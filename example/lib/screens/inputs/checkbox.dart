@@ -3,7 +3,7 @@ import 'package:example/widgets/page.dart';
 import 'package:fluent_ui/fluent_ui.dart';
 
 class CheckBoxPage extends StatefulWidget {
-  const CheckBoxPage({Key? key}) : super(key: key);
+  const CheckBoxPage({super.key});
 
   @override
   State<CheckBoxPage> createState() => _CheckBoxPageState();
@@ -25,6 +25,12 @@ class _CheckBoxPageState extends State<CheckBoxPage> with PageMixin {
         ),
         subtitle(content: const Text('A 2-state Checkbox')),
         CardHighlight(
+          codeSnippet: '''bool checked = false;
+
+Checkbox(
+  checked: checked,
+  onPressed: disabled ? null : (v) => setState(() => checked = v),
+)''',
           child: Row(children: [
             Checkbox(
               checked: firstChecked,
@@ -44,15 +50,29 @@ class _CheckBoxPageState extends State<CheckBoxPage> with PageMixin {
               content: const Text('Disabled'),
             ),
           ]),
+        ),
+        subtitle(content: const Text('A 3-state Checkbox')),
+        CardHighlight(
           codeSnippet: '''bool checked = false;
 
 Checkbox(
   checked: checked,
-  onPressed: disabled ? null : (v) => setState(() => checked = v),
+  onPressed: disabled ? null : (v) {
+    setState(() {
+      // if v (the new value) is true, then true
+      // if v is false, then null (third state)
+      // if v is null (was third state before), then false
+      // otherwise (just to be safe), it's true
+      checked = (v == true
+        ? true
+          : v == false
+            ? null
+              : v == null
+                ? false
+                  : true);
+    });
+  },
 )''',
-        ),
-        subtitle(content: const Text('A 3-state Checkbox')),
-        CardHighlight(
           child: Row(children: [
             Checkbox(
               checked: secondChecked,
@@ -83,26 +103,6 @@ Checkbox(
               content: const Text('Disabled'),
             ),
           ]),
-          codeSnippet: '''bool checked = false;
-
-Checkbox(
-  checked: checked,
-  onPressed: disabled ? null : (v) {
-    setState(() {
-      // if v (the new value) is true, then true
-      // if v is false, then null (third state)
-      // if v is null (was third state before), then false
-      // otherwise (just to be safe), it's true
-      checked = (v == true
-        ? true
-          : v == false
-            ? null
-              : v == null
-                ? false
-                  : true);
-    });
-  },
-)''',
         ),
         subtitle(
           content: const Text('Using a 3-state Checkbox (TreeView)'),

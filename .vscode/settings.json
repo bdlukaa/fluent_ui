@@ -1,0 +1,11 @@
+{
+    "dart.analysisExcludedFolders": [
+        "lib/l10n"
+    ],
+    "dart.lineLength": 80,
+    "[dart]": {
+        "editor.rulers": [
+            80
+        ],
+    }
+}

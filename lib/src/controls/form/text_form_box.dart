@@ -4,6 +4,22 @@ import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/services.dart';
 
+abstract class ControllableFormBox extends FormField<String> {
+  final TextEditingController? controller;
+
+  const ControllableFormBox({
+    required super.builder,
+    super.autovalidateMode,
+    super.enabled,
+    super.initialValue,
+    super.key,
+    super.onSaved,
+    super.restorationId,
+    super.validator,
+    this.controller,
+  });
+}
+
 /// A [FormField] that contains a [TextBox].
 ///
 /// This is a convenience widget that wraps a [TextBox] widget in a
@@ -11,8 +27,8 @@ import 'package:flutter/services.dart';
 ///
 /// A [Form] ancestor is not required. The [Form] simply makes it easier to
 /// save, reset, or validate multiple fields at once. To use without a [Form],
-/// pass a [GlobalKey] to the constructor and use [GlobalKey.currentState] to
-/// save or reset the form field.
+/// pass a `GlobalKey<FormFieldState>` (see [GlobalKey]) to the constructor and use
+/// [GlobalKey.currentState] to save or reset the form field.
 ///
 /// When a [controller] is specified, its [TextEditingController.text]
 /// defines the [initialValue]. If this [FormField] is part of a scrolling
@@ -24,20 +40,30 @@ import 'package:flutter/services.dart';
 /// If a [controller] is not specified, [initialValue] can be used to give
 /// the automatically generated controller an initial value.
 ///
+/// {@macro flutter.material.textfield.wantKeepAlive}
+///
 /// Remember to call [TextEditingController.dispose] of the [TextEditingController]
-/// when it is no longer needed. This will ensure we discard any resources used
-/// by the object.
+/// when it is no longer needed. This will ensure any resources used by the object
+/// are discarded.
 ///
 /// See also:
 ///
-///   * <https://docs.microsoft.com/en-us/windows/apps/design/controls/text-box>
 ///   * [TextBox], which is the underlying text field without the [Form]
 ///    integration.
-class TextFormBox extends FormField<String> {
-  /// Creates a text form box
+///   * <https://docs.microsoft.com/en-us/windows/apps/design/controls/text-box>
+class TextFormBox extends ControllableFormBox {
+  /// Creates a [FormField] that contains a [TextBox].
+  ///
+  /// When a [controller] is specified, [initialValue] must be null (the
+  /// default). If [controller] is null, then a [TextEditingController]
+  /// will be constructed automatically and its `text` will be initialized
+  /// to [initialValue] or the empty string.
+  ///
+  /// For documentation about the various parameters, see the [TextBox] class
+  /// and [TextBox.new], the constructor.
   TextFormBox({
-    Key? key,
-    this.controller,
+    super.key,
+    super.controller,
     String? initialValue,
     FocusNode? focusNode,
     TextInputType? keyboardType,
@@ -61,31 +87,29 @@ class TextFormBox extends FormField<String> {
     int? minLines,
     bool expands = false,
     int? maxLength,
-    double? minHeight,
     EdgeInsetsGeometry padding = kTextBoxPadding,
     ValueChanged<String>? onChanged,
     GestureTapCallback? onTap,
+    TapRegionCallback? onTapOutside,
     VoidCallback? onEditingComplete,
     ValueChanged<String>? onFieldSubmitted,
-    FormFieldSetter<String>? onSaved,
-    FormFieldValidator<String>? validator,
+    super.onSaved,
+    super.validator,
     List<TextInputFormatter>? inputFormatters,
-    bool? enabled,
+    super.enabled = true,
     double cursorWidth = 2.0,
     double? cursorHeight,
     Radius cursorRadius = const Radius.circular(2.0),
     Color? cursorColor,
     Brightness? keyboardAppearance,
     EdgeInsets scrollPadding = const EdgeInsets.all(20.0),
-    bool enableInteractiveSelection = true,
+    bool? enableInteractiveSelection,
     TextSelectionControls? selectionControls,
     ScrollPhysics? scrollPhysics,
     Iterable<String>? autofillHints,
-    AutovalidateMode autovalidateMode = AutovalidateMode.disabled,
+    super.autovalidateMode = AutovalidateMode.disabled,
     String? placeholder,
     TextStyle? placeholderStyle,
-    String? header,
-    TextStyle? headerStyle,
     ScrollController? scrollController,
     Clip clipBehavior = Clip.antiAlias,
     Widget? prefix,
@@ -97,13 +121,16 @@ class TextFormBox extends FormField<String> {
     MaxLengthEnforcement? maxLengthEnforcement,
     ui.BoxHeightStyle selectionHeightStyle = ui.BoxHeightStyle.tight,
     ui.BoxWidthStyle selectionWidthStyle = ui.BoxWidthStyle.tight,
-    BoxDecoration? decoration,
+    WidgetStateProperty<BoxDecoration>? decoration,
     bool enableIMEPersonalizedLearning = true,
     MouseCursor? mouseCursor,
     bool scribbleEnabled = true,
     Color? highlightColor,
     Color? errorHighlightColor,
     Color? unfocusedColor,
+    EditableTextContextMenuBuilder? contextMenuBuilder,
+    TextMagnifierConfiguration? magnifierConfiguration,
+    SpellCheckConfiguration? spellCheckConfiguration,
   })  : assert(initialValue == null || controller == null),
         assert(obscuringCharacter.length == 1),
         assert(maxLines == null || maxLines > 0),
@@ -120,14 +147,12 @@ class TextFormBox extends FormField<String> {
             'Obscured fields cannot be multiline.'),
         assert(maxLength == null || maxLength > 0),
         super(
-          key: key,
           initialValue:
               controller != null ? controller.text : (initialValue ?? ''),
-          onSaved: onSaved,
-          validator: validator,
-          autovalidateMode: autovalidateMode,
           builder: (FormFieldState<String> field) {
-            final state = field as _TextFormBoxState;
+            assert(debugCheckHasFluentTheme(field.context));
+            final theme = FluentTheme.of(field.context);
+            final state = field as TextFormBoxState;
 
             void onChangedHandler(String value) {
               field.didChange(value);
@@ -136,11 +161,12 @@ class TextFormBox extends FormField<String> {
               }
             }
 
-            return FormRow(
-              padding: EdgeInsets.zero,
-              error: (field.errorText == null) ? null : Text(field.errorText!),
-              child: UnmanagedRestorationScope(
-                bucket: field.bucket,
+            return UnmanagedRestorationScope(
+              bucket: field.bucket,
+              child: FormRow(
+                padding: EdgeInsets.zero,
+                error:
+                    (field.errorText == null) ? null : Text(field.errorText!),
                 child: TextBox(
                   controller: state._effectiveController,
                   focusNode: focusNode,
@@ -157,8 +183,14 @@ class TextFormBox extends FormField<String> {
                   obscuringCharacter: obscuringCharacter,
                   obscureText: obscureText,
                   autocorrect: autocorrect,
-                  smartDashesType: smartDashesType,
-                  smartQuotesType: smartQuotesType,
+                  smartDashesType: smartDashesType ??
+                      (obscureText
+                          ? SmartDashesType.disabled
+                          : SmartDashesType.enabled),
+                  smartQuotesType: smartQuotesType ??
+                      (obscureText
+                          ? SmartQuotesType.disabled
+                          : SmartQuotesType.enabled),
                   enableSuggestions: enableSuggestions,
                   maxLines: maxLines,
                   minLines: minLines,
@@ -166,6 +198,7 @@ class TextFormBox extends FormField<String> {
                   maxLength: maxLength,
                   onChanged: onChangedHandler,
                   onTap: onTap,
+                  onTapOutside: onTapOutside,
                   onEditingComplete: onEditingComplete,
                   onSubmitted: onFieldSubmitted,
                   inputFormatters: inputFormatters,
@@ -181,8 +214,6 @@ class TextFormBox extends FormField<String> {
                   autofillHints: autofillHints,
                   placeholder: placeholder,
                   placeholderStyle: placeholderStyle,
-                  header: header,
-                  headerStyle: headerStyle,
                   scrollController: scrollController,
                   clipBehavior: clipBehavior,
                   prefix: prefix,
@@ -191,10 +222,10 @@ class TextFormBox extends FormField<String> {
                   suffixMode: suffixMode,
                   highlightColor: (field.errorText == null)
                       ? highlightColor
-                      : errorHighlightColor ?? Colors.red,
+                      : errorHighlightColor ??
+                          Colors.red.defaultBrushFor(theme.brightness),
                   unfocusedColor: unfocusedColor,
                   dragStartBehavior: dragStartBehavior,
-                  minHeight: minHeight,
                   padding: padding,
                   maxLengthEnforcement: maxLengthEnforcement,
                   restorationId: restorationId,
@@ -202,31 +233,30 @@ class TextFormBox extends FormField<String> {
                   selectionWidthStyle: selectionWidthStyle,
                   decoration: decoration,
                   enableIMEPersonalizedLearning: enableIMEPersonalizedLearning,
-                  mouseCursor: mouseCursor,
                   scribbleEnabled: scribbleEnabled,
                   textDirection: textDirection,
                   selectionControls: selectionControls,
-                  initialValue: initialValue,
+                  contextMenuBuilder: contextMenuBuilder,
+                  magnifierConfiguration: magnifierConfiguration,
+                  spellCheckConfiguration: spellCheckConfiguration,
                 ),
               ),
             );
           },
         );
 
-  final TextEditingController? controller;
-
   @override
-  FormFieldState<String> createState() => _TextFormBoxState();
+  FormFieldState<String> createState() => TextFormBoxState();
 }
 
-class _TextFormBoxState extends FormFieldState<String> {
+class TextFormBoxState extends FormFieldState<String> {
   TextEditingController? _controller;
 
   TextEditingController? get _effectiveController =>
       widget.controller ?? _controller;
 
   @override
-  TextFormBox get widget => super.widget as TextFormBox;
+  ControllableFormBox get widget => super.widget as ControllableFormBox;
 
   @override
   void initState() {
@@ -239,7 +269,7 @@ class _TextFormBoxState extends FormFieldState<String> {
   }
 
   @override
-  void didUpdateWidget(TextFormBox oldWidget) {
+  void didUpdateWidget(ControllableFormBox oldWidget) {
     super.didUpdateWidget(oldWidget);
     if (widget.controller != oldWidget.controller) {
       oldWidget.controller?.removeListener(_handleControllerChanged);

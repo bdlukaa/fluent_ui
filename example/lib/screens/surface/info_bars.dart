@@ -4,7 +4,7 @@ import 'package:fluent_ui/fluent_ui.dart';
 import '../../widgets/page.dart';
 
 class InfoBarsPage extends StatefulWidget {
-  const InfoBarsPage({Key? key}) : super(key: key);
+  const InfoBarsPage({super.key});
 
   @override
   State<InfoBarsPage> createState() => _InfoBarsPageState();
@@ -39,11 +39,24 @@ class _InfoBarsPageState extends State<InfoBarsPage> with PageMixin {
         ),
         CardHighlight(
           backgroundColor: FluentTheme.of(context).micaBackgroundColor,
+          codeSnippet:
+              '''await displayInfoBar(context, builder: (context, close) {
+  return InfoBar(
+    title: const Text('You can not do that :/'),
+    content: const Text(
+        'A proper warning message of why the user can not do that :/'),
+    action: IconButton(
+      icon: const Icon(FluentIcons.clear),
+      onPressed: close,
+    ),
+    severity: InfoBarSeverity.warning,
+  );
+});''',
           child: Padding(
             padding: const EdgeInsets.all(8.0),
             child: Button(
-              onPressed: () {
-                displayInfoBar(context, builder: (context, close) {
+              onPressed: () async {
+                await displayInfoBar(context, builder: (context, close) {
                   return InfoBar(
                     title: const Text('You can not do that :/'),
                     content: const Text(
@@ -59,7 +72,6 @@ class _InfoBarsPageState extends State<InfoBarsPage> with PageMixin {
               child: const Text('Show InfoBar'),
             ),
           ),
-          codeSnippet: '''''',
         ),
         subtitle(
           content: const Text(
@@ -68,6 +80,15 @@ class _InfoBarsPageState extends State<InfoBarsPage> with PageMixin {
         ),
         CardHighlight(
           backgroundColor: FluentTheme.of(context).micaBackgroundColor,
+          codeSnippet: '''InfoBar(
+  title: const Text('Title'),
+  content: const Text(
+    'Essential app message for your users to be informed of, '
+    'acknowledge, or take action on.',
+  ),
+  severity: $severity,
+  isLong: true,
+)''',
           child: Padding(
             padding: const EdgeInsets.all(8.0),
             child: Column(
@@ -101,8 +122,8 @@ class _InfoBarsPageState extends State<InfoBarsPage> with PageMixin {
                     items: InfoBarSeverity.values
                         .map(
                           (severity) => ComboBoxItem(
-                            child: Text(severity.name),
                             value: severity,
+                            child: Text(severity.name),
                           ),
                         )
                         .toList(),
@@ -125,15 +146,6 @@ class _InfoBarsPageState extends State<InfoBarsPage> with PageMixin {
               ],
             ),
           ),
-          codeSnippet: '''InfoBar(
-  title: const Text('Title'),
-  content: const Text(
-    'Essential app message for your users to be informed of, '
-    'acknowledge, or take action on.',
-  ),
-  severity: $severity,
-  isLong: true,
-)''',
         ),
         subtitle(
           content: const Text(
@@ -142,6 +154,24 @@ class _InfoBarsPageState extends State<InfoBarsPage> with PageMixin {
         ),
         CardHighlight(
           backgroundColor: FluentTheme.of(context).micaBackgroundColor,
+          codeSnippet: '''InfoBar(
+  title: const Text('Title'),
+  content: Text(
+    ${_isLong ? '"Essential app message for your users to be informed '
+                  'of, acknowledge, or take action on. Lorem Ipsum is '
+                  'simply dummy text of the printing and typesetting '
+                  'industry. Lorem Ipsum has been the industry\'s '
+                  'standard dummy text ever since the 1500s, when an '
+                  'unknown printer took a galley of type and scrambled '
+                  'it to make a type specimen book."' : '"A short essential message"'}
+  ),
+  severity: $severity,
+  isLong: true,
+  ${_hasActionButton ? '''action: Button(
+    child: const Text('Action'),
+    onPressed: () {},
+  )''' : null}
+)''',
           child: Padding(
             padding: const EdgeInsets.all(8.0),
             child: Column(
@@ -199,24 +229,6 @@ class _InfoBarsPageState extends State<InfoBarsPage> with PageMixin {
               ],
             ),
           ),
-          codeSnippet: '''InfoBar(
-  title: const Text('Title'),
-  content: Text(
-    ${_isLong ? '"Essential app message for your users to be informed '
-                  'of, acknowledge, or take action on. Lorem Ipsum is '
-                  'simply dummy text of the printing and typesetting '
-                  'industry. Lorem Ipsum has been the industry\'s '
-                  'standard dummy text ever since the 1500s, when an '
-                  'unknown printer took a galley of type and scrambled '
-                  'it to make a type specimen book."' : '"A short essential message"'}
-  ),
-  severity: $severity,
-  isLong: true,
-  ${_hasActionButton ? '''action: Button(
-    child: const Text('Action'),
-    onPressed: () {},
-  )''' : null}
-)''',
         ),
       ],
     );

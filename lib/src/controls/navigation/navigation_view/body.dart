@@ -59,7 +59,7 @@ class _NavigationBody extends StatefulWidget {
   /// is used by default.
   ///
   /// See also:
-  ///   * [ThemeData.fastAnimationDuration], the duration used by default.
+  ///   * [FluentThemeData.fastAnimationDuration], the duration used by default.
   final Duration? animationDuration;
 
   @override
@@ -87,12 +87,12 @@ class _NavigationBodyState extends State<_NavigationBody> {
     super.didChangeDependencies();
     final view = InheritedNavigationView.of(context);
     final selected = view.pane?.selected ?? 0;
-    MediaQuery.of(context);
 
     _pageController ??= PageController(initialPage: selected);
 
     if (pageController.hasClients) {
-      if (view.oldIndex != selected || pageController.page != selected) {
+      if (view.previousItemIndex != selected ||
+          pageController.page != selected) {
         pageController.jumpToPage(selected);
       }
     }
@@ -130,7 +130,7 @@ class _NavigationBodyState extends State<_NavigationBody> {
             // click on Settings item is considered Default
             return HorizontalSlidePageTransition(
               animation: animation,
-              fromLeft: view.oldIndex < (view.pane?.selected ?? 0),
+              fromLeft: view.previousItemIndex < (view.pane?.selected ?? 0),
               child: child,
             );
           }
@@ -143,10 +143,13 @@ class _NavigationBodyState extends State<_NavigationBody> {
         child: () {
           final paneBodyBuilder = widget.paneBodyBuilder;
           if (paneBodyBuilder != null) {
-            return FocusTraversalGroup(
-              child: paneBodyBuilder.call(view.pane?.selected != null
-                  ? view.pane?.selectedItem.body
-                  : null),
+            return paneBodyBuilder.call(
+              view.pane?.selected != null ? view.pane!.selectedItem : null,
+              view.pane?.selected != null
+                  ? FocusTraversalGroup(
+                      child: view.pane!.selectedItem.body,
+                    )
+                  : null,
             );
           } else {
             return KeyedSubtree(
@@ -161,9 +164,9 @@ class _NavigationBodyState extends State<_NavigationBody> {
                   final item = view.pane!.effectiveItems[index];
 
                   return ExcludeFocus(
-                    key: item.bodyKey,
                     excluding: !isSelected,
                     child: FocusTraversalGroup(
+                      policy: WidgetOrderTraversalPolicy(),
                       child: item.body,
                     ),
                   );
@@ -186,14 +189,15 @@ class _NavigationBodyState extends State<_NavigationBody> {
 class InheritedNavigationView extends InheritedWidget {
   /// Creates an inherited navigation view.
   const InheritedNavigationView({
-    Key? key,
-    required Widget child,
+    super.key,
+    required super.child,
     required this.displayMode,
     this.minimalPaneOpen = false,
     this.pane,
-    this.oldIndex = 0,
+    this.previousItemIndex = 0,
     this.currentItemIndex = -1,
-  }) : super(key: key, child: child);
+    this.isTransitioning = false,
+  });
 
   /// The current pane display mode according to the current state.
   final PaneDisplayMode displayMode;
@@ -204,13 +208,18 @@ class InheritedNavigationView extends InheritedWidget {
   /// The current navigation pane, if any
   final NavigationPane? pane;
 
-  /// The old index selected index. Usually used by [NavigationIndicator]s to
-  /// display the animation from the old item to the new one.
-  final int oldIndex;
+  /// The previous index selected index.
+  ///
+  /// Usually used by a [NavigationIndicator]s to display the animation from the
+  /// old item to the new one.
+  final int previousItemIndex;
 
   /// Used by [NavigationIndicator] to know what's the current index of the
   /// item
   final int currentItemIndex;
+
+  /// Whether the navigation panes are transitioning or not.
+  final bool isTransitioning;
 
   static InheritedNavigationView? maybeOf(BuildContext context) {
     return context
@@ -228,8 +237,9 @@ class InheritedNavigationView extends InheritedWidget {
     NavigationPane? pane,
     PaneDisplayMode? displayMode,
     bool? minimalPaneOpen,
-    int? oldIndex,
+    int? previousItemIndex,
     bool? currentItemSelected,
+    bool? isTransitioning,
   }) {
     return Builder(builder: (context) {
       final current = InheritedNavigationView.maybeOf(context);
@@ -240,29 +250,31 @@ class InheritedNavigationView extends InheritedWidget {
         minimalPaneOpen: minimalPaneOpen ?? current?.minimalPaneOpen ?? false,
         currentItemIndex: currentItemIndex ?? current?.currentItemIndex ?? -1,
         pane: pane ?? current?.pane,
-        oldIndex: oldIndex ?? current?.oldIndex ?? 0,
+        previousItemIndex: previousItemIndex ?? current?.previousItemIndex ?? 0,
+        isTransitioning: isTransitioning ?? current?.isTransitioning ?? false,
         child: child,
       );
     });
   }
 
   @override
-  bool updateShouldNotify(InheritedNavigationView oldWidget) {
+  bool updateShouldNotify(covariant InheritedNavigationView oldWidget) {
     return oldWidget.displayMode != displayMode ||
         oldWidget.minimalPaneOpen != minimalPaneOpen ||
         oldWidget.pane != pane ||
-        oldWidget.oldIndex != oldIndex ||
-        oldWidget.currentItemIndex != currentItemIndex;
+        oldWidget.previousItemIndex != previousItemIndex ||
+        oldWidget.currentItemIndex != currentItemIndex ||
+        oldWidget.isTransitioning != isTransitioning;
   }
 }
 
 /// Makes the [GlobalKey]s for [PaneItem]s accesible on the scope.
 class PaneItemKeys extends InheritedWidget {
   const PaneItemKeys({
-    Key? key,
-    required Widget child,
+    super.key,
+    required super.child,
     required this.keys,
-  }) : super(key: key, child: child);
+  });
 
   final Map<int, GlobalKey> keys;
 

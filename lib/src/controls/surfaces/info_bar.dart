@@ -1,7 +1,6 @@
 import 'dart:ui';
 
 import 'package:fluent_ui/fluent_ui.dart';
-
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart' show Icons;
 
@@ -31,6 +30,7 @@ typedef InfoBarPopupBuilder = Widget Function(
 Future<void> displayInfoBar(
   BuildContext context, {
   required InfoBarPopupBuilder builder,
+  Alignment alignment = Alignment.bottomCenter,
   Duration duration = const Duration(seconds: 3),
 }) async {
   assert(debugCheckHasOverlay(context));
@@ -47,7 +47,7 @@ Future<void> displayInfoBar(
   entry = OverlayEntry(builder: (context) {
     return SafeArea(
       child: Align(
-        alignment: Alignment.bottomCenter,
+        alignment: alignment,
         child: Padding(
           padding: const EdgeInsets.symmetric(
             vertical: 24.0,
@@ -62,13 +62,15 @@ Future<void> displayInfoBar(
               if (entry.mounted) entry.remove();
             }
 
-            Future.delayed(theme.mediumAnimationDuration).then((_) {
-              if (entry.mounted && !alreadyInitialized) {
-                setState(() => isFading = false);
-              }
+            if (!alreadyInitialized) {
+              Future.delayed(theme.mediumAnimationDuration).then((_) {
+                if (entry.mounted && !alreadyInitialized) {
+                  setState(() => isFading = false);
+                }
 
-              alreadyInitialized = true;
-            }).then((_) => Future.delayed(duration).then((_) => close()));
+                alreadyInitialized = true;
+              }).then((_) => Future.delayed(duration).then((_) => close()));
+            }
 
             return AnimatedSwitcher(
               duration: theme.mediumAnimationDuration,
@@ -120,7 +122,7 @@ enum InfoBarSeverity {
 class InfoBar extends StatelessWidget {
   /// Creates an info bar.
   const InfoBar({
-    Key? key,
+    super.key,
     required this.title,
     this.content,
     this.action,
@@ -129,7 +131,7 @@ class InfoBar extends StatelessWidget {
     this.isLong = false,
     this.onClose,
     this.isIconVisible = true,
-  }) : super(key: key);
+  });
 
   /// The severity of this InfoBar.
   ///
@@ -137,7 +139,7 @@ class InfoBar extends StatelessWidget {
   final InfoBarSeverity severity;
 
   /// The style applied to this info bar. If non-null, it's
-  /// mescled with [ThemeData.infoBarThemeData]
+  /// mescled with [FluentThemeData.infoBarTheme]
   final InfoBarThemeData? style;
 
   final Widget title;
@@ -163,8 +165,23 @@ class InfoBar extends StatelessWidget {
   void debugFillProperties(DiagnosticPropertiesBuilder properties) {
     super.debugFillProperties(properties);
     properties
-      ..add(FlagProperty('long', value: isLong, ifFalse: 'short'))
-      ..add(EnumProperty('severity', severity))
+      ..add(FlagProperty(
+        'long',
+        value: isLong,
+        ifFalse: 'short',
+        defaultValue: false,
+      ))
+      ..add(FlagProperty(
+        'isIconVisible',
+        value: isIconVisible,
+        ifFalse: 'icon not visible',
+        defaultValue: true,
+      ))
+      ..add(EnumProperty<InfoBarSeverity>(
+        'severity',
+        severity,
+        defaultValue: InfoBarSeverity.info,
+      ))
       ..add(ObjectFlagProperty.has('onClose', onClose))
       ..add(DiagnosticsProperty('style', style, ifNull: 'no style'));
   }
@@ -173,21 +190,23 @@ class InfoBar extends StatelessWidget {
   Widget build(BuildContext context) {
     assert(debugCheckHasFluentTheme(context));
     assert(debugCheckHasFluentLocalizations(context));
+
     final theme = FluentTheme.of(context);
     final localizations = FluentLocalizations.of(context);
     final style = InfoBarTheme.of(context).merge(this.style);
+
     final icon = isIconVisible ? style.icon?.call(severity) : null;
     final closeIcon = style.closeIcon;
     final title = Padding(
       padding: const EdgeInsetsDirectional.only(end: 6.0),
-      child: DefaultTextStyle(
+      child: DefaultTextStyle.merge(
         style: theme.typography.bodyStrong ?? const TextStyle(),
         child: this.title,
       ),
     );
     final content = () {
       if (this.content == null) return null;
-      return DefaultTextStyle(
+      return DefaultTextStyle.merge(
         style: theme.typography.body ?? const TextStyle(),
         child: this.content!,
       );
@@ -276,10 +295,10 @@ class InfoBarTheme extends InheritedTheme {
   /// Creates a info bar theme that controls the configurations for
   /// [InfoBar].
   const InfoBarTheme({
-    Key? key,
+    super.key,
     required this.data,
-    required Widget child,
-  }) : super(key: key, child: child);
+    required super.child,
+  });
 
   /// The properties for descendant [InfoBar] widgets.
   final InfoBarThemeData data;
@@ -306,7 +325,7 @@ class InfoBarTheme extends InheritedTheme {
   }
 
   /// Returns the [data] from the closest [InfoBarTheme] ancestor. If there is
-  /// no ancestor, it returns [ThemeData.infoBarTheme]. Applications can assume
+  /// no ancestor, it returns [FluentThemeData.infoBarTheme]. Applications can assume
   /// that the returned value will not be null.
   ///
   /// Typical usage is as follows:
@@ -355,7 +374,7 @@ class InfoBarThemeData with Diagnosticable {
     this.padding,
   });
 
-  factory InfoBarThemeData.standard(ThemeData style) {
+  factory InfoBarThemeData.standard(FluentThemeData theme) {
     return InfoBarThemeData(
       padding: const EdgeInsetsDirectional.only(
         top: 14.0,
@@ -367,23 +386,23 @@ class InfoBarThemeData with Diagnosticable {
         late Color color;
         switch (severity) {
           case InfoBarSeverity.info:
-            color = style.resources.systemFillColorAttentionBackground;
+            color = theme.resources.systemFillColorAttentionBackground;
             break;
           case InfoBarSeverity.warning:
-            color = style.resources.systemFillColorCautionBackground;
+            color = theme.resources.systemFillColorCautionBackground;
             break;
           case InfoBarSeverity.success:
-            color = style.resources.systemFillColorSuccessBackground;
+            color = theme.resources.systemFillColorSuccessBackground;
             break;
           case InfoBarSeverity.error:
-            color = style.resources.systemFillColorCriticalBackground;
+            color = theme.resources.systemFillColorCriticalBackground;
             break;
         }
         return BoxDecoration(
           color: color,
           borderRadius: BorderRadius.circular(4.0),
           border: Border.all(
-            color: style.resources.cardStrokeColorDefault,
+            color: theme.resources.cardStrokeColorDefault,
           ),
         );
       },
@@ -403,21 +422,20 @@ class InfoBarThemeData with Diagnosticable {
       iconColor: (severity) {
         switch (severity) {
           case InfoBarSeverity.info:
-            return style.accentColor.defaultBrushFor(style.brightness);
+            return theme.accentColor.defaultBrushFor(theme.brightness);
           case InfoBarSeverity.warning:
-            return style.resources.systemFillColorCaution;
+            return theme.resources.systemFillColorCaution;
           case InfoBarSeverity.success:
-            return style.resources.systemFillColorSuccess;
+            return theme.resources.systemFillColorSuccess;
           case InfoBarSeverity.error:
-            return style.resources.systemFillColorCritical;
+            return theme.resources.systemFillColorCritical;
         }
       },
-      actionStyle: ButtonStyle(
-        padding: ButtonState.all(const EdgeInsets.all(6)),
+      actionStyle: const ButtonStyle(
+        padding: WidgetStatePropertyAll(EdgeInsets.all(6)),
       ),
-      closeButtonStyle: ButtonStyle(
-        iconSize: ButtonState.all(16.0),
-      ),
+      closeButtonStyle:
+          const ButtonStyle(iconSize: WidgetStatePropertyAll(16.0)),
     );
   }
 
@@ -455,6 +473,8 @@ class InfoBarThemeData with Diagnosticable {
     if (style == null) return this;
     return InfoBarThemeData(
       closeIcon: style.closeIcon ?? closeIcon,
+      closeIconSize: style.closeIconSize ?? closeIconSize,
+      closeButtonStyle: style.closeButtonStyle ?? closeButtonStyle,
       icon: style.icon ?? icon,
       decoration: style.decoration ?? decoration,
       actionStyle: style.actionStyle ?? actionStyle,
@@ -469,6 +489,9 @@ class InfoBarThemeData with Diagnosticable {
     properties
       ..add(ObjectFlagProperty.has('icon', icon))
       ..add(IconDataProperty('closeIcon', closeIcon))
+      ..add(DoubleProperty('closeIconSize', closeIconSize))
+      ..add(DiagnosticsProperty<ButtonStyle>(
+          'closeButtonStyle', closeButtonStyle))
       ..add(ObjectFlagProperty.has('decoration', decoration))
       ..add(ObjectFlagProperty.has('iconColor', iconColor))
       ..add(DiagnosticsProperty<ButtonStyle>(

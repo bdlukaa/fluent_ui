@@ -3,7 +3,7 @@ import 'package:example/widgets/page.dart';
 import 'package:fluent_ui/fluent_ui.dart';
 
 class DatePickerPage extends StatefulWidget {
-  const DatePickerPage({Key? key}) : super(key: key);
+  const DatePickerPage({super.key});
 
   @override
   State<DatePickerPage> createState() => _DatePickerPageState();
@@ -12,11 +12,26 @@ class DatePickerPage extends StatefulWidget {
 class _DatePickerPageState extends State<DatePickerPage> with PageMixin {
   DateTime? simpleTime;
   DateTime? hiddenTime;
+  DateTime? flexTime;
+
+  bool showYear = true;
+  bool showMonth = true;
+  bool showDay = true;
+
+  final datePickerKey = GlobalKey<DatePickerState>();
 
   @override
   Widget build(BuildContext context) {
     return ScaffoldPage.scrollable(
-      header: const PageHeader(title: Text('DatePicker')),
+      header: PageHeader(
+        title: const Text('DatePicker'),
+        commandBar: Button(
+          onPressed: () => setState(
+            () => simpleTime = hiddenTime = flexTime = null,
+          ),
+          child: const Text('Clear'),
+        ),
+      ),
       children: [
         const Text(
           'Use a DatePicker to let users set a date in your app, for example to '
@@ -30,14 +45,6 @@ class _DatePickerPageState extends State<DatePickerPage> with PageMixin {
         ),
         subtitle(content: const Text('A simple DatePicker with a header')),
         CardHighlight(
-          child: Align(
-            alignment: AlignmentDirectional.centerStart,
-            child: DatePicker(
-              header: 'Pick a date',
-              selected: simpleTime,
-              onChanged: (time) => setState(() => simpleTime = time),
-            ),
-          ),
           codeSnippet: '''DateTime? selected;
 
 DatePicker(
@@ -45,17 +52,54 @@ DatePicker(
   selected: selected,
   onChanged: (time) => setState(() => selected = time),
 ),''',
+          child: SizedBox(
+            width: double.infinity,
+            child: Wrap(
+              spacing: 10.0,
+              runSpacing: 10.0,
+              alignment: WrapAlignment.spaceBetween,
+              children: [
+                DatePicker(
+                  header: 'Pick a date',
+                  selected: simpleTime,
+                  onChanged: (time) => setState(() => simpleTime = time),
+                  onCancel: () => debugPrint('User did not pick any date'),
+                  showDay: showDay,
+                  showMonth: showMonth,
+                  showYear: showYear,
+                ),
+                SizedBox(
+                  width: 150,
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Checkbox(
+                        checked: showYear,
+                        onChanged: (v) => setState(() => showYear = v!),
+                        content: const Text('Show year'),
+                      ),
+                      const SizedBox(height: 10.0),
+                      Checkbox(
+                        checked: showMonth,
+                        onChanged: (v) => setState(() => showMonth = v!),
+                        content: const Text('Show month'),
+                      ),
+                      const SizedBox(height: 10.0),
+                      Checkbox(
+                        checked: showDay,
+                        onChanged: (v) => setState(() => showDay = v!),
+                        content: const Text('Show day'),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          ),
         ),
         subtitle(content: const Text('A DatePicker with year hidden')),
         CardHighlight(
-          child: Align(
-            alignment: AlignmentDirectional.centerStart,
-            child: DatePicker(
-              selected: hiddenTime,
-              onChanged: (v) => setState(() => hiddenTime = v),
-              showYear: false,
-            ),
-          ),
           codeSnippet: '''DateTime? selected;
 
 DatePicker(
@@ -63,6 +107,37 @@ DatePicker(
   onChanged: (time) => setState(() => selected = time),
   showYear: false,
 ),''',
+          child: Row(children: [
+            DatePicker(
+              key: datePickerKey,
+              selected: hiddenTime,
+              onChanged: (v) => setState(() => hiddenTime = v),
+              showYear: false,
+            ),
+            const Spacer(),
+            Button(
+              onPressed: () => datePickerKey.currentState?.open(),
+              child: const Text('Show picker'),
+            ),
+          ]),
+        ),
+        subtitle(content: const Text('A DatePicker with flex layout')),
+        CardHighlight(
+          codeSnippet: '''DateTime? selected;
+
+DatePicker(
+  selected: selected,
+  fieldFlex: const [2, 3, 2], // Same order as fieldOrder
+  onChanged: (time) => setState(() => selected = time),
+),''',
+          child: Align(
+            alignment: AlignmentDirectional.centerStart,
+            child: DatePicker(
+              selected: flexTime,
+              fieldFlex: const [2, 3, 2],
+              onChanged: (v) => setState(() => flexTime = v),
+            ),
+          ),
         ),
       ],
     );

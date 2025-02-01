@@ -29,7 +29,7 @@ class ResourceDictionary with Diagnosticable {
 ''';
 
 /// How to generate the resources:
-/// - Go on `https://github.com/microsoft/microsoft-ui-xaml/blob/main/dev/CommonStyles/Common_themeresources_any.xaml`
+/// - Go on `https://github.com/microsoft/microsoft-ui-xaml/blob/main/src/controls/dev/CommonStyles/Common_themeresources_any.xaml`
 /// - Copy the colors under <Default> and paste them on [defaultResourceDirectionary]
 /// - Copy the colors under <Light> and paste them on [lightResourceDictionary]
 /// - Run the generator with `dart bin/dictionary_generator.dart.dart` while being

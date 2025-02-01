@@ -1,7 +1,7 @@
 import 'dart:math' as math;
-import 'dart:ui' as ui;
 
 import 'package:fluent_ui/fluent_ui.dart';
+import 'package:flutter/foundation.dart';
 
 /// Asserts that the given context has a [FluentTheme] ancestor.
 ///
@@ -77,12 +77,15 @@ bool debugCheckHasFluentLocalizations(BuildContext context) {
 /// Check if the current screen is 10 foot long or bigger.
 ///
 /// [width] is the width of the current screen. If not provided,
-/// [SingletonFlutterWindow.physicalSize] is used
-bool is10footScreen([double? width]) {
-  width ??= ui.window.physicalSize.width;
+/// [FlutterView.physicalSize] is used
+bool is10footScreen(BuildContext context) {
+  final width = View.of(context).physicalSize.width;
   return width >= 11520;
 }
 
+/// A horizontal box that is positioned near a target.
+///
+/// This was adapted from [positionDependentBox].
 Offset horizontalPositionDependentBox({
   required Size size,
   required Size childSize,
@@ -97,14 +100,14 @@ Offset horizontalPositionDependentBox({
   final fitsRight = target.dx - horizontalOffset - childSize.width >= margin;
   final tooltipLeft =
       preferLeft ? fitsLeft || !fitsRight : !(fitsRight || !fitsLeft);
-  double x;
+  final double x;
   if (tooltipLeft) {
     x = math.min(target.dx + horizontalOffset, size.width - margin);
   } else {
     x = math.max(target.dx - horizontalOffset - childSize.width, margin);
   }
   // Vertical DIRECTION
-  double y;
+  final double y;
   if (size.height - margin * 2.0 < childSize.height) {
     y = (size.height - childSize.height) / 2.0;
   } else {
@@ -122,7 +125,7 @@ Offset horizontalPositionDependentBox({
 }
 
 extension DecorationExtension on Decoration {
-  /// Gets the border radius of this decoration, if reacheable
+  /// Gets the border radius of this decoration.
   BorderRadiusGeometry? getBorderRadius() {
     if (this is BoxDecoration) {
       return (this as BoxDecoration).borderRadius;
@@ -153,5 +156,14 @@ extension StringExtension on String {
   String lowercaseFirst() {
     final first = substring(0, 1);
     return first.toLowerCase() + substring(1);
+  }
+}
+
+extension OffsetExtension on Offset {
+  Offset clamp(Offset min, Offset max) {
+    return Offset(
+      clampDouble(dx, min.dx, max.dx),
+      clampDouble(dy, min.dy, max.dy),
+    );
   }
 }

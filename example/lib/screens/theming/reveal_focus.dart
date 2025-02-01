@@ -5,10 +5,10 @@ import 'package:fluent_ui/fluent_ui.dart' hide Page;
 
 import '../../widgets/page.dart';
 
-class RevealFocusPage extends Page {
-  final FocusNode focus = FocusNode();
-
+class RevealFocusPage extends StatelessWidget with PageMixin {
   RevealFocusPage({super.key});
+
+  final FocusNode focus = FocusNode();
 
   @override
   Widget build(BuildContext context) {
@@ -45,7 +45,7 @@ class RevealFocusPage extends Page {
               child: FocusTheme(
                 data: FocusThemeData(
                   borderRadius: BorderRadius.zero,
-                  // glowColor: theme.accentColor.withOpacity(0.2),
+                  // glowColor: theme.accentColor.withValues(alpha: 0.2),
                   glowFactor: 4.0,
                   primaryBorder: BorderSide(
                     width: 2.0,

@@ -13,7 +13,7 @@ class NavigationIndicator extends StatefulWidget {
     this.curve = Curves.linear,
     this.color,
     this.duration = kIndicatorAnimationDuration,
-  }) : super();
+  });
 
   /// The curve used on the animation, if any
   ///
@@ -32,12 +32,13 @@ class NavigationIndicator extends StatefulWidget {
   void debugFillProperties(DiagnosticPropertiesBuilder properties) {
     super.debugFillProperties(properties);
     properties
-      ..add(DiagnosticsProperty(
-        'curve',
-        curve,
-        defaultValue: Curves.linear,
-      ))
-      ..add(ColorProperty('highlight color', color));
+      ..add(DiagnosticsProperty('curve', curve, defaultValue: Curves.linear))
+      ..add(ColorProperty('highlight color', color))
+      ..add(DiagnosticsProperty<Duration>(
+        'duration',
+        duration,
+        defaultValue: kIndicatorAnimationDuration,
+      ));
   }
 
   @override
@@ -45,7 +46,7 @@ class NavigationIndicator extends StatefulWidget {
 }
 
 class NavigationIndicatorState<T extends NavigationIndicator> extends State<T> {
-  List<Offset>? offsets;
+  Iterable<Offset>? offsets;
 
   @override
   void initState() {
@@ -58,10 +59,12 @@ class NavigationIndicatorState<T extends NavigationIndicator> extends State<T> {
 
   void fetch() {
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+      if (!mounted) return;
+
       final localOffsets = pane.effectiveItems._getPaneItemsOffsets(
         pane.paneKey,
       );
-      if (mounted && (offsets != localOffsets)) {
+      if (offsets != localOffsets) {
         offsets = localOffsets;
       }
     });
@@ -91,8 +94,8 @@ class NavigationIndicatorState<T extends NavigationIndicator> extends State<T> {
     return InheritedNavigationView.of(context).currentItemIndex;
   }
 
-  int get oldIndex {
-    return InheritedNavigationView.of(context).oldIndex;
+  int get previousItemIndex {
+    return InheritedNavigationView.of(context).previousItemIndex;
   }
 
   PaneItem get item {
@@ -121,13 +124,13 @@ class NavigationIndicatorState<T extends NavigationIndicator> extends State<T> {
 
 /// The end navigation indicator
 class EndNavigationIndicator extends NavigationIndicator {
-  const EndNavigationIndicator({
-    Color? color,
-    this.unselectedColor = Colors.transparent,
-  }) : super(color: color);
-
   /// The color of the indicator when the item is not selected
   final Color unselectedColor;
+
+  const EndNavigationIndicator({
+    super.color,
+    this.unselectedColor = Colors.transparent,
+  });
 
   @override
   NavigationIndicatorState<EndNavigationIndicator> createState() =>
@@ -174,12 +177,13 @@ class _EndNavigationIndicatorState
 class StickyNavigationIndicator extends NavigationIndicator {
   /// Creates a sticky navigation indicator.
   const StickyNavigationIndicator({
-    Curve curve = Curves.easeIn,
-    Color? color,
-    Duration duration = kIndicatorAnimationDuration,
+    super.curve,
+    super.color,
+    super.duration,
     this.topPadding = 12.0,
-    this.leftPadding = 10.0,
-  }) : super(curve: curve, color: color, duration: duration);
+    this.leftPadding = kPaneItemMinHeight * 0.3,
+    this.indicatorSize = 2.75,
+  });
 
   /// The padding used on both horizontal sides of the indicator when the
   /// current display mode is top.
@@ -192,6 +196,14 @@ class StickyNavigationIndicator extends NavigationIndicator {
   ///
   /// Defaults to 10.0
   final double leftPadding;
+
+  /// The size of the indicator.
+  ///
+  /// On top display mode, this represents the height of the indicator. On other
+  /// display modes, this represents the width of the indicator.
+  ///
+  /// Defaults to 2.0
+  final double indicatorSize;
 
   @override
   NavigationIndicatorState<StickyNavigationIndicator> createState() =>
@@ -243,11 +255,11 @@ class _StickyNavigationIndicatorState
     if (itemIndex.isNegative) return false;
 
     if (itemIndex == selectedIndex) return true;
-    return itemIndex == oldIndex && _old != oldIndex;
+    return itemIndex == previousItemIndex && _old != previousItemIndex;
   }
 
-  bool get isAbove => oldIndex < selectedIndex;
-  bool get isBelow => oldIndex > selectedIndex;
+  bool get isAbove => previousItemIndex < selectedIndex;
+  bool get isBelow => previousItemIndex > selectedIndex;
 
   @override
   void didChangeDependencies() {
@@ -262,13 +274,13 @@ class _StickyNavigationIndicatorState
 
     _old = (PageStorage.of(context).readState(
           context,
-          identifier: 'oldIndex$itemIndex',
+          identifier: 'previousItemIndex$itemIndex',
         ) as num?)
             ?.toInt() ??
         _old;
 
     // do not perform the animation twice
-    if (_old == oldIndex) {
+    if (_old == previousItemIndex) {
       return;
     }
 
@@ -282,13 +294,13 @@ class _StickyNavigationIndicatorState
             ),
           );
           upAnimation = null;
-          await downController.forward(from: 0.0);
+          downController.forward(from: 0.0);
         } else {
           upAnimation = Tween<double>(begin: 0, end: 1.0).animate(
             CurvedAnimation(curve: widget.curve, parent: upController),
           );
           downAnimation = null;
-          await upController.reverse(from: 1.0);
+          upController.reverse(from: 1.0);
         }
       } else if (isAbove) {
         if (isSelected) {
@@ -299,23 +311,23 @@ class _StickyNavigationIndicatorState
             ),
           );
           downAnimation = null;
-          await upController.forward(from: 0.0);
+          upController.forward(from: 0.0);
         } else {
           downAnimation = Tween<double>(begin: 0, end: 1.0).animate(
             CurvedAnimation(curve: widget.curve, parent: downController),
           );
           upAnimation = null;
-          await downController.reverse(from: 1.0);
+          downController.reverse(from: 1.0);
         }
       }
     }
 
-    _old = oldIndex;
+    _old = previousItemIndex;
     if (mounted) {
       PageStorage.of(context).writeState(
         context,
         _old,
-        identifier: 'oldIndex$itemIndex',
+        identifier: 'previousItemIndex$itemIndex',
       );
       setState(() {});
     }
@@ -348,11 +360,17 @@ class _StickyNavigationIndicatorState
           child: isHorizontal
               ? Align(
                   alignment: AlignmentDirectional.centerStart,
-                  child: Container(width: 2.5, decoration: decoration),
+                  child: Container(
+                    width: widget.indicatorSize,
+                    decoration: decoration,
+                  ),
                 )
               : Align(
                   alignment: AlignmentDirectional.bottomCenter,
-                  child: Container(height: 2.5, decoration: decoration),
+                  child: Container(
+                    height: widget.indicatorSize,
+                    decoration: decoration,
+                  ),
                 ),
           builder: (context, child) {
             if (!isSelected) {
@@ -365,7 +383,7 @@ class _StickyNavigationIndicatorState
               padding: isHorizontal
                   ? EdgeInsetsDirectional.only(
                       start: () {
-                        final x = offsets![itemIndex].dx;
+                        final x = offsets!.elementAt(itemIndex).dx;
                         if (parent != null) {
                           final isOpen =
                               parent!.expanderKey.currentState?._open ?? false;
@@ -375,7 +393,7 @@ class _StickyNavigationIndicatorState
 
                           final parentIndex =
                               pane.effectiveItems.indexOf(parent!);
-                          final parentX = offsets![parentIndex].dx;
+                          final parentX = offsets!.elementAt(parentIndex).dx;
                           return parentX;
                         }
                         return x;

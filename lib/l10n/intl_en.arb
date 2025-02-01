@@ -60,6 +60,10 @@
   "@selectAllActionLabel": {
     "description": "The label for the select all button on the text selection controls."
   },
+  "undoActionLabel": "Undo",
+  "@undoActionLabel": {
+    "description": "The label for the undo button on the text selection controls."
+  },
   "newTabLabel": "Add new tab",
   "@newTabLabel": {
     "description": "The label used by [TabView]'s new button."
@@ -96,6 +100,10 @@
   "@selectAllActionTooltip": {
     "description": "The tooltip for the select all action on the text selection controls."
   },
+  "undoActionTooltip": "Undo the last action",
+  "@undoActionTooltip": {
+    "description": "The tooltip for the undo action on the text selection controls."
+  },
   "hour": "hour",
   "@hour": {
     "description": "The text used by [TimePicker] for the hour field."
@@ -123,5 +131,620 @@
   "year": "year",
   "@year": {
     "description": "The text used by [DatePicker] for the year field"
+  },
+  "seeMore": "See more",
+  "@seeMore": {
+    "description": "The text used by [CommandBar] to show more items."
+  },
+  "seeLess": "See less",
+  "@seeLess": {
+    "description": "The text used by [CommandBar] to show less items."
+  },
+  "redLabel": "Red",
+  "@redLabel": {
+    "description": "Label for red color component in color picker"
+  },
+  "greenLabel": "Green",
+  "@greenLabel": {
+    "description": "Label for green color component in color picker"
+  },
+  "blueLabel": "Blue",
+  "@blueLabel": {
+    "description": "Label for blue color component in color picker"
+  },
+  "opacityLabel": "Opacity",
+  "@opacityLabel": {
+    "description": "Label for opacity component in color picker"
+  },
+  "hueLabel": "Hue",
+  "@hueLabel": {
+    "description": "Label for hue component in color picker"
+  },
+  "saturationLabel": "Saturation",
+  "@saturationLabel": {
+    "description": "Label for saturation component in color picker"
+  },
+  "valueLabel": "Value",
+  "@valueLabel": {
+    "description": "Label for value component in color picker"
+  },
+  "moreText": "More",
+  "@moreText": {
+    "description": "Text for expanding color picker options"
+  },
+  "lessText": "Less",
+  "@lessText": {
+    "description": "Text for collapsing color picker options"
+  },
+  "valueSliderTooltip": "Value {value} ({colorName})",
+  "@valueSliderTooltip": {
+    "placeholders": {
+      "value": {
+        "type": "int"
+      },
+      "colorName": {
+        "type": "String"
+      }
+    }
+  },
+  "alphaSliderTooltip": "{value}% opacity",
+  "@alphaSliderTooltip": {
+    "placeholders": {
+      "value": {
+        "type": "int"
+      }
+    }
+  },
+  "colorBlack": "Black",
+  "@colorBlack": {
+    "description": "The name of the color, Black."
+  },
+  "colorNavy": "Dark blue",
+  "@colorNavy": {
+    "description": "The name of the color, Navy."
+  },
+  "colorDarkBlue": "Dark blue",
+  "@colorDarkBlue": {
+    "description": "The name of the color, Dark Blue."
+  },
+  "colorMediumBlue": "Blue",
+  "@colorMediumBlue": {
+    "description": "The name of the color, Medium Blue."
+  },
+  "colorBlue": "Blue",
+  "@colorBlue": {
+    "description": "The name of the color, Blue."
+  },
+  "colorDarkGreen": "Dark green",
+  "@colorDarkGreen": {
+    "description": "The name of the color, Dark Green."
+  },
+  "colorGreen": "Dark green",
+  "@colorGreen": {
+    "description": "The name of the color, Green."
+  },
+  "colorTeal": "Dark teal",
+  "@colorTeal": {
+    "description": "The name of the color, Teal."
+  },
+  "colorDarkCyan": "Dark teal",
+  "@colorDarkCyan": {
+    "description": "The name of the color, Dark Cyan."
+  },
+  "colorDeepSkyBlue": "Turquoise",
+  "@colorDeepSkyBlue": {
+    "description": "The name of the color, Deep Sky Blue."
+  },
+  "colorDarkTurquoise": "Aqua",
+  "@colorDarkTurquoise": {
+    "description": "The name of the color, Dark Turquoise."
+  },
+  "colorMediumSpringGreen": "Green",
+  "@colorMediumSpringGreen": {
+    "description": "The name of the color, Medium Spring Green."
+  },
+  "colorLime": "Green",
+  "@colorLime": {
+    "description": "The name of the color, Lime."
+  },
+  "colorSpringGreen": "Green",
+  "@colorSpringGreen": {
+    "description": "The name of the color, Spring Green."
+  },
+  "colorCyan": "Aqua",
+  "@colorCyan": {
+    "description": "The name of the color, Cyan."
+  },
+  "colorMidnightBlue": "Dark blue",
+  "@colorMidnightBlue": {
+    "description": "The name of the color, Midnight Blue."
+  },
+  "colorDodgerBlue": "Blue",
+  "@colorDodgerBlue": {
+    "description": "The name of the color, Dodger Blue."
+  },
+  "colorLightSeaGreen": "Teal",
+  "@colorLightSeaGreen": {
+    "description": "The name of the color, Light Sea Green."
+  },
+  "colorForestGreen": "Dark green",
+  "@colorForestGreen": {
+    "description": "The name of the color, Forest Green."
+  },
+  "colorSeaGreen": "Dark green",
+  "@colorSeaGreen": {
+    "description": "The name of the color, Sea Green."
+  },
+  "colorDarkSlateGray": "Dark teal",
+  "@colorDarkSlateGray": {
+    "description": "The name of the color, Dark Slate Gray."
+  },
+  "colorLimeGreen": "Green",
+  "@colorLimeGreen": {
+    "description": "The name of the color, Lime Green."
+  },
+  "colorMediumSeaGreen": "Green",
+  "@colorMediumSeaGreen": {
+    "description": "The name of the color, Medium Sea Green."
+  },
+  "colorTurquoise": "Teal",
+  "@colorTurquoise": {
+    "description": "The name of the color, Turquoise."
+  },
+  "colorRoyalBlue": "Blue",
+  "@colorRoyalBlue": {
+    "description": "The name of the color, Royal Blue."
+  },
+  "colorSteelBlue": "Blue-gray",
+  "@colorSteelBlue": {
+    "description": "The name of the color, Steel Blue."
+  },
+  "colorDarkSlateBlue": "Purple",
+  "@colorDarkSlateBlue": {
+    "description": "The name of the color, Dark Slate Blue."
+  },
+  "colorMediumTurquoise": "Teal",
+  "@colorMediumTurquoise": {
+    "description": "The name of the color, Medium Turquoise."
+  },
+  "colorIndigo": "Dark purple",
+  "@colorIndigo": {
+    "description": "The name of the color, Indigo."
+  },
+  "colorDarkOliveGreen": "Dark green",
+  "@colorDarkOliveGreen": {
+    "description": "The name of the color, Dark Olive Green."
+  },
+  "colorCadetBlue": "Teal",
+  "@colorCadetBlue": {
+    "description": "The name of the color, Cadet Blue."
+  },
+  "colorCornflowerBlue": "Blue",
+  "@colorCornflowerBlue": {
+    "description": "The name of the color, Cornflower Blue."
+  },
+  "colorMediumAquamarine": "Green",
+  "@colorMediumAquamarine": {
+    "description": "The name of the color, Medium Aquamarine."
+  },
+  "colorDimGray": "Gray",
+  "@colorDimGray": {
+    "description": "The name of the color, Dim Gray."
+  },
+  "colorSlateBlue": "Indigo",
+  "@colorSlateBlue": {
+    "description": "The name of the color, Slate Blue."
+  },
+  "colorOliveDrab": "Dark green",
+  "@colorOliveDrab": {
+    "description": "The name of the color, Olive Drab."
+  },
+  "colorSlateGray": "Blue-gray",
+  "@colorSlateGray": {
+    "description": "The name of the color, Slate Gray."
+  },
+  "colorLightSlateGray": "Blue-gray",
+  "@colorLightSlateGray": {
+    "description": "The name of the color, Light Slate Gray."
+  },
+  "colorMediumSlateBlue": "Light blue",
+  "@colorMediumSlateBlue": {
+    "description": "The name of the color, Medium Slate Blue."
+  },
+  "colorLawnGreen": "Green",
+  "@colorLawnGreen": {
+    "description": "The name of the color, Lawn Green."
+  },
+  "colorChartreuse": "Green",
+  "@colorChartreuse": {
+    "description": "The name of the color, Chartreuse."
+  },
+  "colorAquamarine": "Light green",
+  "@colorAquamarine": {
+    "description": "The name of the color, Aquamarine."
+  },
+  "colorMaroon": "Dark red",
+  "@colorMaroon": {
+    "description": "The name of the color, Maroon."
+  },
+  "colorPurple": "Dark purple",
+  "@colorPurple": {
+    "description": "The name of the color, Purple."
+  },
+  "colorOlive": "Dark yellow",
+  "@colorOlive": {
+    "description": "The name of the color, Olive."
+  },
+  "colorGray": "Gray",
+  "@colorGray": {
+    "description": "The name of the color, Gray."
+  },
+  "colorSkyBlue": "Light turquoise",
+  "@colorSkyBlue": {
+    "description": "The name of the color, Sky Blue."
+  },
+  "colorLightSkyBlue": "Light blue",
+  "@colorLightSkyBlue": {
+    "description": "The name of the color, Light Sky Blue."
+  },
+  "colorBlueViolet": "Purple",
+  "@colorBlueViolet": {
+    "description": "The name of the color, Blue Violet."
+  },
+  "colorDarkRed": "Dark red",
+  "@colorDarkRed": {
+    "description": "The name of the color, Dark Red."
+  },
+  "colorDarkMagenta": "Dark purple",
+  "@colorDarkMagenta": {
+    "description": "The name of the color, Dark Magenta."
+  },
+  "colorSaddleBrown": "Brown",
+  "@colorSaddleBrown": {
+    "description": "The name of the color, Saddle Brown."
+  },
+  "colorDarkSeaGreen": "Green",
+  "@colorDarkSeaGreen": {
+    "description": "The name of the color, Dark Sea Green."
+  },
+  "colorLightGreen": "Light green",
+  "@colorLightGreen": {
+    "description": "The name of the color, Light Green."
+  },
+  "colorMediumPurple": "Lavender",
+  "@colorMediumPurple": {
+    "description": "The name of the color, Medium Purple."
+  },
+  "colorDarkViolet": "Purple",
+  "@colorDarkViolet": {
+    "description": "The name of the color, Dark Violet."
+  },
+  "colorPaleGreen": "Light green",
+  "@colorPaleGreen": {
+    "description": "The name of the color, Pale Green."
+  },
+  "colorDarkOrchid": "Purple",
+  "@colorDarkOrchid": {
+    "description": "The name of the color, Dark Orchid."
+  },
+  "colorYellowGreen": "Green",
+  "@colorYellowGreen": {
+    "description": "The name of the color, Yellow Green."
+  },
+  "colorSienna": "Tan",
+  "@colorSienna": {
+    "description": "The name of the color, Sienna."
+  },
+  "colorBrown": "Red",
+  "@colorBrown": {
+    "description": "The name of the color, Brown."
+  },
+  "colorDarkGray": "Gray",
+  "@colorDarkGray": {
+    "description": "The name of the color, Dark Gray."
+  },
+  "colorLightBlue": "Sky blue",
+  "@colorLightBlue": {
+    "description": "The name of the color, Light Blue."
+  },
+  "colorGreenYellow": "Green",
+  "@colorGreenYellow": {
+    "description": "The name of the color, Green Yellow."
+  },
+  "colorPaleTurquoise": "Aqua",
+  "@colorPaleTurquoise": {
+    "description": "The name of the color, Pale Turquoise."
+  },
+  "colorLightSteelBlue": "Ice blue",
+  "@colorLightSteelBlue": {
+    "description": "The name of the color, Light Steel Blue."
+  },
+  "colorPowderBlue": "Sky blue",
+  "@colorPowderBlue": {
+    "description": "The name of the color, Powder Blue."
+  },
+  "colorFirebrick": "Red",
+  "@colorFirebrick": {
+    "description": "The name of the color, Firebrick."
+  },
+  "colorDarkGoldenrod": "Dark yellow",
+  "@colorDarkGoldenrod": {
+    "description": "The name of the color, Dark Goldenrod."
+  },
+  "colorMediumOrchid": "Purple",
+  "@colorMediumOrchid": {
+    "description": "The name of the color, Medium Orchid."
+  },
+  "colorRosyBrown": "Coral",
+  "@colorRosyBrown": {
+    "description": "The name of the color, Rosy Brown."
+  },
+  "colorDarkKhaki": "Tan",
+  "@colorDarkKhaki": {
+    "description": "The name of the color, Dark Khaki."
+  },
+  "colorSilver": "Light gray",
+  "@colorSilver": {
+    "description": "The name of the color, Silver."
+  },
+  "colorMediumVioletRed": "Pink",
+  "@colorMediumVioletRed": {
+    "description": "The name of the color, Medium Violet Red."
+  },
+  "colorIndianRed": "Red",
+  "@colorIndianRed": {
+    "description": "The name of the color, Indian Red."
+  },
+  "colorPeru": "Tan",
+  "@colorPeru": {
+    "description": "The name of the color, Peru."
+  },
+  "colorChocolate": "Orange",
+  "@colorChocolate": {
+    "description": "The name of the color, Chocolate."
+  },
+  "colorTan": "Tan",
+  "@colorTan": {
+    "description": "The name of the color, Tan."
+  },
+  "colorLightGray": "Light gray",
+  "@colorLightGray": {
+    "description": "The name of the color, Light Gray."
+  },
+  "colorThistle": "Lavender",
+  "@colorThistle": {
+    "description": "The name of the color, Thistle."
+  },
+  "colorOrchid": "Lavender",
+  "@colorOrchid": {
+    "description": "The name of the color, Orchid."
+  },
+  "colorGoldenrod": "Gold",
+  "@colorGoldenrod": {
+    "description": "The name of the color, Goldenrod."
+  },
+  "colorPaleVioletRed": "Rose",
+  "@colorPaleVioletRed": {
+    "description": "The name of the color, Pale Violet Red."
+  },
+  "colorCrimson": "Red",
+  "@colorCrimson": {
+    "description": "The name of the color, Crimson."
+  },
+  "colorGainsboro": "Light gray",
+  "@colorGainsboro": {
+    "description": "The name of the color, Gainsboro."
+  },
+  "colorPlum": "Pink",
+  "@colorPlum": {
+    "description": "The name of the color, Plum."
+  },
+  "colorBurlyWood": "Tan",
+  "@colorBurlyWood": {
+    "description": "The name of the color, Burly Wood."
+  },
+  "colorLightCyan": "Sky blue",
+  "@colorLightCyan": {
+    "description": "The name of the color, Light Cyan."
+  },
+  "colorLavender": "Light blue",
+  "@colorLavender": {
+    "description": "The name of the color, Lavender."
+  },
+  "colorDarkSalmon": "Rose",
+  "@colorDarkSalmon": {
+    "description": "The name of the color, Dark Salmon."
+  },
+  "colorViolet": "Lavender",
+  "@colorViolet": {
+    "description": "The name of the color, Violet."
+  },
+  "colorPaleGoldenrod": "Light yellow",
+  "@colorPaleGoldenrod": {
+    "description": "The name of the color, Pale Goldenrod."
+  },
+  "colorLightCoral": "Rose",
+  "@colorLightCoral": {
+    "description": "The name of the color, Light Coral."
+  },
+  "colorKhaki": "Light yellow",
+  "@colorKhaki": {
+    "description": "The name of the color, Khaki."
+  },
+  "colorAliceBlue": "White",
+  "@colorAliceBlue": {
+    "description": "The name of the color, Alice Blue."
+  },
+  "colorHoneydew": "White",
+  "@colorHoneydew": {
+    "description": "The name of the color, Honeydew."
+  },
+  "colorAzure": "White",
+  "@colorAzure": {
+    "description": "The name of the color, Azure."
+  },
+  "colorSandyBrown": "Light orange",
+  "@colorSandyBrown": {
+    "description": "The name of the color, Sandy Brown."
+  },
+  "colorWheat": "Light yellow",
+  "@colorWheat": {
+    "description": "The name of the color, Wheat."
+  },
+  "colorBeige": "Light yellow",
+  "@colorBeige": {
+    "description": "The name of the color, Beige."
+  },
+  "colorWhiteSmoke": "White",
+  "@colorWhiteSmoke": {
+    "description": "The name of the color, White Smoke."
+  },
+  "colorMintCream": "White",
+  "@colorMintCream": {
+    "description": "The name of the color, Mint Cream."
+  },
+  "colorGhostWhite": "White",
+  "@colorGhostWhite": {
+    "description": "The name of the color, Ghost White."
+  },
+  "colorSalmon": "Rose",
+  "@colorSalmon": {
+    "description": "The name of the color, Salmon."
+  },
+  "colorAntiqueWhite": "Light orange",
+  "@colorAntiqueWhite": {
+    "description": "The name of the color, Antique White."
+  },
+  "colorLinen": "Light orange",
+  "@colorLinen": {
+    "description": "The name of the color, Linen."
+  },
+  "colorLightGoldenrodYellow": "Light yellow",
+  "@colorLightGoldenrodYellow": {
+    "description": "The name of the color, Light Goldenrod Yellow."
+  },
+  "colorOldLace": "White",
+  "@colorOldLace": {
+    "description": "The name of the color, Old Lace."
+  },
+  "colorRed": "Red",
+  "@colorRed": {
+    "description": "The name of the color, Red."
+  },
+  "colorMagenta": "Purple",
+  "@colorMagenta": {
+    "description": "The name of the color, Magenta."
+  },
+  "colorDeepPink": "Pink",
+  "@colorDeepPink": {
+    "description": "The name of the color, Deep Pink."
+  },
+  "colorOrangeRed": "Red",
+  "@colorOrangeRed": {
+    "description": "The name of the color, Orange Red."
+  },
+  "colorTomato": "Red",
+  "@colorTomato": {
+    "description": "The name of the color, Tomato."
+  },
+  "colorHotPink": "Pink",
+  "@colorHotPink": {
+    "description": "The name of the color, Hot Pink."
+  },
+  "colorCoral": "Red",
+  "@colorCoral": {
+    "description": "The name of the color, Coral."
+  },
+  "colorDarkOrange": "Orange",
+  "@colorDarkOrange": {
+    "description": "The name of the color, Dark Orange."
+  },
+  "colorLightSalmon": "Rose",
+  "@colorLightSalmon": {
+    "description": "The name of the color, Light Salmon."
+  },
+  "colorOrange": "Gold",
+  "@colorOrange": {
+    "description": "The name of the color, Orange."
+  },
+  "colorLightPink": "Rose",
+  "@colorLightPink": {
+    "description": "The name of the color, Light Pink."
+  },
+  "colorPink": "Rose",
+  "@colorPink": {
+    "description": "The name of the color, Pink."
+  },
+  "colorGold": "Gold",
+  "@colorGold": {
+    "description": "The name of the color, Gold."
+  },
+  "colorPeachPuff": "Light orange",
+  "@colorPeachPuff": {
+    "description": "The name of the color, Peach Puff."
+  },
+  "colorNavajoWhite": "Light orange",
+  "@colorNavajoWhite": {
+    "description": "The name of the color, Navajo White."
+  },
+  "colorMoccasin": "Light orange",
+  "@colorMoccasin": {
+    "description": "The name of the color, Moccasin."
+  },
+  "colorBisque": "Light orange",
+  "@colorBisque": {
+    "description": "The name of the color, Bisque."
+  },
+  "colorMistyRose": "Rose",
+  "@colorMistyRose": {
+    "description": "The name of the color, Misty Rose."
+  },
+  "colorBlanchedAlmond": "Light orange",
+  "@colorBlanchedAlmond": {
+    "description": "The name of the color, Blanched Almond."
+  },
+  "colorPapayaWhip": "Light orange",
+  "@colorPapayaWhip": {
+    "description": "The name of the color, Papaya Whip."
+  },
+  "colorLavenderBlush": "White",
+  "@colorLavenderBlush": {
+    "description": "The name of the color, Lavender Blush."
+  },
+  "colorSeaShell": "White",
+  "@colorSeaShell": {
+    "description": "The name of the color, Sea Shell."
+  },
+  "colorCornsilk": "Light yellow",
+  "@colorCornsilk": {
+    "description": "The name of the color, Cornsilk."
+  },
+  "colorLemonChiffon": "Light yellow",
+  "@colorLemonChiffon": {
+    "description": "The name of the color, Lemon Chiffon."
+  },
+  "colorFloralWhite": "White",
+  "@colorFloralWhite": {
+    "description": "The name of the color, Floral White."
+  },
+  "colorSnow": "White",
+  "@colorSnow": {
+    "description": "The name of the color, Snow."
+  },
+  "colorYellow": "Yellow",
+  "@colorYellow": {
+    "description": "The name of the color, Yellow."
+  },
+  "colorLightYellow": "Light yellow",
+  "@colorLightYellow": {
+    "description": "The name of the color, Light Yellow."
+  },
+  "colorIvory": "White",
+  "@colorIvory": {
+    "description": "The name of the color, Ivory."
+  },
+  "colorWhite": "White",
+  "@colorWhite": {
+    "description": "The name of the color, White."
   }
 }

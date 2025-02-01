@@ -2,24 +2,23 @@ import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/rendering.dart';
 
-typedef ToggleSwitchThumbBuilder = Widget Function(
+typedef ToggleSwitchKnobBuilder = Widget Function(
   BuildContext context,
-  Set<ButtonStates> states,
+  Set<WidgetState> states,
 );
 
-/// The toggle switch represents a physical switch that allows users to
-/// turn things on or off, like a light switch. Use toggle switch controls
-/// to present users with two mutually exclusive options (such as on/off),
-/// where choosing an option provides immediate results.
+/// The toggle switch represents a physical switch that allows users to turn
+/// things on or off, like a light switch. Use toggle switch controls to present
+/// users with two mutually exclusive options (such as on/off), where choosing
+/// an option provides immediate results.
 ///
-/// Use a toggle switch for binary operations that take effect right after
-/// the user flips the toggle switch
+/// Use a toggle switch for binary operations that take effect right after the
+/// user flips the toggle switch
 ///
 /// ![ToggleSwitch Preview](https://docs.microsoft.com/en-us/windows/uwp/design/controls-and-patterns/images/toggleswitches01.png)
 ///
-/// Think of the toggle switch as a physical power switch for a device: you
-/// flip it on or off when you want to enable or disable the action performed
-/// by the device.
+/// Think of the toggle switch as a physical power switch for a device: you flip
+/// it on or off when you want to enable or disable the action performed by the device.
 ///
 /// See also:
 ///
@@ -32,18 +31,18 @@ typedef ToggleSwitchThumbBuilder = Widget Function(
 class ToggleSwitch extends StatefulWidget {
   /// Creates a toggle switch.
   const ToggleSwitch({
-    Key? key,
+    super.key,
     required this.checked,
     required this.onChanged,
     this.style,
     this.content,
     this.leadingContent = false,
     this.semanticLabel,
-    this.thumb,
-    this.thumbBuilder,
+    this.knob,
+    this.knobBuilder,
     this.focusNode,
     this.autofocus = false,
-  }) : super(key: key);
+  });
 
   /// Whether this toggle switch is checked
   final bool checked;
@@ -55,21 +54,22 @@ class ToggleSwitch extends StatefulWidget {
   /// If this callback is null, the switch is considered disabled.
   final ValueChanged<bool>? onChanged;
 
-  /// The thumb of the switch
+  /// The knob of the switch
   ///
-  /// [DefaultToggleSwitchThumb] is used by default
+  /// [DefaultToggleSwitchKnob] is used by default
   ///
   /// See also:
-  ///   * [thumbBuilder], which builds the thumb based on the current state
-  ///   * [DefaultToggleSwitchThumb], used when both [thumb] and [thumbBuilder] are null
-  final Widget? thumb;
+  ///
+  ///   * [knobBuilder], which builds the knob based on the current state
+  ///   * [DefaultToggleSwitchKnob], used when both [knob] and [knobBuilder] are null
+  final Widget? knob;
 
-  /// Build the thumb of the switch based on the current state
+  /// Build the knob of the switch based on the current state
   ///
   /// See also:
-  ///   * [thumb], a static thumb
-  ///   * [DefaultToggleSwitchThumb], used when both [thumb] and [thumbBuilder] are null
-  final ToggleSwitchThumbBuilder? thumbBuilder;
+  ///   * [knob], a static knob
+  ///   * [DefaultToggleSwitchKnob], used when both [knob] and [knobBuilder] are null
+  final ToggleSwitchKnobBuilder? knobBuilder;
 
   /// The style of the toggle switch
   final ToggleSwitchThemeData? style;
@@ -122,7 +122,9 @@ class _ToggleSwitchState extends State<ToggleSwitch> {
   Alignment? _alignment;
 
   void _handleAlignmentChanged(
-      Offset localPosition, double sliderGestureWidth) {
+    Offset localPosition,
+    double sliderGestureWidth,
+  ) {
     setState(() {
       _alignment = Alignment(
         (localPosition.dx / sliderGestureWidth).clamp(-1, 1),
@@ -142,30 +144,33 @@ class _ToggleSwitchState extends State<ToggleSwitch> {
       margin: style.margin,
       focusNode: widget.focusNode,
       onPressed: isDisabled ? null : () => widget.onChanged!(!widget.checked),
-      onHorizontalDragStart: (e) {
-        if (isDisabled) return;
-        _handleAlignmentChanged(e.localPosition, sliderGestureWidth);
-        setState(() => _dragging = true);
-      },
-      onHorizontalDragUpdate: (e) {
-        if (isDisabled) return;
-        _handleAlignmentChanged(e.localPosition, sliderGestureWidth);
-        if (!_dragging) setState(() => _dragging = true);
-      },
-      onHorizontalDragEnd: (e) {
-        if (isDisabled) return;
-        if (_alignment != null) {
-          if (_alignment!.x >= 0.5) {
-            widget.onChanged!(true);
-          } else {
-            widget.onChanged!(false);
-          }
-          setState(() {
-            _alignment = null;
-            _dragging = false;
-          });
-        }
-      },
+      onHorizontalDragStart: isDisabled
+          ? null
+          : (e) {
+              _handleAlignmentChanged(e.localPosition, sliderGestureWidth);
+              setState(() => _dragging = true);
+            },
+      onHorizontalDragUpdate: isDisabled
+          ? null
+          : (e) {
+              _handleAlignmentChanged(e.localPosition, sliderGestureWidth);
+              if (!_dragging) setState(() => _dragging = true);
+            },
+      onHorizontalDragEnd: isDisabled
+          ? null
+          : (e) {
+              if (_alignment != null) {
+                if (_alignment!.x >= 0.5) {
+                  widget.onChanged!(true);
+                } else {
+                  widget.onChanged!(false);
+                }
+                setState(() {
+                  _alignment = null;
+                  _dragging = false;
+                });
+              }
+            },
       builder: (context, states) {
         Widget child = AnimatedContainer(
           alignment: _alignment ??
@@ -180,32 +185,40 @@ class _ToggleSwitchState extends State<ToggleSwitch> {
           decoration: widget.checked
               ? style.checkedDecoration?.resolve(states)
               : style.uncheckedDecoration?.resolve(states),
-          child: widget.thumb ??
-              widget.thumbBuilder?.call(context, states) ??
-              DefaultToggleSwitchThumb(
+          child: widget.knob ??
+              widget.knobBuilder?.call(context, states) ??
+              DefaultToggleSwitchKnob(
                 checked: widget.checked,
                 style: style,
-                states: _dragging ? {ButtonStates.pressing} : states,
+                states: _dragging ? {WidgetState.pressed} : states,
               ),
         );
         if (widget.content != null) {
-          child = Row(
-            mainAxisSize: MainAxisSize.min,
-            children: widget.leadingContent
-                ? [
-                    widget.content!,
-                    const SizedBox(width: 10.0),
-                    child,
-                  ]
-                : [
-                    child,
-                    const SizedBox(width: 10.0),
-                    widget.content!,
-                  ],
+          child = DefaultTextStyle.merge(
+            style: TextStyle(color: style.foregroundColor?.resolve(states)),
+            child: IconTheme.merge(
+              data: IconThemeData(
+                color: style.foregroundColor?.resolve(states),
+              ),
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: widget.leadingContent
+                    ? [
+                        widget.content!,
+                        const SizedBox(width: 10.0),
+                        child,
+                      ]
+                    : [
+                        child,
+                        const SizedBox(width: 10.0),
+                        widget.content!,
+                      ],
+              ),
+            ),
           );
         }
         return Semantics(
-          checked: widget.checked,
+          toggled: widget.checked,
           child: FocusBorder(
             focused: states.isFocused,
             child: child,
@@ -216,17 +229,17 @@ class _ToggleSwitchState extends State<ToggleSwitch> {
   }
 }
 
-class DefaultToggleSwitchThumb extends StatelessWidget {
-  const DefaultToggleSwitchThumb({
-    Key? key,
+class DefaultToggleSwitchKnob extends StatelessWidget {
+  const DefaultToggleSwitchKnob({
+    super.key,
     required this.checked,
     required this.style,
     required this.states,
-  }) : super(key: key);
+  });
 
   final bool checked;
   final ToggleSwitchThemeData? style;
-  final Set<ButtonStates> states;
+  final Set<WidgetState> states;
 
   @override
   Widget build(BuildContext context) {
@@ -234,19 +247,18 @@ class DefaultToggleSwitchThumb extends StatelessWidget {
     return AnimatedContainer(
       duration: style?.animationDuration ?? Duration.zero,
       curve: style?.animationCurve ?? Curves.linear,
-      margin: states.isHovering
+      margin: states.isHovered
           ? const EdgeInsets.all(1.0 + checkedFactor)
           : const EdgeInsets.symmetric(
               horizontal: 2.0 + checkedFactor,
               vertical: 2.0 + checkedFactor,
             ),
       height: 18.0,
-      width: 12.0 +
-          (states.isHovering ? 2.0 : 0.0) +
-          (states.isPressing ? 5.0 : 0),
+      width:
+          12.0 + (states.isHovered ? 2.0 : 0.0) + (states.isPressed ? 5.0 : 0),
       decoration: checked
-          ? style?.checkedThumbDecoration?.resolve(states)
-          : style?.uncheckedThumbDecoration?.resolve(states),
+          ? style?.checkedKnobDecoration?.resolve(states)
+          : style?.uncheckedKnobDecoration?.resolve(states),
     );
   }
 }
@@ -255,10 +267,10 @@ class ToggleSwitchTheme extends InheritedTheme {
   /// Creates a button theme that controls how descendant [ToggleSwitch]es should
   /// look like.
   const ToggleSwitchTheme({
-    Key? key,
-    required Widget child,
+    super.key,
+    required super.child,
     required this.data,
-  }) : super(key: key, child: child);
+  });
 
   final ToggleSwitchThemeData data;
 
@@ -281,7 +293,7 @@ class ToggleSwitchTheme extends InheritedTheme {
   /// The data from the closest instance of this class that encloses the given
   /// context.
   ///
-  /// Defaults to [ThemeData.toggleSwitchTheme]
+  /// Defaults to [FluentThemeData.toggleSwitchTheme]
   ///
   /// Typical usage is as follows:
   ///
@@ -315,31 +327,48 @@ class ToggleSwitchTheme extends InheritedTheme {
 
 @immutable
 class ToggleSwitchThemeData with Diagnosticable {
-  final ButtonState<Decoration?>? checkedThumbDecoration;
-  final ButtonState<Decoration?>? uncheckedThumbDecoration;
+  /// The decoration of the knob when the switch is checked
+  final WidgetStateProperty<Decoration?>? checkedKnobDecoration;
 
-  final ButtonState<Decoration?>? checkedDecoration;
-  final ButtonState<Decoration?>? uncheckedDecoration;
+  /// The decoration of the knob when the switch is unchecked
+  final WidgetStateProperty<Decoration?>? uncheckedKnobDecoration;
 
+  /// The decoration of the switch when the it is checked
+  final WidgetStateProperty<Decoration?>? checkedDecoration;
+
+  /// The decoration of the switch when the it is unchecked
+  final WidgetStateProperty<Decoration?>? uncheckedDecoration;
+
+  /// The padding of the switch
   final EdgeInsetsGeometry? padding;
+
+  /// The margin of the switch
   final EdgeInsetsGeometry? margin;
 
+  /// The duration of the animation
   final Duration? animationDuration;
+
+  /// The curve of the animation
   final Curve? animationCurve;
 
+  /// The foreground color of the content of the switch
+  final WidgetStateProperty<Color?>? foregroundColor;
+
+  /// Creates a theme that can be used for [ToggleSwitchTheme]
   const ToggleSwitchThemeData({
     this.padding,
     this.margin,
     this.animationDuration,
     this.animationCurve,
-    this.checkedThumbDecoration,
-    this.uncheckedThumbDecoration,
+    this.checkedKnobDecoration,
+    this.uncheckedKnobDecoration,
     this.checkedDecoration,
     this.uncheckedDecoration,
+    this.foregroundColor,
   });
 
-  factory ToggleSwitchThemeData.standard(ThemeData style) {
-    final defaultThumbDecoration = BoxDecoration(
+  factory ToggleSwitchThemeData.standard(FluentThemeData theme) {
+    final defaultKnobDecoration = BoxDecoration(
       borderRadius: BorderRadius.circular(100),
     );
 
@@ -348,43 +377,49 @@ class ToggleSwitchThemeData with Diagnosticable {
     );
 
     return ToggleSwitchThemeData(
-      checkedDecoration: ButtonState.resolveWith((states) {
+      foregroundColor: WidgetStateProperty.resolveWith((states) {
+        return states.isDisabled ? theme.resources.textFillColorDisabled : null;
+      }),
+      checkedDecoration: WidgetStateProperty.resolveWith((states) {
         return defaultDecoration.copyWith(
-          color: ButtonThemeData.checkedInputColor(style, states),
+          color: ButtonThemeData.checkedInputColor(theme, states),
           border: Border.all(
-            color: Colors.transparent,
+            color: ButtonThemeData.checkedInputColor(theme, states),
           ),
         );
       }),
-      uncheckedDecoration: ButtonState.resolveWith((states) {
+      uncheckedDecoration: WidgetStateProperty.resolveWith((states) {
         return defaultDecoration.copyWith(
-          color: states.isNone
-              ? style.resources.subtleFillColorTransparent
-              : ButtonThemeData.uncheckedInputColor(style, states),
+          color: WidgetStateExtension.forStates<Color>(
+            states,
+            disabled: theme.resources.controlAltFillColorDisabled,
+            pressed: theme.resources.controlAltFillColorQuarternary,
+            hovering: theme.resources.controlAltFillColorTertiary,
+            none: theme.resources.controlAltFillColorSecondary,
+          ),
           border: Border.all(
-            color: !states.isDisabled
-                ? style.borderInputColor
-                : style.brightness.isLight
-                    ? const Color.fromRGBO(0, 0, 0, 0.2169)
-                    : const Color.fromRGBO(255, 255, 255, 0.1581),
+            color: WidgetStateExtension.forStates<Color>(
+              states,
+              disabled: theme.resources.controlStrongFillColorDisabled,
+              none: theme.resources.controlStrongFillColorDefault,
+            ),
           ),
         );
       }),
-      margin: const EdgeInsets.all(4),
-      animationDuration: style.fasterAnimationDuration,
-      animationCurve: style.animationCurve,
-      checkedThumbDecoration: ButtonState.resolveWith((states) {
-        return defaultThumbDecoration.copyWith(
+      animationDuration: theme.fasterAnimationDuration,
+      animationCurve: Curves.fastOutSlowIn,
+      checkedKnobDecoration: WidgetStateProperty.resolveWith((states) {
+        return defaultKnobDecoration.copyWith(
           color: states.isDisabled
-              ? style.resources.textOnAccentFillColorDisabled
-              : style.resources.textOnAccentFillColorPrimary,
+              ? theme.resources.textOnAccentFillColorDisabled
+              : theme.resources.textOnAccentFillColorPrimary,
         );
       }),
-      uncheckedThumbDecoration: ButtonState.resolveWith((states) {
-        return defaultThumbDecoration.copyWith(
+      uncheckedKnobDecoration: WidgetStateProperty.resolveWith((states) {
+        return defaultKnobDecoration.copyWith(
           color: states.isDisabled
-              ? style.resources.textFillColorDisabled
-              : style.resources.textFillColorSecondary,
+              ? theme.resources.textFillColorDisabled
+              : theme.resources.textFillColorSecondary,
         );
       }),
     );
@@ -401,14 +436,22 @@ class ToggleSwitchThemeData with Diagnosticable {
       animationCurve: t < 0.5 ? a?.animationCurve : b?.animationCurve,
       animationDuration: lerpDuration(a?.animationDuration ?? Duration.zero,
           b?.animationDuration ?? Duration.zero, t),
-      checkedThumbDecoration: ButtonState.lerp(a?.checkedThumbDecoration,
-          b?.checkedThumbDecoration, t, Decoration.lerp),
-      uncheckedThumbDecoration: ButtonState.lerp(a?.uncheckedThumbDecoration,
-          b?.uncheckedThumbDecoration, t, Decoration.lerp),
-      checkedDecoration: ButtonState.lerp(
+      checkedKnobDecoration: WidgetStateProperty.lerp<Decoration?>(
+          a?.checkedKnobDecoration,
+          b?.checkedKnobDecoration,
+          t,
+          Decoration.lerp),
+      uncheckedKnobDecoration: WidgetStateProperty.lerp<Decoration?>(
+          a?.uncheckedKnobDecoration,
+          b?.uncheckedKnobDecoration,
+          t,
+          Decoration.lerp),
+      checkedDecoration: WidgetStateProperty.lerp<Decoration?>(
           a?.checkedDecoration, b?.checkedDecoration, t, Decoration.lerp),
-      uncheckedDecoration: ButtonState.lerp(
+      uncheckedDecoration: WidgetStateProperty.lerp<Decoration?>(
           a?.uncheckedDecoration, b?.uncheckedDecoration, t, Decoration.lerp),
+      foregroundColor: WidgetStateProperty.lerp<Color?>(
+          a?.foregroundColor, b?.foregroundColor, t, Color.lerp),
     );
   }
 
@@ -418,12 +461,13 @@ class ToggleSwitchThemeData with Diagnosticable {
       padding: style?.padding ?? padding,
       animationCurve: style?.animationCurve ?? animationCurve,
       animationDuration: style?.animationDuration ?? animationDuration,
-      checkedThumbDecoration:
-          style?.checkedThumbDecoration ?? checkedThumbDecoration,
-      uncheckedThumbDecoration:
-          style?.uncheckedThumbDecoration ?? uncheckedThumbDecoration,
+      checkedKnobDecoration:
+          style?.checkedKnobDecoration ?? checkedKnobDecoration,
+      uncheckedKnobDecoration:
+          style?.uncheckedKnobDecoration ?? uncheckedKnobDecoration,
       checkedDecoration: style?.checkedDecoration ?? checkedDecoration,
       uncheckedDecoration: style?.uncheckedDecoration ?? uncheckedDecoration,
+      foregroundColor: style?.foregroundColor ?? foregroundColor,
     );
   }
 
@@ -436,21 +480,22 @@ class ToggleSwitchThemeData with Diagnosticable {
       ..add(DiagnosticsProperty<Curve?>('animationCurve', animationCurve))
       ..add(DiagnosticsProperty<Duration?>(
           'animationDuration', animationDuration))
-      ..add(ObjectFlagProperty<ButtonState<Decoration?>?>.has(
+      ..add(ObjectFlagProperty<WidgetStateProperty<Decoration?>?>.has(
         'checkedDecoration',
         checkedDecoration,
       ))
-      ..add(ObjectFlagProperty<ButtonState<Decoration?>?>.has(
+      ..add(ObjectFlagProperty<WidgetStateProperty<Decoration?>?>.has(
         'uncheckedDecoration',
         uncheckedDecoration,
       ))
-      ..add(ObjectFlagProperty<ButtonState<Decoration?>?>.has(
-        'checkedThumbDecoration',
-        checkedThumbDecoration,
+      ..add(ObjectFlagProperty<WidgetStateProperty<Decoration?>?>.has(
+        'checkedKnobDecoration',
+        checkedKnobDecoration,
       ))
-      ..add(ObjectFlagProperty<ButtonState<Decoration?>?>.has(
-        'uncheckedThumbDecoration',
-        uncheckedThumbDecoration,
-      ));
+      ..add(ObjectFlagProperty<WidgetStateProperty<Decoration?>?>.has(
+        'uncheckedKnobDecoration',
+        uncheckedKnobDecoration,
+      ))
+      ..add(DiagnosticsProperty('foregroundColor', foregroundColor));
   }
 }

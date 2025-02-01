@@ -9,30 +9,28 @@ import 'package:flutter/gestures.dart';
 class Scrollbar extends RawScrollbar {
   /// Creates a fluent-styled scrollbar that wraps the given [child].
   ///
-  /// The [child], or a descendant of the [child], should be a
-  /// source of [ScrollNotification] notifications, typically a
-  /// [Scrollable] widget.
+  /// The [child], or a descendant of the [child], should be a source of
+  /// [ScrollNotification] notifications, typically a [Scrollable] widget.
+  ///
+  /// The [child], [fadeDuration], [pressDuration], and [timeToFade] arguments
+  /// must not be null.
   const Scrollbar({
-    Key? key,
-    required Widget child,
-    ScrollController? controller,
-    bool thumbVisibility = true,
+    super.key,
+    required super.child,
+    super.controller,
+    super.thumbVisibility = true,
     this.style,
-    Duration fadeDuration = const Duration(milliseconds: 300),
-    Duration timeToFade = const Duration(milliseconds: 600),
-    bool? interactive,
-  }) : super(
-          key: key,
-          child: child,
-          thumbVisibility: thumbVisibility,
-          controller: controller,
-          timeToFade: timeToFade,
-          fadeDuration: fadeDuration,
-          interactive: interactive,
-        );
+    super.fadeDuration = const Duration(milliseconds: 300),
+    super.timeToFade = const Duration(milliseconds: 600),
+    super.interactive,
+    super.notificationPredicate,
+    super.scrollbarOrientation,
+    super.pressDuration,
+    super.minOverscrollLength,
+  });
 
   /// The style applied to the scroll bar. If non-null, it's mescled
-  /// with [ThemeData.scrollbarThemeData]
+  /// with [FluentThemeData.scrollbarThemeData]
   final ScrollbarThemeData? style;
 
   @override
@@ -64,26 +62,23 @@ class _ScrollbarState extends RawScrollbarState<Scrollbar> {
     super.didChangeDependencies();
   }
 
-  ButtonStates get _currentState {
-    if (_dragIsActive) {
-      return ButtonStates.pressing;
-    } else if (_hoverIsActive) {
-      return ButtonStates.hovering;
-    } else {
-      return ButtonStates.none;
-    }
+  Set<WidgetState> get _currentState {
+    return {
+      if (_dragIsActive) WidgetState.pressed,
+      if (_hoverIsActive) WidgetState.hovered,
+    };
   }
 
-  Color _trackColor(ButtonStates state) {
-    if (state == ButtonStates.hovering || state == ButtonStates.pressing) {
+  Color _trackColor(Set<WidgetState> state) {
+    if (state.isAllOf({WidgetState.hovered, WidgetState.pressed})) {
       return _scrollbarTheme.backgroundColor ?? Colors.transparent;
     }
     return Colors.transparent;
   }
 
-  Color _thumbColor(ButtonStates state) {
+  Color _thumbColor(Set<WidgetState> state) {
     Color? color;
-    if (state == ButtonStates.pressing) {
+    if (state.isPressed) {
       color = _scrollbarTheme.scrollbarPressingColor;
     }
     color ??= _scrollbarTheme.scrollbarColor ?? Colors.transparent;
@@ -95,7 +90,7 @@ class _ScrollbarState extends RawScrollbarState<Scrollbar> {
     assert(debugCheckHasDirectionality(context));
     assert(debugCheckHasMediaQuery(context));
     final direction = Directionality.of(context);
-    final viewPadding = MediaQuery.of(context).padding;
+    final viewPadding = MediaQuery.viewPaddingOf(context);
     final animation = _hoverAnimationController;
     scrollbarPainter
       ..color = _thumbColor(_currentState)
@@ -124,6 +119,8 @@ class _ScrollbarState extends RawScrollbarState<Scrollbar> {
         end: _scrollbarTheme.hoveringMainAxisMargin ?? 0.0,
       ).evaluate(animation)
       ..minLength = _scrollbarTheme.minThumbLength ?? 48.0
+      ..minOverscrollLength =
+          widget.minOverscrollLength ?? _scrollbarTheme.minThumbLength ?? 48.0
       ..padding = Tween<EdgeInsets>(
             begin:
                 _scrollbarTheme.padding?.resolve(direction) ?? EdgeInsets.zero,
@@ -142,6 +139,7 @@ class _ScrollbarState extends RawScrollbarState<Scrollbar> {
     super.handleThumbPressStart(localPosition);
     if (mounted) {
       setState(() => _dragIsActive = true);
+      _updateAnimation();
     }
   }
 
@@ -150,6 +148,7 @@ class _ScrollbarState extends RawScrollbarState<Scrollbar> {
     super.handleThumbPressEnd(localPosition, velocity);
     if (mounted) {
       setState(() => _dragIsActive = false);
+      _updateAnimation();
     }
   }
 
@@ -162,14 +161,14 @@ class _ScrollbarState extends RawScrollbarState<Scrollbar> {
       await contractDelay;
       if (mounted) {
         setState(() => _hoverIsActive = true);
-        _hoverAnimationController.forward();
+        _updateAnimation();
       }
     } else if (_hoverIsActive) {
       await contractDelay;
       if (mounted) {
         // Pointer was, but is no longer over painted scrollbar.
-        await _hoverAnimationController.reverse();
         setState(() => _hoverIsActive = false);
+        _updateAnimation();
       }
     }
   }
@@ -179,7 +178,7 @@ class _ScrollbarState extends RawScrollbarState<Scrollbar> {
     super.handleHoverExit(event);
     if (mounted) {
       setState(() => _hoverIsActive = false);
-      _hoverAnimationController.reverse();
+      _updateAnimation();
     }
   }
 
@@ -187,6 +186,14 @@ class _ScrollbarState extends RawScrollbarState<Scrollbar> {
   void dispose() {
     _hoverAnimationController.dispose();
     super.dispose();
+  }
+
+  void _updateAnimation() {
+    if (_currentState.isEmpty) {
+      _hoverAnimationController.reverse();
+    } else {
+      _hoverAnimationController.forward();
+    }
   }
 }
 
@@ -199,10 +206,10 @@ class ScrollbarTheme extends InheritedTheme {
   /// Creates a scrollbar theme that controls the configurations for
   /// [Scrollbar].
   const ScrollbarTheme({
-    Key? key,
+    super.key,
     required this.data,
-    required Widget child,
-  }) : super(key: key, child: child);
+    required super.child,
+  });
 
   /// The properties for descendant [Scrollbar] widgets.
   final ScrollbarThemeData data;
@@ -229,7 +236,7 @@ class ScrollbarTheme extends InheritedTheme {
   }
 
   /// Returns the [data] from the closest [ScrollbarTheme] ancestor. If there is
-  /// no ancestor, it returns [ThemeData.scrollbarTheme]. Applications can assume
+  /// no ancestor, it returns [FluentThemeData.scrollbarTheme]. Applications can assume
   /// that the returned value will not be null.
   ///
   /// Typical usage is as follows:
@@ -357,7 +364,7 @@ class ScrollbarThemeData with Diagnosticable {
     this.contractDelay,
   });
 
-  factory ScrollbarThemeData.standard(ThemeData theme) {
+  factory ScrollbarThemeData.standard(FluentThemeData theme) {
     final brightness = theme.brightness;
     return ScrollbarThemeData(
       scrollbarColor: brightness.isLight
@@ -527,5 +534,22 @@ class ScrollbarThemeData with Diagnosticable {
           vertical: 4.0,
         ),
       ));
+  }
+}
+
+/// Provider an extension method to hide vertical scrollbar.
+/// May this can help [SingleChildScrollView] looks better.
+extension ScrollViewExtension on SingleChildScrollView {
+  /// Use [ScrollConfiguration] as wrapper to hide vertical scrollbar.
+  Widget hideVerticalScrollbar(
+    BuildContext context, {
+    ScrollBehavior? behavior,
+  }) {
+    behavior ??= ScrollConfiguration.of(context);
+    var showScrollbar = scrollDirection != Axis.vertical;
+    return ScrollConfiguration(
+      behavior: behavior.copyWith(scrollbars: showScrollbar),
+      child: this,
+    );
   }
 }

@@ -23,7 +23,7 @@ class RatingBar extends StatefulWidget {
   ///
   /// [starSpacing] and [amount] must be greater than 0
   const RatingBar({
-    Key? key,
+    super.key,
     required this.rating,
     this.onChanged,
     this.amount = 5,
@@ -40,8 +40,7 @@ class RatingBar extends StatefulWidget {
     this.dragStartBehavior = DragStartBehavior.down,
   })  : assert(rating >= 0 && rating <= amount),
         assert(starSpacing >= 0),
-        assert(amount > 0),
-        super(key: key);
+        assert(amount > 0);
 
   /// The amount of stars in the bar. The default amount is 5
   final int amount;
@@ -57,7 +56,7 @@ class RatingBar extends StatefulWidget {
   /// The duration of the animation
   final Duration animationDuration;
 
-  /// The curve of the animation. If `null`, uses [ThemeData.animationCurve]
+  /// The curve of the animation. If `null`, uses [FluentThemeData.animationCurve]
   final Curve? animationCurve;
 
   /// The icon used in the bar. If `null`, uses [kRatingBarIcon]
@@ -69,10 +68,10 @@ class RatingBar extends StatefulWidget {
   /// The space between each icon
   final double starSpacing;
 
-  /// The color of the icons that are rated. If `null`, uses [ThemeData.accentColor]
+  /// The color of the icons that are rated. If `null`, uses [FluentThemeData.accentColor]
   final Color? ratedIconColor;
 
-  /// The color of the icons that are not rated. If `null`, uses [ThemeData.disabled]
+  /// The color of the icons that are not rated. If `null`, uses [FluentThemeData.disabled]
   final Color? unratedIconColor;
 
   /// Semantic label for the bar
@@ -177,8 +176,8 @@ class _RatingBarState extends State<RatingBar> {
       );
     }
 
-    switch (intent) {
-      case _AdjustSliderIntent.right():
+    switch (intent.type) {
+      case _SliderAdjustmentType.right:
         switch (directionality) {
           case TextDirection.rtl:
             decrease();
@@ -188,7 +187,7 @@ class _RatingBarState extends State<RatingBar> {
             break;
         }
         break;
-      case _AdjustSliderIntent.left():
+      case _SliderAdjustmentType.left:
         switch (directionality) {
           case TextDirection.rtl:
             increase();
@@ -198,10 +197,10 @@ class _RatingBarState extends State<RatingBar> {
             break;
         }
         break;
-      case _AdjustSliderIntent.up():
+      case _SliderAdjustmentType.up:
         increase();
         break;
-      case _AdjustSliderIntent.down():
+      case _SliderAdjustmentType.down:
         decrease();
         break;
     }
@@ -218,6 +217,7 @@ class _RatingBarState extends State<RatingBar> {
   @override
   Widget build(BuildContext context) {
     assert(debugCheckHasFluentTheme(context));
+    assert(debugCheckHasDirectionality(context));
     return Semantics(
       label: widget.semanticLabel,
       // It's only a slider if its value can be changed
@@ -307,83 +307,4 @@ enum _SliderAdjustmentType {
   left,
   up,
   down,
-}
-
-class RatingIcon extends StatelessWidget {
-  const RatingIcon({
-    Key? key,
-    required this.rating,
-    this.ratedColor,
-    this.unratedColor,
-    this.icon = kRatingBarIcon,
-    this.size,
-  })  : assert(rating >= 0.0 && rating <= 1.0),
-        super(key: key);
-
-  /// The rating of the icon. Must be more or equal to 0 and less or equal than 1.0
-  final double rating;
-
-  /// The icon.
-  final IconData icon;
-
-  /// The color used by the rated part. If `null`, uses [ThemeData.accentColor]
-  final Color? ratedColor;
-
-  /// The color used by the unrated part. If `null`, uses [ThemeData.disabledColor]
-  final Color? unratedColor;
-
-  /// The size of the icon
-  final double? size;
-
-  @override
-  Widget build(BuildContext context) {
-    assert(debugCheckHasFluentTheme(context));
-    final style = FluentTheme.of(context);
-    final icon = this.icon;
-    final size = this.size;
-    final unratedColor =
-        this.unratedColor ?? style.resources.controlFillColorSecondary;
-    final ratedColor =
-        this.ratedColor ?? style.accentColor.defaultBrushFor(style.brightness);
-    if (rating == 1.0) {
-      return Icon(
-        icon,
-        color: ratedColor,
-        size: size,
-      );
-    } else if (rating == 0.0) {
-      return Icon(icon, color: unratedColor, size: size);
-    }
-    return Stack(
-      children: [
-        Icon(icon, color: unratedColor, size: size),
-        ClipRect(
-          clipper: _StarClipper(rating),
-          child: Icon(
-            icon,
-            // IconData(
-            //   fontFamily: 'Segoe MDL2 Assets',
-            // ),
-            color: ratedColor,
-            size: size,
-          ),
-        ),
-      ],
-    );
-  }
-}
-
-class _StarClipper extends CustomClipper<Rect> {
-  final double value;
-
-  _StarClipper(this.value);
-
-  @override
-  Rect getClip(Size size) {
-    final rect = Rect.fromLTWH(0, 0, size.width * value, size.height);
-    return rect;
-  }
-
-  @override
-  bool shouldReclip(_StarClipper oldClipper) => oldClipper.value != value;
 }

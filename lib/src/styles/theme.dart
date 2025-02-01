@@ -8,24 +8,24 @@ class FluentTheme extends StatelessWidget {
   ///
   /// The [data] and [child] arguments must not be null.
   const FluentTheme({
-    Key? key,
+    super.key,
     required this.data,
     required this.child,
-  }) : super(key: key);
+  });
 
   /// Specifies the color and typography values for descendant widgets.
-  final ThemeData data;
+  final FluentThemeData data;
 
   /// The widget below this widget in the tree.
   ///
   /// {@macro flutter.widgets.ProxyWidget.child}
   final Widget child;
 
-  static ThemeData of(BuildContext context) {
+  static FluentThemeData of(BuildContext context) {
     return context.dependOnInheritedWidgetOfExactType<_FluentTheme>()!.data;
   }
 
-  static ThemeData? maybeOf(BuildContext context) {
+  static FluentThemeData? maybeOf(BuildContext context) {
     return context.dependOnInheritedWidgetOfExactType<_FluentTheme>()?.data;
   }
 
@@ -46,12 +46,11 @@ class FluentTheme extends StatelessWidget {
 
 class _FluentTheme extends InheritedTheme {
   const _FluentTheme({
-    Key? key,
     required this.data,
-    required Widget child,
-  }) : super(key: key, child: child);
+    required super.child,
+  });
 
-  final ThemeData data;
+  final FluentThemeData data;
 
   @override
   bool updateShouldNotify(covariant _FluentTheme oldWidget) =>
@@ -63,23 +62,22 @@ class _FluentTheme extends InheritedTheme {
   }
 }
 
-/// An interpolation between two [ThemeData]s.
+/// An interpolation between two [FluentThemeData]s.
 ///
-/// This class specializes the interpolation of [Tween<ThemeData>] to call the
-/// [ThemeData.lerp] method.
+/// This class specializes the interpolation of [Tween<FluentThemeData>] to call the
+/// [FluentThemeData.lerp] method.
 ///
 /// See [Tween] for a discussion on how to use interpolation objects.
-class ThemeDataTween extends Tween<ThemeData> {
-  /// Creates a [ThemeData] tween.
+class FluentThemeDataTween extends Tween<FluentThemeData> {
+  /// Creates a [FluentThemeData] tween.
   ///
   /// The [begin] and [end] properties must be non-null before the tween is
   /// first used, but the arguments can be null if the values are going to be
   /// filled in later.
-  ThemeDataTween({ThemeData? begin, ThemeData? end})
-      : super(begin: begin, end: end);
+  FluentThemeDataTween({super.begin, super.end});
 
   @override
-  ThemeData lerp(double t) => ThemeData.lerp(begin!, end!, t);
+  FluentThemeData lerp(double t) => FluentThemeData.lerp(begin!, end!, t);
 }
 
 /// Animated version of [Theme] which automatically transitions the colors,
@@ -93,7 +91,7 @@ class ThemeDataTween extends Tween<ThemeData> {
 ///
 ///  * [FluentTheme], which [AnimatedFluentTheme] uses to actually apply the interpolated
 ///    theme.
-///  * [ThemeData], which describes the actual configuration of a theme.
+///  * [FluentThemeData], which describes the actual configuration of a theme.
 ///  * [FluentApp], which includes an [AnimatedFluentTheme] widget configured via
 ///    the [FluentApp.theme] argument.
 class AnimatedFluentTheme extends ImplicitlyAnimatedWidget {
@@ -102,16 +100,16 @@ class AnimatedFluentTheme extends ImplicitlyAnimatedWidget {
   /// By default, the theme transition uses a linear curve. The [data] and
   /// [child] arguments must not be null.
   const AnimatedFluentTheme({
-    Key? key,
+    super.key,
     required this.data,
-    Curve curve = Curves.linear,
-    Duration duration = kThemeAnimationDuration,
-    VoidCallback? onEnd,
+    super.curve,
+    super.duration = kThemeAnimationDuration,
+    super.onEnd,
     required this.child,
-  }) : super(key: key, curve: curve, duration: duration, onEnd: onEnd);
+  });
 
   /// Specifies the color and typography values for descendant widgets.
-  final ThemeData data;
+  final FluentThemeData data;
 
   /// The widget below this widget in the tree.
   ///
@@ -125,13 +123,16 @@ class AnimatedFluentTheme extends ImplicitlyAnimatedWidget {
 
 class _AnimatedFluentThemeState
     extends AnimatedWidgetBaseState<AnimatedFluentTheme> {
-  ThemeDataTween? _data;
+  FluentThemeDataTween? _data;
 
   @override
   void forEachTween(TweenVisitor<dynamic> visitor) {
-    _data = visitor(_data, widget.data,
-            (dynamic value) => ThemeDataTween(begin: value as ThemeData))!
-        as ThemeDataTween;
+    _data = visitor(
+            _data,
+            widget.data,
+            (dynamic value) =>
+                FluentThemeDataTween(begin: value as FluentThemeData))!
+        as FluentThemeDataTween;
   }
 
   @override
@@ -145,7 +146,7 @@ class _AnimatedFluentThemeState
   @override
   void debugFillProperties(DiagnosticPropertiesBuilder description) {
     super.debugFillProperties(description);
-    description.add(DiagnosticsProperty<ThemeDataTween>('data', _data,
+    description.add(DiagnosticsProperty<FluentThemeDataTween>('data', _data,
         showName: false, defaultValue: null));
   }
 }
@@ -173,24 +174,24 @@ const standardCurve = Curves.easeInOut;
 
 /// Defines the default theme for a [FluentApp] or [FluentTheme].
 @immutable
-class ThemeData with Diagnosticable {
+class FluentThemeData with Diagnosticable {
   final Typography typography;
   final Map<Object, ThemeExtension<dynamic>> extensions;
 
+  /// The accent color.
+  ///
+  /// Defaults to [Colors.blue]
   final AccentColor accentColor;
   final Color activeColor;
   final Color inactiveColor;
   final Color inactiveBackgroundColor;
-  final Color disabledColor;
   final Color shadowColor;
-  final Color uncheckedColor;
-  final Color checkedColor;
-  final Color borderInputColor;
   final Color scaffoldBackgroundColor;
   final Color acrylicBackgroundColor;
   final Color micaBackgroundColor;
   final Color menuColor;
   final Color cardColor;
+  final Color selectionColor;
 
   final Duration fasterAnimationDuration;
   final Duration fastAnimationDuration;
@@ -198,25 +199,25 @@ class ThemeData with Diagnosticable {
   final Duration slowAnimationDuration;
   final Curve animationCurve;
 
+  /// See [EditableText.cursorOpacityAnimates]. Whether or not to have high
+  /// fidelity animation for the opacity of the blinking text cursor, at the
+  /// expense of higher CPU/GPU usage. Defaults to false (recommended).
+  final bool cursorOpacityAnimates;
+
   final Brightness brightness;
   final VisualDensity visualDensity;
 
   final NavigationPaneThemeData navigationPaneTheme;
   final BottomNavigationThemeData bottomNavigationTheme;
-  final BottomSheetThemeData bottomSheetTheme;
   final CheckboxThemeData checkboxTheme;
-  final ChipThemeData chipTheme;
   final ContentDialogThemeData dialogTheme;
   final DividerThemeData dividerTheme;
   final FocusThemeData focusTheme;
   final IconThemeData iconTheme;
   final InfoBarThemeData infoBarTheme;
-  final PillButtonBarThemeData pillButtonBarTheme;
   final RadioButtonThemeData radioButtonTheme;
   final ScrollbarThemeData scrollbarTheme;
   final SliderThemeData sliderTheme;
-  final SplitButtonThemeData splitButtonTheme;
-  final SnackbarThemeData snackbarTheme;
   final ToggleButtonThemeData toggleButtonTheme;
   final ToggleSwitchThemeData toggleSwitchTheme;
   final TooltipThemeData tooltipTheme;
@@ -225,7 +226,7 @@ class ThemeData with Diagnosticable {
 
   final ResourceDictionary resources;
 
-  factory ThemeData({
+  factory FluentThemeData({
     Iterable<ThemeExtension<dynamic>>? extensions,
     Brightness? brightness,
     VisualDensity? visualDensity,
@@ -235,29 +236,24 @@ class ThemeData with Diagnosticable {
     Color? activeColor,
     Color? inactiveColor,
     Color? inactiveBackgroundColor,
-    Color? disabledColor,
     Color? scaffoldBackgroundColor,
     Color? acrylicBackgroundColor,
     Color? micaBackgroundColor,
     Color? shadowColor,
-    Color? uncheckedColor,
-    Color? checkedColor,
-    Color? borderInputColor,
     Color? menuColor,
     Color? cardColor,
+    Color? selectionColor,
     Duration? fasterAnimationDuration,
     Duration? fastAnimationDuration,
     Duration? mediumAnimationDuration,
     Duration? slowAnimationDuration,
     Curve? animationCurve,
+    bool? cursorOpacityAnimates,
     BottomNavigationThemeData? bottomNavigationTheme,
-    BottomSheetThemeData? bottomSheetTheme,
     ButtonThemeData? buttonTheme,
     CheckboxThemeData? checkboxTheme,
-    ChipThemeData? chipTheme,
     ToggleSwitchThemeData? toggleSwitchTheme,
     IconThemeData? iconTheme,
-    SplitButtonThemeData? splitButtonTheme,
     ContentDialogThemeData? dialogTheme,
     TooltipThemeData? tooltipTheme,
     DividerThemeData? dividerTheme,
@@ -266,10 +262,8 @@ class ThemeData with Diagnosticable {
     ToggleButtonThemeData? toggleButtonTheme,
     SliderThemeData? sliderTheme,
     InfoBarThemeData? infoBarTheme,
-    PillButtonBarThemeData? pillButtonBarTheme,
     FocusThemeData? focusTheme,
     ScrollbarThemeData? scrollbarTheme,
-    SnackbarThemeData? snackbarTheme,
     ResourceDictionary? resources,
   }) {
     brightness ??= Brightness.light;
@@ -286,65 +280,50 @@ class ThemeData with Diagnosticable {
         ? const ResourceDictionary.light()
         : const ResourceDictionary.dark();
     animationCurve ??= standardCurve;
+    cursorOpacityAnimates ??= false;
     accentColor ??= Colors.blue;
     activeColor ??= Colors.white;
     inactiveColor ??= isLight ? Colors.black : Colors.white;
     inactiveBackgroundColor ??=
         isLight ? const Color(0xFFd6d6d6) : const Color(0xFF292929);
-    disabledColor ??= resources.textFillColorDisabled;
     shadowColor ??= isLight ? Colors.black : Colors.grey[130];
-    scaffoldBackgroundColor ??= resources.layerFillColorDefault;
-    acrylicBackgroundColor ??=
-        isLight ? const Color(0xFFfcfcfc) : const Color(0xFF2c2c2c);
+    scaffoldBackgroundColor ??= resources.layerOnAcrylicFillColorDefault;
+    acrylicBackgroundColor ??= isLight
+        ? resources.layerOnAcrylicFillColorDefault
+        : const Color(0xFF2c2c2c);
     micaBackgroundColor ??= resources.solidBackgroundFillColorBase;
-    uncheckedColor ??= isLight
-        ? const Color.fromRGBO(0, 0, 0, 0.6063)
-        : const Color.fromRGBO(255, 255, 255, 0.786);
-    checkedColor ??= isLight ? Colors.white : Colors.black;
-    borderInputColor ??= isLight
-        ? const Color.fromRGBO(0, 0, 0, 0.4458)
-        : const Color.fromRGBO(255, 255, 255, 0.5442);
     menuColor ??= isLight ? const Color(0xFFf9f9f9) : const Color(0xFF2c2c2c);
     cardColor ??= resources.cardBackgroundFillColorDefault;
-    typography = Typography.fromBrightness(brightness: brightness)
-        .merge(typography)
-        .apply(fontFamily: fontFamily);
-    focusTheme = FocusThemeData.standard(
-      glowColor: accentColor.withOpacity(0.15),
-      primaryBorderColor: inactiveColor,
-      secondaryBorderColor: scaffoldBackgroundColor,
-    ).merge(focusTheme);
+    selectionColor ??= accentColor.normal;
+    typography = Typography.fromBrightness(
+      brightness: brightness,
+      color: resources.textFillColorPrimary,
+    ).merge(typography).apply(fontFamily: fontFamily);
+    focusTheme ??= const FocusThemeData();
     buttonTheme ??= const ButtonThemeData();
     checkboxTheme ??= const CheckboxThemeData();
-    chipTheme ??= const ChipThemeData();
     toggleButtonTheme ??= const ToggleButtonThemeData();
     toggleSwitchTheme ??= const ToggleSwitchThemeData();
     iconTheme ??= isLight
         ? const IconThemeData(color: Colors.black, size: 18.0)
         : const IconThemeData(color: Colors.white, size: 18.0);
-    splitButtonTheme ??= const SplitButtonThemeData();
     dialogTheme ??= const ContentDialogThemeData();
     tooltipTheme ??= const TooltipThemeData();
     dividerTheme ??= const DividerThemeData();
-    navigationPaneTheme = NavigationPaneThemeData.standard(
+    navigationPaneTheme = NavigationPaneThemeData.fromResources(
       resources: resources,
       animationCurve: animationCurve,
       animationDuration: fastAnimationDuration,
-      backgroundColor: micaBackgroundColor,
       highlightColor: accentColor.defaultBrushFor(brightness),
       typography: typography,
-      inactiveColor: inactiveColor,
     ).merge(navigationPaneTheme);
     radioButtonTheme ??= const RadioButtonThemeData();
     sliderTheme ??= const SliderThemeData();
     infoBarTheme ??= const InfoBarThemeData();
-    pillButtonBarTheme ??= const PillButtonBarThemeData();
     scrollbarTheme ??= const ScrollbarThemeData();
     bottomNavigationTheme ??= const BottomNavigationThemeData();
-    snackbarTheme ??= const SnackbarThemeData();
-    bottomSheetTheme ??= const BottomSheetThemeData();
 
-    return ThemeData.raw(
+    return FluentThemeData.raw(
       brightness: brightness,
       extensions: _themeExtensionIterableToMap(extensions),
       visualDensity: visualDensity,
@@ -353,22 +332,18 @@ class ThemeData with Diagnosticable {
       mediumAnimationDuration: mediumAnimationDuration,
       slowAnimationDuration: slowAnimationDuration,
       animationCurve: animationCurve,
+      cursorOpacityAnimates: cursorOpacityAnimates,
       accentColor: accentColor,
       activeColor: activeColor,
       inactiveColor: inactiveColor,
       inactiveBackgroundColor: inactiveBackgroundColor,
-      disabledColor: disabledColor,
       scaffoldBackgroundColor: scaffoldBackgroundColor,
       acrylicBackgroundColor: acrylicBackgroundColor,
       micaBackgroundColor: micaBackgroundColor,
       shadowColor: shadowColor,
-      uncheckedColor: uncheckedColor,
-      checkedColor: checkedColor,
-      borderInputColor: borderInputColor,
       bottomNavigationTheme: bottomNavigationTheme,
       buttonTheme: buttonTheme,
       checkboxTheme: checkboxTheme,
-      chipTheme: chipTheme,
       dialogTheme: dialogTheme,
       dividerTheme: dividerTheme,
       focusTheme: focusTheme,
@@ -378,37 +353,31 @@ class ThemeData with Diagnosticable {
       radioButtonTheme: radioButtonTheme,
       scrollbarTheme: scrollbarTheme,
       sliderTheme: sliderTheme,
-      splitButtonTheme: splitButtonTheme,
       toggleButtonTheme: toggleButtonTheme,
       toggleSwitchTheme: toggleSwitchTheme,
       tooltipTheme: tooltipTheme,
       typography: typography,
-      snackbarTheme: snackbarTheme,
-      pillButtonBarTheme: pillButtonBarTheme,
-      bottomSheetTheme: bottomSheetTheme,
       menuColor: menuColor,
       cardColor: cardColor,
       resources: resources,
+      selectionColor: selectionColor,
     );
   }
 
-  const ThemeData.raw({
+  const FluentThemeData.raw({
     required this.typography,
     required this.extensions,
     required this.accentColor,
     required this.activeColor,
     required this.inactiveColor,
     required this.inactiveBackgroundColor,
-    required this.disabledColor,
     required this.shadowColor,
-    required this.uncheckedColor,
-    required this.checkedColor,
-    required this.borderInputColor,
     required this.fasterAnimationDuration,
     required this.fastAnimationDuration,
     required this.mediumAnimationDuration,
     required this.slowAnimationDuration,
     required this.animationCurve,
+    required this.cursorOpacityAnimates,
     required this.brightness,
     required this.visualDensity,
     required this.scaffoldBackgroundColor,
@@ -416,11 +385,9 @@ class ThemeData with Diagnosticable {
     required this.micaBackgroundColor,
     required this.buttonTheme,
     required this.checkboxTheme,
-    required this.chipTheme,
     required this.toggleSwitchTheme,
     required this.bottomNavigationTheme,
     required this.iconTheme,
-    required this.splitButtonTheme,
     required this.dialogTheme,
     required this.tooltipTheme,
     required this.dividerTheme,
@@ -431,24 +398,22 @@ class ThemeData with Diagnosticable {
     required this.infoBarTheme,
     required this.focusTheme,
     required this.scrollbarTheme,
-    required this.snackbarTheme,
-    required this.pillButtonBarTheme,
-    required this.bottomSheetTheme,
     required this.menuColor,
     required this.cardColor,
     required this.resources,
+    required this.selectionColor,
   });
 
-  static ThemeData light() {
-    return ThemeData(brightness: Brightness.light);
+  static FluentThemeData light() {
+    return FluentThemeData(brightness: Brightness.light);
   }
 
-  static ThemeData dark() {
-    return ThemeData(brightness: Brightness.dark);
+  static FluentThemeData dark() {
+    return FluentThemeData(brightness: Brightness.dark);
   }
 
-  static ThemeData lerp(ThemeData a, ThemeData b, double t) {
-    return ThemeData.raw(
+  static FluentThemeData lerp(FluentThemeData a, FluentThemeData b, double t) {
+    return FluentThemeData.raw(
       brightness: t < 0.5 ? a.brightness : b.brightness,
       extensions: t < 0.5 ? a.extensions : b.extensions,
       visualDensity: t < 0.5 ? a.visualDensity : b.visualDensity,
@@ -459,7 +424,6 @@ class ThemeData with Diagnosticable {
       inactiveColor: Color.lerp(a.inactiveColor, b.inactiveColor, t)!,
       inactiveBackgroundColor:
           Color.lerp(a.inactiveBackgroundColor, b.inactiveBackgroundColor, t)!,
-      disabledColor: Color.lerp(a.disabledColor, b.disabledColor, t)!,
       scaffoldBackgroundColor:
           Color.lerp(a.scaffoldBackgroundColor, b.scaffoldBackgroundColor, t)!,
       acrylicBackgroundColor:
@@ -467,9 +431,6 @@ class ThemeData with Diagnosticable {
       micaBackgroundColor:
           Color.lerp(a.micaBackgroundColor, b.micaBackgroundColor, t)!,
       shadowColor: Color.lerp(a.shadowColor, b.shadowColor, t)!,
-      uncheckedColor: Color.lerp(a.uncheckedColor, b.uncheckedColor, t)!,
-      checkedColor: Color.lerp(a.checkedColor, b.checkedColor, t)!,
-      borderInputColor: Color.lerp(a.borderInputColor, b.borderInputColor, t)!,
       cardColor: Color.lerp(a.cardColor, b.cardColor, t)!,
       fasterAnimationDuration:
           lerpDuration(a.fasterAnimationDuration, b.fasterAnimationDuration, t),
@@ -480,15 +441,14 @@ class ThemeData with Diagnosticable {
       slowAnimationDuration:
           lerpDuration(a.slowAnimationDuration, b.slowAnimationDuration, t),
       animationCurve: t < 0.5 ? a.animationCurve : b.animationCurve,
+      cursorOpacityAnimates:
+          t < 0.5 ? a.cursorOpacityAnimates : b.cursorOpacityAnimates,
       buttonTheme: ButtonThemeData.lerp(a.buttonTheme, b.buttonTheme, t),
       checkboxTheme:
           CheckboxThemeData.lerp(a.checkboxTheme, b.checkboxTheme, t),
-      chipTheme: ChipThemeData.lerp(a.chipTheme, b.chipTheme, t),
       toggleSwitchTheme: ToggleSwitchThemeData.lerp(
           a.toggleSwitchTheme, b.toggleSwitchTheme, t),
       iconTheme: IconThemeData.lerp(a.iconTheme, b.iconTheme, t),
-      splitButtonTheme:
-          SplitButtonThemeData.lerp(a.splitButtonTheme, b.splitButtonTheme, t),
       dialogTheme: ContentDialogThemeData.lerp(a.dialogTheme, b.dialogTheme, t),
       tooltipTheme: TooltipThemeData.lerp(a.tooltipTheme, b.tooltipTheme, t),
       dividerTheme: DividerThemeData.lerp(a.dividerTheme, b.dividerTheme, t),
@@ -505,13 +465,8 @@ class ThemeData with Diagnosticable {
           ScrollbarThemeData.lerp(a.scrollbarTheme, b.scrollbarTheme, t),
       bottomNavigationTheme: BottomNavigationThemeData.lerp(
           a.bottomNavigationTheme, b.bottomNavigationTheme, t),
-      snackbarTheme:
-          SnackbarThemeData.lerp(a.snackbarTheme, b.snackbarTheme, t),
-      pillButtonBarTheme: PillButtonBarThemeData.lerp(
-          a.pillButtonBarTheme, b.pillButtonBarTheme, t),
-      bottomSheetTheme:
-          BottomSheetThemeData.lerp(a.bottomSheetTheme, b.bottomSheetTheme, t),
       menuColor: Color.lerp(a.menuColor, b.menuColor, t)!,
+      selectionColor: Color.lerp(a.selectionColor, b.selectionColor, t)!,
     );
   }
 
@@ -522,7 +477,7 @@ class ThemeData with Diagnosticable {
   /// See [extensions] for an interactive example.
   T? extension<T>() => extensions[T] as T?;
 
-  /// Convert the [extensionsIterable] passed to [ThemeData.new] or [copyWith]
+  /// Convert the [extensionsIterable] passed to [FluentThemeData.new] or [copyWith]
   /// to the stored [extensions] map, where each entry's key consists of the extension's type.
   static Map<Object, ThemeExtension<dynamic>> _themeExtensionIterableToMap(
       Iterable<ThemeExtension<dynamic>> extensionsIterable) {
@@ -534,7 +489,7 @@ class ThemeData with Diagnosticable {
     });
   }
 
-  ThemeData copyWith({
+  FluentThemeData copyWith({
     Brightness? brightness,
     Iterable<ThemeExtension<dynamic>>? extensions,
     VisualDensity? visualDensity,
@@ -543,29 +498,24 @@ class ThemeData with Diagnosticable {
     Color? activeColor,
     Color? inactiveColor,
     Color? inactiveBackgroundColor,
-    Color? disabledColor,
     Color? scaffoldBackgroundColor,
     Color? acrylicBackgroundColor,
     Color? micaBackgroundColor,
     Color? shadowColor,
-    Color? uncheckedColor,
-    Color? checkedColor,
-    Color? borderInputColor,
     Color? menuColor,
     Color? cardColor,
+    Color? selectionColor,
     Duration? fasterAnimationDuration,
     Duration? fastAnimationDuration,
     Duration? mediumAnimationDuration,
     Duration? slowAnimationDuration,
     Curve? animationCurve,
+    bool? cursorOpacityAnimates,
     ButtonThemeData? buttonTheme,
     BottomNavigationThemeData? bottomNavigationTheme,
-    BottomSheetThemeData? bottomSheetTheme,
     CheckboxThemeData? checkboxTheme,
-    ChipThemeData? chipTheme,
     ToggleSwitchThemeData? toggleSwitchTheme,
     IconThemeData? iconTheme,
-    SplitButtonThemeData? splitButtonTheme,
     ContentDialogThemeData? dialogTheme,
     TooltipThemeData? tooltipTheme,
     DividerThemeData? dividerTheme,
@@ -574,13 +524,11 @@ class ThemeData with Diagnosticable {
     ToggleButtonThemeData? toggleButtonTheme,
     SliderThemeData? sliderTheme,
     InfoBarThemeData? infoBarTheme,
-    PillButtonBarThemeData? pillButtonBarTheme,
     FocusThemeData? focusTheme,
     ScrollbarThemeData? scrollbarTheme,
-    SnackbarThemeData? snackbarTheme,
     ResourceDictionary? resources,
   }) {
-    return ThemeData.raw(
+    return FluentThemeData.raw(
       brightness: brightness ?? this.brightness,
       visualDensity: visualDensity ?? this.visualDensity,
       typography: this.typography.merge(typography),
@@ -591,12 +539,8 @@ class ThemeData with Diagnosticable {
       activeColor: activeColor ?? this.activeColor,
       inactiveColor: inactiveColor ?? this.inactiveColor,
       shadowColor: shadowColor ?? this.shadowColor,
-      uncheckedColor: uncheckedColor ?? this.uncheckedColor,
-      checkedColor: checkedColor ?? this.checkedColor,
-      borderInputColor: borderInputColor ?? this.borderInputColor,
       inactiveBackgroundColor:
           inactiveBackgroundColor ?? this.inactiveBackgroundColor,
-      disabledColor: disabledColor ?? this.disabledColor,
       scaffoldBackgroundColor:
           scaffoldBackgroundColor ?? this.scaffoldBackgroundColor,
       acrylicBackgroundColor:
@@ -604,6 +548,7 @@ class ThemeData with Diagnosticable {
       micaBackgroundColor: micaBackgroundColor ?? this.micaBackgroundColor,
       menuColor: menuColor ?? this.menuColor,
       cardColor: cardColor ?? this.cardColor,
+      selectionColor: selectionColor ?? this.selectionColor,
       fasterAnimationDuration:
           fasterAnimationDuration ?? this.fasterAnimationDuration,
       fastAnimationDuration:
@@ -613,27 +558,24 @@ class ThemeData with Diagnosticable {
       slowAnimationDuration:
           slowAnimationDuration ?? this.slowAnimationDuration,
       animationCurve: animationCurve ?? this.animationCurve,
+      cursorOpacityAnimates:
+          cursorOpacityAnimates ?? this.cursorOpacityAnimates,
       buttonTheme: this.buttonTheme.merge(buttonTheme),
       bottomNavigationTheme:
           this.bottomNavigationTheme.merge(bottomNavigationTheme),
-      bottomSheetTheme: this.bottomSheetTheme.merge(bottomSheetTheme),
       checkboxTheme: this.checkboxTheme.merge(checkboxTheme),
-      chipTheme: this.chipTheme.merge(chipTheme),
       dialogTheme: this.dialogTheme.merge(dialogTheme),
       dividerTheme: this.dividerTheme.merge(dividerTheme),
       focusTheme: this.focusTheme.merge(focusTheme),
       iconTheme: this.iconTheme.merge(iconTheme),
       infoBarTheme: this.infoBarTheme.merge(infoBarTheme),
-      pillButtonBarTheme: this.pillButtonBarTheme.merge(pillButtonBarTheme),
       navigationPaneTheme: this.navigationPaneTheme.merge(navigationPaneTheme),
       radioButtonTheme: this.radioButtonTheme.merge(radioButtonTheme),
       scrollbarTheme: this.scrollbarTheme.merge(scrollbarTheme),
       sliderTheme: this.sliderTheme.merge(sliderTheme),
-      splitButtonTheme: this.splitButtonTheme.merge(splitButtonTheme),
       toggleButtonTheme: this.toggleButtonTheme.merge(toggleButtonTheme),
       toggleSwitchTheme: this.toggleSwitchTheme.merge(toggleSwitchTheme),
       tooltipTheme: this.tooltipTheme.merge(tooltipTheme),
-      snackbarTheme: this.snackbarTheme.merge(snackbarTheme),
       resources: resources ?? this.resources,
     );
   }
@@ -646,32 +588,24 @@ class ThemeData with Diagnosticable {
       ..add(ColorProperty('activeColor', activeColor))
       ..add(ColorProperty('inactiveColor', inactiveColor))
       ..add(ColorProperty('inactiveBackgroundColor', inactiveBackgroundColor))
-      ..add(ColorProperty('disabledColor', disabledColor))
       ..add(ColorProperty('shadowColor', shadowColor))
       ..add(ColorProperty('scaffoldBackgroundColor', scaffoldBackgroundColor))
       ..add(ColorProperty('acrylicBackgroundColor', acrylicBackgroundColor))
       ..add(ColorProperty('micaBackgroundColor', micaBackgroundColor))
       ..add(ColorProperty('menuColor', menuColor))
       ..add(ColorProperty('cardColor', cardColor))
+      ..add(ColorProperty('selectionColor', selectionColor))
       ..add(EnumProperty('brightness', brightness))
       ..add(DiagnosticsProperty<Duration>(
-        'slowAnimationDuration',
-        slowAnimationDuration,
-      ))
+          'slowAnimationDuration', slowAnimationDuration))
       ..add(DiagnosticsProperty<Duration>(
-        'mediumAnimationDuration',
-        mediumAnimationDuration,
-      ))
+          'mediumAnimationDuration', mediumAnimationDuration))
       ..add(DiagnosticsProperty<Duration>(
-        'fastAnimationDuration',
-        fastAnimationDuration,
-      ))
+          'fastAnimationDuration', fastAnimationDuration))
       ..add(DiagnosticsProperty<Duration>(
-        'fasterAnimationDuration',
-        fasterAnimationDuration,
-      ))
-      ..add(
-        DiagnosticsProperty<Curve>('animationCurve', animationCurve),
-      );
+          'fasterAnimationDuration', fasterAnimationDuration))
+      ..add(DiagnosticsProperty<Curve>('animationCurve', animationCurve))
+      ..add(DiagnosticsProperty<bool>(
+          'cursorOpacityAnimates', cursorOpacityAnimates));
   }
 }

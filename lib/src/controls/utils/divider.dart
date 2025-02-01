@@ -6,16 +6,18 @@ import 'package:flutter/foundation.dart';
 class Divider extends StatelessWidget {
   /// Creates a divider.
   const Divider({
-    Key? key,
+    super.key,
     this.direction = Axis.horizontal,
     this.style,
     this.size,
-  }) : super(key: key);
+  });
 
-  /// The current direction of the slider. Uses [Axis.horizontal] by default
+  /// The current direction of the slider.
+  ///
+  /// Uses [Axis.horizontal] by default
   final Axis direction;
 
-  /// The `style` of the divider. It's mescled with [ThemeData.dividerThemeData]
+  /// The `style` of the divider. It's mescled with [FluentThemeData.dividerTheme]
   final DividerThemeData? style;
 
   /// The size of the divider. The opposite of the [DividerThemeData.thickness]
@@ -63,10 +65,10 @@ class DividerTheme extends InheritedTheme {
   /// Creates a divider theme that controls the configurations for
   /// [Divider].
   const DividerTheme({
-    Key? key,
+    super.key,
     required this.data,
-    required Widget child,
-  }) : super(key: key, child: child);
+    required super.child,
+  });
 
   /// The properties for descendant [Divider] widgets.
   final DividerThemeData data;
@@ -93,7 +95,7 @@ class DividerTheme extends InheritedTheme {
   }
 
   /// Returns the [data] from the closest [DividerTheme] ancestor. If there is
-  /// no ancestor, it returns [ThemeData.dividerTheme]. Applications can assume
+  /// no ancestor, it returns [FluentThemeData.dividerTheme]. Applications can assume
   /// that the returned value will not be null.
   ///
   /// Typical usage is as follows:
@@ -142,13 +144,13 @@ class DividerThemeData with Diagnosticable {
     this.horizontalMargin,
   });
 
-  factory DividerThemeData.standard(ThemeData style) {
+  factory DividerThemeData.standard(FluentThemeData theme) {
     return DividerThemeData(
       thickness: 1,
       horizontalMargin: const EdgeInsets.symmetric(horizontal: 10),
       verticalMargin: const EdgeInsets.symmetric(vertical: 10),
       decoration: BoxDecoration(
-        color: style.resources.dividerStrokeColorDefault,
+        color: theme.resources.dividerStrokeColorDefault,
       ),
     );
   }

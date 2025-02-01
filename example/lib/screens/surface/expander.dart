@@ -4,7 +4,7 @@ import 'package:fluent_ui/fluent_ui.dart';
 import '../../widgets/card_highlight.dart';
 
 class ExpanderPage extends StatefulWidget {
-  const ExpanderPage({Key? key}) : super(key: key);
+  const ExpanderPage({super.key});
 
   @override
   State<ExpanderPage> createState() => _ExpanderPageState();
@@ -62,6 +62,14 @@ class _ExpanderPageState extends State<ExpanderPage> with PageMixin {
           ),
         ),
         CardHighlight(
+          codeSnippet: '''Expander(
+  leading: RadioButton(
+    checked: checked,
+    onChanged: (v) => setState(() => checked = v),
+  ),
+  header: Text('This text is in header'),
+  content: Text('This text is in content'),
+)''',
           child: Expander(
             header: const Text('Choose your crost'),
             onStateChanged: (open) => setState(() => crostOpen = open),
@@ -109,19 +117,20 @@ class _ExpanderPageState extends State<ExpanderPage> with PageMixin {
               ),
             ]),
           ),
-          codeSnippet: '''Expander(
-  leading: RadioButton(
-    checked: checked,
-    onChanged: (v) => setState(() => checked = v),
-  ),
-  header: Text('This text is in header'),
-  content: Text('This text is in content'),
-)''',
         ),
         subtitle(content: const Text('Scrollable content')),
-        const CardHighlight(
+        CardHighlight(
+          codeSnippet: '''Expander(
+  header: Text('Open to see the scrollable text'),
+  content: SizedBox(
+    height: 300,
+    child: SingleChildScrollView(
+      child: Text('A LONG TEXT HERE'),
+    ),
+  ),
+)''',
           child: Expander(
-            header: Text('Open to see the scrollable text'),
+            header: const Text('Open to see the scrollable text'),
             content: SizedBox(
               height: 300,
               child: SingleChildScrollView(
@@ -135,42 +144,14 @@ Donec sit amet semper sem. Pellentesque commodo mi in est sagittis ultricies in 
 Fusce tempor, dolor in porttitor porttitor, turpis leo ullamcorper urna, vitae ultrices lorem augue eget nulla. Nulla sodales venenatis tellus quis feugiat. Phasellus sit amet condimentum nulla. Quisque felis lorem, tempus quis odio id, tincidunt volutpat ante. Fusce ultrices dui vel lorem tincidunt, in pellentesque ligula luctus. Morbi luctus est vitae eros blandit dictum. Quisque convallis diam sed arcu volutpat, eget placerat turpis cursus. Aliquam dapibus finibus luctus. Praesent vestibulum viverra risus, nec sollicitudin mi mattis eu. Nulla vestibulum, nibh eget sagittis placerat, elit eros egestas libero, eu luctus justo ante eget tellus. Etiam quis lacus gravida, consequat diam in, laoreet sapien.
 
 Fusce nunc neque, imperdiet id justo non, porttitor finibus massa. Ut quis risus quis tellus ultricies accumsan et et lorem. Nam pulvinar luctus velit, ut vehicula neque sagittis nec. Integer commodo, metus auctor rutrum finibus, tellus justo feugiat leo, sit amet tempus est justo eu augue. Cras eget nibh ac enim bibendum lobortis. Sed ultricies nunc elit, imperdiet consectetur velit scelerisque eu. Aliquam suscipit libero vel nibh porttitor, vel sodales nisi viverra. Duis vitae rutrum metus, vitae accumsan massa. Sed congue, est interdum commodo facilisis, leo libero blandit tellus, a dapibus tortor odio eget ex. Nunc aliquet nulla vel augue pulvinar, vel luctus risus sagittis. Sed non sodales urna. Phasellus quis sapien placerat, ultricies risus ut, hendrerit mi. Donec pretium ligula non arcu posuere porttitor. Pellentesque eleifend mollis ex non eleifend. Nam sed elit mollis mauris laoreet aliquam eget vel elit.''',
+                  selectionControls: fluentTextSelectionControls,
                 ),
               ),
             ),
           ),
-          codeSnippet: '''Expander(
-  header: Text('Open to see the scrollable text'),
-  content: SizedBox(
-    height: 300,
-    child: SingleChildScrollView(
-      child: Text('A LONG TEXT HERE'),
-    ),
-  ),
-)''',
         ),
         subtitle(content: const Text('Expander opened programatically')),
         CardHighlight(
-            child: Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
-              Expanded(
-                child: Expander(
-                  key: expanderKey,
-                  header: const Text('This text is in header'),
-                  content: const Text('This text is in content'),
-                  onStateChanged: (open) => setState(() {}),
-                ),
-              ),
-              const SizedBox(width: 20),
-              ToggleSwitch(
-                checked: open,
-                onChanged: (v) {
-                  setState(() {
-                    expanderKey.currentState?.isExpanded = v;
-                  });
-                },
-                content: Text(open ? 'Close' : 'Open'),
-              ),
-            ]),
             codeSnippet:
                 '''final expanderKey = GlobalKey<ExpanderState>(debugLabel: 'Expander key');
 
@@ -190,7 +171,27 @@ void toggle() {
   final open = expanderKey.currentState?.open ?? false;
 
   expanderKey.currentState?.open = !open;
-}'''),
+}''',
+            child: Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
+              Expanded(
+                child: Expander(
+                  key: expanderKey,
+                  header: const Text('This text is in header'),
+                  content: const Text('This text is in content'),
+                  onStateChanged: (open) => setState(() {}),
+                ),
+              ),
+              const SizedBox(width: 20),
+              ToggleSwitch(
+                checked: open,
+                onChanged: (v) {
+                  setState(() {
+                    expanderKey.currentState?.isExpanded = v;
+                  });
+                },
+                content: Text(open ? 'Close' : 'Open'),
+              ),
+            ])),
       ],
     );
   }

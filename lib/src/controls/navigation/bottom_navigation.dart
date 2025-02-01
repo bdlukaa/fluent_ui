@@ -38,6 +38,7 @@ class BottomNavigationItem {
 /// ![BottomNavigation Preview](https://static2.sharepointonline.com/files/fabric/fabric-website/images/controls/android/updated/img_bottomnavigation_01_dark.png?text=DarkMode)
 ///
 /// See also:
+///
 ///   * [BottomNavigationItem], the items used by this widget
 ///   * [BottomNavigationThemeData], used to style this widget
 ///   * [ScaffoldPage], used to layout pages
@@ -48,14 +49,13 @@ class BottomNavigation extends StatelessWidget {
   ///
   /// [index] must be in the range of 0 to [items.length]
   const BottomNavigation({
-    Key? key,
+    super.key,
     required this.items,
     required this.index,
     this.onChanged,
     this.style,
   })  : assert(items.length >= 2),
-        assert(index >= 0 && index < items.length),
-        super(key: key);
+        assert(index >= 0 && index < items.length);
 
   /// The items displayed by this widget. There must be at least 2
   /// items in the list.
@@ -71,7 +71,7 @@ class BottomNavigation extends StatelessWidget {
   /// Called when the current index should be changed. If null, the bottom
   /// navigation items are considered disabled.
   ///
-  /// {@toolSnippet}
+  /// {@tool snippet}
   /// ```dart
   ///
   /// int index = 0;
@@ -85,7 +85,7 @@ class BottomNavigation extends StatelessWidget {
   final ValueChanged<int>? onChanged;
 
   /// Used to style this bottom navigation bar. If non-null,
-  /// it's mescled with [ThemeData.bottomNavigationTheme]
+  /// it's mescled with [FluentThemeData.bottomNavigationTheme]
   final BottomNavigationThemeData? style;
 
   bool get _disabled => onChanged == null;
@@ -99,7 +99,7 @@ class BottomNavigation extends StatelessWidget {
       elevation: 8.0,
       shadowColor: FluentTheme.of(context).shadowColor,
       child: Container(
-        height: _kBottomNavigationHeight,
+        constraints: const BoxConstraints(minHeight: _kBottomNavigationHeight),
         color: style.backgroundColor,
         child: Row(
           children: items.map((item) {
@@ -120,12 +120,12 @@ class BottomNavigation extends StatelessWidget {
 
 class _BottomNavigationItem extends StatelessWidget {
   const _BottomNavigationItem({
-    Key? key,
+    super.key,
     required this.item,
     required this.selected,
     required this.style,
     this.onPressed,
-  }) : super(key: key);
+  });
 
   final BottomNavigationItem item;
   final bool selected;
@@ -149,7 +149,7 @@ class _BottomNavigationItem extends StatelessWidget {
             if (item.title != null)
               Padding(
                 padding: const EdgeInsetsDirectional.only(top: 1.0),
-                child: DefaultTextStyle(
+                child: DefaultTextStyle.merge(
                   style: FluentTheme.of(context).typography.caption!.copyWith(
                         color: selected
                             ? style.selectedColor
@@ -185,10 +185,10 @@ class BottomNavigationTheme extends InheritedTheme {
   /// Creates a button theme that controls the configurations for
   /// [BottomNavigation].
   const BottomNavigationTheme({
-    Key? key,
-    required Widget child,
+    super.key,
+    required super.child,
     required this.data,
-  }) : super(key: key, child: child);
+  });
 
   /// The properties for descendant [BottomNavigation] widgets.
   final BottomNavigationThemeData data;
@@ -212,7 +212,7 @@ class BottomNavigationTheme extends InheritedTheme {
   /// The data from the closest instance of this class that encloses the given
   /// context.
   ///
-  /// Defaults to [ThemeData.bottomNavigationTheme]
+  /// Defaults to [FluentThemeData.bottomNavigationTheme]
   ///
   /// Typical usage is as follows:
   ///
@@ -261,13 +261,13 @@ class BottomNavigationThemeData with Diagnosticable {
     this.inactiveColor,
   });
 
-  factory BottomNavigationThemeData.standard(ThemeData style) {
-    final isLight = style.brightness.isLight;
+  factory BottomNavigationThemeData.standard(FluentThemeData theme) {
+    final isLight = theme.brightness.isLight;
     return BottomNavigationThemeData(
       backgroundColor:
           isLight ? const Color(0xFFf8f8f8) : const Color(0xFF0c0c0c),
-      selectedColor: style.accentColor,
-      inactiveColor: style.disabledColor,
+      selectedColor: theme.accentColor,
+      inactiveColor: theme.resources.controlFillColorDisabled,
     );
   }
 

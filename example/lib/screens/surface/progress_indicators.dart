@@ -6,7 +6,7 @@ import 'package:fluent_ui/fluent_ui.dart';
 import '../../widgets/card_highlight.dart';
 
 class ProgressIndicatorsPage extends StatefulWidget {
-  const ProgressIndicatorsPage({Key? key}) : super(key: key);
+  const ProgressIndicatorsPage({super.key});
 
   @override
   State<ProgressIndicatorsPage> createState() => _ProgressIndicatorsPageState();
@@ -35,19 +35,19 @@ class _ProgressIndicatorsPageState extends State<ProgressIndicatorsPage>
             'completion time is unknown.',
           ),
         ),
-        CardHighlight(
-          child: RepaintBoundary(
-            child: Row(children: const [
-              ProgressBar(),
-              SizedBox(width: 20.0),
-              ProgressRing(),
-            ]),
-          ),
+        const CardHighlight(
           codeSnippet: '''// indeterminate progress bar
 ProgressBar(),
 
 // indeterminate progress ring
 ProgressRing(),''',
+          child: RepaintBoundary(
+            child: Row(children: [
+              ProgressBar(),
+              SizedBox(width: 20.0),
+              ProgressRing(),
+            ]),
+          ),
         ),
         subtitle(content: const Text('Determinate Progress Indicators')),
         description(
@@ -58,6 +58,11 @@ ProgressRing(),''',
           ),
         ),
         CardHighlight(
+            codeSnippet: '''// determinate progress bar
+ProgressBar(value: ${determinateValue.toInt()}),
+
+// determinate progress ring
+ProgressRing(value: ${determinateValue.toInt()}),''',
             child: Row(children: [
               ProgressBar(value: determinateValue),
               const SizedBox(width: 20.0),
@@ -70,12 +75,7 @@ ProgressRing(),''',
                   onChanged: (v) => setState(() => determinateValue = v),
                 ),
               ),
-            ]),
-            codeSnippet: '''// determinate progress bar
-ProgressBar(value: ${determinateValue.toInt()}),
-
-// determinate progress ring
-ProgressRing(value: ${determinateValue.toInt()}),'''),
+            ])),
       ],
     );
   }

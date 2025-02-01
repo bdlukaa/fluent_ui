@@ -3,7 +3,7 @@ import 'package:example/widgets/page.dart';
 import 'package:fluent_ui/fluent_ui.dart';
 
 class AutoSuggestBoxPage extends StatefulWidget {
-  const AutoSuggestBoxPage({Key? key}) : super(key: key);
+  const AutoSuggestBoxPage({super.key});
 
   @override
   State<AutoSuggestBoxPage> createState() => _AutoSuggestBoxPageState();
@@ -14,6 +14,10 @@ class _AutoSuggestBoxPageState extends State<AutoSuggestBoxPage>
   String? selectedCat;
   Cat? selectedObjectCat;
   bool enabled = true;
+
+  final asgbKey = GlobalKey<AutoSuggestBoxState>(
+    debugLabel: 'Manually controlled AutoSuggestBox',
+  );
 
   @override
   Widget build(BuildContext context) {
@@ -34,10 +38,39 @@ class _AutoSuggestBoxPageState extends State<AutoSuggestBoxPage>
         ),
         subtitle(content: const Text('A basic AutoSuggestBox')),
         CardHighlight(
+          codeSnippet: '''
+String? selectedCat;
+
+AutoSuggestBox<String>(
+  placeholder: 'Type a cat name',
+  items: cats.map((cat) {
+    return AutoSuggestBoxItem<String>(
+      value: cat,
+      label: cat,
+      onFocusChange: (focused) {
+        if (focused) { 
+          debugPrint('Focused \$cat');
+        }
+      }
+    );
+  }).toList(),
+  onSelected: (item) {
+    setState(() => selected = item);
+  },
+),
+
+const cats = <String>[
+  'Abyssinian',
+  'Aegean',
+  'American Bobtail',
+  'American Curl',
+  ...
+];''',
           child: Row(children: [
             SizedBox(
               width: 350.0,
               child: AutoSuggestBox<String>(
+                placeholder: 'Type a cat name',
                 enabled: enabled,
                 items: cats
                     .map<AutoSuggestBoxItem<String>>(
@@ -62,73 +95,16 @@ class _AutoSuggestBoxPageState extends State<AutoSuggestBoxPage>
               ),
             ),
           ]),
-          codeSnippet: '''
-String? selectedCat;
-
-AutoSuggestBox<String>(
-  items: cats.map((cat) {
-    return AutoSuggestBoxItem<String>(
-      value: cat,
-      label: cat,
-      onFocusChange: (focused) {
-        if (focused) { 
-          debugPrint('Focused \$cat');
-        }
-      }
-    );
-  }).toList(),
-  onSelected: (item) {
-    setState(() => selected = item);
-  },
-),
-
-const cats = <String>[
-  'Abyssinian',
-  'Aegean',
-  'American Bobtail',
-  'American Curl',
-  ...
-];''',
-        ),
-        const Text(
-          'The control can be used with a custom value class. With this feature,'
-          ' AutoSuggestBox can be used as a replacement of a ComboBox.',
         ),
         subtitle(
             content: const Text('A AutoSuggestBox with a custom type "Cat"')),
+        description(
+          content: const Text(
+            'The control can be used with a custom value class. With this feature,'
+            ' AutoSuggestBox can be used as a replacement of a ComboBox.',
+          ),
+        ),
         CardHighlight(
-          child: Row(children: [
-            SizedBox(
-              width: 350.0,
-              child: AutoSuggestBox<Cat>(
-                enabled: enabled,
-                items: objectCats
-                    .map<AutoSuggestBoxItem<Cat>>(
-                      (cat) => AutoSuggestBoxItem<Cat>(
-                        value: cat,
-                        label: cat.name,
-                        onFocusChange: (focused) {
-                          if (focused) {
-                            debugPrint('Focused $cat');
-                          }
-                        },
-                      ),
-                    )
-                    .toList(),
-                onSelected: (item) {
-                  setState(() => selectedObjectCat = item.value);
-                },
-              ),
-            ),
-            Expanded(
-              child: Padding(
-                padding: const EdgeInsetsDirectional.only(start: 8.0),
-                child: Text(selectedObjectCat != null
-                    ? 'Cat #${selectedObjectCat!.id} "${selectedObjectCat!.name}" ${selectedObjectCat!.hasTag ? '[🏷 TAGGED]' : "[❌ NON TAGGED]"}'
-                    : ''),
-              ),
-            ),
-          ]),
           codeSnippet: '''
 class Cat {
   final int id;
@@ -168,6 +144,132 @@ const objectCats = [
   Cat(6, 'American Shorthair', true),
   ...
 ];''',
+          child: Row(children: [
+            SizedBox(
+              width: 350.0,
+              child: AutoSuggestBox<Cat>(
+                enabled: enabled,
+                items: objectCats
+                    .map<AutoSuggestBoxItem<Cat>>(
+                      (cat) => AutoSuggestBoxItem<Cat>(
+                        value: cat,
+                        label: cat.name,
+                        onFocusChange: (focused) {
+                          if (focused) {
+                            debugPrint('Focused $cat');
+                          }
+                        },
+                      ),
+                    )
+                    .toList(),
+                onSelected: (item) {
+                  setState(() => selectedObjectCat = item.value);
+                },
+              ),
+            ),
+            Expanded(
+              child: Padding(
+                padding: const EdgeInsetsDirectional.only(start: 8.0),
+                child: Text(selectedObjectCat != null
+                    ? 'Cat #${selectedObjectCat!.id} "${selectedObjectCat!.name}" ${selectedObjectCat!.hasTag ? '[🏷 TAGGED]' : "[❌ NON TAGGED]"}'
+                    : ''),
+              ),
+            ),
+          ]),
+        ),
+        subtitle(content: const Text('An AutoSuggestBox with manual control')),
+        description(
+          content: const Text(
+            'To manually control an AutoSuggestBox, you can use '
+            'the "GlobalKey<AutoSuggestBoxState>" to get the "AutoSuggestBoxState" '
+            'instance. With this instance, you can call the "showOverlay" and '
+            '"dismissOverlay" methods to show and hide the overlay. To check if '
+            'the overlay is visible, you can use the "isOverlayVisible" property',
+          ),
+        ),
+        CardHighlight(
+          codeSnippet: '''final asgbKey = GlobalKey<AutoSuggestBoxState>(
+  debugLabel: 'Manually controlled AutoSuggestBox',
+);
+
+AutoSuggestBox<String>(
+  key: asgbKey,
+  items: cats.map((cat) {
+    return ...;
+  }).toList(),
+  onSelected: (item) { ... },
+  // Listen to the overlay visibility changes
+  onOverlayVisibilityChanged: (visible) { debugPrint('\$visible'); },
+),
+
+// To toggle the overlay state, first check if it's visible
+final isOverlayVisible = asgbKey.currentState?.isOverlayVisible ?? false;
+if (isOverlayVisible) {
+  // Call the dismissOverlay method to hide the overlay
+  asgbKey.currentState?.dismissOverlay();
+} else {
+  // Call the showOverlay method to show the overlay
+  asgbKey.currentState?.showOverlay();
+}
+''',
+          child: Wrap(
+            runAlignment: WrapAlignment.spaceBetween,
+            alignment: WrapAlignment.spaceBetween,
+            children: [
+              Row(mainAxisSize: MainAxisSize.min, children: [
+                SizedBox(
+                  width: 350.0,
+                  child: AutoSuggestBox<String>(
+                    key: asgbKey,
+                    enabled: enabled,
+                    items: cats
+                        .map<AutoSuggestBoxItem<String>>(
+                          (cat) => AutoSuggestBoxItem<String>(
+                            value: cat,
+                            label: cat,
+                            onFocusChange: (focused) {
+                              if (focused) debugPrint('Focused $cat');
+                            },
+                          ),
+                        )
+                        .toList(),
+                    onSelected: (item) {
+                      setState(() => selectedCat = item.value);
+                    },
+                    onOverlayVisibilityChanged: (visible) {
+                      debugPrint('Overlay is visible: $visible');
+                      setState(() {});
+                    },
+                  ),
+                ),
+                Flexible(
+                  child: Padding(
+                    padding: const EdgeInsetsDirectional.only(start: 8.0),
+                    child: Text(selectedCat ?? ''),
+                  ),
+                ),
+              ]),
+              ToggleButton(
+                checked: asgbKey.currentState?.isOverlayVisible ?? false,
+                onChanged: (_) {
+                  final asgbState = asgbKey.currentState;
+                  if (asgbState == null) return;
+
+                  if (asgbState.isOverlayVisible) {
+                    asgbState.dismissOverlay();
+                  } else {
+                    asgbState.showOverlay();
+                  }
+                  setState(() {});
+                },
+                child: Text(
+                  asgbKey.currentState?.isOverlayVisible ?? false
+                      ? 'Hide overlay'
+                      : 'Show overlay',
+                ),
+              ),
+            ],
+          ),
         ),
       ],
     );

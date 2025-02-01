@@ -3,7 +3,7 @@ import 'package:example/widgets/page.dart';
 import 'package:fluent_ui/fluent_ui.dart';
 
 class SliderPage extends StatefulWidget {
-  const SliderPage({Key? key}) : super(key: key);
+  const SliderPage({super.key});
 
   @override
   State<SliderPage> createState() => _SliderPageState();
@@ -37,6 +37,14 @@ class _SliderPageState extends State<SliderPage> with PageMixin {
         ),
         subtitle(content: const Text('A simple Slider')),
         CardHighlight(
+          codeSnippet: '''double value = 0;
+
+Slider(
+  label: '\${value.toInt()}',
+  value: value,
+  onChanged: disabled ? null : (v) => setState(() => value = v),
+),
+''',
           child: Row(children: [
             Slider(
               label: '${firstValue.toInt()}',
@@ -50,14 +58,6 @@ class _SliderPageState extends State<SliderPage> with PageMixin {
             const Spacer(),
             Text('Output:\n${firstValue.toInt()}'),
           ]),
-          codeSnippet: '''double value = 0;
-
-Slider(
-  label: '\${value.toInt()}',
-  value: value,
-  onChanged: disabled ? null : (v) => setState(() => value = v),
-),
-''',
         ),
         subtitle(content: const Text('A vertical slider')),
         description(
@@ -71,6 +71,15 @@ Slider(
           ),
         ),
         CardHighlight(
+          codeSnippet: '''double value = 0;
+
+Slider(
+  vertical: true,
+  label: '\${value.toInt()}',
+  value: value,
+  onChanged: disabled ? null : (v) => setState(() => value = v),
+),
+''',
           child: Row(children: [
             Slider(
               vertical: true,
@@ -82,15 +91,6 @@ Slider(
             const Spacer(),
             Text('Output:\n${verticalValue.toInt()}'),
           ]),
-          codeSnippet: '''double value = 0;
-
-Slider(
-  vertical: true,
-  label: '\${value.toInt()}',
-  value: value,
-  onChanged: disabled ? null : (v) => setState(() => value = v),
-),
-''',
         ),
       ],
     );

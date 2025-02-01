@@ -9,13 +9,13 @@ const EdgeInsetsGeometry _kDefaultPadding = EdgeInsetsDirectional.fromSTEB(
 
 class FormRow extends StatelessWidget {
   const FormRow({
-    Key? key,
+    super.key,
     required this.child,
     this.padding = _kDefaultPadding,
     this.helper,
     this.error,
     this.textStyle,
-  }) : super(key: key);
+  });
 
   final EdgeInsetsGeometry padding;
 
@@ -29,6 +29,9 @@ class FormRow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    assert(debugCheckHasFluentTheme(context));
+    final theme = FluentTheme.of(context);
+
     return Padding(
       padding: padding,
       child: Column(mainAxisSize: MainAxisSize.min, children: <Widget>[
@@ -36,7 +39,7 @@ class FormRow extends StatelessWidget {
         if (helper != null)
           Align(
             alignment: AlignmentDirectional.centerStart,
-            child: DefaultTextStyle(
+            child: DefaultTextStyle.merge(
               style: textStyle!,
               child: helper!,
             ),
@@ -45,9 +48,9 @@ class FormRow extends StatelessWidget {
           Container(
             margin: const EdgeInsetsDirectional.only(top: 2.0),
             alignment: AlignmentDirectional.centerStart,
-            child: DefaultTextStyle(
-              style: const TextStyle(
-                color: Colors.warningPrimaryColor,
+            child: DefaultTextStyle.merge(
+              style: TextStyle(
+                color: Colors.red.defaultBrushFor(theme.brightness),
                 fontWeight: FontWeight.w500,
               ),
               child: error!,

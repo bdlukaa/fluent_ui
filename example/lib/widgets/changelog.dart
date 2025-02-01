@@ -11,7 +11,7 @@ import 'deferred_widget.dart';
 List<String>? changelog;
 
 class Changelog extends StatefulWidget {
-  const Changelog({Key? key}) : super(key: key);
+  const Changelog({super.key});
 
   @override
   State<Changelog> createState() => _ChangelogState();
@@ -32,8 +32,8 @@ class _ChangelogState extends State<Changelog> {
     );
 
     if (response.statusCode == 200) {
-      final _changelog = response.body.split('\n')..removeRange(0, 2);
-      setState(() => changelog = _changelog);
+      final changelogResult = response.body.split('\n')..removeRange(0, 2);
+      setState(() => changelog = changelogResult);
     } else {
       debugPrint(response.body);
     }

@@ -28,5 +28,16 @@
   "minute": "хвілін",
   "month": "месяц",
   "day": "дзень",
-  "year": "год"
+  "year": "год",
+  "redLabel": "Чырвоны",
+  "greenLabel": "Зялёны",
+  "blueLabel": "Сіні",
+  "opacityLabel": "Празрыстасць",
+  "hueLabel": "Адценне",
+  "saturationLabel": "Насычанасць",
+  "valueLabel": "Значэнне",
+  "moreText": "Больш",
+  "lessText": "Менш",
+  "valueSliderTooltip": "Значэнне {value} ({colorName})",
+  "alphaSliderTooltip": "{value}% Непразрыстасць"
 }

@@ -1,13 +1,14 @@
-import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter/foundation.dart';
-import 'package:system_theme/system_theme.dart';
 import 'package:flutter_acrylic/flutter_acrylic.dart';
+import 'package:system_theme/system_theme.dart';
+
+import 'package:fluent_ui/fluent_ui.dart';
 
 enum NavigationIndicators { sticky, end }
 
 class AppTheme extends ChangeNotifier {
-  AccentColor _color = systemAccentColor;
-  AccentColor get color => _color;
+  AccentColor? _color;
+  AccentColor get color => _color ?? systemAccentColor;
   set color(AccentColor color) {
     _color = color;
     notifyListeners();
@@ -48,7 +49,7 @@ class AppTheme extends ChangeNotifier {
         WindowEffect.solid,
         WindowEffect.acrylic,
       ].contains(effect)
-          ? FluentTheme.of(context).micaBackgroundColor.withOpacity(0.05)
+          ? FluentTheme.of(context).micaBackgroundColor.withValues(alpha: 0.05)
           : Colors.transparent,
       dark: FluentTheme.of(context).brightness.isDark,
     );

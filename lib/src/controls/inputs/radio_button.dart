@@ -3,19 +3,18 @@ import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/rendering.dart';
 
-/// Radio buttons, also called option buttons, let users select
-/// one option from a collection of two or more mutually exclusive,
-/// but related, options. Radio buttons are always used in groups,
-/// and each option is represented by one radio button in the group.
+/// Radio buttons, also called option buttons, let users select one option from
+/// a collection of two or more mutually exclusive, but related, options. Radio
+/// buttons are always used in groups, and each option is represented by one
+/// radio button in the group.
 ///
-/// In the default state, no radio button in a RadioButtons group is
-/// selected. That is, all radio buttons are cleared. However, once a
-/// user has selected a radio button, the user can't deselect the
-/// button to restore the group to its initial cleared state.
+/// In the default state, no radio button in a RadioButtons group is selected.
+/// That is, all radio buttons are cleared. However, once a user has selected a
+/// radio button, the user can't deselect the button to restore the group to its
+/// initial cleared state.
 ///
-/// The singular behavior of a RadioButtons group distinguishes it
-/// from check boxes, which support multi-selection and deselection,
-/// or clearing.
+/// The singular behavior of a RadioButtons group distinguishes it from check
+/// boxes, which support multi-selection and deselection, or clearing.
 ///
 /// ![RadioButton](https://docs.microsoft.com/en-us/windows/uwp/design/controls-and-patterns/images/controls/radio-button.png)
 ///
@@ -29,7 +28,7 @@ import 'package:flutter/rendering.dart';
 class RadioButton extends StatelessWidget {
   /// Creates a radio button.
   const RadioButton({
-    Key? key,
+    super.key,
     required this.checked,
     required this.onChanged,
     this.style,
@@ -37,7 +36,7 @@ class RadioButton extends StatelessWidget {
     this.semanticLabel,
     this.focusNode,
     this.autofocus = false,
-  }) : super(key: key);
+  });
 
   /// Whether this radio button is checked.
   final bool checked;
@@ -96,6 +95,7 @@ class RadioButton extends StatelessWidget {
       autofocus: autofocus,
       focusNode: focusNode,
       onPressed: onChanged == null ? null : () => onChanged!(!checked),
+      semanticLabel: semanticLabel,
       builder: (context, state) {
         final decoration = (checked
                 ? style.checkedDecoration?.resolve(state)
@@ -125,16 +125,22 @@ class RadioButton extends StatelessWidget {
           child = Row(mainAxisSize: MainAxisSize.min, children: [
             child,
             const SizedBox(width: 6.0),
-            Flexible(child: content!),
+            Flexible(
+              child: DefaultTextStyle.merge(
+                style: TextStyle(color: style.foregroundColor?.resolve(state)),
+                child: IconTheme.merge(
+                  data: IconThemeData(
+                    color: style.foregroundColor?.resolve(state),
+                  ),
+                  child: content!,
+                ),
+              ),
+            ),
           ]);
         }
         return Semantics(
-          label: semanticLabel,
-          selected: checked,
-          child: FocusBorder(
-            focused: state.isFocused,
-            child: child,
-          ),
+          checked: checked,
+          child: FocusBorder(focused: state.isFocused, child: child),
         );
       },
     );
@@ -149,11 +155,7 @@ class RadioButton extends StatelessWidget {
 class RadioButtonTheme extends InheritedTheme {
   /// Creates a radio button theme that controls the configurations for
   /// [RadioButton].
-  const RadioButtonTheme({
-    Key? key,
-    required this.data,
-    required Widget child,
-  }) : super(key: key, child: child);
+  const RadioButtonTheme({super.key, required this.data, required super.child});
 
   /// The properties for descendant [RadioButton] widgets.
   final RadioButtonThemeData data;
@@ -181,7 +183,7 @@ class RadioButtonTheme extends InheritedTheme {
   }
 
   /// Returns the [data] from the closest [RadioButtonTheme] ancestor. If there is
-  /// no ancestor, it returns [ThemeData.radioButtonTheme]. Applications can assume
+  /// no ancestor, it returns [FluentThemeData.radioButtonTheme]. Applications can assume
   /// that the returned value will not be null.
   ///
   /// Typical usage is as follows:
@@ -206,53 +208,58 @@ class RadioButtonTheme extends InheritedTheme {
 
 @immutable
 class RadioButtonThemeData with Diagnosticable {
-  final ButtonState<BoxDecoration?>? checkedDecoration;
-  final ButtonState<BoxDecoration?>? uncheckedDecoration;
+  /// The decoration of the radio button when it's checked.
+  final WidgetStateProperty<BoxDecoration?>? checkedDecoration;
 
+  /// The decoration of the radio button when it's unchecked.
+  final WidgetStateProperty<BoxDecoration?>? uncheckedDecoration;
+
+  /// The color of the radio button's content.
+  final WidgetStateProperty<Color?>? foregroundColor;
+
+  /// Creates a theme that can be used for [RadioButtonTheme]
   const RadioButtonThemeData({
     this.checkedDecoration,
     this.uncheckedDecoration,
+    this.foregroundColor,
   });
 
-  factory RadioButtonThemeData.standard(ThemeData style) {
+  factory RadioButtonThemeData.standard(FluentThemeData theme) {
     return RadioButtonThemeData(
-      checkedDecoration: ButtonState.resolveWith((states) {
+      foregroundColor: WidgetStateProperty.resolveWith((states) {
+        return states.isDisabled ? theme.resources.textFillColorDisabled : null;
+      }),
+      checkedDecoration: WidgetStateProperty.resolveWith((states) {
         return BoxDecoration(
           border: Border.all(
-            color: ButtonThemeData.checkedInputColor(style, states),
+            color: ButtonThemeData.checkedInputColor(theme, states),
             width: !states.isDisabled
-                ? states.isHovering && !states.isPressing
+                ? states.isHovered && !states.isPressed
                     ? 3.4
                     : 5.0
                 : 4.0,
           ),
           shape: BoxShape.circle,
-          color: !states.isDisabled
-              ? style.brightness.isLight
-                  ? Colors.white
-                  : Colors.black
-              : style.brightness.isLight
-                  ? Colors.white
-                  : const Color.fromRGBO(255, 255, 255, 0.5302),
+          color: theme.resources.textOnAccentFillColorPrimary,
         );
       }),
-      uncheckedDecoration: ButtonState.resolveWith((states) {
-        final backgroundColor = style.inactiveBackgroundColor;
+      uncheckedDecoration: WidgetStateProperty.resolveWith((states) {
         return BoxDecoration(
-          color: states.isPressing
-              ? backgroundColor
-              : states.isHovering
-                  ? backgroundColor.withOpacity(0.8)
-                  : backgroundColor.withOpacity(0.0),
+          color: WidgetStateExtension.forStates<Color>(
+            states,
+            disabled: theme.resources.controlAltFillColorDisabled,
+            pressed: theme.resources.controlAltFillColorQuarternary,
+            hovering: theme.resources.controlAltFillColorTertiary,
+            none: theme.resources.controlAltFillColorSecondary,
+          ),
           border: Border.all(
-            width: states.isPressing ? 4.5 : 1,
-            color: !states.isDisabled
-                ? states.isPressing
-                    ? style.accentColor
-                    : style.borderInputColor
-                : style.brightness.isLight
-                    ? const Color.fromRGBO(0, 0, 0, 0.2169)
-                    : const Color.fromRGBO(255, 255, 255, 0.1581),
+            width: states.isPressed ? 4.5 : 1,
+            color: WidgetStateExtension.forStates<Color>(
+              states,
+              disabled: theme.resources.textFillColorDisabled,
+              pressed: theme.accentColor.defaultBrushFor(theme.brightness),
+              none: theme.resources.textFillColorTertiary,
+            ),
           ),
           shape: BoxShape.circle,
         );
@@ -261,12 +268,20 @@ class RadioButtonThemeData with Diagnosticable {
   }
 
   static RadioButtonThemeData lerp(
-      RadioButtonThemeData? a, RadioButtonThemeData? b, double t) {
+    RadioButtonThemeData? a,
+    RadioButtonThemeData? b,
+    double t,
+  ) {
     return RadioButtonThemeData(
-      checkedDecoration: ButtonState.lerp(
+      checkedDecoration: WidgetStateProperty.lerp<BoxDecoration?>(
           a?.checkedDecoration, b?.checkedDecoration, t, BoxDecoration.lerp),
-      uncheckedDecoration: ButtonState.lerp(a?.uncheckedDecoration,
-          b?.uncheckedDecoration, t, BoxDecoration.lerp),
+      uncheckedDecoration: WidgetStateProperty.lerp<BoxDecoration?>(
+          a?.uncheckedDecoration,
+          b?.uncheckedDecoration,
+          t,
+          BoxDecoration.lerp),
+      foregroundColor: WidgetStateProperty.lerp<Color?>(
+          a?.foregroundColor, b?.foregroundColor, t, Color.lerp),
     );
   }
 
@@ -274,6 +289,7 @@ class RadioButtonThemeData with Diagnosticable {
     return RadioButtonThemeData(
       checkedDecoration: style?.checkedDecoration ?? checkedDecoration,
       uncheckedDecoration: style?.uncheckedDecoration ?? uncheckedDecoration,
+      foregroundColor: style?.foregroundColor ?? foregroundColor,
     );
   }
 
@@ -281,9 +297,10 @@ class RadioButtonThemeData with Diagnosticable {
   void debugFillProperties(DiagnosticPropertiesBuilder properties) {
     super.debugFillProperties(properties);
     properties
-      ..add(DiagnosticsProperty<ButtonState<BoxDecoration?>?>(
+      ..add(DiagnosticsProperty<WidgetStateProperty<BoxDecoration?>?>(
           'checkedDecoration', checkedDecoration))
-      ..add(DiagnosticsProperty<ButtonState<BoxDecoration?>?>(
-          'uncheckedDecoration', uncheckedDecoration));
+      ..add(DiagnosticsProperty<WidgetStateProperty<BoxDecoration?>?>(
+          'uncheckedDecoration', uncheckedDecoration))
+      ..add(DiagnosticsProperty('foregroundDecoration', foregroundColor));
   }
 }

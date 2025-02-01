@@ -1,6 +1,5 @@
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter/foundation.dart';
-import 'package:flutter/rendering.dart';
 
 /// A button that can be on or off.
 ///
@@ -9,9 +8,9 @@ import 'package:flutter/rendering.dart';
 ///   * [Checkbox], which is used to select or deselect action items
 ///   * [ToggleSwitch], which use used to turn things on and off
 class ToggleButton extends StatelessWidget {
-  /// Creates a toggle button
+  /// Creates a toggle button.
   const ToggleButton({
-    Key? key,
+    super.key,
     required this.checked,
     required this.onChanged,
     this.child,
@@ -19,7 +18,7 @@ class ToggleButton extends StatelessWidget {
     this.semanticLabel,
     this.focusNode,
     this.autofocus = false,
-  }) : super(key: key);
+  });
 
   /// The content of the button
   final Widget? child;
@@ -31,7 +30,7 @@ class ToggleButton extends StatelessWidget {
   final ValueChanged<bool>? onChanged;
 
   /// The style of the button.
-  /// This style is merged with [ThemeData.toggleButtonThemeData]
+  /// This style is merged with [FluentThemeData.toggleButtonThemeData]
   final ToggleButtonThemeData? style;
 
   /// The semantics label of the button
@@ -47,11 +46,7 @@ class ToggleButton extends StatelessWidget {
   void debugFillProperties(DiagnosticPropertiesBuilder properties) {
     super.debugFillProperties(properties);
     properties
-      ..add(FlagProperty(
-        'checked',
-        value: checked,
-        ifFalse: 'unchecked',
-      ))
+      ..add(FlagProperty('checked', value: checked, ifFalse: 'unchecked'))
       ..add(
         ObjectFlagProperty('onChanged', onChanged, ifNull: 'disabled'),
       )
@@ -71,7 +66,7 @@ class ToggleButton extends StatelessWidget {
       focusNode: focusNode,
       onPressed: onChanged == null ? null : () => onChanged!(!checked),
       style: checked ? theme.checkedButtonStyle : theme.uncheckedButtonStyle,
-      child: Semantics(selected: checked, child: child),
+      child: Semantics(toggled: checked, child: child),
     );
   }
 }
@@ -85,10 +80,10 @@ class ToggleButtonTheme extends InheritedTheme {
   /// Creates a toggle button theme that controls the configurations for
   /// [ToggleButton].
   const ToggleButtonTheme({
-    Key? key,
+    super.key,
     required this.data,
-    required Widget child,
-  }) : super(key: key, child: child);
+    required super.child,
+  });
 
   /// The properties for descendant [ToggleButton] widgets.
   final ToggleButtonThemeData data;
@@ -116,7 +111,7 @@ class ToggleButtonTheme extends InheritedTheme {
   }
 
   /// Returns the [data] from the closest [ToggleButtonTheme] ancestor. If there is
-  /// no ancestor, it returns [ThemeData.toggleButtonTheme]. Applications can assume
+  /// no ancestor, it returns [FluentThemeData.toggleButtonTheme]. Applications can assume
   /// that the returned value will not be null.
   ///
   /// Typical usage is as follows:
@@ -150,23 +145,19 @@ class ToggleButtonThemeData with Diagnosticable {
     this.uncheckedButtonStyle,
   });
 
-  factory ToggleButtonThemeData.standard(ThemeData theme) {
+  factory ToggleButtonThemeData.standard(FluentThemeData theme) {
     return ToggleButtonThemeData(
       checkedButtonStyle: ButtonStyle(
-        backgroundColor: ButtonState.resolveWith(
+        backgroundColor: WidgetStateProperty.resolveWith(
           (states) => ButtonThemeData.checkedInputColor(
             theme,
             states,
           ),
         ),
-        shape: ButtonState.all(RoundedRectangleBorder(
-          side: const BorderSide(
-            color: Colors.transparent,
-            width: 0.33,
-          ),
-          borderRadius: BorderRadius.circular(4.0),
-        )),
-        foregroundColor: ButtonState.resolveWith(
+        shape: WidgetStateProperty.resolveWith(
+          (states) => FilledButton.shapeBorder(theme, states),
+        ),
+        foregroundColor: WidgetStateProperty.resolveWith(
           (states) => FilledButton.foregroundColor(
             theme,
             states,

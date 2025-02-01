@@ -2,7 +2,7 @@ import 'package:fluent_ui/fluent_ui.dart';
 import 'package:url_launcher/link.dart';
 
 class SponsorDialog extends StatelessWidget {
-  const SponsorDialog({Key? key}) : super(key: key);
+  const SponsorDialog({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -25,9 +25,9 @@ class SponsorDialog extends StatelessWidget {
           ),
         ],
       ),
-      content: Row(
+      content: const Row(
         crossAxisAlignment: CrossAxisAlignment.start,
-        children: const [
+        children: [
           Expanded(
             child: _Tier(
               name: 'Royal Secretary',
@@ -61,8 +61,11 @@ class SponsorDialog extends StatelessWidget {
         Link(
           uri: Uri.parse('https://www.patreon.com/bdlukaa'),
           builder: (context, open) => FilledButton(
-            child: const Text('Become a Sponsor'),
             onPressed: open,
+            child: Semantics(
+              link: true,
+              child: const Text('Become a Sponsor'),
+            ),
           ),
         ),
       ],
@@ -72,11 +75,10 @@ class SponsorDialog extends StatelessWidget {
 
 class _Tier extends StatelessWidget {
   const _Tier({
-    Key? key,
     required this.name,
     required this.price,
     required this.benefits,
-  }) : super(key: key);
+  });
 
   final String name;
   final String price;

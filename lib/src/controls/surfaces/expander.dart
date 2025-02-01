@@ -1,6 +1,7 @@
 import 'package:fluent_ui/fluent_ui.dart';
+import 'package:flutter/foundation.dart';
 
-typedef ShapeBuilder = ShapeBorder Function(bool open);
+typedef ExpanderShapeBuilder = ShapeBorder Function(bool open);
 
 /// The expander direction
 enum ExpanderDirection {
@@ -31,7 +32,7 @@ enum ExpanderDirection {
 class Expander extends StatefulWidget {
   /// Creates a fluent-styled expander.
   const Expander({
-    Key? key,
+    super.key,
     this.leading,
     required this.header,
     required this.content,
@@ -42,11 +43,12 @@ class Expander extends StatefulWidget {
     this.direction = ExpanderDirection.down,
     this.initiallyExpanded = false,
     this.onStateChanged,
-    this.headerHeight = 48.0,
     this.headerBackgroundColor,
-    this.contentBackgroundColor,
     this.headerShape,
-  }) : super(key: key);
+    this.contentBackgroundColor,
+    this.contentPadding = const EdgeInsets.all(16.0),
+    this.contentShape,
+  });
 
   /// The leading widget.
   ///
@@ -71,50 +73,88 @@ class Expander extends StatefulWidget {
   /// ![Expander Nested Content](https://docs.microsoft.com/en-us/windows/apps/design/controls/images/expander-nested.png)
   final Widget content;
 
-  /// The icon of the toggle button.
+  /// The expander icon. If null, defaults to a chevron down or up, depending on
+  /// the direction.
   final Widget? icon;
 
   /// The trailing widget. It's positioned at the right of [header]
-  /// and at the left of [icon].
+  /// and before [icon].
   ///
   /// See also:
   ///
-  ///  * [ToggleSwitch]
+  ///  * [ToggleSwitch], used to toggle a setting between two states
   final Widget? trailing;
 
   /// The expand-collapse animation duration.
   ///
-  /// If null, defaults to [ThemeData.fastAnimationDuration]
+  /// If null, defaults to [FluentThemeData.fastAnimationDuration]
   final Duration? animationDuration;
 
   /// The expand-collapse animation curve.
   ///
-  /// If null, defaults to [ThemeData.animationCurve]
+  /// If null, defaults to [FluentThemeData.animationCurve]
   final Curve? animationCurve;
 
-  /// The expand direction. Defaults to [ExpanderDirection.down]
+  /// The expand direction.
+  ///
+  /// Defaults to [ExpanderDirection.down]
   final ExpanderDirection direction;
 
-  /// Whether the [Expander] is initially expanded. Defaults to `false`
+  /// Whether the [Expander] is initially expanded.
+  ///
+  /// Defaults to `false`
   final bool initiallyExpanded;
 
-  /// A callback called when the current state is changed. `true` when
-  /// open and `false` when closed.
+  /// A callback called when the current state is changed.
+  ///
+  /// `true` when open and `false` when closed.
   final ValueChanged<bool>? onStateChanged;
 
-  /// The height of the header.
-  ///
-  /// Defaults to 48.0
-  final double headerHeight;
-
   /// The background color of the header.
-  final ButtonState<Color>? headerBackgroundColor;
+  final WidgetStateProperty<Color>? headerBackgroundColor;
 
-  /// The content color of the header
+  /// The shape of the header.
+  ///
+  /// Use the `open` property to determine whether the expander is open or not.
+  final ExpanderShapeBuilder? headerShape;
+
+  /// The content color of the content.
   final Color? contentBackgroundColor;
 
-  /// The shape of the header
-  final ShapeBuilder? headerShape;
+  /// The padding of the content.
+  final EdgeInsetsGeometry? contentPadding;
+
+  /// The shape of the content
+  ///
+  /// Use the `open` property to determine whether the expander is open or not.
+  final ExpanderShapeBuilder? contentShape;
+
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties
+      ..add(DiagnosticsProperty<Duration>(
+        'animationDuration',
+        animationDuration,
+      ))
+      ..add(DiagnosticsProperty<Curve>('animationCurve', animationCurve))
+      ..add(DiagnosticsProperty<ExpanderDirection>(
+        'direction',
+        direction,
+        defaultValue: ExpanderDirection.down,
+      ))
+      ..add(DiagnosticsProperty<bool>(
+        'initiallyExpanded',
+        initiallyExpanded,
+        defaultValue: false,
+      ))
+      ..add(ColorProperty('contentBackgroundColor', contentBackgroundColor))
+      ..add(DiagnosticsProperty<EdgeInsetsGeometry>(
+        'contentPadding',
+        contentPadding,
+        defaultValue: const EdgeInsets.all(16.0),
+      ));
+  }
 
   @override
   State<Expander> createState() => ExpanderState();
@@ -122,7 +162,7 @@ class Expander extends StatefulWidget {
 
 class ExpanderState extends State<Expander>
     with SingleTickerProviderStateMixin {
-  late ThemeData _theme;
+  late FluentThemeData _theme;
 
   late bool _isExpanded;
   bool get isExpanded => _isExpanded;
@@ -153,15 +193,14 @@ class ExpanderState extends State<Expander>
     if (_isExpanded) {
       _controller.animateTo(
         0.0,
-        duration: widget.animationDuration ?? _theme.fastAnimationDuration,
+        duration: widget.animationDuration ?? _theme.mediumAnimationDuration,
         curve: widget.animationCurve ?? _theme.animationCurve,
       );
       _isExpanded = false;
     } else {
       _controller.animateTo(
         1.0,
-        duration: widget.animationDuration ?? _theme.fastAnimationDuration,
-        curve: widget.animationCurve ?? _theme.animationCurve,
+        duration: widget.animationDuration ?? _theme.mediumAnimationDuration,
       );
       _isExpanded = true;
     }
@@ -191,7 +230,9 @@ class ExpanderState extends State<Expander>
         hitTestBehavior: HitTestBehavior.deferToChild,
         builder: (context, states) {
           return Container(
-            height: widget.headerHeight,
+            constraints: const BoxConstraints(
+              minHeight: 42.0,
+            ),
             decoration: ShapeDecoration(
               color: widget.headerBackgroundColor?.resolve(states) ??
                   theme.resources.cardBackgroundFillColorDefault,
@@ -201,8 +242,8 @@ class ExpanderState extends State<Expander>
                       color: theme.resources.cardStrokeColorDefault,
                     ),
                     borderRadius: BorderRadius.vertical(
-                      top: const Radius.circular(4.0),
-                      bottom: Radius.circular(_isExpanded ? 0.0 : 4.0),
+                      top: const Radius.circular(6.0),
+                      bottom: Radius.circular(_isExpanded ? 0.0 : 6.0),
                     ),
                   ),
             ),
@@ -230,22 +271,44 @@ class ExpanderState extends State<Expander>
                 child: FocusBorder(
                   focused: states.isFocused,
                   child: Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 10.0),
-                    decoration: BoxDecoration(
-                      color:
-                          ButtonThemeData.uncheckedInputColor(_theme, states),
-                      borderRadius: BorderRadius.circular(4.0),
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 10.0,
+                      vertical: 10.0,
                     ),
-                    alignment: AlignmentDirectional.center,
+                    decoration: BoxDecoration(
+                      color: ButtonThemeData.uncheckedInputColor(
+                        _theme,
+                        states,
+                        transparentWhenNone: true,
+                      ),
+                      borderRadius: BorderRadius.circular(6.0),
+                    ),
                     child: widget.icon ??
                         RotationTransition(
-                          turns: Tween<double>(begin: 0, end: 0.5)
-                              .animate(_controller),
-                          child: Icon(
-                            _isDown
-                                ? FluentIcons.chevron_down
-                                : FluentIcons.chevron_up,
-                            size: 10,
+                          turns: Tween<double>(
+                            begin: 0,
+                            end: 0.5,
+                          ).animate(CurvedAnimation(
+                            parent: _controller,
+                            curve: Interval(
+                              0.5,
+                              1.0,
+                              curve: widget.animationCurve ??
+                                  _theme.animationCurve,
+                            ),
+                          )),
+                          child: AnimatedSlide(
+                            duration: theme.fastAnimationDuration,
+                            curve: Curves.easeInCirc,
+                            offset: states.isPressed
+                                ? const Offset(0, 0.1)
+                                : Offset.zero,
+                            child: Icon(
+                              _isDown
+                                  ? FluentIcons.chevron_down
+                                  : FluentIcons.chevron_up,
+                              size: 8.0,
+                            ),
                           ),
                         ),
                   ),
@@ -256,20 +319,33 @@ class ExpanderState extends State<Expander>
         },
       ),
       SizeTransition(
-        sizeFactor: _controller,
+        sizeFactor: CurvedAnimation(
+          curve: Interval(
+            0.0,
+            0.5,
+            curve: widget.animationCurve ?? _theme.animationCurve,
+          ),
+          parent: _controller,
+        ),
         child: Container(
           width: double.infinity,
-          padding: const EdgeInsets.all(16.0),
-          decoration: BoxDecoration(
-            border: Border.all(
-              color: theme.resources.cardStrokeColorDefault,
-            ),
+          padding: widget.contentPadding,
+          decoration: ShapeDecoration(
+            shape: widget.contentShape?.call(_isExpanded) ??
+                RoundedRectangleBorder(
+                  side: BorderSide(
+                    color: theme.resources.cardStrokeColorDefault,
+                  ),
+                  borderRadius:
+                      const BorderRadius.vertical(bottom: Radius.circular(6.0)),
+                ),
             color: widget.contentBackgroundColor ??
                 theme.resources.cardBackgroundFillColorSecondary,
-            borderRadius:
-                const BorderRadius.vertical(bottom: Radius.circular(4.0)),
           ),
-          child: widget.content,
+          child: ExcludeFocus(
+            excluding: !_isExpanded,
+            child: widget.content,
+          ),
         ),
       ),
     ];

@@ -3,14 +3,14 @@ import 'package:fluent_ui/fluent_ui.dart';
 class Card extends StatelessWidget {
   /// Creates a card
   const Card({
-    Key? key,
+    super.key,
     required this.child,
     this.padding = const EdgeInsets.all(12.0),
     this.margin,
     this.backgroundColor,
     this.borderColor,
     this.borderRadius = const BorderRadius.all(Radius.circular(4.0)),
-  }) : super(key: key);
+  });
 
   /// The card content
   final Widget child;
@@ -23,7 +23,7 @@ class Card extends StatelessWidget {
 
   /// The card's background color.
   ///
-  /// If null, [ThemeData.cardColor] is used
+  /// If null, [FluentThemeData.cardColor] is used
   final Color? backgroundColor;
 
   /// The card's border color.

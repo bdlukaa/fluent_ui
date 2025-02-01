@@ -24,7 +24,7 @@ InlineSpan _buildLabel(String label, String description) {
 }
 
 class AcrylicPage extends StatefulWidget {
-  const AcrylicPage({Key? key}) : super(key: key);
+  const AcrylicPage({super.key});
 
   @override
   State<AcrylicPage> createState() => _AcrylicPageState();
@@ -39,6 +39,9 @@ class _AcrylicPageState extends State<AcrylicPage> with PageMixin {
 
   @override
   Widget build(BuildContext context) {
+    final menuColor =
+        FluentTheme.of(context).menuColor.withValues(alpha: kMenuColorOpacity);
+
     return ScaffoldPage.scrollable(
       header: const PageHeader(title: Text('Acrylic')),
       children: [
@@ -48,11 +51,11 @@ class _AcrylicPageState extends State<AcrylicPage> with PageMixin {
           'to app surfaces to add depth and help establish a visual hierarchy.',
         ),
         subtitle(content: const Text('Default background acrylic brush.')),
-        Card(
+        const Card(
           child: SizedBox(
             height: 300,
             width: 500,
-            child: Stack(children: const [
+            child: Stack(children: [
               _AcrylicChildren(),
               Positioned.fill(
                 child: Padding(
@@ -98,30 +101,38 @@ class _AcrylicPageState extends State<AcrylicPage> with PageMixin {
                     value: color,
                     items: [
                       ComboBoxItem(
+                        value: menuColor,
+                        child: Row(children: [
+                          buildColorBox(menuColor),
+                          const SizedBox(width: 10.0),
+                          const Text('Acrylic background'),
+                        ]),
+                      ),
+                      ComboBoxItem(
+                        value: Colors.white,
                         child: Row(children: [
                           buildColorBox(Colors.white),
                           const SizedBox(width: 10.0),
                           const Text('White'),
                         ]),
-                        value: Colors.white,
                       ),
                       ComboBoxItem(
+                        value: const Color(0xE4000000),
                         child: Row(children: [
                           buildColorBox(const Color(0xE4000000)),
                           const SizedBox(width: 10.0),
                           const Text('Black'),
                         ]),
-                        value: const Color(0xE4000000),
                       ),
                       ...List.generate(Colors.accentColors.length, (index) {
                         final color = Colors.accentColors[index];
                         return ComboBoxItem(
+                          value: color,
                           child: Row(children: [
                             buildColorBox(color),
                             const SizedBox(width: 10.0),
                             Text(accentColorNames[index + 1]),
                           ]),
-                          value: color,
                         );
                       }),
                     ],
@@ -192,7 +203,7 @@ class _AcrylicPageState extends State<AcrylicPage> with PageMixin {
 }
 
 class _AcrylicChildren extends StatelessWidget {
-  const _AcrylicChildren({Key? key}) : super(key: key);
+  const _AcrylicChildren();
 
   @override
   Widget build(BuildContext context) {

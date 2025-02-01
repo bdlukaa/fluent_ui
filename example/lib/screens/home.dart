@@ -8,7 +8,7 @@ import '../widgets/page.dart';
 import '../widgets/sponsor.dart';
 
 class HomePage extends StatefulWidget {
-  const HomePage({Key? key}) : super(key: key);
+  const HomePage({super.key});
 
   @override
   State<HomePage> createState() => _HomePageState();
@@ -29,11 +29,14 @@ class _HomePageState extends State<HomePage> with PageMixin {
         commandBar: Row(mainAxisAlignment: MainAxisAlignment.end, children: [
           Link(
             uri: Uri.parse('https://github.com/bdlukaa/fluent_ui'),
-            builder: (context, open) => Tooltip(
-              message: 'Source code',
-              child: IconButton(
-                icon: const Icon(FluentIcons.open_source, size: 24.0),
-                onPressed: open,
+            builder: (context, open) => Semantics(
+              link: true,
+              child: Tooltip(
+                message: 'Source code',
+                child: IconButton(
+                  icon: const Icon(FluentIcons.open_source, size: 24.0),
+                  onPressed: open,
+                ),
               ),
             ),
           ),
@@ -58,8 +61,8 @@ class _HomePageState extends State<HomePage> with PageMixin {
                   value: comboboxValue,
                   items: ['Item 1', 'Item 2']
                       .map((e) => ComboBoxItem(
-                            child: Text(e),
                             value: e,
+                            child: Text(e),
                           ))
                       .toList(),
                   isExpanded: true,
@@ -73,7 +76,10 @@ class _HomePageState extends State<HomePage> with PageMixin {
                 child: InfoLabel(
                   label: 'Progress',
                   child: const SizedBox(
-                      height: 30, width: 30, child: ProgressRing()),
+                    height: 30,
+                    width: 30,
+                    child: ProgressRing(),
+                  ),
                 ),
               ),
             ),
@@ -177,18 +183,7 @@ class _HomePageState extends State<HomePage> with PageMixin {
           runSpacing: 10.0,
           children: <Widget>[
             ...sponsors.map((sponsor) {
-              return Link(
-                uri: Uri.parse('https://www.github.com/${sponsor.username}'),
-                builder: (context, open) {
-                  return IconButton(
-                    onPressed: open,
-                    icon: SponsorButton(
-                      imageUrl: sponsor.imageUrl,
-                      username: sponsor.username ?? sponsor.name,
-                    ),
-                  );
-                },
-              );
+              return sponsor.build();
             }),
             IconButton(
               onPressed: () {
@@ -205,7 +200,7 @@ class _HomePageState extends State<HomePage> with PageMixin {
                     shaderCallback: (rect) {
                       return LinearGradient(
                         colors: [
-                          Colors.white.withOpacity(0.8),
+                          Colors.white.withValues(alpha: 0.8),
                           ...Colors.accentColors,
                         ],
                       ).createShader(rect);
@@ -219,6 +214,14 @@ class _HomePageState extends State<HomePage> with PageMixin {
             ),
           ],
         ),
+        Text('CONTRIBUTORS', style: theme.typography.bodyStrong),
+        Wrap(
+          spacing: 10.0,
+          runSpacing: 10.0,
+          children: contributors.map((contributor) {
+            return contributor.build();
+          }).toList(),
+        ),
         subtitle(content: const Text('Equivalents with the material library')),
         const MaterialEquivalents(),
       ],
@@ -228,10 +231,10 @@ class _HomePageState extends State<HomePage> with PageMixin {
 
 class SponsorButton extends StatelessWidget {
   const SponsorButton({
-    Key? key,
+    super.key,
     required this.imageUrl,
     required this.username,
-  }) : super(key: key);
+  });
 
   final String imageUrl;
   final String username;

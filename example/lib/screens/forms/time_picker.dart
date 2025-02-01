@@ -3,7 +3,7 @@ import 'package:example/widgets/page.dart';
 import 'package:fluent_ui/fluent_ui.dart';
 
 class TimePickerPage extends StatefulWidget {
-  const TimePickerPage({Key? key}) : super(key: key);
+  const TimePickerPage({super.key});
 
   @override
   State<TimePickerPage> createState() => _TimePickerPageState();
@@ -14,10 +14,20 @@ class _TimePickerPageState extends State<TimePickerPage> with PageMixin {
   DateTime? arrivalTime;
   DateTime? hhTime;
 
+  final timePickerKey = GlobalKey<TimePickerState>();
+
   @override
   Widget build(BuildContext context) {
     return ScaffoldPage.scrollable(
-      header: const PageHeader(title: Text('TimePicker')),
+      header: PageHeader(
+        title: const Text('TimePicker'),
+        commandBar: Button(
+          onPressed: () => setState(
+            () => simpleTime = arrivalTime = hhTime = null,
+          ),
+          child: const Text('Clear'),
+        ),
+      ),
       children: [
         const Text(
           'Use a TimePicker to let users set a time in your app, for example to '
@@ -31,19 +41,24 @@ class _TimePickerPageState extends State<TimePickerPage> with PageMixin {
         ),
         subtitle(content: const Text('A simple TimePicker')),
         CardHighlight(
-          child: Align(
-            alignment: AlignmentDirectional.centerStart,
-            child: TimePicker(
-              selected: simpleTime,
-              onChanged: (time) => setState(() => simpleTime = time),
-            ),
-          ),
           codeSnippet: '''DateTime? selected;
 
 TimePicker(
   selected: selected,
   onChanged: (time) => setState(() => selected = time),
 ),''',
+          child: Row(children: [
+            TimePicker(
+              key: timePickerKey,
+              selected: simpleTime,
+              onChanged: (time) => setState(() => simpleTime = time),
+            ),
+            const Spacer(),
+            Button(
+              onPressed: () => timePickerKey.currentState?.open(),
+              child: const Text('Show picker'),
+            ),
+          ]),
         ),
         subtitle(
           content: const Text(
@@ -51,15 +66,6 @@ TimePicker(
           ),
         ),
         CardHighlight(
-          child: Align(
-            alignment: AlignmentDirectional.centerStart,
-            child: TimePicker(
-              header: 'Arrival time',
-              selected: arrivalTime,
-              onChanged: (time) => setState(() => arrivalTime = time),
-              minuteIncrement: 15,
-            ),
-          ),
           codeSnippet: '''DateTime? selected;
         
 TimePicker(
@@ -68,6 +74,14 @@ TimePicker(
   header: 'Arrival time',
   minuteIncrement: 15,
 ),''',
+          child: Row(children: [
+            TimePicker(
+              header: 'Arrival time',
+              selected: arrivalTime,
+              onChanged: (time) => setState(() => arrivalTime = time),
+              minuteIncrement: 15,
+            ),
+          ]),
         ),
         subtitle(
           content: const Text(
@@ -75,6 +89,14 @@ TimePicker(
           ),
         ),
         CardHighlight(
+          codeSnippet: '''DateTime? selected;
+        
+TimePicker(
+  selected: selected,
+  onChanged: (time) => setState(() => selected = time),
+  header: '24 hour clock',
+  hourFormat: HourFormat.HH,
+),''',
           child: Align(
             alignment: AlignmentDirectional.centerStart,
             child: TimePicker(
@@ -84,14 +106,6 @@ TimePicker(
               hourFormat: HourFormat.HH,
             ),
           ),
-          codeSnippet: '''DateTime? selected;
-        
-TimePicker(
-  selected: selected,
-  onChanged: (time) => setState(() => selected = time),
-  header: '24 hour clock',
-  hourFormat: HourFormat.HH,
-),''',
         ),
       ],
     );

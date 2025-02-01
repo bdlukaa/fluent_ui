@@ -1,21 +1,19 @@
 part of 'view.dart';
 
-ButtonState<Color?> kDefaultTileColor(BuildContext context, bool isTop) {
-  return ButtonState.resolveWith((states) {
-    // By default, if it's top, do not show any color
+WidgetStateProperty<Color?> kDefaultPaneItemColor(
+    BuildContext context, bool isTop) {
+  assert(debugCheckHasFluentTheme(context));
+
+  return WidgetStateProperty.resolveWith((states) {
     if (isTop) return Colors.transparent;
     final res = FluentTheme.of(context).resources;
-    if (states.isPressing) {
+    if (states.isPressed) {
       return res.subtleFillColorTertiary;
-    } else if (states.isHovering) {
+    } else if (states.isHovered) {
       return res.subtleFillColorSecondary;
     } else {
       return res.subtleFillColorTransparent;
     }
-    // return ButtonThemeData.uncheckedInputColor(
-    //   FluentTheme.of(context),
-    //   states,
-    // );
   });
 }
 
@@ -28,10 +26,10 @@ class NavigationPaneTheme extends InheritedTheme {
   /// Creates a navigation pane theme that controls the configurations for
   /// [NavigationPane].
   const NavigationPaneTheme({
-    Key? key,
+    super.key,
     required this.data,
-    required Widget child,
-  }) : super(key: key, child: child);
+    required super.child,
+  });
 
   /// The properties for descendant [NavigationPane] widgets.
   final NavigationPaneThemeData data;
@@ -59,7 +57,7 @@ class NavigationPaneTheme extends InheritedTheme {
   }
 
   /// Returns the [data] from the closest [NavigationPaneTheme] ancestor. If there is
-  /// no ancestor, it returns [ThemeData.navigationPaneTheme]. Applications can assume
+  /// no ancestor, it returns [FluentThemeData.navigationPaneTheme]. Applications can assume
   /// that the returned value will not be null.
   ///
   /// Typical usage is as follows:
@@ -86,16 +84,21 @@ class NavigationPaneTheme extends InheritedTheme {
 /// The theme data used by [NavigationView]. The default theme
 /// data used is [NavigationPaneThemeData.standard].
 class NavigationPaneThemeData with Diagnosticable {
-  /// The pane background color. If null, [ThemeData.micaBackgroundColor]
-  /// is used.
+  /// The pane background color.
   final Color? backgroundColor;
 
-  /// The color of the tiles. If null, [ButtonThemeData.uncheckedInputColor]
-  /// is used
-  final ButtonState<Color?>? tileColor;
+  /// The pane background color when there is an overlay, such as minimal or
+  /// compact display modes.
+  final Color? overlayBackgroundColor;
 
-  /// The highlight color used on the tiles. If null, [ThemeData.accentColor]
-  /// is used.
+  /// The color of the tiles.
+  ///
+  /// If null, [ButtonThemeData.uncheckedInputColor] is used
+  final WidgetStateProperty<Color?>? tileColor;
+
+  /// The highlight color used on the tiles.
+  ///
+  /// If null, [FluentThemeData.accentColor] is used.
   final Color? highlightColor;
 
   final EdgeInsetsGeometry? labelPadding;
@@ -106,18 +109,21 @@ class NavigationPaneThemeData with Diagnosticable {
   final EdgeInsetsGeometry? headerPadding;
 
   final TextStyle? itemHeaderTextStyle;
-  final ButtonState<TextStyle?>? selectedTextStyle;
-  final ButtonState<TextStyle?>? unselectedTextStyle;
-  final ButtonState<TextStyle?>? selectedTopTextStyle;
-  final ButtonState<TextStyle?>? unselectedTopTextStyle;
-  final ButtonState<Color?>? selectedIconColor;
-  final ButtonState<Color?>? unselectedIconColor;
+  final WidgetStateProperty<TextStyle?>? selectedTextStyle;
+  final WidgetStateProperty<TextStyle?>? unselectedTextStyle;
+  final WidgetStateProperty<TextStyle?>? selectedTopTextStyle;
+  final WidgetStateProperty<TextStyle?>? unselectedTopTextStyle;
+  final WidgetStateProperty<Color?>? selectedIconColor;
+  final WidgetStateProperty<Color?>? unselectedIconColor;
+
+  final IconData? paneNavigationButtonIcon;
 
   final Duration? animationDuration;
   final Curve? animationCurve;
 
   const NavigationPaneThemeData({
     this.backgroundColor,
+    this.overlayBackgroundColor,
     this.tileColor,
     this.highlightColor,
     this.labelPadding,
@@ -132,53 +138,56 @@ class NavigationPaneThemeData with Diagnosticable {
     this.animationCurve,
     this.selectedIconColor,
     this.unselectedIconColor,
+    this.paneNavigationButtonIcon,
   });
 
-  factory NavigationPaneThemeData.standard({
+  /// The default navigation pane theme data.
+  ///
+  /// This is initialized on [FluentThemeData] with the required properties.
+  factory NavigationPaneThemeData.fromResources({
     required ResourceDictionary resources,
     required Duration animationDuration,
     required Curve animationCurve,
-    required Color backgroundColor,
     required Color highlightColor,
     required Typography typography,
-    required Color inactiveColor,
   }) {
     return NavigationPaneThemeData(
       animationDuration: animationDuration,
       animationCurve: animationCurve,
       backgroundColor: resources.solidBackgroundFillColorBase,
+      overlayBackgroundColor: resources.systemFillColorSolidNeutralBackground,
       highlightColor: highlightColor,
       itemHeaderTextStyle: typography.bodyStrong,
-      selectedTextStyle: ButtonState.resolveWith((states) {
+      selectedTextStyle: WidgetStateProperty.resolveWith((states) {
         return typography.body?.copyWith(
-          color: states.isPressing
+          color: states.isPressed
               ? resources.textFillColorSecondary
               : states.isDisabled
                   ? resources.textFillColorDisabled
                   : resources.textFillColorPrimary,
         );
       }),
-      unselectedTextStyle: ButtonState.resolveWith((states) {
+      unselectedTextStyle: WidgetStateProperty.resolveWith((states) {
         return typography.body?.copyWith(
-          color: states.isPressing
+          color: states.isPressed
               ? resources.textFillColorSecondary
               : states.isDisabled
                   ? resources.textFillColorDisabled
                   : resources.textFillColorPrimary,
         );
       }),
-      selectedTopTextStyle: ButtonState.resolveWith((states) {
+      selectedTopTextStyle: WidgetStateProperty.resolveWith((states) {
         return typography.body?.copyWith(
-          color: states.isPressing
+          color: states.isPressed
               ? resources.textFillColorTertiary
-              : states.isHovering
+              : states.isHovered
                   ? resources.textFillColorSecondary
                   : resources.textFillColorPrimary,
         );
       }),
-      unselectedTopTextStyle: ButtonState.resolveWith((states) {
+      unselectedTopTextStyle: WidgetStateProperty.resolveWith((states) {
         return typography.body?.copyWith(
-          color: states.isPressing
+          color: states.isPressed
               ? resources.textFillColorSecondary
               : states.isDisabled
                   ? resources.textFillColorDisabled
@@ -188,6 +197,7 @@ class NavigationPaneThemeData with Diagnosticable {
       labelPadding: const EdgeInsetsDirectional.only(end: 10.0),
       iconPadding: const EdgeInsets.symmetric(horizontal: 10.0),
       headerPadding: const EdgeInsetsDirectional.only(top: 10.0),
+      paneNavigationButtonIcon: FluentIcons.global_nav_button,
     );
   }
 
@@ -202,26 +212,31 @@ class NavigationPaneThemeData with Diagnosticable {
           EdgeInsetsGeometry.lerp(a?.labelPadding, b?.labelPadding, t),
       headerPadding:
           EdgeInsetsGeometry.lerp(a?.headerPadding, b?.headerPadding, t),
-      tileColor: ButtonState.lerp(a?.tileColor, b?.tileColor, t, Color.lerp),
+      tileColor: WidgetStateProperty.lerp<Color?>(
+          a?.tileColor, b?.tileColor, t, Color.lerp),
       backgroundColor: Color.lerp(a?.backgroundColor, b?.backgroundColor, t),
+      overlayBackgroundColor:
+          Color.lerp(a?.overlayBackgroundColor, b?.overlayBackgroundColor, t),
       itemHeaderTextStyle:
           TextStyle.lerp(a?.itemHeaderTextStyle, b?.itemHeaderTextStyle, t),
-      selectedTextStyle: ButtonState.lerp(
+      selectedTextStyle: WidgetStateProperty.lerp<TextStyle?>(
           a?.selectedTextStyle, b?.selectedTextStyle, t, TextStyle.lerp),
-      unselectedTextStyle: ButtonState.lerp(
+      unselectedTextStyle: WidgetStateProperty.lerp<TextStyle?>(
           a?.unselectedTextStyle, b?.unselectedTextStyle, t, TextStyle.lerp),
-      selectedTopTextStyle: ButtonState.lerp(
+      selectedTopTextStyle: WidgetStateProperty.lerp<TextStyle?>(
           a?.selectedTextStyle, b?.selectedTextStyle, t, TextStyle.lerp),
-      unselectedTopTextStyle: ButtonState.lerp(
+      unselectedTopTextStyle: WidgetStateProperty.lerp<TextStyle?>(
           a?.unselectedTextStyle, b?.unselectedTextStyle, t, TextStyle.lerp),
       highlightColor: Color.lerp(a?.highlightColor, b?.highlightColor, t),
       animationCurve: t < 0.5 ? a?.animationCurve : b?.animationCurve,
       animationDuration: lerpDuration(a?.animationDuration ?? Duration.zero,
           b?.animationDuration ?? Duration.zero, t),
-      selectedIconColor: ButtonState.lerp(
+      selectedIconColor: WidgetStateProperty.lerp<Color?>(
           a?.selectedIconColor, b?.selectedIconColor, t, Color.lerp),
-      unselectedIconColor: ButtonState.lerp(
+      unselectedIconColor: WidgetStateProperty.lerp<Color?>(
           a?.unselectedIconColor, b?.unselectedIconColor, t, Color.lerp),
+      paneNavigationButtonIcon:
+          t < 0.5 ? a?.paneNavigationButtonIcon : b?.paneNavigationButtonIcon,
     );
   }
 
@@ -232,6 +247,8 @@ class NavigationPaneThemeData with Diagnosticable {
       headerPadding: style?.headerPadding ?? headerPadding,
       tileColor: style?.tileColor ?? tileColor,
       backgroundColor: style?.backgroundColor ?? backgroundColor,
+      overlayBackgroundColor:
+          style?.overlayBackgroundColor ?? overlayBackgroundColor,
       itemHeaderTextStyle: style?.itemHeaderTextStyle ?? itemHeaderTextStyle,
       selectedTextStyle: style?.selectedTextStyle ?? selectedTextStyle,
       unselectedTextStyle: style?.unselectedTextStyle ?? unselectedTextStyle,
@@ -243,6 +260,8 @@ class NavigationPaneThemeData with Diagnosticable {
       animationDuration: style?.animationDuration ?? animationDuration,
       selectedIconColor: style?.selectedIconColor ?? selectedIconColor,
       unselectedIconColor: style?.unselectedIconColor ?? unselectedIconColor,
+      paneNavigationButtonIcon:
+          style?.paneNavigationButtonIcon ?? paneNavigationButtonIcon,
     );
   }
 
@@ -252,6 +271,7 @@ class NavigationPaneThemeData with Diagnosticable {
     properties
       ..add(DiagnosticsProperty('tileColor', tileColor))
       ..add(ColorProperty('backgroundColor', backgroundColor))
+      ..add(ColorProperty('overlayBackgroundColor', overlayBackgroundColor))
       ..add(ColorProperty('highlightColor', highlightColor))
       ..add(
           DiagnosticsProperty<EdgeInsetsGeometry>('labelPadding', labelPadding))
@@ -266,6 +286,8 @@ class NavigationPaneThemeData with Diagnosticable {
       ..add(DiagnosticsProperty('selectedTopTextStyle', selectedTextStyle))
       ..add(DiagnosticsProperty('unselectedTopTextStyle', unselectedTextStyle))
       ..add(DiagnosticsProperty('selectedIconColor', selectedIconColor))
-      ..add(DiagnosticsProperty('unselectedIconColor', unselectedIconColor));
+      ..add(DiagnosticsProperty('unselectedIconColor', unselectedIconColor))
+      ..add(IconDataProperty(
+          'paneNavigationButtonIcon', paneNavigationButtonIcon));
   }
 }
