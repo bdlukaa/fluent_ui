@@ -6,6 +6,10 @@ import 'package:flutter/foundation.dart';
 /// either rendered above its child or on the side of it.
 ///
 /// ![InfoLabel above a TextBox](https://docs.microsoft.com/en-us/windows/uwp/design/controls-and-patterns/images/text-box-ex1.png)
+///
+/// See also:
+///
+///  * [Text], a widget for showing text.
 class InfoLabel extends StatelessWidget {
   /// Creates an info label.
   InfoLabel({

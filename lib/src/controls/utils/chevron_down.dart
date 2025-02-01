@@ -2,7 +2,11 @@ import 'package:fluent_ui/fluent_ui.dart';
 
 /// The chevron down icon.
 ///
-/// It reacts to change in the current button state and reflect them accordingly
+/// It reacts to change in the current button state and reflect them accordingly.
+///
+/// See also:
+///
+///  * [Icon], a material design icon.
 class ChevronDown extends StatelessWidget {
   /// The icon size
   final double iconSize;
