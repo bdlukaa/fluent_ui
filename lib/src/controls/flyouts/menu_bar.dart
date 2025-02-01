@@ -1,5 +1,6 @@
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter/foundation.dart';
+import 'package:flutter/services.dart';
 
 /// Represents a top-level menu in a [MenuBar] control.
 class MenuBarItem with Diagnosticable {
@@ -72,6 +73,34 @@ class _MenuBarState extends State<MenuBar> {
   );
   static const barMargin = EdgeInsetsDirectional.all(4.0);
 
+  final Map<MenuBarItem, GlobalKey> _keys = {};
+  GlobalKey keyOf(MenuBarItem item) {
+    if (_controller.isOpen) {
+      final menuBar = context.findAncestorStateOfType<_MenuBarState>()!;
+      return menuBar._keys[item] ??= GlobalKey();
+    } else {
+      return _keys[item] ??= GlobalKey();
+    }
+  }
+
+  MenuBarItem previous(MenuBarItem current) {
+    assert(widget.items.isNotEmpty);
+    final index = widget.items.indexOf(current);
+    if (index == 0) {
+      return widget.items.last;
+    }
+    return widget.items[index - 1];
+  }
+
+  MenuBarItem next(MenuBarItem current) {
+    assert(widget.items.isNotEmpty);
+    final index = widget.items.indexOf(current);
+    if (index == widget.items.length - 1) {
+      return widget.items.first;
+    }
+    return widget.items[index + 1];
+  }
+
   @override
   void dispose() {
     _controller.dispose();
@@ -80,7 +109,11 @@ class _MenuBarState extends State<MenuBar> {
 
   bool _locked = false;
   MenuBarItem? _currentOpenItem;
-  Future<void> _showFlyout(BuildContext context, [MenuBarItem? item]) async {
+  Future<void> _showFlyout(
+    BuildContext context, [
+    MenuBarItem? item,
+    bool closeIfOpen = false,
+  ]) async {
     if (_locked) return;
     _locked = true;
     final textDirection = Directionality.of(context);
@@ -95,9 +128,11 @@ class _MenuBarState extends State<MenuBar> {
       ancestor: this.context.findRenderObject(),
     );
     if (_controller.isOpen) {
-      _controller.close();
+      if (closeIfOpen) _controller.close();
       if (_currentOpenItem == item) {
         _currentOpenItem = null;
+        _locked = false;
+        if (mounted) setState(() {});
         return;
       }
       // Waits for the reverse transition duration.
@@ -150,42 +185,65 @@ class _MenuBarState extends State<MenuBar> {
       alignment: AlignmentDirectional.centerStart,
       child: FlyoutTarget(
         controller: _controller,
-        child: Row(children: [
-          for (final item in widget.items)
-            Builder(
-              key: ValueKey(item),
-              builder: (context) {
-                return HoverButton(
-                  onPressed: () {
-                    _locked = false;
-                    _showFlyout(context, item);
-                  },
-                  onPointerEnter: _controller.isOpen
-                      ? (_) {
-                          if (_currentOpenItem != item) {
-                            _showFlyout(context, item);
+        child: Focus(
+          canRequestFocus: false,
+          onKeyEvent: (node, event) {
+            if (event.logicalKey == LogicalKeyboardKey.arrowRight) {
+              final current = _currentOpenItem ?? widget.items.first;
+              final nextItem = next(current);
+              _showFlyout(keyOf(nextItem).currentContext!, nextItem);
+              return KeyEventResult.handled;
+            } else if (event.logicalKey == LogicalKeyboardKey.arrowLeft) {
+              final current = _currentOpenItem ?? widget.items.last;
+              final previousItem = previous(current);
+              _showFlyout(keyOf(previousItem).currentContext!, previousItem);
+              return KeyEventResult.handled;
+            }
+
+            return KeyEventResult.ignored;
+          },
+          child: Row(children: [
+            for (final item in widget.items)
+              Builder(
+                key: _controller.isOpen ? null : keyOf(item),
+                builder: (context) {
+                  return HoverButton(
+                    onPressed: () {
+                      _locked = false;
+                      _showFlyout(context, item);
+                    },
+                    onPointerEnter: _controller.isOpen
+                        ? (_) {
+                            if (_currentOpenItem != item) {
+                              _showFlyout(context, item);
+                            }
                           }
-                        }
-                      : null,
-                  builder: (context, states) {
-                    return Container(
-                      padding: barPadding,
-                      margin: EdgeInsetsDirectional.only(
-                        start: barMargin.start,
-                        end: barMargin.end,
-                      ),
-                      decoration: BoxDecoration(
-                        color: HyperlinkButton.backgroundColor(theme)
-                            .resolve(states),
-                        borderRadius: BorderRadius.circular(4.0),
-                      ),
-                      child: Text(item.title),
-                    );
-                  },
-                );
-              },
-            ),
-        ]),
+                        : null,
+                    builder: (context, states) {
+                      return Padding(
+                        padding: EdgeInsetsDirectional.only(
+                          start: barMargin.start,
+                          end: barMargin.end,
+                        ),
+                        child: FocusBorder(
+                          focused: states.isFocused,
+                          child: Container(
+                            padding: barPadding,
+                            decoration: BoxDecoration(
+                              color: HyperlinkButton.backgroundColor(theme)
+                                  .resolve(states),
+                              borderRadius: BorderRadius.circular(4.0),
+                            ),
+                            child: Text(item.title),
+                          ),
+                        ),
+                      );
+                    },
+                  );
+                },
+              ),
+          ]),
+        ),
       ),
     );
   }
