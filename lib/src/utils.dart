@@ -83,6 +83,9 @@ bool is10footScreen(BuildContext context) {
   return width >= 11520;
 }
 
+/// A horizontal box that is positioned near a target.
+///
+/// This was adapted from [positionDependentBox].
 Offset horizontalPositionDependentBox({
   required Size size,
   required Size childSize,
@@ -122,7 +125,7 @@ Offset horizontalPositionDependentBox({
 }
 
 extension DecorationExtension on Decoration {
-  /// Gets the border radius of this decoration, if reacheable
+  /// Gets the border radius of this decoration.
   BorderRadiusGeometry? getBorderRadius() {
     if (this is BoxDecoration) {
       return (this as BoxDecoration).borderRadius;
