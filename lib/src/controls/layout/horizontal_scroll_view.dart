@@ -33,13 +33,7 @@ class HorizontalScrollView extends StatefulWidget {
 }
 
 class _HorizontalScrollViewState extends State<HorizontalScrollView> {
-  late final ScrollController _controller;
-
-  @override
-  void initState() {
-    super.initState();
-    _controller = ScrollController();
-  }
+  late final ScrollController _controller = ScrollController();
 
   @override
   void dispose() {

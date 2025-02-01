@@ -1,5 +1,5 @@
 import 'package:fluent_ui/fluent_ui.dart';
-import 'package:fluent_ui/src/controls/form/pickers/pickers.dart';
+import 'package:fluent_ui/src/controls/pickers/pickers.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/rendering.dart';
 import 'package:intl/intl.dart';
