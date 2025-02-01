@@ -1,5 +1,8 @@
 import 'package:fluent_ui/fluent_ui.dart';
 
+/// Eyeballed value from Windows Home 11.
+const kFlyoutMinConstraints = BoxConstraints(minWidth: 118);
+
 /// The content of the flyout
 ///
 /// See also:
@@ -16,7 +19,7 @@ class FlyoutContent extends StatelessWidget {
     this.padding = const EdgeInsets.all(8.0),
     this.shadowColor = Colors.black,
     this.elevation = 8.0,
-    this.constraints,
+    this.constraints = kFlyoutMinConstraints,
     this.useAcrylic = true,
   });
 
@@ -49,8 +52,10 @@ class FlyoutContent extends StatelessWidget {
   ///  * [shadowColor], the color of the elevation shadow.
   final double elevation;
 
-  /// Additional constraints to apply to the child.
-  final BoxConstraints? constraints;
+  /// Constraints to apply to the child.
+  ///
+  /// Defaults to [kFlyoutMinConstraints].
+  final BoxConstraints constraints;
 
   /// Whether the background will be an [Acrylic].
   final bool useAcrylic;
@@ -180,7 +185,6 @@ class FlyoutListTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     assert(debugCheckHasFluentTheme(context));
-    final size = Flyout.maybeOf(context)?.size;
 
     return HoverButton(
       key: key,
@@ -225,10 +229,7 @@ class FlyoutListTile extends StatelessWidget {
                     child: icon!,
                   ),
                 ),
-              Flexible(
-                fit: size == null || size.isEmpty
-                    ? FlexFit.loose
-                    : FlexFit.tight,
+              Expanded(
                 child: Padding(
                   padding: const EdgeInsetsDirectional.only(end: 10.0),
                   child: DefaultTextStyle.merge(
