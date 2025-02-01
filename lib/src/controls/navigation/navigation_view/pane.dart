@@ -855,7 +855,6 @@ class _MenuFlyoutPaneItem extends MenuFlyoutItemBase {
   @override
   Widget build(BuildContext context) {
     assert(debugCheckHasFluentTheme(context));
-    final size = Flyout.of(context).size;
     final theme = NavigationPaneTheme.of(context);
     final fluentTheme = FluentTheme.of(context);
     final view = InheritedNavigationView.of(context);
@@ -895,7 +894,6 @@ class _MenuFlyoutPaneItem extends MenuFlyoutItemBase {
             : const SizedBox.shrink();
 
         return Container(
-          width: size.isEmpty ? null : size.width,
           padding: const EdgeInsetsDirectional.only(end: 4.0)
               .add(padding ?? EdgeInsets.zero),
           height: 36.0,
@@ -935,8 +933,7 @@ class _MenuFlyoutPaneItem extends MenuFlyoutItemBase {
                 child: Center(child: item.icon),
               ),
             ),
-            Flexible(
-              fit: size.isEmpty ? FlexFit.loose : FlexFit.tight,
+            Expanded(
               child: textResult,
             ),
             if (item.infoBadge != null) item.infoBadge!,
@@ -1011,12 +1008,10 @@ class _MenuFlyoutPaneItemExpanderState
 
   @override
   Widget build(BuildContext context) {
-    final size = Flyout.of(context).size;
     assert(debugCheckHasFluentTheme(context));
     final theme = FluentTheme.of(context);
 
     return SizedBox(
-      width: size.isEmpty ? null : size.width,
       child: Column(mainAxisSize: MainAxisSize.min, children: [
         _MenuFlyoutPaneItem(
           item: widget.item,
@@ -1036,25 +1031,24 @@ class _MenuFlyoutPaneItemExpanderState
             child: const Icon(FluentIcons.chevron_down, size: 10.0),
           ),
         ).build(context),
-        if (!size.isEmpty)
-          AnimatedSize(
-            duration: theme.fastAnimationDuration,
-            curve: Curves.easeIn,
-            child: !_open
-                ? const SizedBox()
-                : Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: widget.item.items.map((item) {
-                      return _buildMenuPaneItem(
-                        context,
-                        item,
-                        widget.onItemPressed,
-                        paneItemPadding:
-                            const EdgeInsetsDirectional.only(start: 24.0),
-                      ).build(context);
-                    }).toList(),
-                  ),
-          ),
+        AnimatedSize(
+          duration: theme.fastAnimationDuration,
+          curve: Curves.easeIn,
+          child: !_open
+              ? const SizedBox()
+              : Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: widget.item.items.map((item) {
+                    return _buildMenuPaneItem(
+                      context,
+                      item,
+                      widget.onItemPressed,
+                      paneItemPadding:
+                          const EdgeInsetsDirectional.only(start: 24.0),
+                    ).build(context);
+                  }).toList(),
+                ),
+        ),
       ]),
     );
   }

@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter/foundation.dart';
 
+const kDefaultMenuPadding = EdgeInsetsDirectional.symmetric(vertical: 2.0);
 const kDefaultMenuItemMargin = EdgeInsetsDirectional.symmetric(
   horizontal: 4.0,
   vertical: 2.0,
@@ -99,11 +100,11 @@ class _MenuFlyoutState extends State<MenuFlyout> {
 
     Widget content = FlyoutContent(
       color: widget.color,
-      constraints: widget.constraints,
+      constraints: widget.constraints ?? kFlyoutMinConstraints,
       elevation: widget.elevation,
       shadowColor: widget.shadowColor,
       shape: widget.shape,
-      padding: const EdgeInsetsDirectional.symmetric(vertical: 2.0),
+      padding: kDefaultMenuPadding,
       useAcrylic: DisableAcrylic.of(context) != null,
       child: ScrollConfiguration(
         behavior: const _MenuScrollBehavior(),
@@ -289,32 +290,28 @@ class MenuFlyoutItem extends MenuFlyoutItemBase {
 
   @override
   Widget build(BuildContext context) {
-    final size = Flyout.of(context).size;
-    return SizedBox(
-      width: size.isEmpty ? null : size.width,
-      child: FlyoutListTile(
-        margin: EdgeInsets.zero,
-        selected: selected,
-        showSelectedIndicator: false,
-        icon: leading ??
-            () {
-              if (_useIconPlaceholder) return const Icon(null);
-              return null;
-            }(),
-        text: text,
-        trailing: IconTheme.merge(
-          data: const IconThemeData(size: 12.0),
-          child: trailing ?? const SizedBox.shrink(),
-        ),
-        onPressed: onPressed == null
-            ? null
-            : () {
-                if (closeAfterClick) Navigator.of(context).maybePop();
-                onPressed?.call();
-              },
-        onLongPress: onLongPress,
-        focusNode: focusNode,
+    return FlyoutListTile(
+      margin: EdgeInsets.zero,
+      selected: selected,
+      showSelectedIndicator: false,
+      icon: leading ??
+          () {
+            if (_useIconPlaceholder) return const Icon(null);
+            return null;
+          }(),
+      text: text,
+      trailing: IconTheme.merge(
+        data: const IconThemeData(size: 12.0),
+        child: trailing ?? const SizedBox.shrink(),
       ),
+      onPressed: onPressed == null
+          ? null
+          : () {
+              if (closeAfterClick) Navigator.of(context).maybePop();
+              onPressed?.call();
+            },
+      onLongPress: onLongPress,
+      focusNode: focusNode,
     );
   }
 }
@@ -337,15 +334,10 @@ class MenuFlyoutSeparator extends MenuFlyoutItemBase {
 
   @override
   Widget build(BuildContext context) {
-    final size = Flyout.of(context).size;
-
-    return SizedBox(
-      width: size.width,
-      child: const Padding(
-        padding: EdgeInsetsDirectional.only(bottom: 5.0),
-        child: Divider(
-          style: DividerThemeData(horizontalMargin: EdgeInsets.zero),
-        ),
+    return const Padding(
+      padding: EdgeInsetsDirectional.only(bottom: 5.0),
+      child: Divider(
+        style: DividerThemeData(horizontalMargin: EdgeInsets.zero),
       ),
     );
   }
@@ -521,6 +513,14 @@ class _MenuFlyoutSubItemState extends State<_MenuFlyoutSubItem>
   final menuKey = GlobalKey<_MenuFlyoutState>();
 
   Timer? showTimer;
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    final parent = Flyout.of(context);
+    transitionController.duration = parent.transitionDuration;
+    transitionController.reverseDuration = parent.reverseTransitionDuration;
+  }
 
   @override
   void dispose() {

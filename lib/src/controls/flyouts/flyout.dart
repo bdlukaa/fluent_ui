@@ -688,6 +688,7 @@ class FlyoutController with ChangeNotifier {
                       additionalOffset: additionalOffset,
                       margin: margin,
                       transitionDuration: transitionDuration!,
+                      reverseTransitionDuration: reverseTransitionDuration!,
                       root: navigator,
                       builder: (context) {
                         final parentBox =
