@@ -113,6 +113,11 @@ class MenuInfoProvider extends StatefulWidget {
     return context.findAncestorStateOfType<MenuInfoProviderState>()!;
   }
 
+  /// Gets the current state of the sub menus of the root flyout
+  static MenuInfoProviderState? maybeOf(BuildContext context) {
+    return context.findAncestorStateOfType<MenuInfoProviderState>();
+  }
+
   @override
   State<MenuInfoProvider> createState() => MenuInfoProviderState();
 }

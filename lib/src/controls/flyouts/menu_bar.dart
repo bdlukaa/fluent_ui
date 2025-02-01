@@ -234,37 +234,36 @@ class MenuBarState extends State<MenuBar> {
       alignment: AlignmentDirectional.centerStart,
       child: FlyoutTarget(
         controller: _controller,
-        child: Focus(
-          canRequestFocus: false,
-          onKeyEvent: (node, event) {
-            if (event.logicalKey == LogicalKeyboardKey.arrowRight) {
-              final current = _currentOpenItem ?? widget.items.first;
-              final nextItem = next(current);
-              _showFlyout(keyOf(nextItem).currentContext!, nextItem);
-              return KeyEventResult.handled;
-            } else if (event.logicalKey == LogicalKeyboardKey.arrowLeft) {
-              final current = _currentOpenItem ?? widget.items.last;
-              final previousItem = previous(current);
-              _showFlyout(keyOf(previousItem).currentContext!, previousItem);
-              return KeyEventResult.handled;
-            }
+        child: Builder(builder: (context) {
+          // Do not use the [Flyout] object because it is only available for the
+          // flyout content. [MenuInfoProvider] is available for the entire Flyout
+          // popup.
+          final flyout = MenuInfoProvider.maybeOf(context);
 
-            return KeyEventResult.ignored;
-          },
-          child: Row(children: [
-            for (final item in widget.items)
-              Builder(
-                key: _controller.isOpen ? null : keyOf(item),
-                builder: (context) {
-                  return HoverButton(
-                    onPressed: () {
-                      _locked = false;
-                      _showFlyout(context, item);
-                    },
-                    onPointerEnter: _controller.isOpen
-                        ? (_) {
-                            if (_currentOpenItem != item) {
-                              _showFlyout(context, item);
+          /// The flyout menu bar must be invisible because it has transparent
+          /// components, which can lead to visual inconsistencies.
+          return Visibility.maintain(
+            visible: flyout == null,
+            child: Row(children: [
+              for (final item in widget.items)
+                Builder(
+                  key: _controller.isOpen ? null : _keyOf(item),
+                  builder: (context) {
+                    final isSelected = _currentOpenItem == item;
+                    return HoverButton(
+                      margin: EdgeInsetsDirectional.only(
+                        start: barMargin.start,
+                        end: barMargin.end,
+                      ),
+                      onPressed: () {
+                        _locked = false;
+                        _showFlyout(context, item);
+                      },
+                      onPointerEnter: _controller.isOpen
+                          ? (_) {
+                              if (_currentOpenItem != item) {
+                                _showFlyout(context, item);
+                              }
                             }
                           : null,
                       onFocusChange: (focused) {
