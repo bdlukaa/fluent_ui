@@ -12,6 +12,7 @@ class MenuBarPage extends StatefulWidget {
 class _MenuBarPageState extends State<MenuBarPage> with PageMixin {
   var _orientation = 'landscape';
   var _iconSize = 'medium_icons';
+  final _programaticallyKey = GlobalKey<MenuBarState>();
 
   @override
   Widget build(BuildContext context) {
@@ -152,8 +153,7 @@ MenuBar(
     MenuBarItem(title: 'Help', items: [
       MenuFlyoutItem(text: const Text('About'), onPressed: () {}),
     ]),
-  ]
-  ]
+  ],
 )
 ''',
           child: MenuBar(
@@ -229,6 +229,68 @@ MenuBar(
               ]),
             ],
           ),
+        ),
+        subtitle(content: const Text('Open a MenuBar programatically')),
+        description(
+          content: const Text(
+            'You can open a MenuBar programatically using a global key.',
+          ),
+        ),
+        CardHighlight(
+          codeSnippet: '''
+final key = GlobalKey<MenuBarState>();
+
+MenuBar(
+  key: key,
+  items: [
+    MenuBarItem(title: 'File', items: [
+      MenuFlyoutItem(text: const Text('New'), onPressed: () {}),
+      MenuFlyoutItem(text: const Text('Open'), onPressed: () {}),
+      MenuFlyoutItem(text: const Text('Save'), onPressed: () {}),
+      MenuFlyoutItem(text: const Text('Exit'), onPressed: () {}),
+    ]),
+    MenuBarItem(title: 'Edit', items: [
+      MenuFlyoutItem(text: const Text('Cut'), onPressed: () {}),
+      MenuFlyoutItem(text: const Text('Copy'), onPressed: () {}),
+      MenuFlyoutItem(text: const Text('Paste'), onPressed: () {}),
+    ]),
+    MenuBarItem(title: 'Help', items: [
+      MenuFlyoutItem(text: const Text('About'), onPressed: () {}),
+    ]),
+  ],
+),
+
+key.currentState?.showItemAt(items1);
+''',
+          child: Row(children: [
+            Expanded(
+              child: MenuBar(
+                key: _programaticallyKey,
+                items: [
+                  MenuBarItem(title: 'File', items: [
+                    MenuFlyoutItem(text: const Text('New'), onPressed: () {}),
+                    MenuFlyoutItem(text: const Text('Open'), onPressed: () {}),
+                    MenuFlyoutItem(text: const Text('Save'), onPressed: () {}),
+                    MenuFlyoutItem(text: const Text('Exit'), onPressed: () {}),
+                  ]),
+                  MenuBarItem(title: 'Edit', items: [
+                    MenuFlyoutItem(text: const Text('Cut'), onPressed: () {}),
+                    MenuFlyoutItem(text: const Text('Copy'), onPressed: () {}),
+                    MenuFlyoutItem(text: const Text('Paste'), onPressed: () {}),
+                  ]),
+                  MenuBarItem(title: 'Help', items: [
+                    MenuFlyoutItem(text: const Text('About'), onPressed: () {}),
+                  ]),
+                ],
+              ),
+            ),
+            Button(
+              onPressed: () {
+                _programaticallyKey.currentState?.showItemAt(1);
+              },
+              child: const Text('Open MenuBar'),
+            ),
+          ]),
         ),
       ],
     );

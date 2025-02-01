@@ -55,7 +55,7 @@ class MenuBar extends StatefulWidget with Diagnosticable {
   }) : assert(items.isNotEmpty, 'items must not be empty');
 
   @override
-  State<MenuBar> createState() => _MenuBarState();
+  State<MenuBar> createState() => MenuBarState();
 
   @override
   void debugFillProperties(DiagnosticPropertiesBuilder properties) {
@@ -64,7 +64,7 @@ class MenuBar extends StatefulWidget with Diagnosticable {
   }
 }
 
-class _MenuBarState extends State<MenuBar> {
+class MenuBarState extends State<MenuBar> {
   final _controller = FlyoutController();
 
   static const barPadding = EdgeInsetsDirectional.symmetric(
@@ -74,9 +74,11 @@ class _MenuBarState extends State<MenuBar> {
   static const barMargin = EdgeInsetsDirectional.all(4.0);
 
   final Map<MenuBarItem, GlobalKey> _keys = {};
-  GlobalKey keyOf(MenuBarItem item) {
+  GlobalKey? _keyOf(MenuBarItem item) {
     if (_controller.isOpen) {
-      final menuBar = context.findAncestorStateOfType<_MenuBarState>()!;
+      final menuBar = _controller.attachState.context
+          .findAncestorStateOfType<MenuBarState>();
+      if (menuBar == null) return null;
       return menuBar._keys[item] ??= GlobalKey();
     } else {
       return _keys[item] ??= GlobalKey();
@@ -109,10 +111,15 @@ class _MenuBarState extends State<MenuBar> {
 
   bool _locked = false;
   MenuBarItem? _currentOpenItem;
+
+  /// The currently open item in the menu bar.
+  ///
+  /// If null, no item is open.
+  MenuBarItem? get currentOpenItem => _currentOpenItem;
   Future<void> _showFlyout(
     BuildContext context, [
     MenuBarItem? item,
-    bool closeIfOpen = false,
+    bool closeIfOpen = true,
   ]) async {
     if (_locked) return;
     _locked = true;
@@ -128,20 +135,14 @@ class _MenuBarState extends State<MenuBar> {
       ancestor: this.context.findRenderObject(),
     );
     if (_controller.isOpen) {
-      if (closeIfOpen) _controller.close();
       if (_currentOpenItem == item) {
+        if (closeIfOpen) closeFlyout();
         _currentOpenItem = null;
         _locked = false;
         if (mounted) setState(() {});
         return;
       }
-      // Waits for the reverse transition duration.
-      //
-      // Even though the duration is zero, it is necessary to wait for the
-      // transition to finish before showing the next flyout. Otherwise, the
-      // flyout will fail to show due to [_locked]. This has a similar effect
-      // to moving this task to the next frame or using a [Future.microtask].
-      await Future.delayed(Duration.zero);
+      await closeFlyout();
     }
 
     _locked = false;
@@ -163,8 +164,56 @@ class _MenuBarState extends State<MenuBar> {
     );
     setState(() {});
     await future;
-    if (mounted) setState(() {});
     _currentOpenItem = null;
+    if (mounted) setState(() {});
+  }
+
+  /// Close the currently open flyout.
+  ///
+  /// If no flyout is open, this method does nothing.
+  Future<void> closeFlyout() async {
+    if (_controller.isOpen) {
+      _controller.close();
+      // Waits for the reverse transition duration.
+      //
+      // Even though the duration is zero, it is necessary to wait for the
+      // transition to finish before showing the next flyout. Otherwise, the
+      // flyout will fail to show due to [_locked]. This has a similar effect
+      // to moving this task to the next frame or using a [Future.microtask].
+      await Future.delayed(Duration.zero);
+      setState(() {});
+    }
+  }
+
+  /// Show the flyout of the given item.
+  ///
+  /// If the item is not in the menu bar, a [StateError] will be thrown.
+  ///
+  /// [closeIfOpen] determines whether the flyout should be closed if it is
+  /// already open. Defaults to `true`.
+  Future<void> showItem(MenuBarItem item, [bool closeIfOpen = true]) {
+    final key = _keyOf(item);
+    if (key == null) {
+      throw StateError('The item is not in the menu bar.');
+    }
+    final context = key.currentContext;
+    if (context == null) {
+      throw StateError('The item is not in the widget tree.');
+    }
+    return _showFlyout(context, item);
+  }
+
+  /// Show the flyout of the item at the given index.
+  ///
+  /// If the index is out of range, a [RangeError] will be thrown.
+  ///
+  /// [closeIfOpen] determines whether the flyout should be closed if it is
+  /// already open. Defaults to `true`.
+  Future<void> showItemAt(int index, [bool closeIfOpen = true]) {
+    if (index < 0 || index >= widget.items.length) {
+      throw RangeError.range(index, 0, widget.items.length - 1);
+    }
+    return showItem(widget.items[index], closeIfOpen);
   }
 
   @override
@@ -217,15 +266,17 @@ class _MenuBarState extends State<MenuBar> {
                             if (_currentOpenItem != item) {
                               _showFlyout(context, item);
                             }
-                          }
-                        : null,
-                    builder: (context, states) {
-                      return Padding(
-                        padding: EdgeInsetsDirectional.only(
-                          start: barMargin.start,
-                          end: barMargin.end,
-                        ),
-                        child: FocusBorder(
+                          : null,
+                      onFocusChange: (focused) {
+                        if (focused && _controller.isOpen) {
+                          _showFlyout(context, item);
+                        }
+                      },
+                      builder: (context, states) {
+                        if (isSelected) {
+                          states = {...states, WidgetState.hovered};
+                        }
+                        return FocusBorder(
                           focused: states.isFocused,
                           child: Container(
                             padding: barPadding,
@@ -236,14 +287,14 @@ class _MenuBarState extends State<MenuBar> {
                             ),
                             child: Text(item.title),
                           ),
-                        ),
-                      );
-                    },
-                  );
-                },
-              ),
-          ]),
-        ),
+                        );
+                      },
+                    );
+                  },
+                ),
+            ]),
+          );
+        }),
       ),
     );
   }

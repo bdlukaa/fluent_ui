@@ -456,6 +456,12 @@ class FlyoutController with ChangeNotifier {
   /// Whether this flyout controller is attached to any [FlyoutTarget]
   bool get isAttached => _attachState != null;
 
+  /// The state of the attached [FlyoutTarget]
+  State<FlyoutTarget> get attachState {
+    _ensureAttached();
+    return _attachState!;
+  }
+
   /// Attaches this controller to a [FlyoutTarget] widget.
   ///
   /// If already attached, the current state is detached and replaced by the
