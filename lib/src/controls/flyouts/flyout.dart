@@ -449,9 +449,12 @@ typedef FlyoutTransitionBuilder = Widget Function(
 );
 
 /// Controls the state of a flyout
-class FlyoutController with ChangeNotifier {
+class FlyoutController with ChangeNotifier, WidgetsBindingObserver {
+  FlyoutController() {
+    WidgetsBinding.instance.addObserver(this);
+  }
+
   _FlyoutTargetState? _attachState;
-  bool _open = false;
 
   /// Whether this flyout controller is attached to any [FlyoutTarget]
   bool get isAttached => _attachState != null;
@@ -489,7 +492,16 @@ class FlyoutController with ChangeNotifier {
   /// See also:
   ///
   ///  * [showFlyout], which opens the flyout
-  bool get isOpen => _open;
+  bool get isOpen => _route != null;
+
+  PageRouteBuilder? _route;
+
+  /// Make sure the flyout is open.
+  void _ensureOpen() {
+    assert(isOpen, 'The flyout must be open');
+  }
+
+  NavigatorState? _currentNavigator;
 
   /// Shows a flyout.
   ///
@@ -597,13 +609,14 @@ class FlyoutController with ChangeNotifier {
     transitionDuration ??= theme.fastAnimationDuration;
     reverseTransitionDuration ??= transitionDuration;
 
-    final navigator = navigatorKey ?? Navigator.of(context);
+    _currentNavigator = navigatorKey ?? Navigator.of(context);
 
     final Offset targetOffset;
     final Size targetSize;
     final Rect targetRect;
 
-    final navigatorBox = navigator.context.findRenderObject() as RenderBox;
+    final navigatorBox =
+        _currentNavigator!.context.findRenderObject() as RenderBox;
 
     final targetBox = context.findRenderObject() as RenderBox;
     targetSize = targetBox.size;
@@ -618,12 +631,8 @@ class FlyoutController with ChangeNotifier {
         ) &
         targetSize;
 
-    _open = true;
-    notifyListeners();
-
     final flyoutKey = GlobalKey();
-
-    final result = await navigator.push<T>(PageRouteBuilder<T>(
+    _route = PageRouteBuilder<T>(
       opaque: false,
       transitionDuration: transitionDuration,
       reverseTransitionDuration: reverseTransitionDuration,
@@ -659,7 +668,7 @@ class FlyoutController with ChangeNotifier {
         };
 
         return _FlyoutPage(
-          navigator: navigator,
+          navigator: _currentNavigator!,
           targetRect: targetRect,
           attachState: _attachState,
           targetOffset: targetOffset,
@@ -686,9 +695,12 @@ class FlyoutController with ChangeNotifier {
           buildTarget: buildTarget,
         );
       },
-    ));
+    );
+    notifyListeners();
+    final result =
+        await _currentNavigator!.push<T>(_route! as PageRouteBuilder<T>);
 
-    _open = false;
+    _route = _currentNavigator = null;
     notifyListeners();
 
     return result;
@@ -697,11 +709,35 @@ class FlyoutController with ChangeNotifier {
   /// Closes the flyout.
   ///
   /// The flyout must be open, otherwise an error is thrown.
-  void close() {
+  ///
+  /// If any other route is pushed above the Flyout, this route is likely to
+  /// be closed. It is a good practice to close the flyout before pushing new
+  /// routes.
+  ///
+  /// If [force] is true, the flyout is removed from the navigator stack without
+  /// completing the transition.
+  void close([bool force = false]) {
     _ensureAttached();
-    assert(_open);
-    if (!_open) return; // safe for release
-    Navigator.of(_attachState!.context).pop();
+    _ensureOpen();
+    if (_route == null) return; // safe for release
+    if (force) {
+      _currentNavigator!.removeRoute(_route!);
+    } else {
+      _currentNavigator!.maybePop();
+    }
+
+    _route = _currentNavigator = null;
+  }
+
+  @override
+  void didChangeMetrics() {
+    if (isOpen) close();
+  }
+
+  @override
+  void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
+    super.dispose();
   }
 }
 
