@@ -302,6 +302,12 @@ class _MyHomePageState extends State<MyHomePage> with WindowListener {
       body: const SizedBox.shrink(),
     ),
     PaneItem(
+      key: const ValueKey('/popups/menu_bar'),
+      icon: const Icon(FluentIcons.expand_menu),
+      title: const Text('MenuBar'),
+      body: const SizedBox.shrink(),
+    ),
+    PaneItem(
       key: const ValueKey('/popups/tooltip'),
       icon: const Icon(FluentIcons.hint_text),
       title: const Text('Tooltip'),
@@ -938,6 +944,15 @@ final router = GoRouter(navigatorKey: rootNavigatorKey, routes: [
         builder: (context, state) => DeferredWidget(
           surfaces.loadLibrary,
           () => popups.ContentDialogPage(),
+        ),
+      ),
+
+      /// MenuBar
+      GoRoute(
+        path: '/popups/menu_bar',
+        builder: (context, state) => DeferredWidget(
+          surfaces.loadLibrary,
+          () => popups.MenuBarPage(),
         ),
       ),
 

@@ -3,7 +3,6 @@ import 'dart:math' as math;
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/gestures.dart';
-import 'package:flutter/rendering.dart';
 
 /// Defines constants that specify the preferred location for positioning a
 /// flyout derived control relative to a visual element.
@@ -151,6 +150,7 @@ enum FlyoutPlacementMode {
     FlyoutAutoConfiguration configuration,
   ) {
     assert(this == FlyoutPlacementMode.auto);
+    assert(configuration.autoAvailableSpace != null);
 
     // as = available space
 
@@ -284,6 +284,7 @@ class _FlyoutPositionDelegate extends SingleChildLayoutDelegate {
     required this.margin,
     required this.shouldConstrainToRootBounds,
     required this.forceAvailableSpace,
+    required this.onAutoModeChange,
   });
 
   final Offset targetOffset;
@@ -297,6 +298,8 @@ class _FlyoutPositionDelegate extends SingleChildLayoutDelegate {
   final bool shouldConstrainToRootBounds;
 
   final bool forceAvailableSpace;
+
+  final ValueChanged<FlyoutPlacementMode> onAutoModeChange;
 
   @override
   BoxConstraints getConstraintsForChild(BoxConstraints constraints) {
@@ -344,6 +347,10 @@ class _FlyoutPositionDelegate extends SingleChildLayoutDelegate {
           }(),
         ),
       );
+    }
+
+    if (autoPlacementMode != placementMode) {
+      onAutoModeChange(autoPlacementMode!);
     }
 
     double clampHorizontal(double x) {
@@ -428,7 +435,7 @@ class _FlyoutPositionDelegate extends SingleChildLayoutDelegate {
   }
 
   @override
-  bool shouldRelayout(_FlyoutPositionDelegate oldDelegate) {
+  bool shouldRelayout(covariant _FlyoutPositionDelegate oldDelegate) {
     return targetOffset != oldDelegate.targetOffset ||
         placementMode != oldDelegate.placementMode;
   }
@@ -442,12 +449,21 @@ typedef FlyoutTransitionBuilder = Widget Function(
 );
 
 /// Controls the state of a flyout
-class FlyoutController with ChangeNotifier {
+class FlyoutController with ChangeNotifier, WidgetsBindingObserver {
+  FlyoutController() {
+    WidgetsBinding.instance.addObserver(this);
+  }
+
   _FlyoutTargetState? _attachState;
-  bool _open = false;
 
   /// Whether this flyout controller is attached to any [FlyoutTarget]
   bool get isAttached => _attachState != null;
+
+  /// The state of the attached [FlyoutTarget]
+  State<FlyoutTarget> get attachState {
+    _ensureAttached();
+    return _attachState!;
+  }
 
   /// Attaches this controller to a [FlyoutTarget] widget.
   ///
@@ -476,7 +492,16 @@ class FlyoutController with ChangeNotifier {
   /// See also:
   ///
   ///  * [showFlyout], which opens the flyout
-  bool get isOpen => _open;
+  bool get isOpen => _route != null;
+
+  PageRouteBuilder? _route;
+
+  /// Make sure the flyout is open.
+  void _ensureOpen() {
+    assert(isOpen, 'The flyout must be open');
+  }
+
+  NavigatorState? _currentNavigator;
 
   /// Shows a flyout.
   ///
@@ -514,7 +539,11 @@ class FlyoutController with ChangeNotifier {
   /// bounds of the closest [Navigator]. If false, the flyout may overflow the
   /// screen on all sides. Defaults to `true`
   ///
-  /// [additionalOffset] is the offset of the flyout around the attached target
+  /// [additionalOffset] is the offset of the flyout around the attached target.
+  /// This value can not be negative.
+  ///
+  /// [horizontalOffset] is the horizontal offset of the flyout around the
+  /// attached target. Defaults to 0.0.
   ///
   /// [margin] is the margin of the flyout to the root bounds
   ///
@@ -527,7 +556,13 @@ class FlyoutController with ChangeNotifier {
   ///
   /// [transitionDuration] configures the duration of the transition animation.
   /// By default, [FluentThemeData.fastAnimationDuration] is used. Set to [Duration.zero]
-  /// to disable transitions at all
+  /// to disable transitions at all.
+  ///
+  /// [reverseTransitionDuration] configures the duration of the reverse transition
+  /// animation. By default, [transitionDuration] is used. Set to [Duration.zero]
+  /// to disable transitions at all.
+  ///
+  /// [transitionCurve] configures the curve of the transition animation.
   ///
   /// [position] lets you position the flyout anywhere on the screen, making it
   /// possible to create context menus. If provided, [placementMode] is ignored.
@@ -551,11 +586,14 @@ class FlyoutController with ChangeNotifier {
     bool forceAvailableSpace = false,
     bool shouldConstrainToRootBounds = true,
     double additionalOffset = 8.0,
+    double horizontalOffset = 0.0,
     double margin = 8.0,
     Color? barrierColor,
     NavigatorState? navigatorKey,
     FlyoutTransitionBuilder? transitionBuilder,
     Duration? transitionDuration,
+    Duration? reverseTransitionDuration,
+    Curve transitionCurve = Curves.linear,
     Offset? position,
     RouteSettings? settings,
     GestureRecognizer? barrierRecognizer,
@@ -569,221 +607,100 @@ class FlyoutController with ChangeNotifier {
 
     final theme = FluentTheme.of(context);
     transitionDuration ??= theme.fastAnimationDuration;
+    reverseTransitionDuration ??= transitionDuration;
 
-    final navigator = navigatorKey ?? Navigator.of(context);
+    _currentNavigator = navigatorKey ?? Navigator.of(context);
 
     final Offset targetOffset;
     final Size targetSize;
     final Rect targetRect;
 
-    if (position != null) {
-      targetOffset = position;
-      targetSize = Size.zero;
-      targetRect = Rect.zero;
-    } else {
-      final navigatorBox = navigator.context.findRenderObject() as RenderBox;
+    final navigatorBox =
+        _currentNavigator!.context.findRenderObject() as RenderBox;
 
-      final targetBox = context.findRenderObject() as RenderBox;
-      targetSize = targetBox.size;
-      targetOffset = targetBox.localToGlobal(
-            Offset.zero,
-            ancestor: navigatorBox,
-          ) +
-          Offset(0, targetSize.height);
-      targetRect = targetBox.localToGlobal(
-            Offset.zero,
-            ancestor: navigatorBox,
-          ) &
-          targetSize;
-    }
-
-    _open = true;
-    notifyListeners();
+    final targetBox = context.findRenderObject() as RenderBox;
+    targetSize = targetBox.size;
+    targetOffset = targetBox.localToGlobal(
+          Offset.zero,
+          ancestor: navigatorBox,
+        ) +
+        Offset(horizontalOffset, targetSize.height);
+    targetRect = targetBox.localToGlobal(
+          Offset.zero,
+          ancestor: navigatorBox,
+        ) &
+        targetSize;
 
     final flyoutKey = GlobalKey();
-
-    final result = await navigator.push<T>(PageRouteBuilder<T>(
+    _route = PageRouteBuilder<T>(
       opaque: false,
       transitionDuration: transitionDuration,
-      reverseTransitionDuration: transitionDuration,
+      reverseTransitionDuration: reverseTransitionDuration,
       settings: settings,
       fullscreenDialog: true,
       pageBuilder: (context, animation, secondary) {
         transitionBuilder ??= (context, animation, placementMode, flyout) {
           switch (placementMode) {
-            case FlyoutPlacementMode.bottomCenter:
-            case FlyoutPlacementMode.bottomLeft:
-            case FlyoutPlacementMode.bottomRight:
-              return SlideTransition(
-                position: Tween<Offset>(
-                  begin: const Offset(0, -0.05),
-                  end: const Offset(0, 0),
-                ).animate(animation),
-                child: flyout,
-              );
             case FlyoutPlacementMode.topCenter:
             case FlyoutPlacementMode.topLeft:
             case FlyoutPlacementMode.topRight:
               return SlideTransition(
                 position: Tween<Offset>(
-                  begin: const Offset(0, 0.05),
+                  begin: const Offset(0, 0.25),
                   end: const Offset(0, 0),
                 ).animate(animation),
                 child: flyout,
               );
+            case FlyoutPlacementMode.bottomCenter:
+            case FlyoutPlacementMode.bottomLeft:
+            case FlyoutPlacementMode.bottomRight:
             default:
-              return flyout;
+              return ClipRect(
+                child: SlideTransition(
+                  position: Tween<Offset>(
+                    begin: const Offset(0.0, -0.15),
+                    end: Offset.zero,
+                  ).animate(animation),
+                  child: flyout,
+                ),
+              );
           }
         };
 
-        return MenuInfoProvider(
-          builder: (context, rootSize, menus, keys) {
-            assert(menus.length == keys.length);
-
-            final barrier = ColoredBox(
-              color: barrierColor ?? Colors.black.withValues(alpha: 0.3),
-            );
-
-            Widget box = Stack(children: [
-              if (barrierRecognizer != null)
-                Positioned.fill(
-                  child: Listener(
-                    behavior: HitTestBehavior.opaque,
-                    onPointerDown: (event) {
-                      barrierRecognizer.addPointer(event);
-                    },
-                    child: barrier,
-                  ),
-                )
-              else if (barrierDismissible)
-                Positioned.fill(
-                  child: GestureDetector(
-                    behavior: HitTestBehavior.opaque,
-                    onTap: barrierDismissible ? navigator.pop : null,
-                    child: barrier,
-                  ),
-                ),
-              if (buildTarget)
-                Positioned.fromRect(
-                  rect: targetRect,
-                  child: _attachState!.build(context),
-                ),
-              Positioned.fill(
-                child: SafeArea(
-                  child: CustomSingleChildLayout(
-                    delegate: _FlyoutPositionDelegate(
-                      targetOffset: targetOffset,
-                      targetSize: position == null ? targetSize : Size.zero,
-                      autoModeConfiguration: autoModeConfiguration,
-                      placementMode: placementMode,
-                      defaultPreferred: position == null
-                          ? FlyoutPlacementMode.topCenter
-                          : FlyoutPlacementMode.bottomLeft,
-                      margin: margin,
-                      shouldConstrainToRootBounds: shouldConstrainToRootBounds,
-                      forceAvailableSpace: forceAvailableSpace,
-                    ),
-                    child: Flyout(
-                      rootFlyout: flyoutKey,
-                      additionalOffset: additionalOffset,
-                      margin: margin,
-                      transitionDuration: transitionDuration!,
-                      root: navigator,
-                      builder: (context) {
-                        final parentBox =
-                            context.findAncestorRenderObjectOfType<
-                                RenderCustomSingleChildLayoutBox>()!;
-                        final delegate =
-                            parentBox.delegate as _FlyoutPositionDelegate;
-
-                        final realPlacementMode = delegate.autoPlacementMode ??
-                            delegate.placementMode;
-                        final flyout = Padding(
-                          key: flyoutKey,
-                          padding:
-                              realPlacementMode._getAdditionalOffsetPosition(
-                            position == null ? additionalOffset : 0.0,
-                          ),
-                          child: builder(context),
-                        );
-
-                        return transitionBuilder!(
-                          context,
-                          animation,
-                          realPlacementMode,
-                          flyout,
-                        );
-                      },
-                    ),
-                  ),
-                ),
-              ),
-              ...menus,
-            ]);
-
-            if (dismissOnPointerMoveAway) {
-              box = MouseRegion(
-                onHover: (hover) {
-                  if (flyoutKey.currentContext == null) return;
-
-                  final navigatorBox =
-                      navigator.context.findRenderObject() as RenderBox;
-
-                  // the flyout box needs to be fetched at each [onHover] because the
-                  // flyout size may change (a MenuFlyout, for example)
-                  final flyoutBox =
-                      flyoutKey.currentContext!.findRenderObject() as RenderBox;
-                  final flyoutRect = flyoutBox.localToGlobal(
-                        Offset.zero,
-                        ancestor: navigatorBox,
-                      ) &
-                      flyoutBox.size;
-                  final menusRects = keys.map((key) {
-                    if (key.currentContext == null) return Rect.zero;
-
-                    final menuBox =
-                        key.currentContext!.findRenderObject() as RenderBox;
-                    return menuBox.localToGlobal(
-                          Offset.zero,
-                          ancestor: navigatorBox,
-                        ) &
-                        menuBox.size;
-                  });
-
-                  if (!flyoutRect.contains(hover.position) &&
-                      !targetRect.contains(hover.position) &&
-                      !menusRects
-                          .any((rect) => rect.contains(hover.position))) {
-                    navigator.pop();
-                  }
-                },
-                child: box,
-              );
-            }
-
-            if (dismissWithEsc) {
-              box = Actions(
-                actions: {DismissIntent: _DismissAction(navigator.pop)},
-                child: FocusScope(
-                  autofocus: true,
-                  child: box,
-                ),
-              );
-            }
-
-            return FadeTransition(
-              opacity: CurvedAnimation(
-                curve: Curves.ease,
-                parent: animation,
-              ),
-              child: box,
-            );
-          },
+        return _FlyoutPage(
+          navigator: _currentNavigator!,
+          targetRect: targetRect,
+          attachState: _attachState,
+          targetOffset: targetOffset,
+          targetSize: targetSize,
+          flyoutKey: flyoutKey,
+          navigatorBox: navigatorBox,
+          barrierColor: barrierColor,
+          barrierRecognizer: barrierRecognizer,
+          barrierDismissible: barrierDismissible,
+          dismissWithEsc: dismissWithEsc,
+          dismissOnPointerMoveAway: dismissOnPointerMoveAway,
+          placementMode: placementMode,
+          autoModeConfiguration: autoModeConfiguration,
+          forceAvailableSpace: forceAvailableSpace,
+          shouldConstrainToRootBounds: shouldConstrainToRootBounds,
+          additionalOffset: additionalOffset,
+          margin: margin,
+          transitionBuilder: transitionBuilder!,
+          animation: CurvedAnimation(curve: transitionCurve, parent: animation),
+          transitionDuration: transitionDuration,
+          reverseTransitionDuration: reverseTransitionDuration,
+          position: position,
+          builder: builder,
+          buildTarget: buildTarget,
         );
       },
-    ));
+    );
+    notifyListeners();
+    final result =
+        await _currentNavigator!.push<T>(_route! as PageRouteBuilder<T>);
 
-    _open = false;
+    _route = _currentNavigator = null;
     notifyListeners();
 
     return result;
@@ -792,11 +709,278 @@ class FlyoutController with ChangeNotifier {
   /// Closes the flyout.
   ///
   /// The flyout must be open, otherwise an error is thrown.
-  void close() {
+  ///
+  /// If any other route is pushed above the Flyout, this route is likely to
+  /// be closed. It is a good practice to close the flyout before pushing new
+  /// routes.
+  ///
+  /// If [force] is true, the flyout is removed from the navigator stack without
+  /// completing the transition.
+  void close([bool force = false]) {
     _ensureAttached();
-    assert(_open);
-    if (!_open) return; // safe for release
-    Navigator.of(_attachState!.context).pop();
+    _ensureOpen();
+    if (_route == null) return; // safe for release
+    if (force) {
+      _currentNavigator!.removeRoute(_route!);
+    } else {
+      _currentNavigator!.maybePop();
+    }
+
+    _route = _currentNavigator = null;
+  }
+
+  @override
+  void didChangeMetrics() {
+    if (isOpen) close();
+  }
+
+  @override
+  void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
+    super.dispose();
+  }
+}
+
+/// This is a hacky way to calculate the automatic flyout mode and pass it to
+/// the [transitionBuilder] callback.
+///
+/// First, it renders the flyout with a [CustomSingleChildLayout] and, with a
+/// callback, gets the parsed mode. Then, it rebuilds only the actual flyout
+/// widget using a [StatefulBuilder] and a [GlobalKey], passing the parsed mode
+/// to the [transitionBuilder] callback.
+class _FlyoutPage extends StatefulWidget {
+  const _FlyoutPage({
+    required this.navigator,
+    required this.targetRect,
+    required _FlyoutTargetState? attachState,
+    required this.targetOffset,
+    required this.targetSize,
+    required this.flyoutKey,
+    required this.navigatorBox,
+    required this.barrierColor,
+    required this.barrierRecognizer,
+    required this.barrierDismissible,
+    required this.dismissWithEsc,
+    required this.dismissOnPointerMoveAway,
+    required this.placementMode,
+    required this.autoModeConfiguration,
+    required this.forceAvailableSpace,
+    required this.shouldConstrainToRootBounds,
+    required this.additionalOffset,
+    required this.margin,
+    required this.transitionBuilder,
+    required this.animation,
+    required this.transitionDuration,
+    required this.reverseTransitionDuration,
+    required this.position,
+    required this.builder,
+    required this.buildTarget,
+  }) : _attachState = attachState;
+
+  final NavigatorState navigator;
+  final Rect targetRect;
+  final _FlyoutTargetState? _attachState;
+  final Offset targetOffset;
+  final Size targetSize;
+  final GlobalKey<State<StatefulWidget>> flyoutKey;
+  final RenderBox navigatorBox;
+  final Color? barrierColor;
+  final GestureRecognizer? barrierRecognizer;
+  final bool barrierDismissible;
+  final bool dismissWithEsc;
+  final bool dismissOnPointerMoveAway;
+  final FlyoutPlacementMode placementMode;
+  final FlyoutAutoConfiguration? autoModeConfiguration;
+  final bool forceAvailableSpace;
+  final bool shouldConstrainToRootBounds;
+  final double additionalOffset;
+  final double margin;
+  final FlyoutTransitionBuilder transitionBuilder;
+  final Animation<double> animation;
+  final Duration? transitionDuration;
+  final Duration? reverseTransitionDuration;
+  final Offset? position;
+  final WidgetBuilder builder;
+  final bool buildTarget;
+
+  @override
+  State<_FlyoutPage> createState() => _FlyoutPageState();
+}
+
+class _FlyoutPageState extends State<_FlyoutPage> {
+  FlyoutPlacementMode? _autoMode;
+
+  final _key = GlobalKey<State>();
+
+  @override
+  Widget build(BuildContext context) {
+    return MenuInfoProvider(builder: (context, rootSize, menus, keys) {
+      assert(menus.length == keys.length);
+
+      final barrier = ColoredBox(
+        color: widget.barrierColor ?? Colors.black.withValues(alpha: 0.3),
+      );
+
+      Widget box = Stack(children: [
+        if (widget.barrierRecognizer != null)
+          Positioned.fill(
+            child: Listener(
+              behavior: HitTestBehavior.opaque,
+              onPointerDown: (event) {
+                widget.barrierRecognizer!.addPointer(event);
+              },
+              child: barrier,
+            ),
+          )
+        else if (widget.barrierDismissible)
+          Positioned.fill(
+            child: GestureDetector(
+              behavior: HitTestBehavior.opaque,
+              onTap: widget.barrierDismissible ? widget.navigator.pop : null,
+              child: barrier,
+            ),
+          ),
+        if (widget.buildTarget)
+          Positioned.fromRect(
+            rect: widget.targetRect,
+            child: widget._attachState!.build(context),
+          ),
+        Positioned.fill(
+          child: SafeArea(
+            child: CustomSingleChildLayout(
+              delegate: _FlyoutPositionDelegate(
+                targetOffset: widget.position ?? widget.targetOffset,
+                targetSize:
+                    widget.position == null ? widget.targetSize : Size.zero,
+                autoModeConfiguration: widget.autoModeConfiguration,
+                placementMode: widget.placementMode,
+                defaultPreferred: widget.position == null
+                    ? FlyoutPlacementMode.topCenter
+                    : FlyoutPlacementMode.bottomLeft,
+                margin: widget.margin,
+                shouldConstrainToRootBounds: widget.shouldConstrainToRootBounds,
+                forceAvailableSpace: widget.forceAvailableSpace,
+                onAutoModeChange: (mode) {
+                  _autoMode = mode;
+                  WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+                    _key.currentState?.setState(() {});
+                  });
+                },
+              ),
+              child: StatefulBuilder(
+                key: _key,
+                builder: (context, setState) {
+                  return Flyout(
+                    rootFlyout: widget.flyoutKey,
+                    additionalOffset: widget.additionalOffset,
+                    margin: widget.margin,
+                    transitionDuration: widget.transitionDuration!,
+                    reverseTransitionDuration:
+                        widget.reverseTransitionDuration!,
+                    root: widget.navigator,
+                    menuKey: null,
+                    transitionBuilder: widget.transitionBuilder,
+                    builder: (context) {
+                      FlyoutPlacementMode realPlacementMode =
+                          widget.placementMode;
+                      if (widget.placementMode == FlyoutPlacementMode.auto) {
+                        if (_autoMode == null) {
+                          return Visibility(
+                            visible: false,
+                            maintainSize: true,
+                            maintainAnimation: true,
+                            maintainState: true,
+                            child: widget.builder(context),
+                          );
+                        } else {
+                          realPlacementMode = _autoMode!;
+                        }
+                      } else {
+                        realPlacementMode = widget.placementMode;
+                      }
+                      final flyout = Padding(
+                        key: widget.flyoutKey,
+                        padding: realPlacementMode._getAdditionalOffsetPosition(
+                          widget.position == null
+                              ? widget.additionalOffset
+                              : 0.0,
+                        ),
+                        child: widget.builder(context),
+                      );
+
+                      return widget.transitionBuilder(
+                        context,
+                        widget.animation,
+                        realPlacementMode,
+                        flyout,
+                      );
+                    },
+                  );
+                },
+              ),
+            ),
+          ),
+        ),
+        ...menus,
+      ]);
+
+      if (widget.dismissOnPointerMoveAway) {
+        box = MouseRegion(
+          onHover: (hover) {
+            if (widget.flyoutKey.currentContext == null) return;
+
+            final navigatorBox =
+                widget.navigator.context.findRenderObject() as RenderBox;
+
+            // the flyout box needs to be fetched at each [onHover] because the
+            // flyout size may change (a MenuFlyout, for example)
+            final flyoutBox = widget.flyoutKey.currentContext!
+                .findRenderObject() as RenderBox;
+            final flyoutRect = flyoutBox.localToGlobal(
+                  Offset.zero,
+                  ancestor: navigatorBox,
+                ) &
+                flyoutBox.size;
+            final menusRects = keys.map((key) {
+              if (key.currentContext == null) return Rect.zero;
+
+              final menuBox =
+                  key.currentContext!.findRenderObject() as RenderBox;
+              return menuBox.localToGlobal(
+                    Offset.zero,
+                    ancestor: navigatorBox,
+                  ) &
+                  menuBox.size;
+            });
+
+            if (!flyoutRect.contains(hover.position) &&
+                !widget.targetRect.contains(hover.position) &&
+                !menusRects.any((rect) => rect.contains(hover.position))) {
+              widget.navigator.pop();
+            }
+          },
+          child: box,
+        );
+      }
+
+      if (widget.dismissWithEsc) {
+        box = Actions(
+          actions: {DismissIntent: _DismissAction(widget.navigator.pop)},
+          child: FocusScope(
+            autofocus: true,
+            child: box,
+          ),
+        );
+      }
+
+      return FadeTransition(
+        opacity: CurvedAnimation(
+          curve: Curves.ease,
+          parent: widget.animation,
+        ),
+        child: box,
+      );
+    });
   }
 }
 

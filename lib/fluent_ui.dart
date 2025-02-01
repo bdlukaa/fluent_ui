@@ -41,6 +41,7 @@ export 'src/app.dart';
 export 'src/controls/flyouts/content.dart';
 export 'src/controls/flyouts/content_manager.dart';
 export 'src/controls/flyouts/flyout.dart';
+export 'src/controls/flyouts/menu_bar.dart';
 export 'src/controls/flyouts/menu.dart';
 export 'src/controls/form/auto_suggest_box.dart';
 export 'src/controls/form/combo_box.dart';

@@ -212,16 +212,20 @@ class CommandBarState extends State<CommandBar> {
                 : FlyoutPlacementMode.right)
             .resolve(Directionality.of(context)),
       ),
+      additionalOffset: 0.0,
       builder: (context) {
         return FlyoutContent(
+          padding: kDefaultMenuPadding,
           constraints: const BoxConstraints(maxWidth: 200.0),
-          padding: const EdgeInsetsDirectional.only(top: 8.0),
-          child: ListView(
-            shrinkWrap: true,
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
             children: allSecondaryItems.map((item) {
-              return item.build(
-                context,
-                CommandBarItemDisplayMode.inSecondary,
+              return Padding(
+                padding: kDefaultMenuItemMargin,
+                child: item.build(
+                  context,
+                  CommandBarItemDisplayMode.inSecondary,
+                ),
               );
             }).toList(),
           ),
