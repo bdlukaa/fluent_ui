@@ -896,9 +896,7 @@ class _MenuFlyoutPaneItem extends MenuFlyoutItemBase {
 
         return Container(
           width: size.isEmpty ? null : size.width,
-          padding: MenuFlyout.itemsPadding
-              // the scrollbar padding
-              .add(const EdgeInsetsDirectional.only(end: 4.0))
+          padding: const EdgeInsetsDirectional.only(end: 4.0)
               .add(padding ?? EdgeInsets.zero),
           height: 36.0,
           color: ButtonThemeData.uncheckedInputColor(

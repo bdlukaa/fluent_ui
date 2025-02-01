@@ -929,9 +929,8 @@ class _PaneItemExpanderMenuItem extends MenuFlyoutItemBase {
     final theme = FluentTheme.of(context);
     final navigationTheme = NavigationPaneTheme.of(context);
     final size = Flyout.of(context).size;
-    return Container(
+    return SizedBox(
       width: size.isEmpty ? null : size.width,
-      padding: MenuFlyout.itemsPadding,
       child: HoverButton(
         onPressed: item.enabled ? onPressed : null,
         forceEnabled: item.enabled,

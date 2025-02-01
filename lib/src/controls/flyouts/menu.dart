@@ -3,6 +3,11 @@ import 'dart:async';
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter/foundation.dart';
 
+const kDefaultMenuItemMargin = EdgeInsetsDirectional.symmetric(
+  horizontal: 4.0,
+  vertical: 2.0,
+);
+
 /// Menu flyouts are used in menu and context menu scenarios to display a list
 /// of commands or options when requested by the user. A menu flyout shows a
 /// single, inline, top-level menu that can have menu items and sub-menus.
@@ -23,7 +28,7 @@ class MenuFlyout extends StatefulWidget {
     this.shadowColor = Colors.black,
     this.elevation = 8.0,
     this.constraints,
-    this.padding = const EdgeInsetsDirectional.only(top: 8.0),
+    this.itemMargin = kDefaultMenuItemMargin,
   });
 
   /// {@template fluent_ui.flyouts.menu.items}
@@ -55,12 +60,8 @@ class MenuFlyout extends StatefulWidget {
   /// Additional constraints to apply to the child.
   final BoxConstraints? constraints;
 
-  /// The padding applied the [items], with correct handling when scrollable
-  final EdgeInsetsGeometry? padding;
-
-  static const EdgeInsetsGeometry itemsPadding = EdgeInsets.symmetric(
-    horizontal: 8.0,
-  );
+  /// The spacing between the items.
+  final EdgeInsetsGeometry itemMargin;
 
   @override
   State<MenuFlyout> createState() => _MenuFlyoutState();
@@ -102,12 +103,11 @@ class _MenuFlyoutState extends State<MenuFlyout> {
       elevation: widget.elevation,
       shadowColor: widget.shadowColor,
       shape: widget.shape,
-      padding: EdgeInsets.zero,
+      padding: const EdgeInsetsDirectional.symmetric(vertical: 2.0),
       useAcrylic: DisableAcrylic.of(context) != null,
       child: ScrollConfiguration(
         behavior: const _MenuScrollBehavior(),
         child: SingleChildScrollView(
-          padding: widget.padding,
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             mainAxisSize: MainAxisSize.min,
@@ -121,7 +121,10 @@ class _MenuFlyoutState extends State<MenuFlyout> {
               }
               return KeyedSubtree(
                 key: item.key,
-                child: item.build(context),
+                child: Padding(
+                  padding: widget.itemMargin,
+                  child: item.build(context),
+                ),
               );
             }),
           ),
@@ -287,10 +290,10 @@ class MenuFlyoutItem extends MenuFlyoutItemBase {
   @override
   Widget build(BuildContext context) {
     final size = Flyout.of(context).size;
-    return Container(
+    return SizedBox(
       width: size.isEmpty ? null : size.width,
-      padding: MenuFlyout.itemsPadding,
       child: FlyoutListTile(
+        margin: EdgeInsets.zero,
         selected: selected,
         showSelectedIndicator: false,
         icon: leading ??
@@ -609,7 +612,7 @@ class _MenuFlyoutSubItemState extends State<_MenuFlyoutSubItem>
                 color: menuFlyout?.color,
                 constraints: menuFlyout?.constraints,
                 elevation: menuFlyout?.elevation ?? 8.0,
-                padding: menuFlyout?.padding,
+                itemMargin: menuFlyout?.itemMargin ?? kDefaultMenuItemMargin,
                 shadowColor: menuFlyout?.shadowColor ?? Colors.black,
                 shape: menuFlyout?.shape,
                 items: widget.items(context),
@@ -669,7 +672,7 @@ class _SubItemPositionDelegate extends SingleChildLayoutDelegate {
   Offset getPositionForChild(Size rootSize, Size flyoutSize) {
     var x = parentRect.left +
         parentRect.size.width -
-        MenuFlyout.itemsPadding.horizontal / 2;
+        kDefaultMenuItemMargin.horizontal / 2;
 
     // if the flyout will overflow the screen on the right
     final willOverflowX = x + flyoutSize.width + margin > rootSize.width;
@@ -683,7 +686,7 @@ class _SubItemPositionDelegate extends SingleChildLayoutDelegate {
     if (willOverflowX) {
       final rightX = parentRect.left -
           flyoutSize.width +
-          MenuFlyout.itemsPadding.horizontal / 2;
+          kDefaultMenuItemMargin.horizontal / 2;
       if (rightX > margin) {
         x = rightX;
       } else {
