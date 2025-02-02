@@ -1,20 +1,22 @@
 import 'package:fluent_ui/fluent_ui.dart';
 
+/// https://github.com/microsoft/microsoft-ui-xaml/blob/main/src/controls/dev/TeachingTip/TeachingTip_themeresources.xaml
 const kTeachingTipConstraints = BoxConstraints(
   minHeight: 40.0,
   maxHeight: 520.0,
-  minWidth: 320.0,
   maxWidth: 336.0,
 );
+
+typedef TooltipCloseCallback = void Function(BuildContext context);
 
 /// Displays a Fluent teaching tip at the desired position, with Fluent entrance
 /// and exit animations, modal barrier color, and modal barrier behavior
 /// (dialog is dismissible with a tap on the barrier).
 ///
-/// This function takes a `teachingTip`, which typically builds a [TeachingTip]
+/// This function takes a [builder], which typically builds a [TeachingTip].
 ///
-/// The `context` argument is used to look up the [Navigator] and [FluentTheme] for
-/// the dialog. It is only used when the method is called. Its corresponding
+/// The `context` argument is used to look up the [Navigator] and [FluentTheme]
+/// for the dialog. It is only used when the method is called. Its corresponding
 /// widget can be safely removed from the tree before the dialog is closed.
 ///
 /// The `barrierDismissible` argument is used to indicate whether tapping on the
@@ -55,9 +57,11 @@ const kTeachingTipConstraints = BoxConstraints(
 ///
 /// See also:
 ///
+///  * [TeachingTip], a semi-persistent and content-rich flyout that provides
+///                   contextual information.
 ///  * [ContentDialog], for dialogs that have a row of buttons below a body.
-///  * [showGeneralDialog], which allows for customization of the dialog popup.
-///  * <https://docs.microsoft.com/en-us/windows/apps/design/controls/dialogs-and-flyouts/dialogs>
+///  * [showDialog], which allows for customization of the dialog popup.
+///  * <https://learn.microsoft.com/en-us/windows/apps/design/controls/dialogs-and-flyouts/teaching-tip>
 Future<T?> showTeachingTip<T extends Object?>({
   required WidgetBuilder builder,
   required FlyoutController flyoutController,
@@ -73,7 +77,6 @@ Future<T?> showTeachingTip<T extends Object?>({
     placementMode: placementMode,
     transitionDuration: transitionDuration,
     transitionBuilder: TeachingTip.defaultTransitionBuilder,
-    flyoutConstraints: kTeachingTipConstraints,
     builder: (context) {
       final teachingTip = builder(context);
 
@@ -104,25 +107,40 @@ Future<T?> showTeachingTip<T extends Object?>({
 ///  * [Tooltip], a popup that contains additional information about another object.
 ///  * <https://learn.microsoft.com/en-us/windows/apps/design/controls/dialogs-and-flyouts/teaching-tip>
 class TeachingTip extends StatelessWidget {
-  /// Creates a teaching tip
+  /// Creates a teaching tip.
   const TeachingTip({
     super.key,
     required this.title,
     required this.subtitle,
     this.buttons = const [],
+    this.onClose = defaultCloseCallback,
   });
 
-  /// The title of the teaching tip
+  /// The title of the teaching tip.
   ///
-  /// Usually a [Text]
+  /// Usually a [Text] widget.
   final Widget title;
 
-  /// The subttile of the teaching tip
+  /// The subttile of the teaching tip.
   ///
-  /// Usually a [Text]
+  /// Usually a [Text].
   final Widget subtitle;
 
+  /// The buttons to show at the bottom of the teaching tip.
   final List<Widget> buttons;
+
+  /// Called when the close button is pressed.
+  ///
+  /// Set it to `null` to hide the close button.
+  ///
+  /// By default, it pops the current route. It is recommended to override this
+  /// to use `flyoutController.close()`.
+  final TooltipCloseCallback? onClose;
+
+  /// The default close callback for the teaching tip.
+  static void defaultCloseCallback(BuildContext context) {
+    Navigator.of(context).pop();
+  }
 
   static Widget defaultTransitionBuilder(
     BuildContext context,
@@ -173,45 +191,48 @@ class TeachingTip extends StatelessWidget {
     assert(debugCheckHasFluentTheme(context));
     final theme = FluentTheme.of(context);
 
-    return Acrylic(
-      elevation: 1.0,
-      shadowColor: Colors.black,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(6.0),
-        side: BorderSide(
-          color: theme.resources.surfaceStrokeColorDefault,
+    return ConstrainedBox(
+      constraints: kTeachingTipConstraints,
+      child: Acrylic(
+        elevation: 1.0,
+        shadowColor: Colors.black,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(6.0),
+          side: BorderSide(
+            color: theme.resources.surfaceStrokeColorDefault,
+          ),
         ),
-      ),
-      child: Container(
-        color: theme.menuColor.withValues(alpha: 0.6),
-        padding: const EdgeInsets.all(12.0),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            DefaultTextStyle(
-              style: theme.typography.bodyStrong ?? const TextStyle(),
-              child: title,
-            ),
-            subtitle,
-            if (buttons.isNotEmpty)
-              Padding(
-                padding: const EdgeInsets.only(top: 6.0),
-                child: Row(
-                  children: buttons.indexed.map<Widget>((element) {
-                    var (int index, Widget button) = element;
-                    final isLast = buttons.length - 1 == index;
-                    if (isLast) return Expanded(child: button);
-                    return Expanded(
-                      child: Padding(
-                        padding: const EdgeInsetsDirectional.only(end: 6.0),
-                        child: button,
-                      ),
-                    );
-                  }).toList(),
-                ),
+        child: Container(
+          color: theme.menuColor.withValues(alpha: 0.6),
+          padding: const EdgeInsets.all(12.0),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              DefaultTextStyle(
+                style: theme.typography.bodyStrong ?? const TextStyle(),
+                child: title,
               ),
-          ],
+              subtitle,
+              if (buttons.isNotEmpty)
+                Padding(
+                  padding: const EdgeInsets.only(top: 6.0),
+                  child: Row(
+                    children: buttons.indexed.map<Widget>((element) {
+                      var (int index, Widget button) = element;
+                      final isLast = buttons.length - 1 == index;
+                      if (isLast) return Expanded(child: button);
+                      return Expanded(
+                        child: Padding(
+                          padding: const EdgeInsetsDirectional.only(end: 6.0),
+                          child: button,
+                        ),
+                      );
+                    }).toList(),
+                  ),
+                ),
+            ],
+          ),
         ),
       ),
     );

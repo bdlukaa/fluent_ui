@@ -88,9 +88,7 @@ class FlyoutState extends State<Flyout> {
   Widget build(BuildContext context) {
     return KeyedSubtree(
       key: _key,
-      child: IntrinsicWidth(
-        child: Builder(builder: widget.builder),
-      ),
+      child: Builder(builder: widget.builder),
     );
   }
 }

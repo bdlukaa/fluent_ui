@@ -98,36 +98,40 @@ class _MenuFlyoutState extends State<MenuFlyout> {
     final menuInfo = MenuInfoProvider.of(context);
     final parent = Flyout.maybeOf(context);
 
-    Widget content = FlyoutContent(
-      color: widget.color,
-      constraints: widget.constraints ?? kFlyoutMinConstraints,
-      elevation: widget.elevation,
-      shadowColor: widget.shadowColor,
-      shape: widget.shape,
-      padding: kDefaultMenuPadding,
-      useAcrylic: DisableAcrylic.of(context) != null,
-      child: ScrollConfiguration(
-        behavior: const _MenuScrollBehavior(),
-        child: SingleChildScrollView(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisSize: MainAxisSize.min,
-            children: List.generate(widget.items.length, (index) {
-              final item = widget.items[index];
-              if (item is MenuFlyoutItem) item._useIconPlaceholder = hasLeading;
-              if (item is MenuFlyoutSubItem && keys.isNotEmpty) {
-                item
-                  .._key = keys[index] as GlobalKey<_MenuFlyoutSubItemState>?
-                  ..disableAcyrlic = DisableAcrylic.of(context) != null;
-              }
-              return KeyedSubtree(
-                key: item.key,
-                child: Padding(
-                  padding: widget.itemMargin,
-                  child: item.build(context),
-                ),
-              );
-            }),
+    Widget content = IntrinsicWidth(
+      child: FlyoutContent(
+        color: widget.color,
+        constraints: widget.constraints ?? kFlyoutMinConstraints,
+        elevation: widget.elevation,
+        shadowColor: widget.shadowColor,
+        shape: widget.shape,
+        padding: kDefaultMenuPadding,
+        useAcrylic: DisableAcrylic.of(context) != null,
+        child: ScrollConfiguration(
+          behavior: const _MenuScrollBehavior(),
+          child: SingleChildScrollView(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisSize: MainAxisSize.min,
+              children: List.generate(widget.items.length, (index) {
+                final item = widget.items[index];
+                if (item is MenuFlyoutItem) {
+                  item._useIconPlaceholder = hasLeading;
+                }
+                if (item is MenuFlyoutSubItem && keys.isNotEmpty) {
+                  item
+                    .._key = keys[index] as GlobalKey<_MenuFlyoutSubItemState>?
+                    ..disableAcyrlic = DisableAcrylic.of(context) != null;
+                }
+                return KeyedSubtree(
+                  key: item.key,
+                  child: Padding(
+                    padding: widget.itemMargin,
+                    child: item.build(context),
+                  ),
+                );
+              }),
+            ),
           ),
         ),
       ),

@@ -381,6 +381,7 @@ class _AcrylicGuts extends StatelessWidget {
     return ClipPath(
       clipper: ShapeBorderClipper(shape: properties.shape),
       child: CustomPaint(
+        isComplex: true,
         painter: _AcrylicPainter(
           tintColor: disabled ? tint.withValues(alpha: 1.0) : tint,
           luminosityColor: AcrylicHelper.getLuminosityColor(
@@ -395,7 +396,7 @@ class _AcrylicGuts extends StatelessWidget {
                   sigmaX: properties.blurAmount,
                   sigmaY: properties.blurAmount,
                 ),
-                child: Stack(children: [
+                child: Stack(fit: StackFit.passthrough, children: [
                   const Opacity(
                     opacity: 0.02,
                     child: DecoratedBox(
@@ -429,7 +430,7 @@ class _AcrylicPainter extends CustomPainter {
   final Color luminosityColor;
   final Color tintColor;
 
-  _AcrylicPainter({
+  const _AcrylicPainter({
     required this.luminosityColor,
     required this.tintColor,
   });
@@ -448,7 +449,7 @@ class _AcrylicPainter extends CustomPainter {
   }
 
   @override
-  bool shouldRepaint(_AcrylicPainter old) {
+  bool shouldRepaint(covariant _AcrylicPainter old) {
     return luminosityColor != old.luminosityColor || tintColor != old.tintColor;
   }
 }
