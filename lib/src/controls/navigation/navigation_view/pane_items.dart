@@ -732,9 +732,10 @@ class __PaneItemExpanderState extends State<_PaneItemExpander>
 
         flyoutController.showFlyout(
           placementMode: displayMode == PaneDisplayMode.compact
-              ? FlyoutPlacementMode.right
+              ? FlyoutPlacementMode.rightTop
               : FlyoutPlacementMode.bottomCenter,
           forceAvailableSpace: true,
+          barrierColor: Colors.transparent,
           builder: (context) {
             return MenuFlyout(
               items: widget.items.map<MenuFlyoutItemBase>((item) {
@@ -925,8 +926,6 @@ class _PaneItemExpanderMenuItem extends MenuFlyoutItemBase {
 
   @override
   Widget build(BuildContext context) {
-    assert(debugCheckHasFluentTheme(context));
-    final theme = FluentTheme.of(context);
     final navigationTheme = NavigationPaneTheme.of(context);
     return HoverButton(
       onPressed: item.enabled ? onPressed : null,
@@ -943,41 +942,26 @@ class _PaneItemExpanderMenuItem extends MenuFlyoutItemBase {
                   : navigationTheme.unselectedIconColor?.resolve(states)),
           size: textStyle.fontSize ?? 16.0,
         );
-        return Container(
-          padding: const EdgeInsets.symmetric(
-            horizontal: 10.0,
-            vertical: 8.0,
+        return MenuFlyoutItem(
+          selected: isSelected,
+          onPressed: onPressed,
+          leading: IconTheme.merge(
+            data: iconTheme,
+            child: item.icon,
           ),
-          margin: const EdgeInsetsDirectional.only(bottom: 4.0),
-          decoration: BoxDecoration(
-            color: ButtonThemeData.uncheckedInputColor(
-              theme,
-              states,
-              transparentWhenNone: true,
-            ),
-            borderRadius: BorderRadius.circular(6.0),
+          text: DefaultTextStyle(
+            style: textStyle,
+            child: item.title ?? const SizedBox.shrink(),
           ),
-          child: Row(mainAxisSize: MainAxisSize.min, children: [
-            Padding(
-              padding: const EdgeInsetsDirectional.only(end: 12.0),
-              child: IconTheme.merge(
-                data: iconTheme,
-                child: item.icon,
-              ),
-            ),
-            Expanded(
-              child: DefaultTextStyle(
-                style: textStyle,
-                child: item.title ?? const SizedBox.shrink(),
-              ),
-            ),
-            if (item.infoBadge != null)
-              Padding(
+          trailing: () {
+            if (item.infoBadge != null) {
+              return Padding(
                 padding: const EdgeInsetsDirectional.only(start: 8.0),
                 child: item.infoBadge!,
-              ),
-          ]),
-        );
+              );
+            }
+          }(),
+        ).build(context);
       },
     );
   }

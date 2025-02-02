@@ -174,9 +174,15 @@ class TeachingTip extends StatelessWidget {
       case FlyoutPlacementMode.topRight:
         alignment = const Alignment(0.75, -0.75);
         break;
-      case FlyoutPlacementMode.left:
-      case FlyoutPlacementMode.right:
-        alignment = Alignment.center;
+      case FlyoutPlacementMode.leftTop:
+      case FlyoutPlacementMode.leftCenter:
+      case FlyoutPlacementMode.leftBottom:
+        alignment = const Alignment(0.75, 0.0);
+        break;
+      case FlyoutPlacementMode.rightTop:
+      case FlyoutPlacementMode.rightCenter:
+      case FlyoutPlacementMode.rightBottom:
+        alignment = const Alignment(-0.75, 0.0);
         break;
       default:
         return flyout;

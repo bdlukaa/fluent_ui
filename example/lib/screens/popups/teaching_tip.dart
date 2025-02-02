@@ -28,12 +28,16 @@ class _TeachingTipPageState extends State<TeachingTipPage> with PageMixin {
     'Bottom left': FlyoutPlacementMode.bottomLeft,
     'Bottom center': FlyoutPlacementMode.bottomCenter,
     'Bottom right': FlyoutPlacementMode.bottomRight,
-    'Center': FlyoutPlacementMode.left,
+    'Center': FlyoutPlacementMode.leftCenter,
     'Top left': FlyoutPlacementMode.topLeft,
     'Top center': FlyoutPlacementMode.topCenter,
     'Top right': FlyoutPlacementMode.topRight,
-    'Right': FlyoutPlacementMode.right,
-    'Left': FlyoutPlacementMode.left,
+    'Right Top': FlyoutPlacementMode.rightTop,
+    'Right Center': FlyoutPlacementMode.rightCenter,
+    'Right Bottom': FlyoutPlacementMode.rightBottom,
+    'Left Top': FlyoutPlacementMode.leftTop,
+    'Left Center': FlyoutPlacementMode.leftCenter,
+    'Left Bottom': FlyoutPlacementMode.leftBottom,
   };
   var alignment = 'Bottom center';
   var placement = 'Bottom center';

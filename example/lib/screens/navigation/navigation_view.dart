@@ -15,7 +15,7 @@ class NavigationViewPage extends StatefulWidget {
 
 class _NavigationViewPageState extends State<NavigationViewPage>
     with PageMixin {
-  static const double itemHeight = 300.0;
+  static const double itemHeight = 500.0;
 
   int topIndex = 0;
 
@@ -66,6 +66,7 @@ class _NavigationViewPageState extends State<NavigationViewPage>
       enabled: false,
       onTap: () => debugPrint('Tapped disabled'),
     ),
+    PaneItemHeader(header: const Text('Apps')),
     PaneItemExpander(
       icon: const Icon(FluentIcons.account_management),
       title: const Text('Account'),
@@ -84,7 +85,6 @@ class _NavigationViewPageState extends State<NavigationViewPage>
       ),
       onTap: () => debugPrint('Tapped account'),
       items: [
-        PaneItemHeader(header: const Text('Apps')),
         PaneItem(
           icon: const Icon(FluentIcons.mail),
           title: const Text('Mail'),
@@ -376,13 +376,13 @@ NavigationView(
               selected: topIndex,
               onItemPressed: (index) {
                 // Do anything you want to do, such as:
-                if (index == topIndex) {
-                  if (displayMode == PaneDisplayMode.open) {
-                    setState(() => this.displayMode = PaneDisplayMode.compact);
-                  } else if (displayMode == PaneDisplayMode.compact) {
-                    setState(() => this.displayMode = PaneDisplayMode.open);
-                  }
-                }
+                // if (index == topIndex) {
+                //   if (displayMode == PaneDisplayMode.open) {
+                //     setState(() => this.displayMode = PaneDisplayMode.compact);
+                //   } else if (displayMode == PaneDisplayMode.compact) {
+                //     setState(() => this.displayMode = PaneDisplayMode.open);
+                //   }
+                // }
               },
               onChanged: (index) => setState(() => topIndex = index),
               displayMode: displayMode,

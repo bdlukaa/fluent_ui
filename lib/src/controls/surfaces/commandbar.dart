@@ -209,7 +209,7 @@ class CommandBarState extends State<CommandBar> {
       autoModeConfiguration: FlyoutAutoConfiguration(
         preferredMode: (widget.direction == Axis.horizontal
                 ? FlyoutPlacementMode.bottomRight
-                : FlyoutPlacementMode.right)
+                : FlyoutPlacementMode.rightTop)
             .resolve(Directionality.of(context)),
       ),
       additionalOffset: 0.0,

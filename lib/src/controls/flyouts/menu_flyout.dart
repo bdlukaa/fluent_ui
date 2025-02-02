@@ -320,7 +320,6 @@ class MenuFlyoutItem extends MenuFlyoutItemBase {
     return FlyoutListTile(
       margin: EdgeInsets.zero,
       selected: selected,
-      showSelectedIndicator: false,
       icon: leading ??
           () {
             if (_useIconPlaceholder) return const Icon(null);
