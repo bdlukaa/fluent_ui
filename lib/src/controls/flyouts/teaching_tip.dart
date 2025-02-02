@@ -191,47 +191,68 @@ class TeachingTip extends StatelessWidget {
     assert(debugCheckHasFluentTheme(context));
     final theme = FluentTheme.of(context);
 
-    return ConstrainedBox(
-      constraints: kTeachingTipConstraints,
-      child: Acrylic(
-        elevation: 1.0,
-        shadowColor: Colors.black,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(6.0),
-          side: BorderSide(
-            color: theme.resources.surfaceStrokeColorDefault,
+    return IntrinsicWidth(
+      child: ConstrainedBox(
+        constraints: kTeachingTipConstraints,
+        child: Acrylic(
+          elevation: 1.0,
+          shadowColor: Colors.black,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(6.0),
+            side: BorderSide(
+              color: theme.resources.surfaceStrokeColorDefault,
+            ),
           ),
-        ),
-        child: Container(
-          color: theme.menuColor.withValues(alpha: 0.6),
-          padding: const EdgeInsets.all(12.0),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              DefaultTextStyle(
-                style: theme.typography.bodyStrong ?? const TextStyle(),
-                child: title,
-              ),
-              subtitle,
-              if (buttons.isNotEmpty)
-                Padding(
-                  padding: const EdgeInsets.only(top: 6.0),
-                  child: Row(
-                    children: buttons.indexed.map<Widget>((element) {
-                      var (int index, Widget button) = element;
-                      final isLast = buttons.length - 1 == index;
-                      if (isLast) return Expanded(child: button);
-                      return Expanded(
-                        child: Padding(
-                          padding: const EdgeInsetsDirectional.only(end: 6.0),
-                          child: button,
+          child: Container(
+            color: theme.menuColor.withValues(alpha: 0.6),
+            padding: const EdgeInsets.all(12.0),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
+                  Flexible(
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        DefaultTextStyle(
+                          style:
+                              theme.typography.bodyStrong ?? const TextStyle(),
+                          child: title,
                         ),
-                      );
-                    }).toList(),
+                        subtitle,
+                      ],
+                    ),
                   ),
-                ),
-            ],
+                  if (onClose != null)
+                    Padding(
+                      padding: const EdgeInsetsDirectional.only(start: 4.0),
+                      child: IconButton(
+                        icon: const Icon(FluentIcons.chrome_close, size: 16.0),
+                        onPressed: () => onClose!(context),
+                      ),
+                    ),
+                ]),
+                if (buttons.isNotEmpty)
+                  Padding(
+                    padding: const EdgeInsets.only(top: 6.0),
+                    child: Row(
+                      children: buttons.indexed.map<Widget>((element) {
+                        var (int index, Widget button) = element;
+                        final isLast = buttons.length - 1 == index;
+                        if (isLast) return Expanded(child: button);
+                        return Expanded(
+                          child: Padding(
+                            padding: const EdgeInsetsDirectional.only(end: 6.0),
+                            child: button,
+                          ),
+                        );
+                      }).toList(),
+                    ),
+                  ),
+              ],
+            ),
           ),
         ),
       ),
