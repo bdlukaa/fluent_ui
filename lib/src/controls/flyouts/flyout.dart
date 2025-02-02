@@ -294,6 +294,7 @@ class _FlyoutPositionDelegate extends SingleChildLayoutDelegate {
     required this.shouldConstrainToRootBounds,
     required this.forceAvailableSpace,
     required this.onAutoModeChange,
+    required this.flyoutConstraints,
   });
 
   final Offset targetOffset;
@@ -309,6 +310,8 @@ class _FlyoutPositionDelegate extends SingleChildLayoutDelegate {
   final bool forceAvailableSpace;
 
   final ValueChanged<FlyoutPlacementMode> onAutoModeChange;
+
+  final BoxConstraints? flyoutConstraints;
 
   @override
   BoxConstraints getConstraintsForChild(BoxConstraints constraints) {
@@ -328,6 +331,10 @@ class _FlyoutPositionDelegate extends SingleChildLayoutDelegate {
         maxWidth: constraints.biggest.width - margin,
         maxHeight: constraints.biggest.height - margin,
       );
+    }
+
+    if (flyoutConstraints != null) {
+      return constraints.loosen().enforce(flyoutConstraints!.loosen());
     }
 
     return constraints.loosen();
@@ -594,6 +601,10 @@ class FlyoutController with ChangeNotifier, WidgetsBindingObserver {
   /// or not. This helps when the target needs to be tappable, like the
   /// [CommandBar] or [MenuBar] widgets. Any context dependencies of the target
   /// must be available globally. Defaults to false.
+  ///
+  /// [flyoutConstraints] defines the constraints of the flyout. It will try to
+  /// fit the minimum size of the flyout, but it will not exceed the maximum
+  /// size.
   Future<T?> showFlyout<T>({
     required WidgetBuilder builder,
     bool barrierDismissible = true,
@@ -616,6 +627,7 @@ class FlyoutController with ChangeNotifier, WidgetsBindingObserver {
     RouteSettings? settings,
     GestureRecognizer? barrierRecognizer,
     bool buildTarget = false,
+    BoxConstraints? flyoutConstraints,
   }) async {
     _ensureAttached();
     assert(_attachState!.mounted);
@@ -711,6 +723,7 @@ class FlyoutController with ChangeNotifier, WidgetsBindingObserver {
           position: position,
           builder: builder,
           buildTarget: buildTarget,
+          flyoutConstraints: flyoutConstraints,
         );
       },
     );
@@ -793,6 +806,7 @@ class _FlyoutPage extends StatefulWidget {
     required this.position,
     required this.builder,
     required this.buildTarget,
+    required this.flyoutConstraints,
   }) : _attachState = attachState;
 
   final NavigatorState navigator;
@@ -820,6 +834,7 @@ class _FlyoutPage extends StatefulWidget {
   final Offset? position;
   final WidgetBuilder builder;
   final bool buildTarget;
+  final BoxConstraints? flyoutConstraints;
 
   @override
   State<_FlyoutPage> createState() => _FlyoutPageState();
@@ -884,6 +899,7 @@ class _FlyoutPageState extends State<_FlyoutPage> {
                     _key.currentState?.setState(() {});
                   });
                 },
+                flyoutConstraints: widget.flyoutConstraints,
               ),
               child: StatefulBuilder(
                 key: _key,

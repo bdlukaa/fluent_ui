@@ -13,6 +13,7 @@ class TeachingTipPage extends StatefulWidget {
 
 class _TeachingTipPageState extends State<TeachingTipPage> with PageMixin {
   final nonTargetedController = FlyoutController();
+  final targetedController = FlyoutController();
 
   static const alignments = {
     'Bottom left': Alignment.bottomLeft,
@@ -31,9 +32,11 @@ class _TeachingTipPageState extends State<TeachingTipPage> with PageMixin {
     'Top left': FlyoutPlacementMode.topLeft,
     'Top center': FlyoutPlacementMode.topCenter,
     'Top right': FlyoutPlacementMode.topRight,
+    'Right': FlyoutPlacementMode.right,
+    'Left': FlyoutPlacementMode.left,
   };
-  late String alignment = 'Bottom center';
-  final targetedController = FlyoutController();
+  var alignment = 'Bottom center';
+  var placement = 'Bottom center';
 
   @override
   void dispose() {
@@ -146,65 +149,87 @@ showTeachingTip(
             ),
           ]),
         ),
-//         subtitle(
-//           content: const Text('Show a targeted TeachingTip'),
-//         ),
-//         CardHighlight(
-//           child: Row(
-//             children: [
-//               Button(
-//                 child: const Text('Show TeachingTip'),
-//                 onPressed: () {
-//                   targetKey.currentState?.showTeachingTip(builder: (context) {
-//                     return const TeachingTip(
-//                       alignment: Alignment.bottomCenter,
-//                       placementMargin: EdgeInsets.all(20.0),
-//                       title: Text('Change themes without hassle'),
-//                       subtitle: Text(
-//                         'It\'s easier to see control samples in both light and dark theme',
-//                       ),
-//                     );
-//                   });
-//                 },
-//               ),
-//               const Spacer(),
-//               TeachingTipTarget(
-//                 key: targetKey,
-//                 child: Container(
-//                   height: 100,
-//                   width: 200,
-//                   color: theme.accentColor.defaultBrushFor(theme.brightness),
-//                 ),
-//               ),
-//             ],
-//           ),
-//           codeSnippet: '''final teachingTip = TeachingTip(
-//   title: Text('Change themes without hassle'),
-//   subtitle: Text(
-//     'It's easier to see control samples in both light and dark theme',
-//   ),
-//   buttons: <Widget>[
-//     Button(
-//       child: const Text('Toggle theme now'),
-//       onPressed: () {
-//         // toggle theme here
+        subtitle(
+          content: const Text('Show a targeted TeachingTip'),
+        ),
+        CardHighlight(
+          codeSnippet: '''final teachingTip = TeachingTip(
+  title: Text('Change themes without hassle'),
+  subtitle: Text(
+    'It's easier to see control samples in both light and dark theme',
+  ),
+  buttons: <Widget>[
+    Button(
+      child: const Text('Toggle theme now'),
+      onPressed: () {
+        // toggle theme here
 
-//         // then close the popup
-//         Navigator.of(context).pop();
-//       },
-//     ),
-//     Button(
-//       child: const Text('Got it'),
-//       onPressed: Navigator.of(context).pop,
-//     ),
-//   ],
-// ),
+        // then close the popup
+        Navigator.of(context).pop();
+      },
+    ),
+    Button(
+      child: const Text('Got it'),
+      onPressed: Navigator.of(context).pop,
+    ),
+  ],
+),
 
-// showTeachingTip(
-//   context: context,
-//   teachingTip: teachingTip,
-// );''',
-//         ),
+showTeachingTip(
+  context: context,
+  teachingTip: teachingTip,
+);''',
+          child: Row(children: [
+            Expanded(
+              child: Center(
+                child: FlyoutTarget(
+                  controller: targetedController,
+                  child: Container(
+                    height: 100,
+                    width: 200,
+                    color: theme.accentColor.defaultBrushFor(theme.brightness),
+                  ),
+                ),
+              ),
+            ),
+            Column(crossAxisAlignment: CrossAxisAlignment.end, children: [
+              Button(
+                child: const Text('Show TeachingTip'),
+                onPressed: () {
+                  showTeachingTip(
+                    flyoutController: targetedController,
+                    placementMode: placements[placement]!,
+                    builder: (context) {
+                      return const TeachingTip(
+                        title: Text('This is the title'),
+                        subtitle: Text('And this is the subtitle'),
+                      );
+                    },
+                  );
+                },
+              ),
+              const SizedBox(height: 8.0),
+              SizedBox(
+                width: 150.0,
+                child: ComboBox<String>(
+                  placeholder: const Text('Placement'),
+                  items: List.generate(placements.length, (index) {
+                    final entry = placements.entries.elementAt(index);
+
+                    return ComboBoxItem(
+                      value: entry.key,
+                      child: Text(entry.key.uppercaseFirst()),
+                    );
+                  }),
+                  value: placement,
+                  onChanged: (a) {
+                    if (a != null) setState(() => placement = a);
+                  },
+                ),
+              ),
+            ]),
+          ]),
+        ),
       ],
     );
   }
