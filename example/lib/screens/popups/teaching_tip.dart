@@ -201,6 +201,7 @@ showTeachingTip(
                     placementMode: placements[placement]!,
                     builder: (context) {
                       return const TeachingTip(
+                        leading: Icon(FluentIcons.refresh),
                         title: Text('This is the title'),
                         subtitle: Text('And this is the subtitle'),
                       );

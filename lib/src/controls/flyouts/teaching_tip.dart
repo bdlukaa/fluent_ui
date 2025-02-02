@@ -110,11 +110,17 @@ class TeachingTip extends StatelessWidget {
   /// Creates a teaching tip.
   const TeachingTip({
     super.key,
+    this.leading,
     required this.title,
     required this.subtitle,
     this.buttons = const [],
     this.onClose = defaultCloseCallback,
   });
+
+  /// The leading widget of the teaching tip.
+  ///
+  /// Usually an [Icon] or [Image].
+  final Widget? leading;
 
   /// The title of the teaching tip.
   ///
@@ -189,7 +195,10 @@ class TeachingTip extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     assert(debugCheckHasFluentTheme(context));
+    assert(debugCheckHasFluentLocalizations(context));
     final theme = FluentTheme.of(context);
+    final localizations = FluentLocalizations.of(context);
+    const padding = 12.0;
 
     return IntrinsicWidth(
       child: ConstrainedBox(
@@ -203,37 +212,65 @@ class TeachingTip extends StatelessWidget {
               color: theme.resources.surfaceStrokeColorDefault,
             ),
           ),
-          child: Container(
+          child: ColoredBox(
             color: theme.menuColor.withValues(alpha: 0.6),
-            padding: const EdgeInsets.all(12.0),
             child: Column(
               mainAxisSize: MainAxisSize.min,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                  Flexible(
-                    child: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        DefaultTextStyle(
-                          style:
-                              theme.typography.bodyStrong ?? const TextStyle(),
-                          child: title,
+                IntrinsicHeight(
+                  child: Row(children: [
+                    const SizedBox(width: padding),
+                    if (leading != null)
+                      Padding(
+                        padding: const EdgeInsetsDirectional.only(
+                          top: padding,
+                          end: 8.0,
                         ),
-                        subtitle,
-                      ],
-                    ),
-                  ),
-                  if (onClose != null)
-                    Padding(
-                      padding: const EdgeInsetsDirectional.only(start: 4.0),
-                      child: IconButton(
-                        icon: const Icon(FluentIcons.chrome_close, size: 16.0),
-                        onPressed: () => onClose!(context),
+                        child: leading!,
+                      ),
+                    Flexible(
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          const SizedBox(height: padding),
+                          DefaultTextStyle(
+                            style: theme.typography.bodyStrong ??
+                                const TextStyle(),
+                            child: title,
+                          ),
+                          subtitle,
+                        ],
                       ),
                     ),
-                ]),
+                    if (onClose != null)
+                      Align(
+                        alignment: AlignmentDirectional.topStart,
+                        child: Padding(
+                          padding: const EdgeInsetsDirectional.only(
+                            top: padding / 2,
+                            start: 4.0,
+                            end: padding / 2,
+                          ),
+                          child: Builder(builder: (context) {
+                            return Tooltip(
+                              message: localizations.closeButtonLabel,
+                              child: IconButton(
+                                icon: const Icon(
+                                  FluentIcons.chrome_close,
+                                  size: 12.0,
+                                ),
+                                onPressed: () => onClose!(context),
+                              ),
+                            );
+                          }),
+                        ),
+                      )
+                    else
+                      const SizedBox(width: padding)
+                  ]),
+                ),
                 if (buttons.isNotEmpty)
                   Padding(
                     padding: const EdgeInsets.only(top: 6.0),
@@ -251,6 +288,7 @@ class TeachingTip extends StatelessWidget {
                       }).toList(),
                     ),
                   ),
+                const SizedBox(height: padding),
               ],
             ),
           ),
