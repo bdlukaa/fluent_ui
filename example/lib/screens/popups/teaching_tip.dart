@@ -40,6 +40,7 @@ class _TeachingTipPageState extends State<TeachingTipPage> with PageMixin {
   };
   var alignment = 'Bottom center';
   var placement = 'Top center';
+  var showMediaContent = false;
 
   @override
   void dispose() {
@@ -68,32 +69,48 @@ class _TeachingTipPageState extends State<TeachingTipPage> with PageMixin {
           content: const Text('Show a non-targeted TeachingTip with buttons.'),
         ),
         CardHighlight(
-          codeSnippet: '''final teachingTip = TeachingTip(
-  title: Text('Change themes without hassle'),
-  subtitle: Text(
-    'It's easier to see control samples in both light and dark theme',
-  ),
-  buttons: <Widget>[
-    Button(
-      child: const Text('Toggle theme now'),
-      onPressed: () {
-        // toggle theme here
+          codeSnippet: '''final flyoutController = FlyoutController();
 
-        // then close the popup
-        Navigator.of(context).pop();
-      },
-    ),
-    Button(
-      child: const Text('Got it'),
-      onPressed: Navigator.of(context).pop,
-    ),
-  ],
-),
+FlyoutTarget(
+  controller: flyoutController,
+  child: Button(
+    child: const Text('Show TeachingTip'),
+    onPressed: () {
+      
+    },
+  ),
+);
 
 showTeachingTip(
-  context: context,
-  teachingTip: teachingTip,
-);''',
+  flyoutController: flyoutController,
+  nonTargetedAlignment: ${alignments[alignment]},
+  builder: (context) {
+    return TeachingTip(
+      title: const Text('Change themes without hassle'),
+      subtitle: const Text(
+        'It's easier to see control samples in both light and dark theme',
+      ),
+      buttons: [
+        Button(
+          child: const Text('Toggle theme now'),
+          onPressed: () {
+            if (theme.brightness.isDark) {
+              appTheme.mode = ThemeMode.light;
+            } else {
+              appTheme.mode = ThemeMode.dark;
+            }
+            flyoutController.close();
+          },
+        ),
+        Button(
+          onPressed: () => flyoutController.close(),
+          child: const Text('Got it'),
+        ),
+      ],
+    );
+  },
+);
+''',
           child: Row(children: [
             FlyoutTarget(
               controller: nonTargetedController,
@@ -103,7 +120,6 @@ showTeachingTip(
                   showTeachingTip(
                     flyoutController: nonTargetedController,
                     nonTargetedAlignment: alignments[alignment],
-                    // placementMode: placements[alignment]!,
                     builder: (context) => TeachingTip(
                       title: const Text('Change themes without hassle'),
                       subtitle: const Text(
@@ -118,11 +134,11 @@ showTeachingTip(
                             } else {
                               appTheme.mode = ThemeMode.dark;
                             }
-                            Navigator.of(context).pop();
+                            nonTargetedController.close();
                           },
                         ),
                         Button(
-                          onPressed: Navigator.of(context).pop,
+                          onPressed: () => nonTargetedController.close(),
                           child: const Text('Got it'),
                         ),
                       ],
@@ -156,32 +172,35 @@ showTeachingTip(
           content: const Text('Show a targeted TeachingTip.'),
         ),
         CardHighlight(
-          codeSnippet: '''final teachingTip = TeachingTip(
-  title: Text('Change themes without hassle'),
-  subtitle: Text(
-    'It's easier to see control samples in both light and dark theme',
-  ),
-  buttons: <Widget>[
-    Button(
-      child: const Text('Toggle theme now'),
-      onPressed: () {
-        // toggle theme here
+          codeSnippet: '''final flyoutController = FlyoutController();
 
-        // then close the popup
-        Navigator.of(context).pop();
-      },
-    ),
-    Button(
-      child: const Text('Got it'),
-      onPressed: Navigator.of(context).pop,
-    ),
-  ],
-),
+final target = FlyoutTarget(
+  controller: flyoutController,
+  child: Container(
+    height: 100,
+    width: 200,
+    color: theme.accentColor.defaultBrushFor(theme.brightness),
+  ),
+);
 
 showTeachingTip(
-  context: context,
-  teachingTip: teachingTip,
-);''',
+  flyoutController: flyoutController,
+  placementMode: ${placements[placement]},
+  builder: (context) {
+    return TeachingTip(
+      leading: const Icon(FluentIcons.refresh),
+      title: const Text('This is the title'),
+      subtitle: const Text('And this is the subtitle'),${showMediaContent ? '''\n      mediaContent: SizedBox(
+        width: double.infinity,
+        child: ColoredBox(
+          color: Colors.blue.defaultBrushFor(theme.brightness),
+          child: const FlutterLogo(size: 100),
+        ),
+      )''' : ''}
+    );
+  },
+);
+''',
           child: Row(children: [
             Expanded(
               child: Center(
@@ -195,43 +214,70 @@ showTeachingTip(
                 ),
               ),
             ),
-            Column(crossAxisAlignment: CrossAxisAlignment.end, children: [
-              Button(
-                child: const Text('Show TeachingTip'),
-                onPressed: () {
-                  showTeachingTip(
-                    flyoutController: targetedController,
-                    placementMode: placements[placement]!,
-                    builder: (context) {
-                      return const TeachingTip(
-                        leading: Icon(FluentIcons.refresh),
-                        title: Text('This is the title'),
-                        subtitle: Text('And this is the subtitle'),
-                      );
-                    },
-                  );
-                },
-              ),
-              const SizedBox(height: 8.0),
-              SizedBox(
-                width: 150.0,
-                child: ComboBox<String>(
-                  placeholder: const Text('Placement'),
-                  items: List.generate(placements.length, (index) {
-                    final entry = placements.entries.elementAt(index);
+            IntrinsicWidth(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.end,
+                spacing: 8.0,
+                children: [
+                  InfoLabel(
+                    label: 'Placement',
+                    child: ComboBox<String>(
+                      placeholder: const Text('Placement'),
+                      items: List.generate(placements.length, (index) {
+                        final entry = placements.entries.elementAt(index);
 
-                    return ComboBoxItem(
-                      value: entry.key,
-                      child: Text(entry.key.uppercaseFirst()),
-                    );
-                  }),
-                  value: placement,
-                  onChanged: (a) {
-                    if (a != null) setState(() => placement = a);
-                  },
-                ),
+                        return ComboBoxItem(
+                          value: entry.key,
+                          child: Text(entry.key.uppercaseFirst()),
+                        );
+                      }),
+                      value: placement,
+                      onChanged: (a) {
+                        if (a != null) setState(() => placement = a);
+                      },
+                      isExpanded: true,
+                    ),
+                  ),
+                  Checkbox(
+                    checked: showMediaContent,
+                    onChanged: (v) {
+                      if (v != null) setState(() => showMediaContent = v);
+                    },
+                    content: const Text('Show media content'),
+                  ),
+                  const Divider(),
+                  SizedBox(
+                    width: double.infinity,
+                    child: FilledButton(
+                      child: const Text('Show TeachingTip'),
+                      onPressed: () {
+                        showTeachingTip(
+                          flyoutController: targetedController,
+                          placementMode: placements[placement]!,
+                          builder: (context) {
+                            return TeachingTip(
+                              leading: const Icon(FluentIcons.refresh),
+                              title: const Text('This is the title'),
+                              subtitle: const Text('And this is the subtitle'),
+                              mediaContent: showMediaContent
+                                  ? SizedBox(
+                                      width: double.infinity,
+                                      child: ColoredBox(
+                                        color: Colors.blue
+                                            .defaultBrushFor(theme.brightness),
+                                        child: const FlutterLogo(size: 100),
+                                      ),
+                                    )
+                                  : null,
+                            );
+                          },
+                        );
+                      },
+                    ),
+                  ),
+                ],
               ),
-            ]),
+            ),
           ]),
         ),
       ],
