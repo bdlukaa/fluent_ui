@@ -114,9 +114,13 @@ class TeachingTip extends StatelessWidget {
     this.leading,
     required this.title,
     required this.subtitle,
-    this.buttons = const [],
+    this.buttons,
+    this.mediaContent,
     this.onClose = defaultCloseCallback,
-  });
+  }) : assert(
+          buttons == null || mediaContent == null,
+          'The buttons and mediaContent properties can not coexist',
+        );
 
   /// The leading widget of the teaching tip.
   ///
@@ -137,11 +141,23 @@ class TeachingTip extends StatelessWidget {
   ///
   /// It is recommened to show at most two buttons.
   ///
+  /// It can not coexist with the [mediaContent] property.
+  ///
   /// See also:
   ///
   ///   * [Button], a button widget.
   ///   * [FilledButton], an elevated button widget.
-  final List<Widget> buttons;
+  final List<Widget>? buttons;
+
+  /// The media content of the teaching tip.
+  ///
+  /// The media content is shown above or below the title and subtitle,
+  /// depending on the current flyout placement mode.
+  ///
+  /// It can not coexist with the [buttons] property.
+  ///
+  /// Usually an [Image].
+  final Widget? mediaContent;
 
   /// Called when the close button is pressed.
   ///
@@ -210,6 +226,7 @@ class TeachingTip extends StatelessWidget {
   Widget build(BuildContext context) {
     assert(debugCheckHasFluentTheme(context));
     assert(debugCheckHasFluentLocalizations(context));
+    assert(debugCheckHasFlyout(context));
     final theme = FluentTheme.of(context);
     final localizations = FluentLocalizations.of(context);
     final flyout = Flyout.of(context);
@@ -261,6 +278,16 @@ class TeachingTip extends StatelessWidget {
               mainAxisSize: MainAxisSize.min,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
+                /// Show this at the top if the Flyout is placed at the top
+                if (mediaContent != null &&
+                    (switch (flyout.placementMode) {
+                      FlyoutPlacementMode.topLeft ||
+                      FlyoutPlacementMode.topCenter ||
+                      FlyoutPlacementMode.topRight =>
+                        true,
+                      _ => false,
+                    }))
+                  mediaContent!,
                 IntrinsicHeight(
                   child: Row(children: [
                     const SizedBox(width: padding),
@@ -314,7 +341,7 @@ class TeachingTip extends StatelessWidget {
                       const SizedBox(width: padding)
                   ]),
                 ),
-                if (buttons.isNotEmpty)
+                if (buttons != null && buttons!.isNotEmpty)
                   Padding(
                     padding: const EdgeInsetsDirectional.only(
                       start: padding,
@@ -323,12 +350,25 @@ class TeachingTip extends StatelessWidget {
                     ),
                     child: Row(
                       spacing: 6.0,
-                      children: buttons.map<Widget>((button) {
+                      children: buttons!.map<Widget>((button) {
                         return Expanded(child: button);
                       }).toList(),
                     ),
                   ),
                 const SizedBox(height: padding),
+
+                /// Show this at the bottom if the Flyout is placed at the bottom
+                /// or any horizontal placement mode
+                if (mediaContent != null &&
+                    (switch (flyout.placementMode) {
+                          FlyoutPlacementMode.bottomLeft ||
+                          FlyoutPlacementMode.bottomCenter ||
+                          FlyoutPlacementMode.bottomRight =>
+                            true,
+                          _ => false,
+                        } ||
+                        flyout.placementMode.isHorizontal))
+                  mediaContent!,
               ],
             ),
           ),
