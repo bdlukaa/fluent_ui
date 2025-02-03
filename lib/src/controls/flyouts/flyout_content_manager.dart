@@ -20,6 +20,8 @@ class Flyout extends StatefulWidget {
 
   final FlyoutTransitionBuilder transitionBuilder;
 
+  final FlyoutPlacementMode placementMode;
+
   /// Create a flyout.
   const Flyout({
     super.key,
@@ -32,6 +34,7 @@ class Flyout extends StatefulWidget {
     required this.transitionDuration,
     required this.reverseTransitionDuration,
     required this.transitionBuilder,
+    required this.placementMode,
   });
 
   /// Gets the current flyout info
@@ -67,6 +70,9 @@ class FlyoutState extends State<Flyout> {
 
   /// The transition builder
   FlyoutTransitionBuilder get transitionBuilder => widget.transitionBuilder;
+
+  /// The placement mode of the flyout
+  FlyoutPlacementMode get placementMode => widget.placementMode;
 
   /// Closes the current open flyout.
   ///

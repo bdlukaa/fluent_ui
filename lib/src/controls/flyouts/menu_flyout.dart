@@ -653,6 +653,7 @@ class _MenuFlyoutSubItemState extends State<_MenuFlyoutSubItem>
           reverseTransitionDuration: parent.reverseTransitionDuration,
           transitionBuilder: parent.transitionBuilder,
           root: parent.widget.root,
+          placementMode: parent.placementMode,
           builder: (context) {
             var w = parent.transitionBuilder.call(
               context,

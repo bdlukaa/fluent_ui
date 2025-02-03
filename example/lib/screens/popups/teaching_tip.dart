@@ -25,13 +25,12 @@ class _TeachingTipPageState extends State<TeachingTipPage> with PageMixin {
     'Top right': Alignment.topRight,
   };
   static const placements = {
-    'Bottom left': FlyoutPlacementMode.bottomLeft,
-    'Bottom center': FlyoutPlacementMode.bottomCenter,
-    'Bottom right': FlyoutPlacementMode.bottomRight,
-    'Center': FlyoutPlacementMode.leftCenter,
     'Top left': FlyoutPlacementMode.topLeft,
     'Top center': FlyoutPlacementMode.topCenter,
     'Top right': FlyoutPlacementMode.topRight,
+    'Bottom left': FlyoutPlacementMode.bottomLeft,
+    'Bottom center': FlyoutPlacementMode.bottomCenter,
+    'Bottom right': FlyoutPlacementMode.bottomRight,
     'Right Top': FlyoutPlacementMode.rightTop,
     'Right Center': FlyoutPlacementMode.rightCenter,
     'Right Bottom': FlyoutPlacementMode.rightBottom,
@@ -40,7 +39,7 @@ class _TeachingTipPageState extends State<TeachingTipPage> with PageMixin {
     'Left Bottom': FlyoutPlacementMode.leftBottom,
   };
   var alignment = 'Bottom center';
-  var placement = 'Bottom center';
+  var placement = 'Top center';
 
   @override
   void dispose() {
@@ -66,7 +65,7 @@ class _TeachingTipPageState extends State<TeachingTipPage> with PageMixin {
           ),
         ),
         subtitle(
-          content: const Text('Show a non-targeted TeachingTip with buttons'),
+          content: const Text('Show a non-targeted TeachingTip with buttons.'),
         ),
         CardHighlight(
           codeSnippet: '''final teachingTip = TeachingTip(
@@ -154,7 +153,7 @@ showTeachingTip(
           ]),
         ),
         subtitle(
-          content: const Text('Show a targeted TeachingTip'),
+          content: const Text('Show a targeted TeachingTip.'),
         ),
         CardHighlight(
           codeSnippet: '''final teachingTip = TeachingTip(

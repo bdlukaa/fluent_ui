@@ -884,7 +884,7 @@ class FlyoutController with ChangeNotifier, WidgetsBindingObserver {
         };
 
         return _FlyoutPage(
-          navigator: _currentNavigator!,
+          navigator: _currentNavigator ?? Navigator.of(context),
           targetRect: targetRect,
           attachState: _attachState,
           targetOffset: targetOffset,
@@ -1086,6 +1086,23 @@ class _FlyoutPageState extends State<_FlyoutPage> {
               child: StatefulBuilder(
                 key: _key,
                 builder: (context, setState) {
+                  FlyoutPlacementMode realPlacementMode = widget.placementMode;
+                  if (widget.placementMode == FlyoutPlacementMode.auto) {
+                    if (_autoMode == null) {
+                      return Visibility(
+                        visible: false,
+                        maintainSize: true,
+                        maintainAnimation: true,
+                        maintainState: true,
+                        child: widget.builder(context),
+                      );
+                    } else {
+                      realPlacementMode = _autoMode!;
+                    }
+                  } else {
+                    realPlacementMode = widget.placementMode;
+                  }
+
                   return Flyout(
                     rootFlyout: widget.flyoutKey,
                     additionalOffset: widget.additionalOffset,
@@ -1096,24 +1113,8 @@ class _FlyoutPageState extends State<_FlyoutPage> {
                     root: widget.navigator,
                     menuKey: null,
                     transitionBuilder: widget.transitionBuilder,
+                    placementMode: realPlacementMode,
                     builder: (context) {
-                      FlyoutPlacementMode realPlacementMode =
-                          widget.placementMode;
-                      if (widget.placementMode == FlyoutPlacementMode.auto) {
-                        if (_autoMode == null) {
-                          return Visibility(
-                            visible: false,
-                            maintainSize: true,
-                            maintainAnimation: true,
-                            maintainState: true,
-                            child: widget.builder(context),
-                          );
-                        } else {
-                          realPlacementMode = _autoMode!;
-                        }
-                      } else {
-                        realPlacementMode = widget.placementMode;
-                      }
                       Widget flyout = Padding(
                         key: widget.flyoutKey,
                         padding: realPlacementMode._getAdditionalOffsetPosition(
