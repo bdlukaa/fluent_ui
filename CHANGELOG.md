@@ -40,6 +40,8 @@
 - feat: Handle `TextBox` context menu controls on mobile platforms ([#1022](https://github.com/bdlukaa/fluent_ui/issues/1022))
 - fix: Default `TextBox` border
 - feat: Added Nepali localization support ([#1177](https://github.com/bdlukaa/fluent_ui/pull/1177))
+- feat: Teaching Tips ([#412](https://github.com/bdlukaa/fluent_ui/issues/412))
+- feat: Added more flyout placement modes: `leftTop`, `leftCenter`, `leftBottom`, `rightTop`, `rightCenter` and `rightBottom`. `left` and `right` are now deprecated and default to `leftCenter` and `rightCenter`, respectively. Additionally, added the `full` placement mode, which allows the flyout to position itself within the screen. ([#570](https://github.com/bdlukaa/fluent_ui/pull/570))
 
 ## 4.10.0
 

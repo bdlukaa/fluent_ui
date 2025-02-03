@@ -29,10 +29,26 @@ enum FlyoutPlacementMode {
   bottomRight,
 
   /// Preferred location is to the left of the target element.
-  left,
+  leftTop,
+
+  /// Preferred location is to the left of the target element, with the top edge
+  /// of flyout aligned with top edge of the target element.
+  leftCenter,
+
+  /// Preferred location is to the left of the target element, with the bottom
+  /// edge of flyout aligned with bottom edge of the target element.
+  leftBottom,
 
   /// Preferred location is to the right of the target element.
-  right,
+  rightTop,
+
+  /// Preferred location is to the right of the target element, with the top edge
+  /// of flyout aligned with top edge of the target element.
+  rightCenter,
+
+  /// Preferred location is to the right of the target element, with the bottom
+  /// edge of flyout aligned with bottom edge of the target element.
+  rightBottom,
 
   /// Preferred location is above the target element.
   topCenter,
@@ -43,7 +59,153 @@ enum FlyoutPlacementMode {
 
   /// Preferred location is above the target element, with the right edge of
   /// flyout aligned with right edge of the target element.
-  topRight;
+  topRight,
+
+  /// Fills the entire screen. The child is allowed to position itself.
+  full;
+
+  @Deprecated(
+    'Use FlyoutPlacementMode.leftCenter instead. This was deprecated in v4.11.0.',
+  )
+  static FlyoutPlacementMode get left => FlyoutPlacementMode.leftCenter;
+
+  @Deprecated(
+    'Use FlyoutPlacementMode.rightCenter instead. This was deprecated in v4.11.0.',
+  )
+  static FlyoutPlacementMode get right => FlyoutPlacementMode.rightCenter;
+
+  /// Whether the placement is horizontal
+  bool get isHorizontal {
+    switch (this) {
+      case FlyoutPlacementMode.leftTop:
+      case FlyoutPlacementMode.leftCenter:
+      case FlyoutPlacementMode.leftBottom:
+      case FlyoutPlacementMode.rightTop:
+      case FlyoutPlacementMode.rightCenter:
+      case FlyoutPlacementMode.rightBottom:
+        return true;
+      default:
+        return false;
+    }
+  }
+
+  /// All the horizontal modes.
+  static List<FlyoutPlacementMode> get horizontalPlacements {
+    return [
+      FlyoutPlacementMode.leftTop,
+      FlyoutPlacementMode.leftCenter,
+      FlyoutPlacementMode.leftBottom,
+      FlyoutPlacementMode.rightTop,
+      FlyoutPlacementMode.rightCenter,
+      FlyoutPlacementMode.rightBottom,
+    ];
+  }
+
+  /// The vertical alignment of this placement.
+  TextAlignVertical get verticalAlignment {
+    switch (this) {
+      case FlyoutPlacementMode.topCenter:
+      case FlyoutPlacementMode.topLeft:
+      case FlyoutPlacementMode.topRight:
+      case FlyoutPlacementMode.leftTop:
+      case FlyoutPlacementMode.rightTop:
+        return TextAlignVertical.top;
+      case FlyoutPlacementMode.bottomCenter:
+      case FlyoutPlacementMode.bottomLeft:
+      case FlyoutPlacementMode.bottomRight:
+      case FlyoutPlacementMode.leftBottom:
+      case FlyoutPlacementMode.rightBottom:
+        return TextAlignVertical.bottom;
+      case FlyoutPlacementMode.leftCenter:
+      case FlyoutPlacementMode.rightCenter:
+      case FlyoutPlacementMode.full:
+        return TextAlignVertical.center;
+      case FlyoutPlacementMode.auto:
+        throw UnsupportedError('Auto mode does not have a vertical alignment');
+    }
+  }
+
+  FlyoutPlacementMode withVerticalAlignment(
+    TextAlignVertical verticalAlignment,
+  ) {
+    switch (verticalAlignment) {
+      case TextAlignVertical.top:
+        switch (this) {
+          case FlyoutPlacementMode.bottomCenter:
+            return FlyoutPlacementMode.topCenter;
+          case FlyoutPlacementMode.bottomLeft:
+            return FlyoutPlacementMode.topLeft;
+          case FlyoutPlacementMode.bottomRight:
+            return FlyoutPlacementMode.topRight;
+          case FlyoutPlacementMode.leftBottom:
+          case FlyoutPlacementMode.leftCenter:
+            return FlyoutPlacementMode.leftTop;
+          case FlyoutPlacementMode.rightBottom:
+          case FlyoutPlacementMode.rightCenter:
+            return FlyoutPlacementMode.rightTop;
+          case FlyoutPlacementMode.topCenter:
+          case FlyoutPlacementMode.topLeft:
+          case FlyoutPlacementMode.topRight:
+            return this;
+          default:
+            throw UnsupportedError(
+              'Unsupported vertical alignment for $this: $verticalAlignment',
+            );
+        }
+      case TextAlignVertical.center:
+        switch (this) {
+          case FlyoutPlacementMode.topCenter:
+          case FlyoutPlacementMode.bottomCenter:
+          case FlyoutPlacementMode.leftCenter:
+          case FlyoutPlacementMode.rightCenter:
+          case FlyoutPlacementMode.full:
+            return this;
+          case FlyoutPlacementMode.topLeft:
+          case FlyoutPlacementMode.topRight:
+            return FlyoutPlacementMode.topCenter;
+          case FlyoutPlacementMode.bottomLeft:
+          case FlyoutPlacementMode.bottomRight:
+            return FlyoutPlacementMode.bottomCenter;
+          case FlyoutPlacementMode.leftTop:
+          case FlyoutPlacementMode.leftBottom:
+            return FlyoutPlacementMode.leftCenter;
+          case FlyoutPlacementMode.rightTop:
+          case FlyoutPlacementMode.rightBottom:
+            return FlyoutPlacementMode.rightCenter;
+          default:
+            throw UnsupportedError(
+              'Unsupported vertical alignment for $this: $verticalAlignment',
+            );
+        }
+      case TextAlignVertical.bottom:
+        switch (this) {
+          case FlyoutPlacementMode.topCenter:
+            return FlyoutPlacementMode.bottomCenter;
+          case FlyoutPlacementMode.topLeft:
+            return FlyoutPlacementMode.bottomLeft;
+          case FlyoutPlacementMode.topRight:
+            return FlyoutPlacementMode.bottomRight;
+          case FlyoutPlacementMode.leftTop:
+          case FlyoutPlacementMode.leftCenter:
+            return FlyoutPlacementMode.leftBottom;
+          case FlyoutPlacementMode.rightTop:
+          case FlyoutPlacementMode.rightCenter:
+            return FlyoutPlacementMode.rightBottom;
+          case FlyoutPlacementMode.bottomCenter:
+          case FlyoutPlacementMode.bottomLeft:
+          case FlyoutPlacementMode.bottomRight:
+            return this;
+          default:
+            throw UnsupportedError(
+              'Unsupported vertical alignment for $this: $verticalAlignment',
+            );
+        }
+      default:
+        throw UnsupportedError(
+          'Unsupported vertical alignment $verticalAlignment',
+        );
+    }
+  }
 
   /// Resolves this placement with the current text [direction]
   ///
@@ -67,19 +229,28 @@ enum FlyoutPlacementMode {
     switch (this) {
       case FlyoutPlacementMode.bottomCenter:
       case FlyoutPlacementMode.topCenter:
+      case FlyoutPlacementMode.full:
         return this;
       case FlyoutPlacementMode.bottomLeft:
         return isRtl ? FlyoutPlacementMode.bottomRight : this;
       case FlyoutPlacementMode.topLeft:
         return isRtl ? FlyoutPlacementMode.topRight : this;
-      case FlyoutPlacementMode.left:
-        return isRtl ? FlyoutPlacementMode.right : this;
       case FlyoutPlacementMode.bottomRight:
         return isRtl ? FlyoutPlacementMode.bottomLeft : this;
       case FlyoutPlacementMode.topRight:
         return isRtl ? FlyoutPlacementMode.topLeft : this;
-      case FlyoutPlacementMode.right:
-        return isRtl ? FlyoutPlacementMode.left : this;
+      case FlyoutPlacementMode.leftTop:
+        return isRtl ? FlyoutPlacementMode.rightTop : this;
+      case FlyoutPlacementMode.leftCenter:
+        return isRtl ? FlyoutPlacementMode.rightCenter : this;
+      case FlyoutPlacementMode.leftBottom:
+        return isRtl ? FlyoutPlacementMode.rightBottom : this;
+      case FlyoutPlacementMode.rightTop:
+        return isRtl ? FlyoutPlacementMode.leftTop : this;
+      case FlyoutPlacementMode.rightCenter:
+        return isRtl ? FlyoutPlacementMode.leftCenter : this;
+      case FlyoutPlacementMode.rightBottom:
+        return isRtl ? FlyoutPlacementMode.leftBottom : this;
       case FlyoutPlacementMode.auto:
         return this;
     }
@@ -95,11 +266,16 @@ enum FlyoutPlacementMode {
       case FlyoutPlacementMode.topLeft:
       case FlyoutPlacementMode.topRight:
         return EdgeInsets.only(bottom: additionalOffset);
-      case FlyoutPlacementMode.left:
+      case FlyoutPlacementMode.leftTop:
+      case FlyoutPlacementMode.leftCenter:
+      case FlyoutPlacementMode.leftBottom:
         return EdgeInsets.only(right: additionalOffset);
-      case FlyoutPlacementMode.right:
+      case FlyoutPlacementMode.rightTop:
+      case FlyoutPlacementMode.rightCenter:
+      case FlyoutPlacementMode.rightBottom:
         return EdgeInsets.only(left: additionalOffset);
       case FlyoutPlacementMode.auto:
+      case FlyoutPlacementMode.full:
         return EdgeInsets.all(additionalOffset);
     }
   }
@@ -111,6 +287,11 @@ enum FlyoutPlacementMode {
     double margin,
   ) {
     switch (this) {
+      case FlyoutPlacementMode.full:
+        return BoxConstraints(
+          maxWidth: rootSize.width._ensurePositive(),
+          maxHeight: rootSize.height._ensurePositive(),
+        );
       case FlyoutPlacementMode.bottomCenter:
       case FlyoutPlacementMode.bottomLeft:
       case FlyoutPlacementMode.bottomRight:
@@ -126,12 +307,16 @@ enum FlyoutPlacementMode {
           maxWidth: rootSize.width._ensurePositive(),
           maxHeight: targetOffset.dy._ensurePositive(),
         );
-      case FlyoutPlacementMode.left:
+      case FlyoutPlacementMode.leftTop:
+      case FlyoutPlacementMode.leftCenter:
+      case FlyoutPlacementMode.leftBottom:
         return BoxConstraints(
           maxWidth: targetOffset.dx._ensurePositive(),
           maxHeight: rootSize.height._ensurePositive(),
         );
-      case FlyoutPlacementMode.right:
+      case FlyoutPlacementMode.rightTop:
+      case FlyoutPlacementMode.rightCenter:
+      case FlyoutPlacementMode.rightBottom:
         return BoxConstraints(
           maxWidth: (rootSize.width - targetOffset.dx)._ensurePositive(),
           maxHeight: rootSize.height._ensurePositive(),
@@ -157,19 +342,23 @@ enum FlyoutPlacementMode {
     final availableSpace = configuration.autoAvailableSpace!;
 
     if (configuration.horizontal) {
-      final las = FlyoutPlacementMode.left
+      final las = FlyoutPlacementMode.leftCenter
           ._getAvailableSpace(targetOffset, rootSize, margin)
           .biggest;
-      final ras = FlyoutPlacementMode.right
+      final ras = FlyoutPlacementMode.rightCenter
           ._getAvailableSpace(targetOffset, rootSize, margin)
           .biggest;
 
       if (las.width >= availableSpace && ras.width >= availableSpace) {
         return configuration.preferredMode;
       } else if (las.width >= availableSpace) {
-        return FlyoutPlacementMode.left;
+        return FlyoutPlacementMode.leftCenter.withVerticalAlignment(
+          configuration.preferredMode.verticalAlignment,
+        );
       } else if (ras.width >= availableSpace) {
-        return FlyoutPlacementMode.right;
+        return FlyoutPlacementMode.rightCenter.withVerticalAlignment(
+          configuration.preferredMode.verticalAlignment,
+        );
       } else {
         return configuration.preferredMode;
       }
@@ -185,16 +374,20 @@ enum FlyoutPlacementMode {
     }
 
     final isLeftPreferred = [
-      FlyoutPlacementMode.left,
+      FlyoutPlacementMode.leftTop,
+      FlyoutPlacementMode.leftCenter,
+      FlyoutPlacementMode.leftBottom,
       FlyoutPlacementMode.topLeft,
       FlyoutPlacementMode.bottomLeft,
     ].contains(configuration.preferredMode);
     final isCenterPreferred = [
       FlyoutPlacementMode.topCenter,
-      FlyoutPlacementMode.bottomCenter
+      FlyoutPlacementMode.bottomCenter,
     ].contains(configuration.preferredMode);
     final isRightPreferred = [
-      FlyoutPlacementMode.right,
+      FlyoutPlacementMode.rightTop,
+      FlyoutPlacementMode.rightCenter,
+      FlyoutPlacementMode.rightBottom,
       FlyoutPlacementMode.topRight,
       FlyoutPlacementMode.bottomRight
     ].contains(configuration.preferredMode);
@@ -257,16 +450,12 @@ class FlyoutAutoConfiguration {
     required this.preferredMode,
   })  : assert(preferredMode != FlyoutPlacementMode.auto),
         assert(
-          horizontal != null && horizontal
-              ? preferredMode == FlyoutPlacementMode.left ||
-                  preferredMode == FlyoutPlacementMode.right
-              : true,
+          horizontal != null && horizontal ? preferredMode.isHorizontal : true,
           'If the mode horizontal, preferredMode must either be left or right',
         ),
         assert(autoAvailableSpace == null || !autoAvailableSpace.isNegative),
         horizontal = horizontal ??
-            [FlyoutPlacementMode.left, FlyoutPlacementMode.right]
-                .contains(preferredMode);
+            FlyoutPlacementMode.horizontalPlacements.contains(preferredMode);
 }
 
 /// A delegate for computing the layout of a flyout to be displayed according to
@@ -311,6 +500,13 @@ class _FlyoutPositionDelegate extends SingleChildLayoutDelegate {
       return BoxConstraints(
         maxWidth: math.min(availableSpace.width, constraints.biggest.width),
         maxHeight: math.min(availableSpace.height, constraints.biggest.height),
+      );
+    } else if (placementMode == FlyoutPlacementMode.full) {
+      return BoxConstraints(
+        minHeight: constraints.biggest.height - margin,
+        minWidth: constraints.biggest.width - margin,
+        maxWidth: constraints.biggest.width - margin,
+        maxHeight: constraints.biggest.height - margin,
       );
     }
 
@@ -384,9 +580,11 @@ class _FlyoutPositionDelegate extends SingleChildLayoutDelegate {
 
     final bottomY = clampVertical(targetOffset.dy);
 
+    final horizontalTopY = clampVertical(topY + flyoutSize.height);
     final horizontalY = clampVertical(
-      targetOffset.dy - targetSize.height - flyoutSize.height / 4,
+      topY + flyoutSize.height + flyoutSize.height / 4,
     );
+    final horizontalBottomY = clampVertical(bottomY - flyoutSize.height);
 
     final centerX = clampHorizontal(
       (targetOffset.dx + targetSize.width / 2) - (flyoutSize.width / 2.0),
@@ -415,20 +613,38 @@ class _FlyoutPositionDelegate extends SingleChildLayoutDelegate {
         return Offset(centerX, bottomY);
       case FlyoutPlacementMode.topCenter:
         return Offset(centerX, topY);
-      case FlyoutPlacementMode.left:
+      case FlyoutPlacementMode.leftTop:
         return Offset(
-          clampHorizontal(
-            targetOffset.dx - flyoutSize.width,
-          ),
+          clampHorizontal(targetOffset.dx - flyoutSize.width),
+          horizontalTopY,
+        );
+      case FlyoutPlacementMode.leftCenter:
+        return Offset(
+          clampHorizontal(targetOffset.dx - flyoutSize.width),
           horizontalY,
         );
-      case FlyoutPlacementMode.right:
+      case FlyoutPlacementMode.leftBottom:
         return Offset(
-          clampHorizontal(
-            targetOffset.dx + targetSize.width,
-          ),
+          clampHorizontal(targetOffset.dx - flyoutSize.width),
+          horizontalBottomY,
+        );
+      case FlyoutPlacementMode.rightTop:
+        return Offset(
+          clampHorizontal(targetOffset.dx + targetSize.width),
+          horizontalTopY,
+        );
+      case FlyoutPlacementMode.rightCenter:
+        return Offset(
+          clampHorizontal(targetOffset.dx + targetSize.width),
           horizontalY,
         );
+      case FlyoutPlacementMode.rightBottom:
+        return Offset(
+          clampHorizontal(targetOffset.dx + targetSize.width),
+          horizontalBottomY,
+        );
+      case FlyoutPlacementMode.full:
+        return Offset(margin, margin);
       case FlyoutPlacementMode.auto:
         return targetOffset;
     }
@@ -668,7 +884,7 @@ class FlyoutController with ChangeNotifier, WidgetsBindingObserver {
         };
 
         return _FlyoutPage(
-          navigator: _currentNavigator!,
+          navigator: _currentNavigator ?? Navigator.of(context),
           targetRect: targetRect,
           attachState: _attachState,
           targetOffset: targetOffset,
@@ -870,6 +1086,23 @@ class _FlyoutPageState extends State<_FlyoutPage> {
               child: StatefulBuilder(
                 key: _key,
                 builder: (context, setState) {
+                  FlyoutPlacementMode realPlacementMode = widget.placementMode;
+                  if (widget.placementMode == FlyoutPlacementMode.auto) {
+                    if (_autoMode == null) {
+                      return Visibility(
+                        visible: false,
+                        maintainSize: true,
+                        maintainAnimation: true,
+                        maintainState: true,
+                        child: widget.builder(context),
+                      );
+                    } else {
+                      realPlacementMode = _autoMode!;
+                    }
+                  } else {
+                    realPlacementMode = widget.placementMode;
+                  }
+
                   return Flyout(
                     rootFlyout: widget.flyoutKey,
                     additionalOffset: widget.additionalOffset,
@@ -880,25 +1113,9 @@ class _FlyoutPageState extends State<_FlyoutPage> {
                     root: widget.navigator,
                     menuKey: null,
                     transitionBuilder: widget.transitionBuilder,
+                    placementMode: realPlacementMode,
                     builder: (context) {
-                      FlyoutPlacementMode realPlacementMode =
-                          widget.placementMode;
-                      if (widget.placementMode == FlyoutPlacementMode.auto) {
-                        if (_autoMode == null) {
-                          return Visibility(
-                            visible: false,
-                            maintainSize: true,
-                            maintainAnimation: true,
-                            maintainState: true,
-                            child: widget.builder(context),
-                          );
-                        } else {
-                          realPlacementMode = _autoMode!;
-                        }
-                      } else {
-                        realPlacementMode = widget.placementMode;
-                      }
-                      final flyout = Padding(
+                      Widget flyout = Padding(
                         key: widget.flyoutKey,
                         padding: realPlacementMode._getAdditionalOffsetPosition(
                           widget.position == null

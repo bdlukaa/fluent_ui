@@ -302,21 +302,27 @@ class _MyHomePageState extends State<MyHomePage> with WindowListener {
       body: const SizedBox.shrink(),
     ),
     PaneItem(
+      key: const ValueKey('/popups/flyout'),
+      icon: const Icon(FluentIcons.pop_expand),
+      title: const Text('Flyout'),
+      body: const SizedBox.shrink(),
+    ),
+    PaneItem(
       key: const ValueKey('/popups/menu_bar'),
       icon: const Icon(FluentIcons.expand_menu),
       title: const Text('MenuBar'),
       body: const SizedBox.shrink(),
     ),
     PaneItem(
-      key: const ValueKey('/popups/tooltip'),
-      icon: const Icon(FluentIcons.hint_text),
-      title: const Text('Tooltip'),
+      key: const ValueKey('/popups/teaching_tip'),
+      icon: const Icon(FluentIcons.field_filled),
+      title: const Text('Teaching Tip'),
       body: const SizedBox.shrink(),
     ),
     PaneItem(
-      key: const ValueKey('/popups/flyout'),
-      icon: const Icon(FluentIcons.pop_expand),
-      title: const Text('Flyout'),
+      key: const ValueKey('/popups/tooltip'),
+      icon: const Icon(FluentIcons.hint_text),
+      title: const Text('Tooltip'),
       body: const SizedBox.shrink(),
     ),
     PaneItemHeader(header: const Text('Theming')),
@@ -971,6 +977,15 @@ final router = GoRouter(navigatorKey: rootNavigatorKey, routes: [
         builder: (context, state) => DeferredWidget(
           surfaces.loadLibrary,
           () => popups.Flyout2Screen(),
+        ),
+      ),
+
+      /// Teaching Tip
+      GoRoute(
+        path: '/popups/teaching_tip',
+        builder: (context, state) => DeferredWidget(
+          surfaces.loadLibrary,
+          () => popups.TeachingTipPage(),
         ),
       ),
 
