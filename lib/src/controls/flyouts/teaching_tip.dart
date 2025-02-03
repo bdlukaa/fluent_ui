@@ -230,7 +230,8 @@ class TeachingTip extends StatelessWidget {
     final theme = FluentTheme.of(context);
     final localizations = FluentLocalizations.of(context);
     final flyout = Flyout.of(context);
-    const padding = 12.0;
+    const verticalPadding = 12.0;
+    const horizontalPadding = 10.0;
 
     return IntrinsicWidth(
       child: ConstrainedBox(
@@ -241,6 +242,8 @@ class TeachingTip extends StatelessWidget {
           shape: TeachingTipBorder(
             placement: flyout.placementMode,
             borderColor: theme.resources.surfaceStrokeColorDefault,
+            arrowCrossAxisWidth: horizontalPadding,
+            arrowMainAxisWidth: verticalPadding,
           ),
           child: Container(
             color: theme.menuColor,
@@ -249,28 +252,28 @@ class TeachingTip extends StatelessWidget {
                 FlyoutPlacementMode.bottomLeft ||
                 FlyoutPlacementMode.bottomCenter ||
                 FlyoutPlacementMode.bottomRight =>
-                  padding,
+                  verticalPadding,
                 _ => 0.0,
               },
               bottom: switch (flyout.placementMode) {
                 FlyoutPlacementMode.topLeft ||
                 FlyoutPlacementMode.topCenter ||
                 FlyoutPlacementMode.topRight =>
-                  padding,
+                  verticalPadding,
                 _ => 0.0,
               },
               left: switch (flyout.placementMode) {
                 FlyoutPlacementMode.rightTop ||
                 FlyoutPlacementMode.rightCenter ||
                 FlyoutPlacementMode.rightBottom =>
-                  padding,
+                  horizontalPadding,
                 _ => 0.0,
               },
               right: switch (flyout.placementMode) {
                 FlyoutPlacementMode.leftTop ||
                 FlyoutPlacementMode.leftCenter ||
                 FlyoutPlacementMode.leftBottom =>
-                  padding,
+                  horizontalPadding,
                 _ => 0.0,
               },
             ),
@@ -290,11 +293,11 @@ class TeachingTip extends StatelessWidget {
                   mediaContent!,
                 IntrinsicHeight(
                   child: Row(children: [
-                    const SizedBox(width: padding),
+                    const SizedBox(width: horizontalPadding),
                     if (leading != null)
                       Padding(
                         padding: const EdgeInsetsDirectional.only(
-                          top: padding,
+                          top: verticalPadding,
                           end: 8.0,
                         ),
                         child: leading!,
@@ -304,7 +307,7 @@ class TeachingTip extends StatelessWidget {
                         mainAxisSize: MainAxisSize.min,
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          const SizedBox(height: padding),
+                          const SizedBox(height: verticalPadding),
                           DefaultTextStyle(
                             style: theme.typography.bodyStrong ??
                                 const TextStyle(),
@@ -319,9 +322,9 @@ class TeachingTip extends StatelessWidget {
                         alignment: AlignmentDirectional.topStart,
                         child: Padding(
                           padding: const EdgeInsetsDirectional.only(
-                            top: padding / 2,
+                            top: verticalPadding / 2,
                             start: 4.0,
-                            end: padding / 2,
+                            end: verticalPadding / 2,
                           ),
                           child: Builder(builder: (context) {
                             return Tooltip(
@@ -338,15 +341,15 @@ class TeachingTip extends StatelessWidget {
                         ),
                       )
                     else
-                      const SizedBox(width: padding)
+                      const SizedBox(width: horizontalPadding)
                   ]),
                 ),
                 if (buttons != null && buttons!.isNotEmpty)
                   Padding(
                     padding: const EdgeInsetsDirectional.only(
-                      start: padding,
+                      start: horizontalPadding,
                       top: 6.0,
-                      end: padding,
+                      end: horizontalPadding,
                     ),
                     child: Row(
                       spacing: 6.0,
@@ -355,7 +358,7 @@ class TeachingTip extends StatelessWidget {
                       }).toList(),
                     ),
                   ),
-                const SizedBox(height: padding),
+                const SizedBox(height: verticalPadding),
 
                 /// Show this at the bottom if the Flyout is placed at the bottom
                 /// or any horizontal placement mode
