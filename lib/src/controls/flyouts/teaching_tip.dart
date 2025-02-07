@@ -264,16 +264,16 @@ class TeachingTip extends StatelessWidget {
               },
               left: switch (flyout.placementMode) {
                 FlyoutPlacementMode.rightTop ||
-                FlyoutPlacementMode.rightCenter ||
                 FlyoutPlacementMode.rightBottom =>
                   horizontalPadding,
+                FlyoutPlacementMode.rightCenter => verticalPadding,
                 _ => 0.0,
               },
               right: switch (flyout.placementMode) {
                 FlyoutPlacementMode.leftTop ||
-                FlyoutPlacementMode.leftCenter ||
                 FlyoutPlacementMode.leftBottom =>
                   horizontalPadding,
+                FlyoutPlacementMode.leftCenter => verticalPadding,
                 _ => 0.0,
               },
             ),
