@@ -582,7 +582,7 @@ class _FlyoutPositionDelegate extends SingleChildLayoutDelegate {
 
     final horizontalTopY = clampVertical(topY + flyoutSize.height);
     final horizontalY = clampVertical(
-      topY + flyoutSize.height + flyoutSize.height / 4,
+      targetOffset.dy - targetSize.height / 2 - flyoutSize.height / 2,
     );
     final horizontalBottomY = clampVertical(bottomY - flyoutSize.height);
 
