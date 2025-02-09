@@ -1,3 +1,7 @@
+## 4.11.1
+
+- fix: Do not show selected indicator on menu flyout items.
+
 ## 4.11.0
 
 - fix: hide Tab's close button when `onClosed` is null
