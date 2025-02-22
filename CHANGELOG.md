@@ -1,3 +1,7 @@
+## 4.11.2
+
+- fix: Use correct scaffold background color when view is provided
+
 ## 4.11.1
 
 - fix: Do not show selected indicator on menu flyout items.

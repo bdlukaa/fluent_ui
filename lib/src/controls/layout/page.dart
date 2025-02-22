@@ -133,7 +133,7 @@ class _ScaffoldPageState extends State<ScaffoldPage> {
     final view = NavigationView.maybeOf(context);
 
     return Mica(
-      backgroundColor: view == null ? Colors.transparent : null,
+      backgroundColor: view != null ? Colors.transparent : null,
       child: PageStorage(
         bucket: _bucket,
         child: Padding(
