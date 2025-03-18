@@ -1,6 +1,7 @@
 ## 4.11.2
 
 - fix: Use correct scaffold background color when view is provided
+- fix: `MenuFlyoutSubItem` no longer errors while building when `FlyoutPlacementMode.auto` is used
 
 ## 4.11.1
 
