@@ -1,5 +1,8 @@
 import 'package:fluent_ui/fluent_ui.dart';
 
+/// Eyeballed value from Windows Home 11.
+const kFlyoutMinConstraints = BoxConstraints(minWidth: 118);
+
 /// The content of the flyout
 ///
 /// See also:
@@ -15,8 +18,8 @@ class FlyoutContent extends StatelessWidget {
     this.shape,
     this.padding = const EdgeInsets.all(8.0),
     this.shadowColor = Colors.black,
-    this.elevation = 8,
-    this.constraints,
+    this.elevation = 8.0,
+    this.constraints = kFlyoutMinConstraints,
     this.useAcrylic = true,
   });
 
@@ -36,7 +39,7 @@ class FlyoutContent extends StatelessWidget {
   /// Defaults to 8.0 on each side
   final EdgeInsetsGeometry padding;
 
-  /// The color of the shadow. Not used if [elevation] is 0
+  /// The color of the shadow. Not used if [elevation] is 0.0.
   ///
   /// Defaults to black.
   final Color shadowColor;
@@ -46,11 +49,13 @@ class FlyoutContent extends StatelessWidget {
   ///
   /// See also:
   ///
-  ///  * [shadowColor]
+  ///  * [shadowColor], the color of the elevation shadow.
   final double elevation;
 
-  /// Additional constraints to apply to the child.
-  final BoxConstraints? constraints;
+  /// Constraints to apply to the child.
+  ///
+  /// Defaults to [kFlyoutMinConstraints].
+  final BoxConstraints constraints;
 
   /// Whether the background will be an [Acrylic].
   final bool useAcrylic;
@@ -58,43 +63,63 @@ class FlyoutContent extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     assert(debugCheckHasFluentTheme(context));
+    assert(debugCheckHasDirectionality(context));
     final theme = FluentTheme.of(context);
+    final textDirection = Directionality.of(context);
 
     final resolvedShape = shape ??
         RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(6.0),
+          borderRadius: BorderRadius.circular(8.0),
           side: BorderSide(
-            width: 0.25,
-            color: theme.inactiveBackgroundColor,
+            width: 1,
+            color: theme.resources.surfaceStrokeColorFlyout,
           ),
         );
 
-    return PhysicalModel(
-      elevation: elevation,
-      color: Colors.transparent,
-      shadowColor: shadowColor,
-      child: Acrylic(
-        tintAlpha: !useAcrylic ? 1.0 : null,
-        shape: resolvedShape,
-        child: Container(
-          constraints: constraints,
-          decoration: ShapeDecoration(
-            color:
-                color ?? theme.menuColor.withValues(alpha: kMenuColorOpacity),
-            shape: resolvedShape,
-          ),
-          padding: padding,
-          child: DefaultTextStyle.merge(
-            style: theme.typography.body,
-            child: child,
-          ),
+    final resolvedBorderRadius = () {
+      if (resolvedShape is RoundedRectangleBorder) {
+        return resolvedShape.borderRadius;
+      } else if (resolvedShape is ContinuousRectangleBorder) {
+        return resolvedShape.borderRadius;
+      } else if (resolvedShape is BeveledRectangleBorder) {
+        return resolvedShape.borderRadius;
+      } else {
+        return null;
+      }
+    }();
+
+    final content = Acrylic(
+      tintAlpha: !useAcrylic ? 1.0 : null,
+      shape: resolvedShape,
+      child: Container(
+        constraints: constraints,
+        decoration: ShapeDecoration(
+          color: color ?? theme.menuColor.withValues(alpha: kMenuColorOpacity),
+          shape: resolvedShape,
+        ),
+        padding: padding,
+        child: DefaultTextStyle.merge(
+          style: theme.typography.body,
+          child: child,
         ),
       ),
     );
+
+    if (elevation > 0.0) {
+      return PhysicalModel(
+        elevation: elevation,
+        color: Colors.transparent,
+        borderRadius: resolvedBorderRadius?.resolve(textDirection),
+        shadowColor: shadowColor,
+        child: content,
+      );
+    }
+
+    return content;
   }
 }
 
-/// A tile that is used inside of [FlyoutContent]
+/// A tile that is used inside of [FlyoutContent].
 ///
 /// See also:
 ///
@@ -105,6 +130,7 @@ class FlyoutListTile extends StatelessWidget {
   const FlyoutListTile({
     super.key,
     this.onPressed,
+    this.onLongPress,
     this.tooltip,
     this.icon,
     required this.text,
@@ -117,7 +143,11 @@ class FlyoutListTile extends StatelessWidget {
     this.showSelectedIndicator = true,
   });
 
+  /// Called when the tile is tapped or otherwise activated.
   final VoidCallback? onPressed;
+
+  /// Called when the tile is long-pressed.
+  final VoidCallback? onLongPress;
 
   /// The tile tooltip text
   final String? tooltip;
@@ -155,11 +185,11 @@ class FlyoutListTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     assert(debugCheckHasFluentTheme(context));
-    final size = Flyout.maybeOf(context)?.size;
 
     return HoverButton(
       key: key,
       onPressed: onPressed,
+      onLongPress: onLongPress,
       focusNode: focusNode,
       autofocus: autofocus,
       semanticLabel: semanticLabel,
@@ -199,10 +229,7 @@ class FlyoutListTile extends StatelessWidget {
                     child: icon!,
                   ),
                 ),
-              Flexible(
-                fit: size == null || size.isEmpty
-                    ? FlexFit.loose
-                    : FlexFit.tight,
+              Expanded(
                 child: Padding(
                   padding: const EdgeInsetsDirectional.only(end: 10.0),
                   child: DefaultTextStyle.merge(

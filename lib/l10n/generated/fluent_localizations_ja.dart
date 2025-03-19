@@ -52,6 +52,9 @@ class FluentLocalizationsJa extends FluentLocalizations {
   String get selectAllActionLabel => '全て選択';
 
   @override
+  String get undoActionLabel => 'Undo';
+
+  @override
   String get newTabLabel => '新しいタブを追加';
 
   @override
@@ -79,6 +82,9 @@ class FluentLocalizationsJa extends FluentLocalizations {
   String get selectAllActionTooltip => '全て選択';
 
   @override
+  String get undoActionTooltip => 'Undo the last action';
+
+  @override
   String get hour => '時';
 
   @override
@@ -98,6 +104,12 @@ class FluentLocalizationsJa extends FluentLocalizations {
 
   @override
   String get year => '年';
+
+  @override
+  String get seeMore => 'See more';
+
+  @override
+  String get seeLess => 'See less';
 
   @override
   String get redLabel => '赤';

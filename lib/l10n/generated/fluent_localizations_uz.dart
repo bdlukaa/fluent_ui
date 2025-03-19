@@ -52,6 +52,9 @@ class FluentLocalizationsUz extends FluentLocalizations {
   String get selectAllActionLabel => 'Barchasini belgilash';
 
   @override
+  String get undoActionLabel => 'Undo';
+
+  @override
   String get newTabLabel => 'Yangi oyna ochish';
 
   @override
@@ -80,6 +83,9 @@ class FluentLocalizationsUz extends FluentLocalizations {
   String get selectAllActionTooltip => 'Barchasini belgilash';
 
   @override
+  String get undoActionTooltip => 'Undo the last action';
+
+  @override
   String get hour => 'soat';
 
   @override
@@ -99,6 +105,12 @@ class FluentLocalizationsUz extends FluentLocalizations {
 
   @override
   String get year => 'yil';
+
+  @override
+  String get seeMore => 'See more';
+
+  @override
+  String get seeLess => 'See less';
 
   @override
   String get redLabel => 'Qizil';

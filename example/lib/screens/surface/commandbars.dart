@@ -11,28 +11,20 @@ class CommandBarsPage extends StatefulWidget {
 }
 
 class _CommandBarsPageState extends State<CommandBarsPage> with PageMixin {
+  final key = GlobalKey<CommandBarState>();
+
   final simpleCommandBarItems = <CommandBarItem>[
-    CommandBarBuilderItem(
-      builder: (context, mode, w) => Tooltip(
-        message: "Create something new!",
-        child: w,
-      ),
-      wrappedItem: CommandBarButton(
-        icon: const Icon(FluentIcons.add),
-        label: const Text('New'),
-        onPressed: () {},
-      ),
+    CommandBarButton(
+      icon: const Icon(FluentIcons.add),
+      label: const Text('New'),
+      tooltip: 'Create something new!',
+      onPressed: () {},
     ),
-    CommandBarBuilderItem(
-      builder: (context, mode, w) => Tooltip(
-        message: "Delete what is currently selected!",
-        child: w,
-      ),
-      wrappedItem: CommandBarButton(
-        icon: const Icon(FluentIcons.delete),
-        label: const Text('Delete'),
-        onPressed: () {},
-      ),
+    CommandBarButton(
+      icon: const Icon(FluentIcons.delete),
+      label: const Text('Delete'),
+      tooltip: 'Delete what is currently selected!',
+      onPressed: () {},
     ),
     CommandBarButton(
       icon: const Icon(FluentIcons.archive),
@@ -117,812 +109,144 @@ class _CommandBarsPageState extends State<CommandBarsPage> with PageMixin {
     ),
   ];
 
+  double? compactBreakpointWidth;
+  bool _vertical = false;
+  bool _compact = false;
+  var overflowBehavior = CommandBarOverflowBehavior.dynamicOverflow;
+
   @override
   Widget build(BuildContext context) {
     return ScaffoldPage.scrollable(
-      header: PageHeader(
-        title: const Text('CommandBar'),
-        commandBar: CommandBar(
-          mainAxisAlignment: MainAxisAlignment.end,
-          primaryItems: [
-            ...simpleCommandBarItems,
-          ],
-        ),
-      ),
+      header: const PageHeader(title: Text('CommandBar')),
       children: [
         const Text(
           'Command bars provide users with easy access to your app\'s most '
           'common tasks. Command bars can provide access to app-level or '
           'page-specific commands and can be used with any navigation pattern.',
         ),
-        subtitle(content: const Text('Simple command bar (no wrapping)')),
+        const SizedBox(height: 8.0),
+        Card(
+          child: Wrap(
+            spacing: 12.0,
+            runSpacing: 12.0,
+            crossAxisAlignment: WrapCrossAlignment.end,
+            children: [
+              SizedBox(
+                width: 200.0,
+                child: InfoLabel(
+                  label: 'Compact breakpoint width',
+                  child: NumberBox<double>(
+                    value: compactBreakpointWidth,
+                    onChanged: (value) {
+                      setState(() {
+                        compactBreakpointWidth = value;
+                      });
+                    },
+                  ),
+                ),
+              ),
+              InfoLabel(
+                label: 'Overflow behavior',
+                child: ComboBox<CommandBarOverflowBehavior>(
+                  value: overflowBehavior,
+                  items: CommandBarOverflowBehavior.values.map((behavior) {
+                    return ComboBoxItem<CommandBarOverflowBehavior>(
+                      value: behavior,
+                      child: Text(
+                        behavior.name
+                            .replaceAllMapped(
+                              RegExp(r'([a-z])([A-Z])'),
+                              (match) => '${match.group(1)} ${match.group(2)}',
+                            )
+                            .uppercaseFirst(),
+                      ),
+                    );
+                  }).toList(),
+                  onChanged: (value) {
+                    setState(() {
+                      overflowBehavior = value!;
+                    });
+                  },
+                ),
+              ),
+              Checkbox(
+                checked: _vertical,
+                onChanged: (value) {
+                  setState(() {
+                    _vertical = value!;
+                  });
+                },
+                content: const Text('Vertical'),
+              ),
+              Checkbox(
+                checked: _compact,
+                onChanged: (value) {
+                  setState(() {
+                    _compact = value!;
+                  });
+                },
+                content: const Text('Compact'),
+              ),
+              Button(
+                onPressed: () {
+                  key.currentState?.toggleSecondaryMenu();
+                },
+                child: const Text('Toggle secondary menu'),
+              ),
+            ],
+          ),
+        ),
+        subtitle(
+          content: const Text(
+            'Command bar with many items (dynamic overflow)',
+          ),
+        ),
         CardHighlight(
-          codeSnippet: '''
-/// Define list of CommandBarItem
-final simpleCommandBarItems = <CommandBarItem>[
-  CommandBarBuilderItem(
-    builder: (context, mode, w) => Tooltip(
-      message: "Create something new!",
-      child: w,
-    ),
-    wrappedItem: CommandBarButton(
+          codeSnippet: '''final commandBarKey = GlobalKey<CommandBarState>();
+
+CommandBar(
+  key: commandBarKey, ${compactBreakpointWidth != null ? '\n  compactBreakpointWidth: compactBreakpointWidth,' : ''}${_vertical ? '\n  direction: Axis.vertical,' : ''}${_compact ? '\n  isCompact: true,' : ''}
+  overflowBehavior: $overflowBehavior,
+  primaryItems: [
+    CommandBarButton(
       icon: const Icon(FluentIcons.add),
       label: const Text('New'),
-      onPressed: () {},
+      tooltip: 'Create something new!',
+      onPressed: () {
+        // Create something new!
+      },
     ),
-  ),
-  CommandBarBuilderItem(
-    builder: (context, mode, w) => Tooltip(
-      message: "Delete what is currently selected!",
-      child: w,
-    ),
-    wrappedItem: CommandBarButton(
+    const CommandBarSeparator(),
+    CommandBarButton(
       icon: const Icon(FluentIcons.delete),
       label: const Text('Delete'),
-      onPressed: () {},
+      tooltip: 'Delete what is currently selected!',
+      onPressed: () {
+        // Delete what is currently selected!
+      },
     ),
-  ),
-  CommandBarButton(
-    icon: const Icon(FluentIcons.archive),
-    label: const Text('Archive'),
-    onPressed: () {},
-  ),
-  CommandBarButton(
-    icon: const Icon(FluentIcons.move),
-    label: const Text('Move'),
-    onPressed: () {},
-  ),
-  const CommandBarButton(
-    icon: Icon(FluentIcons.cancel),
-    label: Text('Disabled'),
-    onPressed: null,
-  ),
-];
-
-/// Generate CommandBar with different properties like overflowBehavior
-CommandBar(
-  overflowBehavior: CommandBarOverflowBehavior.noWrap,
-  primaryItems: [
-    ...simpleCommandBarItems,
   ],
 );
-''',
-          child: CommandBar(
-            overflowBehavior: CommandBarOverflowBehavior.noWrap,
-            primaryItems: [
-              ...simpleCommandBarItems,
-            ],
-          ),
-        ),
-        subtitle(
-            content: const Text('Simple command bar (no wrapping) (vertical)')),
-        CardHighlight(
-          codeSnippet: '''
-/// Lists of CommandBarItem named as simpleCommandBarItems and moreCommandBarItems
-/// Used as following
 
-/// Generate CommandBar with different properties like overflowBehavior
-CommandBar(
-  direction: Axis.vertical,
-  overflowBehavior: CommandBarOverflowBehavior.noWrap,
-  primaryItems: [
-    ...simpleCommandBarItems,
-  ],
-);
+// To toggle the secondary menu
+commandBarKey.currentState?.toggleSecondaryMenu();
 ''',
-          child: CommandBar(
-            direction: Axis.vertical,
-            overflowBehavior: CommandBarOverflowBehavior.noWrap,
-            primaryItems: [
-              ...simpleCommandBarItems,
-            ],
-          ),
-        ),
-        subtitle(
-          content: const Text(
-            'Command bar with many items (wrapping, auto-compact < 600px)',
-          ),
-        ),
-        CardHighlight(
-          codeSnippet: '''
-/// Lists of CommandBarItem named as simpleCommandBarItems and moreCommandBarItems
-/// Used as following
-
-CommandBar(
-  overflowBehavior: CommandBarOverflowBehavior.wrap,
-  compactBreakpointWidth: 600,
-  primaryItems: [
-    ...simpleCommandBarItems,
-    const CommandBarSeparator(),
-    ...moreCommandBarItems,
-  ],
-);
-''',
-          child: CommandBar(
-            overflowBehavior: CommandBarOverflowBehavior.wrap,
-            compactBreakpointWidth: 600,
-            primaryItems: [
-              ...simpleCommandBarItems,
-              const CommandBarSeparator(),
-              ...moreCommandBarItems,
-            ],
-          ),
-        ),
-        subtitle(
-          content: const Text(
-            'Command bar with many items (wrapping, auto-compact < 600px) (vertical)',
-          ),
-        ),
-        CardHighlight(
-          codeSnippet: '''
-/// Lists of CommandBarItem named as simpleCommandBarItems and moreCommandBarItems
-/// Used as following
-
-ConstrainedBox(
-  constraints: const BoxConstraints(maxHeight: 230),
-  child: CommandBar(
-    direction: Axis.vertical,
-    overflowBehavior: CommandBarOverflowBehavior.wrap,
-    compactBreakpointWidth: 600,
-    primaryItems: [
-      ...simpleCommandBarItems,
-      const CommandBarSeparator(direction: Axis.horizontal),
-      ...moreCommandBarItems,
-    ],
-  ),
-);
-''',
-          child: ConstrainedBox(
-            constraints: const BoxConstraints(maxHeight: 230),
-            child: CommandBar(
-              direction: Axis.vertical,
-              overflowBehavior: CommandBarOverflowBehavior.wrap,
-              compactBreakpointWidth: 600,
-              primaryItems: [
-                ...simpleCommandBarItems,
-                const CommandBarSeparator(direction: Axis.horizontal),
-                ...moreCommandBarItems,
-              ],
-            ),
-          ),
-        ),
-        subtitle(
-          content: const Text(
-            'Carded compact command bar with many items (clipped)',
-          ),
-        ),
-        CardHighlight(
-          codeSnippet: '''
-/// Lists of CommandBarItem named as simpleCommandBarItems and moreCommandBarItems
-/// Used as following
-
-ConstrainedBox(
-  constraints: const BoxConstraints(maxWidth: 230),
-  child: CommandBarCard(
-    child: CommandBar(
-      overflowBehavior: CommandBarOverflowBehavior.clip,
-      isCompact: true,
-      primaryItems: [
-        ...simpleCommandBarItems,
-        const CommandBarSeparator(),
-        ...moreCommandBarItems,
-      ],
-    ),
-  ),
-);
-''',
-          child: ConstrainedBox(
-            constraints: const BoxConstraints(maxWidth: 230),
-            child: CommandBarCard(
+          child: SizedBox(
+            height: _vertical ? 400.0 : null,
+            child: Align(
+              alignment: AlignmentDirectional.topStart,
               child: CommandBar(
-                overflowBehavior: CommandBarOverflowBehavior.clip,
-                isCompact: true,
-                primaryItems: [
-                  ...simpleCommandBarItems,
-                  const CommandBarSeparator(),
-                  ...moreCommandBarItems,
-                ],
-              ),
-            ),
-          ),
-        ),
-        subtitle(
-          content: const Text(
-            'Carded compact command bar with many items (clipped) (vertical)',
-          ),
-        ),
-        CardHighlight(
-          codeSnippet: '''
-/// Lists of CommandBarItem named as simpleCommandBarItems and moreCommandBarItems
-/// Used as following
-
-ConstrainedBox(
-  constraints: const BoxConstraints(maxHeight: 230),
-  child: CommandBarCard(
-    child: CommandBar(
-      direction: Axis.vertical,
-      overflowBehavior: CommandBarOverflowBehavior.clip,
-      isCompact: true,
-      primaryItems: [
-        ...simpleCommandBarItems,
-        const CommandBarSeparator(),
-        ...moreCommandBarItems,
-      ],
-    ),
-  ),
-);
-''',
-          child: ConstrainedBox(
-            constraints: const BoxConstraints(maxHeight: 230),
-            child: CommandBarCard(
-              child: CommandBar(
-                direction: Axis.vertical,
-                overflowBehavior: CommandBarOverflowBehavior.clip,
-                isCompact: true,
-                primaryItems: [
-                  ...simpleCommandBarItems,
-                  const CommandBarSeparator(),
-                  ...moreCommandBarItems,
-                ],
-              ),
-            ),
-          ),
-        ),
-        subtitle(
-          content: const Text(
-            'Carded compact command bar with many items (dynamic overflow)',
-          ),
-        ),
-        CardHighlight(
-          codeSnippet: '''
-/// Create different lists of CommandBarItem
-/// named simpleCommandBarItems, moreCommandBarItems, evenMoreCommandBarItems
-/// These lists can be used as primaryItems as shown
-CommandBarCard(
-  child: CommandBar(
-    overflowBehavior: CommandBarOverflowBehavior.dynamicOverflow,
-    primaryItems: [
-      ...simpleCommandBarItems,
-      const CommandBarSeparator(),
-      ...moreCommandBarItems,
-      const CommandBarSeparator(),
-      ...evenMoreCommandBarItems,
-    ],
-  ),
-);
-''',
-          child: CommandBarCard(
-            child: CommandBar(
-              overflowBehavior: CommandBarOverflowBehavior.dynamicOverflow,
-              primaryItems: [
-                ...simpleCommandBarItems,
-                const CommandBarSeparator(),
-                ...moreCommandBarItems,
-                const CommandBarSeparator(),
-                ...evenMoreCommandBarItems,
-              ],
-            ),
-          ),
-        ),
-        subtitle(
-          content: const Text(
-            'Carded compact command bar with many items (dynamic overflow) (vertical)',
-          ),
-        ),
-        CardHighlight(
-          codeSnippet: '''
-/// Create different lists of CommandBarItem
-/// named simpleCommandBarItems, moreCommandBarItems, evenMoreCommandBarItems
-/// These lists can be used as primaryItems as shown
-ConstrainedBox(
-  constraints: const BoxConstraints(maxHeight: 230),
-  child: CommandBarCard(
-    child: CommandBar(
-      direction: Axis.vertical,
-      overflowBehavior: CommandBarOverflowBehavior.dynamicOverflow,
-      primaryItems: [
-        ...simpleCommandBarItems,
-        const CommandBarSeparator(),
-        ...moreCommandBarItems,
-        const CommandBarSeparator(),
-        ...evenMoreCommandBarItems,
-      ],
-    ),
-  ),
-);
-''',
-          child: ConstrainedBox(
-            constraints: const BoxConstraints(maxHeight: 230),
-            child: CommandBarCard(
-              child: CommandBar(
-                direction: Axis.vertical,
-                overflowBehavior: CommandBarOverflowBehavior.dynamicOverflow,
+                key: key,
+                compactBreakpointWidth: compactBreakpointWidth,
+                direction: _vertical ? Axis.vertical : Axis.horizontal,
+                isCompact: _compact,
+                overflowBehavior: overflowBehavior,
                 primaryItems: [
                   ...simpleCommandBarItems,
                   const CommandBarSeparator(),
                   ...moreCommandBarItems,
                   const CommandBarSeparator(),
                   ...evenMoreCommandBarItems,
-                ],
-              ),
-            ),
-          ),
-        ),
-        subtitle(
-          content: const Text(
-            'End-aligned command bar with many items (dynamic overflow, auto-compact < 900px)',
-          ),
-        ),
-        CardHighlight(
-          codeSnippet: '''
-/// Create different lists of CommandBarItem
-/// named simpleCommandBarItems, moreCommandBarItems, evenMoreCommandBarItems
-/// These lists can be used as primaryItems as shown
-
-CommandBar(
-  mainAxisAlignment: MainAxisAlignment.end,
-  overflowBehavior: CommandBarOverflowBehavior.dynamicOverflow,
-  compactBreakpointWidth: 900,
-  primaryItems: [
-    ...simpleCommandBarItems,
-    const CommandBarSeparator(),
-    ...moreCommandBarItems,
-    const CommandBarSeparator(),
-    ...evenMoreCommandBarItems,
-  ],
-);
-''',
-          child: CommandBar(
-            mainAxisAlignment: MainAxisAlignment.end,
-            overflowBehavior: CommandBarOverflowBehavior.dynamicOverflow,
-            compactBreakpointWidth: 900,
-            primaryItems: [
-              ...simpleCommandBarItems,
-              const CommandBarSeparator(),
-              ...moreCommandBarItems,
-              const CommandBarSeparator(),
-              ...evenMoreCommandBarItems,
-            ],
-          ),
-        ),
-        subtitle(
-          content: const Text(
-            'End-aligned command bar with many items (dynamic overflow, auto-compact < 900px) (vertical)',
-          ),
-        ),
-        CardHighlight(
-          codeSnippet: '''
-/// Create different lists of CommandBarItem
-/// named simpleCommandBarItems, moreCommandBarItems, evenMoreCommandBarItems
-/// These lists can be used as primaryItems as shown
-
-ConstrainedBox(
-  constraints: const BoxConstraints(maxHeight: 230),
-  child: CommandBar(
-    direction: Axis.vertical,
-    mainAxisAlignment: MainAxisAlignment.end,
-    overflowBehavior: CommandBarOverflowBehavior.dynamicOverflow,
-    compactBreakpointWidth: 900,
-    primaryItems: [
-      ...simpleCommandBarItems,
-      const CommandBarSeparator(),
-      ...moreCommandBarItems,
-      const CommandBarSeparator(),
-      ...evenMoreCommandBarItems,
-    ],
-  ),
-);
-''',
-          child: ConstrainedBox(
-            constraints: const BoxConstraints(maxHeight: 230),
-            child: CommandBar(
-              direction: Axis.vertical,
-              mainAxisAlignment: MainAxisAlignment.end,
-              overflowBehavior: CommandBarOverflowBehavior.dynamicOverflow,
-              compactBreakpointWidth: 900,
-              primaryItems: [
-                ...simpleCommandBarItems,
-                const CommandBarSeparator(),
-                ...moreCommandBarItems,
-                const CommandBarSeparator(),
-                ...evenMoreCommandBarItems,
-              ],
-            ),
-          ),
-        ),
-        subtitle(
-          content: const Text(
-            'End-aligned command bar with permanent secondary items (dynamic overflow)',
-          ),
-        ),
-        CardHighlight(
-          codeSnippet: '''
-/// Lists of CommandBarItem named as simpleCommandBarItems and moreCommandBarItems
-/// Used as following
-
-CommandBar(
-  mainAxisAlignment: MainAxisAlignment.end,
-  overflowBehavior: CommandBarOverflowBehavior.dynamicOverflow,
-  primaryItems: [
-    ...simpleCommandBarItems,
-    const CommandBarSeparator(),
-    ...moreCommandBarItems,
-  ],
-  secondaryItems: evenMoreCommandBarItems,
-);
-''',
-          child: CommandBar(
-            mainAxisAlignment: MainAxisAlignment.end,
-            overflowBehavior: CommandBarOverflowBehavior.dynamicOverflow,
-            primaryItems: [
-              ...simpleCommandBarItems,
-              const CommandBarSeparator(),
-              ...moreCommandBarItems,
-            ],
-            secondaryItems: evenMoreCommandBarItems,
-          ),
-        ),
-        subtitle(
-          content: const Text(
-            'End-aligned command bar with permanent secondary items (dynamic overflow) (vertical)',
-          ),
-        ),
-        CardHighlight(
-          codeSnippet: '''
-/// Lists of CommandBarItem named as simpleCommandBarItems and moreCommandBarItems
-/// Used as following
-
-ConstrainedBox(
-  constraints: const BoxConstraints(maxHeight: 230),
-  child: CommandBar(
-    direction: Axis.vertical,
-    mainAxisAlignment: MainAxisAlignment.end,
-    overflowBehavior: CommandBarOverflowBehavior.dynamicOverflow,
-    primaryItems: [
-      ...simpleCommandBarItems,
-      const CommandBarSeparator(),
-      ...moreCommandBarItems,
-    ],
-    secondaryItems: evenMoreCommandBarItems,
-  ),
-);
-''',
-          child: ConstrainedBox(
-            constraints: const BoxConstraints(maxHeight: 230),
-            child: CommandBar(
-              direction: Axis.vertical,
-              mainAxisAlignment: MainAxisAlignment.end,
-              overflowBehavior: CommandBarOverflowBehavior.dynamicOverflow,
-              primaryItems: [
-                ...simpleCommandBarItems,
-                const CommandBarSeparator(),
-                ...moreCommandBarItems,
-              ],
-              secondaryItems: evenMoreCommandBarItems,
-            ),
-          ),
-        ),
-        subtitle(
-          content: const Text(
-            'Command bar with secondary items (wrapping)',
-          ),
-        ),
-        CardHighlight(
-          codeSnippet: '''
-/// Lists of CommandBarItem named as simpleCommandBarItems and moreCommandBarItems
-/// Used as following
-
-CommandBar(
-  overflowBehavior: CommandBarOverflowBehavior.wrap,
-  primaryItems: simpleCommandBarItems,
-  secondaryItems: moreCommandBarItems,
-);
-''',
-          child: CommandBar(
-            overflowBehavior: CommandBarOverflowBehavior.wrap,
-            primaryItems: simpleCommandBarItems,
-            secondaryItems: moreCommandBarItems,
-          ),
-        ),
-        subtitle(
-          content: const Text(
-            'Command bar with secondary items (wrapping) (vertical)',
-          ),
-        ),
-        CardHighlight(
-          codeSnippet: '''
-/// Lists of CommandBarItem named as simpleCommandBarItems and moreCommandBarItems
-/// Used as following
-
-ConstrainedBox(
-  constraints: const BoxConstraints(maxHeight: 230),
-  child: CommandBar(
-    direction: Axis.vertical,
-    overflowBehavior: CommandBarOverflowBehavior.wrap,
-    primaryItems: simpleCommandBarItems,
-    secondaryItems: moreCommandBarItems,
-  ),
-);
-''',
-          child: ConstrainedBox(
-            constraints: const BoxConstraints(maxHeight: 230),
-            child: CommandBar(
-              direction: Axis.vertical,
-              overflowBehavior: CommandBarOverflowBehavior.wrap,
-              primaryItems: simpleCommandBarItems,
-              secondaryItems: moreCommandBarItems,
-            ),
-          ),
-        ),
-        subtitle(
-          content: const Text(
-            'Carded complex command bar with many items (horizontal scrolling)',
-          ),
-        ),
-        CardHighlight(
-          codeSnippet: '''
-CommandBarCard(
-    child: Row(children: [
-      Expanded(
-        child: CommandBar(
-          overflowBehavior: CommandBarOverflowBehavior.scrolling,
-          primaryItems: [
-            ...simpleCommandBarItems,
-            const CommandBarSeparator(),
-            ...moreCommandBarItems,
-          ],
-        ),
-      ),
-      // End-aligned button(s)
-      CommandBar(
-        overflowBehavior: CommandBarOverflowBehavior.noWrap,
-        primaryItems: [
-          CommandBarButton(
-            icon: const Icon(FluentIcons.refresh),
-            onPressed: () {},
-          ),
-        ],
-      ),
-    ],
-  ),
-);
-''',
-          child: CommandBarCard(
-            child: Row(
-              children: [
-                Expanded(
-                  child: CommandBar(
-                    overflowBehavior: CommandBarOverflowBehavior.scrolling,
-                    primaryItems: [
-                      ...simpleCommandBarItems,
-                      const CommandBarSeparator(),
-                      ...moreCommandBarItems,
-                    ],
-                  ),
-                ),
-                // End-aligned button(s)
-                CommandBar(
-                  overflowBehavior: CommandBarOverflowBehavior.noWrap,
-                  primaryItems: [
-                    CommandBarButton(
-                      icon: const Icon(FluentIcons.refresh),
-                      onPressed: () {},
-                    ),
-                  ],
-                ),
-              ],
-            ),
-          ),
-        ),
-        subtitle(
-          content: const Text(
-            'Carded complex command bar with many items (vertical scrolling) (vertical)',
-          ),
-        ),
-        CardHighlight(
-          codeSnippet: '''
-ConstrainedBox(
-  constraints: const BoxConstraints(maxHeight: 230, maxWidth: 48),
-  child: CommandBarCard(
-    child: Column(
-      children: [
-        Expanded(
-          child: CommandBar(
-            direction: Axis.vertical,
-            overflowBehavior: CommandBarOverflowBehavior.scrolling,
-            primaryItems: [
-              ...simpleCommandBarItems,
-              const CommandBarSeparator(direction: Axis.horizontal),
-              ...moreCommandBarItems,
-            ],
-          ),
-        ),
-        // End-aligned button(s)
-        CommandBar(
-          direction: Axis.vertical,
-          overflowBehavior: CommandBarOverflowBehavior.noWrap,
-          primaryItems: [
-            CommandBarButton(
-              icon: const Icon(FluentIcons.refresh),
-              onPressed: () {},
-            ),
-          ],
-        ),
-      ],
-    ),
-  ),
-);
-''',
-          child: ConstrainedBox(
-            constraints: const BoxConstraints(maxHeight: 230, maxWidth: 48),
-            child: CommandBarCard(
-              child: Column(
-                children: [
-                  Expanded(
-                    child: CommandBar(
-                      direction: Axis.vertical,
-                      overflowBehavior: CommandBarOverflowBehavior.scrolling,
-                      primaryItems: [
-                        ...simpleCommandBarItems,
-                        const CommandBarSeparator(direction: Axis.horizontal),
-                        ...moreCommandBarItems,
-                      ],
-                    ),
-                  ),
-                  // End-aligned button(s)
-                  CommandBar(
-                    direction: Axis.vertical,
-                    overflowBehavior: CommandBarOverflowBehavior.noWrap,
-                    primaryItems: [
-                      CommandBarButton(
-                        icon: const Icon(FluentIcons.refresh),
-                        onPressed: () {},
-                      ),
-                    ],
-                  ),
-                ],
-              ),
-            ),
-          ),
-        ),
-        subtitle(
-          content: const Text(
-            'Carded complex command bar with many items (dynamic overflow)',
-          ),
-        ),
-        CardHighlight(
-          codeSnippet: '''
-CommandBarCard(
-  child: Row(
-    children: [
-      Expanded(
-        child: CommandBar(
-          overflowBehavior: CommandBarOverflowBehavior.dynamicOverflow,
-          overflowItemAlignment: MainAxisAlignment.end,
-          primaryItems: [
-            ...simpleCommandBarItems,
-            const CommandBarSeparator(),
-            ...moreCommandBarItems,
-          ],
-          secondaryItems: evenMoreCommandBarItems,
-        ),
-      ),
-      // End-aligned button(s)
-      CommandBar(
-        overflowBehavior: CommandBarOverflowBehavior.noWrap,
-        primaryItems: [
-          CommandBarButton(
-            icon: const Icon(FluentIcons.refresh),
-            onPressed: () {},
-          ),
-        ],
-      ),
-    ],
-  ),
-);
-''',
-          child: CommandBarCard(
-            child: Row(
-              children: [
-                Expanded(
-                  child: CommandBar(
-                    overflowBehavior:
-                        CommandBarOverflowBehavior.dynamicOverflow,
-                    overflowItemAlignment: MainAxisAlignment.end,
-                    primaryItems: [
-                      ...simpleCommandBarItems,
-                      const CommandBarSeparator(),
-                      ...moreCommandBarItems,
-                    ],
-                    secondaryItems: evenMoreCommandBarItems,
-                  ),
-                ),
-                // End-aligned button(s)
-                CommandBar(
-                  overflowBehavior: CommandBarOverflowBehavior.noWrap,
-                  primaryItems: [
-                    CommandBarButton(
-                      icon: const Icon(FluentIcons.refresh),
-                      onPressed: () {},
-                    ),
-                  ],
-                ),
-              ],
-            ),
-          ),
-        ),
-        subtitle(
-          content: const Text(
-            'Carded complex command bar with many items (dynamic overflow) (vertical)',
-          ),
-        ),
-        CardHighlight(
-          codeSnippet: '''
-ConstrainedBox(
-  constraints: const BoxConstraints(maxHeight: 330),
-  child: CommandBarCard(
-    child: Column(
-      children: [
-        Expanded(
-          child: CommandBar(
-            direction: Axis.vertical,
-            overflowBehavior:
-                CommandBarOverflowBehavior.dynamicOverflow,
-            overflowItemAlignment: MainAxisAlignment.end,
-            primaryItems: [
-              ...simpleCommandBarItems,
-              const CommandBarSeparator(direction: Axis.horizontal),
-              ...moreCommandBarItems,
-            ],
-            secondaryItems: evenMoreCommandBarItems,
-          ),
-        ),
-        // End-aligned button(s)
-        CommandBar(
-          direction: Axis.vertical,
-          overflowBehavior: CommandBarOverflowBehavior.noWrap,
-          primaryItems: [
-            CommandBarButton(
-              icon: const Icon(FluentIcons.refresh),
-              onPressed: () {},
-            ),
-          ],
-        ),
-      ],
-    ),
-  ),
-);
-''',
-          child: ConstrainedBox(
-            constraints: const BoxConstraints(maxHeight: 330),
-            child: CommandBarCard(
-              child: Column(
-                children: [
-                  Expanded(
-                    child: CommandBar(
-                      direction: Axis.vertical,
-                      overflowBehavior:
-                          CommandBarOverflowBehavior.dynamicOverflow,
-                      overflowItemAlignment: MainAxisAlignment.end,
-                      primaryItems: [
-                        ...simpleCommandBarItems,
-                        const CommandBarSeparator(direction: Axis.horizontal),
-                        ...moreCommandBarItems,
-                      ],
-                      secondaryItems: evenMoreCommandBarItems,
-                    ),
-                  ),
-                  // End-aligned button(s)
-                  CommandBar(
-                    direction: Axis.vertical,
-                    overflowBehavior: CommandBarOverflowBehavior.noWrap,
-                    primaryItems: [
-                      CommandBarButton(
-                        icon: const Icon(FluentIcons.refresh),
-                        onPressed: () {},
-                      ),
-                    ],
-                  ),
                 ],
               ),
             ),

@@ -52,6 +52,9 @@ class FluentLocalizationsTa extends FluentLocalizations {
   String get selectAllActionLabel => 'அனைத்தையும் தெரிவுசெய்';
 
   @override
+  String get undoActionLabel => 'Undo';
+
+  @override
   String get newTabLabel => 'புதிய தாவலைச் சேர்';
 
   @override
@@ -83,6 +86,9 @@ class FluentLocalizationsTa extends FluentLocalizations {
       'அனைத்து உள்ளடக்கத்தையும் தேர்ந்தெடுக்கவும்';
 
   @override
+  String get undoActionTooltip => 'Undo the last action';
+
+  @override
   String get hour => 'மணி';
 
   @override
@@ -102,6 +108,12 @@ class FluentLocalizationsTa extends FluentLocalizations {
 
   @override
   String get year => 'ஆண்டு';
+
+  @override
+  String get seeMore => 'See more';
+
+  @override
+  String get seeLess => 'See less';
 
   @override
   String get redLabel => 'சிவப்பு';

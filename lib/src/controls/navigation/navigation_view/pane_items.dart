@@ -732,9 +732,10 @@ class __PaneItemExpanderState extends State<_PaneItemExpander>
 
         flyoutController.showFlyout(
           placementMode: displayMode == PaneDisplayMode.compact
-              ? FlyoutPlacementMode.right
+              ? FlyoutPlacementMode.rightTop
               : FlyoutPlacementMode.bottomCenter,
           forceAvailableSpace: true,
+          barrierColor: Colors.transparent,
           builder: (context) {
             return MenuFlyout(
               items: widget.items.map<MenuFlyoutItemBase>((item) {
@@ -925,66 +926,43 @@ class _PaneItemExpanderMenuItem extends MenuFlyoutItemBase {
 
   @override
   Widget build(BuildContext context) {
-    assert(debugCheckHasFluentTheme(context));
-    final theme = FluentTheme.of(context);
     final navigationTheme = NavigationPaneTheme.of(context);
-    final size = Flyout.of(context).size;
-    return Container(
-      width: size.isEmpty ? null : size.width,
-      padding: MenuFlyout.itemsPadding,
-      child: HoverButton(
-        onPressed: item.enabled ? onPressed : null,
-        forceEnabled: item.enabled,
-        builder: (context, states) {
-          final textStyle = (isSelected
-                  ? navigationTheme.selectedTextStyle?.resolve(states)
-                  : navigationTheme.unselectedTextStyle?.resolve(states)) ??
-              const TextStyle();
-          final iconTheme = IconThemeData(
-            color: textStyle.color ??
-                (isSelected
-                    ? navigationTheme.selectedIconColor?.resolve(states)
-                    : navigationTheme.unselectedIconColor?.resolve(states)),
-            size: textStyle.fontSize ?? 16.0,
-          );
-          return Container(
-            padding: const EdgeInsets.symmetric(
-              horizontal: 10.0,
-              vertical: 8.0,
-            ),
-            margin: const EdgeInsetsDirectional.only(bottom: 4.0),
-            decoration: BoxDecoration(
-              color: ButtonThemeData.uncheckedInputColor(
-                theme,
-                states,
-                transparentWhenNone: true,
-              ),
-              borderRadius: BorderRadius.circular(6.0),
-            ),
-            child: Row(mainAxisSize: MainAxisSize.min, children: [
-              Padding(
-                padding: const EdgeInsetsDirectional.only(end: 12.0),
-                child: IconTheme.merge(
-                  data: iconTheme,
-                  child: item.icon,
-                ),
-              ),
-              Flexible(
-                fit: size.isEmpty ? FlexFit.loose : FlexFit.tight,
-                child: DefaultTextStyle(
-                  style: textStyle,
-                  child: item.title ?? const SizedBox.shrink(),
-                ),
-              ),
-              if (item.infoBadge != null)
-                Padding(
-                  padding: const EdgeInsetsDirectional.only(start: 8.0),
-                  child: item.infoBadge!,
-                ),
-            ]),
-          );
-        },
-      ),
+    return HoverButton(
+      onPressed: item.enabled ? onPressed : null,
+      forceEnabled: item.enabled,
+      builder: (context, states) {
+        final textStyle = (isSelected
+                ? navigationTheme.selectedTextStyle?.resolve(states)
+                : navigationTheme.unselectedTextStyle?.resolve(states)) ??
+            const TextStyle();
+        final iconTheme = IconThemeData(
+          color: textStyle.color ??
+              (isSelected
+                  ? navigationTheme.selectedIconColor?.resolve(states)
+                  : navigationTheme.unselectedIconColor?.resolve(states)),
+          size: textStyle.fontSize ?? 16.0,
+        );
+        return MenuFlyoutItem(
+          selected: isSelected,
+          onPressed: onPressed,
+          leading: IconTheme.merge(
+            data: iconTheme,
+            child: item.icon,
+          ),
+          text: DefaultTextStyle(
+            style: textStyle,
+            child: item.title ?? const SizedBox.shrink(),
+          ),
+          trailing: () {
+            if (item.infoBadge != null) {
+              return Padding(
+                padding: const EdgeInsetsDirectional.only(start: 8.0),
+                child: item.infoBadge!,
+              );
+            }
+          }(),
+        ).build(context);
+      },
     );
   }
 }

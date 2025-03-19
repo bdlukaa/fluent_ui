@@ -52,6 +52,9 @@ class FluentLocalizationsFr extends FluentLocalizations {
   String get selectAllActionLabel => 'Tout sélectionner';
 
   @override
+  String get undoActionLabel => 'Undo';
+
+  @override
   String get newTabLabel => 'Ajouter un nouvel onglet';
 
   @override
@@ -82,6 +85,9 @@ class FluentLocalizationsFr extends FluentLocalizations {
   String get selectAllActionTooltip => 'Sélectionner tout le contenu';
 
   @override
+  String get undoActionTooltip => 'Undo the last action';
+
+  @override
   String get hour => 'heure';
 
   @override
@@ -101,6 +107,12 @@ class FluentLocalizationsFr extends FluentLocalizations {
 
   @override
   String get year => 'année';
+
+  @override
+  String get seeMore => 'See more';
+
+  @override
+  String get seeLess => 'See less';
 
   @override
   String get redLabel => 'Rouge';

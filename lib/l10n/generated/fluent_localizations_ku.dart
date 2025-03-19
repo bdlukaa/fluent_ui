@@ -52,6 +52,9 @@ class FluentLocalizationsKu extends FluentLocalizations {
   String get selectAllActionLabel => 'دیاری کردنی هەموو';
 
   @override
+  String get undoActionLabel => 'Undo';
+
+  @override
   String get newTabLabel => 'تابێکی نوێ زیاد بکە';
 
   @override
@@ -81,6 +84,9 @@ class FluentLocalizationsKu extends FluentLocalizations {
   String get selectAllActionTooltip => 'هەموو ناوەڕۆکەکان هەڵبژێرە';
 
   @override
+  String get undoActionTooltip => 'Undo the last action';
+
+  @override
   String get hour => 'کاتژمێر';
 
   @override
@@ -100,6 +106,12 @@ class FluentLocalizationsKu extends FluentLocalizations {
 
   @override
   String get year => 'ساڵ';
+
+  @override
+  String get seeMore => 'See more';
+
+  @override
+  String get seeLess => 'See less';
 
   @override
   String get redLabel => 'سوور';

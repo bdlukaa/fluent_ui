@@ -1,6 +1,7 @@
 import 'package:fluent_ui/fluent_ui.dart';
 
 import 'package:flutter/rendering.dart';
+import 'package:flutter/services.dart';
 
 typedef WidgetStateWidgetBuilder = Widget Function(
   BuildContext,
@@ -52,6 +53,8 @@ class HoverButton extends StatefulWidget {
     this.onHorizontalDragEnd,
     this.gestures = const {},
     this.onFocusTap,
+    this.onPointerEnter,
+    this.onPointerExit,
     this.onFocusChange,
     this.autofocus = false,
     this.actionsEnabled = true,
@@ -102,6 +105,9 @@ class HoverButton extends StatefulWidget {
   ///
   /// [focusEnabled] must not be `false` for this to work
   final VoidCallback? onFocusTap;
+
+  final PointerEnterEventListener? onPointerEnter;
+  final PointerExitEventListener? onPointerExit;
 
   final WidgetStateWidgetBuilder builder;
 
@@ -322,16 +328,22 @@ class _HoverButtonState extends State<HoverButton> {
         onShowHoverHighlight: (v) {
           if (mounted) setState(() => _hovering = v);
         },
-        child: w,
+        child: MouseRegion(
+          onEnter: widget.onPointerEnter,
+          onExit: widget.onPointerExit,
+          child: w,
+        ),
       );
     } else {
       w = MouseRegion(
         cursor: widget.cursor ?? MouseCursor.defer,
         onEnter: (e) {
           if (mounted) setState(() => _hovering = true);
+          widget.onPointerEnter?.call(e);
         },
         onExit: (e) {
           if (mounted) setState(() => _hovering = false);
+          widget.onPointerExit?.call(e);
         },
         child: w,
       );

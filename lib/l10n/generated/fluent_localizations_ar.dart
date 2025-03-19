@@ -52,6 +52,9 @@ class FluentLocalizationsAr extends FluentLocalizations {
   String get selectAllActionLabel => 'تحديد الكل';
 
   @override
+  String get undoActionLabel => 'Undo';
+
+  @override
   String get newTabLabel => 'إضافة علامة تبويب جديدة';
 
   @override
@@ -79,6 +82,9 @@ class FluentLocalizationsAr extends FluentLocalizations {
   String get selectAllActionTooltip => 'تحديد المحتوى بالكامل';
 
   @override
+  String get undoActionTooltip => 'Undo the last action';
+
+  @override
   String get hour => 'ساعة';
 
   @override
@@ -98,6 +104,12 @@ class FluentLocalizationsAr extends FluentLocalizations {
 
   @override
   String get year => 'سنة';
+
+  @override
+  String get seeMore => 'See more';
+
+  @override
+  String get seeLess => 'See less';
 
   @override
   String get redLabel => 'أحمر';

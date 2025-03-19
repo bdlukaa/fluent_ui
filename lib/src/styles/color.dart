@@ -330,10 +330,10 @@ extension ColorExtension on Color {
   /// or darker, and with [Colors.white] if light or lighter.
   ///
   /// See also:
-  ///   - [Color.lerp]
-  ///   - [lerpWith]
-  ///   - [Colors.black]
-  ///   - [Color.white]
+  ///   * [Color.lerp], a method to lerp two colors.
+  ///   * [lerpWith], a helper method to lerp two colors with a factor.
+  ///   * [Colors.black], the darkest color.
+  ///   * [Color.white], the lightest color.
   AccentColor toAccentColor({
     double darkestFactor = 0.38,
     double darkerFactor = 0.30,
@@ -373,11 +373,12 @@ extension ColorExtension on Color {
   /// [t] must be in range of 0.0 to 1.0
   ///
   /// See also:
-  ///   - [Color.lerp]
+  ///   * [Color.lerp]
   Color lerpWith(Color color, double t) {
     return Color.lerp(this, color, t)!;
   }
 
+  @protected
   int get colorValue {
     return _floatToInt8(a) << 24 |
         _floatToInt8(r) << 16 |
@@ -385,6 +386,7 @@ extension ColorExtension on Color {
         _floatToInt8(b) << 0;
   }
 
+  @protected
   static int _floatToInt8(double x) {
     return (x * 255.0).round() & 0xff;
   }

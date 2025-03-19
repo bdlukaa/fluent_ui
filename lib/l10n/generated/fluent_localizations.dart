@@ -27,6 +27,7 @@ import 'fluent_localizations_ko.dart';
 import 'fluent_localizations_ku.dart';
 import 'fluent_localizations_ms.dart';
 import 'fluent_localizations_my.dart';
+import 'fluent_localizations_ne.dart';
 import 'fluent_localizations_nl.dart';
 import 'fluent_localizations_pl.dart';
 import 'fluent_localizations_pt.dart';
@@ -151,6 +152,7 @@ abstract class FluentLocalizations {
     Locale('ku'),
     Locale('ms'),
     Locale('my'),
+    Locale('ne'),
     Locale('nl'),
     Locale('pl'),
     Locale('pt'),
@@ -259,6 +261,12 @@ abstract class FluentLocalizations {
   /// **'Select all'**
   String get selectAllActionLabel;
 
+  /// The label for the undo button on the text selection controls.
+  ///
+  /// In en, this message translates to:
+  /// **'Undo'**
+  String get undoActionLabel;
+
   /// The label used by [TabView]'s new button.
   ///
   /// In en, this message translates to:
@@ -313,6 +321,12 @@ abstract class FluentLocalizations {
   /// **'Select all content'**
   String get selectAllActionTooltip;
 
+  /// The tooltip for the undo action on the text selection controls.
+  ///
+  /// In en, this message translates to:
+  /// **'Undo the last action'**
+  String get undoActionTooltip;
+
   /// The text used by [TimePicker] for the hour field.
   ///
   /// In en, this message translates to:
@@ -354,6 +368,18 @@ abstract class FluentLocalizations {
   /// In en, this message translates to:
   /// **'year'**
   String get year;
+
+  /// The text used by [CommandBar] to show more items.
+  ///
+  /// In en, this message translates to:
+  /// **'See more'**
+  String get seeMore;
+
+  /// The text used by [CommandBar] to show less items.
+  ///
+  /// In en, this message translates to:
+  /// **'See less'**
+  String get seeLess;
 
   /// Label for red color component in color picker
   ///
@@ -1284,6 +1310,7 @@ class _FluentLocalizationsDelegate
         'ku',
         'ms',
         'my',
+        'ne',
         'nl',
         'pl',
         'pt',
@@ -1364,6 +1391,8 @@ FluentLocalizations lookupFluentLocalizations(Locale locale) {
       return FluentLocalizationsMs();
     case 'my':
       return FluentLocalizationsMy();
+    case 'ne':
+      return FluentLocalizationsNe();
     case 'nl':
       return FluentLocalizationsNl();
     case 'pl':

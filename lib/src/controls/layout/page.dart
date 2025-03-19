@@ -132,8 +132,8 @@ class _ScaffoldPageState extends State<ScaffoldPage> {
     final theme = FluentTheme.of(context);
     final view = NavigationView.maybeOf(context);
 
-    return ColoredBox(
-      color: Colors.transparent,
+    return Mica(
+      backgroundColor: view != null ? Colors.transparent : null,
       child: PageStorage(
         bucket: _bucket,
         child: Padding(

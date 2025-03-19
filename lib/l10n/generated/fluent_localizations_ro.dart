@@ -52,6 +52,9 @@ class FluentLocalizationsRo extends FluentLocalizations {
   String get selectAllActionLabel => 'Selectează totul';
 
   @override
+  String get undoActionLabel => 'Undo';
+
+  @override
   String get newTabLabel => 'Adăugați o filă nouă';
 
   @override
@@ -81,6 +84,9 @@ class FluentLocalizationsRo extends FluentLocalizations {
   String get selectAllActionTooltip => 'Selectați tot conținutul';
 
   @override
+  String get undoActionTooltip => 'Undo the last action';
+
+  @override
   String get hour => 'oră';
 
   @override
@@ -100,6 +106,12 @@ class FluentLocalizationsRo extends FluentLocalizations {
 
   @override
   String get year => 'an';
+
+  @override
+  String get seeMore => 'See more';
+
+  @override
+  String get seeLess => 'See less';
 
   @override
   String get redLabel => 'Roșu';

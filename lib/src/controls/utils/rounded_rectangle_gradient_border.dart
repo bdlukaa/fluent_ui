@@ -3,6 +3,12 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/widgets.dart';
 
 /// A border that paints a gradient.
+///
+/// This is a common design among modern Windows applications.
+///
+/// See also:
+///
+///  * [FilledButton], a button that uses this border.
 class RoundedRectangleGradientBorder extends ShapeBorder {
   /// the gradient used to paint the border.
   final Gradient gradient;

@@ -3,6 +3,12 @@ import 'dart:async';
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter/foundation.dart';
 
+const kDefaultMenuPadding = EdgeInsetsDirectional.symmetric(vertical: 2.0);
+const kDefaultMenuItemMargin = EdgeInsetsDirectional.symmetric(
+  horizontal: 4.0,
+  vertical: 2.0,
+);
+
 /// Menu flyouts are used in menu and context menu scenarios to display a list
 /// of commands or options when requested by the user. A menu flyout shows a
 /// single, inline, top-level menu that can have menu items and sub-menus.
@@ -23,7 +29,7 @@ class MenuFlyout extends StatefulWidget {
     this.shadowColor = Colors.black,
     this.elevation = 8.0,
     this.constraints,
-    this.padding = const EdgeInsetsDirectional.only(top: 8.0),
+    this.itemMargin = kDefaultMenuItemMargin,
   });
 
   /// {@template fluent_ui.flyouts.menu.items}
@@ -55,12 +61,8 @@ class MenuFlyout extends StatefulWidget {
   /// Additional constraints to apply to the child.
   final BoxConstraints? constraints;
 
-  /// The padding applied the [items], with correct handling when scrollable
-  final EdgeInsetsGeometry? padding;
-
-  static const EdgeInsetsGeometry itemsPadding = EdgeInsets.symmetric(
-    horizontal: 8.0,
-  );
+  /// The spacing between the items.
+  final EdgeInsetsGeometry itemMargin;
 
   @override
   State<MenuFlyout> createState() => _MenuFlyoutState();
@@ -96,34 +98,40 @@ class _MenuFlyoutState extends State<MenuFlyout> {
     final menuInfo = MenuInfoProvider.of(context);
     final parent = Flyout.maybeOf(context);
 
-    Widget content = FlyoutContent(
-      color: widget.color,
-      constraints: widget.constraints,
-      elevation: widget.elevation,
-      shadowColor: widget.shadowColor,
-      shape: widget.shape,
-      padding: EdgeInsets.zero,
-      useAcrylic: DisableAcrylic.of(context) != null,
-      child: ScrollConfiguration(
-        behavior: const _MenuScrollBehavior(),
-        child: SingleChildScrollView(
-          padding: widget.padding,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisSize: MainAxisSize.min,
-            children: List.generate(widget.items.length, (index) {
-              final item = widget.items[index];
-              if (item is MenuFlyoutItem) item._useIconPlaceholder = hasLeading;
-              if (item is MenuFlyoutSubItem && keys.isNotEmpty) {
-                item
-                  .._key = keys[index] as GlobalKey<_MenuFlyoutSubItemState>?
-                  ..disableAcyrlic = DisableAcrylic.of(context) != null;
-              }
-              return KeyedSubtree(
-                key: item.key,
-                child: item.build(context),
-              );
-            }),
+    Widget content = IntrinsicWidth(
+      child: FlyoutContent(
+        color: widget.color,
+        constraints: widget.constraints ?? kFlyoutMinConstraints,
+        elevation: widget.elevation,
+        shadowColor: widget.shadowColor,
+        shape: widget.shape,
+        padding: kDefaultMenuPadding,
+        useAcrylic: DisableAcrylic.of(context) != null,
+        child: ScrollConfiguration(
+          behavior: const _MenuScrollBehavior(),
+          child: SingleChildScrollView(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisSize: MainAxisSize.min,
+              children: List.generate(widget.items.length, (index) {
+                final item = widget.items[index];
+                if (item is MenuFlyoutItem) {
+                  item._useIconPlaceholder = hasLeading;
+                }
+                if (item is MenuFlyoutSubItem && keys.isNotEmpty) {
+                  item
+                    .._key = keys[index] as GlobalKey<_MenuFlyoutSubItemState>?
+                    ..disableAcyrlic = DisableAcrylic.of(context) != null;
+                }
+                return KeyedSubtree(
+                  key: item.key,
+                  child: Padding(
+                    padding: widget.itemMargin,
+                    child: item.build(context),
+                  ),
+                );
+              }),
+            ),
           ),
         ),
       ),
@@ -184,7 +192,7 @@ class _MenuScrollBehavior extends FluentScrollBehavior {
 ///  * [MenuFlyoutSubItem], which represents a menu item that displays a
 ///    sub-menu in a [MenuFlyout]
 ///  * [MenuFlyoutItemBuilder], which renders the given widget in the items list
-abstract class MenuFlyoutItemBase {
+abstract class MenuFlyoutItemBase with Diagnosticable {
   final Key? key;
 
   const MenuFlyoutItemBase({this.key});
@@ -236,6 +244,8 @@ class MenuFlyoutItem extends MenuFlyoutItemBase {
     required this.text,
     this.trailing,
     required this.onPressed,
+    this.onLongPress,
+    this.focusNode,
     this.selected = false,
     this.closeAfterClick = true,
   });
@@ -266,6 +276,12 @@ class MenuFlyoutItem extends MenuFlyoutItemBase {
   /// If `null`, the item will be marked as disabled.
   final VoidCallback? onPressed;
 
+  /// Called when the item is long pressed.
+  final VoidCallback? onLongPress;
+
+  /// The focus node of the item.
+  final FocusNode? focusNode;
+
   /// Whether this item is selected or not.
   final bool selected;
 
@@ -277,31 +293,52 @@ class MenuFlyoutItem extends MenuFlyoutItemBase {
   bool _useIconPlaceholder = false;
 
   @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties.add(FlagProperty(
+      'selected',
+      value: selected,
+      ifTrue: 'selected',
+    ));
+    properties.add(FlagProperty(
+      'closeAfterClick',
+      value: closeAfterClick,
+      ifFalse: 'keeps open',
+    ));
+    properties
+        .add(ObjectFlagProperty<VoidCallback?>.has('onPressed', onPressed));
+    properties
+        .add(ObjectFlagProperty<VoidCallback?>.has('onLongPress', onLongPress));
+    properties.add(DiagnosticsProperty<FocusNode?>('focusNode', focusNode));
+    properties.add(DiagnosticsProperty<Widget?>('leading', leading));
+    properties.add(DiagnosticsProperty<Widget>('text', text));
+    properties.add(DiagnosticsProperty<Widget?>('trailing', trailing));
+  }
+
+  @override
   Widget build(BuildContext context) {
-    final size = Flyout.of(context).size;
-    return Container(
-      width: size.isEmpty ? null : size.width,
-      padding: MenuFlyout.itemsPadding,
-      child: FlyoutListTile(
-        selected: selected,
-        showSelectedIndicator: false,
-        icon: leading ??
-            () {
-              if (_useIconPlaceholder) return const Icon(null);
-              return null;
-            }(),
-        text: text,
-        trailing: IconTheme.merge(
-          data: const IconThemeData(size: 12.0),
-          child: trailing ?? const SizedBox.shrink(),
-        ),
-        onPressed: onPressed == null
-            ? null
-            : () {
-                if (closeAfterClick) Navigator.of(context).maybePop();
-                onPressed?.call();
-              },
+    return FlyoutListTile(
+      margin: EdgeInsets.zero,
+      selected: selected,
+      showSelectedIndicator: false,
+      icon: leading ??
+          () {
+            if (_useIconPlaceholder) return const Icon(null);
+            return null;
+          }(),
+      text: text,
+      trailing: IconTheme.merge(
+        data: const IconThemeData(size: 12.0),
+        child: trailing ?? const SizedBox.shrink(),
       ),
+      onPressed: onPressed == null
+          ? null
+          : () {
+              if (closeAfterClick) Navigator.of(context).maybePop();
+              onPressed?.call();
+            },
+      onLongPress: onLongPress,
+      focusNode: focusNode,
     );
   }
 }
@@ -324,15 +361,10 @@ class MenuFlyoutSeparator extends MenuFlyoutItemBase {
 
   @override
   Widget build(BuildContext context) {
-    final size = Flyout.of(context).size;
-
-    return SizedBox(
-      width: size.width,
-      child: const Padding(
-        padding: EdgeInsetsDirectional.only(bottom: 5.0),
-        child: Divider(
-          style: DividerThemeData(horizontalMargin: EdgeInsets.zero),
-        ),
+    return const Padding(
+      padding: EdgeInsetsDirectional.only(bottom: 5.0),
+      child: Divider(
+        style: DividerThemeData(horizontalMargin: EdgeInsets.zero),
       ),
     );
   }
@@ -364,7 +396,7 @@ class ToggleMenuFlyoutItem extends MenuFlyoutItem {
     super.trailing,
     required this.value,
     required this.onChanged,
-    super.closeAfterClick = false,
+    super.closeAfterClick,
   }) : super(
           leading: Icon(
             value ? FluentIcons.check_mark : null,
@@ -372,6 +404,14 @@ class ToggleMenuFlyoutItem extends MenuFlyoutItem {
           ),
           onPressed: onChanged == null ? null : () => onChanged(!value),
         );
+
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties.add(DiagnosticsProperty<bool>('value', value));
+    properties.add(
+        ObjectFlagProperty<ValueChanged<bool>?>.has('onChanged', onChanged));
+  }
 }
 
 /// Represents a menu item that is mutually exclusive with other radio menu
@@ -387,7 +427,7 @@ class ToggleMenuFlyoutItem extends MenuFlyoutItem {
 ///    sub-menu in a [MenuFlyout]
 ///  * [ToggleMenuFlyoutItem], which represents a menu item that a user can
 ///    change between two states, checked or unchecked
-class RadioMenuFlyoutItem<T> extends MenuFlyoutItem {
+class RadioMenuFlyoutItem<T extends Object> extends MenuFlyoutItem {
   /// The value of the item.
   final T value;
 
@@ -404,7 +444,7 @@ class RadioMenuFlyoutItem<T> extends MenuFlyoutItem {
     required this.value,
     required this.groupValue,
     required this.onChanged,
-    super.closeAfterClick = false,
+    super.closeAfterClick,
   }) : super(
           leading: Icon(
             value == groupValue ? FluentIcons.radio_bullet : null,
@@ -412,16 +452,29 @@ class RadioMenuFlyoutItem<T> extends MenuFlyoutItem {
           ),
           onPressed: onChanged == null ? null : () => onChanged(value),
         );
+
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties.add(DiagnosticsProperty<T>('value', value));
+    properties.add(DiagnosticsProperty<T>('groupValue', groupValue));
+    properties
+        .add(ObjectFlagProperty<ValueChanged<T>?>.has('onChanged', onChanged));
+  }
 }
 
-enum SubItemShowBehavior {
+@Deprecated('Use SubItemShowAction instead.')
+typedef SubItemShowBehavior = SubItemShowAction;
+
+/// Represents the action that will show the sub-menu in a [MenuFlyoutSubItem].
+enum SubItemShowAction {
   /// Whether the sub-menu will be shown on item press
   press,
 
   /// Whether the sub-menu will be shown on item hover
   ///
   /// This is the default behavior.
-  hover,
+  hover;
 }
 
 typedef MenuItemsBuilder = List<MenuFlyoutItemBase> Function(
@@ -450,7 +503,7 @@ class MenuFlyoutSubItem extends MenuFlyoutItem {
     required super.text,
     super.trailing = const Icon(FluentIcons.chevron_right),
     required this.items,
-    this.showBehavior = SubItemShowBehavior.hover,
+    this.showBehavior = SubItemShowAction.hover,
     this.showHoverDelay = const Duration(milliseconds: 450),
   }) : super(onPressed: null);
 
@@ -468,12 +521,12 @@ class MenuFlyoutSubItem extends MenuFlyoutItem {
 
   /// Represent which user action will show the sub-menu.
   ///
-  /// Defaults to [SubItemShowBehavior.hover]
-  final SubItemShowBehavior showBehavior;
+  /// Defaults to [SubItemShowAction.hover]
+  final SubItemShowAction showBehavior;
 
   /// The sub-menu will be only shown after this delay
   ///
-  /// Only applied if [showBehavior] is [SubItemShowBehavior.hover]
+  /// Only applied if [showBehavior] is [SubItemShowAction.hover]
   final Duration showHoverDelay;
 
   bool disableAcyrlic = false;
@@ -510,6 +563,14 @@ class _MenuFlyoutSubItemState extends State<_MenuFlyoutSubItem>
   Timer? showTimer;
 
   @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    final parent = Flyout.of(context);
+    transitionController.duration = parent.transitionDuration;
+    transitionController.reverseDuration = parent.reverseTransitionDuration;
+  }
+
+  @override
   void dispose() {
     transitionController.dispose();
     super.dispose();
@@ -542,7 +603,7 @@ class _MenuFlyoutSubItemState extends State<_MenuFlyoutSubItem>
       },
     ).build(context);
 
-    if (widget.item.showBehavior == SubItemShowBehavior.hover) {
+    if (widget.item.showBehavior == SubItemShowAction.hover) {
       return MouseRegion(
         onEnter: (event) {
           showTimer = Timer(widget.item.showHoverDelay, () {
@@ -590,16 +651,21 @@ class _MenuFlyoutSubItemState extends State<_MenuFlyoutSubItem>
           additionalOffset: parent.additionalOffset,
           margin: parent.margin,
           transitionDuration: parent.transitionDuration,
+          reverseTransitionDuration: parent.reverseTransitionDuration,
+          transitionBuilder: parent.transitionBuilder,
           root: parent.widget.root,
+          placementMode: parent.placementMode,
           builder: (context) {
-            Widget w = FadeTransition(
-              opacity: transitionController,
-              child: MenuFlyout(
+            var w = parent.transitionBuilder.call(
+              context,
+              transitionController,
+              FlyoutPlacementMode.bottomCenter,
+              MenuFlyout(
                 key: menuKey,
                 color: menuFlyout?.color,
                 constraints: menuFlyout?.constraints,
                 elevation: menuFlyout?.elevation ?? 8.0,
-                padding: menuFlyout?.padding,
+                itemMargin: menuFlyout?.itemMargin ?? kDefaultMenuItemMargin,
                 shadowColor: menuFlyout?.shadowColor ?? Colors.black,
                 shape: menuFlyout?.shape,
                 items: widget.items(context),
@@ -657,9 +723,7 @@ class _SubItemPositionDelegate extends SingleChildLayoutDelegate {
 
   @override
   Offset getPositionForChild(Size rootSize, Size flyoutSize) {
-    var x = parentRect.left +
-        parentRect.size.width -
-        MenuFlyout.itemsPadding.horizontal / 2;
+    var x = parentRect.left + parentRect.size.width;
 
     // if the flyout will overflow the screen on the right
     final willOverflowX = x + flyoutSize.width + margin > rootSize.width;
@@ -671,9 +735,7 @@ class _SubItemPositionDelegate extends SingleChildLayoutDelegate {
     //
     // otherwise, we position the flyout at the end of the screen
     if (willOverflowX) {
-      final rightX = parentRect.left -
-          flyoutSize.width +
-          MenuFlyout.itemsPadding.horizontal / 2;
+      final rightX = parentRect.left - flyoutSize.width;
       if (rightX > margin) {
         x = rightX;
       } else {
@@ -697,7 +759,9 @@ class _SubItemPositionDelegate extends SingleChildLayoutDelegate {
   }
 
   @override
-  bool shouldRelayout(covariant SingleChildLayoutDelegate oldDelegate) {
-    return true;
+  bool shouldRelayout(covariant _SubItemPositionDelegate oldDelegate) {
+    return oldDelegate.parentRect != parentRect ||
+        oldDelegate.parentSize != parentSize ||
+        oldDelegate.margin != margin;
   }
 }

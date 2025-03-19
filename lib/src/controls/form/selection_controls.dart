@@ -2,8 +2,6 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-// ignore_for_file: deprecated_member_use
-
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter/foundation.dart';
 
@@ -11,13 +9,8 @@ import 'package:flutter/foundation.dart';
 // the screen.
 const double _kToolbarScreenPadding = 8.0;
 
-// These values were measured from a screenshot of TextEdit on macOS 10.15.7 on
-// a Macbook Pro.
+// These values were measured from a screenshot of TextBox on Windows 11.
 const double _kToolbarWidth = 222.0;
-const Radius _kToolbarBorderRadius = Radius.circular(4.0);
-const EdgeInsets _kToolbarPadding = EdgeInsets.symmetric(
-  vertical: 3.0,
-);
 
 class FluentTextSelectionToolbar extends StatelessWidget {
   /// {@macro flutter.material.AdaptiveTextSelectionToolbar.buttonItems}
@@ -47,31 +40,99 @@ class FluentTextSelectionToolbar extends StatelessWidget {
   })  : buttonItems = editableTextState.contextMenuButtonItems,
         anchors = editableTextState.contextMenuAnchors;
 
-  // Builds a toolbar just like the default Mac toolbar, with the right color
-  // background, padding, and rounded corners.
-  static Widget _defaultToolbarBuilder(BuildContext context, Widget child) {
-    return Container(
-      width: _kToolbarWidth,
-      decoration: const BoxDecoration(
-        // color: _kToolbarBackgroundColor.resolveFrom(context),
-        // border: Border.all(
-        //   color: _kToolbarBorderColor.resolveFrom(context),
-        // ),
-        borderRadius: BorderRadius.all(_kToolbarBorderRadius),
-      ),
-      child: Padding(
-        padding: _kToolbarPadding,
-        child: child,
-      ),
-    );
+  IconData? contextMenuTypeToIcon(ContextMenuButtonType type) {
+    return switch (type) {
+      ContextMenuButtonType.cut => FluentIcons.cut,
+      ContextMenuButtonType.copy => FluentIcons.copy,
+      ContextMenuButtonType.paste => FluentIcons.paste,
+      ContextMenuButtonType.selectAll => null,
+      ContextMenuButtonType.delete => FluentIcons.delete,
+      ContextMenuButtonType.lookUp => FluentIcons.search,
+      ContextMenuButtonType.searchWeb => FluentIcons.search,
+      ContextMenuButtonType.share => FluentIcons.share,
+      ContextMenuButtonType.liveTextInput => FluentIcons.live_site,
+      ContextMenuButtonType.custom => null,
+    };
+  }
+
+  String? contextMenuTypeToLabel(
+    ContextMenuButtonType type,
+    BuildContext context,
+  ) {
+    final localizations = FluentLocalizations.of(context);
+    return switch (type) {
+      ContextMenuButtonType.cut => localizations.cutActionLabel,
+      ContextMenuButtonType.copy => localizations.copyActionLabel,
+      ContextMenuButtonType.paste => localizations.pasteActionLabel,
+      ContextMenuButtonType.selectAll => localizations.selectAllActionLabel,
+      ContextMenuButtonType.delete => 'Delete',
+      ContextMenuButtonType.lookUp => 'Lookup',
+      ContextMenuButtonType.searchWeb => 'Search Wep',
+      ContextMenuButtonType.share => 'Share',
+      ContextMenuButtonType.liveTextInput => 'Live Text Input',
+      ContextMenuButtonType.custom => null,
+    };
+  }
+
+  String? contextMenuTypeToTooltip(
+    ContextMenuButtonType type,
+    BuildContext context,
+  ) {
+    final localizations = FluentLocalizations.of(context);
+    return switch (type) {
+      ContextMenuButtonType.cut => localizations.cutActionTooltip,
+      ContextMenuButtonType.copy => localizations.copyActionTooltip,
+      ContextMenuButtonType.paste => localizations.pasteActionTooltip,
+      ContextMenuButtonType.selectAll => localizations.selectAllActionTooltip,
+      ContextMenuButtonType.delete => 'Delete',
+      ContextMenuButtonType.lookUp => 'Lookup',
+      ContextMenuButtonType.searchWeb => 'Search Wep',
+      ContextMenuButtonType.share => 'Share',
+      ContextMenuButtonType.liveTextInput => 'Live Text Input',
+      ContextMenuButtonType.custom => null,
+    };
+  }
+
+  String? contextMenuTypeToShortcut(
+    ContextMenuButtonType type,
+    BuildContext context,
+  ) {
+    final localizations = FluentLocalizations.of(context);
+    return switch (type) {
+      ContextMenuButtonType.cut => localizations.cutShortcut,
+      ContextMenuButtonType.copy => localizations.copyShortcut,
+      ContextMenuButtonType.paste => localizations.pasteShortcut,
+      ContextMenuButtonType.selectAll => localizations.selectAllShortcut,
+      ContextMenuButtonType.delete => null,
+      ContextMenuButtonType.lookUp => null,
+      ContextMenuButtonType.searchWeb => null,
+      ContextMenuButtonType.share => null,
+      ContextMenuButtonType.liveTextInput => null,
+      ContextMenuButtonType.custom => null,
+    };
   }
 
   @override
   Widget build(BuildContext context) {
     assert(debugCheckHasMediaQuery(context));
+    assert(debugCheckHasFluentLocalizations(context));
     final paddingAbove =
         MediaQuery.paddingOf(context).top + _kToolbarScreenPadding;
     final localAdjustment = Offset(_kToolbarScreenPadding, paddingAbove);
+
+    final localization = FluentLocalizations.of(context);
+
+    final orderedButtons = buttonItems
+        .where((item) => item.type == ContextMenuButtonType.cut)
+        .followedBy(buttonItems
+            .where((item) => item.type == ContextMenuButtonType.copy))
+        .followedBy(buttonItems
+            .where((item) => item.type == ContextMenuButtonType.paste))
+        .followedBy(buttonItems.where((item) =>
+            item.type == ContextMenuButtonType.custom && item.label == 'Undo'))
+        .followedBy(buttonItems
+            .where((item) => item.type == ContextMenuButtonType.selectAll))
+        .toList();
 
     return Padding(
       padding: EdgeInsets.fromLTRB(
@@ -84,19 +145,33 @@ class FluentTextSelectionToolbar extends StatelessWidget {
         delegate: DesktopTextSelectionToolbarLayoutDelegate(
           anchor: anchors.primaryAnchor - localAdjustment,
         ),
-        child: _defaultToolbarBuilder(
-          context,
-          Column(
-            mainAxisSize: MainAxisSize.min,
-            children: buttonItems.map((item) {
-              return _FluentTextSelectionToolbarButton(
-                onPressed: item.onPressed,
-                icon: null,
-                shortcut: '',
-                tooltip: '',
-                text: item.label ?? '',
-              );
-            }).toList(),
+        child: SizedBox(
+          width: _kToolbarWidth,
+          child: FlyoutContent(
+            child: Column(
+              spacing: 4.0,
+              mainAxisSize: MainAxisSize.min,
+              children: orderedButtons.map((item) {
+                if (item is UndoContextMenuButtonItem) {
+                  return _FluentTextSelectionToolbarButton(
+                    onPressed: item.onPressed,
+                    icon: FluentIcons.undo,
+                    shortcut: localization.undoShortcut,
+                    tooltip: localization.undoActionLabel,
+                    text: localization.undoActionLabel,
+                  );
+                }
+                return _FluentTextSelectionToolbarButton(
+                  onPressed: item.onPressed,
+                  icon: contextMenuTypeToIcon(item.type),
+                  shortcut: contextMenuTypeToShortcut(item.type, context) ?? '',
+                  tooltip: contextMenuTypeToTooltip(item.type, context),
+                  text: item.label ??
+                      contextMenuTypeToLabel(item.type, context) ??
+                      '',
+                );
+              }).toList(),
+            ),
           ),
         ),
       ),
@@ -104,7 +179,22 @@ class FluentTextSelectionToolbar extends StatelessWidget {
   }
 }
 
-class _FluentTextSelectionControls extends TextSelectionControls {
+final fluentTextSelectionControls = FluentTextSelectionControls();
+
+/// Fluent styled text selection handle controls.
+///
+/// Specifically does not manage the toolbar, which is left to
+/// [EditableText.contextMenuBuilder].
+class FluentTextSelectionHandleControls extends FluentTextSelectionControls
+    with TextSelectionHandleControls {
+  FluentTextSelectionHandleControls({super.undoHistoryController});
+}
+
+class FluentTextSelectionControls extends TextSelectionControls {
+  final UndoHistoryController? undoHistoryController;
+
+  FluentTextSelectionControls({this.undoHistoryController});
+
   /// Fluent has no text selection handles.
   @override
   Size getHandleSize(double textLineHeight) {
@@ -112,6 +202,10 @@ class _FluentTextSelectionControls extends TextSelectionControls {
   }
 
   @override
+  @Deprecated(
+    'Use `contextMenuBuilder` instead. '
+    'This feature was deprecated after v3.3.0-0.5.pre.',
+  )
   Widget buildToolbar(
     BuildContext context,
     Rect globalEditableRegion,
@@ -131,6 +225,11 @@ class _FluentTextSelectionControls extends TextSelectionControls {
       handlePaste: canPaste(delegate) ? () => handlePaste(delegate) : null,
       handleSelectAll:
           canSelectAll(delegate) ? () => handleSelectAll(delegate) : null,
+      handleUndo: undoHistoryController == null
+          ? null
+          : undoHistoryController!.value.canUndo
+              ? () => undoHistoryController!.undo()
+              : null,
       selectionMidpoint: selectionMidpoint,
       lastSecondaryTapDownPosition: lastSecondaryTapDownPosition,
       textLineHeight: textLineHeight,
@@ -174,9 +273,6 @@ class _FluentTextSelectionControls extends TextSelectionControls {
 }
 
 // /// Text selection controls that loosely follows Fluent design conventions.
-final TextSelectionControls fluentTextSelectionControls =
-    _FluentTextSelectionControls();
-
 // Generates the child that's passed into FluentTextSelectionToolbar.
 class _FluentTextSelectionControlsToolbar extends StatefulWidget {
   const _FluentTextSelectionControlsToolbar({
@@ -187,6 +283,7 @@ class _FluentTextSelectionControlsToolbar extends StatefulWidget {
     required this.handleCut,
     required this.handlePaste,
     required this.handleSelectAll,
+    required this.handleUndo,
     required this.selectionMidpoint,
     required this.textLineHeight,
     required this.lastSecondaryTapDownPosition,
@@ -199,6 +296,7 @@ class _FluentTextSelectionControlsToolbar extends StatefulWidget {
   final VoidCallback? handleCut;
   final VoidCallback? handlePaste;
   final VoidCallback? handleSelectAll;
+  final VoidCallback? handleUndo;
   final Offset? lastSecondaryTapDownPosition;
   final Offset selectionMidpoint;
   final double textLineHeight;
@@ -316,6 +414,15 @@ class _FluentTextSelectionControlsToolbarState
         widget.handlePaste!,
       );
     }
+    if (widget.handleUndo != null) {
+      addToolbarButton(
+        localizations.undoActionLabel,
+        FluentIcons.undo,
+        localizations.undoShortcut,
+        localizations.undoActionTooltip,
+        widget.handleUndo!,
+      );
+    }
     if (widget.handleSelectAll != null) {
       addToolbarButton(
         localizations.selectAllActionLabel,
@@ -332,7 +439,16 @@ class _FluentTextSelectionControlsToolbarState
     }
 
     return _FluentTextSelectionToolbar(
-      anchor: widget.lastSecondaryTapDownPosition ?? midpointAnchor,
+      anchor: switch (defaultTargetPlatform) {
+        TargetPlatform.android ||
+        TargetPlatform.iOS ||
+        TargetPlatform.fuchsia =>
+          const Offset(100, 100),
+        TargetPlatform.windows ||
+        TargetPlatform.macOS ||
+        TargetPlatform.linux =>
+          widget.lastSecondaryTapDownPosition ?? midpointAnchor,
+      },
       children: items,
     );
   }
@@ -346,12 +462,6 @@ class _FluentTextSelectionControlsToolbarState
 /// Tries to position itself as closesly as possible to [anchor] while remaining
 /// fully on-screen.
 ///
-/// See also:
-///
-///  * [_FluentTextSelectionControls.buildToolbar], where this is used by
-///    default to build a Fluent-style desktop toolbar.
-///  * [TextSelectionToolbar], which is similar, but builds an Android-style
-///    toolbar.
 class _FluentTextSelectionToolbar extends StatelessWidget {
   /// Creates an instance of _FluentTextSelectionToolbar.
   const _FluentTextSelectionToolbar({
@@ -372,8 +482,17 @@ class _FluentTextSelectionToolbar extends StatelessWidget {
     final theme = FluentTheme.of(context);
 
     final paddingAbove =
-        MediaQuery.paddingOf(context).top + _kToolbarScreenPadding;
-    final localAdjustment = Offset(_kToolbarScreenPadding, paddingAbove);
+        MediaQuery.paddingOf(context).top + _kToolbarScreenPadding * 3;
+    final localAdjustment = switch (defaultTargetPlatform) {
+      TargetPlatform.android ||
+      TargetPlatform.iOS ||
+      TargetPlatform.fuchsia =>
+        Offset.zero,
+      TargetPlatform.windows ||
+      TargetPlatform.macOS ||
+      TargetPlatform.linux =>
+        Offset(_kToolbarScreenPadding, paddingAbove),
+    };
 
     final radius = BorderRadius.circular(6.0);
 
@@ -389,19 +508,16 @@ class _FluentTextSelectionToolbar extends StatelessWidget {
           anchor: anchor - localAdjustment,
         ),
         child: Acrylic(
-          elevation: 4.0,
+          // elevation: 4.0,
           shape: RoundedRectangleBorder(borderRadius: radius),
           child: Container(
             color: theme.menuColor.withValues(alpha: kMenuColorOpacity),
-            padding: const EdgeInsetsDirectional.only(
-              top: 5.0,
-              start: 5.0,
-              end: 5.0,
-            ),
+            padding: const EdgeInsetsDirectional.all(5.0),
             child: SizedBox(
               width: _kToolbarWidth,
               child: Column(
                 mainAxisSize: MainAxisSize.min,
+                spacing: 5.0,
                 children: children,
               ),
             ),
@@ -425,7 +541,7 @@ class _FluentTextSelectionToolbarButton extends StatelessWidget {
   final VoidCallback? onPressed;
   final String text;
   final IconData? icon;
-  final String shortcut;
+  final String? shortcut;
   final String? tooltip;
 
   @override
@@ -439,61 +555,71 @@ class _FluentTextSelectionToolbarButton extends StatelessWidget {
 
         final body = theme.typography.body ?? const TextStyle();
 
-        return Padding(
-          padding: const EdgeInsetsDirectional.only(bottom: 5.0),
-          child: FocusBorder(
-            focused: states.isFocused,
-            renderOutside: true,
-            style: FocusThemeData(borderRadius: radius),
-            child: Tooltip(
-              message: tooltip,
-              child: Container(
-                decoration: BoxDecoration(
-                  color: ButtonThemeData.uncheckedInputColor(
-                    theme,
-                    states,
-                    transparentWhenNone: true,
-                  ),
-                  borderRadius: radius,
+        return FocusBorder(
+          focused: states.isFocused,
+          renderOutside: true,
+          style: FocusThemeData(borderRadius: radius),
+          child: Builder(builder: (context) {
+            final widget = Container(
+              decoration: BoxDecoration(
+                color: ButtonThemeData.uncheckedInputColor(
+                  theme,
+                  states,
+                  transparentWhenNone: true,
                 ),
-                padding: const EdgeInsetsDirectional.only(
-                  top: 4.0,
-                  bottom: 4.0,
-                  start: 10.0,
-                  end: 8.0,
+                borderRadius: radius,
+              ),
+              padding: const EdgeInsetsDirectional.only(
+                top: 4.0,
+                bottom: 4.0,
+                start: 10.0,
+                end: 8.0,
+              ),
+              child: Row(mainAxisSize: MainAxisSize.min, children: [
+                Padding(
+                  padding: const EdgeInsetsDirectional.only(end: 10.0),
+                  child: Icon(icon, size: 16.0),
                 ),
-                child: Row(mainAxisSize: MainAxisSize.min, children: [
-                  Padding(
+                Expanded(
+                  child: Padding(
                     padding: const EdgeInsetsDirectional.only(end: 10.0),
-                    child: Icon(icon, size: 16.0),
-                  ),
-                  Expanded(
-                    child: Padding(
-                      padding: const EdgeInsetsDirectional.only(end: 10.0),
-                      child: Text(
-                        text,
-                        style: body.merge(TextStyle(
-                          fontSize: 14.0,
-                          letterSpacing: -0.15,
-                          color: theme.inactiveColor,
-                        )),
-                      ),
+                    child: Text(
+                      text,
+                      style: body.merge(TextStyle(
+                        fontSize: 14.0,
+                        letterSpacing: -0.15,
+                        color: theme.inactiveColor,
+                      )),
                     ),
                   ),
+                ),
+                if (shortcut != null)
                   Text(
-                    shortcut,
-                    style: body.merge(TextStyle(
-                      fontSize: 12.0,
-                      color: theme.resources.controlStrokeColorDefault,
+                    shortcut!,
+                    style: body.merge(const TextStyle(
+                      fontSize: 10.0,
                       height: 0.7,
                     )),
                   ),
-                ]),
-              ),
-            ),
-          ),
+              ]),
+            );
+
+            if (tooltip != null) {
+              return Tooltip(
+                message: tooltip!,
+                child: widget,
+              );
+            }
+            return widget;
+          }),
         );
       },
     );
   }
+}
+
+class UndoContextMenuButtonItem extends ContextMenuButtonItem {
+  const UndoContextMenuButtonItem({
+    required super.onPressed,
+  }) : super(type: ContextMenuButtonType.custom, label: 'Undo');
 }

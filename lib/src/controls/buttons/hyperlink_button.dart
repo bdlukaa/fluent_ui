@@ -31,17 +31,7 @@ class HyperlinkButton extends BaseButton {
     final theme = FluentTheme.of(context);
 
     return ButtonStyle(
-      backgroundColor: WidgetStateProperty.resolveWith((states) {
-        if (states.isDisabled) {
-          return theme.resources.subtleFillColorDisabled;
-        } else if (states.isPressed) {
-          return theme.resources.subtleFillColorTertiary;
-        } else if (states.isHovered) {
-          return theme.resources.subtleFillColorSecondary;
-        } else {
-          return theme.resources.subtleFillColorTransparent;
-        }
-      }),
+      backgroundColor: backgroundColor(theme),
       shape: WidgetStatePropertyAll(
         RoundedRectangleBorder(borderRadius: BorderRadius.circular(4.0)),
       ),
@@ -68,5 +58,19 @@ class HyperlinkButton extends BaseButton {
   ButtonStyle? themeStyleOf(BuildContext context) {
     assert(debugCheckHasFluentTheme(context));
     return ButtonTheme.of(context).hyperlinkButtonStyle;
+  }
+
+  static WidgetStateProperty<Color> backgroundColor(FluentThemeData theme) {
+    return WidgetStateProperty.resolveWith((states) {
+      if (states.isDisabled) {
+        return theme.resources.subtleFillColorDisabled;
+      } else if (states.isPressed) {
+        return theme.resources.subtleFillColorTertiary;
+      } else if (states.isHovered) {
+        return theme.resources.subtleFillColorSecondary;
+      } else {
+        return theme.resources.subtleFillColorTransparent;
+      }
+    });
   }
 }

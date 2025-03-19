@@ -52,6 +52,9 @@ class FluentLocalizationsMy extends FluentLocalizations {
   String get selectAllActionLabel => 'အားလုံးကိုရွေးမည်';
 
   @override
+  String get undoActionLabel => 'Undo';
+
+  @override
   String get newTabLabel => 'Tab အသစ်ထည့်မည်';
 
   @override
@@ -79,6 +82,9 @@ class FluentLocalizationsMy extends FluentLocalizations {
   String get selectAllActionTooltip => 'အားလုံးကိုရွေးမည်';
 
   @override
+  String get undoActionTooltip => 'Undo the last action';
+
+  @override
   String get hour => 'နာရီ';
 
   @override
@@ -98,6 +104,12 @@ class FluentLocalizationsMy extends FluentLocalizations {
 
   @override
   String get year => 'နှစ်';
+
+  @override
+  String get seeMore => 'See more';
+
+  @override
+  String get seeLess => 'See less';
 
   @override
   String get redLabel => 'အနီ';

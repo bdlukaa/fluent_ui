@@ -1,7 +1,18 @@
 {
+  "ar": [
+    "undoActionLabel",
+    "undoActionTooltip",
+    "seeMore",
+    "seeLess"
+  ],
+
   "be": [
+    "undoActionLabel",
+    "undoActionTooltip",
     "am",
     "pm",
+    "seeMore",
+    "seeLess",
     "colorBlack",
     "colorNavy",
     "colorDarkBlue",
@@ -142,7 +153,123 @@
     "colorWhite"
   ],
 
+  "bn": [
+    "undoActionLabel",
+    "undoActionTooltip",
+    "seeMore",
+    "seeLess"
+  ],
+
+  "ca": [
+    "undoActionLabel",
+    "undoActionTooltip",
+    "seeMore",
+    "seeLess"
+  ],
+
+  "cs": [
+    "undoActionLabel",
+    "undoActionTooltip",
+    "seeMore",
+    "seeLess"
+  ],
+
+  "de": [
+    "undoActionLabel",
+    "undoActionTooltip",
+    "seeMore",
+    "seeLess"
+  ],
+
+  "el": [
+    "undoActionLabel",
+    "undoActionTooltip",
+    "seeMore",
+    "seeLess"
+  ],
+
+  "es": [
+    "undoActionLabel",
+    "undoActionTooltip",
+    "seeMore",
+    "seeLess"
+  ],
+
+  "fa": [
+    "undoActionLabel",
+    "undoActionTooltip",
+    "seeMore",
+    "seeLess"
+  ],
+
+  "fr": [
+    "undoActionLabel",
+    "undoActionTooltip",
+    "seeMore",
+    "seeLess"
+  ],
+
+  "he": [
+    "undoActionLabel",
+    "undoActionTooltip",
+    "seeMore",
+    "seeLess"
+  ],
+
+  "hi": [
+    "undoActionLabel",
+    "undoActionTooltip",
+    "seeMore",
+    "seeLess"
+  ],
+
+  "hr": [
+    "undoActionLabel",
+    "undoActionTooltip",
+    "seeMore",
+    "seeLess"
+  ],
+
+  "hu": [
+    "undoActionLabel",
+    "undoActionTooltip",
+    "seeMore",
+    "seeLess"
+  ],
+
+  "id": [
+    "undoActionLabel",
+    "undoActionTooltip",
+    "seeMore",
+    "seeLess"
+  ],
+
+  "it": [
+    "undoActionLabel",
+    "undoActionTooltip",
+    "seeMore",
+    "seeLess"
+  ],
+
+  "ja": [
+    "undoActionLabel",
+    "undoActionTooltip",
+    "seeMore",
+    "seeLess"
+  ],
+
+  "ko": [
+    "undoActionLabel",
+    "undoActionTooltip",
+    "seeMore",
+    "seeLess"
+  ],
+
   "ku": [
+    "undoActionLabel",
+    "undoActionTooltip",
+    "seeMore",
+    "seeLess",
     "colorBlack",
     "colorNavy",
     "colorDarkBlue",
@@ -284,18 +411,26 @@
   ],
 
   "ms": [
+    "undoActionLabel",
+    "undoActionTooltip",
     "hour",
     "minute",
     "am",
     "pm",
     "month",
     "day",
-    "year"
+    "year",
+    "seeMore",
+    "seeLess"
   ],
 
   "my": [
+    "undoActionLabel",
+    "undoActionTooltip",
     "am",
     "pm",
+    "seeMore",
+    "seeLess",
     "colorBlack",
     "colorNavy",
     "colorDarkBlue",
@@ -434,36 +569,108 @@
     "colorLightYellow",
     "colorIvory",
     "colorWhite"
+  ],
+
+  "nl": [
+    "undoActionLabel",
+    "undoActionTooltip",
+    "seeMore",
+    "seeLess"
   ],
 
   "pl": [
+    "undoActionLabel",
+    "undoActionTooltip",
     "hour",
     "minute",
     "am",
     "pm",
     "month",
     "day",
-    "year"
+    "year",
+    "seeMore",
+    "seeLess"
+  ],
+
+  "ro": [
+    "undoActionLabel",
+    "undoActionTooltip",
+    "seeMore",
+    "seeLess"
   ],
 
   "ru": [
+    "undoActionLabel",
+    "undoActionTooltip",
     "hour",
     "minute",
     "am",
     "pm",
     "month",
     "day",
-    "year"
+    "year",
+    "seeMore",
+    "seeLess"
+  ],
+
+  "sk": [
+    "undoActionLabel",
+    "undoActionTooltip",
+    "seeMore",
+    "seeLess"
+  ],
+
+  "sv": [
+    "undoActionLabel",
+    "undoActionTooltip",
+    "seeMore",
+    "seeLess"
+  ],
+
+  "ta": [
+    "undoActionLabel",
+    "undoActionTooltip",
+    "seeMore",
+    "seeLess"
+  ],
+
+  "th": [
+    "undoActionLabel",
+    "undoActionTooltip",
+    "seeMore",
+    "seeLess"
+  ],
+
+  "tr": [
+    "undoActionLabel",
+    "undoActionTooltip",
+    "seeMore",
+    "seeLess"
   ],
 
   "uk": [
+    "undoActionLabel",
+    "undoActionTooltip",
     "am",
-    "pm"
+    "pm",
+    "seeMore",
+    "seeLess"
+  ],
+
+  "ur": [
+    "undoActionLabel",
+    "undoActionTooltip",
+    "seeMore",
+    "seeLess"
   ],
 
   "uz": [
+    "undoActionLabel",
+    "undoActionTooltip",
     "am",
     "pm",
+    "seeMore",
+    "seeLess",
     "colorBlack",
     "colorNavy",
     "colorDarkBlue",
@@ -602,5 +809,26 @@
     "colorLightYellow",
     "colorIvory",
     "colorWhite"
+  ],
+
+  "vi": [
+    "undoActionLabel",
+    "undoActionTooltip",
+    "seeMore",
+    "seeLess"
+  ],
+
+  "zh": [
+    "undoActionLabel",
+    "undoActionTooltip",
+    "seeMore",
+    "seeLess"
+  ],
+
+  "zh_Hant": [
+    "undoActionLabel",
+    "undoActionTooltip",
+    "seeMore",
+    "seeLess"
   ]
 }

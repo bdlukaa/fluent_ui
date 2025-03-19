@@ -74,6 +74,36 @@ bool debugCheckHasFluentLocalizations(BuildContext context) {
   return true;
 }
 
+/// Asserts that the given context has a [Flyout] ancestor.
+///
+/// To call this function, use the following pattern, typically in the
+/// relevant Widget's build method:
+///
+/// ```dart
+/// assert(debugCheckHasFlyout(context));
+/// ```
+///
+/// Does nothing if asserts are disabled. Always returns true.
+bool debugCheckHasFlyout(BuildContext context) {
+  assert(() {
+    if (Flyout.maybeOf(context) == null) {
+      throw FlutterError.fromParts(<DiagnosticsNode>[
+        ErrorSummary('No Flyout found.'),
+        ErrorDescription(
+          '${context.widget.runtimeType} widgets require a Flyout '
+          'to be provided by a Flyout widget ancestor.',
+        ),
+        ErrorHint(
+          'To introduce a Flyout, use the showFlyout method or related methods.',
+        ),
+        ...context.describeMissingAncestor(expectedAncestorType: Flyout)
+      ]);
+    }
+    return true;
+  }());
+  return true;
+}
+
 /// Check if the current screen is 10 foot long or bigger.
 ///
 /// [width] is the width of the current screen. If not provided,
@@ -83,6 +113,9 @@ bool is10footScreen(BuildContext context) {
   return width >= 11520;
 }
 
+/// A horizontal box that is positioned near a target.
+///
+/// This was adapted from [positionDependentBox].
 Offset horizontalPositionDependentBox({
   required Size size,
   required Size childSize,
@@ -122,7 +155,7 @@ Offset horizontalPositionDependentBox({
 }
 
 extension DecorationExtension on Decoration {
-  /// Gets the border radius of this decoration, if reacheable
+  /// Gets the border radius of this decoration.
   BorderRadiusGeometry? getBorderRadius() {
     if (this is BoxDecoration) {
       return (this as BoxDecoration).borderRadius;

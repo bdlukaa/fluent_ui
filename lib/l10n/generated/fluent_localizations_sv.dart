@@ -52,6 +52,9 @@ class FluentLocalizationsSv extends FluentLocalizations {
   String get selectAllActionLabel => 'Markera allt';
 
   @override
+  String get undoActionLabel => 'Undo';
+
+  @override
   String get newTabLabel => 'Ny flik';
 
   @override
@@ -79,6 +82,9 @@ class FluentLocalizationsSv extends FluentLocalizations {
   String get selectAllActionTooltip => 'Markera allt';
 
   @override
+  String get undoActionTooltip => 'Undo the last action';
+
+  @override
   String get hour => 'timme';
 
   @override
@@ -98,6 +104,12 @@ class FluentLocalizationsSv extends FluentLocalizations {
 
   @override
   String get year => 'år';
+
+  @override
+  String get seeMore => 'See more';
+
+  @override
+  String get seeLess => 'See less';
 
   @override
   String get redLabel => 'Röd';

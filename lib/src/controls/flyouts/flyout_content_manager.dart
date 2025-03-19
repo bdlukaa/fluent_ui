@@ -16,17 +16,25 @@ class Flyout extends StatefulWidget {
   final double margin;
 
   final Duration transitionDuration;
+  final Duration reverseTransitionDuration;
+
+  final FlyoutTransitionBuilder transitionBuilder;
+
+  final FlyoutPlacementMode placementMode;
 
   /// Create a flyout.
   const Flyout({
     super.key,
     required this.builder,
-    this.root,
-    this.rootFlyout,
-    this.menuKey,
-    this.additionalOffset = 0.0,
-    this.margin = 0.0,
-    this.transitionDuration = Duration.zero,
+    required this.root,
+    required this.rootFlyout,
+    required this.menuKey,
+    required this.additionalOffset,
+    required this.margin,
+    required this.transitionDuration,
+    required this.reverseTransitionDuration,
+    required this.transitionBuilder,
+    required this.placementMode,
   });
 
   /// Gets the current flyout info
@@ -45,9 +53,6 @@ class Flyout extends StatefulWidget {
 class FlyoutState extends State<Flyout> {
   final _key = GlobalKey(debugLabel: 'FlyoutState key');
 
-  /// The current size of the flyout
-  Size size = Size.zero;
-
   /// The flyout in the beggining of the flyout tree
   GlobalKey get rootFlyout => widget.rootFlyout!;
 
@@ -60,20 +65,18 @@ class FlyoutState extends State<Flyout> {
   /// The duration of the transition animation
   Duration get transitionDuration => widget.transitionDuration;
 
-  @override
-  void initState() {
-    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-      final context = _key.currentContext;
-      if (context == null) return;
-      final box = context.findRenderObject() as RenderBox;
-      setState(() => size = box.size);
-    });
-    super.initState();
-  }
+  /// The duration of the reverse transition animation
+  Duration get reverseTransitionDuration => widget.reverseTransitionDuration;
 
-  /// Closes the current open flyout
+  /// The transition builder
+  FlyoutTransitionBuilder get transitionBuilder => widget.transitionBuilder;
+
+  /// The placement mode of the flyout
+  FlyoutPlacementMode get placementMode => widget.placementMode;
+
+  /// Closes the current open flyout.
   ///
-  /// If the current flyout is a sub menu, the submenu is closed
+  /// If the current flyout is a sub menu, the submenu is closed.
   void close() {
     if (widget.menuKey != null) {
       MenuInfoProvider.of(context).remove(widget.menuKey!);
@@ -112,6 +115,11 @@ class MenuInfoProvider extends StatefulWidget {
   /// Gets the current state of the sub menus of the root flyout
   static MenuInfoProviderState of(BuildContext context) {
     return context.findAncestorStateOfType<MenuInfoProviderState>()!;
+  }
+
+  /// Gets the current state of the sub menus of the root flyout
+  static MenuInfoProviderState? maybeOf(BuildContext context) {
+    return context.findAncestorStateOfType<MenuInfoProviderState>();
   }
 
   @override
