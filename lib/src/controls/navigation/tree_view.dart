@@ -186,6 +186,9 @@ class TreeViewItem with Diagnosticable {
   /// {@macro flutter.widgets.Focus.focusNode}
   final FocusNode focusNode;
 
+  /// Whether the node is focused by press
+  bool _focusedByPress = false;
+
   /// {@macro fluent_ui.controls.inputs.HoverButton.semanticLabel}
   final String? semanticLabel;
 
@@ -956,24 +959,31 @@ class _TreeViewItem extends StatelessWidget {
               },
         onPressed: selectionMode == TreeViewSelectionMode.single
             ? () {
+                item._focusedByPress = true;
+                item.focusNode.requestFocus();
+                FocusTraversalGroup.of(context)
+                    .invalidateScopeData(item.focusNode.nearestScope!);
                 onSelect();
                 onInvoked(TreeViewItemInvokeReason.pressed);
-                FocusScope.of(context).unfocus(
-                  disposition: UnfocusDisposition.previouslyFocusedChild,
-                );
               }
             : () {
+          item._focusedByPress = true;
+                item.focusNode.requestFocus();
+                FocusTraversalGroup.of(context)
+                    .invalidateScopeData(item.focusNode.nearestScope!);
                 onInvoked(TreeViewItemInvokeReason.pressed);
-                FocusScope.of(context).unfocus(
-                  disposition: UnfocusDisposition.previouslyFocusedChild,
-                );
               },
         onFocusTap: _onCheckboxInvoked,
         onFocusChange: selectionMode == TreeViewSelectionMode.single
             ? (focused) {
-                if (focused) onSelect();
+                if (focused && !item._focusedByPress) {
+                  onSelect();
+                }
+                if (!focused) item._focusedByPress = false;
               }
-            : null,
+            : (focused) {
+                if (!focused) item._focusedByPress = false;
+              },
         autofocus: item.autofocus,
         focusNode: item.focusNode,
         semanticLabel: item.semanticLabel,
@@ -987,7 +997,7 @@ class _TreeViewItem extends StatelessWidget {
           );
 
           return FocusBorder(
-            focused: states.isFocused,
+            focused: states.isFocused && !item._focusedByPress,
             child: Stack(children: [
               // Indentation and selection indicator for single selection mode.
               Container(
