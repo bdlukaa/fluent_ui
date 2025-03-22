@@ -967,7 +967,7 @@ class _TreeViewItem extends StatelessWidget {
                 onInvoked(TreeViewItemInvokeReason.pressed);
               }
             : () {
-          item._focusedByPress = true;
+                item._focusedByPress = true;
                 item.focusNode.requestFocus();
                 FocusTraversalGroup.of(context)
                     .invalidateScopeData(item.focusNode.nearestScope!);
