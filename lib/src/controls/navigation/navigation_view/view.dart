@@ -488,10 +488,10 @@ class NavigationViewState extends State<NavigationView> {
         } else {
           final contentShape = widget.contentShape ??
               RoundedRectangleBorder(
-                side: BorderSide(
-                  color:
-                      FluentTheme.of(context).resources.cardStrokeColorDefault,
-                ),
+                // side: BorderSide(
+                //    color:
+                //        FluentTheme.of(context).resources.cardStrokeColorDefault,
+                // ),
                 borderRadius: displayMode == PaneDisplayMode.top
                     ? BorderRadius.zero
                     : const BorderRadiusDirectional.only(
@@ -877,7 +877,7 @@ class NavigationAppBar with Diagnosticable {
     this.title,
     this.actions,
     this.automaticallyImplyLeading = true,
-    this.height = _kDefaultAppBarHeight,
+    this.height = kPaneItemMinHeight,
     this.backgroundColor,
     this.decoration,
   }) : assert(
@@ -990,9 +990,7 @@ class _NavigationAppBar extends StatelessWidget {
         return AnimatedPadding(
           duration: theme.animationDuration ?? Duration.zero,
           curve: theme.animationCurve ?? Curves.linear,
-          padding: (theme.iconPadding ?? EdgeInsets.zero).add(
-            const EdgeInsetsDirectional.only(start: 6.0),
-          ),
+          padding: EdgeInsets.zero,
           child: DefaultTextStyle.merge(
             style: FluentTheme.of(context).typography.caption,
             maxLines: 1,

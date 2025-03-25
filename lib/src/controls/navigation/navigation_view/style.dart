@@ -120,6 +120,7 @@ class NavigationPaneThemeData with Diagnosticable {
 
   final Duration? animationDuration;
   final Curve? animationCurve;
+  final double? iconTopHeight;
 
   const NavigationPaneThemeData({
     this.backgroundColor,
@@ -139,6 +140,7 @@ class NavigationPaneThemeData with Diagnosticable {
     this.selectedIconColor,
     this.unselectedIconColor,
     this.paneNavigationButtonIcon,
+    this.iconTopHeight,
   });
 
   /// The default navigation pane theme data.

@@ -263,10 +263,10 @@ class PaneItem extends NavigationPaneItem {
             case PaneDisplayMode.top:
               Widget result = Row(mainAxisSize: MainAxisSize.min, children: [
                 Padding(
-                  padding: theme.iconPadding ?? EdgeInsets.zero,
+                  padding: showTextOnTop ? theme.iconPadding! : EdgeInsets.zero,
                   child: IconTheme.merge(
                     data: iconThemeData,
-                    child: Center(child: icon),
+                    child: showTextOnTop ? Center(child: icon) : SizedBox(height:theme.iconTopHeight, child:icon),
                   ),
                 ),
                 if (showTextOnTop) textResult,
@@ -352,7 +352,7 @@ class PaneItem extends NavigationPaneItem {
 
     return Padding(
       key: key,
-      padding: const EdgeInsetsDirectional.only(bottom: 4.0),
+      padding: EdgeInsets.only(bottom: 4.0, left: showTextOnTop ? 20: 10),
       child: () {
         // If there is an indicator and the item is an effective item
         if (maybeBody?.pane?.indicator != null &&

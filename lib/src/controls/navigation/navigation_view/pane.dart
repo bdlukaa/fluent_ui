@@ -6,6 +6,8 @@ const double kCompactNavigationPaneWidth = 50.0;
 /// The width of the Open Navigation Pane
 const double kOpenNavigationPaneWidth = 320.0;
 
+const double paneHeight = 72.0;
+
 /// You can use the PaneDisplayMode property to configure different
 /// navigation styles, or display modes, for the NavigationView
 ///
@@ -699,7 +701,7 @@ class _TopNavigationPaneState extends State<_TopNavigationPane> {
     final height = widget.pane.size?.topHeight ?? kOneLineTileHeight;
     return SizedBox(
       key: widget.pane.paneKey,
-      height: height,
+      height: paneHeight,
       child: Row(children: [
         if (widget.pane.leading != null)
           Padding(
@@ -781,8 +783,8 @@ class _TopNavigationPaneState extends State<_TopNavigationPane> {
         ),
         if (widget.pane.autoSuggestBox != null)
           Container(
-            margin: const EdgeInsetsDirectional.only(start: 30.0),
-            constraints: const BoxConstraints(minWidth: 100.0, maxWidth: 215.0),
+            // margin: const EdgeInsetsDirectional.only(start: 30.0),
+            // constraints: const BoxConstraints(minWidth: 100.0, maxWidth: 215.0),
             child: widget.pane.autoSuggestBox!,
           ),
         ...widget.pane.footerItems.map((item) {
