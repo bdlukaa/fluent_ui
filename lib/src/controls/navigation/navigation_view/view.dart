@@ -488,10 +488,10 @@ class NavigationViewState extends State<NavigationView> {
         } else {
           final contentShape = widget.contentShape ??
               RoundedRectangleBorder(
-                // side: BorderSide(
-                //    color:
-                //        FluentTheme.of(context).resources.cardStrokeColorDefault,
-                // ),
+                side: BorderSide(
+                   color: Color(0xFFE1E5ED),
+                       // FluentTheme.of(context).resources.cardStrokeColorDefault,
+                ),
                 borderRadius: displayMode == PaneDisplayMode.top
                     ? BorderRadius.zero
                     : const BorderRadiusDirectional.only(
