@@ -8,9 +8,11 @@ WidgetStateProperty<Color?> kDefaultPaneItemColor(
     if (isTop) return Colors.transparent;
     final res = FluentTheme.of(context).resources;
     if (states.isPressed) {
-      return res.subtleFillColorTertiary;
+      return Color(0xFFF7F8FA);
+      // return res.subtleFillColorTertiary;
     } else if (states.isHovered) {
-      return res.subtleFillColorSecondary;
+      return Color(0xFFF7F8FA);
+      // return res.subtleFillColorSecondary;
     } else {
       return res.subtleFillColorTransparent;
     }
