@@ -1,3 +1,7 @@
+## [next]
+
+- fix: Correctly update `TimePicker` ([#1198](https://github.com/bdlukaa/fluent_ui/issues/1198))
+
 ## 4.11.2
 
 - fix: Use correct scaffold background color when view is provided

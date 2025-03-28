@@ -226,7 +226,10 @@ class TimePickerState extends State<TimePicker>
       pickerContent: (context) {
         return _TimePickerContentPopup(
           onCancel: widget.onCancel ?? () {},
-          onChanged: (time) => widget.onChanged?.call(time),
+          onChanged: (time) {
+            handleDateChanged(time);
+            widget.onChanged?.call(time);
+          },
           date: widget.selected ?? DateTime.now(),
           amPmController: _amPmController,
           hourController: _hourController,
