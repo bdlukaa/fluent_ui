@@ -1,6 +1,7 @@
 ## [next]
 
 - fix: Correctly update `TimePicker` ([#1198](https://github.com/bdlukaa/fluent_ui/issues/1198))
+- feat: Keyboard Shortcuts for `TimePicker` and `DatePicker` popups ([#1200](https://github.com/bdlukaa/fluent_ui/issues/1200))
 
 ## 4.11.2
 

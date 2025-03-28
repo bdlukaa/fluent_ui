@@ -525,6 +525,16 @@ class __DatePickerContentPopUpState extends State<_DatePickerContentPopUp> {
     });
   }
 
+  void onSelect() {
+    Navigator.pop(context);
+    widget.onChanged(localDate);
+  }
+
+  void onDismiss() {
+    Navigator.pop(context);
+    widget.onCancel();
+  }
+
   @override
   Widget build(BuildContext context) {
     assert(debugCheckHasFluentTheme(context));
@@ -773,40 +783,35 @@ class __DatePickerContentPopUpState extends State<_DatePickerContentPopUp> {
 
     final fieldMap = widget.fieldOrder.map((e) => fields[e]);
 
-    return Column(children: [
-      Expanded(
-        child: Stack(children: [
-          const PickerHighlightTile(),
-          Row(mainAxisSize: MainAxisSize.min, children: [
-            ...fieldMap.elementAt(0) ?? [],
-            if (fieldMap.elementAt(1) != null) ...[
-              divider,
-              ...fieldMap.elementAt(1)!,
-            ],
-            if (fieldMap.elementAt(2) != null) ...[
-              divider,
-              ...fieldMap.elementAt(2)!,
-            ],
+    return PickerDialog(
+      onSelect: onSelect,
+      onDismiss: onDismiss,
+      child: Column(children: [
+        Expanded(
+          child: Stack(children: [
+            const PickerHighlightTile(),
+            Row(mainAxisSize: MainAxisSize.min, children: [
+              ...fieldMap.elementAt(0) ?? [],
+              if (fieldMap.elementAt(1) != null) ...[
+                divider,
+                ...fieldMap.elementAt(1)!,
+              ],
+              if (fieldMap.elementAt(2) != null) ...[
+                divider,
+                ...fieldMap.elementAt(2)!,
+              ],
+            ]),
           ]),
-        ]),
-      ),
-      const Divider(
-        style: DividerThemeData(
-          verticalMargin: EdgeInsets.zero,
-          horizontalMargin: EdgeInsets.zero,
         ),
-      ),
-      YesNoPickerControl(
-        onChanged: () {
-          Navigator.pop(context);
-          widget.onChanged(localDate);
-        },
-        onCancel: () {
-          Navigator.pop(context);
-          widget.onCancel();
-        },
-      ),
-    ]);
+        const Divider(
+          style: DividerThemeData(
+            verticalMargin: EdgeInsets.zero,
+            horizontalMargin: EdgeInsets.zero,
+          ),
+        ),
+        YesNoPickerControl(onChanged: onSelect, onCancel: onDismiss),
+      ]),
+    );
   }
 }
 
