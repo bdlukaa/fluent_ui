@@ -81,7 +81,7 @@ class TabView extends StatefulWidget {
   /// The icon of the "Add new tab" button.
   ///
   /// Defaults to an [Icon] with [FluentIcons.add].
-  final Icon newTabIcon;
+  final Widget newTabIcon;
 
   /// The builder for the add icon.
   ///
