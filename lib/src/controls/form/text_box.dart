@@ -255,14 +255,19 @@ class TextBox extends StatefulWidget {
   /// The highlight color of the text box.
   ///
   /// If [foregroundDecoration] is provided, this must not be provided.
+  /// If not provided, defaults to the theme accent color.
   ///
   /// See also:
+  ///
   ///  * [unfocusedColor], displayed when the field is not focused
   final Color? highlightColor;
 
   /// The unfocused color of the highlight border.
   ///
+  /// If [foregroundDecoration] is provided, this must not be provided.
+  ///
   /// See also:
+  ///
   ///   * [highlightColor], displayed when the field is focused
   final Color? unfocusedColor;
 
@@ -1303,7 +1308,7 @@ class _TextBoxState extends State<TextBox>
                   return BoxDecoration(
                     border: Border(
                       bottom: BorderSide(
-                        color:
+                        color: widget.unfocusedColor ??
                             themeData.resources.controlStrongStrokeColorDefault,
                         width: 1.25,
                       ),
