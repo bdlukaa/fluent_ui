@@ -14,15 +14,15 @@ enum ExpanderDirection {
 
 /// The [Expander] control lets you show or hide less important content that's
 /// related to a piece of primary content that's always visible. Items contained
-/// in the Header are always visible. The user can expand and collapse the Content
-/// area, where secondary content is displayed, by interacting with the header.
-/// When the content area is expanded, it pushes other UI elements out of the
-/// way; it does not overlay other UI. The Expander can expand upwards or
+/// in the Header are always visible. The user can expand and collapse the
+/// Content area, where secondary content is displayed, by interacting with the
+/// header. When the content area is expanded, it pushes other UI elements out
+/// of the way; it does not overlay other UI. The Expander can expand upwards or
 /// downwards.
 ///
 /// Both the Header and Content areas can contain any content, from simple text
-/// to complex UI layouts. For example, you can use the control to show additional
-/// options for an item.
+/// to complex UI layouts. For example, you can use the control to show
+/// additional options for an item.
 ///
 /// ![Expander Preview](https://docs.microsoft.com/en-us/windows/apps/design/controls/images/expander-default.gif)
 ///
@@ -43,6 +43,7 @@ class Expander extends StatefulWidget {
     this.direction = ExpanderDirection.down,
     this.initiallyExpanded = false,
     this.onStateChanged,
+    this.enabled = true,
     this.headerBackgroundColor,
     this.headerShape,
     this.contentBackgroundColor,
@@ -61,7 +62,7 @@ class Expander extends StatefulWidget {
 
   /// The expander header
   ///
-  /// Usually a [Text] widget
+  /// Usually a [Text] widget.
   final Widget header;
 
   /// The expander content
@@ -73,12 +74,15 @@ class Expander extends StatefulWidget {
   /// ![Expander Nested Content](https://docs.microsoft.com/en-us/windows/apps/design/controls/images/expander-nested.png)
   final Widget content;
 
-  /// The expander icon. If null, defaults to a chevron down or up, depending on
-  /// the direction.
+  /// The expander icon.
+  ///
+  /// If not provided, defaults to a chevron icon down or up, depending on the
+  /// [direction].
   final Widget? icon;
 
-  /// The trailing widget. It's positioned at the right of [header]
-  /// and before [icon].
+  /// The trailing widget.
+  ///
+  /// It's positioned at the right of [header] and before [icon].
   ///
   /// See also:
   ///
@@ -102,13 +106,18 @@ class Expander extends StatefulWidget {
 
   /// Whether the [Expander] is initially expanded.
   ///
-  /// Defaults to `false`
+  /// Defaults to `false`.
   final bool initiallyExpanded;
 
   /// A callback called when the current state is changed.
   ///
   /// `true` when open and `false` when closed.
   final ValueChanged<bool>? onStateChanged;
+
+  /// Whether the [Expander] is enabled.
+  ///
+  /// Defaults to `true`.
+  final bool enabled;
 
   /// The background color of the header.
   final WidgetStateProperty<Color>? headerBackgroundColor;
@@ -226,7 +235,7 @@ class ExpanderState extends State<Expander>
     final children = [
       // HEADER
       HoverButton(
-        onPressed: _handlePressed,
+        onPressed: widget.enabled ? _handlePressed : null,
         hitTestBehavior: HitTestBehavior.deferToChild,
         builder: (context, states) {
           return Container(
