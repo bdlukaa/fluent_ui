@@ -1,4 +1,4 @@
-## [next]
+## 4.11.3
 
 - fix: `TabView.newTabIcon` is now typed as a `Widget` ([#1187](https://github.com/bdlukaa/fluent_ui/issues/1187))
 - feat: `Expanded.enabled` ([#1188](https://github.com/bdlukaa/fluent_ui/issues/1188))

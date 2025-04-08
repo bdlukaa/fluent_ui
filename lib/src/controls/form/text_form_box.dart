@@ -124,7 +124,8 @@ class TextFormBox extends ControllableFormBox {
     WidgetStateProperty<BoxDecoration>? decoration,
     bool enableIMEPersonalizedLearning = true,
     MouseCursor? mouseCursor,
-    bool scribbleEnabled = true,
+    bool stylusHandwritingEnabled =
+        EditableText.defaultStylusHandwritingEnabled,
     Color? highlightColor,
     Color? errorHighlightColor,
     Color? unfocusedColor,
@@ -233,7 +234,7 @@ class TextFormBox extends ControllableFormBox {
                   selectionWidthStyle: selectionWidthStyle,
                   decoration: decoration,
                   enableIMEPersonalizedLearning: enableIMEPersonalizedLearning,
-                  scribbleEnabled: scribbleEnabled,
+                  stylusHandwritingEnabled: stylusHandwritingEnabled,
                   textDirection: textDirection,
                   selectionControls: selectionControls,
                   contextMenuBuilder: contextMenuBuilder,
