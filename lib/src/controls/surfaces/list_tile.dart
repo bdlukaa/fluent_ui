@@ -13,6 +13,11 @@ const kDefaultListTileShape = RoundedRectangleBorder(
   borderRadius: BorderRadius.all(Radius.circular(4.0)),
 );
 
+const kDefaultListTileDecorationMargin = EdgeInsetsDirectional.symmetric(
+  horizontal: 4.0,
+  vertical: 2.0,
+);
+
 enum ListTileSelectionMode {
   none,
   single,
@@ -44,6 +49,7 @@ class ListTile extends StatelessWidget {
     this.cursor,
     this.contentAlignment = CrossAxisAlignment.center,
     this.contentPadding = kDefaultListTilePadding,
+    this.decorationMargin = kDefaultListTileDecorationMargin,
   })  : assert(
           subtitle != null ? title != null : true,
           'To have a subtitle, there must be a title',
@@ -71,6 +77,7 @@ class ListTile extends StatelessWidget {
     this.cursor,
     this.contentAlignment = CrossAxisAlignment.center,
     this.contentPadding = kDefaultListTilePadding,
+    this.decorationMargin = kDefaultListTileDecorationMargin,
   }) : assert(
           subtitle != null ? title != null : true,
           'To have a subtitle, there must be a title',
@@ -167,6 +174,9 @@ class ListTile extends StatelessWidget {
   ///
   /// Defaults to [kDefaultListTilePadding]
   final EdgeInsetsGeometry contentPadding;
+
+  /// Padding applied between this tile's [FocusBorder] and outer decoration.
+  final EdgeInsetsGeometry? decorationMargin;
 
   @override
   void debugFillProperties(DiagnosticPropertiesBuilder properties) {
@@ -292,8 +302,7 @@ class ListTile extends StatelessWidget {
                 minHeight: kOneLineTileHeight,
                 minWidth: 88.0,
               ),
-              margin:
-                  const EdgeInsets.symmetric(horizontal: 4.0, vertical: 2.0),
+              margin: decorationMargin,
               child: LayoutBuilder(builder: (context, constraints) {
                 final tileHeight = constraints.minHeight;
                 return Row(children: [
