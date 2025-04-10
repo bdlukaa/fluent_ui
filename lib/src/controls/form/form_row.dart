@@ -58,8 +58,9 @@ class FormRow extends StatelessWidget {
             child: error == null ? Text("") : error!,
           ),
         ),
-          
+
       ]),
     );
+
   }
 }

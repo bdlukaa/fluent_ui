@@ -161,7 +161,7 @@ class _EndNavigationIndicatorState
               vertical: isTop ? 0.0 : 10.0,
               horizontal: isTop ? 10.0 : 0.0,
             ),
-            width: isTop ? 24.0 : 6.0,
+            width: isTop ? 24.0 : 2.0,
             height: isTop ? 2 : double.infinity,
             color: itemIndex != selectedIndex
                 ? widget.unselectedColor

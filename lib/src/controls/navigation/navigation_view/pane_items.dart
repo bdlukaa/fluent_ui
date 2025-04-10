@@ -297,7 +297,7 @@ class PaneItem extends NavigationPaneItem {
           label: titleText.isEmpty ? null : titleText,
           selected: selected,
           child: Container(
-            margin: const EdgeInsets.symmetric(horizontal: 6.0),
+            // margin: const EdgeInsets.symmetric(horizontal: 6.0),
             decoration: BoxDecoration(
               color: () {
                 final tileColor = this.tileColor ??
