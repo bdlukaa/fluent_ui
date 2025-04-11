@@ -1332,7 +1332,7 @@ class _TextBoxState extends State<TextBox>
                 child: DecoratedBox(
                   decoration: decoration,
                   child: Container(
-                    foregroundDecoration: foregroundDecoration,
+                    // foregroundDecoration: foregroundDecoration,
                     constraints: const BoxConstraints(
                       minHeight: 32.0,
                     ),
