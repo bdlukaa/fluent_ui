@@ -13,7 +13,7 @@ const kDefaultListTileShape = RoundedRectangleBorder(
   borderRadius: BorderRadius.all(Radius.circular(4.0)),
 );
 
-const kDefaultListTileDecorationMargin = EdgeInsetsDirectional.symmetric(
+const kDefaultListTileMargin = EdgeInsetsDirectional.symmetric(
   horizontal: 4.0,
   vertical: 2.0,
 );
@@ -49,7 +49,7 @@ class ListTile extends StatelessWidget {
     this.cursor,
     this.contentAlignment = CrossAxisAlignment.center,
     this.contentPadding = kDefaultListTilePadding,
-    this.decorationMargin = kDefaultListTileDecorationMargin,
+    this.margin = kDefaultListTileMargin,
   })  : assert(
           subtitle != null ? title != null : true,
           'To have a subtitle, there must be a title',
@@ -77,7 +77,7 @@ class ListTile extends StatelessWidget {
     this.cursor,
     this.contentAlignment = CrossAxisAlignment.center,
     this.contentPadding = kDefaultListTilePadding,
-    this.decorationMargin = kDefaultListTileDecorationMargin,
+    this.margin = kDefaultListTileMargin,
   }) : assert(
           subtitle != null ? title != null : true,
           'To have a subtitle, there must be a title',
@@ -176,7 +176,9 @@ class ListTile extends StatelessWidget {
   final EdgeInsetsGeometry contentPadding;
 
   /// Padding applied between this tile's [FocusBorder] and outer decoration.
-  final EdgeInsetsGeometry? decorationMargin;
+  ///
+  /// Defaults to [kDefaultListTileMargin].
+  final EdgeInsetsGeometry? margin;
 
   @override
   void debugFillProperties(DiagnosticPropertiesBuilder properties) {
@@ -302,7 +304,7 @@ class ListTile extends StatelessWidget {
                 minHeight: kOneLineTileHeight,
                 minWidth: 88.0,
               ),
-              margin: decorationMargin,
+              margin: margin,
               child: LayoutBuilder(builder: (context, constraints) {
                 final tileHeight = constraints.minHeight;
                 return Row(children: [
