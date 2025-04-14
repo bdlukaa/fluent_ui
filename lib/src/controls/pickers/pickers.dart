@@ -464,7 +464,6 @@ class PickerDialog extends StatelessWidget {
     return Focus(
       autofocus: true,
       onKeyEvent: (node, event) {
-        print(event);
         if (event is KeyDownEvent) {
           switch (event.logicalKey) {
             case LogicalKeyboardKey.escape:

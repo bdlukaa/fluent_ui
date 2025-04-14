@@ -195,7 +195,8 @@ class TextBox extends StatefulWidget {
     this.contentInsertionConfiguration,
     this.clipBehavior = Clip.hardEdge,
     this.restorationId,
-    this.scribbleEnabled = true,
+    this.stylusHandwritingEnabled =
+        EditableText.defaultStylusHandwritingEnabled,
     this.enableIMEPersonalizedLearning = true,
     this.contextMenuBuilder = _defaultContextMenuBuilder,
     this.spellCheckConfiguration,
@@ -541,8 +542,8 @@ class TextBox extends StatefulWidget {
   /// {@macro flutter.material.textfield.restorationId}
   final String? restorationId;
 
-  /// {@macro flutter.widgets.editableText.scribbleEnabled}
-  final bool scribbleEnabled;
+  /// {@macro flutter.widgets.editableText.stylusHandwritingEnabled}
+  final bool stylusHandwritingEnabled;
 
   /// {@macro flutter.services.TextInputConfiguration.enableIMEPersonalizedLearning}
   final bool enableIMEPersonalizedLearning;
@@ -693,7 +694,8 @@ class TextBox extends StatefulWidget {
           defaultValue: null))
       ..add(DiagnosticsProperty<Clip>('clipBehavior', clipBehavior,
           defaultValue: Clip.hardEdge))
-      ..add(DiagnosticsProperty<bool>('scribbleEnabled', scribbleEnabled,
+      ..add(DiagnosticsProperty<bool>(
+          'stylusHandwritingEnabled', stylusHandwritingEnabled,
           defaultValue: true))
       ..add(DiagnosticsProperty<bool>(
           'enableIMEPersonalizedLearning', enableIMEPersonalizedLearning,
@@ -1168,7 +1170,7 @@ class _TextBoxState extends State<TextBox>
             autofillClient: this,
             clipBehavior: widget.clipBehavior,
             restorationId: 'editable',
-            scribbleEnabled: widget.scribbleEnabled,
+            stylusHandwritingEnabled: widget.stylusHandwritingEnabled,
             enableIMEPersonalizedLearning: widget.enableIMEPersonalizedLearning,
             contentInsertionConfiguration: widget.contentInsertionConfiguration,
             contextMenuBuilder: widget.contextMenuBuilder,
