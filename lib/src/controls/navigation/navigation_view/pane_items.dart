@@ -297,7 +297,7 @@ class PaneItem extends NavigationPaneItem {
           label: titleText.isEmpty ? null : titleText,
           selected: selected,
           child: Container(
-            // margin: const EdgeInsets.symmetric(horizontal: 6.0),
+            margin: const EdgeInsets.symmetric(horizontal: 6.0),
             decoration: BoxDecoration(
               color: () {
                 final tileColor = this.tileColor ??
@@ -352,7 +352,8 @@ class PaneItem extends NavigationPaneItem {
 
     return Padding(
       key: key,
-      padding: EdgeInsets.only(bottom: 4.0, left: showTextOnTop ? 20: 10),
+      padding: EdgeInsets.only(bottom: 4.0),
+      // padding: EdgeInsets.only(bottom: 4.0, left: showTextOnTop ? 20: 10),
       child: () {
         // If there is an indicator and the item is an effective item
         if (maybeBody?.pane?.indicator != null &&
