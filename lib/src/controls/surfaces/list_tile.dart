@@ -215,6 +215,11 @@ class ListTile extends StatelessWidget {
         'contentPadding',
         contentPadding,
         defaultValue: kDefaultListTilePadding,
+      ))
+      ..add(DiagnosticsProperty<EdgeInsetsGeometry?>(
+        'margin',
+        margin,
+        defaultValue: kDefaultListTileMargin,
       ));
   }
 
