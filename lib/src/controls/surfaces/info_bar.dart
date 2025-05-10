@@ -54,22 +54,23 @@ Future<void> displayInfoBar(
             horizontal: 16.0,
           ),
           child: StatefulBuilder(builder: (context, setState) {
-            void close() async {
-              if (entry.mounted) setState(() => isFading = true);
-
+            Future<void> close() async {
+              if (!entry.mounted) return;
+              setState(() => isFading = true);
               await Future.delayed(theme.mediumAnimationDuration);
-
-              if (entry.mounted) entry.remove();
+              if (!entry.mounted) return;
+              entry.remove();
             }
 
             if (!alreadyInitialized) {
-              Future.delayed(theme.mediumAnimationDuration).then((_) {
-                if (entry.mounted && !alreadyInitialized) {
-                  setState(() => isFading = false);
-                }
-
-                alreadyInitialized = true;
-              }).then((_) => Future.delayed(duration).then((_) => close()));
+              alreadyInitialized = true;
+              () async {
+                await Future.delayed(theme.mediumAnimationDuration);
+                if (!entry.mounted) return;
+                setState(() => isFading = false);
+                await Future.delayed(duration);
+                await close();
+              }();
             }
 
             return AnimatedSwitcher(
