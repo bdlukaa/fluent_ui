@@ -1,4 +1,4 @@
-## [next]
+## 4.11.4
 
 - feat: Added Tagalog localization support ([#1207](https://github.com/bdlukaa/fluent_ui/pull/1207))
 - feat: Added `ListTile.decorationMargin` parameter

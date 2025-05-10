@@ -100,7 +100,7 @@ import 'fluent_localizations_zh.dart';
 /// property.
 abstract class FluentLocalizations {
   FluentLocalizations(String locale)
-    : localeName = intl.Intl.canonicalizedLocale(locale.toString());
+      : localeName = intl.Intl.canonicalizedLocale(locale.toString());
 
   final String localeName;
 
@@ -123,11 +123,11 @@ abstract class FluentLocalizations {
   /// of delegates is preferred or required.
   static const List<LocalizationsDelegate<dynamic>> localizationsDelegates =
       <LocalizationsDelegate<dynamic>>[
-        delegate,
-        GlobalMaterialLocalizations.delegate,
-        GlobalCupertinoLocalizations.delegate,
-        GlobalWidgetsLocalizations.delegate,
-      ];
+    delegate,
+    GlobalMaterialLocalizations.delegate,
+    GlobalCupertinoLocalizations.delegate,
+    GlobalWidgetsLocalizations.delegate,
+  ];
 
   /// A list of this localizations delegate's supported locales.
   static const List<Locale> supportedLocales = <Locale>[
@@ -1291,46 +1291,46 @@ class _FluentLocalizationsDelegate
 
   @override
   bool isSupported(Locale locale) => <String>[
-    'ar',
-    'be',
-    'bn',
-    'ca',
-    'cs',
-    'de',
-    'el',
-    'en',
-    'es',
-    'fa',
-    'fr',
-    'he',
-    'hi',
-    'hr',
-    'hu',
-    'id',
-    'it',
-    'ja',
-    'ko',
-    'ku',
-    'ms',
-    'my',
-    'ne',
-    'nl',
-    'pl',
-    'pt',
-    'ro',
-    'ru',
-    'sk',
-    'sv',
-    'ta',
-    'th',
-    'tl',
-    'tr',
-    'uk',
-    'ur',
-    'uz',
-    'vi',
-    'zh',
-  ].contains(locale.languageCode);
+        'ar',
+        'be',
+        'bn',
+        'ca',
+        'cs',
+        'de',
+        'el',
+        'en',
+        'es',
+        'fa',
+        'fr',
+        'he',
+        'hi',
+        'hr',
+        'hu',
+        'id',
+        'it',
+        'ja',
+        'ko',
+        'ku',
+        'ms',
+        'my',
+        'ne',
+        'nl',
+        'pl',
+        'pt',
+        'ro',
+        'ru',
+        'sk',
+        'sv',
+        'ta',
+        'th',
+        'tl',
+        'tr',
+        'uk',
+        'ur',
+        'uz',
+        'vi',
+        'zh',
+      ].contains(locale.languageCode);
 
   @override
   bool shouldReload(_FluentLocalizationsDelegate old) => false;
