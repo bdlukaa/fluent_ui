@@ -242,13 +242,15 @@ class TimePickerState extends State<TimePicker>
       child: (context, open) => HoverButton(
         focusNode: widget.focusNode,
         autofocus: widget.autofocus,
-        onPressed: () async {
-          _hourController.dispose();
-          _minuteController.dispose();
-          _amPmController.dispose();
-          initControllers();
-          await open();
-        },
+        onPressed: widget.onChanged == null
+            ? null
+            : () async {
+                _hourController.dispose();
+                _minuteController.dispose();
+                _amPmController.dispose();
+                initControllers();
+                await open();
+              },
         builder: (context, states) {
           const divider = Divider(
             direction: Axis.vertical,

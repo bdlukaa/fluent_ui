@@ -5,6 +5,7 @@
 - fix: Custom `ContextMenuButtonItem` are correctly displayed on text selection control ([#1212](https://github.com/bdlukaa/fluent_ui/pull/1212))
 - fix: `TreeView`'s focus always starts at first or last item ([#834](https://github.com/bdlukaa/fluent_ui/issues/834), [#1195](https://github.com/bdlukaa/fluent_ui/pull/1195))
 - fix: `InfoBar` no longer throw error when automatically closing ([#955](https://github.com/bdlukaa/fluent_ui/issues/955), [#1215](https://github.com/bdlukaa/fluent_ui/pull/1215))
+- fix: Properly disable date and time pickers when `onChanged` is null ([#1210](https://github.com/bdlukaa/fluent_ui/issues/1210))
 
 ## 4.11.3
 

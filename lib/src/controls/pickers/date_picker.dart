@@ -83,10 +83,10 @@ class DatePicker extends StatefulWidget {
 
   /// Whenever the current selected date is changed by the user.
   ///
-  /// If null, the picker is considered disabled
+  /// If `null`, the picker is considered disabled
   final ValueChanged<DateTime>? onChanged;
 
-  /// Whenever the user cancels the date change.
+  /// Called when the user cancels the picker.
   final VoidCallback? onCancel;
 
   /// The content of the header
@@ -330,16 +330,15 @@ class DatePickerState extends State<DatePicker> {
       child: (context, open) => HoverButton(
         autofocus: widget.autofocus,
         focusNode: widget.focusNode,
-        onPressed: () async {
-          _monthController.dispose();
-          // _monthController = null;
-          _dayController.dispose();
-          // _dayController = null;
-          _yearController.dispose();
-          // _yearController = null;
-          initControllers();
-          await open();
-        },
+        onPressed: widget.onChanged == null
+            ? null
+            : () async {
+                _monthController.dispose();
+                _dayController.dispose();
+                _yearController.dispose();
+                initControllers();
+                await open();
+              },
         builder: (context, states) {
           if (states.isDisabled) states = <WidgetState>{};
           const divider = Divider(
