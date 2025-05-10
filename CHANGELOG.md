@@ -9,6 +9,7 @@
 - fix: `MenuFlyoutSubItem` no longer errors while building when `FlyoutPlacementMode.auto` is used ([#1206](https://github.com/bdlukaa/fluent_ui/issues/1206), [#1191](https://github.com/bdlukaa/fluent_ui/pull/1191))
 - fix: The checkbox inside `ListTile.selectable` should not have its own focus ([#1144](https://github.com/bdlukaa/fluent_ui/issues/1144))
 - feat: `BaseButton.onTapUp` reflects the `GestureDetector.onTapUp` ([#1201](https://github.com/bdlukaa/fluent_ui/issues/1201))
+- feat: Add `BreadcrumbBar.chevronAlignment` ([#1213](https://github.com/bdlukaa/fluent_ui/issues/1213))
 
 ## 4.11.3
 

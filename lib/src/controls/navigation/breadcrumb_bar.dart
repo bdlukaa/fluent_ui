@@ -1,6 +1,31 @@
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter/rendering.dart';
 
+/// The alignment of the chevron icon in the breadcrumb bar.
+enum ChevronAlignment {
+  /// The chevron icon is aligned to the top of the item.
+  top,
+
+  /// The chevron icon is aligned to the center of the item.
+  ///
+  /// This is the default value.
+  center,
+
+  /// The chevron icon is aligned to the bottom of the item.
+  bottom;
+
+  CrossAxisAlignment get crossAxisAlignment {
+    switch (this) {
+      case ChevronAlignment.top:
+        return CrossAxisAlignment.start;
+      case ChevronAlignment.center:
+        return CrossAxisAlignment.center;
+      case ChevronAlignment.bottom:
+        return CrossAxisAlignment.end;
+    }
+  }
+}
+
 typedef ChevronIconBuilder<T> = Widget Function(
   BuildContext context,
   int index,
@@ -96,6 +121,11 @@ class BreadcrumbBar<T> extends StatefulWidget {
   /// Defaults to 8.0
   final double chevronIconSize;
 
+  /// The alignment of the chevron icon.
+  ///
+  /// Defaults to [ChevronAlignment.center].
+  final ChevronAlignment chevronAlignment;
+
   /// Creates a breadcrumb bar.
   const BreadcrumbBar({
     super.key,
@@ -104,6 +134,7 @@ class BreadcrumbBar<T> extends StatefulWidget {
     this.onItemPressed,
     this.chevronIconBuilder = _defaultChevronBuilder,
     this.chevronIconSize = 8.0,
+    this.chevronAlignment = ChevronAlignment.center,
   });
 
   /// The default overflow button builder.
@@ -111,21 +142,24 @@ class BreadcrumbBar<T> extends StatefulWidget {
     BuildContext context,
     VoidCallback openFlyout,
   ) {
-    return HoverButton(
-      margin: const EdgeInsetsDirectional.symmetric(horizontal: 4.0),
-      onPressed: openFlyout,
-      builder: (context, states) {
-        final foregroundColor = ButtonThemeData.buttonForegroundColor(
-          context,
-          states,
-        );
+    return ConstrainedBox(
+      constraints: const BoxConstraints(minHeight: 19.0),
+      child: HoverButton(
+        margin: const EdgeInsetsDirectional.symmetric(horizontal: 4.0),
+        onPressed: openFlyout,
+        builder: (context, states) {
+          final foregroundColor = ButtonThemeData.buttonForegroundColor(
+            context,
+            states,
+          );
 
-        return Icon(
-          FluentIcons.more,
-          color: foregroundColor,
-          size: 12.0,
-        );
-      },
+          return Icon(
+            FluentIcons.more,
+            color: foregroundColor,
+            size: 12.0,
+          );
+        },
+      ),
     );
   }
 
@@ -211,16 +245,20 @@ class BreadcrumbBarState<T> extends State<BreadcrumbBar<T>> {
           return items.indexOf(widget.items[index]);
         }).toSet();
       },
-      overflowButton: Row(mainAxisSize: MainAxisSize.min, children: [
-        FlyoutTarget(
-          controller: flyoutController,
-          child: widget.overflowButtonBuilder(context, showFlyout),
-        ),
-        IconTheme.merge(
-          data: IconThemeData(size: widget.chevronIconSize),
-          child: widget.chevronIconBuilder(context, -1),
-        ),
-      ]),
+      overflowButton: Row(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: widget.chevronAlignment.crossAxisAlignment,
+        children: [
+          FlyoutTarget(
+            controller: flyoutController,
+            child: widget.overflowButtonBuilder(context, showFlyout),
+          ),
+          IconTheme.merge(
+            data: IconThemeData(size: widget.chevronIconSize),
+            child: widget.chevronIconBuilder(context, -1),
+          ),
+        ],
+      ),
       children: List.generate(items.length, (index) {
         final item = items[index];
 
@@ -250,13 +288,17 @@ class BreadcrumbBarState<T> extends State<BreadcrumbBar<T>> {
         final isLastItem = isReversed ? index == 0 : index == items.length - 1;
         if (isLastItem) return label;
 
-        return Row(mainAxisSize: MainAxisSize.min, children: [
-          label,
-          IconTheme.merge(
-            data: IconThemeData(size: widget.chevronIconSize),
-            child: widget.chevronIconBuilder(context, index),
-          ),
-        ]);
+        return Row(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: widget.chevronAlignment.crossAxisAlignment,
+          children: [
+            label,
+            IconTheme.merge(
+              data: IconThemeData(size: widget.chevronIconSize),
+              child: widget.chevronIconBuilder(context, index),
+            ),
+          ],
+        );
       }),
     );
   }
