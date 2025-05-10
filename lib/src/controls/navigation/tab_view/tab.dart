@@ -162,6 +162,8 @@ class Tab extends StatefulWidget {
     required this.body,
     this.backgroundColor,
     this.selectedBackgroundColor,
+    this.foregroundColor,
+    this.selectedForegroundColor,
     this.outlineColor,
     this.closeIcon = const Icon(FluentIcons.chrome_close),
     this.onClosed,
@@ -198,13 +200,19 @@ class Tab extends StatefulWidget {
   final Widget body;
 
   /// The background color of the tab.
-  final Color? backgroundColor;
+  final WidgetStateProperty<Color>? backgroundColor;
 
   /// The background color of the tab if it is selected.
-  final Color? selectedBackgroundColor;
+  final WidgetStateProperty<Color>? selectedBackgroundColor;
+
+  /// The foreground color of the tab.
+  final WidgetStateProperty<Color>? foregroundColor;
+
+  /// The background color of the tab if it is selected.
+  final WidgetStateProperty<Color>? selectedForegroundColor;
 
   /// The outline color of the tab.
-  final Color? outlineColor;
+  final WidgetStateProperty<Color>? outlineColor;
 
   /// Whether the tab is disabled or not.
   ///
@@ -239,9 +247,14 @@ class Tab extends StatefulWidget {
         onClosed,
         ifNull: 'not closeable',
       ))
-      ..add(ColorProperty('backgroundColor', backgroundColor))
-      ..add(ColorProperty('selectedBackgroundColor', selectedBackgroundColor))
-      ..add(ColorProperty('outlineColor', outlineColor))
+      ..add(DiagnosticsProperty<WidgetStateProperty<Color>>(
+          'backgroundColor', backgroundColor))
+      ..add(DiagnosticsProperty<WidgetStateProperty<Color>>(
+          'selectedBackgroundColor', selectedBackgroundColor))
+      ..add(DiagnosticsProperty<WidgetStateProperty<Color>>(
+          'foregroundColor', foregroundColor))
+      ..add(DiagnosticsProperty<WidgetStateProperty<Color>>(
+          'selectedForegroundColor', selectedForegroundColor))
       ..add(DiagnosticsProperty<Widget>('text', text))
       ..add(DiagnosticsProperty<Widget>('body', body))
       ..add(DiagnosticsProperty<Widget>('icon', icon))
@@ -364,8 +377,9 @@ class TabState extends State<Tab>
               borderRadius: borderRadius,
               // if selected, the background is painted by _TabPainter
               color: (tab.selected
-                      ? widget.selectedBackgroundColor
-                      : widget.backgroundColor) ??
+                          ? widget.selectedBackgroundColor
+                          : widget.backgroundColor)
+                      ?.resolve(states) ??
                   backgroundColor,
             ),
             child: () {
@@ -374,11 +388,19 @@ class TabState extends State<Tab>
                   style: (theme.typography.body ?? const TextStyle()).copyWith(
                     fontSize: 12.0,
                     fontWeight: tab.selected ? FontWeight.w600 : null,
-                    color: foregroundColor,
+                    color: (tab.selected
+                                ? widget.selectedForegroundColor
+                                : widget.foregroundColor)
+                            ?.resolve(states) ??
+                        foregroundColor,
                   ),
                   child: IconTheme.merge(
                     data: IconThemeData(
-                      color: foregroundColor,
+                      color: (tab.selected
+                                  ? widget.selectedForegroundColor
+                                  : widget.foregroundColor)
+                              ?.resolve(states) ??
+                          foregroundColor,
                       size: 16.0,
                     ),
                     child: Row(mainAxisSize: MainAxisSize.min, children: [
@@ -457,7 +479,8 @@ class TabState extends State<Tab>
         }
         if (tab.selected) {
           child = CustomPaint(
-            painter: _TabPainter(backgroundColor, widget.outlineColor),
+            painter: _TabPainter(
+                backgroundColor, widget.outlineColor?.resolve(states)),
             child: child,
           );
         }

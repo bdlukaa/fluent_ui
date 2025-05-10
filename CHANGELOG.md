@@ -10,6 +10,32 @@
 - fix: The checkbox inside `ListTile.selectable` should not have its own focus ([#1144](https://github.com/bdlukaa/fluent_ui/issues/1144))
 - feat: `BaseButton.onTapUp` reflects the `GestureDetector.onTapUp` ([#1201](https://github.com/bdlukaa/fluent_ui/issues/1201))
 - feat: Add `BreadcrumbBar.chevronAlignment` ([#1213](https://github.com/bdlukaa/fluent_ui/issues/1213))
+- **MINOR BREAKING** feat: `Tab.backgroundColor`, `Tab.selectedBackgroundColor`, `Tab.foregroundColor`, `Tab.selectedForegroundColor` and `Tab.outlineColor` are now instance of `WidgetStateProperty<Color>`. ([#1214](https://github.com/bdlukaa/fluent_ui/issues/1214))
+  Before:
+  ```dart
+  Tab(
+    backgroundColor: FluentTheme.of(context).inactiveColor,
+    selectedBackgroundColor: Colors.blue,
+    foregroundColor: Colors.white,
+    selectedForegroundColor: Colors.black,
+    outlineColor: Colors.grey,
+  ),
+  ```
+
+  After:
+  ```dart
+  Tab(
+    backgroundColor: WidgetStateProperty.resolveWith((_) {
+      return FluentTheme.of(context).inactiveColor;
+    }),
+    selectedBackgroundColor: WidgetStateProperty.all(Colors.blue),
+    foregroundColor: WidgetStateProperty.all(Colors.white),
+    selectedForegroundColor: WidgetStateProperty.all(Colors.black),
+    outlineColor: WidgetStateProperty.all(Colors.grey),
+  ),
+  ```
+
+  This allows the `Tab` to be customized based on its state, such as `hovered`, `pressed`, `focused`, and `disabled`, and to be affected by theme changes.
 
 ## 4.11.3
 
