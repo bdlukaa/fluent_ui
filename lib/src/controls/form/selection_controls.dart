@@ -132,6 +132,8 @@ class FluentTextSelectionToolbar extends StatelessWidget {
             item.type == ContextMenuButtonType.custom && item.label == 'Undo'))
         .followedBy(buttonItems
             .where((item) => item.type == ContextMenuButtonType.selectAll))
+        .followedBy(buttonItems
+            .where((item) => item.type == ContextMenuButtonType.custom))
         .toList();
 
     return Padding(
