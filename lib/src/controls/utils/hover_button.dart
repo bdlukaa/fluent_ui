@@ -1,5 +1,4 @@
 import 'package:fluent_ui/fluent_ui.dart';
-
 import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
 
@@ -74,14 +73,14 @@ class HoverButton extends StatefulWidget {
   /// {@endtemplate}
   final MouseCursor? cursor;
 
-  final VoidCallback? onLongPress;
-  final VoidCallback? onLongPressStart;
-  final VoidCallback? onLongPressEnd;
+  final GestureLongPressCallback? onLongPress;
+  final GestureLongPressStartCallback? onLongPressStart;
+  final GestureLongPressEndCallback? onLongPressEnd;
 
   final VoidCallback? onPressed;
-  final VoidCallback? onTapUp;
-  final VoidCallback? onTapDown;
-  final VoidCallback? onTapCancel;
+  final GestureTapUpCallback? onTapUp;
+  final GestureTapDownCallback? onTapDown;
+  final GestureTapCancelCallback? onTapCancel;
 
   final GestureDragStartCallback? onHorizontalDragStart;
   final GestureDragUpdateCallback? onHorizontalDragUpdate;
@@ -101,7 +100,7 @@ class HoverButton extends StatefulWidget {
   final Map<Type, GestureRecognizerFactory> gestures;
 
   /// When the button is focused and is actioned, with either the enter or space
-  /// keys
+  /// keys.
   ///
   /// [focusEnabled] must not be `false` for this to work
   final VoidCallback? onFocusTap;
@@ -134,6 +133,7 @@ class HoverButton extends StatefulWidget {
   /// {@macro flutter.widgets.Focus.autofocus}
   final bool autofocus;
 
+  /// Called when the button focus changes.
   final ValueChanged<bool>? onFocusChange;
 
   /// Whether actions are enabled
@@ -276,14 +276,14 @@ class _HoverButtonState extends State<HoverButton> {
     Widget w = GestureDetector(
       behavior: widget.hitTestBehavior,
       onTap: enabled ? widget.onPressed : null,
-      onTapDown: (_) {
+      onTapDown: (d) {
         if (!enabled) return;
         if (mounted) setState(() => _pressing = true);
-        widget.onTapDown?.call();
+        widget.onTapDown?.call(d);
       },
-      onTapUp: (_) async {
+      onTapUp: (d) async {
         if (!enabled) return;
-        widget.onTapUp?.call();
+        widget.onTapUp?.call(d);
         await Future.delayed(const Duration(milliseconds: 100));
         if (mounted) setState(() => _pressing = false);
       },
@@ -294,16 +294,16 @@ class _HoverButtonState extends State<HoverButton> {
       },
       onLongPress: enabled ? widget.onLongPress : null,
       onLongPressStart: widget.onLongPressStart != null
-          ? (_) {
+          ? (d) {
               if (!enabled) return;
-              widget.onLongPressStart?.call();
+              widget.onLongPressStart?.call(d);
               if (mounted) setState(() => _pressing = true);
             }
           : null,
       onLongPressEnd: widget.onLongPressEnd != null
-          ? (_) {
+          ? (d) {
               if (!enabled) return;
-              widget.onLongPressEnd?.call();
+              widget.onLongPressEnd?.call(d);
               if (mounted) setState(() => _pressing = false);
             }
           : null,
