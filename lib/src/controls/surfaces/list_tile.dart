@@ -257,7 +257,7 @@ class ListTile extends StatelessWidget {
 
           return ButtonThemeData.uncheckedInputColor(
             theme,
-            selected ? {WidgetState.hovered} : states,
+            selected ? {...states, WidgetState.hovered} : states,
             transparentWhenNone: true,
             transparentWhenDisabled: true,
           );
@@ -322,11 +322,13 @@ class ListTile extends StatelessWidget {
                         end: 12.0,
                       ),
                       child: IgnorePointer(
-                        child: Checkbox(
-                          checked: selected,
-                          onChanged: (v) {
-                            onSelectionChange?.call(v ?? false);
-                          },
+                        child: ExcludeFocus(
+                          child: Checkbox(
+                            checked: selected,
+                            onChanged: (v) {
+                              onSelectionChange?.call(v ?? false);
+                            },
+                          ),
                         ),
                       ),
                     )

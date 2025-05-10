@@ -6,6 +6,8 @@
 - fix: `TreeView`'s focus always starts at first or last item ([#834](https://github.com/bdlukaa/fluent_ui/issues/834), [#1195](https://github.com/bdlukaa/fluent_ui/pull/1195))
 - fix: `InfoBar` no longer throw error when automatically closing ([#955](https://github.com/bdlukaa/fluent_ui/issues/955), [#1215](https://github.com/bdlukaa/fluent_ui/pull/1215))
 - fix: Properly disable date and time pickers when `onChanged` is null ([#1210](https://github.com/bdlukaa/fluent_ui/issues/1210))
+- fix: `MenuFlyoutSubItem` no longer errors while building when `FlyoutPlacementMode.auto` is used ([#1206](https://github.com/bdlukaa/fluent_ui/issues/1206), [#1191](https://github.com/bdlukaa/fluent_ui/pull/1191))
+- fix: The checkbox inside `ListTile.selectable` should not have its own focus ([#1144](https://github.com/bdlukaa/fluent_ui/issues/1144))
 
 ## 4.11.3
 
@@ -19,7 +21,6 @@
 ## 4.11.2
 
 - fix: Use correct scaffold background color when view is provided
-- fix: `MenuFlyoutSubItem` no longer errors while building when `FlyoutPlacementMode.auto` is used
 
 ## 4.11.1
 
