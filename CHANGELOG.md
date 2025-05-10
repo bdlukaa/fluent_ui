@@ -14,6 +14,7 @@
 ## 4.11.2
 
 - fix: Use correct scaffold background color when view is provided
+- fix: The focus should start at the tree item that was pressed last when using the keyboard
 
 ## 4.11.1
 
