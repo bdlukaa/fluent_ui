@@ -1,9 +1,13 @@
-## 4.11.4
+## [next]
+
 - feat: Added Tagalog localization support ([#1207](https://github.com/bdlukaa/fluent_ui/pull/1207))
+- feat: Added `ListTile.decorationMargin` parameter
+- fix: Custom `ContextMenuButtonItem` are correctly displayed on text selection control ([#1212](https://github.com/bdlukaa/fluent_ui/pull/1212))
+- fix: `TreeView`'s focus always starts at first or last item ([#834](https://github.com/bdlukaa/fluent_ui/issues/834), [#1195](https://github.com/bdlukaa/fluent_ui/pull/1195))
+- fix: `InfoBar` no longer throw error when automatically closing ([#955](https://github.com/bdlukaa/fluent_ui/issues/955), [#1215](https://github.com/bdlukaa/fluent_ui/pull/1215))
 
 ## 4.11.3
 
-- feat: Added `ListTile.decorationMargin` parameter
 - fix: `TabView.newTabIcon` is now typed as a `Widget` ([#1187](https://github.com/bdlukaa/fluent_ui/issues/1187))
 - feat: `Expanded.enabled` ([#1188](https://github.com/bdlukaa/fluent_ui/issues/1188))
 - fix: Correctly apply `TextBox.unfocusedColor` on unfocused highlight border ([#1192](https://github.com/bdlukaa/fluent_ui/issues/1192))
@@ -14,7 +18,6 @@
 ## 4.11.2
 
 - fix: Use correct scaffold background color when view is provided
-- fix: The focus should start at the tree item that was pressed last when using the keyboard
 
 ## 4.11.1
 
