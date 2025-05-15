@@ -1,3 +1,7 @@
+## [next]
+
+- fix: Context Menu was not available on TextFormBox ([#1216](https://github.com/bdlukaa/fluent_ui/pull/1216), [#1219](https://github.com/bdlukaa/fluent_ui/pull/1219))
+
 ## 4.11.4
 
 - feat: Added Tagalog localization support ([#1207](https://github.com/bdlukaa/fluent_ui/pull/1207))
