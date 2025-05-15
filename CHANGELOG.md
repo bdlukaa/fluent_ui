@@ -1,3 +1,7 @@
+## [next]
+
+- fix: Undo entry was doubled in EditableText context menu ([#1218](https://github.com/bdlukaa/fluent_ui/pull/1218))
+
 ## 4.11.4
 
 - feat: Added Tagalog localization support ([#1207](https://github.com/bdlukaa/fluent_ui/pull/1207))
