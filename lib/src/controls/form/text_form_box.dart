@@ -129,7 +129,8 @@ class TextFormBox extends ControllableFormBox {
     Color? highlightColor,
     Color? errorHighlightColor,
     Color? unfocusedColor,
-    EditableTextContextMenuBuilder? contextMenuBuilder,
+    EditableTextContextMenuBuilder? contextMenuBuilder =
+        TextBox.defaultContextMenuBuilder,
     TextMagnifierConfiguration? magnifierConfiguration,
     SpellCheckConfiguration? spellCheckConfiguration,
   })  : assert(initialValue == null || controller == null),

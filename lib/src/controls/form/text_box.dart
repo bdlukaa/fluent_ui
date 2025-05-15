@@ -198,7 +198,7 @@ class TextBox extends StatefulWidget {
     this.stylusHandwritingEnabled =
         EditableText.defaultStylusHandwritingEnabled,
     this.enableIMEPersonalizedLearning = true,
-    this.contextMenuBuilder = _defaultContextMenuBuilder,
+    this.contextMenuBuilder = defaultContextMenuBuilder,
     this.spellCheckConfiguration,
     this.magnifierConfiguration,
   })  : assert(obscuringCharacter.length == 1),
@@ -560,7 +560,7 @@ class TextBox extends StatefulWidget {
   ///  * [AdaptiveTextSelectionToolbar], which is built by default.
   final EditableTextContextMenuBuilder? contextMenuBuilder;
 
-  static Widget _defaultContextMenuBuilder(
+  static Widget defaultContextMenuBuilder(
       BuildContext context, EditableTextState editableTextState) {
     final undoController = editableTextState.widget.undoController;
     return FluentTextSelectionToolbar(
