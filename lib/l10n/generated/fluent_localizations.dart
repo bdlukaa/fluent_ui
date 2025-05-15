@@ -170,7 +170,7 @@ abstract class FluentLocalizations {
     Locale('uz'),
     Locale('vi'),
     Locale('zh'),
-    Locale.fromSubtags(languageCode: 'zh', scriptCode: 'Hant'),
+    Locale.fromSubtags(languageCode: 'zh', scriptCode: 'Hant')
   ];
 
   /// The tooltip for the back button on [NavigationAppBar].
@@ -1285,8 +1285,7 @@ class _FluentLocalizationsDelegate
   @override
   Future<FluentLocalizations> load(Locale locale) {
     return SynchronousFuture<FluentLocalizations>(
-      lookupFluentLocalizations(locale),
-    );
+        lookupFluentLocalizations(locale));
   }
 
   @override
@@ -1329,7 +1328,7 @@ class _FluentLocalizationsDelegate
         'ur',
         'uz',
         'vi',
-        'zh',
+        'zh'
       ].contains(locale.languageCode);
 
   @override
@@ -1432,9 +1431,8 @@ FluentLocalizations lookupFluentLocalizations(Locale locale) {
   }
 
   throw FlutterError(
-    'FluentLocalizations.delegate failed to load unsupported locale "$locale". This is likely '
-    'an issue with the localizations generation tool. Please file an issue '
-    'on GitHub with a reproducible sample app and the gen-l10n configuration '
-    'that was used.',
-  );
+      'FluentLocalizations.delegate failed to load unsupported locale "$locale". This is likely '
+      'an issue with the localizations generation tool. Please file an issue '
+      'on GitHub with a reproducible sample app and the gen-l10n configuration '
+      'that was used.');
 }

@@ -1,3 +1,7 @@
+## [next]
+
+- fix: add missing translations for French ([#1217](https://github.com/bdlukaa/fluent_ui/pull/1217))
+
 ## 4.11.4
 
 - feat: Added Tagalog localization support ([#1207](https://github.com/bdlukaa/fluent_ui/pull/1207))
