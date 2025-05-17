@@ -1,6 +1,7 @@
 ## [next]
 
-- fix: add missing translations for French ([#1217](https://github.com/bdlukaa/fluent_ui/pull/1217))
+- fix: Add missing translations for French ([#1217](https://github.com/bdlukaa/fluent_ui/pull/1217))
+- fix: Add missing translations for Spanish
 - fix: Context Menu was not available on TextFormBox ([#1216](https://github.com/bdlukaa/fluent_ui/pull/1216), [#1219](https://github.com/bdlukaa/fluent_ui/pull/1219))
 - fix: Undo entry was doubled in EditableText context menu ([#1218](https://github.com/bdlukaa/fluent_ui/pull/1218))
 
