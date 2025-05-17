@@ -214,6 +214,7 @@ class _HomePageState extends State<HomePage> with PageMixin {
             ),
           ],
         ),
+        const SizedBox(height: 22.0),
         Text('CONTRIBUTORS', style: theme.typography.bodyStrong),
         Wrap(
           spacing: 10.0,
