@@ -223,8 +223,12 @@ class _HomePageState extends State<HomePage> with PageMixin {
             return contributor.build();
           }).toList(),
         ),
-        subtitle(content: const Text('Equivalents with the material library')),
-        const MaterialEquivalents(),
+        subtitle(
+          content: const Text(
+            'Equivalents with the material and cupertino libraries',
+          ),
+        ),
+        const UIEquivalents(),
       ],
     );
   }
