@@ -1,0 +1,16 @@
+{
+  "version": 3,
+  "engine": "v2",
+  "file": "main.dart.js_20.part.js",
+  "sourceRoot": "",
+  "sources": [],
+  "names": [],
+  "mappings": "A",
+  "x_org_dartlang_dart2js": {
+    "minified_names": {
+      "global": "",
+      "instance": ""
+    },
+    "frames": ""
+  }
+}
