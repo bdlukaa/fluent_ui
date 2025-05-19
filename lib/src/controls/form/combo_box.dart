@@ -1317,10 +1317,14 @@ class ComboBoxState<T> extends State<ComboBox<T>> {
                 color: theme.resources.textFillColorDisabled,
               ),
         child: Container(
-          padding: padding.resolve(Directionality.of(context)),
+          // padding: padding.resolve(Directionality.of(context)), //原版
+          padding: EdgeInsetsDirectional.only(
+            start: 11.0,
+            end: 8.0,
+          ),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            mainAxisSize: MainAxisSize.min,
+            // mainAxisSize: MainAxisSize.min,  //原版
             children: <Widget>[
               if (widget.isExpanded)
                 Expanded(child: innerItemsWidget)
