@@ -1,4 +1,4 @@
-## 4.12.[next]
+## 4.12.0
 
 - feat: Support Flutter 3.32
 - feat: Added `TextBox.onTapUpOutside`, `TextBox.forceLine`, `TextBox.mouseCursor`, `TextBox.onAppPrivateCommand`, `TextBox.onSelectionHandleTapped`, `TextBox.scrollBehavior`, `TextBox.textScaler`, `TextBox.textHeightBehavior`, `TextBox.textWidthBasis`.
