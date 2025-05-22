@@ -1,3 +1,7 @@
+## 4.12.[next]
+
+- feat: Support Flutter 3.32
+
 ## 4.11.5
 
 - fix: Add missing translations for French ([#1217](https://github.com/bdlukaa/fluent_ui/pull/1217))
