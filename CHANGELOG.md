@@ -1,6 +1,8 @@
 ## 4.12.[next]
 
 - feat: Support Flutter 3.32
+- feat: Added `TextBox.onTapUpOutside`, `TextBox.forceLine`, `TextBox.mouseCursor`, `TextBox.onAppPrivateCommand`, `TextBox.onSelectionHandleTapped`, `TextBox.scrollBehavior`, `TextBox.textScaler`, `TextBox.textHeightBehavior`, `TextBox.textWidthBasis`.
+- feat: Removed `TextBox.clearButtonMode` ([#1225](https://github.com/bdlukaa/fluent_ui/issues/1225))   
 
 ## 4.11.5
 
