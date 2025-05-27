@@ -701,7 +701,7 @@ class NumberBoxState<T extends num> extends State<NumberBox<T>> {
       value = num.tryParse(controller.text);
       if (value == null && widget.allowExpressions) {
         try {
-          value = Parser()
+          value = ShuntingYardParser()
               .parse(controller.text)
               .evaluate(EvaluationType.REAL, ContextModel());
           // If the value is infinite or not a number, we reset the value with

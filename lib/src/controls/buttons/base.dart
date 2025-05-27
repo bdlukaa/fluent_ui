@@ -35,7 +35,7 @@ abstract class BaseButton extends StatefulWidget {
   /// See also:
   ///
   ///  * [enabled], which is true if the button is enabled.
-  final VoidCallback? onPressed;
+  final GestureTapCallback? onPressed;
 
   /// Called when the button is pressed.
   ///
@@ -45,7 +45,7 @@ abstract class BaseButton extends StatefulWidget {
   /// See also:
   ///
   ///  * [enabled], which is true if the button is enabled.
-  final VoidCallback? onTapDown;
+  final GestureTapDownCallback? onTapDown;
 
   /// Called when the button is released.
   ///
@@ -55,7 +55,7 @@ abstract class BaseButton extends StatefulWidget {
   /// See also:
   ///
   ///  * [enabled], which is true if the button is enabled.
-  final VoidCallback? onTapUp;
+  final GestureTapUpCallback? onTapUp;
 
   /// Called when the button is long-pressed.
   ///
@@ -65,7 +65,7 @@ abstract class BaseButton extends StatefulWidget {
   /// See also:
   ///
   ///  * [enabled], which is true if the button is enabled.
-  final VoidCallback? onLongPress;
+  final GestureLongPressCallback? onLongPress;
 
   /// Customizes this button's appearance.
   final ButtonStyle? style;

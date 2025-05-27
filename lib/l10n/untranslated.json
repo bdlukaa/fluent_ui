@@ -188,21 +188,7 @@
     "seeLess"
   ],
 
-  "es": [
-    "undoActionLabel",
-    "undoActionTooltip",
-    "seeMore",
-    "seeLess"
-  ],
-
   "fa": [
-    "undoActionLabel",
-    "undoActionTooltip",
-    "seeMore",
-    "seeLess"
-  ],
-
-  "fr": [
     "undoActionLabel",
     "undoActionTooltip",
     "seeMore",

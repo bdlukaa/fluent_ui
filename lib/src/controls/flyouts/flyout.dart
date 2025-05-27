@@ -917,7 +917,9 @@ class FlyoutController with ChangeNotifier, WidgetsBindingObserver {
         await _currentNavigator!.push<T>(_route! as PageRouteBuilder<T>);
 
     _route = _currentNavigator = null;
-    notifyListeners();
+    if (context.mounted) {
+      notifyListeners();
+    }
 
     return result;
   }
@@ -1088,50 +1090,49 @@ class _FlyoutPageState extends State<_FlyoutPage> {
                 builder: (context, setState) {
                   FlyoutPlacementMode realPlacementMode = widget.placementMode;
                   if (widget.placementMode == FlyoutPlacementMode.auto) {
-                    if (_autoMode == null) {
-                      return Visibility(
-                        visible: false,
-                        maintainSize: true,
-                        maintainAnimation: true,
-                        maintainState: true,
-                        child: widget.builder(context),
-                      );
-                    } else {
+                    if (_autoMode != null) {
                       realPlacementMode = _autoMode!;
                     }
                   } else {
                     realPlacementMode = widget.placementMode;
                   }
 
-                  return Flyout(
-                    rootFlyout: widget.flyoutKey,
-                    additionalOffset: widget.additionalOffset,
-                    margin: widget.margin,
-                    transitionDuration: widget.transitionDuration!,
-                    reverseTransitionDuration:
-                        widget.reverseTransitionDuration!,
-                    root: widget.navigator,
-                    menuKey: null,
-                    transitionBuilder: widget.transitionBuilder,
-                    placementMode: realPlacementMode,
-                    builder: (context) {
-                      Widget flyout = Padding(
-                        key: widget.flyoutKey,
-                        padding: realPlacementMode._getAdditionalOffsetPosition(
-                          widget.position == null
-                              ? widget.additionalOffset
-                              : 0.0,
-                        ),
-                        child: widget.builder(context),
-                      );
+                  return Visibility(
+                    visible: realPlacementMode != FlyoutPlacementMode.auto,
+                    maintainSize: true,
+                    maintainAnimation: true,
+                    maintainState: true,
+                    child: Flyout(
+                      rootFlyout: widget.flyoutKey,
+                      additionalOffset: widget.additionalOffset,
+                      margin: widget.margin,
+                      transitionDuration: widget.transitionDuration!,
+                      reverseTransitionDuration:
+                          widget.reverseTransitionDuration!,
+                      root: widget.navigator,
+                      menuKey: null,
+                      transitionBuilder: widget.transitionBuilder,
+                      placementMode: realPlacementMode,
+                      builder: (context) {
+                        Widget flyout = Padding(
+                          key: widget.flyoutKey,
+                          padding:
+                              realPlacementMode._getAdditionalOffsetPosition(
+                            widget.position == null
+                                ? widget.additionalOffset
+                                : 0.0,
+                          ),
+                          child: widget.builder(context),
+                        );
 
-                      return widget.transitionBuilder(
-                        context,
-                        widget.animation,
-                        realPlacementMode,
-                        flyout,
-                      );
-                    },
+                        return widget.transitionBuilder(
+                          context,
+                          widget.animation,
+                          realPlacementMode,
+                          flyout,
+                        );
+                      },
+                    ),
                   );
                 },
               ),

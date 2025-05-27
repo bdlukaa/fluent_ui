@@ -10,11 +10,6 @@ const sponsors = [
     name: 'Sander in \'t Hout',
   ),
   Person(
-    username: 'phorcys420',
-    imageUrl: 'https://avatars.githubusercontent.com/u/57866459?v=4',
-    name: 'Phorcys',
-  ),
-  Person(
     username: 'whiplashoo',
     imageUrl: 'https://avatars.githubusercontent.com/u/9117427?v=4',
     name: 'Minas Giannekas',
@@ -28,19 +23,24 @@ const sponsors = [
 
 const contributors = [
   Person(
+    username: 'bdlukaa',
+    imageUrl: 'https://avatars.githubusercontent.com/u/45696119?v=4',
+    name: 'Bruno D\'Luka',
+  ),
+  Person(
     username: 'WinXaito',
     imageUrl: 'https://avatars.githubusercontent.com/u/8223773?v=4',
     name: 'Kevin Vuilleumier',
   ),
   Person(
-    username: 'henry2man',
-    imageUrl: 'https://avatars.githubusercontent.com/u/4610108?v=4',
-    name: 'Enrique Cardona',
-  ),
-  Person(
     username: 'klondikedragon',
     imageUrl: 'https://avatars.githubusercontent.com/u/88254524?v=4',
     name: 'klondikedragon',
+  ),
+  Person(
+    username: 'henry2man',
+    imageUrl: 'https://avatars.githubusercontent.com/u/4610108?v=4',
+    name: 'Enrique Cardona',
   ),
 ];
 

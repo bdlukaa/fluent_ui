@@ -346,14 +346,14 @@ class _PasswordBoxState extends State<PasswordBox> {
                 // todo: half eye icon, like WinUI3 ?
                 onPressed: null,
                 onTapDown: widget.enabled
-                    ? () {
+                    ? (_) {
                         setState(() {
                           peek = true;
                         });
                       }
                     : null,
                 onTapUp: widget.enabled
-                    ? () {
+                    ? (_) {
                         setState(() {
                           peek = false;
                         });

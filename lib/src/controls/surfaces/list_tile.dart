@@ -13,6 +13,11 @@ const kDefaultListTileShape = RoundedRectangleBorder(
   borderRadius: BorderRadius.all(Radius.circular(4.0)),
 );
 
+const kDefaultListTileMargin = EdgeInsetsDirectional.symmetric(
+  horizontal: 4.0,
+  vertical: 2.0,
+);
+
 enum ListTileSelectionMode {
   none,
   single,
@@ -44,6 +49,7 @@ class ListTile extends StatelessWidget {
     this.cursor,
     this.contentAlignment = CrossAxisAlignment.center,
     this.contentPadding = kDefaultListTilePadding,
+    this.margin = kDefaultListTileMargin,
   })  : assert(
           subtitle != null ? title != null : true,
           'To have a subtitle, there must be a title',
@@ -71,6 +77,7 @@ class ListTile extends StatelessWidget {
     this.cursor,
     this.contentAlignment = CrossAxisAlignment.center,
     this.contentPadding = kDefaultListTilePadding,
+    this.margin = kDefaultListTileMargin,
   }) : assert(
           subtitle != null ? title != null : true,
           'To have a subtitle, there must be a title',
@@ -168,6 +175,11 @@ class ListTile extends StatelessWidget {
   /// Defaults to [kDefaultListTilePadding]
   final EdgeInsetsGeometry contentPadding;
 
+  /// Padding applied between this tile's [FocusBorder] and outer decoration.
+  ///
+  /// Defaults to [kDefaultListTileMargin].
+  final EdgeInsetsGeometry? margin;
+
   @override
   void debugFillProperties(DiagnosticPropertiesBuilder properties) {
     super.debugFillProperties(properties);
@@ -203,6 +215,11 @@ class ListTile extends StatelessWidget {
         'contentPadding',
         contentPadding,
         defaultValue: kDefaultListTilePadding,
+      ))
+      ..add(DiagnosticsProperty<EdgeInsetsGeometry?>(
+        'margin',
+        margin,
+        defaultValue: kDefaultListTileMargin,
       ));
   }
 
@@ -240,7 +257,7 @@ class ListTile extends StatelessWidget {
 
           return ButtonThemeData.uncheckedInputColor(
             theme,
-            selected ? {WidgetState.hovered} : states,
+            selected ? {...states, WidgetState.hovered} : states,
             transparentWhenNone: true,
             transparentWhenDisabled: true,
           );
@@ -292,8 +309,7 @@ class ListTile extends StatelessWidget {
                 minHeight: kOneLineTileHeight,
                 minWidth: 88.0,
               ),
-              margin:
-                  const EdgeInsets.symmetric(horizontal: 4.0, vertical: 2.0),
+              margin: margin,
               child: LayoutBuilder(builder: (context, constraints) {
                 final tileHeight = constraints.minHeight;
                 return Row(children: [
@@ -306,11 +322,13 @@ class ListTile extends StatelessWidget {
                         end: 12.0,
                       ),
                       child: IgnorePointer(
-                        child: Checkbox(
-                          checked: selected,
-                          onChanged: (v) {
-                            onSelectionChange?.call(v ?? false);
-                          },
+                        child: ExcludeFocus(
+                          child: Checkbox(
+                            checked: selected,
+                            onChanged: (v) {
+                              onSelectionChange?.call(v ?? false);
+                            },
+                          ),
                         ),
                       ),
                     )

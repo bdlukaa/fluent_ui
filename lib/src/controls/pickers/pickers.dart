@@ -441,3 +441,57 @@ class PickerState extends State<Picker> {
     );
   }
 }
+
+class PickerDialog extends StatelessWidget {
+  final Widget child;
+
+  final VoidCallback onSelect;
+  final VoidCallback onDismiss;
+
+  const PickerDialog({
+    super.key,
+    required this.child,
+    required this.onSelect,
+    required this.onDismiss,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    assert(debugCheckHasFluentTheme(context));
+    final theme = FluentTheme.of(context);
+
+    return Focus(
+      autofocus: true,
+      onKeyEvent: (node, event) {
+        if (event is KeyDownEvent) {
+          switch (event.logicalKey) {
+            case LogicalKeyboardKey.escape:
+              onDismiss();
+              return KeyEventResult.handled;
+            case LogicalKeyboardKey.enter:
+            case LogicalKeyboardKey.numpadEnter:
+            case LogicalKeyboardKey.space:
+              onSelect();
+              return KeyEventResult.handled;
+          }
+        }
+
+        return KeyEventResult.ignored;
+      },
+      child: Container(
+        decoration: ShapeDecoration(
+          color: theme.menuColor,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(4.0),
+            side: BorderSide(
+              color: theme.resources.surfaceStrokeColorFlyout,
+              width: 0.6,
+            ),
+          ),
+        ),
+        child: child,
+      ),
+    );
+  }
+}
+
