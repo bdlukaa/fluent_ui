@@ -45,7 +45,7 @@
 
 ### Content
 
-- [Motivation and ](#motivation-and-maintenance)
+- [Motivation and maintenance](#motivation-and-maintenance)
 - [Installation](#installation)
   - [Badge](#badge)
   - [Accent color](#accent-color)
