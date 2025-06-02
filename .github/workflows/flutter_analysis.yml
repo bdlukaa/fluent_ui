@@ -22,7 +22,7 @@ jobs:
 
       - name: Check formatting (excluding lib/l10n)
         run: |
-          find . -type f -name "*.dart" ! -path "./lib/l10n/*" -print0 | xargs -0 dart format --set-exit-if-changed .
+          find . -type f -name "*.dart" ! -path "./lib/l10n/**" -print0 | xargs -0 dart format --set-exit-if-changed .
 
       - name: Run analysis
         run: flutter analyze
