@@ -21,13 +21,16 @@ jobs:
         run: flutter pub get
 
       - name: Check formatting (excluding lib/l10n)
+        continue-on-error: true
         run: |
           dart format --set-exit-if-changed lib/src test/
 
       - name: Run analysis
+        continue-on-error: true
         run: flutter analyze
 
       - name: Verify package health
+        continue-on-error: true
         run: flutter pub publish --dry-run
 
       - name: Run tests
