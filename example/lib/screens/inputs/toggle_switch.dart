@@ -38,7 +38,7 @@ class _ToggleSwitchPageState extends State<ToggleSwitchPage> with PageMixin {
 
 ToggleSwitch(
   checked: checked,
-  onPressed: disabled ? null : (v) => setState(() => checked = v),
+  onChanged: disabled ? null : (v) => setState(() => checked = v),
 )''',
           child: Align(
             alignment: AlignmentDirectional.centerStart,
@@ -58,7 +58,7 @@ ToggleSwitch(
 
 ToggleSwitch(
   checked: checked,
-  onPressed: disabled ? null : (v) => setState(() => checked = v),
+  onChanged: disabled ? null : (v) => setState(() => checked = v),
   content: Text(checked ? 'Working' : 'Do work'),
 )''',
           child: Row(children: [
