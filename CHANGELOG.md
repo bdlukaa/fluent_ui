@@ -1,3 +1,7 @@
+## [next]
+
+- fix: `ToggleSwitch` outdated usage in the demo.
+
 ## 4.12.0
 
 - feat: Support Flutter 3.32
