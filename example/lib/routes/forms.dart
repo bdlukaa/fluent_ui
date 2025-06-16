@@ -1,4 +1,5 @@
 export '../screens/forms/auto_suggest_box.dart';
+export '../screens/forms/calendar_view.dart';
 export '../screens/forms/combobox.dart';
 export '../screens/forms/number_box.dart';
 export '../screens/forms/password_box.dart';
