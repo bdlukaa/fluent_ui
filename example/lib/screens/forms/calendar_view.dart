@@ -30,17 +30,12 @@ class _CalendarViewPageState extends State<CalendarViewPage> with PageMixin {
       ),
       children: [
         const Text(
-          'Use a DateRangePicker to let users select a start and end date in your '
-          'app, for example to book a hotel stay or plan a trip. The DateRangePicker '
-          'displays two date fields—start and end—each with controls for month, '
-          'date, and year. These controls are intuitive and offer styling and '
-          'configuration options to match your app’s design.\n\nThe entry point '
-          'shows the currently selected range, and when the user taps or clicks '
-          'it, a dialog appears containing two DatePickers —one for selecting the '
-          'start date and another for the end date. This dialog provides a focused'
-          ', modal experience where users can easily choose a date range without '
-          'distractions. Once the range is selected, the dialog closes and the '
-          'chosen dates are reflected in the entry fields.',
+          'Use a CalendarView to let users select one or more dates directly from a calendar grid. '
+          'CalendarView displays a monthly calendar, allowing users to tap or click on specific days to select them. '
+          'You can configure the selection mode to allow single, multiple, or range selections, depending on your app’s needs.\n\n'
+          'The calendar highlights the selected date(s) and can be customized to indicate today’s date or out-of-scope dates. '
+          'CalendarView provides an intuitive and familiar way for users to pick dates, making it ideal for scheduling, booking, or planning features. '
+          'Selections are updated instantly as users interact with the calendar, and you can respond to changes through callbacks in your app.',
         ),
         subtitle(content: const Text('Default CalendarView')),
         CardHighlight(
