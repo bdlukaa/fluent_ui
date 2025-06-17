@@ -3,26 +3,87 @@ import 'package:fluent_ui/src/controls/pickers/pickers.dart';
 import 'package:intl/intl.dart';
 import 'package:recase/recase.dart';
 
-enum CalendarViewSelectionMode { none, single, range, multiple }
+/// Defines the selection modes available for the [CalendarView].
+enum CalendarViewSelectionMode {
+  /// No selection is allowed.
+  none,
 
-enum CalendarViewDisplayMode { month, year, decade }
+  /// Only a single date can be selected.
+  single,
 
+  /// A range of dates can be selected.
+  range,
+
+  /// Multiple, non-contiguous dates can be selected.
+  multiple,
+}
+
+/// Defines the display modes for the [CalendarView].
+enum CalendarViewDisplayMode {
+  /// Displays the calendar in month view.
+  month,
+
+  /// Displays the calendar in year view.
+  year,
+
+  /// Displays the calendar in decade view.
+  decade,
+}
+
+/// A customizable calendar widget that allows users to select dates in various modes.
+///
+/// The [CalendarView] supports single, range, and multiple date selection modes,
+/// as well as different display modes (month, year, decade). It provides options
+/// for customizing appearance, selection behavior, and localization.
 class CalendarView extends StatefulWidget {
+  /// The initially selected start date.
   final DateTime? initialStart;
+
+  /// The initially selected end date (used in range selection).
   final DateTime? initialEnd;
+
+  /// Callback invoked when the selection changes.
+  /// - For [CalendarViewSelectionMode.single], only [start] is provided (the selected date).
+  /// - For [CalendarViewSelectionMode.range], both [start] and [end] are provided (the selected range).
+  /// - For [CalendarViewSelectionMode.multiple], [multiple] contains the list of selected dates.
+  /// - For [CalendarViewSelectionMode.none], the callback is not called.
   final void Function(DateTime? start,
       [DateTime? end, List<DateTime>? multiple])? onSelectionChanged;
+
+  /// The minimum selectable date.
   final DateTime? minDate;
+
+  /// The maximum selectable date.
   final DateTime? maxDate;
+
+  /// The color used to highlight selected dates.
   final Color? selectionColor;
+
+  /// The decoration for the calendar container.
   final BoxDecoration? decoration;
+
+  /// The shape of each day cell.
   final WidgetStateProperty<ShapeBorder?>? dayShape;
+
+  /// The initial display mode (month, year, or decade).
   final CalendarViewDisplayMode displayMode;
+
+  /// The selection mode (none, single, range, multiple).
   final CalendarViewSelectionMode selectionMode;
+
+  /// Whether to highlight today's date.
   final bool isTodayHighlighted;
+
+  /// Number of weeks displayed per view (between 4 and 8).
   final int weeksPerView;
+
+  /// Whether to enable selection of out-of-scope dates.
   final bool isOutOfScopeEnabled;
+
+  /// The text style for the calendar header.
   final TextStyle? headerStyle;
+
+  /// The locale used for date formatting and localization.
   final Locale? locale;
 
   const CalendarView({
@@ -439,6 +500,15 @@ class _CalendarViewState extends State<CalendarView> {
   }
 }
 
+/// A stateless widget that represents a single calendar item
+/// (such as a month or a year) in a calendar view.
+///
+/// The [_CalendarItem] displays its [content] inside a styled [Button],
+/// supporting customization for shape, fill color, and disabled state.
+/// It visually distinguishes between filled, hovered, and disabled states,
+/// and triggers [onTapped] when pressed (unless disabled).
+///
+/// Used internally by the calendar picker controls.
 class _CalendarItem extends StatelessWidget {
   const _CalendarItem({
     required this.content,
