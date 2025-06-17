@@ -22,7 +22,7 @@ class CalendarView extends StatefulWidget {
   final bool isTodayHighlighted;
   final int weeksPerView;
   final bool isOutOfScopeEnabled;
-  final TextStyle? monthLabelStyle;
+  final TextStyle? headerStyle;
   final Locale? locale;
 
   const CalendarView({
@@ -38,7 +38,7 @@ class CalendarView extends StatefulWidget {
     this.selectionColor,
     this.isTodayHighlighted = true,
     this.decoration,
-    this.monthLabelStyle,
+    this.headerStyle,
     this.weeksPerView = 6,
     this.isOutOfScopeEnabled = false,
     this.locale,
@@ -56,6 +56,7 @@ class _CalendarViewState extends State<CalendarView> {
   late final DateTime _anchorMonth;
   late int _currentPage;
   late DateTime _visibleMonth;
+  late CalendarViewDisplayMode _displayMode;
   DateTime? selectedStart;
   DateTime? selectedEnd;
   List<DateTime> selectedMultiple = [];
@@ -70,13 +71,10 @@ class _CalendarViewState extends State<CalendarView> {
         ? widget.initialEnd
         : null;
     if (widget.selectionMode == CalendarViewSelectionMode.multiple) {
-      if (selectedStart != null) {
-        selectedMultiple.add(selectedStart!);
-      }
-      if (selectedEnd != null) {
-        selectedMultiple.add(selectedEnd!);
-      }
+      if (selectedStart != null) selectedMultiple.add(selectedStart!);
+      if (selectedEnd != null) selectedMultiple.add(selectedEnd!);
     }
+    _displayMode = widget.displayMode;
     _anchorMonth = DateTime(DateTime.now().year, DateTime.now().month, 1);
     _currentPage = _initialPage;
     _visibleMonth = _monthForPage(_currentPage);
@@ -90,17 +88,17 @@ class _CalendarViewState extends State<CalendarView> {
   }
 
   DateTime _monthForPage(int page) {
-    // page 0 => 100 years before _anchorMonth
-    // page _initialPage => _anchorMonth
-    // page _monthsToShow-1 => 100 years after _anchorMonth
     return DateTime(
-        _anchorMonth.year, _anchorMonth.month + (page - _initialPage), 1);
+      _anchorMonth.year,
+      _anchorMonth.month + (page - _initialPage),
+      1,
+    );
   }
 
   DateTime _getFirstVisibleDayOfWeeksView(DateTime baseMonth) {
     final firstOfMonth = DateTime(baseMonth.year, baseMonth.month, 1);
     final weekday = firstOfMonth.weekday;
-    return firstOfMonth.subtract(Duration(days: weekday));
+    return firstOfMonth.subtract(Duration(days: weekday - 1));
   }
 
   bool _isInRange(DateTime day) {
@@ -144,7 +142,6 @@ class _CalendarViewState extends State<CalendarView> {
         } else {
           selectedMultiple.add(day);
         }
-        // Sort for visual consistency
         selectedMultiple.sort((a, b) => a.compareTo(b));
         widget.onSelectionChanged?.call(
           selectedMultiple.isNotEmpty ? selectedMultiple.first : null,
@@ -234,75 +231,297 @@ class _CalendarViewState extends State<CalendarView> {
     );
   }
 
-  @override
-  Widget build(BuildContext context) {
+  Widget _buildHeader() {
     final locale = widget.locale ?? Localizations.localeOf(context);
-    return Container(
-      decoration: widget.decoration ?? kPickerDecorationBuilder(context, {}),
-      padding: const EdgeInsets.all(8),
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          // Header with month navigation
-          Padding(
-            padding: const EdgeInsets.symmetric(vertical: 8),
-            child: Row(
+    String label;
+    VoidCallback? onTap;
+
+    switch (_displayMode) {
+      case CalendarViewDisplayMode.month:
+        label =
+            DateFormat.yMMMM(locale.toString()).format(_visibleMonth).titleCase;
+        onTap =
+            () => setState(() => _displayMode = CalendarViewDisplayMode.year);
+        break;
+      case CalendarViewDisplayMode.year:
+        label = _visibleMonth.year.toString();
+        onTap =
+            () => setState(() => _displayMode = CalendarViewDisplayMode.decade);
+        break;
+      case CalendarViewDisplayMode.decade:
+        final startYear = (_visibleMonth.year ~/ 10) * 10;
+        label = '$startYear - ${startYear + 9}';
+        onTap = null;
+        break;
+    }
+
+    return Row(
+      children: [
+        Expanded(
+          child: IconButton(
+            onPressed: onTap,
+            icon: Row(
+              mainAxisAlignment: MainAxisAlignment.start,
               children: [
-                Expanded(
-                  child: Text(
-                    DateFormat.yMMMM(locale.toString())
-                        .format(_visibleMonth)
-                        .titleCase,
-                    style: widget.monthLabelStyle ??
-                        FluentTheme.of(context).typography.subtitle,
-                  ),
-                ),
-                IconButton(
-                  icon: const Icon(FluentIcons.caret_solid_up, size: 12),
-                  onPressed:
-                      _currentPage - 1 < 0 ? null : () => _navigateMonth(-1),
-                ),
-                IconButton(
-                  icon: const Icon(FluentIcons.caret_solid_down, size: 12),
-                  onPressed: _currentPage + 1 >= _monthsToShow
-                      ? null
-                      : () => _navigateMonth(1),
+                Text(
+                  label,
+                  style: widget.headerStyle ??
+                      FluentTheme.of(context).typography.subtitle,
                 ),
               ],
             ),
           ),
-          const Divider(
-            style: DividerThemeData(horizontalMargin: EdgeInsets.zero),
+        ),
+        if (_displayMode == CalendarViewDisplayMode.month) ...[
+          IconButton(
+            icon: const Icon(FluentIcons.caret_solid_up, size: 12),
+            onPressed: _currentPage - 1 < 0 ? null : () => _navigateMonth(-1),
           ),
-          const SizedBox(height: 4),
-          Row(children: _buildWeekDays(context)),
-          const SizedBox(height: 4),
-          SizedBox(
-            height: widget.weeksPerView * 38.0,
-            child: PageView.builder(
-              controller: _pageController,
-              scrollDirection: Axis.vertical,
-              pageSnapping: true,
-              itemCount: _monthsToShow,
-              onPageChanged: (index) {
-                setState(() {
-                  _visibleMonth = _monthForPage(index);
-                  _currentPage = index;
+          IconButton(
+            icon: const Icon(FluentIcons.caret_solid_down, size: 12),
+            onPressed: _currentPage + 1 >= _monthsToShow
+                ? null
+                : () => _navigateMonth(1),
+          ),
+        ]
+      ],
+    );
+  }
+
+  Widget _buildMonthView() {
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      spacing: 4,
+      children: [
+        _buildHeader(),
+        const Divider(
+          style: DividerThemeData(horizontalMargin: EdgeInsets.zero),
+        ),
+        const SizedBox(height: 4),
+        Row(children: _buildWeekDays(context)),
+        const SizedBox(height: 4),
+        SizedBox(
+          height: widget.weeksPerView * 38.0,
+          child: PageView.builder(
+            controller: _pageController,
+            scrollDirection: Axis.vertical,
+            pageSnapping: true,
+            itemCount: _monthsToShow,
+            onPageChanged: (index) {
+              setState(() {
+                _visibleMonth = _monthForPage(index);
+                _currentPage = index;
+              });
+            },
+            itemBuilder: (context, index) {
+              final month = _monthForPage(index);
+              return _buildWeeksGrid(month);
+            },
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildYearView() {
+    final locale = widget.locale ?? Localizations.localeOf(context);
+    final year = _visibleMonth.year;
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      spacing: 4,
+      children: [
+        _buildHeader(),
+        const Divider(
+          style: DividerThemeData(horizontalMargin: EdgeInsets.zero),
+        ),
+        GridView.count(
+          shrinkWrap: true,
+          physics: const NeverScrollableScrollPhysics(),
+          crossAxisCount: 4,
+          children: List.generate(12, (i) {
+            final month = DateTime(year, i + 1, 1);
+            final isDisabled =
+                (widget.minDate != null && month.isBefore(widget.minDate!)) ||
+                    (widget.maxDate != null && month.isAfter(widget.maxDate!));
+            final isFilled = DateTime.now().year == year &&
+                DateTime.now().month == month.month;
+            return _CalendarItem(
+                content:
+                    DateFormat.MMM(locale.toString()).format(month).titleCase,
+                isDisabled: isDisabled,
+                isFilled: isFilled,
+                fillColor: widget.selectionColor,
+                shape: widget.dayShape,
+                onTapped: () {
+                  setState(() {
+                    _visibleMonth = month;
+                    _currentPage = _initialPage +
+                        (month.year - _anchorMonth.year) * 12 +
+                        (month.month - _anchorMonth.month);
+                    _displayMode = CalendarViewDisplayMode.month;
+                  });
+
+                  WidgetsBinding.instance.addPostFrameCallback((_) {
+                    if (_pageController.hasClients) {
+                      _pageController.jumpToPage(_currentPage);
+                    }
+                  });
                 });
-              },
-              itemBuilder: (context, index) {
-                final month = _monthForPage(index);
-                return _buildWeeksGrid(month);
-              },
-            ),
-          ),
-        ],
+          }),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildDecadeView() {
+    final int startYear = (_visibleMonth.year ~/ 10) * 10;
+    final years = List.generate(12, (i) => startYear - 1 + i);
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        _buildHeader(),
+        const Divider(
+          style: DividerThemeData(horizontalMargin: EdgeInsets.zero),
+        ),
+        GridView.count(
+          shrinkWrap: true,
+          physics: const NeverScrollableScrollPhysics(),
+          crossAxisCount: 4,
+          children: years.map((y) {
+            final isCurrentYear = y == DateTime.now().year;
+            final isDisabled = (widget.minDate != null &&
+                    DateTime(y, 1, 1).isBefore(widget.minDate!)) ||
+                (widget.maxDate != null &&
+                    DateTime(y, 12, 31).isAfter(widget.maxDate!));
+            return _CalendarItem(
+              content: y.toString(),
+              isDisabled:
+                  isDisabled || y == startYear - 1 || y == startYear + 10,
+              onTapped: () => setState(() {
+                _visibleMonth = DateTime(y, 1, 1);
+                _displayMode = CalendarViewDisplayMode.year;
+              }),
+              fillColor: widget.selectionColor,
+              isFilled: isCurrentYear,
+              shape: widget.dayShape,
+            );
+          }).toList(),
+        ),
+      ],
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    switch (_displayMode) {
+      case CalendarViewDisplayMode.month:
+        return Container(
+          decoration:
+              widget.decoration ?? kPickerDecorationBuilder(context, {}),
+          padding: const EdgeInsets.all(8),
+          child: _buildMonthView(),
+        );
+      case CalendarViewDisplayMode.year:
+        return Container(
+          decoration:
+              widget.decoration ?? kPickerDecorationBuilder(context, {}),
+          padding: const EdgeInsets.all(8),
+          child: _buildYearView(),
+        );
+      case CalendarViewDisplayMode.decade:
+        return Container(
+          decoration:
+              widget.decoration ?? kPickerDecorationBuilder(context, {}),
+          padding: const EdgeInsets.all(8),
+          child: _buildDecadeView(),
+        );
+    }
+  }
+}
+
+class _CalendarItem extends StatelessWidget {
+  const _CalendarItem({
+    required this.content,
+    required this.isDisabled,
+    required this.onTapped,
+    this.shape,
+    this.fillColor,
+    this.isFilled = false,
+  });
+
+  final String content;
+  final bool isDisabled;
+  final bool isFilled;
+  final VoidCallback onTapped;
+  final Color? fillColor;
+  final WidgetStateProperty<ShapeBorder?>? shape;
+
+  @override
+  Widget build(BuildContext context) {
+    final color = fillColor ?? FluentTheme.of(context).accentColor;
+    return Button(
+      style: ButtonStyle(
+        shape: shape ?? const WidgetStatePropertyAll(CircleBorder()),
+        backgroundColor: WidgetStateProperty.resolveWith((states) {
+          if (isFilled) return color;
+          if (isDisabled) return Colors.transparent;
+          if (states.contains(WidgetState.hovered)) {
+            return color.withAlpha(20);
+          }
+          return Colors.transparent;
+        }),
+        foregroundColor: WidgetStateProperty.resolveWith((states) {
+          if (isDisabled) {
+            return FluentTheme.of(context).resources.textFillColorDisabled;
+          }
+          if (isFilled) {
+            return color.computeLuminance() > 0.5 ? Colors.black : Colors.white;
+          }
+          return FluentTheme.of(context).resources.textFillColorPrimary;
+        }),
+      ),
+      onPressed: isDisabled ? null : onTapped,
+      child: Padding(
+        padding: const EdgeInsets.all(2.0),
+        child: Text(content),
       ),
     );
   }
 }
 
+/// A widget that represents a single day item in a calendar view.
+///
+/// Displays the day number and handles selection, range highlighting,
+/// disabled state, and custom shapes and colors. Tapping the item
+/// triggers the [onDayTapped] callback if the item is not disabled.
 class _CalendarDayItem extends StatelessWidget {
+  /// The date represented by this day item.
+  final DateTime day;
+
+  /// Whether this day is currently selected.
+  final bool isSelected;
+
+  /// Whether this day is within a selected range.
+  final bool isInRange;
+
+  /// Whether this day is disabled and cannot be selected.
+  final bool isDisabled;
+
+  /// Whether the day item should be filled with the selection color.
+  final bool isFilled;
+
+  /// Callback invoked when the day item is tapped.
+  /// Receives the [day] as a parameter.
+  final void Function(DateTime) onDayTapped;
+
+  /// The color used for selection and highlighting.
+  /// If null, the theme's accent color is used.
+  final Color? selectionColor;
+
+  /// The shape of the day item button.
+  /// If null, a circular shape is used by default.
+  final WidgetStateProperty<ShapeBorder?>? shape;
+
   const _CalendarDayItem({
     required this.day,
     required this.isSelected,
@@ -313,15 +532,6 @@ class _CalendarDayItem extends StatelessWidget {
     this.selectionColor,
     this.isFilled = false,
   });
-
-  final DateTime day;
-  final bool isSelected;
-  final bool isInRange;
-  final bool isDisabled;
-  final bool isFilled;
-  final void Function(DateTime) onDayTapped;
-  final Color? selectionColor;
-  final WidgetStateProperty<ShapeBorder?>? shape;
 
   void _onDayTapped(DateTime day) {
     onDayTapped(day);
