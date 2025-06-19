@@ -159,7 +159,7 @@ class _CalendarViewState extends State<CalendarView> {
   DateTime _getFirstVisibleDayOfWeeksView(DateTime baseMonth) {
     final firstOfMonth = DateTime(baseMonth.year, baseMonth.month, 1);
     final weekday = firstOfMonth.weekday;
-    return firstOfMonth.subtract(Duration(days: weekday - 1));
+    return firstOfMonth.subtract(Duration(days: weekday));
   }
 
   bool _isInRange(DateTime day) {
@@ -528,7 +528,9 @@ class _CalendarItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final color = fillColor ?? FluentTheme.of(context).accentColor;
+    final theme = FluentTheme.of(context);
+    final color =
+        fillColor ?? theme.accentColor.defaultBrushFor(theme.brightness);
     return Button(
       style: ButtonStyle(
         shape: shape ?? const WidgetStatePropertyAll(CircleBorder()),
@@ -585,7 +587,7 @@ class _CalendarDayItem extends StatelessWidget {
   final void Function(DateTime) onDayTapped;
 
   /// The color used for selection and highlighting.
-  /// If null, the theme's accent color is used.
+  /// If null, the default brush for the theme's accent color is used.
   final Color? selectionColor;
 
   /// The shape of the day item button.
@@ -611,7 +613,9 @@ class _CalendarDayItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final color = selectionColor ?? FluentTheme.of(context).accentColor;
+    final theme = FluentTheme.of(context);
+    final color =
+        selectionColor ?? theme.accentColor.defaultBrushFor(theme.brightness);
     return Button(
       style: ButtonStyle(
         shape: shape ??
