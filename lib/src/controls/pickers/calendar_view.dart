@@ -436,7 +436,7 @@ class _CalendarViewState extends State<CalendarView> {
 
   Widget _buildDecadeView() {
     final int startYear = (_visibleMonth.year ~/ 10) * 10;
-    final years = List.generate(12, (i) => startYear - 1 + i);
+    final years = List.generate(16, (i) => startYear - 1 + i);
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: [
@@ -451,13 +451,13 @@ class _CalendarViewState extends State<CalendarView> {
           children: years.map((y) {
             final isCurrentYear = y == DateTime.now().year;
             final isDisabled = (widget.minDate != null &&
-                    DateTime(y, 1, 1).isBefore(widget.minDate!)) ||
+                    DateTime(y).isBefore(widget.minDate!)) ||
                 (widget.maxDate != null &&
                     DateTime(y, 12, 31).isAfter(widget.maxDate!));
             return _CalendarItem(
               content: y.toString(),
               isDisabled:
-                  isDisabled || y == startYear - 1 || y == startYear + 10,
+                  isDisabled || y == startYear - 1 || y >= startYear + 10,
               onTapped: () => setState(() {
                 _visibleMonth = DateTime(y, 1, 1);
                 _displayMode = CalendarViewDisplayMode.year;
