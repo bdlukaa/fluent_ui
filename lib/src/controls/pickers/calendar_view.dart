@@ -80,6 +80,9 @@ class CalendarView extends StatefulWidget {
   /// Whether to enable selection of out-of-scope dates.
   final bool isOutOfScopeEnabled;
 
+  /// Whether to show the month label above the day number for the first day of each month.
+  final bool isGroupLabelVisible;
+
   /// The text style for the calendar header.
   final TextStyle? headerStyle;
 
@@ -103,6 +106,7 @@ class CalendarView extends StatefulWidget {
     this.weeksPerView = 6,
     this.isOutOfScopeEnabled = false,
     this.locale,
+    this.isGroupLabelVisible = true,
   }) : assert(weeksPerView >= 4 && weeksPerView <= 8);
 
   @override
@@ -241,8 +245,9 @@ class _CalendarViewState extends State<CalendarView> {
         final isOutOfScope =
             (widget.minDate != null && day.isBefore(widget.minDate!)) ||
                 (widget.maxDate != null && day.isAfter(widget.maxDate!));
-        final isCurrentMonth =
-            day.month == currentMonth.month && day.year == currentMonth.year;
+        final isCurrentMonth = DateUtils.isSameMonth(day, currentMonth);
+        final isFirstMonthDay =
+            DateUtils.isSameDay(day, DateTime(day.year, day.month));
         final isSelected =
             widget.selectionMode == CalendarViewSelectionMode.single
                 ? _isSameDay(day, selectedStart)
@@ -270,6 +275,8 @@ class _CalendarViewState extends State<CalendarView> {
               shape: widget.dayShape,
               selectionColor: widget.selectionColor,
               isFilled: isToday,
+              showGroupLabel: widget.isGroupLabelVisible && isFirstMonthDay,
+              locale: widget.locale,
             ),
           ),
         );
@@ -335,7 +342,7 @@ class _CalendarViewState extends State<CalendarView> {
         Row(children: _buildWeekDays(context)),
         const SizedBox(height: 4),
         SizedBox(
-          height: widget.weeksPerView * 38.0,
+          height: widget.weeksPerView * 40.0,
           child: PageView.builder(
             controller: _pageController,
             scrollDirection: Axis.vertical,
@@ -657,6 +664,12 @@ class _CalendarDayItem extends StatelessWidget {
   /// If null, a circular shape is used by default.
   final WidgetStateProperty<ShapeBorder?>? shape;
 
+  /// Whether to show the month label above the day number for the first day of each month.
+  final bool showGroupLabel;
+
+  /// DateTime locale
+  final Locale? locale;
+
   const _CalendarDayItem({
     required this.day,
     required this.isSelected,
@@ -666,6 +679,8 @@ class _CalendarDayItem extends StatelessWidget {
     this.shape,
     this.selectionColor,
     this.isFilled = false,
+    required this.showGroupLabel,
+    this.locale,
   });
 
   void _onDayTapped(DateTime day) {
@@ -679,6 +694,7 @@ class _CalendarDayItem extends StatelessWidget {
     final theme = FluentTheme.of(context);
     final color =
         selectionColor ?? theme.accentColor.defaultBrushFor(theme.brightness);
+    final Color? selectedTextColor = isSelected ? color : null;
     return Button(
       style: ButtonStyle(
         shape: shape ??
@@ -710,9 +726,25 @@ class _CalendarDayItem extends StatelessWidget {
         }),
       ),
       onPressed: isDisabled ? null : () => _onDayTapped(day),
-      child: Padding(
-        padding: const EdgeInsets.all(2.0),
-        child: Text(d),
+      child: Stack(
+        alignment: Alignment.center,
+        children: [
+          if (showGroupLabel)
+            Positioned(
+              top: -3,
+              child: Text(
+                DateFormat.MMM(locale).format(day),
+                style: TextStyle(fontSize: 9, color: selectedTextColor),
+              ),
+            ),
+          Padding(
+            padding: const EdgeInsets.all(4.0),
+            child: Text(
+              d,
+              style: TextStyle(color: selectedTextColor),
+            ),
+          ),
+        ],
       ),
     );
   }
