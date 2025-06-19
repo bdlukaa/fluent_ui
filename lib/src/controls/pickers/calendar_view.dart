@@ -1,7 +1,23 @@
 import 'package:fluent_ui/fluent_ui.dart';
-import 'package:fluent_ui/src/controls/pickers/pickers.dart';
 import 'package:intl/intl.dart';
 import 'package:recase/recase.dart';
+
+/// Default decoration for the [CalendarView].
+///
+/// See following properties at https://github.com/microsoft/microsoft-ui-xaml/blob/main/specs/CalendarView/CalendarViewSpec1.md:
+/// - `CalendarViewBackground`
+/// - `CalendarViewBorderBrush`
+BoxDecoration _defaultCalendarDecoration(BuildContext context) {
+  final theme = FluentTheme.of(context);
+  return BoxDecoration(
+    color: theme.resources.controlFillColorInputActive,
+    borderRadius: BorderRadius.circular(4),
+    border: Border.all(
+      width: 0.15,
+      color: theme.resources.controlStrokeColorDefault,
+    ),
+  );
+}
 
 /// Defines the selection modes available for the [CalendarView].
 enum CalendarViewSelectionMode {
@@ -224,9 +240,15 @@ class _CalendarViewState extends State<CalendarView> {
       final weekdayIndex = i % 7;
       return Expanded(
         child: Center(
-          child: Text(
-            symbols[weekdayIndex == 7 ? 0 : weekdayIndex].titleCase,
-            style: FluentTheme.of(context).typography.body,
+          child: Padding(
+            padding: const EdgeInsets.all(1),
+            child: Text(
+              symbols[weekdayIndex == 7 ? 0 : weekdayIndex].titleCase,
+              style: FluentTheme.of(context).typography.body?.copyWith(
+                    // See `CalendarViewDayOfWeekFontWeight` at https://github.com/microsoft/microsoft-ui-xaml/blob/fb7a83b668baa612b5cc594678746dd8c1f8d8bd/src/controls/dev/CommonStyles/CalendarView_themeresources.xaml#L328
+                    fontWeight: FontWeight.w500,
+                  ),
+            ),
           ),
         ),
       );
@@ -242,7 +264,7 @@ class _CalendarViewState extends State<CalendarView> {
       final List<Widget> days = [];
       for (int d = 0; d < 7; d++) {
         final day = firstDay.add(Duration(days: week * 7 + d));
-        final isOutOfScope =
+        final isBlackout =
             (widget.minDate != null && day.isBefore(widget.minDate!)) ||
                 (widget.maxDate != null && day.isAfter(widget.maxDate!));
         final isCurrentMonth = DateUtils.isSameMonth(day, currentMonth);
@@ -269,9 +291,9 @@ class _CalendarViewState extends State<CalendarView> {
               day: day,
               isSelected: isSelected,
               isInRange: isInRange,
-              isDisabled: isOutOfScope ||
-                  (!widget.isOutOfScopeEnabled && !isCurrentMonth),
-              onDayTapped: (date) => _onDayTapped(date, !isOutOfScope),
+              isOutOfScope: !widget.isOutOfScopeEnabled && !isCurrentMonth,
+              isBlackout: isBlackout,
+              onDayTapped: (date) => _onDayTapped(date, !isBlackout),
               shape: widget.dayShape,
               selectionColor: widget.selectionColor,
               isFilled: isToday,
@@ -454,25 +476,24 @@ class _CalendarViewState extends State<CalendarView> {
 
   @override
   Widget build(BuildContext context) {
+    final defaultCalendarDecoration = _defaultCalendarDecoration(context);
+
     switch (_displayMode) {
       case CalendarViewDisplayMode.month:
         return Container(
-          decoration:
-              widget.decoration ?? kPickerDecorationBuilder(context, {}),
+          decoration: widget.decoration ?? defaultCalendarDecoration,
           padding: const EdgeInsets.all(8),
           child: _buildMonthView(),
         );
       case CalendarViewDisplayMode.year:
         return Container(
-          decoration:
-              widget.decoration ?? kPickerDecorationBuilder(context, {}),
+          decoration: widget.decoration ?? defaultCalendarDecoration,
           padding: const EdgeInsets.all(8),
           child: _buildYearView(),
         );
       case CalendarViewDisplayMode.decade:
         return Container(
-          decoration:
-              widget.decoration ?? kPickerDecorationBuilder(context, {}),
+          decoration: widget.decoration ?? defaultCalendarDecoration,
           padding: const EdgeInsets.all(8),
           child: _buildDecadeView(),
         );
@@ -557,11 +578,11 @@ class _CalendarHeader extends StatelessWidget {
         ),
         if (showNavigation) ...[
           IconButton(
-            icon: const Icon(FluentIcons.caret_solid_up, size: 12),
+            icon: const Icon(FluentIcons.caret_up_solid8, size: 12),
             onPressed: onPrevious,
           ),
           IconButton(
-            icon: const Icon(FluentIcons.caret_solid_down, size: 12),
+            icon: const Icon(FluentIcons.caret_down_solid8, size: 12),
             onPressed: onNext,
           ),
         ]
@@ -606,11 +627,11 @@ class _CalendarItem extends StatelessWidget {
         shape: shape ?? const WidgetStatePropertyAll(CircleBorder()),
         backgroundColor: WidgetStateProperty.resolveWith((states) {
           if (isFilled) return color;
-          if (isDisabled) return Colors.transparent;
           if (states.contains(WidgetState.hovered)) {
-            return color.withAlpha(20);
+            return theme.resources.subtleFillColorSecondary;
           }
-          return Colors.transparent;
+
+          return theme.resources.subtleFillColorTransparent;
         }),
         foregroundColor: WidgetStateProperty.resolveWith((states) {
           if (isDisabled) {
@@ -646,8 +667,11 @@ class _CalendarDayItem extends StatelessWidget {
   /// Whether this day is within a selected range.
   final bool isInRange;
 
+  /// Whether this day is disabled(visually) due to being outside the allowed date range.
+  final bool isOutOfScope;
+
   /// Whether this day is disabled and cannot be selected.
-  final bool isDisabled;
+  final bool isBlackout;
 
   /// Whether the day item should be filled with the selection color.
   final bool isFilled;
@@ -674,7 +698,8 @@ class _CalendarDayItem extends StatelessWidget {
     required this.day,
     required this.isSelected,
     required this.isInRange,
-    required this.isDisabled,
+    required this.isOutOfScope,
+    required this.isBlackout,
     required this.onDayTapped,
     this.shape,
     this.selectionColor,
@@ -694,38 +719,53 @@ class _CalendarDayItem extends StatelessWidget {
     final theme = FluentTheme.of(context);
     final color =
         selectionColor ?? theme.accentColor.defaultBrushFor(theme.brightness);
-    final Color? selectedTextColor = isSelected ? color : null;
+    final Color borderColor = isSelected
+        ? color
+        : isBlackout
+            ? theme.resources.accentFillColorDisabled
+            : theme.resources.subtleFillColorTransparent;
+
     return Button(
       style: ButtonStyle(
         shape: shape ??
             WidgetStateProperty.resolveWith((states) {
               return CircleBorder(
                 side: BorderSide(
-                  width: 1,
-                  color: isSelected ? color : Colors.transparent,
+                  width:
+                      1, // See `CalendarItemBorderThickness` at https://github.com/microsoft/microsoft-ui-xaml/blob/fb7a83b668baa612b5cc594678746dd8c1f8d8bd/src/controls/dev/CommonStyles/CalendarView_themeresources.xaml#L311
+                  color: borderColor,
                 ),
               );
             }),
         backgroundColor: WidgetStateProperty.resolveWith((states) {
           if (isFilled) return color;
           if (isInRange) return color.withAlpha(50);
-          if (isDisabled) return Colors.transparent;
+          if (isBlackout) return Colors.transparent;
           if (states.contains(WidgetState.hovered)) {
-            return color.withAlpha(20);
+            return selectionColor?.withAlpha(20) ??
+                // See `CalendarItemHoverBackground` at https://github.com/microsoft/microsoft-ui-xaml/blob/fb7a83b668baa612b5cc594678746dd8c1f8d8bd/src/controls/dev/CommonStyles/CalendarView_themeresources.xaml#L42
+                theme.resources.subtleFillColorSecondary;
           }
-          return Colors.transparent;
+
+          // See `CalendarViewCalendarItemBackground` at https://github.com/microsoft/microsoft-ui-xaml/blob/fb7a83b668baa612b5cc594678746dd8c1f8d8bd/src/controls/dev/CommonStyles/CalendarView_themeresources.xaml#L18
+          return theme.resources.subtleFillColorTransparent;
         }),
         foregroundColor: WidgetStateProperty.resolveWith((states) {
-          if (isDisabled) {
-            return FluentTheme.of(context).resources.textFillColorDisabled;
+          if (isBlackout) {
+            // See https://github.com/microsoft/microsoft-ui-xaml/blob/fb7a83b668baa612b5cc594678746dd8c1f8d8bd/src/controls/dev/CommonStyles/CalendarView_themeresources.xaml#L12
+            return theme.resources.textFillColorPrimary;
+          }
+          if (isOutOfScope) {
+            // See https://github.com/microsoft/microsoft-ui-xaml/blob/fb7a83b668baa612b5cc594678746dd8c1f8d8bd/src/controls/dev/CommonStyles/CalendarView_themeresources.xaml#L15
+            return theme.resources.textFillColorSecondary;
           }
           if (isFilled) {
             return color.computeLuminance() > 0.5 ? Colors.black : Colors.white;
           }
-          return FluentTheme.of(context).resources.textFillColorPrimary;
+          return isSelected ? color : theme.resources.textFillColorPrimary;
         }),
       ),
-      onPressed: isDisabled ? null : () => _onDayTapped(day),
+      onPressed: isBlackout ? null : () => _onDayTapped(day),
       child: Stack(
         alignment: Alignment.center,
         children: [
@@ -734,15 +774,15 @@ class _CalendarDayItem extends StatelessWidget {
               top: -3,
               child: Text(
                 DateFormat.MMM(locale).format(day),
-                style: TextStyle(fontSize: 9, color: selectedTextColor),
+                style: const TextStyle(
+                  // `FirstOfMonthLabelFontSize` at https://github.com/microsoft/microsoft-ui-xaml/blob/fb7a83b668baa612b5cc594678746dd8c1f8d8bd/src/controls/dev/CommonStyles/CalendarView_themeresources.xaml#L63
+                  fontSize: 8,
+                ),
               ),
             ),
           Padding(
             padding: const EdgeInsets.all(4.0),
-            child: Text(
-              d,
-              style: TextStyle(color: selectedTextColor),
-            ),
+            child: Text(d),
           ),
         ],
       ),
