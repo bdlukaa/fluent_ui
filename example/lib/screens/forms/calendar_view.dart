@@ -15,6 +15,7 @@ class _CalendarViewPageState extends State<CalendarViewPage> with PageMixin {
 
   bool outOfScopeEnabled = false;
   bool todayHighlighted = false;
+  bool groupLabelVisible = false;
 
   @override
   Widget build(BuildContext context) {
@@ -23,7 +24,8 @@ class _CalendarViewPageState extends State<CalendarViewPage> with PageMixin {
         title: const Text('CalendarView'),
         commandBar: Button(
           onPressed: () => setState(
-            () => outOfScopeEnabled = todayHighlighted = false,
+            () => outOfScopeEnabled =
+                todayHighlighted = groupLabelVisible = false,
           ),
           child: const Text('Clear'),
         ),
@@ -45,7 +47,7 @@ class _CalendarViewPageState extends State<CalendarViewPage> with PageMixin {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               SizedBox(
-                width: 340,
+                width: 350,
                 child: CalendarView(
                   selectionMode: selectionMode,
                 ),
@@ -72,11 +74,11 @@ class _CalendarViewPageState extends State<CalendarViewPage> with PageMixin {
         ),
         subtitle(content: const Text('A customized CalendarView')),
         CardHighlight(
-          codeSnippet: '''DateTime? selected;
-
+          codeSnippet: '''
 CalendarView(
-  initialStart: selected,
-  onSelectionChanged: (time) => setState(() => selected = time),
+  isOutOfScopeEnabled: false, // By default
+  isTodayHighlighted: true,
+  isGroupLabelVisible: true,
 ),''',
           child: SizedBox(
             width: double.infinity,
@@ -86,10 +88,11 @@ CalendarView(
               alignment: WrapAlignment.spaceBetween,
               children: [
                 SizedBox(
-                  width: 340,
+                  width: 350,
                   child: CalendarView(
                     isOutOfScopeEnabled: outOfScopeEnabled,
                     isTodayHighlighted: todayHighlighted,
+                    isGroupLabelVisible: groupLabelVisible,
                   ),
                 ),
                 SizedBox(
@@ -99,6 +102,12 @@ CalendarView(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     spacing: 10,
                     children: [
+                      Checkbox(
+                        checked: groupLabelVisible,
+                        onChanged: (v) =>
+                            setState(() => groupLabelVisible = v!),
+                        content: const Text('Group Label visible'),
+                      ),
                       Checkbox(
                         checked: outOfScopeEnabled,
                         onChanged: (v) =>
