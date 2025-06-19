@@ -293,59 +293,32 @@ class _CalendarViewState extends State<CalendarView> {
   }
 
   Widget _buildHeader() {
-    final locale = widget.locale ?? Localizations.localeOf(context);
-    String label;
     VoidCallback? onTap;
 
     switch (_displayMode) {
       case CalendarViewDisplayMode.month:
-        label =
-            DateFormat.yMMMM(locale.toString()).format(_visibleMonth).titleCase;
         onTap =
             () => setState(() => _displayMode = CalendarViewDisplayMode.year);
         break;
       case CalendarViewDisplayMode.year:
-        label = _visibleMonth.year.toString();
         onTap =
             () => setState(() => _displayMode = CalendarViewDisplayMode.decade);
         break;
       case CalendarViewDisplayMode.decade:
-        final startYear = (_visibleMonth.year ~/ 10) * 10;
-        label = '$startYear - ${startYear + 9}';
         onTap = null;
         break;
     }
 
-    return Row(
-      children: [
-        Expanded(
-          child: IconButton(
-            onPressed: onTap,
-            icon: Row(
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: [
-                Text(
-                  label,
-                  style: widget.headerStyle ??
-                      FluentTheme.of(context).typography.subtitle,
-                ),
-              ],
-            ),
-          ),
-        ),
-        if (_displayMode == CalendarViewDisplayMode.month) ...[
-          IconButton(
-            icon: const Icon(FluentIcons.caret_solid_up, size: 12),
-            onPressed: _currentPage - 1 < 0 ? null : () => _navigateMonth(-1),
-          ),
-          IconButton(
-            icon: const Icon(FluentIcons.caret_solid_down, size: 12),
-            onPressed: _currentPage + 1 >= _monthsToShow
-                ? null
-                : () => _navigateMonth(1),
-          ),
-        ]
-      ],
+    return _CalendarHeader(
+      date: _visibleMonth,
+      displayMode: _displayMode,
+      onNext:
+          _currentPage + 1 >= _monthsToShow ? null : () => _navigateMonth(1),
+      onPrevious: _currentPage - 1 < 0 ? null : () => _navigateMonth(-1),
+      onTap: onTap,
+      style: widget.headerStyle,
+      locale: widget.locale,
+      showNavigation: _displayMode != CalendarViewDisplayMode.decade,
     );
   }
 
@@ -497,6 +470,96 @@ class _CalendarViewState extends State<CalendarView> {
           child: _buildDecadeView(),
         );
     }
+  }
+}
+
+/// A header widget for the calendar view that displays the current date/period and navigation controls.
+///
+/// This widget shows the current month/year/decade based on the display mode, and provides
+/// navigation buttons to move between periods. It also supports tapping the label to change
+/// the display mode.
+class _CalendarHeader extends StatelessWidget {
+  /// The current display mode of the calendar (month, year, or decade)
+  final CalendarViewDisplayMode displayMode;
+
+  /// The date to display in the header
+  final DateTime date;
+
+  /// Callback when the previous button is pressed
+  final VoidCallback? onPrevious;
+
+  /// Callback when the next button is pressed
+  final VoidCallback? onNext;
+
+  /// Callback when the header label is tapped
+  final VoidCallback? onTap;
+
+  /// The locale to use for formatting dates
+  final Locale? locale;
+
+  /// Whether to show the navigation buttons
+  final bool showNavigation;
+
+  /// Optional text style to apply to the header label
+  final TextStyle? style;
+
+  const _CalendarHeader({
+    required this.displayMode,
+    required this.date,
+    required this.onPrevious,
+    required this.onNext,
+    required this.onTap,
+    this.locale,
+    this.showNavigation = true,
+    this.style,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final fLocale = locale ?? Localizations.localeOf(context);
+    String label;
+
+    switch (displayMode) {
+      case CalendarViewDisplayMode.month:
+        label = DateFormat.yMMMM(fLocale.toString()).format(date).titleCase;
+        break;
+      case CalendarViewDisplayMode.year:
+        label = date.year.toString();
+        break;
+      case CalendarViewDisplayMode.decade:
+        final startYear = (date.year ~/ 10) * 10;
+        label = '$startYear - ${startYear + 9}';
+        break;
+    }
+
+    return Row(
+      children: [
+        Expanded(
+          child: IconButton(
+            onPressed: onTap,
+            icon: Row(
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                Text(
+                  label,
+                  style: style ?? FluentTheme.of(context).typography.subtitle,
+                ),
+              ],
+            ),
+          ),
+        ),
+        if (showNavigation) ...[
+          IconButton(
+            icon: const Icon(FluentIcons.caret_solid_up, size: 12),
+            onPressed: onPrevious,
+          ),
+          IconButton(
+            icon: const Icon(FluentIcons.caret_solid_down, size: 12),
+            onPressed: onNext,
+          ),
+        ]
+      ],
+    );
   }
 }
 
