@@ -470,8 +470,9 @@ class _CalendarViewState extends State<CalendarView> {
                 itemBuilder: (context, i) {
                   final monthNumber = i + 1;
                   final isValidMonth = monthNumber >= 1 && monthNumber <= 12;
-                  final month = DateTime(
-                      year, isValidMonth ? monthNumber : monthNumber % 12);
+                  final month = isValidMonth
+                      ? DateTime(year, monthNumber)
+                      : DateTime(year + (monthNumber ~/ 12), monthNumber % 12);
                   final isDisabled = !isValidMonth ||
                       (widget.minDate != null &&
                           month.isBefore(widget.minDate!)) ||
@@ -488,6 +489,9 @@ class _CalendarViewState extends State<CalendarView> {
                     isFilled: isFilled,
                     fillColor: widget.selectionColor,
                     shape: widget.dayShape,
+                    groupLabel: month.month == 1
+                        ? DateFormat.y(locale.toString()).format(month)
+                        : null,
                     onTapped: () {
                       setState(() {
                         _visibleMonth = month;
@@ -668,15 +672,18 @@ class _CalendarHeader extends StatelessWidget {
   }
 }
 
-/// A stateless widget that represents a single calendar item
-/// (such as a month or a year) in a calendar view.
+/// A stateless widget that represents a single calendar item (month or year) in a calendar view.
 ///
-/// The [_CalendarItem] displays its [content] inside a styled [Button],
-/// supporting customization for shape, fill color, and disabled state.
-/// It visually distinguishes between filled, hovered, and disabled states,
-/// and triggers [onTapped] when pressed (unless disabled).
+/// The [_CalendarItem] displays [content] in a styled [Button] with customizable:
+/// - Shape via [shape]
+/// - Fill color via [fillColor]
+/// - Disabled state via [isDisabled]
+/// - Filled state via [isFilled]
+/// - Optional group label via [groupLabel]
 ///
-/// Used internally by the calendar picker controls.
+/// Triggers [onTapped] callback when pressed, unless disabled.
+///
+/// Used internally by month/year selection views in the calendar
 class _CalendarItem extends StatelessWidget {
   const _CalendarItem({
     required this.content,
@@ -685,11 +692,13 @@ class _CalendarItem extends StatelessWidget {
     this.shape,
     this.fillColor,
     this.isFilled = false,
+    this.groupLabel,
   });
 
   final String content;
   final bool isDisabled;
   final bool isFilled;
+  final String? groupLabel;
   final VoidCallback onTapped;
   final Color? fillColor;
   final WidgetStateProperty<ShapeBorder?>? shape;
@@ -703,27 +712,52 @@ class _CalendarItem extends StatelessWidget {
       style: ButtonStyle(
         shape: shape ?? const WidgetStatePropertyAll(CircleBorder()),
         backgroundColor: WidgetStateProperty.resolveWith((states) {
-          if (isFilled) return color;
           if (states.contains(WidgetState.hovered)) {
-            return theme.resources.subtleFillColorSecondary;
+            if (isFilled) {
+              // Missing resource `AccentFillColorSecondaryBrush` (https://github.com/microsoft/microsoft-ui-xaml/blob/main/specs/CalendarView/CalendarViewSpec1.md#showcasing-the-todayhoverbackground-property---current-date-is-hovered)
+              // return theme.resources.accentFillColorSecondary;
+              return color.toAccentColor().dark;
+            } else {
+              return theme.resources.subtleFillColorSecondary;
+            }
           }
 
-          return theme.resources.subtleFillColorTransparent;
+          return isFilled ? color : theme.resources.subtleFillColorTransparent;
         }),
         foregroundColor: WidgetStateProperty.resolveWith((states) {
           if (isDisabled) {
-            return FluentTheme.of(context).resources.textFillColorDisabled;
+            return theme.resources.textFillColorDisabled;
           }
           if (isFilled) {
-            return color.computeLuminance() > 0.5 ? Colors.black : Colors.white;
+            if (fillColor != null) {
+              return fillColor!.computeLuminance() > 0.5
+                  ? Colors.black
+                  : Colors.white;
+            } else {
+              return theme.resources.textOnAccentFillColorPrimary;
+            }
           }
-          return FluentTheme.of(context).resources.textFillColorPrimary;
+          return theme.resources.textFillColorPrimary;
         }),
       ),
       onPressed: isDisabled ? null : onTapped,
-      child: Padding(
-        padding: const EdgeInsets.all(2.0),
-        child: Text(content),
+      child: Stack(
+        alignment: Alignment.center,
+        clipBehavior: Clip.none,
+        children: [
+          if (groupLabel != null)
+            Positioned(
+              top: -6,
+              child: Text(
+                groupLabel!,
+                style: const TextStyle(fontSize: 8),
+              ),
+            ),
+          Padding(
+            padding: const EdgeInsets.all(4.0),
+            child: Text(content),
+          ),
+        ],
       ),
     );
   }
