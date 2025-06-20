@@ -376,7 +376,6 @@ class _CalendarViewState extends State<CalendarView> {
         onPrevious = _currentYearPage - 1 < 0 ? null : () => _navigateYear(-1);
         break;
       case CalendarViewDisplayMode.decade:
-        onTap = null;
         break;
     }
 
@@ -457,7 +456,7 @@ class _CalendarViewState extends State<CalendarView> {
               });
             },
             itemBuilder: (context, index) {
-              final year = _anchorMonth.year + (index - _initialYearPage);
+              final year = _visibleYear.year;
               return GridView.builder(
                 shrinkWrap: true,
                 physics: const NeverScrollableScrollPhysics(),
@@ -539,7 +538,7 @@ class _CalendarViewState extends State<CalendarView> {
               isDisabled:
                   isDisabled || y == startYear - 1 || y >= startYear + 10,
               onTapped: () => setState(() {
-                _visibleMonth = DateTime(y, 1, 1);
+                _visibleYear = _visibleMonth = DateTime(y, 1, 1);
                 _displayMode = CalendarViewDisplayMode.year;
               }),
               fillColor: widget.selectionColor,
