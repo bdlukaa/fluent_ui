@@ -79,6 +79,7 @@ export 'src/controls/navigation/tree_view.dart';
 export 'src/controls/pickers/color_picker/color_picker.dart';
 export 'src/controls/pickers/date_picker.dart';
 export 'src/controls/pickers/time_picker.dart';
+export 'src/controls/pickers/calendar_view.dart';
 export 'src/controls/surfaces/acrylic.dart';
 export 'src/controls/surfaces/card.dart';
 export 'src/controls/surfaces/commandbar.dart';
