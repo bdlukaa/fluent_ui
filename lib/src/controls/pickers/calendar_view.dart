@@ -349,8 +349,20 @@ class _CalendarViewState extends State<CalendarView> {
 
     switch (_displayMode) {
       case CalendarViewDisplayMode.month:
-        onTap =
-            () => setState(() => _displayMode = CalendarViewDisplayMode.year);
+        onTap = () {
+          final yearPage =
+              _initialYearPage + (_visibleMonth.year - _anchorMonth.year);
+          setState(() {
+            _currentYearPage = yearPage;
+            _visibleYear = DateTime(_visibleMonth.year, 1, 1);
+            _displayMode = CalendarViewDisplayMode.year;
+          });
+          WidgetsBinding.instance.addPostFrameCallback((_) {
+            if (_yearPageController.hasClients) {
+              _yearPageController.jumpToPage(yearPage);
+            }
+          });
+        };
         onNext =
             _currentPage + 1 >= _monthsToShow ? null : () => _navigateMonth(1);
         onPrevious = _currentPage - 1 < 0 ? null : () => _navigateMonth(-1);
