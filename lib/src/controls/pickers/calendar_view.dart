@@ -130,9 +130,10 @@ class CalendarView extends StatefulWidget {
 }
 
 class _CalendarViewState extends State<CalendarView> {
-  static const int _yearsToShow = 100;
-  static const int _monthsToShow = _yearsToShow * 12 * 2 + 1;
+  static const int _yearsToShow = 200;
+  static const int _monthsToShow = _yearsToShow * 12 + 1;
   static const int _initialPage = _monthsToShow ~/ 2;
+  static const int _initialYearPage = _yearsToShow ~/ 2;
 
   late final DateTime _anchorMonth;
   late int _currentPage;
@@ -143,6 +144,10 @@ class _CalendarViewState extends State<CalendarView> {
   List<DateTime> selectedMultiple = [];
 
   late PageController _pageController;
+
+  late int _currentYearPage;
+  late DateTime _visibleYear;
+  late PageController _yearPageController;
 
   @override
   void initState() {
@@ -156,15 +161,23 @@ class _CalendarViewState extends State<CalendarView> {
       if (selectedEnd != null) selectedMultiple.add(selectedEnd!);
     }
     _displayMode = widget.displayMode;
-    _anchorMonth = DateTime(DateTime.now().year, DateTime.now().month, 1);
+    final anchor = widget.initialStart ?? DateTime.now();
+    _anchorMonth = DateTime(anchor.year, anchor.month, 1);
+
     _currentPage = _initialPage;
     _visibleMonth = _monthForPage(_currentPage);
     _pageController = PageController(initialPage: _currentPage);
+
+    _currentYearPage = _initialYearPage;
+    _visibleYear = DateTime(
+        _anchorMonth.year + (_currentYearPage - _initialYearPage), 1, 1);
+    _yearPageController = PageController(initialPage: _currentYearPage);
   }
 
   @override
   void dispose() {
     _pageController.dispose();
+    _yearPageController.dispose();
     super.dispose();
   }
 
@@ -321,17 +334,34 @@ class _CalendarViewState extends State<CalendarView> {
     );
   }
 
+  void _navigateYear(int offset) {
+    final newPage = _currentYearPage + offset;
+    if (newPage < 0 || newPage >= _yearsToShow) return;
+    _yearPageController.animateToPage(
+      newPage,
+      duration: const Duration(milliseconds: 300),
+      curve: Curves.easeIn,
+    );
+  }
+
   Widget _buildHeader() {
-    VoidCallback? onTap;
+    VoidCallback? onTap, onNext, onPrevious;
 
     switch (_displayMode) {
       case CalendarViewDisplayMode.month:
         onTap =
             () => setState(() => _displayMode = CalendarViewDisplayMode.year);
+        onNext =
+            _currentPage + 1 >= _monthsToShow ? null : () => _navigateMonth(1);
+        onPrevious = _currentPage - 1 < 0 ? null : () => _navigateMonth(-1);
         break;
       case CalendarViewDisplayMode.year:
         onTap =
             () => setState(() => _displayMode = CalendarViewDisplayMode.decade);
+        onNext = _currentYearPage + 1 >= _yearsToShow
+            ? null
+            : () => _navigateYear(1);
+        onPrevious = _currentYearPage - 1 < 0 ? null : () => _navigateYear(-1);
         break;
       case CalendarViewDisplayMode.decade:
         onTap = null;
@@ -339,11 +369,12 @@ class _CalendarViewState extends State<CalendarView> {
     }
 
     return _CalendarHeader(
-      date: _visibleMonth,
+      date: _displayMode == CalendarViewDisplayMode.year
+          ? _visibleYear
+          : _visibleMonth,
       displayMode: _displayMode,
-      onNext:
-          _currentPage + 1 >= _monthsToShow ? null : () => _navigateMonth(1),
-      onPrevious: _currentPage - 1 < 0 ? null : () => _navigateMonth(-1),
+      onNext: onNext,
+      onPrevious: onPrevious,
       onTap: onTap,
       style: widget.headerStyle,
       locale: widget.locale,
@@ -388,7 +419,7 @@ class _CalendarViewState extends State<CalendarView> {
 
   Widget _buildYearView() {
     final locale = widget.locale ?? Localizations.localeOf(context);
-    final year = _visibleMonth.year;
+
     return Column(
       mainAxisSize: MainAxisSize.min,
       spacing: 4,
@@ -397,40 +428,75 @@ class _CalendarViewState extends State<CalendarView> {
         const Divider(
           style: DividerThemeData(horizontalMargin: EdgeInsets.zero),
         ),
-        GridView.count(
-          shrinkWrap: true,
-          physics: const NeverScrollableScrollPhysics(),
-          crossAxisCount: 4,
-          children: List.generate(12, (i) {
-            final month = DateTime(year, i + 1, 1);
-            final isDisabled =
-                (widget.minDate != null && month.isBefore(widget.minDate!)) ||
-                    (widget.maxDate != null && month.isAfter(widget.maxDate!));
-            final isFilled = DateTime.now().year == year &&
-                DateTime.now().month == month.month;
-            return _CalendarItem(
-                content:
-                    DateFormat.MMM(locale.toString()).format(month).titleCase,
-                isDisabled: isDisabled,
-                isFilled: isFilled,
-                fillColor: widget.selectionColor,
-                shape: widget.dayShape,
-                onTapped: () {
-                  setState(() {
-                    _visibleMonth = month;
-                    _currentPage = _initialPage +
-                        (month.year - _anchorMonth.year) * 12 +
-                        (month.month - _anchorMonth.month);
-                    _displayMode = CalendarViewDisplayMode.month;
-                  });
+        const SizedBox(height: 4),
+        SizedBox(
+          height: 4 * 68.0,
+          child: PageView.builder(
+            controller: _yearPageController,
+            scrollDirection: Axis.vertical,
+            physics: const RangeMaintainingScrollPhysics(),
+            pageSnapping: false,
+            itemCount: _yearsToShow,
+            onPageChanged: (index) {
+              setState(() {
+                _visibleYear = DateTime(
+                    _anchorMonth.year + (index - _initialYearPage), 1, 1);
+                _currentYearPage = index;
+              });
+            },
+            itemBuilder: (context, index) {
+              final year = _anchorMonth.year + (index - _initialYearPage);
+              return GridView.builder(
+                shrinkWrap: true,
+                physics: const NeverScrollableScrollPhysics(),
+                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                  crossAxisCount: 4,
+                  mainAxisSpacing: 4,
+                  crossAxisSpacing: 4,
+                  childAspectRatio: 1.3,
+                ),
+                itemCount: 16,
+                itemBuilder: (context, i) {
+                  final monthNumber = i + 1;
+                  final isValidMonth = monthNumber >= 1 && monthNumber <= 12;
+                  final month = DateTime(
+                      year, isValidMonth ? monthNumber : monthNumber % 12);
+                  final isDisabled = !isValidMonth ||
+                      (widget.minDate != null &&
+                          month.isBefore(widget.minDate!)) ||
+                      (widget.maxDate != null &&
+                          month.isAfter(widget.maxDate!));
+                  final isFilled = isValidMonth &&
+                      DateTime.now().year == year &&
+                      DateTime.now().month == monthNumber;
+                  return _CalendarItem(
+                    content: DateFormat.MMM(locale.toString())
+                        .format(month)
+                        .titleCase,
+                    isDisabled: isDisabled,
+                    isFilled: isFilled,
+                    fillColor: widget.selectionColor,
+                    shape: widget.dayShape,
+                    onTapped: () {
+                      setState(() {
+                        _visibleMonth = month;
+                        _currentPage = _initialPage +
+                            (month.year - _anchorMonth.year) * 12 +
+                            (month.month - _anchorMonth.month);
+                        _displayMode = CalendarViewDisplayMode.month;
+                      });
 
-                  WidgetsBinding.instance.addPostFrameCallback((_) {
-                    if (_pageController.hasClients) {
-                      _pageController.jumpToPage(_currentPage);
-                    }
-                  });
-                });
-          }),
+                      WidgetsBinding.instance.addPostFrameCallback((_) {
+                        if (_pageController.hasClients) {
+                          _pageController.jumpToPage(_currentPage);
+                        }
+                      });
+                    },
+                  );
+                },
+              );
+            },
+          ),
         ),
       ],
     );
