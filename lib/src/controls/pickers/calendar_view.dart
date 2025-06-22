@@ -185,7 +185,7 @@ class _CalendarViewState extends State<CalendarView> {
   late CalendarViewDisplayMode _displayMode;
   DateTime? selectedStart;
   DateTime? selectedEnd;
-  List<DateTime> selectedMultiple = [];
+  final selectedMultiple = <DateTime>[];
 
   late PageController _pageController;
 
@@ -226,6 +226,22 @@ class _CalendarViewState extends State<CalendarView> {
     _pageController.dispose();
     _yearPageController.dispose();
     super.dispose();
+  }
+
+  @override
+  void didUpdateWidget(covariant CalendarView oldWidget) {
+    super.didUpdateWidget(oldWidget);
+
+    if (widget.selectionMode != oldWidget.selectionMode) {
+      // Reset selection state if the selection mode changes
+      selectedStart = widget.initialStart;
+      selectedEnd = widget.selectionMode == CalendarViewSelectionMode.range
+          ? widget.initialEnd
+          : null;
+      selectedMultiple.clear();
+      if (selectedStart != null) selectedMultiple.add(selectedStart!);
+      if (selectedEnd != null) selectedMultiple.add(selectedEnd!);
+    }
   }
 
   DateTime _monthForPage(int page) {
