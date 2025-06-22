@@ -180,8 +180,17 @@ class _CalendarViewState extends State<CalendarView> {
   DateTime? selectedEnd;
   final selectedMultiple = <DateTime>[];
 
+  final _monthScrollController = ScrollController();
+  final _yearScrollController = ScrollController();
+
+  /// Describes the date that is currently visible in the calendar when scrolling.
+  DateTime? _scrollDate;
+
+  static const double _rowHeight = 40.0;
+  static const double _yearRowHeight = 60.0;
+
   DateTime get _visibleDate {
-    return _anchorMonth;
+    return _scrollDate ?? _anchorMonth;
   }
 
   @override
@@ -198,10 +207,15 @@ class _CalendarViewState extends State<CalendarView> {
     _displayMode = widget.initialDisplayMode;
     final anchor = widget.initialStart ?? DateTime.now();
     _anchorMonth = DateTime(anchor.year, anchor.month, 1);
+
+    _monthScrollController.addListener(_monthScrollListener);
+    _yearScrollController.addListener(_yearScrollListener);
   }
 
   @override
   void dispose() {
+    _monthScrollController.dispose();
+    _yearScrollController.dispose();
     super.dispose();
   }
 
@@ -218,6 +232,28 @@ class _CalendarViewState extends State<CalendarView> {
       selectedMultiple.clear();
       if (selectedStart != null) selectedMultiple.add(selectedStart!);
       if (selectedEnd != null) selectedMultiple.add(selectedEnd!);
+    }
+  }
+
+  void _monthScrollListener() {
+    final pixels = _monthScrollController.position.pixels;
+    final rowIndex = (pixels / _rowHeight).round();
+    if (_displayMode == CalendarViewDisplayMode.month) {
+      final page = (rowIndex / 5).round();
+      setState(() {
+        _scrollDate = _monthForPage(page);
+      });
+    }
+  }
+
+  void _yearScrollListener() {
+    final pixels = _yearScrollController.position.pixels;
+    final rowIndex = (pixels / _yearRowHeight).round();
+    if (_displayMode == CalendarViewDisplayMode.year) {
+      final page = (rowIndex / 4).round();
+      setState(() {
+        _scrollDate = _yearForPage(page);
+      });
     }
   }
 
@@ -342,27 +378,36 @@ class _CalendarViewState extends State<CalendarView> {
     final isToday =
         widget.isTodayHighlighted && _isSameDay(day, DateTime.now());
 
-    return _CalendarDayItem(
-      day: day,
-      isSelected: isSelected,
-      isInRange: isInRange,
-      isOutOfScope: !widget.isOutOfScopeEnabled && !isCurrentMonth,
-      isBlackout: isBlackout,
-      onDayTapped: (date) => _onDayTapped(date, !isBlackout),
-      shape: widget.dayItemShape,
-      selectionColor: widget.selectionColor,
-      isFilled: isToday,
-      showGroupLabel: widget.isGroupLabelVisible && isFirstMonthDay,
-      locale: widget.locale,
+    return SizedBox(
+      height: _rowHeight,
+      child: _CalendarDayItem(
+        day: day,
+        isSelected: isSelected,
+        isInRange: isInRange,
+        isOutOfScope: !widget.isOutOfScopeEnabled && !isCurrentMonth,
+        isBlackout: isBlackout,
+        onDayTapped: (date) => _onDayTapped(date, !isBlackout),
+        shape: widget.dayItemShape,
+        selectionColor: widget.selectionColor,
+        isFilled: isToday,
+        showGroupLabel: widget.isGroupLabelVisible && isFirstMonthDay,
+        locale: widget.locale,
+      ),
     );
   }
 
   void _navigateMonth({int offset = 0}) {
-    setState(() => _anchorMonth = _monthForPage(offset));
+    setState(() {
+      _scrollDate = null;
+      _anchorMonth = _monthForPage(offset);
+    });
   }
 
   void _navigateYear(int offset) {
-    setState(() => _anchorMonth = _yearForPage(offset));
+    setState(() {
+      _scrollDate = null;
+      _anchorMonth = _yearForPage(offset);
+    });
   }
 
   Widget _buildHeader() {
@@ -390,7 +435,7 @@ class _CalendarViewState extends State<CalendarView> {
     }
 
     return _CalendarHeader(
-      date: _anchorMonth,
+      date: _visibleDate,
       displayMode: _displayMode,
       onNext: onNext,
       onPrevious: onPrevious,
@@ -471,8 +516,6 @@ class _CalendarViewState extends State<CalendarView> {
 
                 gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                   crossAxisCount: 7,
-                  // mainAxisSpacing: 4,
-                  // crossAxisSpacing: 4,
                   childAspectRatio: 1.0,
                 ),
                 delegate: SliverChildBuilderDelegate((context, index) {
@@ -483,6 +526,7 @@ class _CalendarViewState extends State<CalendarView> {
               );
 
               return CustomScrollView(
+                controller: _monthScrollController,
                 center: forwardListKey,
                 slivers: [reverseGrid, forwardGrid],
               );
@@ -540,6 +584,7 @@ class _CalendarViewState extends State<CalendarView> {
               );
 
               return CustomScrollView(
+                controller: _yearScrollController,
                 center: forwardListKey,
                 slivers: [reverseGrid, forwardGrid],
               );
