@@ -328,7 +328,9 @@ class _CalendarViewState extends State<CalendarView> {
 
   List<Widget> _buildWeekDays(BuildContext context) {
     final locale = widget.locale ?? Localizations.localeOf(context);
-    final symbols = DateFormat.E(locale.toString()).dateSymbols.SHORTWEEKDAYS;
+    final symbols = DateFormat.E(
+      locale.toString(),
+    ).dateSymbols.STANDALONESHORTWEEKDAYS;
     return List.generate(7, (i) {
       final weekdayIndex = i % 7;
       return Expanded(
@@ -710,12 +712,15 @@ class _CalendarHeader extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = FluentTheme.of(context);
     final fLocale = locale ?? Localizations.localeOf(context);
     String label;
 
     switch (displayMode) {
       case CalendarViewDisplayMode.month:
-        label = DateFormat.yMMMM(fLocale.toString()).format(date).titleCase;
+        label = DateFormat.yMMMM(
+          fLocale.toLanguageTag(),
+        ).format(date).titleCase;
         break;
       case CalendarViewDisplayMode.year:
         label = date.year.toString();
@@ -726,33 +731,54 @@ class _CalendarHeader extends StatelessWidget {
         break;
     }
 
-    return Row(
-      children: [
-        Expanded(
-          child: IconButton(
-            onPressed: onTap,
-            icon: Row(
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: [
-                Text(
-                  label,
-                  style: style ?? FluentTheme.of(context).typography.subtitle,
+    return IntrinsicHeight(
+      child: Row(
+        spacing: 4,
+        children: [
+          Expanded(
+            child: IconButton(
+              onPressed: onTap,
+              style: ButtonStyle(
+                backgroundColor: WidgetStateProperty.resolveWith(
+                  // This keeps the same background color when the button is
+                  // disabled
+                  (states) => ButtonThemeData.uncheckedInputColor(
+                    theme,
+                    states,
+                    transparentWhenNone: true,
+                    transparentWhenDisabled: true,
+                  ),
                 ),
-              ],
+              ),
+              icon: Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  Text(
+                    label,
+                    style:
+                        style ??
+                        theme.typography.subtitle?.copyWith(fontSize: 14),
+                  ),
+                ],
+              ),
             ),
           ),
-        ),
-        if (showNavigation) ...[
-          IconButton(
-            icon: const Icon(FluentIcons.caret_up_solid8, size: 12),
-            onPressed: onPrevious,
-          ),
-          IconButton(
-            icon: const Icon(FluentIcons.caret_down_solid8, size: 12),
-            onPressed: onNext,
-          ),
+          if (showNavigation) ...[
+            IconButton(
+              icon: const Center(
+                child: Icon(FluentIcons.caret_up_solid8, size: 10),
+              ),
+              onPressed: onPrevious,
+            ),
+            IconButton(
+              icon: const Center(
+                child: Icon(FluentIcons.caret_down_solid8, size: 10),
+              ),
+              onPressed: onNext,
+            ),
+          ],
         ],
-      ],
+      ),
     );
   }
 }
@@ -794,33 +820,46 @@ class _CalendarItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = FluentTheme.of(context);
-    return Button(
-      style: ButtonStyle(
-        shape: shape ?? const WidgetStatePropertyAll(CircleBorder()),
-        backgroundColor: WidgetStateProperty.resolveWith((states) {
-          return FilledButton.backgroundColor(theme, states);
-        }),
-        foregroundColor: WidgetStateProperty.resolveWith((states) {
-          if (isDisabled) {
-            return theme.resources.textFillColorDisabled;
-          } else if (isFilled) {
-            return theme.resources.textOnAccentFillColorPrimary;
-          }
-          return theme.resources.textFillColorPrimary;
-        }),
-      ),
-      onPressed: isDisabled ? null : onTapped,
-      child: Stack(
-        alignment: Alignment.center,
-        clipBehavior: Clip.none,
-        children: [
-          if (groupLabel != null)
-            Positioned(
-              top: -6,
-              child: Text(groupLabel!, style: const TextStyle(fontSize: 8)),
-            ),
-          Padding(padding: const EdgeInsets.all(4.0), child: Text(content)),
-        ],
+    return Center(
+      child: Button(
+        style: ButtonStyle(
+          shape: shape ?? const WidgetStatePropertyAll(CircleBorder()),
+          backgroundColor: WidgetStateProperty.resolveWith((states) {
+            if (isFilled) {
+              return FilledButton.backgroundColor(theme, states);
+            } else {
+              return ButtonThemeData.uncheckedInputColor(
+                theme,
+                states,
+                transparentWhenNone: true,
+              );
+            }
+          }),
+          foregroundColor: WidgetStateProperty.resolveWith((states) {
+            if (isDisabled) {
+              return theme.resources.textFillColorDisabled;
+            } else if (isFilled) {
+              return theme.resources.textOnAccentFillColorPrimary;
+            }
+            return theme.resources.textFillColorPrimary;
+          }),
+        ),
+        onPressed: isDisabled ? null : onTapped,
+        child: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Stack(
+            alignment: Alignment.center,
+            clipBehavior: Clip.none,
+            children: [
+              if (groupLabel != null)
+                Positioned(
+                  top: -6,
+                  child: Text(groupLabel!, style: const TextStyle(fontSize: 8)),
+                ),
+              Padding(padding: const EdgeInsets.all(4.0), child: Text(content)),
+            ],
+          ),
+        ),
       ),
     );
   }
