@@ -175,23 +175,32 @@ class CalendarView extends StatefulWidget {
 
 class _CalendarViewState extends State<CalendarView> {
   static const int _yearsToShow = 200;
-  static const int _monthsToShow = _yearsToShow * 12 + 1;
-  static const int _initialPage = _monthsToShow ~/ 2;
   static const int _initialYearPage = _yearsToShow ~/ 2;
 
   late final DateTime _anchorMonth;
-  late int _currentPage;
-  late DateTime _visibleMonth;
+  var _currentPage = 0;
   late CalendarViewDisplayMode _displayMode;
   DateTime? selectedStart;
   DateTime? selectedEnd;
   final selectedMultiple = <DateTime>[];
 
-  late PageController _pageController;
+  final _monthScrollController = ScrollController();
+  final _monthHandlers = <DateTime, GlobalKey>{};
 
   late int _currentYearPage;
   late DateTime _visibleYear;
   late PageController _yearPageController;
+
+  DateTime get _referenceDate {
+    final now = DateTime.now();
+    return DateTime(now.year, now.month, 1);
+  }
+
+  DateTime get _visibleDate {
+    return _displayMode == CalendarViewDisplayMode.month
+        ? _monthForPage(_currentPage)
+        : _visibleYear;
+  }
 
   @override
   void initState() {
@@ -208,10 +217,6 @@ class _CalendarViewState extends State<CalendarView> {
     final anchor = widget.initialStart ?? DateTime.now();
     _anchorMonth = DateTime(anchor.year, anchor.month, 1);
 
-    _currentPage = _initialPage;
-    _visibleMonth = _monthForPage(_currentPage);
-    _pageController = PageController(initialPage: _currentPage);
-
     _currentYearPage = _initialYearPage;
     _visibleYear = DateTime(
       _anchorMonth.year + (_currentYearPage - _initialYearPage),
@@ -223,7 +228,6 @@ class _CalendarViewState extends State<CalendarView> {
 
   @override
   void dispose() {
-    _pageController.dispose();
     _yearPageController.dispose();
     super.dispose();
   }
@@ -245,11 +249,7 @@ class _CalendarViewState extends State<CalendarView> {
   }
 
   DateTime _monthForPage(int page) {
-    return DateTime(
-      _anchorMonth.year,
-      _anchorMonth.month + (page - _initialPage),
-      1,
-    );
+    return DateTime(_anchorMonth.year, _anchorMonth.month + (page - 0), 1);
   }
 
   bool _isInRange(DateTime day) {
@@ -366,6 +366,9 @@ class _CalendarViewState extends State<CalendarView> {
         widget.isTodayHighlighted && _isSameDay(day, DateTime.now());
 
     return _CalendarDayItem(
+      key: isFirstMonthDay
+          ? _monthHandlers.putIfAbsent(day, () => GlobalKey())
+          : null,
       day: day,
       isSelected: isSelected,
       isInRange: isInRange,
@@ -381,13 +384,20 @@ class _CalendarViewState extends State<CalendarView> {
   }
 
   void _navigateMonth(int offset) {
+    if (!_monthScrollController.hasClients) return;
     final newPage = _currentPage + offset;
-    if (newPage < 0 || newPage >= _monthsToShow) return;
-    _pageController.animateToPage(
-      newPage,
+
+    final pageMonth = _monthForPage(newPage);
+    final maybeBox = _monthHandlers[pageMonth]?.currentContext;
+    if (maybeBox == null) return;
+    _monthScrollController.position.ensureVisible(
+      maybeBox.findRenderObject()!,
       duration: const Duration(milliseconds: 300),
-      curve: Curves.easeInOut,
+      curve: Curves.easeIn,
     );
+    if (mounted) {
+      setState(() => _currentPage = newPage);
+    }
   }
 
   void _navigateYear(int offset) {
@@ -407,10 +417,10 @@ class _CalendarViewState extends State<CalendarView> {
       case CalendarViewDisplayMode.month:
         onTap = () {
           final yearPage =
-              _initialYearPage + (_visibleMonth.year - _anchorMonth.year);
+              _initialYearPage + (_visibleDate.year - _anchorMonth.year);
           setState(() {
             _currentYearPage = yearPage;
-            _visibleYear = DateTime(_visibleMonth.year, 1, 1);
+            _visibleYear = DateTime(_visibleDate.year, 1, 1);
             _displayMode = CalendarViewDisplayMode.year;
           });
           WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -419,10 +429,8 @@ class _CalendarViewState extends State<CalendarView> {
             }
           });
         };
-        onNext = _currentPage + 1 >= _monthsToShow
-            ? null
-            : () => _navigateMonth(1);
-        onPrevious = _currentPage - 1 < 0 ? null : () => _navigateMonth(-1);
+        onNext = () => _navigateMonth(1);
+        onPrevious = () => _navigateMonth(-1);
         break;
       case CalendarViewDisplayMode.year:
         onTap = () =>
@@ -439,7 +447,7 @@ class _CalendarViewState extends State<CalendarView> {
     return _CalendarHeader(
       date: _displayMode == CalendarViewDisplayMode.year
           ? _visibleYear
-          : _visibleMonth,
+          : _monthForPage(_currentPage),
       displayMode: _displayMode,
       onNext: onNext,
       onPrevious: onPrevious,
@@ -496,9 +504,6 @@ class _CalendarViewState extends State<CalendarView> {
             builder: (context) {
               Key forwardListKey = UniqueKey();
 
-              final now = DateTime.now();
-              final initialDate = DateTime(now.year, now.month, 1);
-
               Widget reverseGrid = SliverGrid(
                 gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                   crossAxisCount: 7,
@@ -506,9 +511,9 @@ class _CalendarViewState extends State<CalendarView> {
                 ),
                 delegate: SliverChildBuilderDelegate((context, index) {
                   final negativeIndex = _getNegativeIndex(index, 7);
-                  final day = initialDate.add(Duration(days: negativeIndex));
+                  final day = _referenceDate.add(Duration(days: negativeIndex));
 
-                  return _buildDayItem(day, now);
+                  return _buildDayItem(day, _referenceDate);
                 }),
               );
 
@@ -522,13 +527,14 @@ class _CalendarViewState extends State<CalendarView> {
                   childAspectRatio: 1.0,
                 ),
                 delegate: SliverChildBuilderDelegate((context, index) {
-                  final day = initialDate.add(Duration(days: index));
+                  final day = _referenceDate.add(Duration(days: index));
 
-                  return _buildDayItem(day, now);
+                  return _buildDayItem(day, _referenceDate);
                 }),
               );
 
               return CustomScrollView(
+                controller: _monthScrollController,
                 center: forwardListKey,
                 slivers: [reverseGrid, forwardGrid],
               );
@@ -610,19 +616,17 @@ class _CalendarViewState extends State<CalendarView> {
                         : null,
                     onTapped: () {
                       setState(() {
-                        _visibleMonth = month;
                         _currentPage =
-                            _initialPage +
                             (month.year - _anchorMonth.year) * 12 +
                             (month.month - _anchorMonth.month);
                         _displayMode = CalendarViewDisplayMode.month;
                       });
 
-                      WidgetsBinding.instance.addPostFrameCallback((_) {
-                        if (_pageController.hasClients) {
-                          _pageController.jumpToPage(_currentPage);
-                        }
-                      });
+                      // WidgetsBinding.instance.addPostFrameCallback((_) {
+                      //   if (_pageController.hasClients) {
+                      //     _pageController.jumpToPage(_currentPage);
+                      //   }
+                      // });
                     },
                   );
                 },
@@ -635,7 +639,7 @@ class _CalendarViewState extends State<CalendarView> {
   }
 
   Widget _buildDecadeView() {
-    final int startYear = (_visibleMonth.year ~/ 10) * 10;
+    final int startYear = (_visibleDate.year ~/ 10) * 10;
     final years = List.generate(16, (i) => startYear - 1 + i);
     return Column(
       mainAxisSize: MainAxisSize.min,
@@ -660,7 +664,7 @@ class _CalendarViewState extends State<CalendarView> {
               isDisabled:
                   isDisabled || y == startYear - 1 || y >= startYear + 10,
               onTapped: () => setState(() {
-                _visibleYear = _visibleMonth = DateTime(y, 1, 1);
+                _visibleYear = DateTime(y, 1, 1);
                 _displayMode = CalendarViewDisplayMode.year;
               }),
               fillColor: widget.selectionColor,
@@ -831,6 +835,7 @@ class _CalendarHeader extends StatelessWidget {
 /// Used internally by month/year selection views in the calendar
 class _CalendarItem extends StatelessWidget {
   const _CalendarItem({
+    super.key,
     required this.content,
     required this.isDisabled,
     required this.onTapped,
@@ -939,6 +944,7 @@ class _CalendarDayItem extends StatelessWidget {
   final Locale? locale;
 
   const _CalendarDayItem({
+    super.key,
     required this.day,
     required this.isSelected,
     required this.isInRange,
