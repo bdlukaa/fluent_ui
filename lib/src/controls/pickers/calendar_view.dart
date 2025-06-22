@@ -76,6 +76,7 @@ class CalendarSelectionData {
 ///
 ///  * [DatePicker], which provides a more compact date selection interface.
 ///  * [TimePicker], which allows users to select a time.
+///  * <https://learn.microsoft.com/en-us/windows/apps/design/controls/calendar-view>
 class CalendarView extends StatefulWidget {
   /// The initial start date for selection.
   final DateTime? initialStart;
@@ -100,10 +101,12 @@ class CalendarView extends StatefulWidget {
   final DateTime? maxDate;
 
   /// The color used to highlight selected dates.
+  ///
+  /// If null, the default accent color from the theme is used.
   final Color? selectionColor;
 
   /// The decoration for the calendar container.
-  final BoxDecoration? decoration;
+  final Decoration? decoration;
 
   /// The shape of the day item buttons.
   final ShapeBorder? dayItemShape;
@@ -119,6 +122,8 @@ class CalendarView extends StatefulWidget {
   final CalendarViewSelectionMode selectionMode;
 
   /// Whether to highlight today's date.
+  ///
+  /// Defaults to true.
   final bool isTodayHighlighted;
 
   /// This determines how many weeks are shown in the month view.
@@ -187,41 +192,42 @@ class CalendarView extends StatefulWidget {
        );
 
   @override
-  State<CalendarView> createState() => _CalendarViewState();
+  State<CalendarView> createState() => CalendarViewState();
 }
 
-class _CalendarViewState extends State<CalendarView> {
+class CalendarViewState extends State<CalendarView> {
+  /// The anchor month is the month that the calendar is currently centered on.
   late DateTime _anchorMonth;
-  late CalendarViewDisplayMode _displayMode;
-  DateTime? selectedStart;
-  DateTime? selectedEnd;
-  final selectedMultiple = <DateTime>[];
+  late CalendarViewDisplayMode _displayMode = widget.initialDisplayMode;
+  late DateTime? _selectedStart = widget.initialStart;
+  late DateTime? _selectedEnd =
+      widget.selectionMode == CalendarViewSelectionMode.range
+      ? widget.initialEnd
+      : null;
+  final _selectedMultiple = <DateTime>[];
 
   final _monthScrollController = ScrollController();
   final _yearScrollController = ScrollController();
 
-  /// Describes the date that is currently visible in the calendar when scrolling.
+  /// Describes the date that is currently visible in the calendar when
+  /// scrolling.
   DateTime? _scrollDate;
 
   static const double _rowHeight = 40.0;
   static const double _yearRowHeight = 60.0;
 
-  DateTime get _visibleDate {
+  /// The currently visible date in the calendar.
+  DateTime get visibleDate {
     return _scrollDate ?? _anchorMonth;
   }
 
   @override
   void initState() {
     super.initState();
-    selectedStart = widget.initialStart;
-    selectedEnd = widget.selectionMode == CalendarViewSelectionMode.range
-        ? widget.initialEnd
-        : null;
     if (widget.selectionMode == CalendarViewSelectionMode.multiple) {
-      if (selectedStart != null) selectedMultiple.add(selectedStart!);
-      if (selectedEnd != null) selectedMultiple.add(selectedEnd!);
+      if (_selectedStart != null) _selectedMultiple.add(_selectedStart!);
+      if (_selectedEnd != null) _selectedMultiple.add(_selectedEnd!);
     }
-    _displayMode = widget.initialDisplayMode;
     final anchor = widget.initialStart ?? DateTime.now();
     _anchorMonth = DateTime(anchor.year, anchor.month, 1);
 
@@ -242,13 +248,13 @@ class _CalendarViewState extends State<CalendarView> {
 
     if (widget.selectionMode != oldWidget.selectionMode) {
       // Reset selection state if the selection mode changes
-      selectedStart = widget.initialStart;
-      selectedEnd = widget.selectionMode == CalendarViewSelectionMode.range
+      _selectedStart = widget.initialStart;
+      _selectedEnd = widget.selectionMode == CalendarViewSelectionMode.range
           ? widget.initialEnd
           : null;
-      selectedMultiple.clear();
-      if (selectedStart != null) selectedMultiple.add(selectedStart!);
-      if (selectedEnd != null) selectedMultiple.add(selectedEnd!);
+      _selectedMultiple.clear();
+      if (_selectedStart != null) _selectedMultiple.add(_selectedStart!);
+      if (_selectedEnd != null) _selectedMultiple.add(_selectedEnd!);
     }
   }
 
@@ -282,17 +288,50 @@ class _CalendarViewState extends State<CalendarView> {
     return DateTime(_anchorMonth.year + page, _anchorMonth.month, 1);
   }
 
-  bool _isInRange(DateTime day) {
-    if (selectedStart == null || selectedEnd == null) return false;
-    return !day.isBefore(selectedStart!) && !day.isAfter(selectedEnd!);
+  /// Navigates to the specified month in the calendar view.
+  void navigateToMonth(DateTime date) {
+    setState(() {
+      _scrollDate = null;
+      _anchorMonth = DateTime(date.year, date.month, 1);
+      _displayMode = CalendarViewDisplayMode.month;
+    });
+    if (_monthScrollController.hasClients) {
+      _monthScrollController.jumpTo(0);
+    }
   }
 
-  bool _isSameDay(DateTime? a, DateTime? b) =>
-      a != null &&
-      b != null &&
-      a.year == b.year &&
-      a.month == b.month &&
-      a.day == b.day;
+  /// Steps to the next or previous month based on the offset.
+  ///
+  /// If the offset is positive, it navigates to a future month. If negative,
+  /// it navigates to a past month.
+  void stepMonth({int offset = 0}) {
+    navigateToMonth(_monthForPage(offset));
+  }
+
+  /// Navigates to the specified year in the calendar view.
+  void navigateToYear(DateTime date) {
+    setState(() {
+      _scrollDate = null;
+      _anchorMonth = DateTime(date.year, date.month, 1);
+      _displayMode = CalendarViewDisplayMode.year;
+    });
+    if (_yearScrollController.hasClients) {
+      _yearScrollController.jumpTo(0);
+    }
+  }
+
+  /// Steps to the next or previous year based on the offset.
+  ///
+  /// If the offset is positive, it navigates to a future year. If negative,
+  /// it navigates to a past year.
+  void stepYear({int offset = 0}) {
+    navigateToYear(_yearForPage(offset));
+  }
+
+  bool _isInRange(DateTime day) {
+    if (_selectedStart == null || _selectedEnd == null) return false;
+    return !day.isBefore(_selectedStart!) && !day.isAfter(_selectedEnd!);
+  }
 
   void _onDayTapped(DateTime day, bool inScope) {
     if (widget.selectionMode == CalendarViewSelectionMode.none) return;
@@ -300,49 +339,53 @@ class _CalendarViewState extends State<CalendarView> {
 
     setState(() {
       if (widget.selectionMode == CalendarViewSelectionMode.single) {
-        selectedStart = _isSameDay(selectedStart, day) ? null : day;
-        selectedEnd = null;
+        _selectedStart = DateUtils.isSameDay(_selectedStart, day) ? null : day;
+        _selectedEnd = null;
         widget.onSelectionChanged?.call(
           CalendarSelectionData(
-            selectedDates: selectedStart != null ? [selectedStart!] : [],
-            startDate: selectedStart,
+            selectedDates: _selectedStart != null ? [_selectedStart!] : [],
+            startDate: _selectedStart,
             endDate: null,
           ),
         );
       } else if (widget.selectionMode == CalendarViewSelectionMode.range) {
-        if (selectedStart == null || selectedEnd != null) {
-          selectedStart = day;
-          selectedEnd = null;
-        } else if (selectedStart != null && selectedEnd == null) {
-          if (day.isBefore(selectedStart!)) {
-            selectedEnd = selectedStart;
-            selectedStart = day;
+        if (_selectedStart == null || _selectedEnd != null) {
+          _selectedStart = day;
+          _selectedEnd = null;
+        } else if (_selectedStart != null && _selectedEnd == null) {
+          if (day.isBefore(_selectedStart!)) {
+            _selectedEnd = _selectedStart;
+            _selectedStart = day;
           } else {
-            selectedEnd = day;
+            _selectedEnd = day;
           }
           widget.onSelectionChanged?.call(
             CalendarSelectionData(
-              selectedDates: [?selectedStart, ?selectedEnd],
-              startDate: selectedStart,
-              endDate: selectedEnd,
+              selectedDates: [?_selectedStart, ?_selectedEnd],
+              startDate: _selectedStart,
+              endDate: _selectedEnd,
             ),
           );
         }
       } else if (widget.selectionMode == CalendarViewSelectionMode.multiple) {
-        bool alreadySelected = selectedMultiple.any((d) => _isSameDay(d, day));
+        final alreadySelected = _selectedMultiple.any(
+          (d) => DateUtils.isSameDay(d, day),
+        );
         if (alreadySelected) {
-          selectedMultiple.removeWhere((d) => _isSameDay(d, day));
+          _selectedMultiple.removeWhere((d) => DateUtils.isSameDay(d, day));
         } else {
-          selectedMultiple.add(day);
+          _selectedMultiple.add(day);
         }
-        selectedMultiple.sort((a, b) => a.compareTo(b));
+        _selectedMultiple.sort((a, b) => a.compareTo(b));
         widget.onSelectionChanged?.call(
           CalendarSelectionData(
-            selectedDates: List.unmodifiable(selectedMultiple),
-            startDate: selectedMultiple.isNotEmpty
-                ? selectedMultiple.first
+            selectedDates: List.unmodifiable(_selectedMultiple),
+            startDate: _selectedMultiple.isNotEmpty
+                ? _selectedMultiple.first
                 : null,
-            endDate: selectedMultiple.length > 1 ? selectedMultiple.last : null,
+            endDate: _selectedMultiple.length > 1
+                ? _selectedMultiple.last
+                : null,
           ),
         );
       }
@@ -385,27 +428,30 @@ class _CalendarViewState extends State<CalendarView> {
     );
   }
 
-  Widget _buildDayItem(DateTime day, DateTime? currentMonth) {
+  Widget _buildDayItem(DateTime day) {
+    final locale = widget.locale ?? Localizations.localeOf(context);
+
     final isBlackout =
         (widget.minDate != null && day.isBefore(widget.minDate!)) ||
         (widget.maxDate != null && day.isAfter(widget.maxDate!));
-    final isCurrentMonth = DateUtils.isSameMonth(day, currentMonth);
+    final isCurrentMonth = DateUtils.isSameMonth(day, visibleDate);
     final isFirstMonthDay = DateUtils.isSameDay(
       day,
       DateTime(day.year, day.month),
     );
     final isSelected = widget.selectionMode == CalendarViewSelectionMode.single
-        ? _isSameDay(day, selectedStart)
+        ? DateUtils.isSameDay(day, _selectedStart)
         : widget.selectionMode == CalendarViewSelectionMode.range
-        ? (_isSameDay(day, selectedStart) || _isSameDay(day, selectedEnd))
-        : selectedMultiple.any((d) => _isSameDay(day, d));
+        ? (DateUtils.isSameDay(day, _selectedStart) ||
+              DateUtils.isSameDay(day, _selectedEnd))
+        : _selectedMultiple.any((d) => DateUtils.isSameDay(day, d));
     final isInRange =
         widget.selectionMode == CalendarViewSelectionMode.range &&
-        selectedStart != null &&
-        selectedEnd != null &&
+        _selectedStart != null &&
+        _selectedEnd != null &&
         _isInRange(day);
     final isToday =
-        widget.isTodayHighlighted && _isSameDay(day, DateTime.now());
+        widget.isTodayHighlighted && DateUtils.isSameDay(day, DateTime.now());
 
     return _CalendarDayItem(
       day: day,
@@ -418,28 +464,8 @@ class _CalendarViewState extends State<CalendarView> {
       selectionColor: widget.selectionColor,
       isFilled: isToday,
       showGroupLabel: widget.isGroupLabelVisible && isFirstMonthDay,
-      locale: widget.locale,
+      locale: locale,
     );
-  }
-
-  void _navigateMonth({int offset = 0}) {
-    setState(() {
-      _scrollDate = null;
-      _anchorMonth = _monthForPage(offset);
-    });
-    if (_monthScrollController.hasClients) {
-      _monthScrollController.jumpTo(0);
-    }
-  }
-
-  void _navigateYear(int offset) {
-    setState(() {
-      _scrollDate = null;
-      _anchorMonth = _yearForPage(offset);
-    });
-    if (_yearScrollController.hasClients) {
-      _yearScrollController.jumpTo(0);
-    }
   }
 
   Widget _buildHeader() {
@@ -449,18 +475,18 @@ class _CalendarViewState extends State<CalendarView> {
       case CalendarViewDisplayMode.month:
         onTap = () {
           setState(() {
-            _navigateYear(0);
+            stepYear();
             _displayMode = CalendarViewDisplayMode.year;
           });
         };
-        onNext = () => _navigateMonth(offset: 1);
-        onPrevious = () => _navigateMonth(offset: -1);
+        onNext = () => stepMonth(offset: 1);
+        onPrevious = () => stepMonth(offset: -1);
         break;
       case CalendarViewDisplayMode.year:
         onTap = () =>
             setState(() => _displayMode = CalendarViewDisplayMode.decade);
-        onNext = () => _navigateYear(1);
-        onPrevious = () => _navigateYear(-1);
+        onNext = () => stepYear(offset: 1);
+        onPrevious = () => stepYear(offset: -1);
         break;
       case CalendarViewDisplayMode.decade:
         break;
@@ -474,7 +500,7 @@ class _CalendarViewState extends State<CalendarView> {
         bottom: 4.0,
       ),
       child: _CalendarHeader(
-        date: _visibleDate,
+        date: visibleDate,
         displayMode: _displayMode,
         onNext: onNext,
         onPrevious: onPrevious,
@@ -543,23 +569,23 @@ class _CalendarViewState extends State<CalendarView> {
                 mainAxisSpacing: 2.0,
               );
 
-              Widget reverseGrid = SliverGrid(
+              final reverseGrid = SliverGrid(
                 gridDelegate: gridDelegate,
                 delegate: SliverChildBuilderDelegate((context, index) {
                   final negativeIndex = _getNegativeIndex(index, 7) + offset;
                   final day = _anchorMonth.add(Duration(days: negativeIndex));
 
-                  return _buildDayItem(day, _anchorMonth);
+                  return _buildDayItem(day);
                 }),
               );
 
-              Widget forwardGrid = SliverGrid(
+              final forwardGrid = SliverGrid(
                 key: forwardListKey,
                 gridDelegate: gridDelegate,
                 delegate: SliverChildBuilderDelegate((context, index) {
                   final day = _anchorMonth.add(Duration(days: index - offset));
 
-                  return _buildDayItem(day, _anchorMonth);
+                  return _buildDayItem(day);
                 }),
               );
 
@@ -591,13 +617,15 @@ class _CalendarViewState extends State<CalendarView> {
             builder: (context) {
               final forwardListKey = UniqueKey();
 
+              const gridDelegate = SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: 4,
+                mainAxisSpacing: 4,
+                crossAxisSpacing: 4,
+                childAspectRatio: 1.3,
+              );
+
               final reverseGrid = SliverGrid(
-                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 4,
-                  mainAxisSpacing: 4,
-                  crossAxisSpacing: 4,
-                  childAspectRatio: 1.3,
-                ),
+                gridDelegate: gridDelegate,
                 delegate: SliverChildBuilderDelegate((context, index) {
                   final nIndex = _getNegativeIndex(index, 4);
                   final year = _anchorMonth.year + (nIndex ~/ 12);
@@ -608,12 +636,7 @@ class _CalendarViewState extends State<CalendarView> {
 
               final forwardGrid = SliverGrid(
                 key: forwardListKey,
-                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 4,
-                  mainAxisSpacing: 4,
-                  crossAxisSpacing: 4,
-                  childAspectRatio: 1.3,
-                ),
+                gridDelegate: gridDelegate,
                 delegate: SliverChildBuilderDelegate((context, index) {
                   final year = _anchorMonth.year + (index ~/ 12);
                   final monthNumber = (index % 12) + 1;
@@ -668,7 +691,7 @@ class _CalendarViewState extends State<CalendarView> {
   }
 
   Widget _buildDecadeView() {
-    final int startYear = (_visibleDate.year ~/ 10) * 10;
+    final int startYear = (visibleDate.year ~/ 10) * 10;
     final years = List.generate(16, (i) => startYear - 1 + i);
     return Column(
       mainAxisSize: MainAxisSize.min,
@@ -710,17 +733,17 @@ class _CalendarViewState extends State<CalendarView> {
     assert(debugCheckHasFluentTheme(context));
     final theme = FluentTheme.of(context);
 
-    final defaultCalendarDecoration = BoxDecoration(
-      color: theme.resources.controlFillColorInputActive,
-      borderRadius: BorderRadius.circular(4),
-      border: Border.all(
-        width: 1,
-        color: theme.resources.controlStrokeColorDefault,
-      ),
-    );
-
     return Container(
-      decoration: widget.decoration ?? defaultCalendarDecoration,
+      decoration:
+          widget.decoration ??
+          BoxDecoration(
+            color: theme.resources.controlFillColorInputActive,
+            borderRadius: BorderRadius.circular(4),
+            border: Border.all(
+              width: 1,
+              color: theme.resources.controlStrokeColorDefault,
+            ),
+          ),
       constraints: const BoxConstraints(maxWidth: 300, minHeight: 350),
       child: switch (_displayMode) {
         CalendarViewDisplayMode.month => _buildMonthView(),
@@ -966,15 +989,12 @@ class _CalendarDayItem extends StatelessWidget {
   /// If null, the default brush for the theme's accent color is used.
   final Color? selectionColor;
 
-  /// The shape of the day item button.
-  /// If null, a circular shape is used by default.
   final ShapeBorder? shape;
 
   /// Whether to show the month label above the day number for the first day of each month.
   final bool showGroupLabel;
 
-  /// DateTime locale
-  final Locale? locale;
+  final Locale locale;
 
   const _CalendarDayItem({
     required this.day,
@@ -983,11 +1003,11 @@ class _CalendarDayItem extends StatelessWidget {
     required this.isOutOfScope,
     required this.isBlackout,
     required this.onDayTapped,
+    required this.locale,
     this.shape,
     this.selectionColor,
     this.isFilled = false,
     required this.showGroupLabel,
-    this.locale,
   });
 
   @override
@@ -1011,7 +1031,6 @@ class _CalendarDayItem extends StatelessWidget {
               side: BorderSide(width: borderWidth, color: borderColor),
             ),
       ),
-      // margin: const EdgeInsets.all(1),
       padding: EdgeInsets.all(borderWidth),
       child: Button(
         style: ButtonStyle(
@@ -1052,7 +1071,7 @@ class _CalendarDayItem extends StatelessWidget {
               Positioned(
                 top: -6,
                 child: Text(
-                  DateFormat.MMM(locale).format(day),
+                  DateFormat.MMM(locale.toString()).format(day),
                   style: const TextStyle(fontSize: 8),
                 ),
               ),
