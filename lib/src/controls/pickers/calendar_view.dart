@@ -174,24 +174,14 @@ class CalendarView extends StatefulWidget {
 }
 
 class _CalendarViewState extends State<CalendarView> {
-  late final DateTime _anchorMonth;
-  var _currentPage = 0;
+  late DateTime _anchorMonth;
   late CalendarViewDisplayMode _displayMode;
   DateTime? selectedStart;
   DateTime? selectedEnd;
   final selectedMultiple = <DateTime>[];
 
-  final _monthScrollController = ScrollController();
-  final _monthHandlers = <DateTime, GlobalKey>{};
-
-  var _currentYearPage = 0;
-  final _yearScrollController = ScrollController();
-  final _yearHandlers = <DateTime, GlobalKey>{};
-
   DateTime get _visibleDate {
-    return _displayMode == CalendarViewDisplayMode.month
-        ? _monthForPage(_currentPage)
-        : _yearForPage(_currentYearPage);
+    return _anchorMonth;
   }
 
   @override
@@ -212,8 +202,6 @@ class _CalendarViewState extends State<CalendarView> {
 
   @override
   void dispose() {
-    _monthScrollController.dispose();
-    _yearScrollController.dispose();
     super.dispose();
   }
 
@@ -237,17 +225,8 @@ class _CalendarViewState extends State<CalendarView> {
     return DateTime(_anchorMonth.year, _anchorMonth.month + page, 1);
   }
 
-  int _pageForMonth(DateTime month) {
-    return (month.year - _anchorMonth.year) * 12 +
-        (month.month - _anchorMonth.month);
-  }
-
   DateTime _yearForPage(int page) {
-    return DateTime(_anchorMonth.year + page, 1, 1);
-  }
-
-  int _pageForYear(DateTime year) {
-    return year.year - _anchorMonth.year;
+    return DateTime(_anchorMonth.year + page, _anchorMonth.month, 1);
   }
 
   bool _isInRange(DateTime day) {
@@ -364,9 +343,6 @@ class _CalendarViewState extends State<CalendarView> {
         widget.isTodayHighlighted && _isSameDay(day, DateTime.now());
 
     return _CalendarDayItem(
-      key: isFirstMonthDay
-          ? _monthHandlers.putIfAbsent(day, () => GlobalKey())
-          : null,
       day: day,
       isSelected: isSelected,
       isInRange: isInRange,
@@ -381,56 +357,12 @@ class _CalendarViewState extends State<CalendarView> {
     );
   }
 
-  void _navigateMonth({
-    int offset = 0,
-    Duration duration = const Duration(milliseconds: 300),
-  }) {
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      if (!_monthScrollController.hasClients) return;
-      final newPage = _currentPage + offset;
-
-      final pageMonth = _monthForPage(newPage);
-      final maybeBox = _monthHandlers[pageMonth]?.currentContext;
-      if (maybeBox == null) {
-        // If the month is not found, we can't scroll to the closest month to it
-        // This can happen if the month is out of the current view range.
-
-        return;
-      }
-      _monthScrollController.position.ensureVisible(
-        maybeBox.findRenderObject()!,
-        duration: duration,
-        curve: Curves.easeIn,
-      );
-      if (mounted) {
-        setState(() {
-          _currentPage = newPage;
-          _currentYearPage = _pageForYear(pageMonth);
-        });
-      }
-    });
+  void _navigateMonth({int offset = 0}) {
+    setState(() => _anchorMonth = _monthForPage(offset));
   }
 
   void _navigateYear(int offset) {
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      if (!_yearScrollController.hasClients) return;
-
-      final newPage = _currentYearPage + offset;
-      final year = _yearForPage(newPage);
-      final maybeBox = _yearHandlers[year]?.currentContext;
-      if (maybeBox == null) return;
-      _yearScrollController.position.ensureVisible(
-        maybeBox.findRenderObject()!,
-        duration: const Duration(milliseconds: 300),
-        curve: Curves.easeIn,
-      );
-      if (mounted) {
-        setState(() {
-          _currentYearPage = newPage;
-          _displayMode = CalendarViewDisplayMode.year;
-        });
-      }
-    });
+    setState(() => _anchorMonth = _yearForPage(offset));
   }
 
   Widget _buildHeader() {
@@ -458,9 +390,7 @@ class _CalendarViewState extends State<CalendarView> {
     }
 
     return _CalendarHeader(
-      date: _displayMode == CalendarViewDisplayMode.year
-          ? _yearForPage(_currentYearPage)
-          : _monthForPage(_currentPage),
+      date: _anchorMonth,
       displayMode: _displayMode,
       onNext: onNext,
       onPrevious: onPrevious,
@@ -517,13 +447,19 @@ class _CalendarViewState extends State<CalendarView> {
             builder: (context) {
               Key forwardListKey = UniqueKey();
 
+              // The offset describes how many days from the first day of the
+              // week. This helps to align the first week of the month correctly.
+              int offset = _anchorMonth.weekday + 1;
+              if (offset > 7) offset = 1;
+              offset--;
+
               Widget reverseGrid = SliverGrid(
                 gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                   crossAxisCount: 7,
                   childAspectRatio: 1.0,
                 ),
                 delegate: SliverChildBuilderDelegate((context, index) {
-                  final negativeIndex = _getNegativeIndex(index, 7);
+                  final negativeIndex = _getNegativeIndex(index, 7) + offset;
                   final day = _anchorMonth.add(Duration(days: negativeIndex));
 
                   return _buildDayItem(day, _anchorMonth);
@@ -540,14 +476,13 @@ class _CalendarViewState extends State<CalendarView> {
                   childAspectRatio: 1.0,
                 ),
                 delegate: SliverChildBuilderDelegate((context, index) {
-                  final day = _anchorMonth.add(Duration(days: index));
+                  final day = _anchorMonth.add(Duration(days: index - offset));
 
                   return _buildDayItem(day, _anchorMonth);
                 }),
               );
 
               return CustomScrollView(
-                controller: _monthScrollController,
                 center: forwardListKey,
                 slivers: [reverseGrid, forwardGrid],
               );
@@ -605,7 +540,6 @@ class _CalendarViewState extends State<CalendarView> {
               );
 
               return CustomScrollView(
-                controller: _yearScrollController,
                 center: forwardListKey,
                 slivers: [reverseGrid, forwardGrid],
               );
@@ -621,7 +555,7 @@ class _CalendarViewState extends State<CalendarView> {
 
     final isValidMonth = monthNumber >= 1 && monthNumber <= 12;
     final month = isValidMonth
-        ? DateTime(year, monthNumber)
+        ? DateTime(year, monthNumber, 1)
         : DateTime(year + (monthNumber ~/ 12), monthNumber % 12);
     final isDisabled =
         !isValidMonth ||
@@ -633,9 +567,6 @@ class _CalendarViewState extends State<CalendarView> {
         DateTime.now().month == monthNumber;
     final showGroupLabel = widget.isGroupLabelVisible && month.month == 1;
     return _CalendarItem(
-      key: showGroupLabel
-          ? _yearHandlers.putIfAbsent(month, () => GlobalKey())
-          : null,
       content: DateFormat.MMM(locale.toString()).format(month).titleCase,
       isDisabled: isDisabled,
       isFilled: isFilled,
@@ -647,9 +578,8 @@ class _CalendarViewState extends State<CalendarView> {
       onTapped: () {
         setState(() {
           _displayMode = CalendarViewDisplayMode.month;
+          _anchorMonth = month;
         });
-        _currentPage = _pageForMonth(month);
-        _navigateMonth(duration: Duration.zero);
       },
     );
   }
@@ -850,7 +780,6 @@ class _CalendarHeader extends StatelessWidget {
 /// Used internally by month/year selection views in the calendar
 class _CalendarItem extends StatelessWidget {
   const _CalendarItem({
-    super.key,
     required this.content,
     required this.isDisabled,
     required this.onTapped,
@@ -959,7 +888,6 @@ class _CalendarDayItem extends StatelessWidget {
   final Locale? locale;
 
   const _CalendarDayItem({
-    super.key,
     required this.day,
     required this.isSelected,
     required this.isInRange,
