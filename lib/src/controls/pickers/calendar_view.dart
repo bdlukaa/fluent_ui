@@ -407,21 +407,18 @@ class _CalendarViewState extends State<CalendarView> {
     final isToday =
         widget.isTodayHighlighted && _isSameDay(day, DateTime.now());
 
-    return SizedBox(
-      height: _rowHeight,
-      child: _CalendarDayItem(
-        day: day,
-        isSelected: isSelected,
-        isInRange: isInRange,
-        isOutOfScope: !widget.isOutOfScopeEnabled && !isCurrentMonth,
-        isBlackout: isBlackout,
-        onDayTapped: (date) => _onDayTapped(date, !isBlackout),
-        shape: widget.dayItemShape,
-        selectionColor: widget.selectionColor,
-        isFilled: isToday,
-        showGroupLabel: widget.isGroupLabelVisible && isFirstMonthDay,
-        locale: widget.locale,
-      ),
+    return _CalendarDayItem(
+      day: day,
+      isSelected: isSelected,
+      isInRange: isInRange,
+      isOutOfScope: !widget.isOutOfScopeEnabled && !isCurrentMonth,
+      isBlackout: isBlackout,
+      onDayTapped: (date) => _onDayTapped(date, !isBlackout),
+      shape: widget.dayItemShape,
+      selectionColor: widget.selectionColor,
+      isFilled: isToday,
+      showGroupLabel: widget.isGroupLabelVisible && isFirstMonthDay,
+      locale: widget.locale,
     );
   }
 
@@ -430,6 +427,9 @@ class _CalendarViewState extends State<CalendarView> {
       _scrollDate = null;
       _anchorMonth = _monthForPage(offset);
     });
+    if (_monthScrollController.hasClients) {
+      _monthScrollController.jumpTo(0);
+    }
   }
 
   void _navigateYear(int offset) {
@@ -437,6 +437,9 @@ class _CalendarViewState extends State<CalendarView> {
       _scrollDate = null;
       _anchorMonth = _yearForPage(offset);
     });
+    if (_yearScrollController.hasClients) {
+      _yearScrollController.jumpTo(0);
+    }
   }
 
   Widget _buildHeader() {
@@ -533,11 +536,15 @@ class _CalendarViewState extends State<CalendarView> {
               // week. This align the first week of the month correctly.
               final offset = (_anchorMonth.weekday - firstDayOfWeek + 7) % 7;
 
+              const gridDelegate = SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: 7,
+                childAspectRatio: 1.0,
+                crossAxisSpacing: 2.0,
+                mainAxisSpacing: 2.0,
+              );
+
               Widget reverseGrid = SliverGrid(
-                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 7,
-                  childAspectRatio: 1.0,
-                ),
+                gridDelegate: gridDelegate,
                 delegate: SliverChildBuilderDelegate((context, index) {
                   final negativeIndex = _getNegativeIndex(index, 7) + offset;
                   final day = _anchorMonth.add(Duration(days: negativeIndex));
@@ -548,11 +555,7 @@ class _CalendarViewState extends State<CalendarView> {
 
               Widget forwardGrid = SliverGrid(
                 key: forwardListKey,
-
-                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 7,
-                  childAspectRatio: 1.0,
-                ),
+                gridDelegate: gridDelegate,
                 delegate: SliverChildBuilderDelegate((context, index) {
                   final day = _anchorMonth.add(Duration(days: index - offset));
 
@@ -1000,7 +1003,7 @@ class _CalendarDayItem extends StatelessWidget {
     final borderWidth = isSelected ? 1.0 : 0.0;
 
     return Container(
-      constraints: BoxConstraints.tight(const Size.square(38)),
+      constraints: BoxConstraints.tight(const Size.square(40)),
       decoration: ShapeDecoration(
         shape:
             shape ??
@@ -1013,7 +1016,7 @@ class _CalendarDayItem extends StatelessWidget {
       child: Button(
         style: ButtonStyle(
           padding: WidgetStatePropertyAll(
-            kDefaultButtonPadding - EdgeInsetsDirectional.all(borderWidth),
+            kDefaultButtonPadding - EdgeInsetsDirectional.all(borderWidth * 2),
           ),
           shape: WidgetStateProperty.resolveWith((states) {
             return const CircleBorder(side: BorderSide.none);
