@@ -126,6 +126,18 @@ class CalendarView extends StatefulWidget {
   /// It can be set to a value between 4 and 8, with the default being 6.
   final int weeksPerView;
 
+  /// The first day of the week.
+  ///
+  /// Defaults to the system's first day of the week.
+  ///
+  /// Monday is 1, Tuesday is 2, Wednesday is 3, Thursday is 4, Friday is 5,
+  /// Saturday is 6, and Sunday is 7.
+  ///
+  /// See also:
+  ///
+  ///  * [DateTime.weekday] for the weekday values.
+  final int? firstDayOfWeek;
+
   /// Whether to enable selection of out-of-scope dates.
   ///
   /// If enabled, users can select dates that are outside the defined[minDate]
@@ -164,10 +176,15 @@ class CalendarView extends StatefulWidget {
     this.decoration,
     this.headerStyle,
     this.weeksPerView = 6,
+    this.firstDayOfWeek,
     this.isOutOfScopeEnabled = false,
     this.locale,
     this.isGroupLabelVisible = true,
-  }) : assert(weeksPerView >= 4 && weeksPerView <= 8);
+  }) : assert(weeksPerView >= 4 && weeksPerView <= 8),
+       assert(
+         firstDayOfWeek == null || (firstDayOfWeek >= 1 && firstDayOfWeek <= 7),
+         'firstDayOfWeek must be between 1 and 7, or null for system default',
+       );
 
   @override
   State<CalendarView> createState() => _CalendarViewState();
@@ -303,7 +320,6 @@ class _CalendarViewState extends State<CalendarView> {
           } else {
             selectedEnd = day;
           }
-          // widget.onSelectionChanged?.call(selectedStart!, selectedEnd!);
           widget.onSelectionChanged?.call(
             CalendarSelectionData(
               selectedDates: [?selectedStart, ?selectedEnd],
@@ -333,23 +349,29 @@ class _CalendarViewState extends State<CalendarView> {
     });
   }
 
+  int get firstDayOfWeek {
+    final locale = widget.locale ?? Localizations.localeOf(context);
+    return widget.firstDayOfWeek ??
+        (DateFormat.yMd(locale.toString()).dateSymbols.FIRSTDAYOFWEEK + 1);
+  }
+
   Widget _buildWeekDays(BuildContext context) {
     final locale = widget.locale ?? Localizations.localeOf(context);
     final symbols = DateFormat.E(
       locale.toString(),
     ).dateSymbols.STANDALONESHORTWEEKDAYS;
+
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 8.0),
       child: Row(
         children: [
-          ...List.generate(7, (i) {
-            final weekdayIndex = i % 7;
-            return Expanded(
+          for (int i = 0; i < 7; i++)
+            Expanded(
               child: Center(
                 child: Padding(
                   padding: const EdgeInsets.all(1),
                   child: Text(
-                    symbols[weekdayIndex == 7 ? 0 : weekdayIndex].titleCase,
+                    symbols[(firstDayOfWeek + i) % 7],
                     style: FluentTheme.of(context).typography.body?.copyWith(
                       fontWeight: FontWeight.w500,
                       fontSize: 12,
@@ -357,8 +379,7 @@ class _CalendarViewState extends State<CalendarView> {
                   ),
                 ),
               ),
-            );
-          }),
+            ),
         ],
       ),
     );
@@ -477,7 +498,6 @@ class _CalendarViewState extends State<CalendarView> {
   ///
   /// [.... ,-14, -13, -12, -11, -10, -9, -8, -7, -6, -5, -4, -3, -2, -1, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, ...]
   int _getNegativeIndex(int index, int crossAxisCount) {
-    // Calculate the row and column of the item in the grid.
     final int row = index ~/ crossAxisCount;
     final int col = index % crossAxisCount;
 
@@ -507,13 +527,11 @@ class _CalendarViewState extends State<CalendarView> {
           height: widget.weeksPerView * _rowHeight,
           child: Builder(
             builder: (context) {
-              Key forwardListKey = UniqueKey();
+              final forwardListKey = UniqueKey();
 
               // The offset describes how many days from the first day of the
-              // week. This helps to align the first week of the month correctly.
-              int offset = _anchorMonth.weekday + 1;
-              if (offset > 7) offset = 1;
-              offset--;
+              // week. This align the first week of the month correctly.
+              final offset = (_anchorMonth.weekday - firstDayOfWeek + 7) % 7;
 
               Widget reverseGrid = SliverGrid(
                 gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
