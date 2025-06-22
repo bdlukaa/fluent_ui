@@ -106,7 +106,7 @@ class CalendarView extends StatefulWidget {
   final BoxDecoration? decoration;
 
   /// The shape of the day item buttons.
-  final WidgetStateProperty<ShapeBorder>? dayItemShape;
+  final ShapeBorder? dayItemShape;
 
   /// The initial display mode of the calendar view.
   ///
@@ -252,12 +252,6 @@ class _CalendarViewState extends State<CalendarView> {
     );
   }
 
-  DateTime _getFirstVisibleDayOfWeeksView(DateTime baseMonth) {
-    final firstOfMonth = DateTime(baseMonth.year, baseMonth.month, 1);
-    final weekday = firstOfMonth.weekday;
-    return firstOfMonth.subtract(Duration(days: weekday));
-  }
-
   bool _isInRange(DateTime day) {
     if (selectedStart == null || selectedEnd == null) return false;
     return !day.isBefore(selectedStart!) && !day.isAfter(selectedEnd!);
@@ -349,58 +343,41 @@ class _CalendarViewState extends State<CalendarView> {
     });
   }
 
-  Widget _buildWeeksGrid(DateTime forMonth) {
-    final List<Widget> rows = [];
-    final DateTime firstDay = _getFirstVisibleDayOfWeeksView(forMonth);
-    final DateTime currentMonth = DateTime(forMonth.year, forMonth.month);
+  Widget _buildDayItem(DateTime day, DateTime? currentMonth) {
+    final isBlackout =
+        (widget.minDate != null && day.isBefore(widget.minDate!)) ||
+        (widget.maxDate != null && day.isAfter(widget.maxDate!));
+    final isCurrentMonth = DateUtils.isSameMonth(day, currentMonth);
+    final isFirstMonthDay = DateUtils.isSameDay(
+      day,
+      DateTime(day.year, day.month),
+    );
+    final isSelected = widget.selectionMode == CalendarViewSelectionMode.single
+        ? _isSameDay(day, selectedStart)
+        : widget.selectionMode == CalendarViewSelectionMode.range
+        ? (_isSameDay(day, selectedStart) || _isSameDay(day, selectedEnd))
+        : selectedMultiple.any((d) => _isSameDay(day, d));
+    final isInRange =
+        widget.selectionMode == CalendarViewSelectionMode.range &&
+        selectedStart != null &&
+        selectedEnd != null &&
+        _isInRange(day);
+    final isToday =
+        widget.isTodayHighlighted && _isSameDay(day, DateTime.now());
 
-    for (int week = 0; week < widget.weeksPerView; week++) {
-      final days = <Widget>[];
-      for (int d = 0; d < 7; d++) {
-        final day = firstDay.add(Duration(days: week * 7 + d));
-        final isBlackout =
-            (widget.minDate != null && day.isBefore(widget.minDate!)) ||
-            (widget.maxDate != null && day.isAfter(widget.maxDate!));
-        final isCurrentMonth = DateUtils.isSameMonth(day, currentMonth);
-        final isFirstMonthDay = DateUtils.isSameDay(
-          day,
-          DateTime(day.year, day.month),
-        );
-        final isSelected =
-            widget.selectionMode == CalendarViewSelectionMode.single
-            ? _isSameDay(day, selectedStart)
-            : widget.selectionMode == CalendarViewSelectionMode.range
-            ? (_isSameDay(day, selectedStart) || _isSameDay(day, selectedEnd))
-            : selectedMultiple.any((d) => _isSameDay(day, d));
-        final isInRange =
-            widget.selectionMode == CalendarViewSelectionMode.range &&
-            selectedStart != null &&
-            selectedEnd != null &&
-            _isInRange(day);
-        final isToday =
-            widget.isTodayHighlighted && _isSameDay(day, DateTime.now());
-
-        days.add(
-          Expanded(
-            child: _CalendarDayItem(
-              day: day,
-              isSelected: isSelected,
-              isInRange: isInRange,
-              isOutOfScope: !widget.isOutOfScopeEnabled && !isCurrentMonth,
-              isBlackout: isBlackout,
-              onDayTapped: (date) => _onDayTapped(date, !isBlackout),
-              shape: widget.dayItemShape,
-              selectionColor: widget.selectionColor,
-              isFilled: isToday,
-              showGroupLabel: widget.isGroupLabelVisible && isFirstMonthDay,
-              locale: widget.locale,
-            ),
-          ),
-        );
-      }
-      rows.add(Row(children: days));
-    }
-    return Column(mainAxisSize: MainAxisSize.min, children: rows);
+    return _CalendarDayItem(
+      day: day,
+      isSelected: isSelected,
+      isInRange: isInRange,
+      isOutOfScope: !widget.isOutOfScopeEnabled && !isCurrentMonth,
+      isBlackout: isBlackout,
+      onDayTapped: (date) => _onDayTapped(date, !isBlackout),
+      shape: widget.dayItemShape,
+      selectionColor: widget.selectionColor,
+      isFilled: isToday,
+      showGroupLabel: widget.isGroupLabelVisible && isFirstMonthDay,
+      locale: widget.locale,
+    );
   }
 
   void _navigateMonth(int offset) {
@@ -473,6 +450,34 @@ class _CalendarViewState extends State<CalendarView> {
     );
   }
 
+  /// Calculates the negative index for a grid item based on its index and
+  /// the number of columns in the grid.
+  ///
+  /// The problem is that the reverse grid layout starts at the leftmost item,
+  /// causing this situation:
+  ///
+  /// [... ,-7, -8, -9, -10, -11, -12, -13, -0, -1, -2, -3, -4, -5, -6, 1, 2, 3, 4, 5, 6, 7, 8 , 9, 10, 11, 12, 13, 14, ...]
+  ///
+  /// The function calculates the row and column of the item in the grid,
+  /// then computes the index as if the items in the row were reversed.
+  /// Finally, it converts the 0-based swapped index to the final negative
+  /// display index.
+  ///
+  /// [.... ,-14, -13, -12, -11, -10, -9, -8, -7, -6, -5, -4, -3, -2, -1, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, ...]
+  int _getNegativeIndex(int index, int crossAxisCount) {
+    // Calculate the row and column of the item in the grid.
+    final int row = index ~/ crossAxisCount;
+    final int col = index % crossAxisCount;
+
+    // Calculate the index as if the items in the row were reversed.
+    // This finds the "mirror" index within the same row.
+    final int swappedIndexInRow = crossAxisCount - 1 - col;
+    final int swappedBuilderIndex = (row * crossAxisCount) + swappedIndexInRow;
+
+    // Convert the 0-based swapped index to the final negative display index.
+    return -swappedBuilderIndex - 1;
+  }
+
   Widget _buildMonthView() {
     return Column(
       mainAxisSize: MainAxisSize.min,
@@ -487,20 +492,46 @@ class _CalendarViewState extends State<CalendarView> {
         const SizedBox(height: 4),
         SizedBox(
           height: widget.weeksPerView * 40.0,
-          child: PageView.builder(
-            controller: _pageController,
-            scrollDirection: Axis.vertical,
-            pageSnapping: true,
-            itemCount: _monthsToShow,
-            onPageChanged: (index) {
-              setState(() {
-                _visibleMonth = _monthForPage(index);
-                _currentPage = index;
-              });
-            },
-            itemBuilder: (context, index) {
-              final month = _monthForPage(index);
-              return _buildWeeksGrid(month);
+          child: Builder(
+            builder: (context) {
+              Key forwardListKey = UniqueKey();
+
+              final now = DateTime.now();
+              final initialDate = DateTime(now.year, now.month, 1);
+
+              Widget reverseGrid = SliverGrid(
+                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                  crossAxisCount: 7,
+                  childAspectRatio: 1.0,
+                ),
+                delegate: SliverChildBuilderDelegate((context, index) {
+                  final negativeIndex = _getNegativeIndex(index, 7);
+                  final day = initialDate.add(Duration(days: negativeIndex));
+
+                  return _buildDayItem(day, now);
+                }),
+              );
+
+              Widget forwardGrid = SliverGrid(
+                key: forwardListKey,
+
+                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                  crossAxisCount: 7,
+                  // mainAxisSpacing: 4,
+                  // crossAxisSpacing: 4,
+                  childAspectRatio: 1.0,
+                ),
+                delegate: SliverChildBuilderDelegate((context, index) {
+                  final day = initialDate.add(Duration(days: index));
+
+                  return _buildDayItem(day, now);
+                }),
+              );
+
+              return CustomScrollView(
+                center: forwardListKey,
+                slivers: [reverseGrid, forwardGrid],
+              );
             },
           ),
         ),
@@ -815,7 +846,7 @@ class _CalendarItem extends StatelessWidget {
   final String? groupLabel;
   final VoidCallback onTapped;
   final Color? fillColor;
-  final WidgetStateProperty<ShapeBorder>? shape;
+  final ShapeBorder? shape;
 
   @override
   Widget build(BuildContext context) {
@@ -823,7 +854,7 @@ class _CalendarItem extends StatelessWidget {
     return Center(
       child: Button(
         style: ButtonStyle(
-          shape: shape ?? const WidgetStatePropertyAll(CircleBorder()),
+          shape: WidgetStatePropertyAll(shape ?? const CircleBorder()),
           backgroundColor: WidgetStateProperty.resolveWith((states) {
             if (isFilled) {
               return FilledButton.backgroundColor(theme, states);
@@ -899,7 +930,7 @@ class _CalendarDayItem extends StatelessWidget {
 
   /// The shape of the day item button.
   /// If null, a circular shape is used by default.
-  final WidgetStateProperty<ShapeBorder>? shape;
+  final ShapeBorder? shape;
 
   /// Whether to show the month label above the day number for the first day of each month.
   final bool showGroupLabel;
@@ -931,54 +962,65 @@ class _CalendarDayItem extends StatelessWidget {
         ? theme.resources.accentFillColorDisabled
         : theme.resources.subtleFillColorTransparent;
 
-    return Button(
-      style: ButtonStyle(
+    final borderWidth = isSelected ? 1.0 : 0.0;
+
+    return Container(
+      constraints: BoxConstraints.tight(const Size.square(38)),
+      decoration: ShapeDecoration(
         shape:
             shape ??
-            WidgetStateProperty.resolveWith((states) {
-              return CircleBorder(
-                side: BorderSide(width: 1, color: borderColor),
-              );
-            }),
-        backgroundColor: WidgetStateProperty.resolveWith((states) {
-          if (isFilled) return FilledButton.backgroundColor(theme, states);
-          if (isInRange) return color.withAlpha(50);
-          if (isBlackout) return Colors.transparent;
-          if (states.contains(WidgetState.hovered)) {
-            return selectionColor?.withAlpha(20) ??
-                theme.resources.subtleFillColorSecondary;
-          }
-
-          return theme.resources.subtleFillColorTransparent;
-        }),
-        foregroundColor: WidgetStateProperty.resolveWith((states) {
-          if (isBlackout) {
-            return theme.resources.textFillColorPrimary;
-          } else if (isOutOfScope) {
-            return theme.resources.textFillColorSecondary;
-          } else if (isFilled) {
-            return theme.resources.textOnAccentFillColorPrimary;
-          }
-          return isSelected ? color : theme.resources.textFillColorPrimary;
-        }),
-      ),
-      onPressed: isBlackout ? null : () => onDayTapped(day),
-      child: Stack(
-        alignment: Alignment.center,
-        children: [
-          if (showGroupLabel)
-            Positioned(
-              top: -3,
-              child: Text(
-                DateFormat.MMM(locale).format(day),
-                style: const TextStyle(fontSize: 8),
-              ),
+            CircleBorder(
+              side: BorderSide(width: borderWidth, color: borderColor),
             ),
-          Padding(
-            padding: const EdgeInsets.all(4.0),
-            child: Text('${day.day}'),
+      ),
+      // margin: const EdgeInsets.all(1),
+      padding: EdgeInsets.all(borderWidth),
+      child: Button(
+        style: ButtonStyle(
+          padding: WidgetStatePropertyAll(
+            kDefaultButtonPadding - EdgeInsetsDirectional.all(borderWidth),
           ),
-        ],
+          shape: WidgetStateProperty.resolveWith((states) {
+            return const CircleBorder(side: BorderSide.none);
+          }),
+          backgroundColor: WidgetStateProperty.resolveWith((states) {
+            if (isFilled) return FilledButton.backgroundColor(theme, states);
+            if (isInRange) return color.withAlpha(50);
+            if (isBlackout) return Colors.transparent;
+            if (states.contains(WidgetState.hovered)) {
+              return selectionColor?.withAlpha(20) ??
+                  theme.resources.subtleFillColorSecondary;
+            }
+
+            return theme.resources.subtleFillColorTransparent;
+          }),
+          foregroundColor: WidgetStateProperty.resolveWith((states) {
+            if (isBlackout) {
+              return theme.resources.textFillColorPrimary;
+            } else if (isOutOfScope) {
+              return theme.resources.textFillColorSecondary;
+            } else if (isFilled) {
+              return theme.resources.textOnAccentFillColorPrimary;
+            }
+            return isSelected ? color : theme.resources.textFillColorPrimary;
+          }),
+        ),
+        onPressed: isBlackout ? null : () => onDayTapped(day),
+        child: Stack(
+          alignment: Alignment.center,
+          clipBehavior: Clip.none,
+          children: [
+            if (showGroupLabel)
+              Positioned(
+                top: -6,
+                child: Text(
+                  DateFormat.MMM(locale).format(day),
+                  style: const TextStyle(fontSize: 8),
+                ),
+              ),
+            Text('${day.day}'),
+          ],
+        ),
       ),
     );
   }
