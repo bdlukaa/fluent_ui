@@ -46,11 +46,8 @@ class _CalendarViewPageState extends State<CalendarViewPage> with PageMixin {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              SizedBox(
-                width: 350,
-                child: CalendarView(
-                  selectionMode: selectionMode,
-                ),
+              CalendarView(
+                selectionMode: selectionMode,
               ),
               SizedBox(
                 width: 200,

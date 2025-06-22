@@ -333,27 +333,35 @@ class _CalendarViewState extends State<CalendarView> {
     });
   }
 
-  List<Widget> _buildWeekDays(BuildContext context) {
+  Widget _buildWeekDays(BuildContext context) {
     final locale = widget.locale ?? Localizations.localeOf(context);
     final symbols = DateFormat.E(
       locale.toString(),
     ).dateSymbols.STANDALONESHORTWEEKDAYS;
-    return List.generate(7, (i) {
-      final weekdayIndex = i % 7;
-      return Expanded(
-        child: Center(
-          child: Padding(
-            padding: const EdgeInsets.all(1),
-            child: Text(
-              symbols[weekdayIndex == 7 ? 0 : weekdayIndex].titleCase,
-              style: FluentTheme.of(
-                context,
-              ).typography.body?.copyWith(fontWeight: FontWeight.w500),
-            ),
-          ),
-        ),
-      );
-    });
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 8.0),
+      child: Row(
+        children: [
+          ...List.generate(7, (i) {
+            final weekdayIndex = i % 7;
+            return Expanded(
+              child: Center(
+                child: Padding(
+                  padding: const EdgeInsets.all(1),
+                  child: Text(
+                    symbols[weekdayIndex == 7 ? 0 : weekdayIndex].titleCase,
+                    style: FluentTheme.of(context).typography.body?.copyWith(
+                      fontWeight: FontWeight.w500,
+                      fontSize: 12,
+                    ),
+                  ),
+                ),
+              ),
+            );
+          }),
+        ],
+      ),
+    );
   }
 
   Widget _buildDayItem(DateTime day, DateTime? currentMonth) {
@@ -434,15 +442,23 @@ class _CalendarViewState extends State<CalendarView> {
         break;
     }
 
-    return _CalendarHeader(
-      date: _visibleDate,
-      displayMode: _displayMode,
-      onNext: onNext,
-      onPrevious: onPrevious,
-      onTap: onTap,
-      style: widget.headerStyle,
-      locale: widget.locale,
-      showNavigation: _displayMode != CalendarViewDisplayMode.decade,
+    return Padding(
+      padding: const EdgeInsetsDirectional.only(
+        start: 8.0,
+        end: 8.0,
+        top: 8.0,
+        bottom: 4.0,
+      ),
+      child: _CalendarHeader(
+        date: _visibleDate,
+        displayMode: _displayMode,
+        onNext: onNext,
+        onPrevious: onPrevious,
+        onTap: onTap,
+        style: widget.headerStyle,
+        locale: widget.locale,
+        showNavigation: _displayMode != CalendarViewDisplayMode.decade,
+      ),
     );
   }
 
@@ -484,10 +500,11 @@ class _CalendarViewState extends State<CalendarView> {
           style: DividerThemeData(horizontalMargin: EdgeInsets.zero),
         ),
         const SizedBox(height: 4),
-        Row(children: _buildWeekDays(context)),
+        _buildWeekDays(context),
         const SizedBox(height: 4),
-        SizedBox(
-          height: widget.weeksPerView * 40.0,
+        Container(
+          padding: const EdgeInsets.symmetric(horizontal: 8.0),
+          height: widget.weeksPerView * _rowHeight,
           child: Builder(
             builder: (context) {
               Key forwardListKey = UniqueKey();
@@ -676,14 +693,14 @@ class _CalendarViewState extends State<CalendarView> {
       color: theme.resources.controlFillColorInputActive,
       borderRadius: BorderRadius.circular(4),
       border: Border.all(
-        width: 0.15,
+        width: 1,
         color: theme.resources.controlStrokeColorDefault,
       ),
     );
 
     return Container(
       decoration: widget.decoration ?? defaultCalendarDecoration,
-      padding: const EdgeInsets.all(8),
+      constraints: const BoxConstraints(maxWidth: 300, minHeight: 350),
       child: switch (_displayMode) {
         CalendarViewDisplayMode.month => _buildMonthView(),
         CalendarViewDisplayMode.year => _buildYearView(),
@@ -789,17 +806,23 @@ class _CalendarHeader extends StatelessWidget {
             ),
           ),
           if (showNavigation) ...[
-            IconButton(
-              icon: const Center(
-                child: Icon(FluentIcons.caret_up_solid8, size: 10),
+            AspectRatio(
+              aspectRatio: 1,
+              child: IconButton(
+                icon: const Center(
+                  child: Icon(FluentIcons.caret_up_solid8, size: 10),
+                ),
+                onPressed: onPrevious,
               ),
-              onPressed: onPrevious,
             ),
-            IconButton(
-              icon: const Center(
-                child: Icon(FluentIcons.caret_down_solid8, size: 10),
+            AspectRatio(
+              aspectRatio: 1,
+              child: IconButton(
+                icon: const Center(
+                  child: Icon(FluentIcons.caret_down_solid8, size: 10),
+                ),
+                onPressed: onNext,
               ),
-              onPressed: onNext,
             ),
           ],
         ],
@@ -870,8 +893,8 @@ class _CalendarItem extends StatelessWidget {
           }),
         ),
         onPressed: isDisabled ? null : onTapped,
-        child: Padding(
-          padding: const EdgeInsets.all(8.0),
+        child: SizedBox.square(
+          dimension: 54,
           child: Stack(
             alignment: Alignment.center,
             clipBehavior: Clip.none,
