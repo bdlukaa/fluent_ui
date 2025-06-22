@@ -706,36 +706,17 @@ class _CalendarItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = FluentTheme.of(context);
-    final color =
-        fillColor ?? theme.accentColor.defaultBrushFor(theme.brightness);
     return Button(
       style: ButtonStyle(
         shape: shape ?? const WidgetStatePropertyAll(CircleBorder()),
         backgroundColor: WidgetStateProperty.resolveWith((states) {
-          if (states.contains(WidgetState.hovered)) {
-            if (isFilled) {
-              // Missing resource `AccentFillColorSecondaryBrush` (https://github.com/microsoft/microsoft-ui-xaml/blob/main/specs/CalendarView/CalendarViewSpec1.md#showcasing-the-todayhoverbackground-property---current-date-is-hovered)
-              // return theme.resources.accentFillColorSecondary;
-              return color.toAccentColor().dark;
-            } else {
-              return theme.resources.subtleFillColorSecondary;
-            }
-          }
-
-          return isFilled ? color : theme.resources.subtleFillColorTransparent;
+          return FilledButton.backgroundColor(theme, states);
         }),
         foregroundColor: WidgetStateProperty.resolveWith((states) {
           if (isDisabled) {
             return theme.resources.textFillColorDisabled;
-          }
-          if (isFilled) {
-            if (fillColor != null) {
-              return fillColor!.computeLuminance() > 0.5
-                  ? Colors.black
-                  : Colors.white;
-            } else {
-              return theme.resources.textOnAccentFillColorPrimary;
-            }
+          } else if (isFilled) {
+            return theme.resources.textOnAccentFillColorPrimary;
           }
           return theme.resources.textFillColorPrimary;
         }),
@@ -828,10 +809,9 @@ class _CalendarDayItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = FluentTheme.of(context);
-    final color =
-        selectionColor ?? theme.accentColor.defaultBrushFor(theme.brightness);
+    final color = theme.accentColor.defaultBrushFor(theme.brightness);
     final Color borderColor = isSelected
-        ? color
+        ? selectionColor ?? color
         : isBlackout
             ? theme.resources.accentFillColorDisabled
             : theme.resources.subtleFillColorTransparent;
@@ -842,36 +822,29 @@ class _CalendarDayItem extends StatelessWidget {
             WidgetStateProperty.resolveWith((states) {
               return CircleBorder(
                 side: BorderSide(
-                  width:
-                      1, // See `CalendarItemBorderThickness` at https://github.com/microsoft/microsoft-ui-xaml/blob/fb7a83b668baa612b5cc594678746dd8c1f8d8bd/src/controls/dev/CommonStyles/CalendarView_themeresources.xaml#L311
+                  width: 1,
                   color: borderColor,
                 ),
               );
             }),
         backgroundColor: WidgetStateProperty.resolveWith((states) {
-          if (isFilled) return color;
+          if (isFilled) return FilledButton.backgroundColor(theme, states);
           if (isInRange) return color.withAlpha(50);
           if (isBlackout) return Colors.transparent;
           if (states.contains(WidgetState.hovered)) {
             return selectionColor?.withAlpha(20) ??
-                // See `CalendarItemHoverBackground` at https://github.com/microsoft/microsoft-ui-xaml/blob/fb7a83b668baa612b5cc594678746dd8c1f8d8bd/src/controls/dev/CommonStyles/CalendarView_themeresources.xaml#L42
                 theme.resources.subtleFillColorSecondary;
           }
 
-          // See `CalendarViewCalendarItemBackground` at https://github.com/microsoft/microsoft-ui-xaml/blob/fb7a83b668baa612b5cc594678746dd8c1f8d8bd/src/controls/dev/CommonStyles/CalendarView_themeresources.xaml#L18
           return theme.resources.subtleFillColorTransparent;
         }),
         foregroundColor: WidgetStateProperty.resolveWith((states) {
           if (isBlackout) {
-            // See https://github.com/microsoft/microsoft-ui-xaml/blob/fb7a83b668baa612b5cc594678746dd8c1f8d8bd/src/controls/dev/CommonStyles/CalendarView_themeresources.xaml#L12
             return theme.resources.textFillColorPrimary;
-          }
-          if (isOutOfScope) {
-            // See https://github.com/microsoft/microsoft-ui-xaml/blob/fb7a83b668baa612b5cc594678746dd8c1f8d8bd/src/controls/dev/CommonStyles/CalendarView_themeresources.xaml#L15
+          } else if (isOutOfScope) {
             return theme.resources.textFillColorSecondary;
-          }
-          if (isFilled) {
-            return color.computeLuminance() > 0.5 ? Colors.black : Colors.white;
+          } else if (isFilled) {
+            return theme.resources.textOnAccentFillColorPrimary;
           }
           return isSelected ? color : theme.resources.textFillColorPrimary;
         }),
@@ -886,7 +859,6 @@ class _CalendarDayItem extends StatelessWidget {
               child: Text(
                 DateFormat.MMM(locale).format(day),
                 style: const TextStyle(
-                  // `FirstOfMonthLabelFontSize` at https://github.com/microsoft/microsoft-ui-xaml/blob/fb7a83b668baa612b5cc594678746dd8c1f8d8bd/src/controls/dev/CommonStyles/CalendarView_themeresources.xaml#L63
                   fontSize: 8,
                 ),
               ),
