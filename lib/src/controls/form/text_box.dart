@@ -147,7 +147,6 @@ class TextBox extends StatefulWidget {
     this.suffix,
     this.suffixMode = OverlayVisibilityMode.always,
     this.crossAxisAlignment = CrossAxisAlignment.center,
-    this.clearButtonMode = OverlayVisibilityMode.never,
     TextInputType? keyboardType,
     this.textInputAction,
     this.textCapitalization = TextCapitalization.none,
@@ -174,6 +173,7 @@ class TextBox extends StatefulWidget {
     this.onEditingComplete,
     this.onSubmitted,
     this.onTapOutside,
+    this.onTapUpOutside,
     this.inputFormatters,
     this.enabled = true,
     this.cursorWidth = 2.0,
@@ -201,6 +201,14 @@ class TextBox extends StatefulWidget {
     this.contextMenuBuilder = defaultContextMenuBuilder,
     this.spellCheckConfiguration,
     this.magnifierConfiguration,
+    this.forceLine = true,
+    this.mouseCursor,
+    this.onAppPrivateCommand,
+    this.onSelectionHandleTapped,
+    this.scrollBehavior,
+    this.textScaler,
+    this.textHeightBehavior,
+    this.textWidthBasis = TextWidthBasis.parent,
   })  : assert(obscuringCharacter.length == 1),
         smartDashesType = smartDashesType ??
             (obscureText ? SmartDashesType.disabled : SmartDashesType.enabled),
@@ -326,16 +334,6 @@ class TextBox extends StatefulWidget {
   /// Has no effect when both the [prefix] and [suffix] are null.
   final CrossAxisAlignment crossAxisAlignment;
 
-  /// Show an iOS-style clear button to clear the current text entry.
-  ///
-  /// Can be made to appear depending on various text states of the
-  /// [TextEditingController].
-  ///
-  /// Will only appear if no [suffix] widget is appearing.
-  ///
-  /// Defaults to [OverlayVisibilityMode.never].
-  final OverlayVisibilityMode clearButtonMode;
-
   /// {@macro flutter.widgets.editableText.keyboardType}
   final TextInputType keyboardType;
 
@@ -454,6 +452,9 @@ class TextBox extends StatefulWidget {
 
   /// {@macro flutter.widgets.editableText.onTapOutside}
   final TapRegionCallback? onTapOutside;
+
+  /// {@macro flutter.widgets.editableText.onTapUpOutside}
+  final TapRegionUpCallback? onTapUpOutside;
 
   /// {@macro flutter.widgets.editableText.inputFormatters}
   final List<TextInputFormatter>? inputFormatters;
@@ -597,6 +598,47 @@ class TextBox extends StatefulWidget {
   /// If [SpellCheckConfiguration.misspelledTextStyle] is not specified in this
   /// configuration, then [fluentMisspelledTextStyle] is used by default.
   final SpellCheckConfiguration? spellCheckConfiguration;
+
+  /// Whether the text will take the full width regardless of the text width.
+  ///
+  /// When this is set to false, the width will be based on text width, which
+  /// will also be affected by [textWidthBasis].
+  ///
+  /// Defaults to true.
+  ///
+  /// See also:
+  ///
+  ///  * [textWidthBasis], which controls the calculation of text width.
+  final bool forceLine;
+
+  /// The cursor for a mouse pointer when it enters or is hovering over the
+  /// widget.
+  ///
+  /// If this property is null, [SystemMouseCursors.text] will be used.
+  ///
+  /// The [mouseCursor] is the only property of [EditableText] that controls the
+  /// appearance of the mouse pointer. All other properties related to "cursor"
+  /// stands for the text cursor, which is usually a blinking vertical line at
+  /// the editing position.
+  final MouseCursor? mouseCursor;
+
+  /// {@macro flutter.widgets.editableText.onAppPrivateCommand}
+  final AppPrivateCommandCallback? onAppPrivateCommand;
+
+  /// {@macro flutter.widgets.SelectionOverlay.onSelectionHandleTapped}
+  final VoidCallback? onSelectionHandleTapped;
+
+  /// {@macro flutter.widgets.editableText.scrollBehavior}
+  final ScrollBehavior? scrollBehavior;
+
+  // {@macro flutter.painting.textPainter.textScaler}
+  final TextScaler? textScaler;
+
+  /// {@macro dart.ui.textHeightBehavior}
+  final TextHeightBehavior? textHeightBehavior;
+
+  /// {@macro flutter.painting.textPainter.textWidthBasis}
+  final TextWidthBasis textWidthBasis;
 
   /// The [TextStyle] used to indicate misspelled words in the Fluent style.
   ///
@@ -1175,6 +1217,16 @@ class _TextBoxState extends State<TextBox>
             contentInsertionConfiguration: widget.contentInsertionConfiguration,
             contextMenuBuilder: widget.contextMenuBuilder,
             spellCheckConfiguration: spellCheckConfiguration,
+            autofillHints: widget.autofillHints,
+            forceLine: widget.forceLine,
+            mouseCursor: widget.mouseCursor,
+            onAppPrivateCommand: widget.onAppPrivateCommand,
+            onSelectionHandleTapped: widget.onSelectionHandleTapped,
+            onTapUpOutside: widget.onTapUpOutside,
+            scrollBehavior: widget.scrollBehavior,
+            textScaler: widget.textScaler,
+            textHeightBehavior: widget.textHeightBehavior,
+            textWidthBasis: widget.textWidthBasis,
           ),
         ),
       ),

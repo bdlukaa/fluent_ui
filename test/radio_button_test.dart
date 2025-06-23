@@ -1,9 +1,30 @@
 import 'package:fluent_ui/fluent_ui.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 import 'app_test.dart';
 
 void main() {
+  testWidgets('RadioButton initializes with correct selected value',
+      (tester) async {
+    var radioButtonValue = true;
+
+    await tester.pumpWidget(
+      StatefulBuilder(
+        builder: (BuildContext context, StateSetter setState) {
+          return wrapApp(
+            child: RadioButton(
+              checked: radioButtonValue,
+              onChanged: (bool value) {},
+            ),
+          );
+        },
+      ),
+    );
+
+    expect(tester.widget<RadioButton>(find.byType(RadioButton)).checked,
+        radioButtonValue);
+  });
   testWidgets('RadioButton change state accordingly',
       (WidgetTester tester) async {
     var radioButtonValue = false;
@@ -34,5 +55,103 @@ void main() {
     await tester.tap(find.byType(RadioButton));
     await tester.pumpAndSettle();
     expect(radioButtonValue, false);
+  });
+  testWidgets('Radio Button can be focused and selected with keyboard',
+      (WidgetTester tester) async {
+    var radioButtonValue = false;
+    final focusNode = FocusNode();
+
+    await tester.pumpWidget(
+      StatefulBuilder(
+        builder: (BuildContext context, StateSetter setState) {
+          return wrapApp(
+            child: RadioButton(
+              focusNode: focusNode,
+              onChanged: (bool value) {
+                setState(() {
+                  radioButtonValue = value;
+                });
+              },
+              checked: radioButtonValue,
+            ),
+          );
+        },
+      ),
+    );
+    final radioButtonFinder = find.byType(RadioButton);
+
+    expect(radioButtonFinder, findsOneWidget);
+    expect(focusNode.hasFocus, false);
+    await tester.sendKeyEvent(LogicalKeyboardKey.tab);
+    expect(focusNode.hasFocus, true);
+    await tester.sendKeyEvent(LogicalKeyboardKey.enter);
+    await tester.pumpAndSettle();
+    expect(radioButtonValue, true);
+  });
+
+  testWidgets('Disabled RadioButton cannot be selected',
+      (WidgetTester tester) async {
+    var radioButtonValue = false;
+
+    await tester.pumpWidget(
+      StatefulBuilder(
+        builder: (BuildContext context, StateSetter setState) {
+          return wrapApp(
+            child: RadioButton(
+              onChanged: null,
+              checked: radioButtonValue,
+            ),
+          );
+        },
+      ),
+    );
+    final radioButtonFinder = find.byType(RadioButton);
+    final radioButtonWidget = tester.widget<RadioButton>(radioButtonFinder);
+
+    expect(radioButtonWidget.checked, false);
+    await tester.tap(radioButtonFinder);
+    await tester.pumpAndSettle();
+    expect(radioButtonValue, false);
+  });
+  testWidgets('Focus moves between RadioButtons in correct order',
+      (WidgetTester tester) async {
+    final focusNode1 = FocusNode();
+    final focusNode2 = FocusNode();
+
+    await tester.pumpWidget(
+      StatefulBuilder(
+        builder: (BuildContext context, StateSetter setState) {
+          return wrapApp(
+            child: Column(
+              children: [
+                RadioButton(
+                  autofocus: true,
+                  key: const Key('radioButton1'),
+                  focusNode: focusNode1,
+                  onChanged: (bool value) {},
+                  checked: true,
+                ),
+                RadioButton(
+                  key: const Key('radioButton2'),
+                  focusNode: focusNode2,
+                  onChanged: (bool value) {},
+                  checked: false,
+                ),
+              ],
+            ),
+          );
+        },
+      ),
+    );
+    final radioButton1Finder = find.byKey(const Key('radioButton1'));
+    final radioButton2Finder = find.byKey(const Key('radioButton2'));
+
+    expect(radioButton1Finder, findsOneWidget);
+    expect(radioButton2Finder, findsOneWidget);
+
+    expect(focusNode1.hasFocus, true);
+    expect(focusNode2.hasFocus, false);
+    await tester.sendKeyEvent(LogicalKeyboardKey.tab);
+    expect(focusNode2.hasFocus, isTrue);
   });
 }

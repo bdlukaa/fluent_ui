@@ -1,7 +1,19 @@
 ## [next]
 
 - fix: NavigationView transition when in top ([#1220](https://github.com/bdlukaa/fluent_ui/pull/1220))
-- fix: add missing translations for French ([#1217](https://github.com/bdlukaa/fluent_ui/pull/1217))
+- fix: `ToggleSwitch` outdated usage in the demo.
+
+## 4.12.0
+
+- feat: Support Flutter 3.32
+- feat: Added `TextBox.onTapUpOutside`, `TextBox.forceLine`, `TextBox.mouseCursor`, `TextBox.onAppPrivateCommand`, `TextBox.onSelectionHandleTapped`, `TextBox.scrollBehavior`, `TextBox.textScaler`, `TextBox.textHeightBehavior`, `TextBox.textWidthBasis`.
+- feat: Removed `TextBox.clearButtonMode` ([#1225](https://github.com/bdlukaa/fluent_ui/issues/1225))
+- fix: `FlyoutController` being used after disposed ([#1224](https://github.com/bdlukaa/fluent_ui/issues/1224))
+
+## 4.11.5
+
+- fix: Add missing translations for French ([#1217](https://github.com/bdlukaa/fluent_ui/pull/1217))
+- fix: Add missing translations for Spanish ([58bfc](https://github.com/bdlukaa/fluent_ui/commits/58bfc314fcd9c8d0859a8ed844121c77cb8654b4))
 - fix: Context Menu was not available on TextFormBox ([#1216](https://github.com/bdlukaa/fluent_ui/pull/1216), [#1219](https://github.com/bdlukaa/fluent_ui/pull/1219))
 - fix: Undo entry was doubled in EditableText context menu ([#1218](https://github.com/bdlukaa/fluent_ui/pull/1218))
 

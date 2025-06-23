@@ -917,7 +917,9 @@ class FlyoutController with ChangeNotifier, WidgetsBindingObserver {
         await _currentNavigator!.push<T>(_route! as PageRouteBuilder<T>);
 
     _route = _currentNavigator = null;
-    notifyListeners();
+    if (context.mounted) {
+      notifyListeners();
+    }
 
     return result;
   }

@@ -1,16 +1,17 @@
 import 'dart:math';
 
 import 'package:fluent_ui/fluent_ui.dart';
+import 'package:flutter/cupertino.dart' as c;
 import 'package:flutter/material.dart' as m;
 
-class MaterialEquivalents extends StatefulWidget {
-  const MaterialEquivalents({super.key});
+class UIEquivalents extends StatefulWidget {
+  const UIEquivalents({super.key});
 
   @override
-  State<MaterialEquivalents> createState() => _MaterialEquivalentsState();
+  State<UIEquivalents> createState() => _UIEquivalentsState();
 }
 
-class _MaterialEquivalentsState extends State<MaterialEquivalents> {
+class _UIEquivalentsState extends State<UIEquivalents> {
   bool comboboxChecked = true;
   bool radioChecked = true;
   bool switchChecked = true;
@@ -47,6 +48,10 @@ class _MaterialEquivalentsState extends State<MaterialEquivalents> {
           child: const Text('Content'),
           onPressed: () {},
         ),
+        c.CupertinoButton.tinted(
+          child: const Text('Content'),
+          onPressed: () {},
+        ),
       ],
       [
         const Text('HyperlinkButton'),
@@ -55,6 +60,10 @@ class _MaterialEquivalentsState extends State<MaterialEquivalents> {
           onPressed: () {},
         ),
         m.TextButton(
+          child: const Text('Content'),
+          onPressed: () {},
+        ),
+        c.CupertinoButton(
           child: const Text('Content'),
           onPressed: () {},
         ),
@@ -69,6 +78,10 @@ class _MaterialEquivalentsState extends State<MaterialEquivalents> {
           child: const Text('Content'),
           onPressed: () {},
         ),
+        c.CupertinoButton.filled(
+          child: const Text('Content'),
+          onPressed: () {},
+        ),
       ],
       [
         const Text('IconButton'),
@@ -80,6 +93,9 @@ class _MaterialEquivalentsState extends State<MaterialEquivalents> {
           icon: const Icon(FluentIcons.graph_symbol),
           onPressed: () {},
         ),
+        // c.CupertinoNavigationBarBackButton(
+        //   onPressed: () {},
+        // ),
       ],
       [
         const Text('Checkbox'),
@@ -89,6 +105,11 @@ class _MaterialEquivalentsState extends State<MaterialEquivalents> {
               setState(() => comboboxChecked = v ?? comboboxChecked),
         ),
         m.Checkbox(
+          value: comboboxChecked,
+          onChanged: (v) =>
+              setState(() => comboboxChecked = v ?? comboboxChecked),
+        ),
+        c.CupertinoCheckbox(
           value: comboboxChecked,
           onChanged: (v) =>
               setState(() => comboboxChecked = v ?? comboboxChecked),
@@ -105,6 +126,11 @@ class _MaterialEquivalentsState extends State<MaterialEquivalents> {
           value: radioChecked,
           onChanged: (v) => setState(() => radioChecked = !radioChecked),
         ),
+        c.CupertinoRadio(
+          value: true,
+          groupValue: radioChecked,
+          onChanged: (v) => setState(() => radioChecked = !radioChecked),
+        ),
       ],
       [
         const Text('ToggleSwitch'),
@@ -113,6 +139,10 @@ class _MaterialEquivalentsState extends State<MaterialEquivalents> {
           onChanged: (v) => setState(() => switchChecked = v),
         ),
         m.Switch(
+          value: switchChecked,
+          onChanged: (v) => setState(() => switchChecked = v),
+        ),
+        c.CupertinoSwitch(
           value: switchChecked,
           onChanged: (v) => setState(() => switchChecked = v),
         ),
@@ -129,16 +159,23 @@ class _MaterialEquivalentsState extends State<MaterialEquivalents> {
           max: 100,
           onChanged: (v) => setState(() => sliderValue = v),
         ),
+        c.CupertinoSlider(
+          value: sliderValue,
+          max: 100,
+          onChanged: (v) => setState(() => sliderValue = v),
+        ),
       ],
       [
         const Text('ProgressRing'),
         const RepaintBoundary(child: ProgressRing()),
         const RepaintBoundary(child: m.CircularProgressIndicator()),
+        const RepaintBoundary(child: c.CupertinoActivityIndicator()),
       ],
       [
         const Text('ProgressBar'),
         const RepaintBoundary(child: ProgressBar()),
         const RepaintBoundary(child: m.LinearProgressIndicator()),
+        const RepaintBoundary(child: c.CupertinoActivityIndicator()),
       ],
       [
         const Text('ComboBox'),
@@ -155,6 +192,12 @@ class _MaterialEquivalentsState extends State<MaterialEquivalents> {
               .toList(),
           value: comboboxItem,
           onChanged: (value) => setState(() => comboboxItem = value),
+        ),
+        c.CupertinoPicker(
+          itemExtent: 32.0,
+          onSelectedItemChanged: (value) =>
+              setState(() => comboboxItem = comboboxItems[value]),
+          children: comboboxItems.map((e) => c.Text(e)).toList(),
         ),
       ],
       [
@@ -192,11 +235,33 @@ class _MaterialEquivalentsState extends State<MaterialEquivalents> {
             },
           ),
         ),
+        c.CupertinoButton(
+          child: Text(dropdownItem),
+          onPressed: () {
+            c.showCupertinoModalPopup(
+              context: context,
+              builder: (context) => c.CupertinoActionSheet(
+                actions: comboboxItems
+                    .map(
+                      (e) => c.CupertinoActionSheetAction(
+                        child: c.Text(e),
+                        onPressed: () => setState(() => dropdownItem = e),
+                      ),
+                    )
+                    .toList(),
+              ),
+            );
+          },
+        ),
       ],
       [
         const Text('TextBox'),
         TextBox(controller: fieldController),
         m.TextField(controller: fieldController),
+        c.CupertinoTextField(
+          controller: fieldController,
+          style: const c.TextStyle(color: Colors.white),
+        ),
       ],
       [
         const Text('TimePicker'),
@@ -226,6 +291,39 @@ class _MaterialEquivalentsState extends State<MaterialEquivalents> {
             }
           },
         ),
+        c.CupertinoButton(
+          child: const Text('Show Picker'),
+          onPressed: () async {
+            c.showCupertinoModalPopup(
+              barrierDismissible: true,
+              context: context,
+              builder: (context) {
+                return Align(
+                  alignment: Alignment.bottomCenter,
+                  child: Container(
+                    height: 216,
+                    padding: const EdgeInsets.only(top: 6.0),
+                    margin: EdgeInsets.only(
+                        bottom: MediaQuery.of(context).viewInsets.bottom),
+                    color:
+                        c.CupertinoColors.systemBackground.resolveFrom(context),
+                    child: SafeArea(
+                      top: false,
+                      child: c.CupertinoDatePicker(
+                        initialDateTime: time,
+                        mode: c.CupertinoDatePickerMode.time,
+                        use24hFormat: true,
+                        onDateTimeChanged: (DateTime newDate) {
+                          setState(() => time = newDate);
+                        },
+                      ),
+                    ),
+                  ),
+                );
+              },
+            );
+          },
+        ),
       ],
       [
         const Text('DatePicker'),
@@ -247,6 +345,40 @@ class _MaterialEquivalentsState extends State<MaterialEquivalents> {
             }
           },
         ),
+        c.CupertinoButton(
+          child: const Text('Show Picker'),
+          onPressed: () async {
+            c.showCupertinoModalPopup(
+              barrierDismissible: true,
+              context: context,
+              builder: (context) {
+                return Align(
+                  alignment: Alignment.bottomCenter,
+                  child: Container(
+                    height: 216,
+                    padding: const EdgeInsets.only(top: 6.0),
+                    margin: EdgeInsets.only(
+                        bottom: MediaQuery.of(context).viewInsets.bottom),
+                    color:
+                        c.CupertinoColors.systemBackground.resolveFrom(context),
+                    child: SafeArea(
+                      top: false,
+                      child: c.CupertinoDatePicker(
+                        initialDateTime: time,
+                        mode: c.CupertinoDatePickerMode.date,
+                        use24hFormat: true,
+                        showDayOfWeek: true,
+                        onDateTimeChanged: (DateTime newDate) {
+                          setState(() => time = newDate);
+                        },
+                      ),
+                    ),
+                  ),
+                );
+              },
+            );
+          },
+        ),
       ],
       [
         const Text('ListTile'),
@@ -256,6 +388,11 @@ class _MaterialEquivalentsState extends State<MaterialEquivalents> {
           onPressed: () {},
         ),
         m.ListTile(
+          leading: const Icon(FluentIcons.graph_symbol),
+          title: const Text('Content'),
+          onTap: () {},
+        ),
+        c.CupertinoListTile(
           leading: const Icon(FluentIcons.graph_symbol),
           title: const Text('Content'),
           onTap: () {},
@@ -275,16 +412,21 @@ class _MaterialEquivalentsState extends State<MaterialEquivalents> {
     ];
 
     Widget buildColumn(int index) {
-      return Column(
-        children: children
-            .map(
-              (children) => Container(
-                constraints: const BoxConstraints(minHeight: 50.0),
-                alignment: AlignmentDirectional.center,
-                child: children[index],
-              ),
-            )
-            .toList(),
+      return FocusTraversalGroup(
+        child: Column(
+          children: children
+              .map(
+                (children) => Container(
+                  constraints: const BoxConstraints(minHeight: 50.0),
+                  alignment: AlignmentDirectional.center,
+                  child: children.firstWhere(
+                    (e) => children.indexOf(e) == index,
+                    orElse: () => const SizedBox(),
+                  ),
+                ),
+              )
+              .toList(),
+        ),
       );
     }
 
@@ -296,6 +438,8 @@ class _MaterialEquivalentsState extends State<MaterialEquivalents> {
         Expanded(child: buildColumn(1)),
         const m.VerticalDivider(),
         Expanded(child: buildColumn(2)),
+        const m.VerticalDivider(),
+        Expanded(child: buildColumn(3)),
       ]),
     );
   }

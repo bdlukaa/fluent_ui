@@ -1,13 +1,13 @@
 name: fluent_ui
 description: Implements Microsoft's Windows User Interface in Flutter.
-version: 4.11.4
+version: 4.12.0
 homepage: https://bdlukaa.github.io/fluent_ui/#/
 repository: https://github.com/bdlukaa/fluent_ui
 issue_tracker: https://github.com/bdlukaa/fluent_ui/issues
 
 environment:
   sdk: ">=3.0.0 <4.0.0"
-  flutter: ">=3.27.0"
+  flutter: ">=3.32.0"
 
 topics:
   - windows
@@ -22,7 +22,7 @@ dependencies:
     sdk: flutter
 
   # Used on date and time pickers
-  intl: '>=0.19.0 <= 1.0.0'
+  intl: '>=0.20.2 <= 1.0.0'
 
   # Used on TabView
   scroll_pos: '>=0.5.0 < 1.0.0'

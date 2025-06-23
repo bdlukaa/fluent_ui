@@ -10,6 +10,7 @@ class CardHighlight extends StatefulWidget {
     this.header,
     required this.child,
     required this.codeSnippet,
+    this.initiallyOpen = false,
   });
 
   final Widget? header;
@@ -17,6 +18,7 @@ class CardHighlight extends StatefulWidget {
   final String codeSnippet;
 
   final Color? backgroundColor;
+  final bool initiallyOpen;
 
   @override
   State<CardHighlight> createState() => _CardHighlightState();
@@ -24,8 +26,8 @@ class CardHighlight extends StatefulWidget {
 
 class _CardHighlightState extends State<CardHighlight>
     with AutomaticKeepAliveClientMixin<CardHighlight> {
-  bool isOpen = false;
-  bool isCopying = false;
+  late var isOpen = widget.initiallyOpen;
+  var isCopying = false;
 
   final GlobalKey expanderKey = GlobalKey<ExpanderState>(
     debugLabel: 'Card Expander Key',
@@ -60,6 +62,7 @@ class _CardHighlightState extends State<CardHighlight>
             ),
           ),
           Expander(
+            initiallyExpanded: widget.initiallyOpen,
             key: expanderKey,
             onStateChanged: (state) {
               // this is done because [onStateChanges] is called while the [Expander]
