@@ -323,7 +323,7 @@ class CalendarViewState extends State<CalendarView> {
   /// If the offset is positive, it navigates to a future month. If negative,
   /// it navigates to a past month.
   void stepMonth({int offset = 0}) {
-    final offsetDate = DateTime(_anchorMonth.year, _anchorMonth.month + offset, 1);
+    final offsetDate = DateTime(visibleDate.year, visibleDate.month + offset, 1);
     navigateToMonth(offsetDate);
   }
 
