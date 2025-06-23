@@ -1,5 +1,6 @@
 ## [next]
 
+- fix: NavigationView transition when in top ([#1220](https://github.com/bdlukaa/fluent_ui/pull/1220))
 - fix: `ToggleSwitch` outdated usage in the demo.
 
 ## 4.12.0

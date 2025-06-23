@@ -122,12 +122,12 @@ class _NavigationBodyState extends State<_NavigationBody> {
           if (isTop) {
             // Other transtitions other than default is only applied to top nav
             // when clicking overflow on topnav, transition is from bottom
-            // otherwise if prevItem is on left side of nextActualItem, transition is from left
-            //           if prevItem is on right side of nextActualItem, transition is from right
+            // otherwise if prevItem is on right side of nextActualItem, transition is from left
+            //           if prevItem is on left side of nextActualItem, transition is from right
             // click on Settings item is considered Default
             return HorizontalSlidePageTransition(
               animation: animation,
-              fromLeft: view.previousItemIndex < (view.pane?.selected ?? 0),
+              fromLeft: view.previousItemIndex > (view.pane?.selected ?? 0),
               child: child,
             );
           }
