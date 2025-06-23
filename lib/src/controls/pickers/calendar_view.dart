@@ -324,7 +324,11 @@ class CalendarViewState extends State<CalendarView> {
   /// If the offset is positive, it navigates to a future month. If negative,
   /// it navigates to a past month.
   void stepMonth({int offset = 0}) {
-    final offsetDate = DateTime(visibleDate.year, visibleDate.month + offset, 1);
+    final offsetDate = DateTime(
+      visibleDate.year,
+      visibleDate.month + offset,
+      1,
+    );
     navigateToMonth(offsetDate);
   }
 
@@ -354,60 +358,67 @@ class CalendarViewState extends State<CalendarView> {
   }
 
   void _onDayTapped(DateTime day, bool inScope) {
-    if (widget.selectionMode == CalendarViewSelectionMode.none) return;
     if (!inScope && !widget.isOutOfScopeEnabled) return;
 
     setState(() {
-      if (widget.selectionMode == CalendarViewSelectionMode.single) {
-        _selectedStart = DateUtils.isSameDay(_selectedStart, day) ? null : day;
-        _selectedEnd = null;
-        widget.onSelectionChanged?.call(
-          CalendarSelectionData(
-            selectedDates: _selectedStart != null ? [_selectedStart!] : [],
-            startDate: _selectedStart,
-            endDate: null,
-          ),
-        );
-      } else if (widget.selectionMode == CalendarViewSelectionMode.range) {
-        if (_selectedStart == null || _selectedEnd != null) {
-          _selectedStart = day;
+      switch (widget.selectionMode) {
+        case CalendarViewSelectionMode.single:
+          _selectedStart = DateUtils.isSameDay(_selectedStart, day)
+              ? null
+              : day;
           _selectedEnd = null;
-        } else if (_selectedStart != null && _selectedEnd == null) {
-          if (day.isBefore(_selectedStart!)) {
-            _selectedEnd = _selectedStart;
-            _selectedStart = day;
-          } else {
-            _selectedEnd = day;
-          }
           widget.onSelectionChanged?.call(
             CalendarSelectionData(
-              selectedDates: [?_selectedStart, ?_selectedEnd],
+              selectedDates: _selectedStart != null ? [_selectedStart!] : [],
               startDate: _selectedStart,
-              endDate: _selectedEnd,
+              endDate: null,
             ),
           );
-        }
-      } else if (widget.selectionMode == CalendarViewSelectionMode.multiple) {
-        final alreadySelected = _selectedMultiple.any(
-          (d) => DateUtils.isSameDay(d, day),
-        );
-        if (alreadySelected) {
-          _selectedMultiple.removeWhere((d) => DateUtils.isSameDay(d, day));
-        } else {
-          _selectedMultiple.add(day);
-        }
-        _selectedMultiple.sort((a, b) => a.compareTo(b));
-        widget.onSelectionChanged?.call(
-          CalendarSelectionData(
-            selectedDates: List.unmodifiable(_selectedMultiple),
-            startDate: _selectedMultiple.isNotEmpty
-                ? _selectedMultiple.first
-                : null,
-            endDate: _selectedMultiple.length > 1
-                ? _selectedMultiple.last
-                : null,
-          ),
-        );
+          break;
+        case CalendarViewSelectionMode.range:
+          if (_selectedStart == null || _selectedEnd != null) {
+            _selectedStart = day;
+            _selectedEnd = null;
+          } else if (_selectedStart != null && _selectedEnd == null) {
+            if (day.isBefore(_selectedStart!)) {
+              _selectedEnd = _selectedStart;
+              _selectedStart = day;
+            } else {
+              _selectedEnd = day;
+            }
+            widget.onSelectionChanged?.call(
+              CalendarSelectionData(
+                selectedDates: [?_selectedStart, ?_selectedEnd],
+                startDate: _selectedStart,
+                endDate: _selectedEnd,
+              ),
+            );
+          }
+          break;
+        case CalendarViewSelectionMode.multiple:
+          final alreadySelected = _selectedMultiple.any(
+            (d) => DateUtils.isSameDay(d, day),
+          );
+          if (alreadySelected) {
+            _selectedMultiple.removeWhere((d) => DateUtils.isSameDay(d, day));
+          } else {
+            _selectedMultiple.add(day);
+          }
+          _selectedMultiple.sort((a, b) => a.compareTo(b));
+          widget.onSelectionChanged?.call(
+            CalendarSelectionData(
+              selectedDates: List.unmodifiable(_selectedMultiple),
+              startDate: _selectedMultiple.isNotEmpty
+                  ? _selectedMultiple.first
+                  : null,
+              endDate: _selectedMultiple.length > 1
+                  ? _selectedMultiple.last
+                  : null,
+            ),
+          );
+          break;
+        default:
+          return;
       }
     });
   }
