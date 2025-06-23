@@ -121,6 +121,18 @@ class CalendarView extends StatefulWidget {
   /// Defaults to [CalendarViewSelectionMode.single].
   final CalendarViewSelectionMode selectionMode;
 
+  /// A list of dates that should be disabled or unavailable for selection in the calendar view.
+  ///
+  /// Any date included in this list will be considered a "blackout" date, meaning users will not
+  /// be able to select it. This is useful for preventing selection of holidays, weekends, or other
+  /// restricted dates.
+  ///
+  /// Example:
+  /// ```dart
+  /// blackoutDates: [DateTime(2024, 1, 1), DateTime(2024, 12, 25)]
+  /// ```
+  final List<DateTime> blackoutDates;
+
   /// Whether to highlight today's date.
   ///
   /// Defaults to true.
@@ -145,8 +157,8 @@ class CalendarView extends StatefulWidget {
 
   /// Whether to enable selection of out-of-scope dates.
   ///
-  /// If enabled, users can select dates that are outside the defined[minDate]
-  /// and [maxDate].
+  /// If enabled, users can select dates that are outside the days of the
+  /// visible month.
   ///
   /// If disabled, out-of-scope dates will be visually distinct and cannot be
   /// selected.
@@ -177,6 +189,7 @@ class CalendarView extends StatefulWidget {
     this.initialDisplayMode = CalendarViewDisplayMode.month,
     this.selectionMode = CalendarViewSelectionMode.single,
     this.selectionColor,
+    this.blackoutDates = const <DateTime>[],
     this.isTodayHighlighted = true,
     this.decoration,
     this.headerStyle,
@@ -432,6 +445,7 @@ class CalendarViewState extends State<CalendarView> {
     final locale = widget.locale ?? Localizations.localeOf(context);
 
     final isBlackout =
+        widget.blackoutDates.contains(day) ||
         (widget.minDate != null && day.isBefore(widget.minDate!)) ||
         (widget.maxDate != null && day.isAfter(widget.maxDate!));
     final isCurrentMonth = DateUtils.isSameMonth(day, visibleDate);
