@@ -276,9 +276,10 @@ class CalendarViewState extends State<CalendarView> {
     final pixels = _monthScrollController.position.pixels;
     final rowIndex = (pixels / _rowHeight).round();
     if (_displayMode == CalendarViewDisplayMode.month) {
-      final page = (rowIndex / 5).round();
       setState(() {
-        _scrollDate = _monthForPage(page);
+        // todo(kv): work pretty well when adding 10 days.
+        //  It is maybe due because of bug of the duplicated week in June.
+        _scrollDate = _daysFromAnchor((rowIndex * 7 + 10).toInt());
       });
     }
   }
@@ -294,8 +295,12 @@ class CalendarViewState extends State<CalendarView> {
     }
   }
 
-  DateTime _monthForPage(int page) {
-    return DateTime(_anchorMonth.year, _anchorMonth.month + page, 1);
+  DateTime _daysFromAnchor(int days) {
+    return DateTime(
+      _anchorMonth.year,
+      _anchorMonth.month,
+      1,
+    ).add(Duration(days: days));
   }
 
   DateTime _yearForPage(int page) {
@@ -319,7 +324,8 @@ class CalendarViewState extends State<CalendarView> {
   /// If the offset is positive, it navigates to a future month. If negative,
   /// it navigates to a past month.
   void stepMonth({int offset = 0}) {
-    navigateToMonth(_monthForPage(offset));
+    final offsetDate = DateTime(visibleDate.year, visibleDate.month + offset, 1);
+    navigateToMonth(offsetDate);
   }
 
   /// Navigates to the specified year in the calendar view.
@@ -580,8 +586,9 @@ class CalendarViewState extends State<CalendarView> {
               const gridDelegate = SliverGridDelegateWithFixedCrossAxisCount(
                 crossAxisCount: 7,
                 childAspectRatio: 1.0,
-                crossAxisSpacing: 2.0,
-                mainAxisSpacing: 2.0,
+                crossAxisSpacing: 0.0,
+                mainAxisSpacing: 0.0,
+                mainAxisExtent: _rowHeight,
               );
 
               final reverseGrid = SliverGrid(
