@@ -1105,12 +1105,12 @@ class _CalendarDayItem extends StatelessWidget {
             return theme.resources.subtleFillColorTransparent;
           }),
           foregroundColor: WidgetStateProperty.resolveWith((states) {
-            if (isBlackout) {
+            if (isFilled) {
+              return theme.resources.textOnAccentFillColorPrimary;
+            } else if (isBlackout) {
               return theme.resources.textFillColorPrimary;
             } else if (isOutOfScope) {
               return theme.resources.textFillColorSecondary;
-            } else if (isFilled) {
-              return theme.resources.textOnAccentFillColorPrimary;
             }
             return isSelected ? color : theme.resources.textFillColorPrimary;
           }),
