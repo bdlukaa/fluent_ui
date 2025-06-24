@@ -41,13 +41,22 @@ class _CalendarViewPageState extends State<CalendarViewPage> with PageMixin {
         ),
         subtitle(content: const Text('Default CalendarView')),
         CardHighlight(
-          codeSnippet: 'CalendarView();',
+          codeSnippet: '''CalendarView(
+  selectionMode: $selectionMode,
+  onSelectionChanged: (value) {
+    debugPrint('\${value.selectedDates}');
+  },
+);
+''',
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               CalendarView(
                 selectionMode: selectionMode,
+                onSelectionChanged: (value) {
+                  debugPrint('${value.selectedDates}');
+                },
               ),
               SizedBox(
                 width: 200,

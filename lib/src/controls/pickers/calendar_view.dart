@@ -440,6 +440,7 @@ class CalendarViewState extends State<CalendarView> {
     });
   }
 
+  /// Gets the first day of the week based on the current locale.
   int get firstDayOfWeek {
     final locale = widget.locale ?? Localizations.localeOf(context);
     return widget.firstDayOfWeek ??
