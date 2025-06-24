@@ -239,13 +239,14 @@ class CalendarViewState extends State<CalendarView> {
 
   final _monthScrollController = ScrollController();
   final _yearScrollController = ScrollController();
+  final _decadeScrollController = ScrollController();
 
   /// Describes the date that is currently visible in the calendar when
   /// scrolling.
   DateTime? _scrollDate;
 
   static const double _rowHeight = 40.0;
-  static const double _yearRowHeight = 68.0;
+  static const double _yearRowHeight = 70.0;
 
   /// The currently visible date in the calendar.
   DateTime get visibleDate {
@@ -264,12 +265,14 @@ class CalendarViewState extends State<CalendarView> {
 
     _monthScrollController.addListener(_monthScrollListener);
     _yearScrollController.addListener(_yearScrollListener);
+    _decadeScrollController.addListener(_decadeScrollListener);
   }
 
   @override
   void dispose() {
     _monthScrollController.dispose();
     _yearScrollController.dispose();
+    _decadeScrollController.dispose();
     super.dispose();
   }
 
@@ -308,6 +311,16 @@ class CalendarViewState extends State<CalendarView> {
       final page = (rowIndex / 4).round();
       setState(() {
         _scrollDate = _yearForPage(page);
+      });
+    }
+  }
+
+  void _decadeScrollListener() {
+    final pixels = _decadeScrollController.position.pixels;
+    final rowIndex = (pixels / _yearRowHeight).round();
+    if (_displayMode == CalendarViewDisplayMode.decade) {
+      setState(() {
+        _scrollDate = DateTime(_anchorMonth.year + rowIndex, 1, 1);
       });
     }
   }
@@ -554,7 +567,7 @@ class CalendarViewState extends State<CalendarView> {
         displayMode: _displayMode,
         onNext: onNext,
         onPrevious: onPrevious,
-        onTap: onTap,
+        onTap: _displayMode == CalendarViewDisplayMode.decade ? null : onTap,
         style: widget.headerStyle,
         locale: widget.locale,
         showNavigation: _displayMode != CalendarViewDisplayMode.decade,
@@ -652,10 +665,8 @@ class CalendarViewState extends State<CalendarView> {
     );
   }
 
+  double get _yearViewHeight => (widget.yearsPerView / 4) * _yearRowHeight;
   Widget _buildYearView() {
-    print(
-      '${(widget.yearsPerView ~/ 4) * _yearRowHeight} - ${widget.weeksPerView * _rowHeight}',
-    );
     return Column(
       mainAxisSize: MainAxisSize.min,
       spacing: 4,
@@ -666,7 +677,7 @@ class CalendarViewState extends State<CalendarView> {
         ),
         const SizedBox(height: 4),
         SizedBox(
-          height: (widget.yearsPerView ~/ 4) * _yearRowHeight,
+          height: _yearViewHeight,
           child: Builder(
             builder: (context) {
               final forwardListKey = UniqueKey();
@@ -744,8 +755,6 @@ class CalendarViewState extends State<CalendarView> {
   }
 
   Widget _buildDecadeView() {
-    final int startYear = (visibleDate.year ~/ 10) * 10;
-    final years = List.generate(16, (i) => startYear - 1 + i);
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: [
@@ -753,31 +762,64 @@ class CalendarViewState extends State<CalendarView> {
         const Divider(
           style: DividerThemeData(horizontalMargin: EdgeInsets.zero),
         ),
-        GridView.count(
-          shrinkWrap: true,
-          physics: const NeverScrollableScrollPhysics(),
-          crossAxisCount: 4,
-          children: years.map((y) {
-            final isCurrentYear = y == DateTime.now().year;
-            final isDisabled =
-                (widget.minDate != null &&
-                    DateTime(y).isBefore(widget.minDate!)) ||
-                (widget.maxDate != null &&
-                    DateTime(y, 12, 31).isAfter(widget.maxDate!));
-            return _CalendarItem(
-              content: y.toString(),
-              isDisabled:
-                  isDisabled || y == startYear - 1 || y >= startYear + 10,
-              onTapped: () => setState(() {
-                _displayMode = CalendarViewDisplayMode.year;
-              }),
-              fillColor: widget.selectionColor,
-              isFilled: isCurrentYear,
-              shape: widget.dayItemShape,
-            );
-          }).toList(),
+        const SizedBox(height: 4),
+        SizedBox(
+          height: _yearViewHeight,
+          child: Builder(
+            builder: (context) {
+              final forwardListKey = UniqueKey();
+
+              const gridDelegate = SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: 4,
+                childAspectRatio: 1.1,
+              );
+
+              final reverseGrid = SliverGrid(
+                gridDelegate: gridDelegate,
+                delegate: SliverChildBuilderDelegate((context, index) {
+                  final nIndex = _getNegativeIndex(index, 4);
+                  final year = _anchorMonth.year + nIndex;
+                  return _buildDecadeItem(year);
+                }),
+              );
+
+              final forwardGrid = SliverGrid(
+                key: forwardListKey,
+                gridDelegate: gridDelegate,
+                delegate: SliverChildBuilderDelegate((context, index) {
+                  final year = _anchorMonth.year + index;
+
+                  return _buildDecadeItem(year);
+                }),
+              );
+
+              return CustomScrollView(
+                controller: _decadeScrollController,
+                center: forwardListKey,
+                slivers: [reverseGrid, forwardGrid],
+              );
+            },
+          ),
         ),
       ],
+    );
+  }
+
+  Widget _buildDecadeItem(int year) {
+    final isCurrentYear = year == DateTime.now().year;
+    final isDisabled =
+        (widget.minDate != null && DateTime(year).isBefore(widget.minDate!)) ||
+        (widget.maxDate != null &&
+            DateTime(year, 12, 31).isAfter(widget.maxDate!));
+    return _CalendarItem(
+      content: year.toString(),
+      isDisabled: isDisabled,
+      onTapped: () => setState(() {
+        _displayMode = CalendarViewDisplayMode.year;
+      }),
+      fillColor: widget.selectionColor,
+      isFilled: isCurrentYear,
+      shape: widget.dayItemShape,
     );
   }
 
@@ -852,23 +894,27 @@ class _CalendarHeader extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = FluentTheme.of(context);
-    final fLocale = locale ?? Localizations.localeOf(context);
+    final locale = this.locale ?? Localizations.localeOf(context);
     String label;
 
     switch (displayMode) {
       case CalendarViewDisplayMode.month:
-        label = DateFormat.yMMMM(
-          fLocale.toLanguageTag(),
-        ).format(date).titleCase;
+        label = DateFormat.yMMMM(locale.toLanguageTag()).format(date).titleCase;
         break;
       case CalendarViewDisplayMode.year:
         label = date.year.toString();
         break;
       case CalendarViewDisplayMode.decade:
         final startYear = (date.year ~/ 10) * 10;
-        label = '$startYear - ${startYear + 9}';
+        final endYear = startYear + 9;
+        label = '$startYear - $endYear';
         break;
     }
+
+    final foregroundColor = WidgetStateProperty.resolveWith((states) {
+      if (states.isDisabled) return theme.resources.textFillColorDisabled;
+      return null;
+    });
 
     return IntrinsicHeight(
       child: Row(
@@ -892,11 +938,20 @@ class _CalendarHeader extends StatelessWidget {
               icon: Row(
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
-                  Text(
-                    label,
-                    style:
-                        style ??
-                        theme.typography.subtitle?.copyWith(fontSize: 14),
+                  Builder(
+                    builder: (context) {
+                      return Text(
+                        label,
+                        style:
+                            style ??
+                            theme.typography.subtitle?.copyWith(
+                              fontSize: 14,
+                              color: foregroundColor.resolve(
+                                HoverButton.of(context).states,
+                              ),
+                            ),
+                      );
+                    },
                   ),
                 ],
               ),
