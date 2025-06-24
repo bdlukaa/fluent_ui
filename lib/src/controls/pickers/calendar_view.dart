@@ -1117,8 +1117,6 @@ class _CalendarDayItem extends StatelessWidget {
     final color = theme.accentColor.defaultBrushFor(theme.brightness);
     final Color borderColor = isSelected
         ? selectionColor ?? color
-        : isBlackout
-        ? theme.resources.accentFillColorDisabled
         : theme.resources.subtleFillColorTransparent;
 
     final borderWidth = isSelected ? 1.0 : 0.0;
@@ -1133,53 +1131,102 @@ class _CalendarDayItem extends StatelessWidget {
             ),
       ),
       padding: EdgeInsets.all(borderWidth),
-      child: Button(
-        style: ButtonStyle(
-          padding: WidgetStatePropertyAll(
-            kDefaultButtonPadding - EdgeInsetsDirectional.all(borderWidth * 2),
-          ),
-          shape: WidgetStateProperty.resolveWith((states) {
-            return const CircleBorder(side: BorderSide.none);
-          }),
-          backgroundColor: WidgetStateProperty.resolveWith((states) {
-            if (isFilled) return FilledButton.backgroundColor(theme, states);
-            if (isInRange) return color.withAlpha(50);
-            if (isBlackout) return Colors.transparent;
-            if (states.contains(WidgetState.hovered)) {
-              return selectionColor?.withAlpha(20) ??
-                  theme.resources.subtleFillColorSecondary;
-            }
-
-            return theme.resources.subtleFillColorTransparent;
-          }),
-          foregroundColor: WidgetStateProperty.resolveWith((states) {
-            if (isFilled) {
-              return theme.resources.textOnAccentFillColorPrimary;
-            } else if (isBlackout) {
-              return theme.resources.textFillColorPrimary;
-            } else if (isOutOfScope) {
-              return theme.resources.textFillColorSecondary;
-            }
-            return isSelected ? color : theme.resources.textFillColorPrimary;
-          }),
-        ),
-        onPressed: isBlackout ? null : () => onDayTapped(day),
-        child: Stack(
-          alignment: Alignment.center,
-          clipBehavior: Clip.none,
-          children: [
-            if (showGroupLabel)
-              Positioned(
-                top: -6,
-                child: Text(
-                  DateFormat.MMM(locale.toString()).format(day),
-                  style: const TextStyle(fontSize: 8),
-                ),
+      child: Stack(
+        fit: StackFit.expand,
+        children: [
+          Button(
+            style: ButtonStyle(
+              padding: WidgetStatePropertyAll(
+                kDefaultButtonPadding -
+                    EdgeInsetsDirectional.all(borderWidth * 2),
               ),
-            Text('${day.day}'),
-          ],
-        ),
+              shape: WidgetStateProperty.resolveWith((states) {
+                return const CircleBorder(side: BorderSide.none);
+              }),
+              backgroundColor: WidgetStateProperty.resolveWith((states) {
+                if (isBlackout) {
+                  return isFilled
+                      ? selectionColor ?? color
+                      : Colors.transparent;
+                }
+                if (isFilled)
+                  return FilledButton.backgroundColor(theme, states);
+                if (isInRange) return color.withAlpha(50);
+                if (states.contains(WidgetState.hovered)) {
+                  return selectionColor?.withAlpha(20) ??
+                      theme.resources.subtleFillColorSecondary;
+                }
+                return theme.resources.subtleFillColorTransparent;
+              }),
+              foregroundColor: WidgetStateProperty.resolveWith((states) {
+                if (isFilled) {
+                  return theme.resources.textOnAccentFillColorPrimary;
+                } else if (isBlackout) {
+                  return theme.resources.textFillColorPrimary;
+                } else if (isOutOfScope) {
+                  return theme.resources.textFillColorSecondary;
+                }
+                return isSelected
+                    ? color
+                    : theme.resources.textFillColorPrimary;
+              }),
+            ),
+            onPressed: isBlackout ? null : () => onDayTapped(day),
+            child: Stack(
+              alignment: Alignment.center,
+              clipBehavior: Clip.none,
+              children: [
+                if (showGroupLabel)
+                  Positioned(
+                    top: -6,
+                    child: Text(
+                      DateFormat.MMM(locale.toString()).format(day),
+                      style: const TextStyle(fontSize: 8),
+                    ),
+                  ),
+                Text('${day.day}'),
+              ],
+            ),
+          ),
+          if (isBlackout)
+            CustomPaint(
+              painter: _SlashPainter(
+                color: isFilled
+                    ? theme.resources.textOnAccentFillColorPrimary
+                    : theme.resources.controlStrongStrokeColorDefault,
+              ),
+            ),
+        ],
       ),
     );
   }
+}
+
+/// A [CustomPainter] that draws a diagonal slash (from top-right to bottom-left)
+/// with configurable color and padding. Useful for indicating disabled or unavailable
+/// states in UI elements.
+///
+/// The slash is drawn with a fixed stroke width and rounded stroke cap.
+class _SlashPainter extends CustomPainter {
+  final Color color;
+
+  _SlashPainter({required this.color});
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    final paint = Paint()
+      ..color = color
+      ..strokeWidth = 1.15
+      ..strokeCap = StrokeCap.round;
+
+    final pad = size.width * 0.3;
+    canvas.drawLine(
+      Offset(size.width - pad, pad),
+      Offset(pad, size.height - pad),
+      paint,
+    );
+  }
+
+  @override
+  bool shouldRepaint(_SlashPainter oldDelegate) => oldDelegate.color != color;
 }
