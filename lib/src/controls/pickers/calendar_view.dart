@@ -139,10 +139,18 @@ class CalendarView extends StatefulWidget {
   /// Defaults to true.
   final bool isTodayHighlighted;
 
-  /// This determines how many weeks are shown in the month view.
+  /// The number of weeks to display in the month view.
   ///
   /// It can be set to a value between 4 and 8, with the default being 6.
   final int weeksPerView;
+
+  /// The number of years to display in the year view.
+  ///
+  /// Every row contains 4 years, so the total number of years per view must
+  /// be a multiple of 4.
+  ///
+  /// Defaults to 16 years per view.
+  final int yearsPerView;
 
   /// The first day of the week.
   ///
@@ -179,7 +187,7 @@ class CalendarView extends StatefulWidget {
   final Locale? locale;
 
   /// Creates a new [CalendarView].
-  const CalendarView({
+  CalendarView({
     super.key,
     this.initialStart,
     this.initialEnd,
@@ -195,14 +203,23 @@ class CalendarView extends StatefulWidget {
     this.decoration,
     this.headerStyle,
     this.weeksPerView = 6,
+    this.yearsPerView = 16,
     this.firstDayOfWeek,
     this.isOutOfScopeEnabled = false,
     this.locale,
     this.isGroupLabelVisible = true,
   }) : assert(weeksPerView >= 4 && weeksPerView <= 8),
+       assert(yearsPerView > 0, 'yearsPerView must be greater than 0'),
+       assert(yearsPerView % 4 == 0, 'yearsPerView must be a multiple of 4'),
        assert(
          firstDayOfWeek == null || (firstDayOfWeek >= 1 && firstDayOfWeek <= 7),
          'firstDayOfWeek must be between 1 and 7, or null for system default',
+       ),
+       assert(
+         initialStart == null ||
+             initialEnd == null ||
+             initialStart.isBefore(initialEnd),
+         'initialStart must be before initialEnd if both are provided.',
        );
 
   @override
@@ -228,7 +245,7 @@ class CalendarViewState extends State<CalendarView> {
   DateTime? _scrollDate;
 
   static const double _rowHeight = 40.0;
-  static const double _yearRowHeight = 60.0;
+  static const double _yearRowHeight = 68.0;
 
   /// The currently visible date in the calendar.
   DateTime get visibleDate {
@@ -635,6 +652,9 @@ class CalendarViewState extends State<CalendarView> {
   }
 
   Widget _buildYearView() {
+    print(
+      '${(widget.yearsPerView ~/ 4) * _yearRowHeight} - ${widget.weeksPerView * _rowHeight}',
+    );
     return Column(
       mainAxisSize: MainAxisSize.min,
       spacing: 4,
@@ -645,16 +665,14 @@ class CalendarViewState extends State<CalendarView> {
         ),
         const SizedBox(height: 4),
         SizedBox(
-          height: 4 * 68.0,
+          height: (widget.yearsPerView ~/ 4) * _yearRowHeight,
           child: Builder(
             builder: (context) {
               final forwardListKey = UniqueKey();
 
               const gridDelegate = SliverGridDelegateWithFixedCrossAxisCount(
                 crossAxisCount: 4,
-                mainAxisSpacing: 4,
-                crossAxisSpacing: 4,
-                childAspectRatio: 1.3,
+                childAspectRatio: 1.1,
               );
 
               final reverseGrid = SliverGrid(
@@ -673,6 +691,7 @@ class CalendarViewState extends State<CalendarView> {
                 delegate: SliverChildBuilderDelegate((context, index) {
                   final year = _anchorMonth.year + (index ~/ 12);
                   final monthNumber = (index % 12) + 1;
+
                   return _buildYearItem(year, monthNumber);
                 }),
               );
@@ -978,7 +997,7 @@ class _CalendarItem extends StatelessWidget {
             children: [
               if (groupLabel != null)
                 Positioned(
-                  top: -6,
+                  top: 0,
                   child: Text(groupLabel!, style: const TextStyle(fontSize: 8)),
                 ),
               Padding(padding: const EdgeInsets.all(4.0), child: Text(content)),
