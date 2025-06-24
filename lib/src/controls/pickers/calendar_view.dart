@@ -814,9 +814,7 @@ class CalendarViewState extends State<CalendarView> {
     return _CalendarItem(
       content: year.toString(),
       isDisabled: isDisabled,
-      onTapped: () => setState(() {
-        _displayMode = CalendarViewDisplayMode.year;
-      }),
+      onTapped: () => navigateToYear(DateTime(year)),
       fillColor: widget.selectionColor,
       isFilled: isCurrentYear,
       shape: widget.dayItemShape,
