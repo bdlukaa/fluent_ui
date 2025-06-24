@@ -745,12 +745,7 @@ class CalendarViewState extends State<CalendarView> {
       groupLabel: showGroupLabel
           ? DateFormat.y(locale.toString()).format(month)
           : null,
-      onTapped: () {
-        setState(() {
-          _displayMode = CalendarViewDisplayMode.month;
-          _anchorMonth = month;
-        });
-      },
+      onTapped: () => navigateToMonth(month),
     );
   }
 
