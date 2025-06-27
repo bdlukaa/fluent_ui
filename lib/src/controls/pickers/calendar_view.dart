@@ -614,43 +614,50 @@ class CalendarViewState extends State<CalendarView> {
   }
 
   Widget _buildDayItem(DateTime day) {
-    final locale = widget.locale ?? Localizations.localeOf(context);
+    return ValueListenableBuilder(
+      valueListenable: _scrollDate,
+      builder: (context, _, _) {
+        final locale = widget.locale ?? Localizations.localeOf(context);
 
-    final isBlackout =
-        (widget.minDate != null && day.isBefore(widget.minDate!)) ||
-        (widget.maxDate != null && day.isAfter(widget.maxDate!)) ||
-        (widget.blackoutRule?.call(day) ?? false);
-    final isCurrentMonth = DateUtils.isSameMonth(day, visibleDate);
-    final isFirstMonthDay = DateUtils.isSameDay(
-      day,
-      DateTime(day.year, day.month),
-    );
-    final isSelected = widget.selectionMode == CalendarViewSelectionMode.single
-        ? DateUtils.isSameDay(day, _selectedStart)
-        : widget.selectionMode == CalendarViewSelectionMode.range
-        ? (DateUtils.isSameDay(day, _selectedStart) ||
-              DateUtils.isSameDay(day, _selectedEnd))
-        : _selectedMultiple.any((d) => DateUtils.isSameDay(day, d));
-    final isInRange =
-        widget.selectionMode == CalendarViewSelectionMode.range &&
-        _selectedStart != null &&
-        _selectedEnd != null &&
-        _isInRange(day);
-    final isToday =
-        widget.isTodayHighlighted && DateUtils.isSameDay(day, DateTime.now());
+        final isBlackout =
+            (widget.minDate != null && day.isBefore(widget.minDate!)) ||
+            (widget.maxDate != null && day.isAfter(widget.maxDate!)) ||
+            (widget.blackoutRule?.call(day) ?? false);
+        final isCurrentMonth = DateUtils.isSameMonth(day, visibleDate);
+        final isFirstMonthDay = DateUtils.isSameDay(
+          day,
+          DateTime(day.year, day.month),
+        );
+        final isSelected =
+            widget.selectionMode == CalendarViewSelectionMode.single
+            ? DateUtils.isSameDay(day, _selectedStart)
+            : widget.selectionMode == CalendarViewSelectionMode.range
+            ? (DateUtils.isSameDay(day, _selectedStart) ||
+                  DateUtils.isSameDay(day, _selectedEnd))
+            : _selectedMultiple.any((d) => DateUtils.isSameDay(day, d));
+        final isInRange =
+            widget.selectionMode == CalendarViewSelectionMode.range &&
+            _selectedStart != null &&
+            _selectedEnd != null &&
+            _isInRange(day);
+        final isToday =
+            widget.isTodayHighlighted &&
+            DateUtils.isSameDay(day, DateTime.now());
 
-    return _CalendarDayItem(
-      day: day,
-      isSelected: isSelected,
-      isInRange: isInRange,
-      isOutOfScope: !widget.isOutOfScopeEnabled && !isCurrentMonth,
-      isBlackout: isBlackout,
-      onDayTapped: (date) => _onDayTapped(date, !isBlackout),
-      shape: widget.dayItemShape,
-      selectionColor: widget.selectionColor,
-      isFilled: isToday,
-      showGroupLabel: widget.isGroupLabelVisible && isFirstMonthDay,
-      locale: locale,
+        return _CalendarDayItem(
+          day: day,
+          isSelected: isSelected,
+          isInRange: isInRange,
+          isOutOfScope: !widget.isOutOfScopeEnabled && !isCurrentMonth,
+          isBlackout: isBlackout,
+          onDayTapped: (date) => _onDayTapped(date, !isBlackout),
+          shape: widget.dayItemShape,
+          selectionColor: widget.selectionColor,
+          isFilled: isToday,
+          showGroupLabel: widget.isGroupLabelVisible && isFirstMonthDay,
+          locale: locale,
+        );
+      },
     );
   }
 
