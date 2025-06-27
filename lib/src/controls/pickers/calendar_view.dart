@@ -243,14 +243,15 @@ class CalendarViewState extends State<CalendarView> {
 
   /// Describes the date that is currently visible in the calendar when
   /// scrolling.
-  DateTime? _scrollDate;
+  // DateTime? _scrollDate;
+  final _scrollDate = ValueNotifier<DateTime?>(null);
 
   static const double _rowHeight = 40.0;
   static const double _yearRowHeight = 70.0;
 
   /// The currently visible date in the calendar.
   DateTime get visibleDate {
-    return _scrollDate ?? _anchorMonth;
+    return _scrollDate.value ?? _anchorMonth;
   }
 
   /// The current visible decade in the calendar.
@@ -317,11 +318,9 @@ class CalendarViewState extends State<CalendarView> {
     if (_displayMode == CalendarViewDisplayMode.month) {
       final newScrollDate = _daysFromAnchor((rowIndex * 7 + 10).toInt());
       if (_shouldUpdateDate(newScrollDate)) {
-        setState(() {
-          // todo(kv): work pretty well when adding 10 days.
-          //  It is maybe due because of bug of the duplicated week in June.
-          _scrollDate = newScrollDate;
-        });
+        // todo(kv): work pretty well when adding 10 days.
+        //  It is maybe due because of bug of the duplicated week in June.
+        _scrollDate.value = newScrollDate;
       }
     }
   }
@@ -333,9 +332,7 @@ class CalendarViewState extends State<CalendarView> {
       final page = (rowIndex / 4).round();
       final newScrollDate = _yearForPage(page);
       if (_shouldUpdateDate(newScrollDate)) {
-        setState(() {
-          _scrollDate = newScrollDate;
-        });
+        _scrollDate.value = newScrollDate;
       }
     }
   }
@@ -347,9 +344,7 @@ class CalendarViewState extends State<CalendarView> {
       final page = (rowIndex / 2.5).round();
       final newScrollDate = _decadeForPage(page);
       if (_shouldUpdateDate(newScrollDate)) {
-        setState(() {
-          _scrollDate = _decadeForPage(page);
-        });
+        _scrollDate.value = _decadeForPage(page);
       }
     }
   }
@@ -373,7 +368,7 @@ class CalendarViewState extends State<CalendarView> {
   /// Navigates to the specified month in the calendar view.
   void navigateToMonth(DateTime date) {
     setState(() {
-      _scrollDate = null;
+      _scrollDate.value = null;
       _anchorMonth = DateTime(date.year, date.month, 1);
       _displayMode = CalendarViewDisplayMode.month;
     });
@@ -398,7 +393,7 @@ class CalendarViewState extends State<CalendarView> {
   /// Navigates to the specified year in the calendar view.
   void navigateToYear(DateTime date) {
     setState(() {
-      _scrollDate = null;
+      _scrollDate.value = null;
       _anchorMonth = DateTime(date.year, date.month, 1);
       _displayMode = CalendarViewDisplayMode.year;
     });
@@ -595,15 +590,18 @@ class CalendarViewState extends State<CalendarView> {
         top: 8.0,
         bottom: 4.0,
       ),
-      child: _CalendarHeader(
-        date: visibleDate,
-        displayMode: _displayMode,
-        onNext: onNext,
-        onPrevious: onPrevious,
-        onTap: _displayMode == CalendarViewDisplayMode.decade ? null : onTap,
-        style: widget.headerStyle,
-        locale: widget.locale,
-        showNavigation: _displayMode != CalendarViewDisplayMode.decade,
+      child: ValueListenableBuilder(
+        valueListenable: _scrollDate,
+        builder: (context, value, _) => _CalendarHeader(
+          date: visibleDate,
+          displayMode: _displayMode,
+          onNext: onNext,
+          onPrevious: onPrevious,
+          onTap: _displayMode == CalendarViewDisplayMode.decade ? null : onTap,
+          style: widget.headerStyle,
+          locale: widget.locale,
+          showNavigation: _displayMode != CalendarViewDisplayMode.decade,
+        ),
       ),
     );
   }
@@ -770,7 +768,7 @@ class CalendarViewState extends State<CalendarView> {
         DateTime.now().month == monthNumber;
     final showGroupLabel = widget.isGroupLabelVisible && month.month == 1;
     return _CalendarItem(
-      content: DateFormat.MMM(locale.toString()).format(month).titleCase,
+      content: DateFormat.MMM(locale.toString()).format(month),
       isDisabled: isDisabled,
       isFilled: isFilled,
       fillColor: widget.selectionColor,
