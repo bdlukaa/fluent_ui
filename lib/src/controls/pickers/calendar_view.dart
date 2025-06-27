@@ -287,15 +287,106 @@ class CalendarViewState extends State<CalendarView> {
     super.didUpdateWidget(oldWidget);
 
     if (widget.selectionMode != oldWidget.selectionMode) {
-      // Reset selection state if the selection mode changes
       _selectedStart = widget.initialStart;
       _selectedEnd = widget.selectionMode == CalendarViewSelectionMode.range
           ? widget.initialEnd
           : null;
       _selectedMultiple.clear();
-      if (_selectedStart != null) _selectedMultiple.add(_selectedStart!);
-      if (_selectedEnd != null) _selectedMultiple.add(_selectedEnd!);
+
+      if (widget.selectionMode == CalendarViewSelectionMode.multiple &&
+          _selectedStart != null) {
+        _selectedMultiple.add(_selectedStart!);
+      }
+      _notifySelectionChanged();
+      return;
     }
+
+    if (widget.initialStart != oldWidget.initialStart ||
+        (widget.selectionMode == CalendarViewSelectionMode.range &&
+            widget.initialEnd != oldWidget.initialEnd)) {
+      _selectedStart = widget.initialStart;
+      if (widget.selectionMode == CalendarViewSelectionMode.range) {
+        _selectedEnd = widget.initialEnd;
+      }
+      if (widget.selectionMode == CalendarViewSelectionMode.multiple) {
+        _selectedMultiple.clear();
+        if (_selectedStart != null) {
+          _selectedMultiple.add(_selectedStart!);
+        }
+      }
+      _notifySelectionChanged();
+    }
+
+    if (widget.minDate != oldWidget.minDate ||
+        widget.maxDate != oldWidget.maxDate) {
+      bool selectionWasInvalidated = false;
+
+      if (_selectedStart != null && !_isDateWithinBounds(_selectedStart!)) {
+        _selectedStart = null;
+        selectionWasInvalidated = true;
+      }
+      if (_selectedEnd != null && !_isDateWithinBounds(_selectedEnd!)) {
+        _selectedEnd = null;
+        selectionWasInvalidated = true;
+      }
+      if (_selectedMultiple.isNotEmpty) {
+        final originalCount = _selectedMultiple.length;
+        _selectedMultiple.removeWhere((date) => !_isDateWithinBounds(date));
+        if (_selectedMultiple.length != originalCount) {
+          selectionWasInvalidated = true;
+        }
+      }
+
+      if (selectionWasInvalidated) {
+        _notifySelectionChanged();
+      }
+    }
+
+    if (widget.initialDisplayMode != oldWidget.initialDisplayMode &&
+        widget.initialDisplayMode != _displayMode) {
+      _displayMode = widget.initialDisplayMode;
+    }
+  }
+
+  /// Helper method to check if a date is within the min/max selection bounds.
+  bool _isDateWithinBounds(DateTime date) {
+    if (widget.minDate != null && date.isBefore(widget.minDate!)) {
+      return false;
+    }
+    if (widget.maxDate != null && date.isAfter(widget.maxDate!)) {
+      return false;
+    }
+    return true;
+  }
+
+  void _notifySelectionChanged() {
+    if (widget.onSelectionChanged == null) return;
+
+    final data = switch (widget.selectionMode) {
+      CalendarViewSelectionMode.none => CalendarSelectionData(
+        selectedDates: const [],
+      ),
+      CalendarViewSelectionMode.single => CalendarSelectionData(
+        selectedDates: _selectedStart != null ? [_selectedStart!] : [],
+        startDate: _selectedStart,
+      ),
+      CalendarViewSelectionMode.range => CalendarSelectionData(
+        selectedDates: [
+          if (_selectedStart != null) _selectedStart!,
+          if (_selectedEnd != null) _selectedEnd!,
+        ],
+        startDate: _selectedStart,
+        endDate: _selectedEnd,
+      ),
+      CalendarViewSelectionMode.multiple => CalendarSelectionData(
+        selectedDates: List.unmodifiable(_selectedMultiple),
+        startDate: _selectedMultiple.isNotEmpty
+            ? _selectedMultiple.first
+            : null,
+        endDate: _selectedMultiple.length > 1 ? _selectedMultiple.last : null,
+      ),
+    };
+    widget.onSelectionChanged?.call(data);
   }
 
   /// Determines whether the scroll date should be updated based on the new
