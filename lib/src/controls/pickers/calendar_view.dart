@@ -656,7 +656,7 @@ class CalendarViewState extends State<CalendarView> {
 
               // The offset describes how many days from the first day of the
               // week. This align the first week of the month correctly.
-              final offset = (_anchorMonth.weekday - firstDayOfWeek + 7) % 7;
+              final offset = _anchorMonth.weekday;
 
               const gridDelegate = SliverGridDelegateWithFixedCrossAxisCount(
                 crossAxisCount: 7,
@@ -669,7 +669,7 @@ class CalendarViewState extends State<CalendarView> {
               final reverseGrid = SliverGrid(
                 gridDelegate: gridDelegate,
                 delegate: SliverChildBuilderDelegate((context, index) {
-                  final negativeIndex = _getNegativeIndex(index, 7) + offset;
+                  final negativeIndex = _getNegativeIndex(index, 7) - offset;
                   final day = _anchorMonth.add(Duration(days: negativeIndex));
 
                   return _buildDayItem(day);
