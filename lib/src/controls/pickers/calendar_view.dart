@@ -828,7 +828,7 @@ class CalendarViewState extends State<CalendarView> {
                 gridDelegate: gridDelegate,
                 delegate: SliverChildBuilderDelegate((context, index) {
                   final nIndex = _getNegativeIndex(index, 4);
-                  final year = _anchorMonth.year + (nIndex ~/ 12);
+                  final year = _anchorMonth.year - 1 + (nIndex ~/ 13);
                   final monthNumber = (nIndex % 12) + 1;
                   return _buildYearItem(year, monthNumber);
                 }),
@@ -869,9 +869,7 @@ class CalendarViewState extends State<CalendarView> {
         (widget.minDate != null && month.isBefore(widget.minDate!)) ||
         (widget.maxDate != null && month.isAfter(widget.maxDate!));
     final isFilled =
-        isValidMonth &&
-        DateTime.now().year == year &&
-        DateTime.now().month == monthNumber;
+        isValidMonth && DateUtils.isSameMonth(month, DateTime.now());
     final showGroupLabel = widget.isGroupLabelVisible && month.month == 1;
     return _CalendarItem(
       content: DateFormat.MMM(locale.toString()).format(month),
