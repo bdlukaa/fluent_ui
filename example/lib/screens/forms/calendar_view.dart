@@ -11,6 +11,7 @@ class CalendarViewPage extends StatefulWidget {
 
 class _CalendarViewPageState extends State<CalendarViewPage> with PageMixin {
   CalendarViewSelectionMode selectionMode = CalendarViewSelectionMode.single;
+  final key = GlobalKey<CalendarViewState>();
 
   bool isOutOfScopeEnabled = false;
   Locale? locale;
@@ -23,10 +24,13 @@ class _CalendarViewPageState extends State<CalendarViewPage> with PageMixin {
       header: PageHeader(
         title: const Text('CalendarView'),
         commandBar: Button(
-          onPressed: () => setState(
-            () => isOutOfScopeEnabled = isGroupLabelVisible = false,
-          ),
-          child: const Text('Clear'),
+          onPressed: () {
+            setState(
+              () => isOutOfScopeEnabled = isGroupLabelVisible = false,
+            );
+            key.currentState?.navigateToMonth(DateTime.now());
+          },
+          child: const Text('Reset'),
         ),
       ),
       children: [
@@ -55,6 +59,7 @@ class _CalendarViewPageState extends State<CalendarViewPage> with PageMixin {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               CalendarView(
+                key: key,
                 selectionMode: selectionMode,
                 onSelectionChanged: (value) {
                   debugPrint('${value.selectedDates}');

@@ -186,7 +186,7 @@ class CalendarView extends StatefulWidget {
   /// The locale to use for formatting dates in the calendar.
   final Locale? locale;
 
-  /// Creates a new [CalendarView].
+  /// Creates a windows-styled [CalendarView].
   CalendarView({
     super.key,
     this.initialStart,
@@ -255,7 +255,7 @@ class CalendarViewState extends State<CalendarView> {
   }
 
   /// The current visible decade in the calendar.
-  DateTime get anchorDecade {
+  DateTime get visibleDecade {
     return DateTime(_anchorMonth.year - (_anchorMonth.year % 10), 1, 1);
   }
 
@@ -453,7 +453,7 @@ class CalendarViewState extends State<CalendarView> {
   }
 
   DateTime _decadeForPage(int page) {
-    return DateTime(anchorDecade.year + page * 10, 1, 1);
+    return DateTime(visibleDecade.year + page * 10, 1, 1);
   }
 
   /// Navigates to the specified month in the calendar view.
@@ -508,6 +508,10 @@ class CalendarViewState extends State<CalendarView> {
 
   void _onDayTapped(DateTime day, bool inScope) {
     if (!inScope && !widget.isOutOfScopeEnabled) return;
+
+    if (widget.selectionMode == CalendarViewSelectionMode.none) {
+      return;
+    }
 
     setState(() {
       switch (widget.selectionMode) {
@@ -674,24 +678,28 @@ class CalendarViewState extends State<CalendarView> {
         break;
     }
 
-    return Padding(
-      padding: const EdgeInsetsDirectional.only(
-        start: 8.0,
-        end: 8.0,
-        top: 8.0,
-        bottom: 4.0,
-      ),
-      child: ValueListenableBuilder(
-        valueListenable: _scrollDate,
-        builder: (context, value, _) => _CalendarHeader(
-          date: visibleDate,
-          displayMode: _displayMode,
-          onNext: onNext,
-          onPrevious: onPrevious,
-          onTap: _displayMode == CalendarViewDisplayMode.decade ? null : onTap,
-          style: widget.headerStyle,
-          locale: widget.locale,
-          showNavigation: _displayMode != CalendarViewDisplayMode.decade,
+    return RepaintBoundary(
+      child: Padding(
+        padding: const EdgeInsetsDirectional.only(
+          start: 8.0,
+          end: 8.0,
+          top: 8.0,
+          bottom: 4.0,
+        ),
+        child: ValueListenableBuilder(
+          valueListenable: _scrollDate,
+          builder: (context, value, _) => _CalendarHeader(
+            date: visibleDate,
+            displayMode: _displayMode,
+            onNext: onNext,
+            onPrevious: onPrevious,
+            onTap: _displayMode == CalendarViewDisplayMode.decade
+                ? null
+                : onTap,
+            style: widget.headerStyle,
+            locale: widget.locale,
+            showNavigation: _displayMode != CalendarViewDisplayMode.decade,
+          ),
         ),
       ),
     );
@@ -895,7 +903,7 @@ class CalendarViewState extends State<CalendarView> {
                 gridDelegate: gridDelegate,
                 delegate: SliverChildBuilderDelegate((context, index) {
                   final nIndex = _getNegativeIndex(index, 4);
-                  final year = anchorDecade.year + nIndex;
+                  final year = visibleDecade.year + nIndex;
                   return _buildDecadeItem(year);
                 }),
               );
@@ -904,7 +912,7 @@ class CalendarViewState extends State<CalendarView> {
                 key: forwardListKey,
                 gridDelegate: gridDelegate,
                 delegate: SliverChildBuilderDelegate((context, index) {
-                  final year = anchorDecade.year + index;
+                  final year = visibleDecade.year + index;
 
                   return _buildDecadeItem(year);
                 }),
