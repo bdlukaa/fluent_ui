@@ -253,6 +253,11 @@ class CalendarViewState extends State<CalendarView> {
     return _scrollDate ?? _anchorMonth;
   }
 
+  /// The current visible decade in the calendar.
+  DateTime get anchorDecade {
+    return DateTime(_anchorMonth.year - (_anchorMonth.year % 10), 1, 1);
+  }
+
   @override
   void initState() {
     super.initState();
@@ -296,11 +301,14 @@ class CalendarViewState extends State<CalendarView> {
     final pixels = _monthScrollController.position.pixels;
     final rowIndex = (pixels / _rowHeight).round();
     if (_displayMode == CalendarViewDisplayMode.month) {
-      setState(() {
-        // todo(kv): work pretty well when adding 10 days.
-        //  It is maybe due because of bug of the duplicated week in June.
-        _scrollDate = _daysFromAnchor((rowIndex * 7 + 10).toInt());
-      });
+      final newScrollDate = _daysFromAnchor((rowIndex * 7 + 10).toInt());
+      if (_scrollDate != newScrollDate) {
+        setState(() {
+          // todo(kv): work pretty well when adding 10 days.
+          //  It is maybe due because of bug of the duplicated week in June.
+          _scrollDate = newScrollDate;
+        });
+      }
     }
   }
 
@@ -309,9 +317,12 @@ class CalendarViewState extends State<CalendarView> {
     final rowIndex = (pixels / _yearRowHeight).round();
     if (_displayMode == CalendarViewDisplayMode.year) {
       final page = (rowIndex / 4).round();
-      setState(() {
-        _scrollDate = _yearForPage(page);
-      });
+      final newScrollDate = _yearForPage(page);
+      if (_scrollDate != newScrollDate) {
+        setState(() {
+          _scrollDate = newScrollDate;
+        });
+      }
     }
   }
 
@@ -319,9 +330,13 @@ class CalendarViewState extends State<CalendarView> {
     final pixels = _decadeScrollController.position.pixels;
     final rowIndex = (pixels / _yearRowHeight).round();
     if (_displayMode == CalendarViewDisplayMode.decade) {
-      setState(() {
-        _scrollDate = DateTime(_anchorMonth.year + rowIndex, 1, 1);
-      });
+      final page = (rowIndex / 2.5).round();
+      final newScrollDate = _decadeForPage(page);
+      if (_scrollDate != newScrollDate) {
+        setState(() {
+          _scrollDate = _decadeForPage(page);
+        });
+      }
     }
   }
 
@@ -335,6 +350,10 @@ class CalendarViewState extends State<CalendarView> {
 
   DateTime _yearForPage(int page) {
     return DateTime(_anchorMonth.year + page, _anchorMonth.month, 1);
+  }
+
+  DateTime _decadeForPage(int page) {
+    return DateTime(anchorDecade.year + page * 10, 1, 1);
   }
 
   /// Navigates to the specified month in the calendar view.
@@ -773,7 +792,7 @@ class CalendarViewState extends State<CalendarView> {
                 gridDelegate: gridDelegate,
                 delegate: SliverChildBuilderDelegate((context, index) {
                   final nIndex = _getNegativeIndex(index, 4);
-                  final year = _anchorMonth.year + nIndex;
+                  final year = anchorDecade.year + nIndex;
                   return _buildDecadeItem(year);
                 }),
               );
@@ -782,7 +801,7 @@ class CalendarViewState extends State<CalendarView> {
                 key: forwardListKey,
                 gridDelegate: gridDelegate,
                 delegate: SliverChildBuilderDelegate((context, index) {
-                  final year = _anchorMonth.year + index;
+                  final year = anchorDecade.year + index;
 
                   return _buildDecadeItem(year);
                 }),
@@ -818,6 +837,7 @@ class CalendarViewState extends State<CalendarView> {
 
   @override
   Widget build(BuildContext context) {
+    assert(debugCheckHasFluentLocalizations(context));
     assert(debugCheckHasFluentTheme(context));
     final theme = FluentTheme.of(context);
 
@@ -1144,15 +1164,15 @@ class _CalendarDayItem extends StatelessWidget {
                 return const CircleBorder(side: BorderSide.none);
               }),
               backgroundColor: WidgetStateProperty.resolveWith((states) {
-                if (isBlackout) {
+                if (isFilled) {
+                  return FilledButton.backgroundColor(theme, states);
+                } else if (isBlackout) {
                   return isFilled
                       ? selectionColor ?? color
                       : Colors.transparent;
-                }
-                if (isFilled)
-                  return FilledButton.backgroundColor(theme, states);
-                if (isInRange) return color.withAlpha(50);
-                if (states.contains(WidgetState.hovered)) {
+                } else if (isInRange) {
+                  return color.withAlpha(50);
+                } else if (states.contains(WidgetState.hovered)) {
                   return selectionColor?.withAlpha(20) ??
                       theme.resources.subtleFillColorSecondary;
                 }
@@ -1165,10 +1185,10 @@ class _CalendarDayItem extends StatelessWidget {
                   return theme.resources.textFillColorPrimary;
                 } else if (isOutOfScope) {
                   return theme.resources.textFillColorSecondary;
+                } else if (isSelected) {
+                  return color;
                 }
-                return isSelected
-                    ? color
-                    : theme.resources.textFillColorPrimary;
+                return theme.resources.textFillColorPrimary;
               }),
             ),
             onPressed: isBlackout ? null : () => onDayTapped(day),

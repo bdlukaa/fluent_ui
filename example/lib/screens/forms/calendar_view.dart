@@ -13,11 +13,12 @@ class _CalendarViewPageState extends State<CalendarViewPage> with PageMixin {
   CalendarViewSelectionMode selectionMode = CalendarViewSelectionMode.single;
 
   bool isOutOfScopeEnabled = false;
-  Locale locale = const Locale('en');
+  Locale? locale;
   bool isGroupLabelVisible = false;
 
   @override
   Widget build(BuildContext context) {
+    final currentLocale = locale ?? Localizations.localeOf(context);
     return ScaffoldPage.scrollable(
       header: PageHeader(
         title: const Text('CalendarView'),
@@ -46,7 +47,7 @@ class _CalendarViewPageState extends State<CalendarViewPage> with PageMixin {
   },
   isOutOfScopeEnabled: $isOutOfScopeEnabled,
   isGroupLabelVisible: $isGroupLabelVisible,
-  locale: const Locale('${locale.languageCode}'),
+  locale: const Locale('${currentLocale.languageCode}'),
 );
 ''',
           child: Row(
@@ -96,7 +97,7 @@ class _CalendarViewPageState extends State<CalendarViewPage> with PageMixin {
                     ),
                     const Text('Language'),
                     ComboBox<Locale>(
-                      value: locale,
+                      value: currentLocale,
                       items: FluentLocalizations.supportedLocales
                           .map((e) => ComboBoxItem(
                                 value: e,
