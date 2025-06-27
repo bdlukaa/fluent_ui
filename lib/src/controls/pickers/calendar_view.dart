@@ -297,12 +297,26 @@ class CalendarViewState extends State<CalendarView> {
     }
   }
 
+  /// Determines whether the scroll date should be updated based on the new
+  /// date. This avoids unnecessary rebuilds while scrolling.
+  bool _shouldUpdateDate(DateTime? newDate) {
+    if (newDate == null) return false;
+    if (_displayMode == CalendarViewDisplayMode.month) {
+      return !DateUtils.isSameMonth(newDate, visibleDate);
+    } else if (_displayMode == CalendarViewDisplayMode.year) {
+      return newDate.year != visibleDate.year;
+    } else if (_displayMode == CalendarViewDisplayMode.decade) {
+      return newDate.year ~/ 10 != visibleDate.year ~/ 10;
+    }
+    return false;
+  }
+
   void _monthScrollListener() {
     final pixels = _monthScrollController.position.pixels;
     final rowIndex = (pixels / _rowHeight).round();
     if (_displayMode == CalendarViewDisplayMode.month) {
       final newScrollDate = _daysFromAnchor((rowIndex * 7 + 10).toInt());
-      if (_scrollDate != newScrollDate) {
+      if (_shouldUpdateDate(newScrollDate)) {
         setState(() {
           // todo(kv): work pretty well when adding 10 days.
           //  It is maybe due because of bug of the duplicated week in June.
@@ -318,7 +332,7 @@ class CalendarViewState extends State<CalendarView> {
     if (_displayMode == CalendarViewDisplayMode.year) {
       final page = (rowIndex / 4).round();
       final newScrollDate = _yearForPage(page);
-      if (_scrollDate != newScrollDate) {
+      if (_shouldUpdateDate(newScrollDate)) {
         setState(() {
           _scrollDate = newScrollDate;
         });
@@ -332,7 +346,7 @@ class CalendarViewState extends State<CalendarView> {
     if (_displayMode == CalendarViewDisplayMode.decade) {
       final page = (rowIndex / 2.5).round();
       final newScrollDate = _decadeForPage(page);
-      if (_scrollDate != newScrollDate) {
+      if (_shouldUpdateDate(newScrollDate)) {
         setState(() {
           _scrollDate = _decadeForPage(page);
         });
