@@ -839,7 +839,7 @@ class CalendarViewState extends State<CalendarView> {
                 gridDelegate: gridDelegate,
                 delegate: SliverChildBuilderDelegate((context, index) {
                   final year = _anchorMonth.year + (index ~/ 12);
-                  final monthNumber = (index % 12) + 1;
+                  final monthNumber = index + 1;
 
                   return _buildYearItem(year, monthNumber);
                 }),
@@ -865,7 +865,6 @@ class CalendarViewState extends State<CalendarView> {
         ? DateTime(year, monthNumber, 1)
         : DateTime(year + (monthNumber ~/ 12), monthNumber % 12);
     final isDisabled =
-        !isValidMonth ||
         (widget.minDate != null && month.isBefore(widget.minDate!)) ||
         (widget.maxDate != null && month.isAfter(widget.maxDate!));
     final isFilled =
@@ -876,6 +875,7 @@ class CalendarViewState extends State<CalendarView> {
       isDisabled: isDisabled,
       isFilled: isFilled,
       fillColor: widget.selectionColor,
+      isOutOfScope: !widget.isOutOfScopeEnabled && !isValidMonth,
       shape: widget.dayItemShape,
       groupLabel: showGroupLabel
           ? DateFormat.y(locale.toString()).format(month)
@@ -941,8 +941,13 @@ class CalendarViewState extends State<CalendarView> {
         (widget.minDate != null && DateTime(year).isBefore(widget.minDate!)) ||
         (widget.maxDate != null &&
             DateTime(year, 12, 31).isAfter(widget.maxDate!));
+
+    final currentDecadeStart = (visibleDate.year ~/ 10) * 10;
+    final currentDecadeEnd = currentDecadeStart + 9;
+    final isOutOfScope = year < currentDecadeStart || year > currentDecadeEnd;
     return _CalendarItem(
       content: year.toString(),
+      isOutOfScope: !widget.isOutOfScopeEnabled && isOutOfScope,
       isDisabled: isDisabled,
       onTapped: () => navigateToYear(DateTime(year)),
       fillColor: widget.selectionColor,
@@ -1132,6 +1137,7 @@ class _CalendarItem extends StatelessWidget {
     required this.content,
     required this.isDisabled,
     required this.onTapped,
+    required this.isOutOfScope,
     this.shape,
     this.fillColor,
     this.isFilled = false,
@@ -1140,6 +1146,7 @@ class _CalendarItem extends StatelessWidget {
 
   final String content;
   final bool isDisabled;
+  final bool isOutOfScope;
   final bool isFilled;
   final String? groupLabel;
   final VoidCallback onTapped;
@@ -1169,6 +1176,8 @@ class _CalendarItem extends StatelessWidget {
               return theme.resources.textFillColorDisabled;
             } else if (isFilled) {
               return theme.resources.textOnAccentFillColorPrimary;
+            } else if (isOutOfScope) {
+              return theme.resources.textFillColorSecondary;
             }
             return theme.resources.textFillColorPrimary;
           }),
