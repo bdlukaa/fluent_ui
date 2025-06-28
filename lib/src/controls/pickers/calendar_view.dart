@@ -839,7 +839,7 @@ class CalendarViewState extends State<CalendarView> {
                 gridDelegate: gridDelegate,
                 delegate: SliverChildBuilderDelegate((context, index) {
                   final year = _anchorMonth.year + (index ~/ 12);
-                  final monthNumber = index + 1;
+                  final monthNumber = (index % 12) + 1;
 
                   return _buildYearItem(year, monthNumber);
                 }),
@@ -858,29 +858,34 @@ class CalendarViewState extends State<CalendarView> {
   }
 
   Widget _buildYearItem(int year, int monthNumber) {
-    final locale = widget.locale ?? Localizations.localeOf(context);
+    return ValueListenableBuilder(
+      valueListenable: _scrollDate,
+      builder: (context, _, __) {
+        final locale = widget.locale ?? Localizations.localeOf(context);
 
-    final isValidMonth = monthNumber >= 1 && monthNumber <= 12;
-    final month = isValidMonth
-        ? DateTime(year, monthNumber, 1)
-        : DateTime(year + (monthNumber ~/ 12), monthNumber % 12);
-    final isDisabled =
-        (widget.minDate != null && month.isBefore(widget.minDate!)) ||
-        (widget.maxDate != null && month.isAfter(widget.maxDate!));
-    final isFilled =
-        isValidMonth && DateUtils.isSameMonth(month, DateTime.now());
-    final showGroupLabel = widget.isGroupLabelVisible && month.month == 1;
-    return _CalendarItem(
-      content: DateFormat.MMM(locale.toString()).format(month),
-      isDisabled: isDisabled,
-      isFilled: isFilled,
-      fillColor: widget.selectionColor,
-      isOutOfScope: !widget.isOutOfScopeEnabled && !isValidMonth,
-      shape: widget.dayItemShape,
-      groupLabel: showGroupLabel
-          ? DateFormat.y(locale.toString()).format(month)
-          : null,
-      onTapped: () => navigateToMonth(month),
+        final isCurrentYear = visibleDate.year == year;
+        final month = isCurrentYear
+            ? DateTime(year, monthNumber, 1)
+            : DateTime(year + (monthNumber ~/ 12), monthNumber % 12);
+        final isDisabled =
+            (widget.minDate != null && month.isBefore(widget.minDate!)) ||
+            (widget.maxDate != null && month.isAfter(widget.maxDate!));
+        final isFilled =
+            isCurrentYear && DateUtils.isSameMonth(month, DateTime.now());
+        final showGroupLabel = widget.isGroupLabelVisible && month.month == 1;
+        return _CalendarItem(
+          content: DateFormat.MMM(locale.toString()).format(month),
+          isDisabled: isDisabled,
+          isFilled: isFilled,
+          fillColor: widget.selectionColor,
+          isOutOfScope: !widget.isOutOfScopeEnabled && !isCurrentYear,
+          shape: widget.dayItemShape,
+          groupLabel: showGroupLabel
+              ? DateFormat.y(locale.toString()).format(month)
+              : null,
+          onTapped: () => navigateToMonth(month),
+        );
+      },
     );
   }
 
@@ -936,23 +941,30 @@ class CalendarViewState extends State<CalendarView> {
   }
 
   Widget _buildDecadeItem(int year) {
-    final isCurrentYear = year == DateTime.now().year;
-    final isDisabled =
-        (widget.minDate != null && DateTime(year).isBefore(widget.minDate!)) ||
-        (widget.maxDate != null &&
-            DateTime(year, 12, 31).isAfter(widget.maxDate!));
+    return ValueListenableBuilder(
+      valueListenable: _scrollDate,
+      builder: (context, _, __) {
+        final isCurrentYear = year == DateTime.now().year;
+        final isDisabled =
+            (widget.minDate != null &&
+                DateTime(year).isBefore(widget.minDate!)) ||
+            (widget.maxDate != null &&
+                DateTime(year, 12, 31).isAfter(widget.maxDate!));
 
-    final currentDecadeStart = (visibleDate.year ~/ 10) * 10;
-    final currentDecadeEnd = currentDecadeStart + 9;
-    final isOutOfScope = year < currentDecadeStart || year > currentDecadeEnd;
-    return _CalendarItem(
-      content: year.toString(),
-      isOutOfScope: !widget.isOutOfScopeEnabled && isOutOfScope,
-      isDisabled: isDisabled,
-      onTapped: () => navigateToYear(DateTime(year)),
-      fillColor: widget.selectionColor,
-      isFilled: isCurrentYear,
-      shape: widget.dayItemShape,
+        final currentDecadeStart = (visibleDate.year ~/ 10) * 10;
+        final currentDecadeEnd = currentDecadeStart + 9;
+        final isOutOfScope =
+            year < currentDecadeStart || year > currentDecadeEnd;
+        return _CalendarItem(
+          content: year.toString(),
+          isOutOfScope: !widget.isOutOfScopeEnabled && isOutOfScope,
+          isDisabled: isDisabled,
+          onTapped: () => navigateToYear(DateTime(year)),
+          fillColor: widget.selectionColor,
+          isFilled: isCurrentYear,
+          shape: widget.dayItemShape,
+        );
+      },
     );
   }
 
