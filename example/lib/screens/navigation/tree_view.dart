@@ -122,7 +122,7 @@ TreeView(
 
       // Do your fetching...
       await Future.delayed(const Duration(seconds: 2));
-      
+
       // ...and add the fetched nodes.
       item.children.addAll([
         TreeViewItem(
@@ -216,6 +216,67 @@ TreeView(
                   },
                 ),
               };
+            },
+          ),
+        ),
+        subtitle(
+          content: const Text('A TreeView with checkbox disabled'),
+        ),
+        CardHighlight(
+          codeSnippet: r'''late final disabledItems = [
+  TreeViewItem(
+    content: const Text('Personal Documents'),
+    value: 'personal_docs',
+    children: [
+      TreeViewItem(
+        content: const Text('Home Remodel'),
+        value: 'home_remodel',
+        disabled: true,
+        children: [
+          TreeViewItem(
+            content: const Text('Contractor Contact Info'),
+            value: 'contr_cont_inf',
+          ),
+          TreeViewItem(
+            content: const Text('Paint Color Scheme'),
+            value: 'paint_color_scheme',
+            disabled: true,
+          ),
+        ],
+      ),
+      TreeViewItem(
+        content: const Text('Tax Documents'),
+        value: 'tax_docs',
+        children: [
+          TreeViewItem(content: const Text('2017'), value: "tax_2017"),
+          TreeViewItem(content: const Text('Current Year'), value: "tax_cur"),
+        ],
+      ),
+    ],
+  ),
+];
+
+TreeView(
+  selectionMode: TreeViewSelectionMode.multiple,
+  items: disabledItems,
+  onItemInvoked: (item, reason) async =>
+      debugPrint('onItemInvoked(reason=$reason): $item'),
+  onSelectionChanged: (selectedItems) async => debugPrint(
+      'onSelectionChanged: ${selectedItems.map((i) => i.value)}'),
+  onSecondaryTap: (item, details) async {
+    debugPrint('onSecondaryTap $item at ${details.globalPosition}');
+  },
+)
+''',
+          child: TreeView(
+            selectionMode: TreeViewSelectionMode.multiple,
+            items: disabledItems,
+            onItemInvoked: (item, reason) async =>
+                debugPrint('onItemInvoked(reason=$reason): $item'),
+            onSelectionChanged: (selectedItems) async => debugPrint(
+                'onSelectionChanged: ${selectedItems.map((i) => i.value)}'),
+            onSecondaryTap: (item, details) async {
+              debugPrint('onSecondaryTap $item at ${details.globalPosition}');
             },
           ),
         ),
@@ -314,6 +375,39 @@ TreeView(
           ),
         ]);
       },
+    ),
+  ];
+
+  late final disabledItems = [
+    TreeViewItem(
+      content: const Text('Personal Documents'),
+      value: 'personal_docs',
+      children: [
+        TreeViewItem(
+          content: const Text('Home Remodel'),
+          value: 'home_remodel',
+          disabled: true,
+          children: [
+            TreeViewItem(
+              content: const Text('Contractor Contact Info'),
+              value: 'contr_cont_inf',
+            ),
+            TreeViewItem(
+              content: const Text('Paint Color Scheme'),
+              value: 'paint_color_scheme',
+              disabled: true,
+            ),
+          ],
+        ),
+        TreeViewItem(
+          content: const Text('Tax Documents'),
+          value: 'tax_docs',
+          children: [
+            TreeViewItem(content: const Text('2017'), value: "tax_2017"),
+            TreeViewItem(content: const Text('Current Year'), value: "tax_cur"),
+          ],
+        ),
+      ],
     ),
   ];
 }
