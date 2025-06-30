@@ -265,6 +265,21 @@ class CalendarViewState extends State<CalendarView> {
   final _yearScrollController = ScrollController();
   final _decadeScrollController = ScrollController();
 
+  final _scrollBehavior = const ScrollBehavior().copyWith(
+    scrollbars: false,
+    physics: const BouncingScrollPhysics(
+      decelerationRate: ScrollDecelerationRate.fast,
+    ),
+  );
+
+  /// The minimum year that can be displayed in the calendar.
+  /// Defaults to current year minus half of [_defaultDisplayedYearCount].
+  late int _minDisplayedYear;
+
+  /// The maximum year that can be displayed in the calendar.
+  /// Defaults to current year plus half of [_defaultDisplayedYearCount].
+  late int _maxDisplayedYear;
+
   /// Describes the date that is currently visible in the calendar when
   /// scrolling.
   // DateTime? _scrollDate;
@@ -273,6 +288,7 @@ class CalendarViewState extends State<CalendarView> {
   static const double _rowHeight = 40.0;
   static const double _yearRowHeight = 70.0;
 
+  /// The default number of years to be displayed in the calendar
   static const int _defaultDisplayedYearCount = 200;
 
   /// The currently visible date in the calendar.
@@ -302,12 +318,20 @@ class CalendarViewState extends State<CalendarView> {
       if (_selectedStart != null) _selectedMultiple.add(_selectedStart!);
       if (_selectedEnd != null) _selectedMultiple.add(_selectedEnd!);
     }
-    final anchor = widget.initialStart ?? DateTime.now();
+    final currentDate = DateTime.now();
+    final anchor = widget.initialStart ?? currentDate;
     _anchorMonth = DateTime(anchor.year, anchor.month, 1);
 
     _monthScrollController.addListener(_monthScrollListener);
     _yearScrollController.addListener(_yearScrollListener);
     _decadeScrollController.addListener(_decadeScrollListener);
+
+    _minDisplayedYear =
+        widget.displayDateStart?.year ??
+        currentDate.year - (_defaultDisplayedYearCount ~/ 2);
+    _maxDisplayedYear =
+        widget.displayDateEnd?.year ??
+        currentDate.year + (_defaultDisplayedYearCount ~/ 2);
   }
 
   @override
@@ -698,13 +722,8 @@ class CalendarViewState extends State<CalendarView> {
 
   Widget _buildHeader() {
     VoidCallback? onTap, onNext, onPrevious;
-    final now = DateTime.now();
-    final minDate =
-        widget.displayDateStart ??
-        DateTime(now.year - (_defaultDisplayedYearCount ~/ 2));
-    final maxDate =
-        widget.displayDateEnd ??
-        DateTime(now.year + (_defaultDisplayedYearCount ~/ 2));
+    final minDate = widget.displayDateStart ?? DateTime(_minDisplayedYear);
+    final maxDate = widget.displayDateEnd ?? DateTime(_maxDisplayedYear);
 
     switch (_displayMode) {
       case CalendarViewDisplayMode.month:
@@ -790,6 +809,22 @@ class CalendarViewState extends State<CalendarView> {
   }
 
   Widget _buildMonthView() {
+    final firstMonth = widget.displayDateStart?.month ?? 1;
+    final reverseGridMonthCount =
+        (_anchorMonth.year - _minDisplayedYear) * 12 -
+        firstMonth +
+        _anchorMonth.month;
+    final reverseGridCount =
+        reverseGridMonthCount * 4; // Assuming each month have 04 weeks
+
+    final int lastMonth = widget.displayDateEnd?.month ?? 12;
+    final int forwardGridMonthCount =
+        (_maxDisplayedYear - _anchorMonth.year) * 12 +
+        lastMonth -
+        _anchorMonth.month +
+        1;
+    final forwardGridCount = forwardGridMonthCount * 4 + 1;
+
     return Column(
       mainAxisSize: MainAxisSize.min,
       spacing: 4,
@@ -826,8 +861,17 @@ class CalendarViewState extends State<CalendarView> {
                   final negativeIndex = _getNegativeIndex(index, 7) - offset;
                   final day = _anchorMonth.add(Duration(days: negativeIndex));
 
+                  if (day.isAfter(
+                        widget.displayDateEnd ?? DateTime(_maxDisplayedYear),
+                      ) ||
+                      day.isBefore(
+                        widget.displayDateStart ?? DateTime(_minDisplayedYear),
+                      )) {
+                    return const SizedBox.shrink();
+                  }
+
                   return _buildDayItem(day);
-                }),
+                }, childCount: reverseGridCount),
               );
 
               final forwardGrid = SliverGrid(
@@ -835,13 +879,23 @@ class CalendarViewState extends State<CalendarView> {
                 gridDelegate: gridDelegate,
                 delegate: SliverChildBuilderDelegate((context, index) {
                   final day = _anchorMonth.add(Duration(days: index - offset));
+                  if (day.isAfter(
+                        widget.displayDateEnd ?? DateTime(_maxDisplayedYear),
+                      ) ||
+                      day.isBefore(
+                        widget.displayDateStart ?? DateTime(_minDisplayedYear),
+                      )) {
+                    return const SizedBox.shrink();
+                  }
 
                   return _buildDayItem(day);
-                }),
+                }, childCount: forwardGridCount),
               );
 
               return CustomScrollView(
                 controller: _monthScrollController,
+                scrollBehavior: _scrollBehavior,
+                semanticChildCount: reverseGridCount + forwardGridCount,
                 center: forwardListKey,
                 slivers: [reverseGrid, forwardGrid],
               );
@@ -854,6 +908,19 @@ class CalendarViewState extends State<CalendarView> {
 
   double get _yearViewHeight => (widget.yearsPerView / 4) * _yearRowHeight;
   Widget _buildYearView() {
+    final firstMonth = widget.displayDateStart?.month ?? 1;
+    final reverseGridCount =
+        (_anchorMonth.year - _minDisplayedYear) * 12 -
+        firstMonth +
+        _anchorMonth.month;
+
+    final int lastMonth = widget.displayDateEnd?.month ?? 12;
+    final int forwardGridCount =
+        (_maxDisplayedYear - _anchorMonth.year) * 12 +
+        lastMonth -
+        _anchorMonth.month +
+        1;
+
     return Column(
       mainAxisSize: MainAxisSize.min,
       spacing: 4,
@@ -881,7 +948,7 @@ class CalendarViewState extends State<CalendarView> {
                   final year = _anchorMonth.year - 1 + (nIndex ~/ 13);
                   final monthNumber = (nIndex % 12) + 1;
                   return _buildYearItem(year, monthNumber);
-                }),
+                }, childCount: reverseGridCount),
               );
 
               final forwardGrid = SliverGrid(
@@ -892,11 +959,13 @@ class CalendarViewState extends State<CalendarView> {
                   final monthNumber = (index % 12) + 1;
 
                   return _buildYearItem(year, monthNumber);
-                }),
+                }, childCount: forwardGridCount),
               );
 
               return CustomScrollView(
                 controller: _yearScrollController,
+                scrollBehavior: _scrollBehavior,
+                semanticChildCount: reverseGridCount + forwardGridCount,
                 center: forwardListKey,
                 slivers: [reverseGrid, forwardGrid],
               );
@@ -938,14 +1007,6 @@ class CalendarViewState extends State<CalendarView> {
   }
 
   Widget _buildDecadeView() {
-    final currentDate = DateTime.now();
-    final int minYear =
-        widget.displayDateStart?.year ??
-        currentDate.year - (_defaultDisplayedYearCount ~/ 2);
-    final int maxYear =
-        widget.displayDateEnd?.year ??
-        currentDate.year + (_defaultDisplayedYearCount ~/ 2);
-
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: [
@@ -971,7 +1032,7 @@ class CalendarViewState extends State<CalendarView> {
                   final nIndex = _getNegativeIndex(index, 4);
                   final year = visibleDecade.year + nIndex;
                   return _buildDecadeItem(year);
-                }, childCount: visibleDecade.year - minYear - 1),
+                }, childCount: visibleDecade.year - _minDisplayedYear - 1),
               );
 
               final forwardGrid = SliverGrid(
@@ -981,15 +1042,13 @@ class CalendarViewState extends State<CalendarView> {
                   final year = visibleDecade.year + index;
 
                   return _buildDecadeItem(year);
-                }, childCount: maxYear - visibleDecade.year + 1),
+                }, childCount: _maxDisplayedYear - visibleDecade.year + 1),
               );
 
               return CustomScrollView(
                 controller: _decadeScrollController,
-                scrollBehavior: const ScrollBehavior().copyWith(
-                  scrollbars: false,
-                ),
-                semanticChildCount: maxYear - minYear,
+                scrollBehavior: _scrollBehavior,
+                semanticChildCount: _maxDisplayedYear - _minDisplayedYear,
                 center: forwardListKey,
                 slivers: [reverseGrid, forwardGrid],
               );
