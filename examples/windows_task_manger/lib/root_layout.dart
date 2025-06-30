@@ -1,6 +1,14 @@
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:window_manager/window_manager.dart';
 import 'package:fluentui_system_icons/fluentui_system_icons.dart' as system;
+import 'package:windows_task_manger/app_history/app_history_view.dart';
+import 'package:windows_task_manger/details/details_view.dart';
+import 'package:windows_task_manger/performance/performance_view.dart';
+import 'package:windows_task_manger/processes/processes_view.dart';
+import 'package:windows_task_manger/services/services_view.dart';
+import 'package:windows_task_manger/settings/settings_view.dart';
+import 'package:windows_task_manger/startup_apps/startup_apps_view.dart';
+import 'package:windows_task_manger/users/users_view.dart';
 import 'package:windows_task_manger/windows_buttons.dart';
 
 class RootLayout extends StatefulWidget {
@@ -11,6 +19,7 @@ class RootLayout extends StatefulWidget {
 }
 
 class _RootLayoutState extends State<RootLayout> with WindowListener {
+  int _selectedIndex = 0;
   @override
   Widget build(BuildContext context) {
     return Card(
@@ -19,7 +28,7 @@ class _RootLayoutState extends State<RootLayout> with WindowListener {
       child: NavigationView(
         appBar: NavigationAppBar(
           backgroundColor: Colors.transparent,
-          height: 48,
+          height: 52,
 
           automaticallyImplyLeading: false,
           actions: WindowsButtons(),
@@ -27,7 +36,7 @@ class _RootLayoutState extends State<RootLayout> with WindowListener {
           title: DragToMoveArea(
             child: Container(
               color: Colors.transparent,
-              height: 40,
+              height: 32,
               child: Row(
                 children: [
                   Image.asset('assets/logo.png', width: 16, height: 16),
@@ -38,81 +47,98 @@ class _RootLayoutState extends State<RootLayout> with WindowListener {
                   ),
 
                   const SizedBox(width: 8),
+                  const Spacer(),
+                  Expanded(
+                    flex: 2,
+                    child: TextBox(
+                      placeholder: 'Type a a name,publisher, or PID to search',
+                      prefix: Padding(
+                        padding: const EdgeInsetsDirectional.only(start: 8.0),
+                        child: IconButton(
+                          iconButtonMode: IconButtonMode.large,
+                          icon: Icon(
+                            system.FluentIcons.search_48_regular,
+                            size: 14,
+                          ),
+
+                          onPressed: () {},
+                        ),
+                      ),
+                    ),
+                  ),
+                  const Spacer(),
                 ],
               ),
             ),
           ),
         ),
         pane: NavigationPane(
-          selected: 2,
+          size: const NavigationPaneSize(compactWidth: 48),
+          selected: _selectedIndex,
           displayMode: PaneDisplayMode.auto,
+          onChanged: (int index) {
+            setState(() {
+              // Update the selected index when a pane item is clicked
+              _selectedIndex = index;
+            });
+          },
 
           items: [
             PaneItem(
               icon: const Icon(FluentIcons.app_icon_default),
               title: const Text('Processes'),
-              body: Card(
-                child: const Center(
-                  child: Text('Task Manager Content Goes Here'),
-                ),
-              ),
+              body: ProcessesView(),
             ),
             PaneItem(
-              icon: const Icon(system.FluentIcons.pulse_square_20_regular),
-              title: const Text('Performance'),
-              body: Card(
-                child: const Center(
-                  child: Text('Task Manager Content Goes Here'),
+              icon: SizedBox(
+                child: const Icon(
+                  system.FluentIcons.pulse_square_24_regular,
+                  size: 18,
                 ),
               ),
+              title: const Text('Performance'),
+              body: PerformanceView(),
             ),
             PaneItem(
               icon: const Icon(FluentIcons.history),
               title: const Text('App History'),
-              body: Card(
-                child: const Center(
-                  child: Text('Task Manager Content Goes Here'),
-                ),
-              ),
+              body: AppHistoryView(),
             ),
             PaneItem(
-              icon: const Icon(system.FluentIcons.fast_acceleration_24_filled),
+              icon: const Icon(
+                system.FluentIcons.top_speed_24_regular,
+                size: 18,
+              ),
               title: const Text('Startup Apps'),
-              body: Card(
-                child: const Center(
-                  child: Text('Task Manager Content Goes Here'),
-                ),
-              ),
+              body: StartupAppsView(),
             ),
             PaneItem(
-              icon: const Icon(system.FluentIcons.people_48_regular, size: 24),
+              icon: const Icon(system.FluentIcons.people_24_regular, size: 18),
               title: Text('Users'),
-              body: Card(
-                child: Center(child: Text('Task Manager Content Goes Here')),
-              ),
+              body: UsersView(),
             ),
             PaneItem(
-              icon: const Icon(FluentIcons.a_t_p_logo),
+              icon: const Icon(
+                system.FluentIcons.text_bullet_list_24_regular,
+                size: 18,
+              ),
               title: const Text('Details'),
-              body: Card(
-                child: const Center(child: Text('Settings Content Goes Here')),
-              ),
+              body: DetailsView(),
             ),
             PaneItem(
-              icon: const Icon(FluentIcons.a_a_d_logo),
+              icon: const Icon(FluentIcons.puzzle, size: 18),
               title: const Text('Services'),
-              body: Card(
-                child: const Center(child: Text('About Content Goes Here')),
-              ),
+              body: ServicesView(),
             ),
           ],
           footerItems: [
             PaneItem(
-              icon: const Icon(FluentIcons.a_a_d_logo),
-              title: const Text('Settings'),
-              body: Card(
-                child: const Center(child: Text('Help Content Goes Here')),
+              icon: const Icon(
+                system.FluentIcons.settings_24_regular,
+                size: 18,
               ),
+              title: const Text('Settings'),
+              body: SettingsView(),
             ),
           ],
         ),

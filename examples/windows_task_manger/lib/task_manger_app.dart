@@ -12,6 +12,7 @@ class TaskMangerApp extends StatelessWidget {
           (context, accent) => FluentApp(
             title: 'Task Manager',
             theme: FluentThemeData(
+              navigationPaneTheme: NavigationPaneThemeData(),
               brightness: Brightness.light,
               accentColor: accent.toAccentColor(),
             ),
