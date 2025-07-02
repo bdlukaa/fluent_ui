@@ -1,7 +1,8 @@
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter/foundation.dart';
 import 'package:intl/intl.dart';
-import 'package:recase/recase.dart';
+
+typedef CalendarViewBlackoutRule = bool Function(DateTime date);
 
 /// Defines the selection modes available for the [CalendarView].
 enum CalendarViewSelectionMode {
@@ -138,7 +139,7 @@ class CalendarView extends StatefulWidget {
   /// // To blackout all weekends
   /// blackoutRule: (date) => date.weekday == DateTime.saturday || date.weekday == DateTime.sunday,
   /// ```
-  final bool Function(DateTime date)? blackoutRule;
+  final CalendarViewBlackoutRule? blackoutRule;
 
   /// Whether to highlight today's date.
   ///
@@ -192,6 +193,11 @@ class CalendarView extends StatefulWidget {
   /// The locale to use for formatting dates in the calendar.
   final Locale? locale;
 
+  /// The scroll behavior to use for the calendar view.
+  /// If null, a default scroll behavior will be used with disabled scrollbars
+  /// and bouncing scroll physics.
+  final ScrollBehavior? scrollBehavior;
+
   /// Creates a windows-styled [CalendarView].
   CalendarView({
     super.key,
@@ -216,6 +222,7 @@ class CalendarView extends StatefulWidget {
     this.isGroupLabelVisible = true,
     this.displayDateEnd,
     this.displayDateStart,
+    this.scrollBehavior,
   }) : assert(weeksPerView >= 4 && weeksPerView <= 8),
        assert(yearsPerView > 0, 'yearsPerView must be greater than 0'),
        assert(yearsPerView % 4 == 0, 'yearsPerView must be a multiple of 4'),
@@ -265,12 +272,7 @@ class CalendarViewState extends State<CalendarView> {
   final _yearScrollController = ScrollController();
   final _decadeScrollController = ScrollController();
 
-  final _scrollBehavior = const ScrollBehavior().copyWith(
-    scrollbars: false,
-    physics: const BouncingScrollPhysics(
-      decelerationRate: ScrollDecelerationRate.fast,
-    ),
-  );
+  late ScrollBehavior _scrollBehavior;
 
   /// The minimum year that can be displayed in the calendar.
   /// Defaults to current year minus half of [_defaultDisplayedYearCount].
@@ -314,6 +316,15 @@ class CalendarViewState extends State<CalendarView> {
   @override
   void initState() {
     super.initState();
+    _scrollBehavior =
+        widget.scrollBehavior ??
+        const ScrollBehavior().copyWith(
+          scrollbars: false,
+          physics: const BouncingScrollPhysics(
+            decelerationRate: ScrollDecelerationRate.fast,
+          ),
+        );
+
     if (widget.selectionMode == CalendarViewSelectionMode.multiple) {
       if (_selectedStart != null) _selectedMultiple.add(_selectedStart!);
       if (_selectedEnd != null) _selectedMultiple.add(_selectedEnd!);
@@ -1217,21 +1228,14 @@ class _CalendarHeader extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = FluentTheme.of(context);
     final locale = this.locale ?? Localizations.localeOf(context);
-    String label;
-
-    switch (displayMode) {
-      case CalendarViewDisplayMode.month:
-        label = DateFormat.yMMMM(locale.toLanguageTag()).format(date).titleCase;
-        break;
-      case CalendarViewDisplayMode.year:
-        label = date.year.toString();
-        break;
-      case CalendarViewDisplayMode.decade:
-        final startYear = (date.year ~/ 10) * 10;
-        final endYear = startYear + 9;
-        label = '$startYear - $endYear';
-        break;
-    }
+    final label = switch (displayMode) {
+      CalendarViewDisplayMode.month => DateFormat.yMMMM(
+        locale.toLanguageTag(),
+      ).format(date),
+      CalendarViewDisplayMode.year => date.year.toString(),
+      CalendarViewDisplayMode.decade =>
+        "${(date.year ~/ 10) * 10} - ${(date.year ~/ 10) * 10 + 9}",
+    };
 
     final foregroundColor = WidgetStateProperty.resolveWith((states) {
       if (states.isDisabled) return theme.resources.textFillColorDisabled;
