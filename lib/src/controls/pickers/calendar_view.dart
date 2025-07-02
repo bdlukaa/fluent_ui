@@ -821,6 +821,7 @@ class CalendarViewState extends State<CalendarView> {
 
   Widget _buildMonthView() {
     return Column(
+      key: const ValueKey('month_view'),
       mainAxisSize: MainAxisSize.min,
       spacing: 4,
       children: [
@@ -919,6 +920,7 @@ class CalendarViewState extends State<CalendarView> {
   double get _yearViewHeight => (widget.yearsPerView / 4) * _yearRowHeight;
   Widget _buildYearView() {
     return Column(
+      key: const ValueKey('year_view'),
       mainAxisSize: MainAxisSize.min,
       spacing: 4,
       children: [
@@ -1023,7 +1025,9 @@ class CalendarViewState extends State<CalendarView> {
 
   Widget _buildDecadeView() {
     return Column(
+      key: const ValueKey('decades_view'),
       mainAxisSize: MainAxisSize.min,
+      spacing: 4,
       children: [
         _buildHeader(),
         const Divider(
@@ -1144,11 +1148,25 @@ class CalendarViewState extends State<CalendarView> {
             ),
           ),
       constraints: const BoxConstraints(maxWidth: 300, minHeight: 350),
-      child: switch (_displayMode) {
-        CalendarViewDisplayMode.month => _buildMonthView(),
-        CalendarViewDisplayMode.year => _buildYearView(),
-        CalendarViewDisplayMode.decade => _buildDecadeView(),
-      },
+      child: AnimatedSwitcher(
+        duration: const Duration(milliseconds: 167),
+        switchInCurve: Curves.easeInOut,
+        switchOutCurve: Curves.easeInOut,
+        child: switch (_displayMode) {
+          CalendarViewDisplayMode.month => _buildMonthView(),
+          CalendarViewDisplayMode.year => _buildYearView(),
+          CalendarViewDisplayMode.decade => _buildDecadeView(),
+        },
+        layoutBuilder: (currentChild, previousChildren) {
+          return Stack(
+            alignment: AlignmentDirectional.topCenter,
+            children: [
+              ...previousChildren,
+              if (currentChild != null) currentChild,
+            ],
+          );
+        },
+      ),
     );
   }
 }
