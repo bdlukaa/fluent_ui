@@ -362,6 +362,7 @@ class CalendarViewState extends State<CalendarView> {
   void didUpdateWidget(covariant CalendarView oldWidget) {
     super.didUpdateWidget(oldWidget);
 
+    // Update the min/max display years if the date range changes
     if (widget.displayDateStart != oldWidget.displayDateStart ||
         widget.displayDateEnd != oldWidget.displayDateEnd) {
       final currentDate = DateTime.now();
@@ -371,8 +372,19 @@ class CalendarViewState extends State<CalendarView> {
       _maxDisplayedYear =
           widget.displayDateEnd?.year ??
           currentDate.year + (_defaultDisplayedYearCount ~/ 2);
+
+      // Clamp anchorMonth to new range if needed
+      final minDate = widget.displayDateStart ?? DateTime(_minDisplayedYear);
+      final maxDate =
+          widget.displayDateEnd ?? DateTime(_maxDisplayedYear, 12, 31);
+      if (_anchorMonth.isBefore(minDate)) {
+        _anchorMonth = minDate;
+      } else if (_anchorMonth.isAfter(maxDate)) {
+        _anchorMonth = DateTime(maxDate.year, maxDate.month, 1);
+      }
     }
 
+    // Handle selection mode changes by resetting selection state
     if (widget.selectionMode != oldWidget.selectionMode) {
       _selectedStart = widget.initialStart;
       _selectedEnd = widget.selectionMode == CalendarViewSelectionMode.range
@@ -388,6 +400,7 @@ class CalendarViewState extends State<CalendarView> {
       return;
     }
 
+    // Update selection when initial dates change
     if (widget.initialStart != oldWidget.initialStart ||
         (widget.selectionMode == CalendarViewSelectionMode.range &&
             widget.initialEnd != oldWidget.initialEnd)) {
@@ -404,31 +417,26 @@ class CalendarViewState extends State<CalendarView> {
       _notifySelectionChanged();
     }
 
+    // Validate and update selections when min/max dates change
     if (widget.minDate != oldWidget.minDate ||
         widget.maxDate != oldWidget.maxDate) {
-      bool selectionWasInvalidated = false;
+      final wasStartInvalid =
+          _selectedStart != null && !_isDateWithinBounds(_selectedStart!);
+      final wasEndInvalid =
+          _selectedEnd != null && !_isDateWithinBounds(_selectedEnd!);
+      final originalCount = _selectedMultiple.length;
+      _selectedMultiple.removeWhere((date) => !_isDateWithinBounds(date));
+      final wasMultipleInvalid = originalCount != _selectedMultiple.length;
 
-      if (_selectedStart != null && !_isDateWithinBounds(_selectedStart!)) {
-        _selectedStart = null;
-        selectionWasInvalidated = true;
-      }
-      if (_selectedEnd != null && !_isDateWithinBounds(_selectedEnd!)) {
-        _selectedEnd = null;
-        selectionWasInvalidated = true;
-      }
-      if (_selectedMultiple.isNotEmpty) {
-        final originalCount = _selectedMultiple.length;
-        _selectedMultiple.removeWhere((date) => !_isDateWithinBounds(date));
-        if (_selectedMultiple.length != originalCount) {
-          selectionWasInvalidated = true;
-        }
-      }
+      if (wasStartInvalid) _selectedStart = null;
+      if (wasEndInvalid) _selectedEnd = null;
 
-      if (selectionWasInvalidated) {
+      if (wasStartInvalid || wasEndInvalid || wasMultipleInvalid) {
         _notifySelectionChanged();
       }
     }
 
+    // Update display mode if it changed and differs from current
     if (widget.initialDisplayMode != oldWidget.initialDisplayMode &&
         widget.initialDisplayMode != _displayMode) {
       _displayMode = widget.initialDisplayMode;
