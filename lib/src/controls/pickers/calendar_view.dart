@@ -95,16 +95,21 @@ class CalendarView extends StatefulWidget {
   ///   * [CalendarSelectionData] for details on the selection data structure.
   final ValueChanged<CalendarSelectionData>? onSelectionChanged;
 
-  /// The minimum date that can be selected.
+  /// The minimum date that can be selected. Dates before this will be
+  /// considered invalid for selection.
   final DateTime? minDate;
 
-  /// The maximum date that can be selected.
+  /// The maximum date that can be selected. Dates after this will be
+  /// considered invalid for selection.
   final DateTime? maxDate;
 
-  /// The last date in the date range that is available in the calendar..
+  /// The maximum date that can be displayed in the calendar.
+  ///
+  /// This date must be at least 10 years after [displayDateStart] if both are provided.
   final DateTime? displayDateEnd;
 
-  /// The first date that is available in the calendar.
+  /// The minimum date that can be displayed in the calendar.
+  /// This date must be at least 10 years before [displayDateEnd] if both are provided.
   final DateTime? displayDateStart;
 
   /// The color used to highlight selected dates.
@@ -852,7 +857,7 @@ class CalendarViewState extends State<CalendarView> {
 
               // The offset describes how many days from the first day of the
               // week. This align the first week of the month correctly.
-              final offset = _anchorMonth.weekday;
+              final offset = (_anchorMonth.weekday - firstDayOfWeek + 7) % 7;
 
               const gridDelegate = SliverGridDelegateWithFixedCrossAxisCount(
                 crossAxisCount: 7,
