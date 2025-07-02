@@ -1,7 +1,6 @@
 ## [next]
 
-- fix: `ToggleSwitch` outdated usage in the demo.
-- feat: Add [WinUI3 CalendarView](https://learn.microsoft.com/en-us/windows/apps/design/controls/calendar-view)  widget
+- feat: Added `CalendarView` widget ([#1232](https://github.com/bdlukaa/fluent_ui/pull/1232) thanks to [@asmitta-01](https://github.com/Asmitta-01), [#236](https://github.com/bdlukaa/fluent_ui/issues/236))
 
 ## 4.12.0
 
