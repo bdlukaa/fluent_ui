@@ -941,12 +941,6 @@ class CalendarViewState extends State<CalendarView> {
               final reverseGridCount =
                   (_anchorMonth.year - _minDisplayedYear) * 12;
 
-              final int lastMonth = widget.displayDateEnd?.month ?? 12;
-              final int forwardGridCount =
-                  (_maxDisplayedYear - _anchorMonth.year) * 12 +
-                  lastMonth -
-                  _anchorMonth.month +
-                  1;
               final reverseGrid = SliverGrid(
                 gridDelegate: gridDelegate,
                 delegate: SliverChildBuilderDelegate((context, index) {
@@ -954,12 +948,12 @@ class CalendarViewState extends State<CalendarView> {
                   final year = _anchorMonth.year - 1 + (nIndex ~/ 13);
                   final monthNumber = (nIndex % 12) + 1;
 
-                  final isMonthVisible =
-                      widget.displayDateStart != null &&
-                      DateTime(
-                        year,
-                        monthNumber,
-                      ).isAfter(widget.displayDateStart!);
+                  final isMonthVisible = widget.displayDateStart != null
+                      ? DateTime(
+                          year,
+                          monthNumber,
+                        ).isAfter(widget.displayDateStart!)
+                      : true;
 
                   if (!isMonthVisible) {
                     return SizedBox.shrink(key: ValueKey(year));
@@ -969,6 +963,9 @@ class CalendarViewState extends State<CalendarView> {
                 }, childCount: reverseGridCount),
               );
 
+              final int lastMonth = widget.displayDateEnd?.month ?? 12;
+              final int forwardGridCount =
+                  (_maxDisplayedYear - _anchorMonth.year) * 12 + lastMonth;
               final forwardGrid = SliverGrid(
                 key: forwardListKey,
                 gridDelegate: gridDelegate,
