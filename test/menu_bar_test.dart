@@ -10,24 +10,13 @@ void main() {
       MenuBarItem(
         title: 'File',
         items: [
-          MenuFlyoutItem(
-            text: const Text('New'),
-            onPressed: () {},
-          ),
-          MenuFlyoutItem(
-            text: const Text('Open'),
-            onPressed: () {},
-          ),
+          MenuFlyoutItem(text: const Text('New'), onPressed: () {}),
+          MenuFlyoutItem(text: const Text('Open'), onPressed: () {}),
         ],
       ),
       MenuBarItem(
         title: 'Edit',
-        items: [
-          MenuFlyoutItem(
-            text: const Text('Undo'),
-            onPressed: () {},
-          ),
-        ],
+        items: [MenuFlyoutItem(text: const Text('Undo'), onPressed: () {})],
       ),
     ];
   });
@@ -46,8 +35,9 @@ void main() {
     expect(find.text('Open'), findsOneWidget);
   });
 
-  testWidgets('MenuBar shows correct flyout for each menu item',
-      (tester) async {
+  testWidgets('MenuBar shows correct flyout for each menu item', (
+    tester,
+  ) async {
     await tester.pumpWidget(wrapApp(child: MenuBar(items: items)));
     await tester.tap(find.text('Edit'));
     await tester.pumpAndSettle();

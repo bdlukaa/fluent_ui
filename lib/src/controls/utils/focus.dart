@@ -47,21 +47,23 @@ class FocusBorder extends StatelessWidget {
   void debugFillProperties(DiagnosticPropertiesBuilder properties) {
     super.debugFillProperties(properties);
     properties
-      ..add(
-        FlagProperty('focused', value: focused, ifFalse: 'unfocused'),
-      )
+      ..add(FlagProperty('focused', value: focused, ifFalse: 'unfocused'))
       ..add(DiagnosticsProperty<FocusThemeData>('style', style))
-      ..add(FlagProperty(
-        'renderOutside',
-        value: renderOutside,
-        ifFalse: 'render inside',
-      ))
-      ..add(FlagProperty(
-        'useStackApproach',
-        value: useStackApproach,
-        defaultValue: true,
-        ifFalse: 'use border approach',
-      ));
+      ..add(
+        FlagProperty(
+          'renderOutside',
+          value: renderOutside,
+          ifFalse: 'render inside',
+        ),
+      )
+      ..add(
+        FlagProperty(
+          'useStackApproach',
+          value: useStackApproach,
+          defaultValue: true,
+          ifFalse: 'use border approach',
+        ),
+      );
   }
 
   static Widget _buildBorder(
@@ -69,17 +71,19 @@ class FocusBorder extends StatelessWidget {
     bool focused, [
     Widget? child,
   ]) {
-    return Builder(builder: (context) {
-      return IgnorePointer(
-        child: DecoratedBox(
-          decoration: style.buildPrimaryDecoration(focused),
+    return Builder(
+      builder: (context) {
+        return IgnorePointer(
           child: DecoratedBox(
-            decoration: style.buildSecondaryDecoration(focused),
-            child: child,
+            decoration: style.buildPrimaryDecoration(focused),
+            child: DecoratedBox(
+              decoration: style.buildSecondaryDecoration(focused),
+              child: child,
+            ),
           ),
-        ),
-      );
-    });
+        );
+      },
+    );
   }
 
   @override
@@ -112,19 +116,16 @@ class FocusBorder extends StatelessWidget {
 }
 
 class FocusTheme extends InheritedWidget {
-  const FocusTheme({
-    super.key,
-    required this.data,
-    required super.child,
-  });
+  const FocusTheme({super.key, required this.data, required super.child});
 
   final FocusThemeData data;
 
   static FocusThemeData of(BuildContext context) {
     assert(debugCheckHasFluentTheme(context));
     final theme = context.dependOnInheritedWidgetOfExactType<FocusTheme>();
-    return FocusThemeData.fromTheme(FluentTheme.of(context))
-        .merge(FluentTheme.of(context).focusTheme.merge(theme?.data));
+    return FocusThemeData.fromTheme(
+      FluentTheme.of(context),
+    ).merge(FluentTheme.of(context).focusTheme.merge(theme?.data));
   }
 
   @override
@@ -159,9 +160,7 @@ class FocusThemeData with Diagnosticable {
         width: 2,
         color: theme.resources.focusStrokeColorOuter,
       ),
-      secondaryBorder: BorderSide(
-        color: theme.resources.focusStrokeColorInner,
-      ),
+      secondaryBorder: BorderSide(color: theme.resources.focusStrokeColorInner),
       glowColor: theme.accentColor.withValues(alpha: 0.15),
       glowFactor: 0.0,
       renderOutside: true,
@@ -171,10 +170,16 @@ class FocusThemeData with Diagnosticable {
   static FocusThemeData lerp(FocusThemeData? a, FocusThemeData? b, double t) {
     return FocusThemeData(
       borderRadius: BorderRadius.lerp(a?.borderRadius, b?.borderRadius, t),
-      primaryBorder: BorderSide.lerp(a?.primaryBorder ?? BorderSide.none,
-          b?.primaryBorder ?? BorderSide.none, t),
-      secondaryBorder: BorderSide.lerp(a?.secondaryBorder ?? BorderSide.none,
-          b?.secondaryBorder ?? BorderSide.none, t),
+      primaryBorder: BorderSide.lerp(
+        a?.primaryBorder ?? BorderSide.none,
+        b?.primaryBorder ?? BorderSide.none,
+        t,
+      ),
+      secondaryBorder: BorderSide.lerp(
+        a?.secondaryBorder ?? BorderSide.none,
+        b?.secondaryBorder ?? BorderSide.none,
+        t,
+      ),
       glowColor: Color.lerp(a?.glowColor, b?.glowColor, t),
       glowFactor: lerpDouble(a?.glowFactor, b?.glowFactor, t),
       renderOutside: t < 0.5 ? a?.renderOutside : b?.renderOutside,
@@ -243,32 +248,38 @@ class FocusThemeData with Diagnosticable {
   void debugFillProperties(DiagnosticPropertiesBuilder properties) {
     super.debugFillProperties(properties);
     properties
-      ..add(DiagnosticsProperty<BorderSide>(
-        'primaryBorder',
-        primaryBorder,
-        ifNull: 'No primary border',
-      ))
-      ..add(DiagnosticsProperty<BorderSide>(
-        'secondaryBorder',
-        secondaryBorder,
-        ifNull: 'No secondary border',
-      ))
-      ..add(DiagnosticsProperty<BorderRadius>(
-        'borderRadius',
-        borderRadius,
-        defaultValue: BorderRadius.zero,
-      ))
+      ..add(
+        DiagnosticsProperty<BorderSide>(
+          'primaryBorder',
+          primaryBorder,
+          ifNull: 'No primary border',
+        ),
+      )
+      ..add(
+        DiagnosticsProperty<BorderSide>(
+          'secondaryBorder',
+          secondaryBorder,
+          ifNull: 'No secondary border',
+        ),
+      )
+      ..add(
+        DiagnosticsProperty<BorderRadius>(
+          'borderRadius',
+          borderRadius,
+          defaultValue: BorderRadius.zero,
+        ),
+      )
       ..add(DoubleProperty('glowFactor', glowFactor, defaultValue: 0.0))
-      ..add(ColorProperty(
-        'glowColor',
-        glowColor,
-        defaultValue: Colors.transparent,
-      ))
-      ..add(FlagProperty(
-        'renderOutside',
-        value: renderOutside,
-        defaultValue: true,
-        ifFalse: 'renderInside',
-      ));
+      ..add(
+        ColorProperty('glowColor', glowColor, defaultValue: Colors.transparent),
+      )
+      ..add(
+        FlagProperty(
+          'renderOutside',
+          value: renderOutside,
+          defaultValue: true,
+          ifFalse: 'renderInside',
+        ),
+      );
   }
 }

@@ -79,11 +79,13 @@ class RadioButton extends StatelessWidget {
     super.debugFillProperties(properties);
     properties
       ..add(FlagProperty('checked', value: checked, ifFalse: 'unchecked'))
-      ..add(FlagProperty('disabled',
-          value: onChanged == null, ifFalse: 'enabled'))
+      ..add(
+        FlagProperty('disabled', value: onChanged == null, ifFalse: 'enabled'),
+      )
       ..add(ObjectFlagProperty.has('style', style))
       ..add(
-          FlagProperty('autofocus', value: autofocus, ifFalse: 'manual focus'))
+        FlagProperty('autofocus', value: autofocus, ifFalse: 'manual focus'),
+      )
       ..add(StringProperty('semanticLabel', semanticLabel));
   }
 
@@ -97,7 +99,8 @@ class RadioButton extends StatelessWidget {
       onPressed: onChanged == null ? null : () => onChanged!(!checked),
       semanticLabel: semanticLabel,
       builder: (context, state) {
-        final decoration = (checked
+        final decoration =
+            (checked
                 ? style.checkedDecoration?.resolve(state)
                 : style.uncheckedDecoration?.resolve(state)) ??
             const BoxDecoration(shape: BoxShape.circle);
@@ -122,21 +125,26 @@ class RadioButton extends StatelessWidget {
           ),
         );
         if (content != null) {
-          child = Row(mainAxisSize: MainAxisSize.min, children: [
-            child,
-            const SizedBox(width: 6.0),
-            Flexible(
-              child: DefaultTextStyle.merge(
-                style: TextStyle(color: style.foregroundColor?.resolve(state)),
-                child: IconTheme.merge(
-                  data: IconThemeData(
+          child = Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              child,
+              const SizedBox(width: 6.0),
+              Flexible(
+                child: DefaultTextStyle.merge(
+                  style: TextStyle(
                     color: style.foregroundColor?.resolve(state),
                   ),
-                  child: content!,
+                  child: IconTheme.merge(
+                    data: IconThemeData(
+                      color: style.foregroundColor?.resolve(state),
+                    ),
+                    child: content!,
+                  ),
                 ),
               ),
-            ),
-          ]);
+            ],
+          );
         }
         return Semantics(
           checked: checked,
@@ -167,18 +175,20 @@ class RadioButtonTheme extends InheritedTheme {
     required RadioButtonThemeData data,
     required Widget child,
   }) {
-    return Builder(builder: (BuildContext context) {
-      return RadioButtonTheme(
-        key: key,
-        data: _getInheritedThemeData(context).merge(data),
-        child: child,
-      );
-    });
+    return Builder(
+      builder: (BuildContext context) {
+        return RadioButtonTheme(
+          key: key,
+          data: _getInheritedThemeData(context).merge(data),
+          child: child,
+        );
+      },
+    );
   }
 
   static RadioButtonThemeData _getInheritedThemeData(BuildContext context) {
-    final theme =
-        context.dependOnInheritedWidgetOfExactType<RadioButtonTheme>();
+    final theme = context
+        .dependOnInheritedWidgetOfExactType<RadioButtonTheme>();
     return theme?.data ?? FluentTheme.of(context).radioButtonTheme;
   }
 
@@ -192,9 +202,9 @@ class RadioButtonTheme extends InheritedTheme {
   /// RadioButtonThemeData theme = RadioButtonTheme.of(context);
   /// ```
   static RadioButtonThemeData of(BuildContext context) {
-    return RadioButtonThemeData.standard(FluentTheme.of(context)).merge(
-      _getInheritedThemeData(context),
-    );
+    return RadioButtonThemeData.standard(
+      FluentTheme.of(context),
+    ).merge(_getInheritedThemeData(context));
   }
 
   @override
@@ -235,8 +245,8 @@ class RadioButtonThemeData with Diagnosticable {
             color: ButtonThemeData.checkedInputColor(theme, states),
             width: !states.isDisabled
                 ? states.isHovered && !states.isPressed
-                    ? 3.4
-                    : 5.0
+                      ? 3.4
+                      : 5.0
                 : 4.0,
           ),
           shape: BoxShape.circle,
@@ -274,14 +284,23 @@ class RadioButtonThemeData with Diagnosticable {
   ) {
     return RadioButtonThemeData(
       checkedDecoration: WidgetStateProperty.lerp<BoxDecoration?>(
-          a?.checkedDecoration, b?.checkedDecoration, t, BoxDecoration.lerp),
+        a?.checkedDecoration,
+        b?.checkedDecoration,
+        t,
+        BoxDecoration.lerp,
+      ),
       uncheckedDecoration: WidgetStateProperty.lerp<BoxDecoration?>(
-          a?.uncheckedDecoration,
-          b?.uncheckedDecoration,
-          t,
-          BoxDecoration.lerp),
+        a?.uncheckedDecoration,
+        b?.uncheckedDecoration,
+        t,
+        BoxDecoration.lerp,
+      ),
       foregroundColor: WidgetStateProperty.lerp<Color?>(
-          a?.foregroundColor, b?.foregroundColor, t, Color.lerp),
+        a?.foregroundColor,
+        b?.foregroundColor,
+        t,
+        Color.lerp,
+      ),
     );
   }
 
@@ -297,10 +316,18 @@ class RadioButtonThemeData with Diagnosticable {
   void debugFillProperties(DiagnosticPropertiesBuilder properties) {
     super.debugFillProperties(properties);
     properties
-      ..add(DiagnosticsProperty<WidgetStateProperty<BoxDecoration?>?>(
-          'checkedDecoration', checkedDecoration))
-      ..add(DiagnosticsProperty<WidgetStateProperty<BoxDecoration?>?>(
-          'uncheckedDecoration', uncheckedDecoration))
+      ..add(
+        DiagnosticsProperty<WidgetStateProperty<BoxDecoration?>?>(
+          'checkedDecoration',
+          checkedDecoration,
+        ),
+      )
+      ..add(
+        DiagnosticsProperty<WidgetStateProperty<BoxDecoration?>?>(
+          'uncheckedDecoration',
+          uncheckedDecoration,
+        ),
+      )
       ..add(DiagnosticsProperty('foregroundDecoration', foregroundColor));
   }
 }

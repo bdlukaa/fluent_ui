@@ -5,8 +5,9 @@ import 'package:flutter_test/flutter_test.dart';
 import 'app_test.dart';
 
 void main() {
-  testWidgets('RadioButton initializes with correct selected value',
-      (tester) async {
+  testWidgets('RadioButton initializes with correct selected value', (
+    tester,
+  ) async {
     var radioButtonValue = true;
 
     await tester.pumpWidget(
@@ -22,11 +23,14 @@ void main() {
       ),
     );
 
-    expect(tester.widget<RadioButton>(find.byType(RadioButton)).checked,
-        radioButtonValue);
+    expect(
+      tester.widget<RadioButton>(find.byType(RadioButton)).checked,
+      radioButtonValue,
+    );
   });
-  testWidgets('RadioButton change state accordingly',
-      (WidgetTester tester) async {
+  testWidgets('RadioButton change state accordingly', (
+    WidgetTester tester,
+  ) async {
     var radioButtonValue = false;
 
     await tester.pumpWidget(
@@ -56,8 +60,9 @@ void main() {
     await tester.pumpAndSettle();
     expect(radioButtonValue, false);
   });
-  testWidgets('Radio Button can be focused and selected with keyboard',
-      (WidgetTester tester) async {
+  testWidgets('Radio Button can be focused and selected with keyboard', (
+    WidgetTester tester,
+  ) async {
     var radioButtonValue = false;
     final focusNode = FocusNode();
 
@@ -89,18 +94,16 @@ void main() {
     expect(radioButtonValue, true);
   });
 
-  testWidgets('Disabled RadioButton cannot be selected',
-      (WidgetTester tester) async {
+  testWidgets('Disabled RadioButton cannot be selected', (
+    WidgetTester tester,
+  ) async {
     var radioButtonValue = false;
 
     await tester.pumpWidget(
       StatefulBuilder(
         builder: (BuildContext context, StateSetter setState) {
           return wrapApp(
-            child: RadioButton(
-              onChanged: null,
-              checked: radioButtonValue,
-            ),
+            child: RadioButton(onChanged: null, checked: radioButtonValue),
           );
         },
       ),
@@ -113,8 +116,9 @@ void main() {
     await tester.pumpAndSettle();
     expect(radioButtonValue, false);
   });
-  testWidgets('Focus moves between RadioButtons in correct order',
-      (WidgetTester tester) async {
+  testWidgets('Focus moves between RadioButtons in correct order', (
+    WidgetTester tester,
+  ) async {
     final focusNode1 = FocusNode();
     final focusNode2 = FocusNode();
 

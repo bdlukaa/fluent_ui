@@ -4,10 +4,8 @@ import 'package:flutter/foundation.dart';
 const double _kVerticalOffset = 6.0;
 const Widget _kDefaultDropdownButtonTrailing = ChevronDown();
 
-typedef DropDownButtonBuilder = Widget Function(
-  BuildContext context,
-  VoidCallback? onOpen,
-);
+typedef DropDownButtonBuilder =
+    Widget Function(BuildContext context, VoidCallback? onOpen);
 
 /// A dropdown button is a button that shows a chevron as a visual indicator that
 /// it has an attached flyout that contains more options. It has the same
@@ -187,13 +185,16 @@ class DropDownButton extends StatefulWidget {
             return ClipRect(
               child: SlideTransition(
                 textDirection: textDirection,
-                position: Tween<Offset>(
-                  begin: const Offset(0, -1),
-                  end: const Offset(0, 0),
-                ).animate(CurvedAnimation(
-                  parent: animation,
-                  curve: FluentTheme.of(context).animationCurve,
-                )),
+                position:
+                    Tween<Offset>(
+                      begin: const Offset(0, -1),
+                      end: const Offset(0, 0),
+                    ).animate(
+                      CurvedAnimation(
+                        parent: animation,
+                        curve: FluentTheme.of(context).animationCurve,
+                      ),
+                    ),
                 child: child,
               ),
             );
@@ -203,13 +204,16 @@ class DropDownButton extends StatefulWidget {
             return ClipRect(
               child: SlideTransition(
                 textDirection: textDirection,
-                position: Tween<Offset>(
-                  begin: const Offset(0, 1),
-                  end: const Offset(0, 0),
-                ).animate(CurvedAnimation(
-                  parent: animation,
-                  curve: FluentTheme.of(context).animationCurve,
-                )),
+                position:
+                    Tween<Offset>(
+                      begin: const Offset(0, 1),
+                      end: const Offset(0, 0),
+                    ).animate(
+                      CurvedAnimation(
+                        parent: animation,
+                        curve: FluentTheme.of(context).animationCurve,
+                      ),
+                    ),
                 child: child,
               ),
             );
@@ -226,17 +230,21 @@ class DropDownButton extends StatefulWidget {
     super.debugFillProperties(properties);
     properties
       ..add(IterableProperty<MenuFlyoutItemBase>('items', items))
-      ..add(DoubleProperty(
-        'verticalOffset',
-        verticalOffset,
-        defaultValue: _kVerticalOffset,
-      ))
-      ..add(FlagProperty(
-        'close after click',
-        value: closeAfterClick,
-        defaultValue: false,
-        ifFalse: 'do not close after click',
-      ))
+      ..add(
+        DoubleProperty(
+          'verticalOffset',
+          verticalOffset,
+          defaultValue: _kVerticalOffset,
+        ),
+      )
+      ..add(
+        FlagProperty(
+          'close after click',
+          value: closeAfterClick,
+          defaultValue: false,
+          ifFalse: 'do not close after click',
+        ),
+      )
       ..add(EnumProperty<FlyoutPlacementMode>('placement', placement))
       ..add(DiagnosticsProperty<ShapeBorder>('menu shape', menuShape))
       ..add(ColorProperty('menu color', menuColor));
@@ -274,56 +282,60 @@ class DropDownButtonState extends State<DropDownButton> {
     final theme = FluentTheme.of(context);
     return FlyoutTarget(
       controller: _flyoutController,
-      child: Builder(builder: (context) {
-        if (widget.buttonBuilder != null) {
-          return widget.buttonBuilder!(
-            context,
-            widget.disabled ? null : open,
-          );
-        }
+      child: Builder(
+        builder: (context) {
+          if (widget.buttonBuilder != null) {
+            return widget.buttonBuilder!(
+              context,
+              widget.disabled ? null : open,
+            );
+          }
 
-        return Button(
-          onPressed: widget.disabled ? null : open,
-          autofocus: widget.autofocus,
-          focusNode: widget.focusNode,
-          style: widget.style,
-          child: Builder(builder: (context) {
-            final state = HoverButton.of(context).states;
+          return Button(
+            onPressed: widget.disabled ? null : open,
+            autofocus: widget.autofocus,
+            focusNode: widget.focusNode,
+            style: widget.style,
+            child: Builder(
+              builder: (context) {
+                final state = HoverButton.of(context).states;
 
-            return IconTheme.merge(
-              data: const IconThemeData(size: 20.0),
-              child: Row(
-                mainAxisSize: MainAxisSize.min,
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: _space(<Widget>[
-                  if (widget.leading != null) widget.leading!,
-                  if (widget.title != null) widget.title!,
-                  if (widget.trailing != null)
-                    IconTheme.merge(
-                      data: IconThemeData(
-                        color: state.isDisabled
-                            ? theme.resources.textFillColorDisabled
-                            : state.isPressed
+                return IconTheme.merge(
+                  data: const IconThemeData(size: 20.0),
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: _space(<Widget>[
+                      if (widget.leading != null) widget.leading!,
+                      if (widget.title != null) widget.title!,
+                      if (widget.trailing != null)
+                        IconTheme.merge(
+                          data: IconThemeData(
+                            color: state.isDisabled
+                                ? theme.resources.textFillColorDisabled
+                                : state.isPressed
                                 ? theme.resources.textFillColorTertiary
                                 : state.isHovered
-                                    ? theme.resources.textFillColorSecondary
-                                    : theme.resources.textFillColorPrimary,
-                      ),
-                      child: AnimatedSlide(
-                        duration: theme.fastAnimationDuration,
-                        curve: Curves.easeInCirc,
-                        offset: state.isPressed
-                            ? const Offset(0, 0.1)
-                            : Offset.zero,
-                        child: widget.trailing!,
-                      ),
-                    ),
-                ]),
-              ),
-            );
-          }),
-        );
-      }),
+                                ? theme.resources.textFillColorSecondary
+                                : theme.resources.textFillColorPrimary,
+                          ),
+                          child: AnimatedSlide(
+                            duration: theme.fastAnimationDuration,
+                            curve: Curves.easeInCirc,
+                            offset: state.isPressed
+                                ? const Offset(0, 0.1)
+                                : Offset.zero,
+                            child: widget.trailing!,
+                          ),
+                        ),
+                    ]),
+                  ),
+                );
+              },
+            ),
+          );
+        },
+      ),
     );
   }
 

@@ -47,14 +47,13 @@ class ToggleButton extends StatelessWidget {
     super.debugFillProperties(properties);
     properties
       ..add(FlagProperty('checked', value: checked, ifFalse: 'unchecked'))
-      ..add(
-        ObjectFlagProperty('onChanged', onChanged, ifNull: 'disabled'),
-      )
+      ..add(ObjectFlagProperty('onChanged', onChanged, ifNull: 'disabled'))
       ..add(DiagnosticsProperty<ToggleButtonThemeData>('style', style))
       ..add(StringProperty('semanticLabel', semanticLabel))
       ..add(ObjectFlagProperty<FocusNode>.has('focusNode', focusNode))
       ..add(
-          FlagProperty('autofocus', value: autofocus, ifFalse: 'manual focus'));
+        FlagProperty('autofocus', value: autofocus, ifFalse: 'manual focus'),
+      );
   }
 
   @override
@@ -95,18 +94,20 @@ class ToggleButtonTheme extends InheritedTheme {
     required ToggleButtonThemeData data,
     required Widget child,
   }) {
-    return Builder(builder: (BuildContext context) {
-      return ToggleButtonTheme(
-        key: key,
-        data: _getInheritedThemeData(context).merge(data),
-        child: child,
-      );
-    });
+    return Builder(
+      builder: (BuildContext context) {
+        return ToggleButtonTheme(
+          key: key,
+          data: _getInheritedThemeData(context).merge(data),
+          child: child,
+        );
+      },
+    );
   }
 
   static ToggleButtonThemeData _getInheritedThemeData(BuildContext context) {
-    final theme =
-        context.dependOnInheritedWidgetOfExactType<ToggleButtonTheme>();
+    final theme = context
+        .dependOnInheritedWidgetOfExactType<ToggleButtonTheme>();
     return theme?.data ?? FluentTheme.of(context).toggleButtonTheme;
   }
 
@@ -120,9 +121,9 @@ class ToggleButtonTheme extends InheritedTheme {
   /// ToggleButtonThemeData theme = ToggleButtonTheme.of(context);
   /// ```
   static ToggleButtonThemeData of(BuildContext context) {
-    return ToggleButtonThemeData.standard(FluentTheme.of(context)).merge(
-      _getInheritedThemeData(context),
-    );
+    return ToggleButtonThemeData.standard(
+      FluentTheme.of(context),
+    ).merge(_getInheritedThemeData(context));
   }
 
   @override
@@ -149,19 +150,13 @@ class ToggleButtonThemeData with Diagnosticable {
     return ToggleButtonThemeData(
       checkedButtonStyle: ButtonStyle(
         backgroundColor: WidgetStateProperty.resolveWith(
-          (states) => ButtonThemeData.checkedInputColor(
-            theme,
-            states,
-          ),
+          (states) => ButtonThemeData.checkedInputColor(theme, states),
         ),
         shape: WidgetStateProperty.resolveWith(
           (states) => FilledButton.shapeBorder(theme, states),
         ),
         foregroundColor: WidgetStateProperty.resolveWith(
-          (states) => FilledButton.foregroundColor(
-            theme,
-            states,
-          ),
+          (states) => FilledButton.foregroundColor(theme, states),
         ),
       ),
     );
@@ -173,10 +168,16 @@ class ToggleButtonThemeData with Diagnosticable {
     double t,
   ) {
     return ToggleButtonThemeData(
-      checkedButtonStyle:
-          ButtonStyle.lerp(a?.checkedButtonStyle, b?.checkedButtonStyle, t),
-      uncheckedButtonStyle:
-          ButtonStyle.lerp(a?.uncheckedButtonStyle, b?.uncheckedButtonStyle, t),
+      checkedButtonStyle: ButtonStyle.lerp(
+        a?.checkedButtonStyle,
+        b?.checkedButtonStyle,
+        t,
+      ),
+      uncheckedButtonStyle: ButtonStyle.lerp(
+        a?.uncheckedButtonStyle,
+        b?.uncheckedButtonStyle,
+        t,
+      ),
     );
   }
 
@@ -192,9 +193,17 @@ class ToggleButtonThemeData with Diagnosticable {
   void debugFillProperties(DiagnosticPropertiesBuilder properties) {
     super.debugFillProperties(properties);
     properties
-      ..add(DiagnosticsProperty<ButtonStyle>(
-          'checkedButtonStyle', checkedButtonStyle))
-      ..add(DiagnosticsProperty<ButtonStyle>(
-          'uncheckedButtonStyle', uncheckedButtonStyle));
+      ..add(
+        DiagnosticsProperty<ButtonStyle>(
+          'checkedButtonStyle',
+          checkedButtonStyle,
+        ),
+      )
+      ..add(
+        DiagnosticsProperty<ButtonStyle>(
+          'uncheckedButtonStyle',
+          uncheckedButtonStyle,
+        ),
+      );
   }
 }

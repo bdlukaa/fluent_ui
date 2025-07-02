@@ -33,36 +33,34 @@ void main() {
   });
 
   testWidgets(
-      'Flyout closes when clicking outside if barrierDismissible is true',
-      (tester) async {
-    final controller = FlyoutController();
-    await tester.pumpWidget(
-      wrapApp(
-        child: Column(
-          children: [
-            const Text('Click outside to dismiss'),
-            FlyoutTarget(
-              controller: controller,
-              child: const Text('Target'),
-            ),
-          ],
+    'Flyout closes when clicking outside if barrierDismissible is true',
+    (tester) async {
+      final controller = FlyoutController();
+      await tester.pumpWidget(
+        wrapApp(
+          child: Column(
+            children: [
+              const Text('Click outside to dismiss'),
+              FlyoutTarget(controller: controller, child: const Text('Target')),
+            ],
+          ),
         ),
-      ),
-    );
+      );
 
-    controller.showFlyout(
-      builder: (context) => const FlyoutContent(child: Text('Flyout')),
-      barrierDismissible: true,
-    );
-    await tester.pumpAndSettle();
-    expect(controller.isOpen, isTrue);
+      controller.showFlyout(
+        builder: (context) => const FlyoutContent(child: Text('Flyout')),
+        barrierDismissible: true,
+      );
+      await tester.pumpAndSettle();
+      expect(controller.isOpen, isTrue);
 
-    // Tap outside to dismiss
-    await tester.tap(find.text('Click outside to dismiss'));
-    await tester.pumpAndSettle();
-    expect(controller.isOpen, isFalse);
-    expect(find.text('Flyout'), findsNothing);
-  });
+      // Tap outside to dismiss
+      await tester.tap(find.text('Click outside to dismiss'));
+      await tester.pumpAndSettle();
+      expect(controller.isOpen, isFalse);
+      expect(find.text('Flyout'), findsNothing);
+    },
+  );
 
   testWidgets('MenuFlyout displays items and responds to tap', (tester) async {
     bool pressed = false;
@@ -87,10 +85,7 @@ void main() {
             },
           ),
           const MenuFlyoutSeparator(),
-          MenuFlyoutItem(
-            text: const Text('Item 2'),
-            onPressed: () {},
-          ),
+          MenuFlyoutItem(text: const Text('Item 2'), onPressed: () {}),
         ],
       ),
     );
@@ -120,10 +115,7 @@ void main() {
     controller.showFlyout(
       builder: (context) => MenuFlyout(
         items: [
-          MenuFlyoutItem(
-            text: const Text('Disabled Item'),
-            onPressed: null,
-          ),
+          MenuFlyoutItem(text: const Text('Disabled Item'), onPressed: null),
         ],
       ),
     );
@@ -139,8 +131,9 @@ void main() {
     expect(find.text('Disabled Item'), findsOneWidget);
   });
 
-  testWidgets('ToggleMenuFlyoutItem toggles value and calls onChanged',
-      (tester) async {
+  testWidgets('ToggleMenuFlyoutItem toggles value and calls onChanged', (
+    tester,
+  ) async {
     bool? value;
     final controller = FlyoutController();
 
@@ -171,8 +164,9 @@ void main() {
     expect(value, isTrue);
   });
 
-  testWidgets('RadioMenuFlyoutItem calls onChanged with correct value',
-      (tester) async {
+  testWidgets('RadioMenuFlyoutItem calls onChanged with correct value', (
+    tester,
+  ) async {
     String? selected;
     final controller = FlyoutController();
 

@@ -297,8 +297,8 @@ enum FlyoutPlacementMode {
       case FlyoutPlacementMode.bottomRight:
         return BoxConstraints(
           maxWidth: rootSize.width._ensurePositive(),
-          maxHeight:
-              (rootSize.height - margin - targetOffset.dy)._ensurePositive(),
+          maxHeight: (rootSize.height - margin - targetOffset.dy)
+              ._ensurePositive(),
         );
       case FlyoutPlacementMode.topCenter:
       case FlyoutPlacementMode.topLeft:
@@ -389,15 +389,11 @@ enum FlyoutPlacementMode {
       FlyoutPlacementMode.rightCenter,
       FlyoutPlacementMode.rightBottom,
       FlyoutPlacementMode.topRight,
-      FlyoutPlacementMode.bottomRight
+      FlyoutPlacementMode.bottomRight,
     ].contains(configuration.preferredMode);
 
     final bas = FlyoutPlacementMode.bottomCenter
-        ._getAvailableSpace(
-          targetOffset,
-          rootSize,
-          margin,
-        )
+        ._getAvailableSpace(targetOffset, rootSize, margin)
         .biggest;
 
     if (bas.height >= availableSpace) {
@@ -407,11 +403,7 @@ enum FlyoutPlacementMode {
     }
 
     final tas = FlyoutPlacementMode.topCenter
-        ._getAvailableSpace(
-          targetOffset,
-          rootSize,
-          margin,
-        )
+        ._getAvailableSpace(targetOffset, rootSize, margin)
         .biggest;
 
     if (tas.height >= availableSpace) {
@@ -448,14 +440,15 @@ class FlyoutAutoConfiguration {
     this.autoAvailableSpace,
     bool? horizontal,
     required this.preferredMode,
-  })  : assert(preferredMode != FlyoutPlacementMode.auto),
-        assert(
-          horizontal != null && horizontal ? preferredMode.isHorizontal : true,
-          'If the mode horizontal, preferredMode must either be left or right',
-        ),
-        assert(autoAvailableSpace == null || !autoAvailableSpace.isNegative),
-        horizontal = horizontal ??
-            FlyoutPlacementMode.horizontalPlacements.contains(preferredMode);
+  }) : assert(preferredMode != FlyoutPlacementMode.auto),
+       assert(
+         horizontal != null && horizontal ? preferredMode.isHorizontal : true,
+         'If the mode horizontal, preferredMode must either be left or right',
+       ),
+       assert(autoAvailableSpace == null || !autoAvailableSpace.isNegative),
+       horizontal =
+           horizontal ??
+           FlyoutPlacementMode.horizontalPlacements.contains(preferredMode);
 }
 
 /// A delegate for computing the layout of a flyout to be displayed according to
@@ -657,12 +650,13 @@ class _FlyoutPositionDelegate extends SingleChildLayoutDelegate {
   }
 }
 
-typedef FlyoutTransitionBuilder = Widget Function(
-  BuildContext context,
-  Animation<double> animation,
-  FlyoutPlacementMode placement,
-  Widget child,
-);
+typedef FlyoutTransitionBuilder =
+    Widget Function(
+      BuildContext context,
+      Animation<double> animation,
+      FlyoutPlacementMode placement,
+      Widget child,
+    );
 
 /// Controls the state of a flyout
 class FlyoutController with ChangeNotifier, WidgetsBindingObserver {
@@ -836,15 +830,11 @@ class FlyoutController with ChangeNotifier, WidgetsBindingObserver {
 
     final targetBox = context.findRenderObject() as RenderBox;
     targetSize = targetBox.size;
-    targetOffset = targetBox.localToGlobal(
-          Offset.zero,
-          ancestor: navigatorBox,
-        ) +
+    targetOffset =
+        targetBox.localToGlobal(Offset.zero, ancestor: navigatorBox) +
         Offset(horizontalOffset, targetSize.height);
-    targetRect = targetBox.localToGlobal(
-          Offset.zero,
-          ancestor: navigatorBox,
-        ) &
+    targetRect =
+        targetBox.localToGlobal(Offset.zero, ancestor: navigatorBox) &
         targetSize;
 
     final flyoutKey = GlobalKey();
@@ -913,8 +903,9 @@ class FlyoutController with ChangeNotifier, WidgetsBindingObserver {
       },
     );
     notifyListeners();
-    final result =
-        await _currentNavigator!.push<T>(_route! as PageRouteBuilder<T>);
+    final result = await _currentNavigator!.push<T>(
+      _route! as PageRouteBuilder<T>,
+    );
 
     _route = _currentNavigator = null;
     if (context.mounted) {
@@ -1032,173 +1023,178 @@ class _FlyoutPageState extends State<_FlyoutPage> {
 
   @override
   Widget build(BuildContext context) {
-    return MenuInfoProvider(builder: (context, rootSize, menus, keys) {
-      assert(menus.length == keys.length);
+    return MenuInfoProvider(
+      builder: (context, rootSize, menus, keys) {
+        assert(menus.length == keys.length);
 
-      final barrier = ColoredBox(
-        color: widget.barrierColor ?? Colors.black.withValues(alpha: 0.3),
-      );
+        final barrier = ColoredBox(
+          color: widget.barrierColor ?? Colors.black.withValues(alpha: 0.3),
+        );
 
-      Widget box = Stack(children: [
-        if (widget.barrierRecognizer != null)
-          Positioned.fill(
-            child: Listener(
-              behavior: HitTestBehavior.opaque,
-              onPointerDown: (event) {
-                widget.barrierRecognizer!.addPointer(event);
-              },
-              child: barrier,
-            ),
-          )
-        else if (widget.barrierDismissible)
-          Positioned.fill(
-            child: GestureDetector(
-              behavior: HitTestBehavior.opaque,
-              onTap: widget.barrierDismissible ? widget.navigator.pop : null,
-              child: barrier,
-            ),
-          ),
-        if (widget.buildTarget)
-          Positioned.fromRect(
-            rect: widget.targetRect,
-            child: widget._attachState!.build(context),
-          ),
-        Positioned.fill(
-          child: SafeArea(
-            child: CustomSingleChildLayout(
-              delegate: _FlyoutPositionDelegate(
-                targetOffset: widget.position ?? widget.targetOffset,
-                targetSize:
-                    widget.position == null ? widget.targetSize : Size.zero,
-                autoModeConfiguration: widget.autoModeConfiguration,
-                placementMode: widget.placementMode,
-                defaultPreferred: widget.position == null
-                    ? FlyoutPlacementMode.topCenter
-                    : FlyoutPlacementMode.bottomLeft,
-                margin: widget.margin,
-                shouldConstrainToRootBounds: widget.shouldConstrainToRootBounds,
-                forceAvailableSpace: widget.forceAvailableSpace,
-                onAutoModeChange: (mode) {
-                  _autoMode = mode;
-                  WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-                    _key.currentState?.setState(() {});
-                  });
-                },
+        Widget box = Stack(
+          children: [
+            if (widget.barrierRecognizer != null)
+              Positioned.fill(
+                child: Listener(
+                  behavior: HitTestBehavior.opaque,
+                  onPointerDown: (event) {
+                    widget.barrierRecognizer!.addPointer(event);
+                  },
+                  child: barrier,
+                ),
+              )
+            else if (widget.barrierDismissible)
+              Positioned.fill(
+                child: GestureDetector(
+                  behavior: HitTestBehavior.opaque,
+                  onTap: widget.barrierDismissible
+                      ? widget.navigator.pop
+                      : null,
+                  child: barrier,
+                ),
               ),
-              child: StatefulBuilder(
-                key: _key,
-                builder: (context, setState) {
-                  FlyoutPlacementMode realPlacementMode = widget.placementMode;
-                  if (widget.placementMode == FlyoutPlacementMode.auto) {
-                    if (_autoMode != null) {
-                      realPlacementMode = _autoMode!;
-                    }
-                  } else {
-                    realPlacementMode = widget.placementMode;
-                  }
+            if (widget.buildTarget)
+              Positioned.fromRect(
+                rect: widget.targetRect,
+                child: widget._attachState!.build(context),
+              ),
+            Positioned.fill(
+              child: SafeArea(
+                child: CustomSingleChildLayout(
+                  delegate: _FlyoutPositionDelegate(
+                    targetOffset: widget.position ?? widget.targetOffset,
+                    targetSize: widget.position == null
+                        ? widget.targetSize
+                        : Size.zero,
+                    autoModeConfiguration: widget.autoModeConfiguration,
+                    placementMode: widget.placementMode,
+                    defaultPreferred: widget.position == null
+                        ? FlyoutPlacementMode.topCenter
+                        : FlyoutPlacementMode.bottomLeft,
+                    margin: widget.margin,
+                    shouldConstrainToRootBounds:
+                        widget.shouldConstrainToRootBounds,
+                    forceAvailableSpace: widget.forceAvailableSpace,
+                    onAutoModeChange: (mode) {
+                      _autoMode = mode;
+                      WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+                        _key.currentState?.setState(() {});
+                      });
+                    },
+                  ),
+                  child: StatefulBuilder(
+                    key: _key,
+                    builder: (context, setState) {
+                      FlyoutPlacementMode realPlacementMode =
+                          widget.placementMode;
+                      if (widget.placementMode == FlyoutPlacementMode.auto) {
+                        if (_autoMode != null) {
+                          realPlacementMode = _autoMode!;
+                        }
+                      } else {
+                        realPlacementMode = widget.placementMode;
+                      }
 
-                  return Visibility(
-                    visible: realPlacementMode != FlyoutPlacementMode.auto,
-                    maintainSize: true,
-                    maintainAnimation: true,
-                    maintainState: true,
-                    child: Flyout(
-                      rootFlyout: widget.flyoutKey,
-                      additionalOffset: widget.additionalOffset,
-                      margin: widget.margin,
-                      transitionDuration: widget.transitionDuration!,
-                      reverseTransitionDuration:
-                          widget.reverseTransitionDuration!,
-                      root: widget.navigator,
-                      menuKey: null,
-                      transitionBuilder: widget.transitionBuilder,
-                      placementMode: realPlacementMode,
-                      builder: (context) {
-                        Widget flyout = Padding(
-                          key: widget.flyoutKey,
-                          padding:
-                              realPlacementMode._getAdditionalOffsetPosition(
-                            widget.position == null
-                                ? widget.additionalOffset
-                                : 0.0,
-                          ),
-                          child: widget.builder(context),
-                        );
+                      return Visibility(
+                        visible: realPlacementMode != FlyoutPlacementMode.auto,
+                        maintainSize: true,
+                        maintainAnimation: true,
+                        maintainState: true,
+                        child: Flyout(
+                          rootFlyout: widget.flyoutKey,
+                          additionalOffset: widget.additionalOffset,
+                          margin: widget.margin,
+                          transitionDuration: widget.transitionDuration!,
+                          reverseTransitionDuration:
+                              widget.reverseTransitionDuration!,
+                          root: widget.navigator,
+                          menuKey: null,
+                          transitionBuilder: widget.transitionBuilder,
+                          placementMode: realPlacementMode,
+                          builder: (context) {
+                            Widget flyout = Padding(
+                              key: widget.flyoutKey,
+                              padding: realPlacementMode
+                                  ._getAdditionalOffsetPosition(
+                                    widget.position == null
+                                        ? widget.additionalOffset
+                                        : 0.0,
+                                  ),
+                              child: widget.builder(context),
+                            );
 
-                        return widget.transitionBuilder(
-                          context,
-                          widget.animation,
-                          realPlacementMode,
-                          flyout,
-                        );
-                      },
-                    ),
-                  );
-                },
+                            return widget.transitionBuilder(
+                              context,
+                              widget.animation,
+                              realPlacementMode,
+                              flyout,
+                            );
+                          },
+                        ),
+                      );
+                    },
+                  ),
+                ),
               ),
             ),
+            ...menus,
+          ],
+        );
+
+        if (widget.dismissOnPointerMoveAway) {
+          box = MouseRegion(
+            onHover: (hover) {
+              if (widget.flyoutKey.currentContext == null) return;
+
+              final navigatorBox =
+                  widget.navigator.context.findRenderObject() as RenderBox;
+
+              // the flyout box needs to be fetched at each [onHover] because the
+              // flyout size may change (a MenuFlyout, for example)
+              final flyoutBox =
+                  widget.flyoutKey.currentContext!.findRenderObject()
+                      as RenderBox;
+              final flyoutRect =
+                  flyoutBox.localToGlobal(Offset.zero, ancestor: navigatorBox) &
+                  flyoutBox.size;
+              final menusRects = keys.map((key) {
+                if (key.currentContext == null) return Rect.zero;
+
+                final menuBox =
+                    key.currentContext!.findRenderObject() as RenderBox;
+                return menuBox.localToGlobal(
+                      Offset.zero,
+                      ancestor: navigatorBox,
+                    ) &
+                    menuBox.size;
+              });
+
+              if (!flyoutRect.contains(hover.position) &&
+                  !widget.targetRect.contains(hover.position) &&
+                  !menusRects.any((rect) => rect.contains(hover.position))) {
+                widget.navigator.pop();
+              }
+            },
+            child: box,
+          );
+        }
+
+        if (widget.dismissWithEsc) {
+          box = Actions(
+            actions: {DismissIntent: _DismissAction(widget.navigator.pop)},
+            child: FocusScope(autofocus: true, child: box),
+          );
+        }
+
+        return FadeTransition(
+          opacity: CurvedAnimation(
+            curve: Curves.ease,
+            parent: widget.animation,
           ),
-        ),
-        ...menus,
-      ]);
-
-      if (widget.dismissOnPointerMoveAway) {
-        box = MouseRegion(
-          onHover: (hover) {
-            if (widget.flyoutKey.currentContext == null) return;
-
-            final navigatorBox =
-                widget.navigator.context.findRenderObject() as RenderBox;
-
-            // the flyout box needs to be fetched at each [onHover] because the
-            // flyout size may change (a MenuFlyout, for example)
-            final flyoutBox = widget.flyoutKey.currentContext!
-                .findRenderObject() as RenderBox;
-            final flyoutRect = flyoutBox.localToGlobal(
-                  Offset.zero,
-                  ancestor: navigatorBox,
-                ) &
-                flyoutBox.size;
-            final menusRects = keys.map((key) {
-              if (key.currentContext == null) return Rect.zero;
-
-              final menuBox =
-                  key.currentContext!.findRenderObject() as RenderBox;
-              return menuBox.localToGlobal(
-                    Offset.zero,
-                    ancestor: navigatorBox,
-                  ) &
-                  menuBox.size;
-            });
-
-            if (!flyoutRect.contains(hover.position) &&
-                !widget.targetRect.contains(hover.position) &&
-                !menusRects.any((rect) => rect.contains(hover.position))) {
-              widget.navigator.pop();
-            }
-          },
           child: box,
         );
-      }
-
-      if (widget.dismissWithEsc) {
-        box = Actions(
-          actions: {DismissIntent: _DismissAction(widget.navigator.pop)},
-          child: FocusScope(
-            autofocus: true,
-            child: box,
-          ),
-        );
-      }
-
-      return FadeTransition(
-        opacity: CurvedAnimation(
-          curve: Curves.ease,
-          parent: widget.animation,
-        ),
-        child: box,
-      );
-    });
+      },
+    );
   }
 }
 

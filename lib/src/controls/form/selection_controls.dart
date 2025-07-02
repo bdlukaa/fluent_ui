@@ -37,8 +37,8 @@ class FluentTextSelectionToolbar extends StatelessWidget {
   FluentTextSelectionToolbar.editableText({
     super.key,
     required EditableTextState editableTextState,
-  })  : buttonItems = editableTextState.contextMenuButtonItems,
-        anchors = editableTextState.contextMenuAnchors;
+  }) : buttonItems = editableTextState.contextMenuButtonItems,
+       anchors = editableTextState.contextMenuAnchors;
 
   IconData? contextMenuTypeToIcon(ContextMenuButtonType type) {
     return switch (type) {
@@ -124,16 +124,31 @@ class FluentTextSelectionToolbar extends StatelessWidget {
 
     final orderedButtons = buttonItems
         .where((item) => item.type == ContextMenuButtonType.cut)
-        .followedBy(buttonItems
-            .where((item) => item.type == ContextMenuButtonType.copy))
-        .followedBy(buttonItems
-            .where((item) => item.type == ContextMenuButtonType.paste))
-        .followedBy(buttonItems.where((item) =>
-            item.type == ContextMenuButtonType.custom && item.label == 'Undo'))
-        .followedBy(buttonItems
-            .where((item) => item.type == ContextMenuButtonType.selectAll))
-        .followedBy(buttonItems.where((item) =>
-            item.type == ContextMenuButtonType.custom && item.label != 'Undo'))
+        .followedBy(
+          buttonItems.where((item) => item.type == ContextMenuButtonType.copy),
+        )
+        .followedBy(
+          buttonItems.where((item) => item.type == ContextMenuButtonType.paste),
+        )
+        .followedBy(
+          buttonItems.where(
+            (item) =>
+                item.type == ContextMenuButtonType.custom &&
+                item.label == 'Undo',
+          ),
+        )
+        .followedBy(
+          buttonItems.where(
+            (item) => item.type == ContextMenuButtonType.selectAll,
+          ),
+        )
+        .followedBy(
+          buttonItems.where(
+            (item) =>
+                item.type == ContextMenuButtonType.custom &&
+                item.label != 'Undo',
+          ),
+        )
         .toList();
 
     return Padding(
@@ -168,7 +183,8 @@ class FluentTextSelectionToolbar extends StatelessWidget {
                   icon: contextMenuTypeToIcon(item.type),
                   shortcut: contextMenuTypeToShortcut(item.type, context) ?? '',
                   tooltip: contextMenuTypeToTooltip(item.type, context),
-                  text: item.label ??
+                  text:
+                      item.label ??
                       contextMenuTypeToLabel(item.type, context) ??
                       '',
                 );
@@ -225,13 +241,14 @@ class FluentTextSelectionControls extends TextSelectionControls {
       handleCut: canCut(delegate) ? () => handleCut(delegate) : null,
       handleCopy: canCopy(delegate) ? () => handleCopy(delegate) : null,
       handlePaste: canPaste(delegate) ? () => handlePaste(delegate) : null,
-      handleSelectAll:
-          canSelectAll(delegate) ? () => handleSelectAll(delegate) : null,
+      handleSelectAll: canSelectAll(delegate)
+          ? () => handleSelectAll(delegate)
+          : null,
       handleUndo: undoHistoryController == null
           ? null
           : undoHistoryController!.value.canUndo
-              ? () => undoHistoryController!.undo()
-              : null,
+          ? () => undoHistoryController!.undo()
+          : null,
       selectionMidpoint: selectionMidpoint,
       lastSecondaryTapDownPosition: lastSecondaryTapDownPosition,
       textLineHeight: textLineHeight,
@@ -379,13 +396,15 @@ class _FluentTextSelectionControlsToolbarState
       String tooltip,
       VoidCallback onPressed,
     ) {
-      items.add(_FluentTextSelectionToolbarButton(
-        onPressed: onPressed,
-        icon: icon,
-        shortcut: shortcut,
-        tooltip: tooltip,
-        text: text,
-      ));
+      items.add(
+        _FluentTextSelectionToolbarButton(
+          onPressed: onPressed,
+          icon: icon,
+          shortcut: shortcut,
+          tooltip: tooltip,
+          text: text,
+        ),
+      );
     }
 
     if (widget.handleCut != null) {
@@ -444,8 +463,7 @@ class _FluentTextSelectionControlsToolbarState
       anchor: switch (defaultTargetPlatform) {
         TargetPlatform.android ||
         TargetPlatform.iOS ||
-        TargetPlatform.fuchsia =>
-          const Offset(100, 100),
+        TargetPlatform.fuchsia => const Offset(100, 100),
         TargetPlatform.windows ||
         TargetPlatform.macOS ||
         TargetPlatform.linux =>
@@ -488,12 +506,10 @@ class _FluentTextSelectionToolbar extends StatelessWidget {
     final localAdjustment = switch (defaultTargetPlatform) {
       TargetPlatform.android ||
       TargetPlatform.iOS ||
-      TargetPlatform.fuchsia =>
-        Offset.zero,
+      TargetPlatform.fuchsia => Offset.zero,
       TargetPlatform.windows ||
       TargetPlatform.macOS ||
-      TargetPlatform.linux =>
-        Offset(_kToolbarScreenPadding, paddingAbove),
+      TargetPlatform.linux => Offset(_kToolbarScreenPadding, paddingAbove),
     };
 
     final radius = BorderRadius.circular(6.0);
@@ -561,59 +577,62 @@ class _FluentTextSelectionToolbarButton extends StatelessWidget {
           focused: states.isFocused,
           renderOutside: true,
           style: FocusThemeData(borderRadius: radius),
-          child: Builder(builder: (context) {
-            final widget = Container(
-              decoration: BoxDecoration(
-                color: ButtonThemeData.uncheckedInputColor(
-                  theme,
-                  states,
-                  transparentWhenNone: true,
+          child: Builder(
+            builder: (context) {
+              final widget = Container(
+                decoration: BoxDecoration(
+                  color: ButtonThemeData.uncheckedInputColor(
+                    theme,
+                    states,
+                    transparentWhenNone: true,
+                  ),
+                  borderRadius: radius,
                 ),
-                borderRadius: radius,
-              ),
-              padding: const EdgeInsetsDirectional.only(
-                top: 4.0,
-                bottom: 4.0,
-                start: 10.0,
-                end: 8.0,
-              ),
-              child: Row(mainAxisSize: MainAxisSize.min, children: [
-                Padding(
-                  padding: const EdgeInsetsDirectional.only(end: 10.0),
-                  child: Icon(icon, size: 16.0),
+                padding: const EdgeInsetsDirectional.only(
+                  top: 4.0,
+                  bottom: 4.0,
+                  start: 10.0,
+                  end: 8.0,
                 ),
-                Expanded(
-                  child: Padding(
-                    padding: const EdgeInsetsDirectional.only(end: 10.0),
-                    child: Text(
-                      text,
-                      style: body.merge(TextStyle(
-                        fontSize: 14.0,
-                        letterSpacing: -0.15,
-                        color: theme.inactiveColor,
-                      )),
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Padding(
+                      padding: const EdgeInsetsDirectional.only(end: 10.0),
+                      child: Icon(icon, size: 16.0),
                     ),
-                  ),
+                    Expanded(
+                      child: Padding(
+                        padding: const EdgeInsetsDirectional.only(end: 10.0),
+                        child: Text(
+                          text,
+                          style: body.merge(
+                            TextStyle(
+                              fontSize: 14.0,
+                              letterSpacing: -0.15,
+                              color: theme.inactiveColor,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                    if (shortcut != null)
+                      Text(
+                        shortcut!,
+                        style: body.merge(
+                          const TextStyle(fontSize: 10.0, height: 0.7),
+                        ),
+                      ),
+                  ],
                 ),
-                if (shortcut != null)
-                  Text(
-                    shortcut!,
-                    style: body.merge(const TextStyle(
-                      fontSize: 10.0,
-                      height: 0.7,
-                    )),
-                  ),
-              ]),
-            );
-
-            if (tooltip != null) {
-              return Tooltip(
-                message: tooltip!,
-                child: widget,
               );
-            }
-            return widget;
-          }),
+
+              if (tooltip != null) {
+                return Tooltip(message: tooltip!, child: widget);
+              }
+              return widget;
+            },
+          ),
         );
       },
     );
@@ -621,7 +640,6 @@ class _FluentTextSelectionToolbarButton extends StatelessWidget {
 }
 
 class UndoContextMenuButtonItem extends ContextMenuButtonItem {
-  const UndoContextMenuButtonItem({
-    required super.onPressed,
-  }) : super(type: ContextMenuButtonType.custom, label: 'Undo');
+  const UndoContextMenuButtonItem({required super.onPressed})
+    : super(type: ContextMenuButtonType.custom, label: 'Undo');
 }

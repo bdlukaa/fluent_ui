@@ -34,9 +34,9 @@ class Tooltip extends StatefulWidget {
     this.triggerMode,
     this.enableFeedback,
   }) : assert(
-          (message == null) != (richMessage == null),
-          'Either `message` or `richMessage` must be specified',
-        );
+         (message == null) != (richMessage == null),
+         'Either `message` or `richMessage` must be specified',
+       );
 
   /// The text to display in the tooltip.
   ///
@@ -146,35 +146,45 @@ class Tooltip extends StatefulWidget {
       ..add(StringProperty('message', message))
       ..add(DiagnosticsProperty<InlineSpan>('richMessage', richMessage))
       ..add(DiagnosticsProperty<TooltipThemeData>('style', style))
-      ..add(FlagProperty(
-        'excludeFromSemantics',
-        value: excludeFromSemantics,
-        ifTrue: 'excluded',
-        defaultValue: false,
-      ))
-      ..add(FlagProperty(
-        'useMousePosition',
-        value: useMousePosition,
-        ifFalse: 'use child position',
-        defaultValue: true,
-      ))
-      ..add(FlagProperty(
-        'displayHorizontally',
-        value: displayHorizontally,
-        ifTrue: 'display horizontally',
-        defaultValue: false,
-      ))
-      ..add(EnumProperty<TooltipTriggerMode>(
-        'triggerMode',
-        triggerMode,
-        defaultValue: _TooltipState._defaultTriggerMode,
-      ))
-      ..add(FlagProperty(
-        'enableFeedback',
-        value: enableFeedback,
-        ifFalse: 'feedback disabled',
-        defaultValue: true,
-      ));
+      ..add(
+        FlagProperty(
+          'excludeFromSemantics',
+          value: excludeFromSemantics,
+          ifTrue: 'excluded',
+          defaultValue: false,
+        ),
+      )
+      ..add(
+        FlagProperty(
+          'useMousePosition',
+          value: useMousePosition,
+          ifFalse: 'use child position',
+          defaultValue: true,
+        ),
+      )
+      ..add(
+        FlagProperty(
+          'displayHorizontally',
+          value: displayHorizontally,
+          ifTrue: 'display horizontally',
+          defaultValue: false,
+        ),
+      )
+      ..add(
+        EnumProperty<TooltipTriggerMode>(
+          'triggerMode',
+          triggerMode,
+          defaultValue: _TooltipState._defaultTriggerMode,
+        ),
+      )
+      ..add(
+        FlagProperty(
+          'enableFeedback',
+          value: enableFeedback,
+          ifFalse: 'feedback disabled',
+          defaultValue: true,
+        ),
+      );
   }
 }
 
@@ -233,8 +243,9 @@ class _TooltipState extends State<Tooltip> with SingleTickerProviderStateMixin {
       vsync: this,
     )..addStatusListener(_handleStatusChanged);
     // Listen to see when a mouse is added.
-    RendererBinding.instance.mouseTracker
-        .addListener(_handleMouseTrackerChange);
+    RendererBinding.instance.mouseTracker.addListener(
+      _handleMouseTrackerChange,
+    );
     // Listen to global pointer events so that we can hide a tooltip immediately
     // if some other control is clicked on.
     GestureBinding.instance.pointerRouter.addGlobalRoute(_handlePointerEvent);
@@ -464,10 +475,12 @@ class _TooltipState extends State<Tooltip> with SingleTickerProviderStateMixin {
   @override
   void dispose() {
     _removeEntry();
-    GestureBinding.instance.pointerRouter
-        .removeGlobalRoute(_handlePointerEvent);
-    RendererBinding.instance.mouseTracker
-        .removeListener(_handleMouseTrackerChange);
+    GestureBinding.instance.pointerRouter.removeGlobalRoute(
+      _handlePointerEvent,
+    );
+    RendererBinding.instance.mouseTracker.removeListener(
+      _handleMouseTrackerChange,
+    );
     _controller.dispose();
     super.dispose();
   }
@@ -503,9 +516,7 @@ class _TooltipState extends State<Tooltip> with SingleTickerProviderStateMixin {
     defaultDecoration = BoxDecoration(
       color: theme.menuColor,
       borderRadius: const BorderRadius.all(Radius.circular(8)),
-      border: Border.all(
-        color: theme.resources.surfaceStrokeColorFlyout,
-      ),
+      border: Border.all(color: theme.resources.surfaceStrokeColorFlyout),
     );
 
     padding = tooltipTheme.padding ?? EdgeInsets.zero;
@@ -531,8 +542,9 @@ class _TooltipState extends State<Tooltip> with SingleTickerProviderStateMixin {
     if (_visible) {
       result = GestureDetector(
         behavior: HitTestBehavior.opaque,
-        onLongPress:
-            (triggerMode == TooltipTriggerMode.longPress) ? _handlePress : null,
+        onLongPress: (triggerMode == TooltipTriggerMode.longPress)
+            ? _handlePress
+            : null,
         onTap: (triggerMode == TooltipTriggerMode.tap) ? _handlePress : null,
         excludeFromSemantics: true,
         child: result,
@@ -562,11 +574,7 @@ class _TooltipState extends State<Tooltip> with SingleTickerProviderStateMixin {
 class TooltipTheme extends InheritedTheme {
   /// Creates a tooltip theme that controls the configurations for
   /// [Tooltip].
-  const TooltipTheme({
-    super.key,
-    required this.data,
-    required super.child,
-  });
+  const TooltipTheme({super.key, required this.data, required super.child});
 
   /// The properties for descendant [Tooltip] widgets.
   final TooltipThemeData data;
@@ -578,13 +586,15 @@ class TooltipTheme extends InheritedTheme {
     required TooltipThemeData data,
     required Widget child,
   }) {
-    return Builder(builder: (BuildContext context) {
-      return TooltipTheme(
-        key: key,
-        data: _getInheritedThemeData(context).merge(data),
-        child: child,
-      );
-    });
+    return Builder(
+      builder: (BuildContext context) {
+        return TooltipTheme(
+          key: key,
+          data: _getInheritedThemeData(context).merge(data),
+          child: child,
+        );
+      },
+    );
   }
 
   static TooltipThemeData _getInheritedThemeData(BuildContext context) {
@@ -602,9 +612,9 @@ class TooltipTheme extends InheritedTheme {
   /// TooltipThemeData theme = TooltipTheme.of(context);
   /// ```
   static TooltipThemeData of(BuildContext context) {
-    return TooltipThemeData.standard(FluentTheme.of(context)).merge(
-      _getInheritedThemeData(context),
-    );
+    return TooltipThemeData.standard(
+      FluentTheme.of(context),
+    ).merge(_getInheritedThemeData(context));
   }
 
   @override
@@ -750,12 +760,18 @@ class TooltipThemeData with Diagnosticable {
       margin: EdgeInsetsGeometry.lerp(a?.margin, b?.margin, t),
       padding: EdgeInsetsGeometry.lerp(a?.padding, b?.padding, t),
       preferBelow: t < 0.5 ? a?.preferBelow : b?.preferBelow,
-      showDuration: lerpDuration(a?.showDuration ?? Duration.zero,
-          b?.showDuration ?? Duration.zero, t),
+      showDuration: lerpDuration(
+        a?.showDuration ?? Duration.zero,
+        b?.showDuration ?? Duration.zero,
+        t,
+      ),
       textStyle: TextStyle.lerp(a?.textStyle, b?.textStyle, t),
       verticalOffset: lerpDouble(a?.verticalOffset, b?.verticalOffset, t),
-      waitDuration: lerpDuration(a?.waitDuration ?? Duration.zero,
-          b?.waitDuration ?? Duration.zero, t),
+      waitDuration: lerpDuration(
+        a?.waitDuration ?? Duration.zero,
+        b?.waitDuration ?? Duration.zero,
+        t,
+      ),
       maxWidth: lerpDouble(a?.maxWidth, b?.maxWidth, t),
     );
   }
@@ -782,17 +798,15 @@ class TooltipThemeData with Diagnosticable {
     properties
       ..add(DoubleProperty('height', height))
       ..add(DoubleProperty('verticalOffset', verticalOffset))
+      ..add(DiagnosticsProperty<EdgeInsetsGeometry>('padding', padding))
+      ..add(DiagnosticsProperty<EdgeInsetsGeometry>('margin', margin))
       ..add(
-        DiagnosticsProperty<EdgeInsetsGeometry>('padding', padding),
+        FlagProperty(
+          'preferBelow',
+          value: preferBelow,
+          ifFalse: 'prefer above',
+        ),
       )
-      ..add(
-        DiagnosticsProperty<EdgeInsetsGeometry>('margin', margin),
-      )
-      ..add(FlagProperty(
-        'preferBelow',
-        value: preferBelow,
-        ifFalse: 'prefer above',
-      ))
       ..add(DiagnosticsProperty<Decoration>('decoration', decoration))
       ..add(DiagnosticsProperty<Duration>('waitDuration', waitDuration))
       ..add(DiagnosticsProperty<Duration>('showDuration', showDuration))

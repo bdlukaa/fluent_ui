@@ -27,7 +27,8 @@ class IconButton extends BaseButton {
   ButtonStyle defaultStyleOf(BuildContext context) {
     assert(debugCheckHasFluentTheme(context));
     final theme = FluentTheme.of(context);
-    final isIconSmall = SmallIconButton.of(context) != null ||
+    final isIconSmall =
+        SmallIconButton.of(context) != null ||
         iconButtonMode == IconButtonMode.tiny;
     final isSmall = iconButtonMode != null
         ? iconButtonMode != IconButtonMode.large
@@ -35,7 +36,8 @@ class IconButton extends BaseButton {
     return ButtonStyle(
       iconSize: WidgetStatePropertyAll(isIconSmall ? 11.0 : null),
       padding: WidgetStatePropertyAll(
-          isSmall ? kDefaultButtonPadding : const EdgeInsets.all(8.0)),
+        isSmall ? kDefaultButtonPadding : const EdgeInsets.all(8.0),
+      ),
       backgroundColor: WidgetStateProperty.resolveWith((states) {
         if (states.isDisabled) {
           return ButtonThemeData.buttonColor(context, states);
@@ -51,9 +53,9 @@ class IconButton extends BaseButton {
         if (states.isDisabled) return theme.resources.textFillColorDisabled;
         return null;
       }),
-      shape: WidgetStatePropertyAll(RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(4.0),
-      )),
+      shape: WidgetStatePropertyAll(
+        RoundedRectangleBorder(borderRadius: BorderRadius.circular(4.0)),
+      ),
     );
   }
 

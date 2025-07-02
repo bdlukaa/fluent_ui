@@ -6,20 +6,19 @@ import 'package:fluent_ui/fluent_ui.dart';
 import 'app_test.dart';
 
 void main() {
-  testWidgets('NumberBox renders with initial value',
-      (WidgetTester tester) async {
-    await tester.pumpWidget(wrapApp(
-      child: NumberBox<int>(
-        value: 42,
-        onChanged: (value) {},
-      ),
-    ));
+  testWidgets('NumberBox renders with initial value', (
+    WidgetTester tester,
+  ) async {
+    await tester.pumpWidget(
+      wrapApp(child: NumberBox<int>(value: 42, onChanged: (value) {})),
+    );
 
     expect(find.text('42'), findsOneWidget);
   });
 
-  testWidgets('NumberBox updates value when text changes',
-      (WidgetTester tester) async {
+  testWidgets('NumberBox updates value when text changes', (
+    WidgetTester tester,
+  ) async {
     int? newValue;
     await tester.pumpWidget(
       wrapApp(
@@ -39,15 +38,17 @@ void main() {
     expect(newValue, equals(20));
   });
 
-  testWidgets('NumberBox shows clear button when focused',
-      (WidgetTester tester) async {
+  testWidgets('NumberBox shows clear button when focused', (
+    WidgetTester tester,
+  ) async {
     await tester.pumpWidget(
       wrapApp(
-          child: NumberBox<int>(
-        value: 5,
-        onChanged: (value) {},
-        clearButton: true,
-      )),
+        child: NumberBox<int>(
+          value: 5,
+          onChanged: (value) {},
+          clearButton: true,
+        ),
+      ),
     );
 
     await tester.tap(find.byType(TextBox));
@@ -56,8 +57,9 @@ void main() {
     expect(find.byIcon(FluentIcons.clear), findsOneWidget);
   });
 
-  testWidgets('NumberBox clears value when clear button is pressed',
-      (WidgetTester tester) async {
+  testWidgets('NumberBox clears value when clear button is pressed', (
+    WidgetTester tester,
+  ) async {
     int? newValue;
     await tester.pumpWidget(
       wrapApp(
@@ -80,24 +82,27 @@ void main() {
     expect(find.text('15'), findsNothing);
   });
 
-  testWidgets('NumberBox shows increment and decrement buttons in inline mode',
-      (WidgetTester tester) async {
-    await tester.pumpWidget(
-      wrapApp(
-        child: NumberBox<int>(
-          value: 0,
-          onChanged: (value) {},
-          mode: SpinButtonPlacementMode.inline,
+  testWidgets(
+    'NumberBox shows increment and decrement buttons in inline mode',
+    (WidgetTester tester) async {
+      await tester.pumpWidget(
+        wrapApp(
+          child: NumberBox<int>(
+            value: 0,
+            onChanged: (value) {},
+            mode: SpinButtonPlacementMode.inline,
+          ),
         ),
-      ),
-    );
+      );
 
-    expect(find.byIcon(FluentIcons.chevron_up), findsOneWidget);
-    expect(find.byIcon(FluentIcons.chevron_down), findsOneWidget);
-  });
+      expect(find.byIcon(FluentIcons.chevron_up), findsOneWidget);
+      expect(find.byIcon(FluentIcons.chevron_down), findsOneWidget);
+    },
+  );
 
-  testWidgets('NumberBox increments value when increment button is pressed',
-      (WidgetTester tester) async {
+  testWidgets('NumberBox increments value when increment button is pressed', (
+    WidgetTester tester,
+  ) async {
     int? newValue;
     await tester.pumpWidget(
       wrapApp(
@@ -117,8 +122,9 @@ void main() {
     expect(newValue, equals(1));
   });
 
-  testWidgets('NumberBox decrements value when decrement button is pressed',
-      (WidgetTester tester) async {
+  testWidgets('NumberBox decrements value when decrement button is pressed', (
+    WidgetTester tester,
+  ) async {
     int? newValue;
     await tester.pumpWidget(
       wrapApp(
@@ -180,8 +186,9 @@ void main() {
     expect(newValue, equals(10));
   });
 
-  testWidgets('NumberBox evaluates expressions when allowExpressions is true',
-      (WidgetTester tester) async {
+  testWidgets('NumberBox evaluates expressions when allowExpressions is true', (
+    WidgetTester tester,
+  ) async {
     int? newValue;
     await tester.pumpWidget(
       wrapApp(
@@ -202,8 +209,9 @@ void main() {
     expect(newValue, equals(5));
   });
 
-  testWidgets('NumberBox responds to keyboard arrow keys',
-      (WidgetTester tester) async {
+  testWidgets('NumberBox responds to keyboard arrow keys', (
+    WidgetTester tester,
+  ) async {
     int? newValue;
     await tester.pumpWidget(
       wrapApp(
@@ -229,8 +237,9 @@ void main() {
     expect(newValue, equals(0));
   });
 
-  testWidgets('NumberBox responds to page up/down keys',
-      (WidgetTester tester) async {
+  testWidgets('NumberBox responds to page up/down keys', (
+    WidgetTester tester,
+  ) async {
     int? newValue;
     await tester.pumpWidget(
       wrapApp(
@@ -257,8 +266,9 @@ void main() {
     expect(newValue, equals(0));
   });
 
-  testWidgets('NumberBox responds to mouse wheel scroll',
-      (WidgetTester tester) async {
+  testWidgets('NumberBox responds to mouse wheel scroll', (
+    WidgetTester tester,
+  ) async {
     int? newValue;
     await tester.pumpWidget(
       wrapApp(
@@ -278,26 +288,25 @@ void main() {
     final box = tester.getRect(numberBoxFinder);
     final center = box.center;
 
-    await tester.sendEventToBinding(PointerScrollEvent(
-      position: center,
-      scrollDelta: const Offset(0, -10),
-    ));
+    await tester.sendEventToBinding(
+      PointerScrollEvent(position: center, scrollDelta: const Offset(0, -10)),
+    );
 
     await tester.pumpAndSettle();
 
     expect(newValue, equals(1));
 
-    await tester.sendEventToBinding(PointerScrollEvent(
-      position: center,
-      scrollDelta: const Offset(0, 10),
-    ));
+    await tester.sendEventToBinding(
+      PointerScrollEvent(position: center, scrollDelta: const Offset(0, 10)),
+    );
     await tester.pumpAndSettle();
 
     expect(newValue, equals(0));
   });
 
-  testWidgets('NumberBox formats double values with specified precision',
-      (WidgetTester tester) async {
+  testWidgets('NumberBox formats double values with specified precision', (
+    WidgetTester tester,
+  ) async {
     await tester.pumpWidget(
       wrapApp(
         child: ScaffoldPage(
@@ -313,8 +322,9 @@ void main() {
     expect(find.text('3.14'), findsOneWidget);
   });
 
-  testWidgets('NumberBox shows placeholder when value is null',
-      (WidgetTester tester) async {
+  testWidgets('NumberBox shows placeholder when value is null', (
+    WidgetTester tester,
+  ) async {
     await tester.pumpWidget(
       wrapApp(
         child: NumberBox<int>(
@@ -328,8 +338,9 @@ void main() {
     expect(find.text('Enter a number'), findsOneWidget);
   });
 
-  testWidgets('NumberBox shows leading icon when provided',
-      (WidgetTester tester) async {
+  testWidgets('NumberBox shows leading icon when provided', (
+    WidgetTester tester,
+  ) async {
     await tester.pumpWidget(
       wrapApp(
         child: NumberBox<int>(

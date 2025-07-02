@@ -34,11 +34,13 @@ class NavigationIndicator extends StatefulWidget {
     properties
       ..add(DiagnosticsProperty('curve', curve, defaultValue: Curves.linear))
       ..add(ColorProperty('highlight color', color))
-      ..add(DiagnosticsProperty<Duration>(
-        'duration',
-        duration,
-        defaultValue: kIndicatorAnimationDuration,
-      ));
+      ..add(
+        DiagnosticsProperty<Duration>(
+          'duration',
+          duration,
+          defaultValue: kIndicatorAnimationDuration,
+        ),
+      );
   }
 
   @override
@@ -272,10 +274,11 @@ class _StickyNavigationIndicatorState
       return;
     }
 
-    _old = (PageStorage.of(context).readState(
-          context,
-          identifier: 'previousItemIndex$itemIndex',
-        ) as num?)
+    _old =
+        (PageStorage.of(
+                  context,
+                ).readState(context, identifier: 'previousItemIndex$itemIndex')
+                as num?)
             ?.toInt() ??
         _old;
 
@@ -296,9 +299,10 @@ class _StickyNavigationIndicatorState
           upAnimation = null;
           downController.forward(from: 0.0);
         } else {
-          upAnimation = Tween<double>(begin: 0, end: 1.0).animate(
-            CurvedAnimation(curve: widget.curve, parent: upController),
-          );
+          upAnimation = Tween<double>(
+            begin: 0,
+            end: 1.0,
+          ).animate(CurvedAnimation(curve: widget.curve, parent: upController));
           downAnimation = null;
           upController.reverse(from: 1.0);
         }
@@ -324,11 +328,9 @@ class _StickyNavigationIndicatorState
 
     _old = previousItemIndex;
     if (mounted) {
-      PageStorage.of(context).writeState(
+      PageStorage.of(
         context,
-        _old,
-        identifier: 'previousItemIndex$itemIndex',
-      );
+      ).writeState(context, _old, identifier: 'previousItemIndex$itemIndex');
       setState(() {});
     }
   }
@@ -391,8 +393,9 @@ class _StickyNavigationIndicatorState
                             return x + _PaneItemExpander.leadingPadding.start;
                           }
 
-                          final parentIndex =
-                              pane.effectiveItems.indexOf(parent!);
+                          final parentIndex = pane.effectiveItems.indexOf(
+                            parent!,
+                          );
                           final parentX = offsets!.elementAt(parentIndex).dx;
                           return parentX;
                         }

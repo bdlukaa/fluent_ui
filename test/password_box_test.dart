@@ -4,8 +4,9 @@ import 'package:fluent_ui/fluent_ui.dart';
 import 'app_test.dart';
 
 void main() {
-  testWidgets('PasswordBox shows reveal button in peek mode when focused',
-      (WidgetTester tester) async {
+  testWidgets('PasswordBox shows reveal button in peek mode when focused', (
+    WidgetTester tester,
+  ) async {
     await tester.pumpWidget(
       wrapApp(
         child: PasswordBox(
@@ -21,8 +22,9 @@ void main() {
     expect(find.byIcon(FluentIcons.red_eye), findsOneWidget);
   });
 
-  testWidgets('PasswordBox always shows reveal button in peekAlways mode',
-      (WidgetTester tester) async {
+  testWidgets('PasswordBox always shows reveal button in peekAlways mode', (
+    WidgetTester tester,
+  ) async {
     await tester.pumpWidget(
       wrapApp(
         child: PasswordBox(
@@ -40,8 +42,9 @@ void main() {
     expect(find.byIcon(FluentIcons.red_eye), findsOneWidget);
   });
 
-  testWidgets('PasswordBox shows placeholder when empty',
-      (WidgetTester tester) async {
+  testWidgets('PasswordBox shows placeholder when empty', (
+    WidgetTester tester,
+  ) async {
     await tester.pumpWidget(
       wrapApp(
         child: const PasswordBox(
@@ -54,8 +57,9 @@ void main() {
     expect(find.text('Enter password'), findsOneWidget);
   });
 
-  testWidgets('PasswordBox calls onChanged when text changes',
-      (WidgetTester tester) async {
+  testWidgets('PasswordBox calls onChanged when text changes', (
+    WidgetTester tester,
+  ) async {
     String? newValue;
     await tester.pumpWidget(
       wrapApp(
@@ -72,8 +76,9 @@ void main() {
     expect(newValue, equals('newpass'));
   });
 
-  testWidgets('PasswordBox is disabled when enabled is false',
-      (WidgetTester tester) async {
+  testWidgets('PasswordBox is disabled when enabled is false', (
+    WidgetTester tester,
+  ) async {
     await tester.pumpWidget(
       wrapApp(
         child: const ScaffoldPage(
@@ -94,8 +99,9 @@ void main() {
     expect(find.byIcon(FluentIcons.red_eye), findsNothing);
   });
 
-  testWidgets('PasswordBox shows leading icon when provided',
-      (WidgetTester tester) async {
+  testWidgets('PasswordBox shows leading icon when provided', (
+    WidgetTester tester,
+  ) async {
     await tester.pumpWidget(
       wrapApp(
         child: const ScaffoldPage(

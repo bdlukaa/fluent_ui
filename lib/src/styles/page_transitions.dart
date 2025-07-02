@@ -38,23 +38,25 @@ class EntrancePageTransition extends StatelessWidget {
   void debugFillProperties(DiagnosticPropertiesBuilder properties) {
     super.debugFillProperties(properties);
     properties
-      ..add(FlagProperty(
-        'vertical',
-        value: vertical,
-        ifFalse: 'horizontal',
-        defaultValue: true,
-      ))
-      ..add(FlagProperty(
-        vertical ? 'from top' : 'from left',
-        value: reverse,
-        ifTrue: vertical ? 'from bottom' : 'from right',
-        defaultValue: false,
-      ))
-      ..add(PercentProperty(
-        'animationValue',
-        animation.value,
-        ifNull: 'stopped',
-      ));
+      ..add(
+        FlagProperty(
+          'vertical',
+          value: vertical,
+          ifFalse: 'horizontal',
+          defaultValue: true,
+        ),
+      )
+      ..add(
+        FlagProperty(
+          vertical ? 'from top' : 'from left',
+          value: reverse,
+          ifTrue: vertical ? 'from bottom' : 'from right',
+          defaultValue: false,
+        ),
+      )
+      ..add(
+        PercentProperty('animationValue', animation.value, ifNull: 'stopped'),
+      );
   }
 
   @override
@@ -65,10 +67,7 @@ class EntrancePageTransition extends StatelessWidget {
         begin: vertical ? Offset(0, value) : Offset(value, 0),
         end: Offset.zero,
       ).animate(animation),
-      child: FadeTransition(
-        opacity: animation,
-        child: child,
-      ),
+      child: FadeTransition(opacity: animation, child: child),
     );
   }
 }
@@ -96,11 +95,9 @@ class DrillInPageTransition extends StatelessWidget {
   @override
   void debugFillProperties(DiagnosticPropertiesBuilder properties) {
     super.debugFillProperties(properties);
-    properties.add(PercentProperty(
-      'animationValue',
-      animation.value,
-      ifNull: 'stopped',
-    ));
+    properties.add(
+      PercentProperty('animationValue', animation.value, ifNull: 'stopped'),
+    );
   }
 
   @override
@@ -138,32 +135,26 @@ class HorizontalSlidePageTransition extends StatelessWidget {
   void debugFillProperties(DiagnosticPropertiesBuilder properties) {
     super.debugFillProperties(properties);
     properties
-      ..add(PercentProperty(
-        'animationValue',
-        animation.value,
-        ifNull: 'stopped',
-      ))
-      ..add(FlagProperty(
-        'fromLeft',
-        value: fromLeft,
-        defaultValue: true,
-        ifFalse: 'from right',
-      ));
+      ..add(
+        PercentProperty('animationValue', animation.value, ifNull: 'stopped'),
+      )
+      ..add(
+        FlagProperty(
+          'fromLeft',
+          value: fromLeft,
+          defaultValue: true,
+          ifFalse: 'from right',
+        ),
+      );
   }
 
   @override
   Widget build(BuildContext context) {
     final offsetTween = () {
       if (fromLeft) {
-        return Tween<Offset>(
-          begin: const Offset(-0.65, 0),
-          end: Offset.zero,
-        );
+        return Tween<Offset>(begin: const Offset(-0.65, 0), end: Offset.zero);
       } else {
-        return Tween<Offset>(
-          begin: const Offset(0.65, 0),
-          end: Offset.zero,
-        );
+        return Tween<Offset>(begin: const Offset(0.65, 0), end: Offset.zero);
       }
     }();
     return SlideTransition(
@@ -175,10 +166,7 @@ class HorizontalSlidePageTransition extends StatelessWidget {
 
 /// To avoid playing any animation during navigation, use this animation.
 class SuppressPageTransition extends StatelessWidget {
-  const SuppressPageTransition({
-    super.key,
-    required this.child,
-  });
+  const SuppressPageTransition({super.key, required this.child});
 
   /// The widget to be animation
   final Widget child;

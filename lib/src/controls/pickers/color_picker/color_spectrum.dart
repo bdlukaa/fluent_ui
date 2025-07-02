@@ -45,13 +45,16 @@ class ColorRingSpectrum extends StatefulWidget {
     this.maxHue = 360,
     this.minSaturation = 0,
     this.maxSaturation = 100,
-  })  : assert(minHue >= 0 && minHue <= maxHue && maxHue <= 360,
-            'Hue values must be between 0 and 360'),
-        assert(
-            minSaturation >= 0 &&
-                minSaturation <= maxSaturation &&
-                maxSaturation <= 100,
-            'Saturation values must be between 0 and 100');
+  }) : assert(
+         minHue >= 0 && minHue <= maxHue && maxHue <= 360,
+         'Hue values must be between 0 and 360',
+       ),
+       assert(
+         minSaturation >= 0 &&
+             minSaturation <= maxSaturation &&
+             maxSaturation <= 100,
+         'Saturation values must be between 0 and 100',
+       );
 
   @override
   State<ColorRingSpectrum> createState() => _ColorRingSpectrumState();
@@ -136,7 +139,8 @@ class _ColorRingSpectrumState extends State<ColorRingSpectrum> {
 
     // Map the 0-1 distance range to minSaturation-maxSaturation range
     final normalizedDistance = distance / radius;
-    final s = normalizedDistance *
+    final s =
+        normalizedDistance *
             (widget.maxSaturation - widget.minSaturation) /
             100 +
         widget.minSaturation / 100;
@@ -189,13 +193,16 @@ class ColorBoxSpectrum extends StatefulWidget {
     this.maxHue = 360,
     this.minSaturation = 0,
     this.maxSaturation = 100,
-  })  : assert(minHue >= 0 && minHue <= maxHue && maxHue <= 360,
-            'Hue values must be between 0 and 360'),
-        assert(
-            minSaturation >= 0 &&
-                minSaturation <= maxSaturation &&
-                maxSaturation <= 100,
-            'Saturation values must be between 0 and 100');
+  }) : assert(
+         minHue >= 0 && minHue <= maxHue && maxHue <= 360,
+         'Hue values must be between 0 and 360',
+       ),
+       assert(
+         minSaturation >= 0 &&
+             minSaturation <= maxSaturation &&
+             maxSaturation <= 100,
+         'Saturation values must be between 0 and 100',
+       );
 
   @override
   State<ColorBoxSpectrum> createState() => _ColorBoxSpectrumState();
@@ -217,9 +224,7 @@ class _ColorBoxSpectrumState extends State<ColorBoxSpectrum> {
       onTapUp: _handleTapUp,
       child: Container(
         decoration: BoxDecoration(
-          border: Border.all(
-            color: theme.resources.dividerStrokeColorDefault,
-          ),
+          border: Border.all(color: theme.resources.dividerStrokeColorDefault),
           borderRadius: BorderRadius.circular(4),
         ),
         child: CustomPaint(
@@ -276,7 +281,8 @@ class _ColorBoxSpectrumState extends State<ColorBoxSpectrum> {
     final double h =
         widget.minHue + (x / width) * (widget.maxHue - widget.minHue);
     // Saturation from top (maxSaturation) to bottom (minSaturation)
-    final double s = widget.maxSaturation / 100 -
+    final double s =
+        widget.maxSaturation / 100 -
         (y / height) * (widget.maxSaturation - widget.minSaturation) / 100;
 
     // Note: HSL value is not set in the box spectrum.
@@ -327,14 +333,17 @@ class _RingSpectrumPainter extends CustomPainter {
     this.maxHue = 360,
     this.minSaturation = 0,
     this.maxSaturation = 1,
-  })  : assert(minHue >= 0 && minHue <= maxHue && maxHue <= 360,
-            'Hue values must be between 0 and 360'),
-        assert(
-            minSaturation >= 0 &&
-                minSaturation <= maxSaturation &&
-                maxSaturation <= 100,
-            'Saturation values must be between 0 and 100'),
-        super(repaint: colorState);
+  }) : assert(
+         minHue >= 0 && minHue <= maxHue && maxHue <= 360,
+         'Hue values must be between 0 and 360',
+       ),
+       assert(
+         minSaturation >= 0 &&
+             minSaturation <= maxSaturation &&
+             maxSaturation <= 100,
+         'Saturation values must be between 0 and 100',
+       ),
+       super(repaint: colorState);
 
   @override
   void paint(Canvas canvas, Size size) {
@@ -377,7 +386,7 @@ class _RingSpectrumPainter extends CustomPainter {
     final normalizedSaturation = (maxSaturation == minSaturation)
         ? maxSaturation / 100
         : (colorState.saturation * 100 - minSaturation) /
-            (maxSaturation - minSaturation); // [0..1]
+              (maxSaturation - minSaturation); // [0..1]
 
     final radians = normalizedHue * math.pi / 180.0;
     final distance = normalizedSaturation * radius;
@@ -389,9 +398,14 @@ class _RingSpectrumPainter extends CustomPainter {
     // Draw indicator with current color and border
     // Calculate perceived brightness to determine stroke color
     final rgb = ColorState.hsvToRgb(
-        HsvComponents(colorState.hue, colorState.saturation, 1.0));
-    final fillColor = Color.fromARGB(255, (rgb.r * 255).round(),
-        (rgb.g * 255).round(), (rgb.b * 255).round());
+      HsvComponents(colorState.hue, colorState.saturation, 1.0),
+    );
+    final fillColor = Color.fromARGB(
+      255,
+      (rgb.r * 255).round(),
+      (rgb.g * 255).round(),
+      (rgb.b * 255).round(),
+    );
 
     // Compute relative luminance to determine optimal stroke color visibility
     final relativeLuminance = ColorState.relativeLuminance(fillColor);
@@ -482,10 +496,7 @@ class _RingSpectrumPainter extends CustomPainter {
       ),
       Paint()
         ..color = shadow.color
-        ..maskFilter = MaskFilter.blur(
-          BlurStyle.normal,
-          shadow.blurRadius,
-        ),
+        ..maskFilter = MaskFilter.blur(BlurStyle.normal, shadow.blurRadius),
     );
 
     // Draw background
@@ -503,10 +514,7 @@ class _RingSpectrumPainter extends CustomPainter {
     // Draw text
     textPainter.paint(
       canvas,
-      Offset(
-        labelX + labelPadding.left,
-        labelY + labelPadding.top,
-      ),
+      Offset(labelX + labelPadding.left, labelY + labelPadding.top),
     );
   }
 }
@@ -552,14 +560,17 @@ class _BoxSpectrumPainter extends CustomPainter {
     this.maxHue = 360,
     this.minSaturation = 0,
     this.maxSaturation = 100,
-  })  : assert(minHue >= 0 && minHue <= maxHue && maxHue <= 360,
-            'Hue values must be between 0 and 360'),
-        assert(
-            minSaturation >= 0 &&
-                minSaturation <= maxSaturation &&
-                maxSaturation <= 100,
-            'Saturation values must be between 0 and 100'),
-        super(repaint: colorState);
+  }) : assert(
+         minHue >= 0 && minHue <= maxHue && maxHue <= 360,
+         'Hue values must be between 0 and 360',
+       ),
+       assert(
+         minSaturation >= 0 &&
+             minSaturation <= maxSaturation &&
+             maxSaturation <= 100,
+         'Saturation values must be between 0 and 100',
+       ),
+       super(repaint: colorState);
 
   @override
   void paint(Canvas canvas, Size size) {
@@ -570,30 +581,19 @@ class _BoxSpectrumPainter extends CustomPainter {
       final hue = minHue + (index / 360) * (maxHue - minHue);
       return HSVColor.fromAHSV(1.0, hue, 1.0, 1.0).toColor();
     });
-    final hueGradient = LinearGradient(
-      colors: colors,
-    );
+    final hueGradient = LinearGradient(colors: colors);
 
-    canvas.drawRect(
-      rect,
-      Paint()..shader = hueGradient.createShader(rect),
-    );
+    canvas.drawRect(rect, Paint()..shader = hueGradient.createShader(rect));
 
     // Draw brightness gradient (top to bottom)
     final saturationGradient = LinearGradient(
       begin: Alignment.topCenter,
       end: Alignment.bottomCenter,
       stops: [(1 - maxSaturation / 100), (1 - minSaturation / 100)],
-      colors: const [
-        Colors.transparent,
-        Colors.white,
-      ],
+      colors: const [Colors.transparent, Colors.white],
     );
 
-    canvas.drawRect(
-      rect,
-      Paint()..shader = hueGradient.createShader(rect),
-    );
+    canvas.drawRect(rect, Paint()..shader = hueGradient.createShader(rect));
 
     canvas.drawRect(
       rect,
@@ -603,7 +603,8 @@ class _BoxSpectrumPainter extends CustomPainter {
     // Draw current color indicator
     // Map the current hue and saturation to the box coordinates
     final normalizedHue = (colorState.hue - minHue) / (maxHue - minHue);
-    final normalizedSaturation = (colorState.saturation * 100 - minSaturation) /
+    final normalizedSaturation =
+        (colorState.saturation * 100 - minSaturation) /
         (maxSaturation - minSaturation);
 
     final x = normalizedHue * size.width;
@@ -612,9 +613,14 @@ class _BoxSpectrumPainter extends CustomPainter {
     // Draw indicator with current color and white border
     // Calculate perceived brightness to determine stroke color
     final rgb = ColorState.hsvToRgb(
-        HsvComponents(colorState.hue, colorState.saturation, 1.0));
-    final fillColor = Color.fromARGB(255, (rgb.r * 255).round(),
-        (rgb.g * 255).round(), (rgb.b * 255).round());
+      HsvComponents(colorState.hue, colorState.saturation, 1.0),
+    );
+    final fillColor = Color.fromARGB(
+      255,
+      (rgb.r * 255).round(),
+      (rgb.g * 255).round(),
+      (rgb.b * 255).round(),
+    );
 
     // Compute relative luminance to determine optimal stroke color visibility
     final relativeLuminance = ColorState.relativeLuminance(fillColor);
@@ -705,10 +711,7 @@ class _BoxSpectrumPainter extends CustomPainter {
       ),
       Paint()
         ..color = shadow.color
-        ..maskFilter = MaskFilter.blur(
-          BlurStyle.normal,
-          shadow.blurRadius,
-        ),
+        ..maskFilter = MaskFilter.blur(BlurStyle.normal, shadow.blurRadius),
     );
 
     // Draw background
@@ -726,10 +729,7 @@ class _BoxSpectrumPainter extends CustomPainter {
     // Draw text
     textPainter.paint(
       canvas,
-      Offset(
-        labelX + labelPadding.left,
-        labelY + labelPadding.top,
-      ),
+      Offset(labelX + labelPadding.left, labelY + labelPadding.top),
     );
   }
 }
@@ -741,9 +741,7 @@ class CheckerboardPainter extends CustomPainter {
   /// The theme data for styling
   final FluentThemeData theme;
 
-  const CheckerboardPainter({
-    required this.theme,
-  });
+  const CheckerboardPainter({required this.theme});
 
   @override
   void paint(Canvas canvas, Size size) {
@@ -759,13 +757,17 @@ class CheckerboardPainter extends CustomPainter {
 
         paint.color = isDarkSquare
             ? theme.brightness.isDark
-                ? const Color(0x20D8D8D8)
-                : const Color(0x20393939)
+                  ? const Color(0x20D8D8D8)
+                  : const Color(0x20393939)
             : Colors.transparent;
 
         canvas.drawRect(
-          Rect.fromLTWH(i.toDouble(), j.toDouble(), squareSize.toDouble(),
-              squareSize.toDouble()),
+          Rect.fromLTWH(
+            i.toDouble(),
+            j.toDouble(),
+            squareSize.toDouble(),
+            squareSize.toDouble(),
+          ),
           paint,
         );
       }

@@ -48,21 +48,53 @@ class ButtonStyle with Diagnosticable {
   static ButtonStyle lerp(ButtonStyle? a, ButtonStyle? b, double t) {
     return ButtonStyle(
       textStyle: WidgetStateProperty.lerp<TextStyle?>(
-          a?.textStyle, b?.textStyle, t, TextStyle.lerp),
+        a?.textStyle,
+        b?.textStyle,
+        t,
+        TextStyle.lerp,
+      ),
       backgroundColor: WidgetStateProperty.lerp<Color?>(
-          a?.backgroundColor, b?.backgroundColor, t, Color.lerp),
+        a?.backgroundColor,
+        b?.backgroundColor,
+        t,
+        Color.lerp,
+      ),
       foregroundColor: WidgetStateProperty.lerp<Color?>(
-          a?.foregroundColor, b?.foregroundColor, t, Color.lerp),
+        a?.foregroundColor,
+        b?.foregroundColor,
+        t,
+        Color.lerp,
+      ),
       shadowColor: WidgetStateProperty.lerp<Color?>(
-          a?.shadowColor, b?.shadowColor, t, Color.lerp),
+        a?.shadowColor,
+        b?.shadowColor,
+        t,
+        Color.lerp,
+      ),
       elevation: WidgetStateProperty.lerp<double?>(
-          a?.elevation, b?.elevation, t, lerpDouble),
+        a?.elevation,
+        b?.elevation,
+        t,
+        lerpDouble,
+      ),
       padding: WidgetStateProperty.lerp<EdgeInsetsGeometry?>(
-          a?.padding, b?.padding, t, EdgeInsetsGeometry.lerp),
+        a?.padding,
+        b?.padding,
+        t,
+        EdgeInsetsGeometry.lerp,
+      ),
       shape: WidgetStateProperty.lerp<ShapeBorder?>(
-          a?.shape, b?.shape, t, ShapeBorder.lerp),
+        a?.shape,
+        b?.shape,
+        t,
+        ShapeBorder.lerp,
+      ),
       iconSize: WidgetStateProperty.lerp<double?>(
-          a?.iconSize, b?.iconSize, t, lerpDouble),
+        a?.iconSize,
+        b?.iconSize,
+        t,
+        lerpDouble,
+      ),
     );
   }
 
@@ -97,11 +129,7 @@ class ButtonStyle with Diagnosticable {
 class ButtonTheme extends InheritedTheme {
   /// Creates a button theme that controls the configurations for
   /// [Button].
-  const ButtonTheme({
-    super.key,
-    required super.child,
-    required this.data,
-  });
+  const ButtonTheme({super.key, required super.child, required this.data});
 
   /// The properties for descendant [Button] widgets.
   final ButtonThemeData data;
@@ -113,13 +141,15 @@ class ButtonTheme extends InheritedTheme {
     required ButtonThemeData data,
     required Widget child,
   }) {
-    return Builder(builder: (BuildContext context) {
-      return ButtonTheme(
-        key: key,
-        data: _getInheritedButtonThemeData(context)?.merge(data) ?? data,
-        child: child,
-      );
-    });
+    return Builder(
+      builder: (BuildContext context) {
+        return ButtonTheme(
+          key: key,
+          data: _getInheritedButtonThemeData(context)?.merge(data) ?? data,
+          child: child,
+        );
+      },
+    );
   }
 
   /// The data from the closest instance of this class that encloses the given
@@ -134,14 +164,14 @@ class ButtonTheme extends InheritedTheme {
   /// ```
   static ButtonThemeData of(BuildContext context) {
     assert(debugCheckHasFluentTheme(context));
-    return FluentTheme.of(context).buttonTheme.merge(
-          _getInheritedButtonThemeData(context),
-        );
+    return FluentTheme.of(
+      context,
+    ).buttonTheme.merge(_getInheritedButtonThemeData(context));
   }
 
   static ButtonThemeData? _getInheritedButtonThemeData(BuildContext context) {
-    final buttonTheme =
-        context.dependOnInheritedWidgetOfExactType<ButtonTheme>();
+    final buttonTheme = context
+        .dependOnInheritedWidgetOfExactType<ButtonTheme>();
     return buttonTheme?.data;
   }
 
@@ -173,11 +203,11 @@ class ButtonThemeData with Diagnosticable {
   });
 
   const ButtonThemeData.all(ButtonStyle? style)
-      : defaultButtonStyle = style,
-        filledButtonStyle = style,
-        hyperlinkButtonStyle = style,
-        outlinedButtonStyle = style,
-        iconButtonStyle = style;
+    : defaultButtonStyle = style,
+      filledButtonStyle = style,
+      hyperlinkButtonStyle = style,
+      outlinedButtonStyle = style,
+      iconButtonStyle = style;
 
   static ButtonThemeData lerp(
     ButtonThemeData? a,
@@ -202,16 +232,33 @@ class ButtonThemeData with Diagnosticable {
   void debugFillProperties(DiagnosticPropertiesBuilder properties) {
     super.debugFillProperties(properties);
     properties
-      ..add(DiagnosticsProperty<ButtonStyle>(
-          'outlinedButtonStyle', outlinedButtonStyle))
-      ..add(DiagnosticsProperty<ButtonStyle>(
-          'filledButtonStyle', filledButtonStyle))
-      ..add(DiagnosticsProperty<ButtonStyle>(
-          'hyperlinkButtonStyle', hyperlinkButtonStyle))
-      ..add(DiagnosticsProperty<ButtonStyle>(
-          'defaultButtonStyle', defaultButtonStyle))
       ..add(
-          DiagnosticsProperty<ButtonStyle>('iconButtonStyle', iconButtonStyle));
+        DiagnosticsProperty<ButtonStyle>(
+          'outlinedButtonStyle',
+          outlinedButtonStyle,
+        ),
+      )
+      ..add(
+        DiagnosticsProperty<ButtonStyle>(
+          'filledButtonStyle',
+          filledButtonStyle,
+        ),
+      )
+      ..add(
+        DiagnosticsProperty<ButtonStyle>(
+          'hyperlinkButtonStyle',
+          hyperlinkButtonStyle,
+        ),
+      )
+      ..add(
+        DiagnosticsProperty<ButtonStyle>(
+          'defaultButtonStyle',
+          defaultButtonStyle,
+        ),
+      )
+      ..add(
+        DiagnosticsProperty<ButtonStyle>('iconButtonStyle', iconButtonStyle),
+      );
   }
 
   /// Defines the default color used by [Button]s using the current brightness
@@ -250,13 +297,13 @@ class ButtonThemeData with Diagnosticable {
   }
 
   static ShapeBorder shapeBorder(
-      BuildContext context, Set<WidgetState> states) {
+    BuildContext context,
+    Set<WidgetState> states,
+  ) {
     final theme = FluentTheme.of(context);
     if (states.isPressed || states.isDisabled) {
       return RoundedRectangleBorder(
-        side: BorderSide(
-          color: theme.resources.controlStrokeColorDefault,
-        ),
+        side: BorderSide(color: theme.resources.controlStrokeColorDefault),
         borderRadius: BorderRadius.circular(4.0),
       );
     } else {
@@ -279,7 +326,9 @@ class ButtonThemeData with Diagnosticable {
   /// radio button and toggle switch. It's based on the current style and the
   /// current state.
   static Color checkedInputColor(
-      FluentThemeData theme, Set<WidgetState> states) {
+    FluentThemeData theme,
+    Set<WidgetState> states,
+  ) {
     return FilledButton.backgroundColor(theme, states);
   }
 

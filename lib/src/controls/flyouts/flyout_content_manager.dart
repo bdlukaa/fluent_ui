@@ -99,12 +99,13 @@ class FlyoutState extends State<Flyout> {
   }
 }
 
-typedef MenuBuilder = Widget Function(
-  BuildContext context,
-  BoxConstraints rootSize,
-  Iterable<Widget> menus,
-  Iterable<GlobalKey> keys,
-);
+typedef MenuBuilder =
+    Widget Function(
+      BuildContext context,
+      BoxConstraints rootSize,
+      Iterable<Widget> menus,
+      Iterable<GlobalKey> keys,
+    );
 
 class MenuInfoProvider extends StatefulWidget {
   final MenuBuilder builder;
@@ -147,13 +148,10 @@ class MenuInfoProviderState extends State<MenuInfoProvider> {
 
   @override
   Widget build(BuildContext context) {
-    return LayoutBuilder(builder: (context, constraints) {
-      return widget.builder(
-        context,
-        constraints,
-        _menus.values,
-        _menus.keys,
-      );
-    });
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        return widget.builder(context, constraints, _menus.values, _menus.keys);
+      },
+    );
   }
 }

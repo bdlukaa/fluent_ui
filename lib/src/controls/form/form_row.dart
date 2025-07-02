@@ -34,29 +34,29 @@ class FormRow extends StatelessWidget {
 
     return Padding(
       padding: padding,
-      child: Column(mainAxisSize: MainAxisSize.min, children: <Widget>[
-        Flexible(child: child),
-        if (helper != null)
-          Align(
-            alignment: AlignmentDirectional.centerStart,
-            child: DefaultTextStyle.merge(
-              style: textStyle!,
-              child: helper!,
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: <Widget>[
+          Flexible(child: child),
+          if (helper != null)
+            Align(
+              alignment: AlignmentDirectional.centerStart,
+              child: DefaultTextStyle.merge(style: textStyle!, child: helper!),
             ),
-          ),
-        if (error != null)
-          Container(
-            margin: const EdgeInsetsDirectional.only(top: 2.0),
-            alignment: AlignmentDirectional.centerStart,
-            child: DefaultTextStyle.merge(
-              style: TextStyle(
-                color: Colors.red.defaultBrushFor(theme.brightness),
-                fontWeight: FontWeight.w500,
+          if (error != null)
+            Container(
+              margin: const EdgeInsetsDirectional.only(top: 2.0),
+              alignment: AlignmentDirectional.centerStart,
+              child: DefaultTextStyle.merge(
+                style: TextStyle(
+                  color: Colors.red.defaultBrushFor(theme.brightness),
+                  fontWeight: FontWeight.w500,
+                ),
+                child: error!,
               ),
-              child: error!,
             ),
-          ),
-      ]),
+        ],
+      ),
     );
   }
 }

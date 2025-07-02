@@ -95,7 +95,8 @@ class _ScrollbarState extends RawScrollbarState<Scrollbar> {
     scrollbarPainter
       ..color = _thumbColor(_currentState)
       ..trackColor = _trackColor(_currentState)
-      ..trackBorderColor = Color.lerp(
+      ..trackBorderColor =
+          Color.lerp(
             _scrollbarTheme.trackBorderColor,
             _scrollbarTheme.hoveringTrackBorderColor,
             animation.value,
@@ -121,18 +122,19 @@ class _ScrollbarState extends RawScrollbarState<Scrollbar> {
       ..minLength = _scrollbarTheme.minThumbLength ?? 48.0
       ..minOverscrollLength =
           widget.minOverscrollLength ?? _scrollbarTheme.minThumbLength ?? 48.0
-      ..padding = Tween<EdgeInsets>(
+      ..padding =
+          Tween<EdgeInsets>(
             begin:
                 _scrollbarTheme.padding?.resolve(direction) ?? EdgeInsets.zero,
-            end: _scrollbarTheme.hoveringPadding?.resolve(direction) ??
+            end:
+                _scrollbarTheme.hoveringPadding?.resolve(direction) ??
                 EdgeInsets.zero,
           ).evaluate(animation) +
           viewPadding;
   }
 
-  Future<void> get contractDelay => Future.delayed(
-        _scrollbarTheme.contractDelay ?? Duration.zero,
-      );
+  Future<void> get contractDelay =>
+      Future.delayed(_scrollbarTheme.contractDelay ?? Duration.zero);
 
   @override
   void handleThumbPressStart(Offset localPosition) {
@@ -205,11 +207,7 @@ class _ScrollbarState extends RawScrollbarState<Scrollbar> {
 class ScrollbarTheme extends InheritedTheme {
   /// Creates a scrollbar theme that controls the configurations for
   /// [Scrollbar].
-  const ScrollbarTheme({
-    super.key,
-    required this.data,
-    required super.child,
-  });
+  const ScrollbarTheme({super.key, required this.data, required super.child});
 
   /// The properties for descendant [Scrollbar] widgets.
   final ScrollbarThemeData data;
@@ -221,13 +219,15 @@ class ScrollbarTheme extends InheritedTheme {
     required ScrollbarThemeData data,
     required Widget child,
   }) {
-    return Builder(builder: (BuildContext context) {
-      return ScrollbarTheme(
-        key: key,
-        data: _getInheritedThemeData(context).merge(data),
-        child: child,
-      );
-    });
+    return Builder(
+      builder: (BuildContext context) {
+        return ScrollbarTheme(
+          key: key,
+          data: _getInheritedThemeData(context).merge(data),
+          child: child,
+        );
+      },
+    );
   }
 
   static ScrollbarThemeData _getInheritedThemeData(BuildContext context) {
@@ -245,9 +245,9 @@ class ScrollbarTheme extends InheritedTheme {
   /// ScrollbarThemeData theme = ScrollbarTheme.of(context);
   /// ```
   static ScrollbarThemeData of(BuildContext context) {
-    return ScrollbarThemeData.standard(FluentTheme.of(context)).merge(
-      _getInheritedThemeData(context),
-    );
+    return ScrollbarThemeData.standard(
+      FluentTheme.of(context),
+    ).merge(_getInheritedThemeData(context));
   }
 
   @override
@@ -384,43 +384,59 @@ class ScrollbarThemeData with Diagnosticable {
       minThumbLength: 48.0,
       trackBorderColor: Colors.transparent,
       hoveringTrackBorderColor: Colors.transparent,
-      padding: const EdgeInsets.symmetric(
-        horizontal: 4.0,
-        vertical: 4.0,
-      ),
-      hoveringPadding: const EdgeInsets.symmetric(
-        vertical: 4.0,
-      ),
+      padding: const EdgeInsets.symmetric(horizontal: 4.0, vertical: 4.0),
+      hoveringPadding: const EdgeInsets.symmetric(vertical: 4.0),
       expandContractAnimationDuration: theme.fastAnimationDuration,
       contractDelay: const Duration(milliseconds: 500),
     );
   }
 
   static ScrollbarThemeData lerp(
-      ScrollbarThemeData? a, ScrollbarThemeData? b, double t) {
+    ScrollbarThemeData? a,
+    ScrollbarThemeData? b,
+    double t,
+  ) {
     return ScrollbarThemeData(
       backgroundColor: Color.lerp(a?.backgroundColor, b?.backgroundColor, t),
       scrollbarColor: Color.lerp(a?.scrollbarColor, b?.scrollbarColor, t),
-      scrollbarPressingColor:
-          Color.lerp(a?.scrollbarPressingColor, b?.scrollbarPressingColor, t),
+      scrollbarPressingColor: Color.lerp(
+        a?.scrollbarPressingColor,
+        b?.scrollbarPressingColor,
+        t,
+      ),
       thickness: lerpDouble(a?.thickness, b?.thickness, t),
-      hoveringThickness:
-          lerpDouble(a?.hoveringThickness, b?.hoveringThickness, t),
+      hoveringThickness: lerpDouble(
+        a?.hoveringThickness,
+        b?.hoveringThickness,
+        t,
+      ),
       radius: Radius.lerp(a?.radius, b?.radius, t),
       hoveringRadius: Radius.lerp(a?.hoveringRadius, b?.hoveringRadius, t),
       crossAxisMargin: lerpDouble(a?.crossAxisMargin, b?.crossAxisMargin, t),
-      hoveringCrossAxisMargin:
-          lerpDouble(a?.hoveringCrossAxisMargin, b?.hoveringCrossAxisMargin, t),
+      hoveringCrossAxisMargin: lerpDouble(
+        a?.hoveringCrossAxisMargin,
+        b?.hoveringCrossAxisMargin,
+        t,
+      ),
       mainAxisMargin: lerpDouble(a?.mainAxisMargin, b?.mainAxisMargin, t),
-      hoveringMainAxisMargin:
-          lerpDouble(a?.hoveringMainAxisMargin, b?.hoveringMainAxisMargin, t),
+      hoveringMainAxisMargin: lerpDouble(
+        a?.hoveringMainAxisMargin,
+        b?.hoveringMainAxisMargin,
+        t,
+      ),
       minThumbLength: lerpDouble(a?.minThumbLength, b?.minThumbLength, t),
       trackBorderColor: Color.lerp(a?.trackBorderColor, b?.trackBorderColor, t),
       hoveringTrackBorderColor: Color.lerp(
-          a?.hoveringTrackBorderColor, b?.hoveringTrackBorderColor, t),
+        a?.hoveringTrackBorderColor,
+        b?.hoveringTrackBorderColor,
+        t,
+      ),
       padding: EdgeInsetsGeometry.lerp(a?.padding, b?.padding, t),
-      hoveringPadding:
-          EdgeInsetsGeometry.lerp(a?.hoveringPadding, b?.hoveringPadding, t),
+      hoveringPadding: EdgeInsetsGeometry.lerp(
+        a?.hoveringPadding,
+        b?.hoveringPadding,
+        t,
+      ),
       expandContractAnimationDuration: lerpDuration(
         a?.expandContractAnimationDuration ?? Duration.zero,
         b?.expandContractAnimationDuration ?? Duration.zero,
@@ -457,7 +473,8 @@ class ScrollbarThemeData with Diagnosticable {
       trackBorderColor: style.trackBorderColor ?? trackBorderColor,
       padding: style.padding ?? padding,
       hoveringPadding: style.hoveringPadding ?? hoveringPadding,
-      expandContractAnimationDuration: style.expandContractAnimationDuration ??
+      expandContractAnimationDuration:
+          style.expandContractAnimationDuration ??
           expandContractAnimationDuration,
       contractDelay: style.contractDelay ?? contractDelay,
     );
@@ -468,72 +485,84 @@ class ScrollbarThemeData with Diagnosticable {
     super.debugFillProperties(properties);
     properties
       ..add(ColorProperty('scrollbarColor', scrollbarColor))
-      ..add(
-        ColorProperty('scrollbarPressingColor', scrollbarPressingColor),
-      )
+      ..add(ColorProperty('scrollbarPressingColor', scrollbarPressingColor))
       ..add(ColorProperty('backgroundColor', backgroundColor))
       ..add(DoubleProperty('thickness', thickness, defaultValue: 2.0))
-      ..add(DoubleProperty(
-        'hoveringThickness',
-        hoveringThickness,
-        defaultValue: 16.0,
-      ))
-      ..add(DiagnosticsProperty<Radius>(
-        'radius',
-        radius,
-        defaultValue: const Radius.circular(100),
-      ))
-      ..add(DiagnosticsProperty<Radius>(
-        'hoveringRadius',
-        hoveringRadius,
-        defaultValue: Radius.zero,
-      ))
       ..add(
-        DoubleProperty('mainAxisMargin', mainAxisMargin, defaultValue: 2.0),
+        DoubleProperty(
+          'hoveringThickness',
+          hoveringThickness,
+          defaultValue: 16.0,
+        ),
       )
-      ..add(DoubleProperty(
-        'hoveringMainAxisMargin',
-        hoveringMainAxisMargin,
-        defaultValue: 0.0,
-      ))
+      ..add(
+        DiagnosticsProperty<Radius>(
+          'radius',
+          radius,
+          defaultValue: const Radius.circular(100),
+        ),
+      )
+      ..add(
+        DiagnosticsProperty<Radius>(
+          'hoveringRadius',
+          hoveringRadius,
+          defaultValue: Radius.zero,
+        ),
+      )
+      ..add(DoubleProperty('mainAxisMargin', mainAxisMargin, defaultValue: 2.0))
+      ..add(
+        DoubleProperty(
+          'hoveringMainAxisMargin',
+          hoveringMainAxisMargin,
+          defaultValue: 0.0,
+        ),
+      )
       ..add(
         DoubleProperty('crossAxisMargin', mainAxisMargin, defaultValue: 2.0),
       )
-      ..add(DoubleProperty(
-        'hoveringCrossAxisMargin',
-        hoveringMainAxisMargin,
-        defaultValue: 0.0,
-      ))
+      ..add(
+        DoubleProperty(
+          'hoveringCrossAxisMargin',
+          hoveringMainAxisMargin,
+          defaultValue: 0.0,
+        ),
+      )
       ..add(
         DoubleProperty('minThumbLength', minThumbLength, defaultValue: 48.0),
       )
       ..add(ColorProperty('trackBorderColor', trackBorderColor))
       ..add(ColorProperty('hoveringTrackBorderColor', hoveringTrackBorderColor))
-      ..add(DiagnosticsProperty<Duration>(
-        'expandContractAnimationDuration',
-        expandContractAnimationDuration,
-        defaultValue: const Duration(milliseconds: 100),
-      ))
-      ..add(DiagnosticsProperty<Duration>(
-        'contractDelay',
-        contractDelay,
-        defaultValue: const Duration(seconds: 2),
-      ))
-      ..add(DiagnosticsProperty(
-        'padding',
-        padding,
-        defaultValue: const EdgeInsets.symmetric(
-          horizontal: 2.0,
-          vertical: 4.0,
+      ..add(
+        DiagnosticsProperty<Duration>(
+          'expandContractAnimationDuration',
+          expandContractAnimationDuration,
+          defaultValue: const Duration(milliseconds: 100),
         ),
-      ))
-      ..add(DiagnosticsProperty(
-        'hoveringPadding',
-        hoveringPadding,
-        defaultValue: const EdgeInsets.symmetric(
-          vertical: 4.0,
+      )
+      ..add(
+        DiagnosticsProperty<Duration>(
+          'contractDelay',
+          contractDelay,
+          defaultValue: const Duration(seconds: 2),
         ),
-      ));
+      )
+      ..add(
+        DiagnosticsProperty(
+          'padding',
+          padding,
+          defaultValue: const EdgeInsets.symmetric(
+            horizontal: 2.0,
+            vertical: 4.0,
+          ),
+        ),
+      )
+      ..add(
+        DiagnosticsProperty(
+          'hoveringPadding',
+          hoveringPadding,
+          defaultValue: const EdgeInsets.symmetric(vertical: 4.0),
+        ),
+      );
   }
 }
 

@@ -83,11 +83,11 @@ class FluentApp extends StatefulWidget {
     this.themeMode,
     this.restorationScopeId,
     this.scrollBehavior = const FluentScrollBehavior(),
-  })  : routeInformationProvider = null,
-        routeInformationParser = null,
-        routerDelegate = null,
-        backButtonDispatcher = null,
-        routerConfig = null;
+  }) : routeInformationProvider = null,
+       routeInformationParser = null,
+       routerDelegate = null,
+       backButtonDispatcher = null,
+       routerConfig = null;
 
   /// Creates a [FluentApp] that uses the [Router] instead of a [Navigator].
   FluentApp.router({
@@ -116,35 +116,37 @@ class FluentApp extends StatefulWidget {
     this.actions,
     this.restorationScopeId,
     this.scrollBehavior = const FluentScrollBehavior(),
-  })  : assert(() {
-          if (routerConfig != null) {
-            assert(
-              (routeInformationProvider ??
-                      routeInformationParser ??
-                      routerDelegate ??
-                      backButtonDispatcher) ==
-                  null,
-              'If the routerConfig is provided, all the other router delegates must not be provided',
-            );
-            return true;
-          }
-          assert(routerDelegate != null,
-              'Either one of routerDelegate or routerConfig must be provided');
-          assert(
-            routeInformationProvider == null || routeInformationParser != null,
-            'If routeInformationProvider is provided, routeInformationParser must also be provided',
-          );
-          return true;
-        }()),
-        assert(supportedLocales.isNotEmpty),
-        navigatorObservers = null,
-        navigatorKey = null,
-        onGenerateRoute = null,
-        home = null,
-        onGenerateInitialRoutes = null,
-        onUnknownRoute = null,
-        routes = null,
-        initialRoute = null;
+  }) : assert(() {
+         if (routerConfig != null) {
+           assert(
+             (routeInformationProvider ??
+                     routeInformationParser ??
+                     routerDelegate ??
+                     backButtonDispatcher) ==
+                 null,
+             'If the routerConfig is provided, all the other router delegates must not be provided',
+           );
+           return true;
+         }
+         assert(
+           routerDelegate != null,
+           'Either one of routerDelegate or routerConfig must be provided',
+         );
+         assert(
+           routeInformationProvider == null || routeInformationParser != null,
+           'If routeInformationProvider is provided, routeInformationParser must also be provided',
+         );
+         return true;
+       }()),
+       assert(supportedLocales.isNotEmpty),
+       navigatorObservers = null,
+       navigatorKey = null,
+       onGenerateRoute = null,
+       home = null,
+       onGenerateInitialRoutes = null,
+       onUnknownRoute = null,
+       routes = null,
+       initialRoute = null;
 
   /// Default visual properties, like colors fonts and shapes, for this app's
   /// fluent widgets.
@@ -406,17 +408,15 @@ class _FluentAppState extends State<FluentApp> {
     final result = _buildApp(context);
     return ScrollConfiguration(
       behavior: widget.scrollBehavior,
-      child: HeroControllerScope(
-        controller: _heroController,
-        child: result,
-      ),
+      child: HeroControllerScope(controller: _heroController, child: result),
     );
   }
 
   FluentThemeData theme(BuildContext context) {
     final mode = widget.themeMode ?? ThemeMode.system;
     final platformBrightness = MediaQuery.platformBrightnessOf(context);
-    final usedarkStyle = mode == ThemeMode.dark ||
+    final usedarkStyle =
+        mode == ThemeMode.dark ||
         (mode == ThemeMode.system && platformBrightness == Brightness.dark);
 
     final data = () {
@@ -437,7 +437,8 @@ class _FluentAppState extends State<FluentApp> {
 
     var colorValue = 900;
     return m.AnimatedTheme(
-      data: mTheme?.data ??
+      data:
+          mTheme?.data ??
           m.ThemeData(
             colorScheme: m.ColorScheme.fromSwatch(
               primarySwatch: m.MaterialColor(
@@ -584,10 +585,7 @@ class FluentScrollBehavior extends ScrollBehavior {
             );
           case TargetPlatform.linux:
           case TargetPlatform.windows:
-            return Scrollbar(
-              controller: details.controller,
-              child: child,
-            );
+            return Scrollbar(controller: details.controller, child: child);
           case TargetPlatform.android:
           case TargetPlatform.fuchsia:
             return child;

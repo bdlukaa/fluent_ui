@@ -91,9 +91,9 @@ class _MenuFlyoutState extends State<MenuFlyout> {
 
   @override
   Widget build(BuildContext context) {
-    final hasLeading = widget.items
-        .whereType<MenuFlyoutItem>()
-        .any((item) => item.leading != null);
+    final hasLeading = widget.items.whereType<MenuFlyoutItem>().any(
+      (item) => item.leading != null,
+    );
 
     final menuInfo = MenuInfoProvider.of(context);
     final parent = Flyout.maybeOf(context);
@@ -154,8 +154,8 @@ class _MenuFlyoutState extends State<MenuFlyout> {
             final offset = Offset(translation[0], translation[1]);
             final itemRect =
                 (itemBox.localToGlobal(Offset.zero, ancestor: parentBox) +
-                        offset) &
-                    itemBox.size;
+                    offset) &
+                itemBox.size;
 
             if (!itemRect.contains(event.position)) {
               state.close(menuInfo);
@@ -214,10 +214,7 @@ class MenuFlyoutItemBuilder extends MenuFlyoutItemBase {
   final WidgetBuilder builder;
 
   /// Creates a menu flyout item builder
-  const MenuFlyoutItemBuilder({
-    super.key,
-    required this.builder,
-  });
+  const MenuFlyoutItemBuilder({super.key, required this.builder});
 
   @override
   Widget build(BuildContext context) => builder(context);
@@ -295,20 +292,22 @@ class MenuFlyoutItem extends MenuFlyoutItemBase {
   @override
   void debugFillProperties(DiagnosticPropertiesBuilder properties) {
     super.debugFillProperties(properties);
-    properties.add(FlagProperty(
-      'selected',
-      value: selected,
-      ifTrue: 'selected',
-    ));
-    properties.add(FlagProperty(
-      'closeAfterClick',
-      value: closeAfterClick,
-      ifFalse: 'keeps open',
-    ));
-    properties
-        .add(ObjectFlagProperty<VoidCallback?>.has('onPressed', onPressed));
-    properties
-        .add(ObjectFlagProperty<VoidCallback?>.has('onLongPress', onLongPress));
+    properties.add(
+      FlagProperty('selected', value: selected, ifTrue: 'selected'),
+    );
+    properties.add(
+      FlagProperty(
+        'closeAfterClick',
+        value: closeAfterClick,
+        ifFalse: 'keeps open',
+      ),
+    );
+    properties.add(
+      ObjectFlagProperty<VoidCallback?>.has('onPressed', onPressed),
+    );
+    properties.add(
+      ObjectFlagProperty<VoidCallback?>.has('onLongPress', onLongPress),
+    );
     properties.add(DiagnosticsProperty<FocusNode?>('focusNode', focusNode));
     properties.add(DiagnosticsProperty<Widget?>('leading', leading));
     properties.add(DiagnosticsProperty<Widget>('text', text));
@@ -321,7 +320,8 @@ class MenuFlyoutItem extends MenuFlyoutItemBase {
       margin: EdgeInsets.zero,
       selected: selected,
       showSelectedIndicator: false,
-      icon: leading ??
+      icon:
+          leading ??
           () {
             if (_useIconPlaceholder) return const Icon(null);
             return null;
@@ -398,19 +398,17 @@ class ToggleMenuFlyoutItem extends MenuFlyoutItem {
     required this.onChanged,
     super.closeAfterClick,
   }) : super(
-          leading: Icon(
-            value ? FluentIcons.check_mark : null,
-            size: 12.0,
-          ),
-          onPressed: onChanged == null ? null : () => onChanged(!value),
-        );
+         leading: Icon(value ? FluentIcons.check_mark : null, size: 12.0),
+         onPressed: onChanged == null ? null : () => onChanged(!value),
+       );
 
   @override
   void debugFillProperties(DiagnosticPropertiesBuilder properties) {
     super.debugFillProperties(properties);
     properties.add(DiagnosticsProperty<bool>('value', value));
     properties.add(
-        ObjectFlagProperty<ValueChanged<bool>?>.has('onChanged', onChanged));
+      ObjectFlagProperty<ValueChanged<bool>?>.has('onChanged', onChanged),
+    );
   }
 }
 
@@ -446,20 +444,21 @@ class RadioMenuFlyoutItem<T extends Object> extends MenuFlyoutItem {
     required this.onChanged,
     super.closeAfterClick,
   }) : super(
-          leading: Icon(
-            value == groupValue ? FluentIcons.radio_bullet : null,
-            size: 12.0,
-          ),
-          onPressed: onChanged == null ? null : () => onChanged(value),
-        );
+         leading: Icon(
+           value == groupValue ? FluentIcons.radio_bullet : null,
+           size: 12.0,
+         ),
+         onPressed: onChanged == null ? null : () => onChanged(value),
+       );
 
   @override
   void debugFillProperties(DiagnosticPropertiesBuilder properties) {
     super.debugFillProperties(properties);
     properties.add(DiagnosticsProperty<T>('value', value));
     properties.add(DiagnosticsProperty<T>('groupValue', groupValue));
-    properties
-        .add(ObjectFlagProperty<ValueChanged<T>?>.has('onChanged', onChanged));
+    properties.add(
+      ObjectFlagProperty<ValueChanged<T>?>.has('onChanged', onChanged),
+    );
   }
 }
 
@@ -474,12 +473,11 @@ enum SubItemShowAction {
   /// Whether the sub-menu will be shown on item hover
   ///
   /// This is the default behavior.
-  hover;
+  hover,
 }
 
-typedef MenuItemsBuilder = List<MenuFlyoutItemBase> Function(
-  BuildContext context,
-);
+typedef MenuItemsBuilder =
+    List<MenuFlyoutItemBase> Function(BuildContext context);
 
 /// Represents a menu item that displays a sub-menu in a [MenuFlyout].
 ///
@@ -632,7 +630,8 @@ class _MenuFlyoutSubItemState extends State<_MenuFlyoutSubItem>
     final menuFlyout = context.findAncestorWidgetOfExactType<MenuFlyout>();
 
     final itemBox = context.findRenderObject() as RenderBox;
-    final itemRect = itemBox.localToGlobal(
+    final itemRect =
+        itemBox.localToGlobal(
           Offset.zero,
           ancestor: parent.widget.root?.context.findRenderObject(),
         ) &

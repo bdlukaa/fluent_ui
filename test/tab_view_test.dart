@@ -11,12 +11,7 @@ void main() {
       Tab(text: const Text('Tab 2'), body: const Text('Body 2')),
     ];
     await tester.pumpWidget(
-      wrapApp(
-        child: TabView(
-          currentIndex: 0,
-          tabs: tabs,
-        ),
-      ),
+      wrapApp(child: TabView(currentIndex: 0, tabs: tabs)),
     );
     expect(find.text('Tab 1'), findsOneWidget);
     expect(find.text('Tab 2'), findsOneWidget);
@@ -49,12 +44,11 @@ void main() {
     expect(find.text('Body 2'), findsOneWidget);
   });
 
-  testWidgets('TabView calls onNewPressed when add button is tapped',
-      (tester) async {
+  testWidgets('TabView calls onNewPressed when add button is tapped', (
+    tester,
+  ) async {
     bool pressed = false;
-    final tabs = [
-      Tab(text: const Text('Tab 1'), body: const Text('Body 1')),
-    ];
+    final tabs = [Tab(text: const Text('Tab 1'), body: const Text('Body 1'))];
     await tester.pumpWidget(
       wrapApp(
         child: TabView(
@@ -73,9 +67,7 @@ void main() {
   });
 
   testWidgets('TabView shows header and footer', (tester) async {
-    final tabs = [
-      Tab(text: const Text('Tab 1'), body: const Text('Body 1')),
-    ];
+    final tabs = [Tab(text: const Text('Tab 1'), body: const Text('Body 1'))];
     await tester.pumpWidget(
       wrapApp(
         child: TabView(
@@ -90,8 +82,9 @@ void main() {
     expect(find.text('Footer'), findsOneWidget);
   });
 
-  testWidgets('TabView calls onClosed when close button is tapped',
-      (tester) async {
+  testWidgets('TabView calls onClosed when close button is tapped', (
+    tester,
+  ) async {
     bool closed = false;
     final tabs = [
       Tab(
@@ -104,12 +97,7 @@ void main() {
       ),
     ];
     await tester.pumpWidget(
-      wrapApp(
-        child: TabView(
-          currentIndex: 0,
-          tabs: tabs,
-        ),
-      ),
+      wrapApp(child: TabView(currentIndex: 0, tabs: tabs)),
     );
     // Find the close button (IconButton with tooltip 'Close')
     final closeButton = find.byIcon(FluentIcons.cancel);
@@ -119,12 +107,11 @@ void main() {
     expect(closed, isTrue);
   });
 
-  testWidgets('TabView disables shortcuts when shortcutsEnabled is false',
-      (tester) async {
+  testWidgets('TabView disables shortcuts when shortcutsEnabled is false', (
+    tester,
+  ) async {
     bool pressed = false;
-    final tabs = [
-      Tab(text: const Text('Tab 1'), body: const Text('Body 1')),
-    ];
+    final tabs = [Tab(text: const Text('Tab 1'), body: const Text('Body 1'))];
     await tester.pumpWidget(
       wrapApp(
         child: TabView(
@@ -135,19 +122,13 @@ void main() {
         ),
       ),
     );
-    await tester.sendKeyDownEvent(
-      LogicalKeyboardKey.control,
-    );
-    await tester.sendKeyDownEvent(
-      LogicalKeyboardKey.keyT,
-    );
+    await tester.sendKeyDownEvent(LogicalKeyboardKey.control);
+    await tester.sendKeyDownEvent(LogicalKeyboardKey.keyT);
     expect(pressed, isFalse);
   });
 
   testWidgets('TabView supports custom stripBuilder', (tester) async {
-    final tabs = [
-      Tab(text: const Text('Tab 1'), body: const Text('Body 1')),
-    ];
+    final tabs = [Tab(text: const Text('Tab 1'), body: const Text('Body 1'))];
     await tester.pumpWidget(
       wrapApp(
         child: TabView(
@@ -155,7 +136,10 @@ void main() {
           tabs: tabs,
           stripBuilder: (context, strip) => Column(
             mainAxisSize: MainAxisSize.min,
-            children: [const Text('Custom Strip'), Expanded(child: strip)],
+            children: [
+              const Text('Custom Strip'),
+              Expanded(child: strip),
+            ],
           ),
         ),
       ),

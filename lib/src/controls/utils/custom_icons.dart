@@ -43,10 +43,7 @@ class ChevronDown extends StatelessWidget {
           child: Transform.translate(
             filterQuality: FilterQuality.high,
             offset: Offset(0, value == 1 ? 0 : value * 1),
-            child: Transform.scale(
-              scale: value,
-              child: child,
-            ),
+            child: Transform.scale(scale: value, child: child),
           ),
         );
       },
@@ -102,11 +99,7 @@ class RatingIcon extends StatelessWidget {
     final ratedColor =
         this.ratedColor ?? style.accentColor.defaultBrushFor(style.brightness);
     if (rating == 1.0) {
-      return Icon(
-        icon,
-        color: ratedColor,
-        size: size,
-      );
+      return Icon(icon, color: ratedColor, size: size);
     } else if (rating == 0.0) {
       return Icon(icon, color: unratedColor, size: size);
     }

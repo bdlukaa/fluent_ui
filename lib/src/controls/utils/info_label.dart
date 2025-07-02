@@ -53,8 +53,9 @@ class InfoLabel extends StatelessWidget {
     return Flex(
       direction: isHeader ? Axis.vertical : Axis.horizontal,
       mainAxisSize: MainAxisSize.min,
-      crossAxisAlignment:
-          isHeader ? CrossAxisAlignment.start : CrossAxisAlignment.center,
+      crossAxisAlignment: isHeader
+          ? CrossAxisAlignment.start
+          : CrossAxisAlignment.center,
       children: [
         if (isHeader)
           Padding(

@@ -47,10 +47,9 @@ class HyperlinkButton extends BaseButton {
           return theme.accentColor.defaultBrushFor(theme.brightness);
         }
       }),
-      textStyle: const WidgetStatePropertyAll(TextStyle(
-        fontWeight: FontWeight.w600,
-        letterSpacing: 0.5,
-      )),
+      textStyle: const WidgetStatePropertyAll(
+        TextStyle(fontWeight: FontWeight.w600, letterSpacing: 0.5),
+      ),
     );
   }
 

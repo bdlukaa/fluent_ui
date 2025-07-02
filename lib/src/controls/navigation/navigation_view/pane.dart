@@ -94,9 +94,9 @@ class NavigationPane with Diagnosticable {
     this.leading,
     this.indicator = const StickyNavigationIndicator(),
   }) : assert(
-          selected == null || !selected.isNegative,
-          'The selected index must not be negative',
-        );
+         selected == null || !selected.isNegative,
+         'The selected index must not be negative',
+       );
 
   final Key? key;
 
@@ -210,27 +210,34 @@ class NavigationPane with Diagnosticable {
   void debugFillProperties(DiagnosticPropertiesBuilder properties) {
     super.debugFillProperties(properties);
     properties
-      ..add(EnumProperty<PaneDisplayMode>(
-        'displayMode',
-        displayMode,
-        defaultValue: PaneDisplayMode.auto,
-      ))
-      ..add(IterableProperty<NavigationPaneItem>(
-        'items',
-        items,
-        defaultValue: [],
-      ))
-      ..add(IterableProperty<NavigationPaneItem>(
-        'footerItems',
-        footerItems,
-        defaultValue: [],
-      ))
+      ..add(
+        EnumProperty<PaneDisplayMode>(
+          'displayMode',
+          displayMode,
+          defaultValue: PaneDisplayMode.auto,
+        ),
+      )
+      ..add(
+        IterableProperty<NavigationPaneItem>('items', items, defaultValue: []),
+      )
+      ..add(
+        IterableProperty<NavigationPaneItem>(
+          'footerItems',
+          footerItems,
+          defaultValue: [],
+        ),
+      )
       ..add(IntProperty('selected', selected, ifNull: 'none'))
       ..add(ObjectFlagProperty('onChanged', onChanged, ifNull: 'disabled'))
-      ..add(ObjectFlagProperty('onItemPressed', onItemPressed,
-          ifNull: 'disabled'))
-      ..add(DiagnosticsProperty<ScrollController>(
-          'scrollController', scrollController))
+      ..add(
+        ObjectFlagProperty('onItemPressed', onItemPressed, ifNull: 'disabled'),
+      )
+      ..add(
+        DiagnosticsProperty<ScrollController>(
+          'scrollController',
+          scrollController,
+        ),
+      )
       ..add(DiagnosticsProperty<NavigationPaneSize>('size', size))
       ..add(ObjectFlagProperty<Widget>.has('autoSuggestBox', autoSuggestBox));
   }
@@ -253,13 +260,12 @@ class NavigationPane with Diagnosticable {
         if (parent is PaneItemExpander) {
           // Them, we add them and their parent and siblings info to the
           // [expandItems]
-          expandItems.addAll(parent.items.map(
-            (expandItem) => _PaneItemExpanderItem(
-              parent,
-              expandItem,
-              parent.items,
+          expandItems.addAll(
+            parent.items.map(
+              (expandItem) =>
+                  _PaneItemExpanderItem(parent, expandItem, parent.items),
             ),
-          ));
+          );
         }
       }
 
@@ -314,12 +320,7 @@ class NavigationPane with Diagnosticable {
         title: itemTitle,
         icon: const Icon(FluentIcons.global_nav_button),
         body: const SizedBox.shrink(),
-      ).build(
-        context,
-        false,
-        onPressed,
-        displayMode: PaneDisplayMode.compact,
-      ),
+      ).build(context, false, onPressed, displayMode: PaneDisplayMode.compact),
     );
   }
 
@@ -432,24 +433,24 @@ class NavigationPaneSize with Diagnosticable {
     this.openMinWidth,
     this.openMaxWidth,
     this.headerHeight,
-  })  : assert(
-          openMinWidth == null ||
-              openMaxWidth == null ||
-              openMinWidth <= openMaxWidth,
-          'openMinWidth must be greater than openMaxWidth',
-        ),
-        assert(
-          topHeight == null || topHeight >= 0,
-          'topHeight must be greater than 0',
-        ),
-        assert(
-          compactWidth == null || compactWidth >= 0,
-          'compactWidth must be greater than 0',
-        ),
-        assert(
-          headerHeight == null || headerHeight >= 0,
-          'headerHeight must be greater than 0',
-        );
+  }) : assert(
+         openMinWidth == null ||
+             openMaxWidth == null ||
+             openMinWidth <= openMaxWidth,
+         'openMinWidth must be greater than openMaxWidth',
+       ),
+       assert(
+         topHeight == null || topHeight >= 0,
+         'topHeight must be greater than 0',
+       ),
+       assert(
+         compactWidth == null || compactWidth >= 0,
+         'compactWidth must be greater than 0',
+       ),
+       assert(
+         headerHeight == null || headerHeight >= 0,
+         'headerHeight must be greater than 0',
+       );
 
   /// Gets the open pane width with constraints applied.
   double get openPaneWidth {
@@ -491,28 +492,36 @@ class NavigationPaneSize with Diagnosticable {
     super.debugFillProperties(properties);
 
     properties
-      ..add(DoubleProperty(
-        'topHeight',
-        topHeight,
-        defaultValue: kOneLineTileHeight,
-      ))
-      ..add(DoubleProperty(
-        'compactWidth',
-        compactWidth,
-        defaultValue: kCompactNavigationPaneWidth,
-      ))
-      ..add(DoubleProperty(
-        'openWidth',
-        openWidth,
-        defaultValue: kOpenNavigationPaneWidth,
-      ))
+      ..add(
+        DoubleProperty(
+          'topHeight',
+          topHeight,
+          defaultValue: kOneLineTileHeight,
+        ),
+      )
+      ..add(
+        DoubleProperty(
+          'compactWidth',
+          compactWidth,
+          defaultValue: kCompactNavigationPaneWidth,
+        ),
+      )
+      ..add(
+        DoubleProperty(
+          'openWidth',
+          openWidth,
+          defaultValue: kOpenNavigationPaneWidth,
+        ),
+      )
       ..add(DoubleProperty('openMinWidth', openMinWidth))
       ..add(DoubleProperty('openMaxWidth', openMaxWidth))
-      ..add(DoubleProperty(
-        'headerHeight',
-        headerHeight,
-        defaultValue: kOneLineTileHeight,
-      ));
+      ..add(
+        DoubleProperty(
+          'headerHeight',
+          headerHeight,
+          defaultValue: kOneLineTileHeight,
+        ),
+      );
   }
 }
 
@@ -553,11 +562,8 @@ abstract class NavigationPaneWidget {
 ///
 /// ![Top Pane Anatomy](https://docs.microsoft.com/en-us/windows/uwp/design/controls-and-patterns/images/navview-pane-anatomy-horizontal.png)
 class _TopNavigationPane extends StatefulWidget {
-  _TopNavigationPane({
-    required this.pane,
-    this.listKey,
-    this.appBar,
-  }) : super(key: pane.key);
+  _TopNavigationPane({required this.pane, this.listKey, this.appBar})
+    : super(key: pane.key);
 
   final NavigationPane pane;
   final GlobalKey? listKey;
@@ -574,10 +580,7 @@ class _TopNavigationPaneState extends State<_TopNavigationPane> {
   List<int> hiddenPaneItems = [];
   late List<int> _localItemHold;
   void generateLocalItemHold() {
-    _localItemHold = List.generate(
-      widget.pane.items.length,
-      (index) => index,
-    );
+    _localItemHold = List.generate(widget.pane.items.length, (index) => index);
   }
 
   @override
@@ -593,55 +596,55 @@ class _TopNavigationPaneState extends State<_TopNavigationPane> {
     }
   }
 
-  Widget _buildItem(
-    NavigationPaneItem item,
-    double height,
-  ) {
-    return Builder(builder: (context) {
-      if (item is PaneItemHeader) {
-        final theme = NavigationPaneTheme.of(context);
-        final style = item.header.getProperty<TextStyle>() ??
-            theme.itemHeaderTextStyle ??
-            DefaultTextStyle.of(context).style;
+  Widget _buildItem(NavigationPaneItem item, double height) {
+    return Builder(
+      builder: (context) {
+        if (item is PaneItemHeader) {
+          final theme = NavigationPaneTheme.of(context);
+          final style =
+              item.header.getProperty<TextStyle>() ??
+              theme.itemHeaderTextStyle ??
+              DefaultTextStyle.of(context).style;
 
-        return Padding(
-          padding: EdgeInsetsDirectional.only(
-            // This will center the item header
-            top: (height - (style.fontSize ?? 14.0)) / 4,
-          ),
-          child: item.build(context),
-        );
-      } else if (item is PaneItemSeparator) {
-        return item.build(context, Axis.vertical);
-      } else if (item is PaneItemExpander) {
-        final selected = widget.pane.isSelected(item);
-        return item.build(
-          context,
-          selected,
-          () => _onPressed(item),
-          onItemPressed: _onPressed,
-          // only show the text if the item is not in the footer
-          showTextOnTop: !widget.pane.footerItems.contains(item),
-          displayMode: PaneDisplayMode.top,
-        );
-      } else if (item is PaneItem) {
-        final selected = widget.pane.isSelected(item);
-        return item.build(
-          context,
-          selected,
-          () => _onPressed(item),
-          // only show the text if the item is not in the footer
-          showTextOnTop: !widget.pane.footerItems.contains(item),
-          displayMode: PaneDisplayMode.top,
-        );
-      } else if (item is PaneItemWidgetAdapter) {
-        return item.build(context);
-      } else {
-        throw UnsupportedError(
-          '${item.runtimeType} is not a supported navigation pane item type.',
-        );
-      }
-    });
+          return Padding(
+            padding: EdgeInsetsDirectional.only(
+              // This will center the item header
+              top: (height - (style.fontSize ?? 14.0)) / 4,
+            ),
+            child: item.build(context),
+          );
+        } else if (item is PaneItemSeparator) {
+          return item.build(context, Axis.vertical);
+        } else if (item is PaneItemExpander) {
+          final selected = widget.pane.isSelected(item);
+          return item.build(
+            context,
+            selected,
+            () => _onPressed(item),
+            onItemPressed: _onPressed,
+            // only show the text if the item is not in the footer
+            showTextOnTop: !widget.pane.footerItems.contains(item),
+            displayMode: PaneDisplayMode.top,
+          );
+        } else if (item is PaneItem) {
+          final selected = widget.pane.isSelected(item);
+          return item.build(
+            context,
+            selected,
+            () => _onPressed(item),
+            // only show the text if the item is not in the footer
+            showTextOnTop: !widget.pane.footerItems.contains(item),
+            displayMode: PaneDisplayMode.top,
+          );
+        } else if (item is PaneItemWidgetAdapter) {
+          return item.build(context);
+        } else {
+          throw UnsupportedError(
+            '${item.runtimeType} is not a supported navigation pane item type.',
+          );
+        }
+      },
+    );
   }
 
   @override
@@ -659,9 +662,7 @@ class _TopNavigationPaneState extends State<_TopNavigationPane> {
 
     // if the selected item changed
     if (widget.pane.selected != oldWidget.pane.selected) {
-      final selectedItem = widget.pane.items.indexOf(
-        widget.pane.selectedItem,
-      );
+      final selectedItem = widget.pane.items.indexOf(widget.pane.selectedItem);
 
       // if the selected item is part of the middle items and
       // if there is a non-hidden item
@@ -700,95 +701,108 @@ class _TopNavigationPaneState extends State<_TopNavigationPane> {
     return SizedBox(
       key: widget.pane.paneKey,
       height: height,
-      child: Row(children: [
-        if (widget.pane.leading != null)
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 6.0),
-            child: widget.pane.leading!,
-          ),
-        if (widget.pane.header != null)
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 6.0),
-            child: widget.pane.header!,
-          ),
-        Expanded(
-          child: DynamicOverflow(
-            overflowWidgetAlignment: MainAxisAlignment.start,
-            overflowWidget: FlyoutTarget(
-              key: overflowKey,
-              controller: overflowController,
-              child: PaneItem(
-                icon: const Icon(FluentIcons.more),
-                body: const SizedBox.shrink(),
-              ).build(
-                context,
-                false,
-                () {
-                  overflowController.showFlyout(
-                    placementMode: FlyoutPlacementMode.bottomCenter,
-                    forceAvailableSpace: true,
-                    builder: (context) {
-                      return InheritedNavigationView(
-                        displayMode: view.displayMode,
-                        currentItemIndex: view.currentItemIndex,
-                        minimalPaneOpen: view.minimalPaneOpen,
-                        previousItemIndex: view.previousItemIndex,
-                        pane: view.pane,
-                        child: MenuFlyout(
-                          items: _localItemHold
-                              .sublist(hiddenPaneItems.first)
-                              .map((i) {
-                            final item = widget.pane.items[i];
-                            return _buildMenuPaneItem(
-                              context,
-                              item,
-                              _onPressed,
-                            );
-                          }).toList(),
-                        ),
-                      );
-                    },
-                  );
-                },
-                showTextOnTop: false,
-                displayMode: PaneDisplayMode.top,
+      child: Row(
+        children: [
+          if (widget.pane.leading != null)
+            Padding(
+              padding: const EdgeInsets.symmetric(
+                horizontal: 8.0,
+                vertical: 6.0,
               ),
+              child: widget.pane.leading!,
             ),
-            overflowChangedCallback: (hiddenItems) {
-              setState(() {
-                // indexes should always be valid
-                assert(() {
-                  for (var i = 0; i < hiddenItems.length; i++) {
-                    if (hiddenItems[i] < 0 ||
-                        hiddenItems[i] >= widget.pane.items.length) {
-                      return false;
+          if (widget.pane.header != null)
+            Padding(
+              padding: const EdgeInsets.symmetric(
+                horizontal: 8.0,
+                vertical: 6.0,
+              ),
+              child: widget.pane.header!,
+            ),
+          Expanded(
+            child: DynamicOverflow(
+              overflowWidgetAlignment: MainAxisAlignment.start,
+              overflowWidget: FlyoutTarget(
+                key: overflowKey,
+                controller: overflowController,
+                child:
+                    PaneItem(
+                      icon: const Icon(FluentIcons.more),
+                      body: const SizedBox.shrink(),
+                    ).build(
+                      context,
+                      false,
+                      () {
+                        overflowController.showFlyout(
+                          placementMode: FlyoutPlacementMode.bottomCenter,
+                          forceAvailableSpace: true,
+                          builder: (context) {
+                            return InheritedNavigationView(
+                              displayMode: view.displayMode,
+                              currentItemIndex: view.currentItemIndex,
+                              minimalPaneOpen: view.minimalPaneOpen,
+                              previousItemIndex: view.previousItemIndex,
+                              pane: view.pane,
+                              child: MenuFlyout(
+                                items: _localItemHold
+                                    .sublist(hiddenPaneItems.first)
+                                    .map((i) {
+                                      final item = widget.pane.items[i];
+                                      return _buildMenuPaneItem(
+                                        context,
+                                        item,
+                                        _onPressed,
+                                      );
+                                    })
+                                    .toList(),
+                              ),
+                            );
+                          },
+                        );
+                      },
+                      showTextOnTop: false,
+                      displayMode: PaneDisplayMode.top,
+                    ),
+              ),
+              overflowChangedCallback: (hiddenItems) {
+                setState(() {
+                  // indexes should always be valid
+                  assert(() {
+                    for (var i = 0; i < hiddenItems.length; i++) {
+                      if (hiddenItems[i] < 0 ||
+                          hiddenItems[i] >= widget.pane.items.length) {
+                        return false;
+                      }
                     }
-                  }
-                  return true;
-                }());
+                    return true;
+                  }());
 
-                hiddenPaneItems = hiddenItems;
-              });
-            },
-            children: _localItemHold.map((index) {
-              final item = widget.pane.items[index];
-              return SizedBox(
-                height: height,
-                child: _buildItem(item, height),
-              );
-            }).toList(),
+                  hiddenPaneItems = hiddenItems;
+                });
+              },
+              children: _localItemHold.map((index) {
+                final item = widget.pane.items[index];
+                return SizedBox(
+                  height: height,
+                  child: _buildItem(item, height),
+                );
+              }).toList(),
+            ),
           ),
-        ),
-        if (widget.pane.autoSuggestBox != null)
-          Container(
-            margin: const EdgeInsetsDirectional.only(start: 30.0),
-            constraints: const BoxConstraints(minWidth: 100.0, maxWidth: 215.0),
-            child: widget.pane.autoSuggestBox!,
-          ),
-        ...widget.pane.footerItems.map((item) {
-          return _buildItem(item, height);
-        }),
-      ]),
+          if (widget.pane.autoSuggestBox != null)
+            Container(
+              margin: const EdgeInsetsDirectional.only(start: 30.0),
+              constraints: const BoxConstraints(
+                minWidth: 100.0,
+                maxWidth: 215.0,
+              ),
+              child: widget.pane.autoSuggestBox!,
+            ),
+          ...widget.pane.footerItems.map((item) {
+            return _buildItem(item, height);
+          }),
+        ],
+      ),
     );
   }
 }
@@ -885,17 +899,19 @@ class _MenuFlyoutPaneItem extends MenuFlyoutItemBase {
                   softWrap: false,
                   textAlign:
                       item.title?.getProperty<TextAlign>() ?? TextAlign.start,
-                  textHeightBehavior:
-                      item.title?.getProperty<TextHeightBehavior>(),
-                  textWidthBasis: item.title?.getProperty<TextWidthBasis>() ??
+                  textHeightBehavior: item.title
+                      ?.getProperty<TextHeightBehavior>(),
+                  textWidthBasis:
+                      item.title?.getProperty<TextWidthBasis>() ??
                       TextWidthBasis.parent,
                 ),
               )
             : const SizedBox.shrink();
 
         return Container(
-          padding: const EdgeInsetsDirectional.only(end: 4.0)
-              .add(padding ?? EdgeInsets.zero),
+          padding: const EdgeInsetsDirectional.only(
+            end: 4.0,
+          ).add(padding ?? EdgeInsets.zero),
           height: 36.0,
           color: ButtonThemeData.uncheckedInputColor(
             FluentTheme.of(context),
@@ -903,42 +919,45 @@ class _MenuFlyoutPaneItem extends MenuFlyoutItemBase {
             transparentWhenNone: true,
             transparentWhenDisabled: true,
           ),
-          child: Row(mainAxisSize: MainAxisSize.min, children: [
-            Center(
-              child: Padding(
-                padding: EdgeInsets.symmetric(
-                  vertical: kDefaultListTilePadding.vertical,
-                ),
-                child: Container(
-                  height: 30 * 0.7,
-                  width: 3.0,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(100.0),
-                    color: selected
-                        ? fluentTheme.accentColor
-                            .defaultBrushFor(fluentTheme.brightness)
-                        : Colors.transparent,
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Center(
+                child: Padding(
+                  padding: EdgeInsets.symmetric(
+                    vertical: kDefaultListTilePadding.vertical,
+                  ),
+                  child: Container(
+                    height: 30 * 0.7,
+                    width: 3.0,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(100.0),
+                      color: selected
+                          ? fluentTheme.accentColor.defaultBrushFor(
+                              fluentTheme.brightness,
+                            )
+                          : Colors.transparent,
+                    ),
                   ),
                 ),
               ),
-            ),
-            Padding(
-              padding: theme.iconPadding ?? EdgeInsets.zero,
-              child: IconTheme.merge(
-                data: IconThemeData(
-                  color: theme.unselectedIconColor?.resolve(states) ??
-                      baseStyle.color,
-                  size: 16.0,
+              Padding(
+                padding: theme.iconPadding ?? EdgeInsets.zero,
+                child: IconTheme.merge(
+                  data: IconThemeData(
+                    color:
+                        theme.unselectedIconColor?.resolve(states) ??
+                        baseStyle.color,
+                    size: 16.0,
+                  ),
+                  child: Center(child: item.icon),
                 ),
-                child: Center(child: item.icon),
               ),
-            ),
-            Expanded(
-              child: textResult,
-            ),
-            if (item.infoBadge != null) item.infoBadge!,
-            trailing,
-          ]),
+              Expanded(child: textResult),
+              if (item.infoBadge != null) item.infoBadge!,
+              trailing,
+            ],
+          ),
         );
       },
     );
@@ -1012,44 +1031,47 @@ class _MenuFlyoutPaneItemExpanderState
     final theme = FluentTheme.of(context);
 
     return SizedBox(
-      child: Column(mainAxisSize: MainAxisSize.min, children: [
-        _MenuFlyoutPaneItem(
-          item: widget.item,
-          onPressed: () {
-            toggleOpen();
-            widget.onPressed?.call();
-          },
-          trailing: AnimatedBuilder(
-            animation: controller,
-            builder: (context, child) => RotationTransition(
-              turns: controller.drive(Tween<double>(
-                begin: _open ? 0 : 1.0,
-                end: _open ? 0.5 : 0.5,
-              )),
-              child: child,
-            ),
-            child: const Icon(FluentIcons.chevron_down, size: 10.0),
-          ),
-        ).build(context),
-        AnimatedSize(
-          duration: theme.fastAnimationDuration,
-          curve: Curves.easeIn,
-          child: !_open
-              ? const SizedBox()
-              : Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: widget.item.items.map((item) {
-                    return _buildMenuPaneItem(
-                      context,
-                      item,
-                      widget.onItemPressed,
-                      paneItemPadding:
-                          const EdgeInsetsDirectional.only(start: 24.0),
-                    ).build(context);
-                  }).toList(),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          _MenuFlyoutPaneItem(
+            item: widget.item,
+            onPressed: () {
+              toggleOpen();
+              widget.onPressed?.call();
+            },
+            trailing: AnimatedBuilder(
+              animation: controller,
+              builder: (context, child) => RotationTransition(
+                turns: controller.drive(
+                  Tween<double>(begin: _open ? 0 : 1.0, end: _open ? 0.5 : 0.5),
                 ),
-        ),
-      ]),
+                child: child,
+              ),
+              child: const Icon(FluentIcons.chevron_down, size: 10.0),
+            ),
+          ).build(context),
+          AnimatedSize(
+            duration: theme.fastAnimationDuration,
+            curve: Curves.easeIn,
+            child: !_open
+                ? const SizedBox()
+                : Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: widget.item.items.map((item) {
+                      return _buildMenuPaneItem(
+                        context,
+                        item,
+                        widget.onItemPressed,
+                        paneItemPadding: const EdgeInsetsDirectional.only(
+                          start: 24.0,
+                        ),
+                      ).build(context);
+                    }).toList(),
+                  ),
+          ),
+        ],
+      ),
     );
   }
 }
@@ -1072,49 +1094,43 @@ class _CompactNavigationPane extends StatelessWidget {
   final VoidCallback? onAnimationEnd;
 
   static Widget _buildItem(NavigationPaneItem item) {
-    return Builder(builder: (context) {
-      assert(debugCheckHasFluentTheme(context));
-      final pane = InheritedNavigationView.of(context).pane!;
-      if (item is PaneItemHeader) {
-        // Item Header is not visible on compact pane
-        return const SizedBox();
-      } else if (item is PaneItemSeparator) {
-        return item.build(context, Axis.horizontal);
-      } else if (item is PaneItemExpander) {
-        final selected = pane.isSelected(item);
-        return item.build(
-          context,
-          selected,
-          () {
+    return Builder(
+      builder: (context) {
+        assert(debugCheckHasFluentTheme(context));
+        final pane = InheritedNavigationView.of(context).pane!;
+        if (item is PaneItemHeader) {
+          // Item Header is not visible on compact pane
+          return const SizedBox();
+        } else if (item is PaneItemSeparator) {
+          return item.build(context, Axis.horizontal);
+        } else if (item is PaneItemExpander) {
+          final selected = pane.isSelected(item);
+          return item.build(context, selected, () {
             pane.changeTo(item);
-          },
-          onItemPressed: pane.changeTo,
-        );
-      } else if (item is PaneItem) {
-        final selected = pane.isSelected(item);
-        return item.build(
-          context,
-          selected,
-          () {
+          }, onItemPressed: pane.changeTo);
+        } else if (item is PaneItem) {
+          final selected = pane.isSelected(item);
+          return item.build(context, selected, () {
             pane.changeTo(item);
-          },
-        );
-      } else if (item is PaneItemWidgetAdapter) {
-        return item.build(context);
-      } else {
-        throw UnsupportedError(
-          '${item.runtimeType} is not a supported pane item type.',
-        );
-      }
-    });
+          });
+        } else if (item is PaneItemWidgetAdapter) {
+          return item.build(context);
+        } else {
+          throw UnsupportedError(
+            '${item.runtimeType} is not a supported pane item type.',
+          );
+        }
+      },
+    );
   }
 
   @override
   Widget build(BuildContext context) {
     assert(debugCheckHasFluentTheme(context));
     final theme = NavigationPaneTheme.of(context);
-    const EdgeInsetsGeometry topPadding =
-        EdgeInsetsDirectional.only(bottom: 8.0);
+    const EdgeInsetsGeometry topPadding = EdgeInsetsDirectional.only(
+      bottom: 8.0,
+    );
     final showReplacement =
         pane.autoSuggestBox != null && pane.autoSuggestBoxReplacement != null;
     return AnimatedContainer(
@@ -1126,57 +1142,59 @@ class _CompactNavigationPane extends StatelessWidget {
       child: Align(
         key: pane.paneKey,
         alignment: AlignmentDirectional.topCenter,
-        child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-          () {
-            if (pane.menuButton != null) return pane.menuButton!;
-            if (onToggle != null) {
-              return NavigationPane.buildMenuButton(
-                context,
-                Text(FluentLocalizations.of(context).openNavigationTooltip),
-                pane,
-                onPressed: () {
-                  onToggle?.call();
-                },
-                padding: showReplacement ? EdgeInsets.zero : topPadding,
-              );
-            }
-            return const SizedBox.shrink();
-          }(),
-          if (showReplacement)
-            Padding(
-              padding: topPadding,
-              child: PaneItem(
-                title: Text(FluentLocalizations.of(context).clickToSearch),
-                icon: pane.autoSuggestBoxReplacement!,
-                body: const SizedBox.shrink(),
-              ).build(
-                context,
-                false,
-                () {
-                  onToggle?.call();
-                  onOpenSearch?.call();
-                },
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            () {
+              if (pane.menuButton != null) return pane.menuButton!;
+              if (onToggle != null) {
+                return NavigationPane.buildMenuButton(
+                  context,
+                  Text(FluentLocalizations.of(context).openNavigationTooltip),
+                  pane,
+                  onPressed: () {
+                    onToggle?.call();
+                  },
+                  padding: showReplacement ? EdgeInsets.zero : topPadding,
+                );
+              }
+              return const SizedBox.shrink();
+            }(),
+            if (showReplacement)
+              Padding(
+                padding: topPadding,
+                child:
+                    PaneItem(
+                      title: Text(
+                        FluentLocalizations.of(context).clickToSearch,
+                      ),
+                      icon: pane.autoSuggestBoxReplacement!,
+                      body: const SizedBox.shrink(),
+                    ).build(context, false, () {
+                      onToggle?.call();
+                      onOpenSearch?.call();
+                    }),
+              ),
+            Expanded(
+              child: ListView(
+                shrinkWrap: true,
+                key: listKey,
+                primary: true,
+                children: pane.items.map((item) {
+                  return _buildItem(item);
+                }).toList(),
               ),
             ),
-          Expanded(
-            child: ListView(
+            ListView(
               shrinkWrap: true,
-              key: listKey,
-              primary: true,
-              children: pane.items.map((item) {
+              physics: const NeverScrollableScrollPhysics(),
+              primary: false,
+              children: pane.footerItems.map((item) {
                 return _buildItem(item);
               }).toList(),
             ),
-          ),
-          ListView(
-            shrinkWrap: true,
-            physics: const NeverScrollableScrollPhysics(),
-            primary: false,
-            children: pane.footerItems.map((item) {
-              return _buildItem(item);
-            }).toList(),
-          ),
-        ]),
+          ],
+        ),
       ),
     );
   }
@@ -1209,46 +1227,44 @@ class _OpenNavigationPane extends StatefulWidget {
     VoidCallback? onChanged,
     double? width,
   ]) {
-    return Builder(builder: (context) {
-      if (width != null && width < kOpenNavigationPaneWidth / 1.5) {
-        return _CompactNavigationPane._buildItem(item);
-      }
-      if (item is PaneItemHeader) {
-        return item.build(context);
-      } else if (item is PaneItemSeparator) {
-        return item.build(context, Axis.horizontal);
-      } else if (item is PaneItemExpander) {
-        final selected = pane.isSelected(item);
-        return item.build(
-          context,
-          selected,
-          () {
+    return Builder(
+      builder: (context) {
+        if (width != null && width < kOpenNavigationPaneWidth / 1.5) {
+          return _CompactNavigationPane._buildItem(item);
+        }
+        if (item is PaneItemHeader) {
+          return item.build(context);
+        } else if (item is PaneItemSeparator) {
+          return item.build(context, Axis.horizontal);
+        } else if (item is PaneItemExpander) {
+          final selected = pane.isSelected(item);
+          return item.build(
+            context,
+            selected,
+            () {
+              pane.changeTo(item);
+              onChanged?.call();
+            },
+            onItemPressed: (item) {
+              pane.changeTo(item);
+              onChanged?.call();
+            },
+          );
+        } else if (item is PaneItem) {
+          final selected = pane.isSelected(item);
+          return item.build(context, selected, () {
             pane.changeTo(item);
             onChanged?.call();
-          },
-          onItemPressed: (item) {
-            pane.changeTo(item);
-            onChanged?.call();
-          },
-        );
-      } else if (item is PaneItem) {
-        final selected = pane.isSelected(item);
-        return item.build(
-          context,
-          selected,
-          () {
-            pane.changeTo(item);
-            onChanged?.call();
-          },
-        );
-      } else if (item is PaneItemWidgetAdapter) {
-        return item.build(context);
-      } else {
-        throw UnsupportedError(
-          '${item.runtimeType} is not a supported pane item type.',
-        );
-      }
-    });
+          });
+        } else if (item is PaneItemWidgetAdapter) {
+          return item.build(context);
+        } else {
+          throw UnsupportedError(
+            '${item.runtimeType} is not a supported pane item type.',
+          );
+        }
+      },
+    );
   }
 
   @override
@@ -1261,18 +1277,17 @@ class _OpenNavigationPaneState extends State<_OpenNavigationPane> {
   @override
   void initState() {
     super.initState();
-    PageStorage.of(context).writeState(
+    PageStorage.of(
       context,
-      true,
-      identifier: 'openModeOpen',
-    );
+    ).writeState(context, true, identifier: 'openModeOpen');
   }
 
   @override
   Widget build(BuildContext context) {
     assert(debugCheckHasFluentTheme(context));
-    const EdgeInsetsGeometry topPadding =
-        EdgeInsetsDirectional.only(bottom: 6.0);
+    const EdgeInsetsGeometry topPadding = EdgeInsetsDirectional.only(
+      bottom: 6.0,
+    );
     final menuButton = () {
       if (widget.pane.menuButton != null) return widget.pane.menuButton!;
       if (widget.onToggle != null) {
@@ -1300,73 +1315,93 @@ class _OpenNavigationPaneState extends State<_OpenNavigationPane> {
       key: widget.paneKey,
       width: paneWidth,
       onEnd: widget.onAnimationEnd,
-      child: LayoutBuilder(builder: (context, constraints) {
-        final width = constraints.maxWidth;
-        return Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          key: widget.pane.paneKey,
-          children: [
-            if (paneHeaderHeight == null || paneHeaderHeight >= 0)
-              Container(
-                margin: widget.pane.autoSuggestBox != null
-                    ? (menuButton == null ? theme.iconPadding : null)
-                    : topPadding,
-                height: paneHeaderHeight,
-                child: () {
-                  if (widget.pane.header != null) {
-                    return Row(children: [
-                      menuButton ?? const SizedBox.shrink(),
-                      Expanded(
-                        child: Align(
-                          alignment: AlignmentDirectional.centerStart,
-                          child: Padding(
-                            padding: const EdgeInsetsDirectional.only(
-                              start: 8.0,
-                            ),
-                            child: DefaultTextStyle.merge(
-                              style: theme.itemHeaderTextStyle,
-                              maxLines: 1,
-                              child: widget.pane.header!,
+      child: LayoutBuilder(
+        builder: (context, constraints) {
+          final width = constraints.maxWidth;
+          return Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            key: widget.pane.paneKey,
+            children: [
+              if (paneHeaderHeight == null || paneHeaderHeight >= 0)
+                Container(
+                  margin: widget.pane.autoSuggestBox != null
+                      ? (menuButton == null ? theme.iconPadding : null)
+                      : topPadding,
+                  height: paneHeaderHeight,
+                  child: () {
+                    if (widget.pane.header != null) {
+                      return Row(
+                        children: [
+                          menuButton ?? const SizedBox.shrink(),
+                          Expanded(
+                            child: Align(
+                              alignment: AlignmentDirectional.centerStart,
+                              child: Padding(
+                                padding: const EdgeInsetsDirectional.only(
+                                  start: 8.0,
+                                ),
+                                child: DefaultTextStyle.merge(
+                                  style: theme.itemHeaderTextStyle,
+                                  maxLines: 1,
+                                  child: widget.pane.header!,
+                                ),
+                              ),
                             ),
                           ),
-                        ),
-                      ),
-                    ]);
-                  } else {
-                    return menuButton ?? const SizedBox.shrink();
-                  }
-                }(),
-              ),
-            if (widget.pane.autoSuggestBox != null)
-              if (width > kOpenNavigationPaneWidth / 1.5)
-                Container(
-                  padding: theme.iconPadding ?? EdgeInsets.zero,
-                  height: 41.0,
-                  alignment: AlignmentDirectional.center,
-                  margin: topPadding,
-                  child: widget.pane.autoSuggestBox!,
-                )
-              else
-                Padding(
-                  padding: topPadding,
-                  child: PaneItem(
-                    title: Text(FluentLocalizations.of(context).clickToSearch),
-                    icon: widget.pane.autoSuggestBoxReplacement!,
-                    body: const SizedBox.shrink(),
-                  ).build(
-                    context,
-                    false,
-                    () {},
-                    displayMode: PaneDisplayMode.compact,
-                  ),
+                        ],
+                      );
+                    } else {
+                      return menuButton ?? const SizedBox.shrink();
+                    }
+                  }(),
                 ),
-            Expanded(
-              child: ListView(
+              if (widget.pane.autoSuggestBox != null)
+                if (width > kOpenNavigationPaneWidth / 1.5)
+                  Container(
+                    padding: theme.iconPadding ?? EdgeInsets.zero,
+                    height: 41.0,
+                    alignment: AlignmentDirectional.center,
+                    margin: topPadding,
+                    child: widget.pane.autoSuggestBox!,
+                  )
+                else
+                  Padding(
+                    padding: topPadding,
+                    child:
+                        PaneItem(
+                          title: Text(
+                            FluentLocalizations.of(context).clickToSearch,
+                          ),
+                          icon: widget.pane.autoSuggestBoxReplacement!,
+                          body: const SizedBox.shrink(),
+                        ).build(
+                          context,
+                          false,
+                          () {},
+                          displayMode: PaneDisplayMode.compact,
+                        ),
+                  ),
+              Expanded(
+                child: ListView(
+                  shrinkWrap: true,
+                  key: widget.listKey,
+                  primary: true,
+                  addAutomaticKeepAlives: false,
+                  children: widget.pane.items.map((item) {
+                    return _OpenNavigationPane.buildItem(
+                      widget.pane,
+                      item,
+                      widget.onItemSelected,
+                      width,
+                    );
+                  }).toList(),
+                ),
+              ),
+              ListView(
+                primary: false,
                 shrinkWrap: true,
-                key: widget.listKey,
-                primary: true,
-                addAutomaticKeepAlives: false,
-                children: widget.pane.items.map((item) {
+                physics: const NeverScrollableScrollPhysics(),
+                children: widget.pane.footerItems.map((item) {
                   return _OpenNavigationPane.buildItem(
                     widget.pane,
                     item,
@@ -1375,23 +1410,10 @@ class _OpenNavigationPaneState extends State<_OpenNavigationPane> {
                   );
                 }).toList(),
               ),
-            ),
-            ListView(
-              primary: false,
-              shrinkWrap: true,
-              physics: const NeverScrollableScrollPhysics(),
-              children: widget.pane.footerItems.map((item) {
-                return _OpenNavigationPane.buildItem(
-                  widget.pane,
-                  item,
-                  widget.onItemSelected,
-                  width,
-                );
-              }).toList(),
-            ),
-          ],
-        );
-      }),
+            ],
+          );
+        },
+      ),
     );
   }
 }

@@ -117,8 +117,12 @@ class RoundedRectangleGradientBorder extends ShapeBorder {
   }
 
   @override
-  void paintInterior(Canvas canvas, Rect rect, Paint paint,
-      {TextDirection? textDirection}) {
+  void paintInterior(
+    Canvas canvas,
+    Rect rect,
+    Paint paint, {
+    TextDirection? textDirection,
+  }) {
     if (borderRadius == BorderRadius.zero) {
       canvas.drawRect(rect, paint);
     } else {
@@ -139,10 +143,7 @@ class RoundedRectangleGradientBorder extends ShapeBorder {
         break;
       case BorderStyle.solid:
         final paint = Paint()
-          ..shader = gradient.createShader(
-            rect,
-            textDirection: textDirection,
-          );
+          ..shader = gradient.createShader(rect, textDirection: textDirection);
         final borderRect = borderRadius.resolve(textDirection).toRRect(rect);
         final inner = borderRect.deflate(strokeInset);
         final outer = borderRect.inflate(strokeOutset);

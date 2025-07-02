@@ -7,17 +7,19 @@ void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
 
   testWidgets('AutoSuggestBox basics testing', (tester) async {
-    await tester.pumpWidget(wrapApp(
-      child: AutoSuggestBox(
-        items: [
-          AutoSuggestBoxItem<String>(label: 'One', value: 'one'),
-          AutoSuggestBoxItem<String>(label: 'Two', value: 'two'),
-          AutoSuggestBoxItem<String>(label: 'Three', value: 'three'),
-        ],
-        leadingIcon: const Icon(FluentIcons.number),
-        placeholder: 'Numbers',
+    await tester.pumpWidget(
+      wrapApp(
+        child: AutoSuggestBox(
+          items: [
+            AutoSuggestBoxItem<String>(label: 'One', value: 'one'),
+            AutoSuggestBoxItem<String>(label: 'Two', value: 'two'),
+            AutoSuggestBoxItem<String>(label: 'Three', value: 'three'),
+          ],
+          leadingIcon: const Icon(FluentIcons.number),
+          placeholder: 'Numbers',
+        ),
       ),
-    ));
+    );
     // Placeholder is shown
     expect(find.text('Numbers'), findsOneWidget);
     // Icon is shown

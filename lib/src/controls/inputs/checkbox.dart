@@ -74,12 +74,14 @@ class Checkbox extends StatelessWidget {
       ..add(DiagnosticsProperty<CheckboxThemeData>('style', style))
       ..add(StringProperty('semanticLabel', semanticLabel))
       ..add(DiagnosticsProperty<FocusNode>('focusNode', focusNode))
-      ..add(FlagProperty(
-        'autofocus',
-        value: autofocus,
-        defaultValue: false,
-        ifFalse: 'manual focus',
-      ));
+      ..add(
+        FlagProperty(
+          'autofocus',
+          value: autofocus,
+          defaultValue: false,
+          ifFalse: 'manual focus',
+        ),
+      );
   }
 
   @override
@@ -114,7 +116,8 @@ class Checkbox extends StatelessWidget {
           }(),
           child: checked == null
               ? _ThirdStateDash(
-                  color: style.thirdstateIconColor?.resolve(state) ??
+                  color:
+                      style.thirdstateIconColor?.resolve(state) ??
                       style.checkedIconColor?.resolve(state) ??
                       FluentTheme.of(context).inactiveColor,
                 )
@@ -134,19 +137,22 @@ class Checkbox extends StatelessWidget {
                 ),
         );
         if (content != null) {
-          child = Row(mainAxisSize: MainAxisSize.min, children: [
-            child,
-            const SizedBox(width: 8.0),
-            DefaultTextStyle.merge(
-              style: TextStyle(color: style.foregroundColor?.resolve(state)),
-              child: IconTheme.merge(
-                data: IconThemeData(
-                  color: style.foregroundColor?.resolve(state),
+          child = Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              child,
+              const SizedBox(width: 8.0),
+              DefaultTextStyle.merge(
+                style: TextStyle(color: style.foregroundColor?.resolve(state)),
+                child: IconTheme.merge(
+                  data: IconThemeData(
+                    color: style.foregroundColor?.resolve(state),
+                  ),
+                  child: content!,
                 ),
-                child: content!,
               ),
-            ),
-          ]);
+            ],
+          );
         }
         return Semantics(
           checked: checked,
@@ -168,22 +174,14 @@ class _ThirdStateDash extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      height: 1.4,
-      width: 8,
-      color: color,
-    );
+    return Container(height: 1.4, width: 8, color: color);
   }
 }
 
 class CheckboxTheme extends InheritedTheme {
   /// Creates a button theme that controls how descendant [Checkbox]es should
   /// look like.
-  const CheckboxTheme({
-    super.key,
-    required super.child,
-    required this.data,
-  });
+  const CheckboxTheme({super.key, required super.child, required this.data});
 
   final CheckboxThemeData data;
 
@@ -194,13 +192,15 @@ class CheckboxTheme extends InheritedTheme {
     required CheckboxThemeData data,
     required Widget child,
   }) {
-    return Builder(builder: (BuildContext context) {
-      return CheckboxTheme(
-        key: key,
-        data: _getInheritedCheckboxThemeData(context).merge(data),
-        child: child,
-      );
-    });
+    return Builder(
+      builder: (BuildContext context) {
+        return CheckboxTheme(
+          key: key,
+          data: _getInheritedCheckboxThemeData(context).merge(data),
+          child: child,
+        );
+      },
+    );
   }
 
   /// The data from the closest instance of this class that encloses the given
@@ -215,15 +215,16 @@ class CheckboxTheme extends InheritedTheme {
   /// ```
   static CheckboxThemeData of(BuildContext context) {
     assert(debugCheckHasFluentTheme(context));
-    return CheckboxThemeData.standard(FluentTheme.of(context)).merge(
-      _getInheritedCheckboxThemeData(context),
-    );
+    return CheckboxThemeData.standard(
+      FluentTheme.of(context),
+    ).merge(_getInheritedCheckboxThemeData(context));
   }
 
   static CheckboxThemeData _getInheritedCheckboxThemeData(
-      BuildContext context) {
-    final checkboxTheme =
-        context.dependOnInheritedWidgetOfExactType<CheckboxTheme>();
+    BuildContext context,
+  ) {
+    final checkboxTheme = context
+        .dependOnInheritedWidgetOfExactType<CheckboxTheme>();
     return checkboxTheme?.data ?? FluentTheme.of(context).checkboxTheme;
   }
 
@@ -348,19 +349,47 @@ class CheckboxThemeData with Diagnosticable {
       padding: EdgeInsetsGeometry.lerp(a?.padding, b?.padding, t),
       icon: t < 0.5 ? a?.icon : b?.icon,
       checkedIconColor: WidgetStateProperty.lerp<Color?>(
-          a?.checkedIconColor, b?.checkedIconColor, t, Color.lerp),
+        a?.checkedIconColor,
+        b?.checkedIconColor,
+        t,
+        Color.lerp,
+      ),
       uncheckedIconColor: WidgetStateProperty.lerp<Color?>(
-          a?.uncheckedIconColor, b?.uncheckedIconColor, t, Color.lerp),
+        a?.uncheckedIconColor,
+        b?.uncheckedIconColor,
+        t,
+        Color.lerp,
+      ),
       thirdstateIconColor: WidgetStateProperty.lerp<Color?>(
-          a?.thirdstateIconColor, b?.thirdstateIconColor, t, Color.lerp),
+        a?.thirdstateIconColor,
+        b?.thirdstateIconColor,
+        t,
+        Color.lerp,
+      ),
       checkedDecoration: WidgetStateProperty.lerp<Decoration?>(
-          a?.checkedDecoration, b?.checkedDecoration, t, Decoration.lerp),
+        a?.checkedDecoration,
+        b?.checkedDecoration,
+        t,
+        Decoration.lerp,
+      ),
       uncheckedDecoration: WidgetStateProperty.lerp<Decoration?>(
-          a?.uncheckedDecoration, b?.uncheckedDecoration, t, Decoration.lerp),
+        a?.uncheckedDecoration,
+        b?.uncheckedDecoration,
+        t,
+        Decoration.lerp,
+      ),
       thirdstateDecoration: WidgetStateProperty.lerp<Decoration?>(
-          a?.thirdstateDecoration, b?.thirdstateDecoration, t, Decoration.lerp),
+        a?.thirdstateDecoration,
+        b?.thirdstateDecoration,
+        t,
+        Decoration.lerp,
+      ),
       foregroundColor: WidgetStateProperty.lerp<Color?>(
-          a?.foregroundColor, b?.foregroundColor, t, Color.lerp),
+        a?.foregroundColor,
+        b?.foregroundColor,
+        t,
+        Color.lerp,
+      ),
     );
   }
 
@@ -384,42 +413,56 @@ class CheckboxThemeData with Diagnosticable {
   void debugFillProperties(DiagnosticPropertiesBuilder properties) {
     super.debugFillProperties(properties);
     properties
-      ..add(ObjectFlagProperty<WidgetStateProperty<Decoration?>?>.has(
-        'thirdstateDecoration',
-        thirdstateDecoration,
-      ))
-      ..add(ObjectFlagProperty<WidgetStateProperty<Decoration?>?>.has(
-        'uncheckedDecoration',
-        uncheckedDecoration,
-      ))
-      ..add(ObjectFlagProperty<WidgetStateProperty<Decoration?>?>.has(
-        'checkedDecoration',
-        checkedDecoration,
-      ))
-      ..add(ObjectFlagProperty<WidgetStateProperty<Color?>?>.has(
-        'thirdstateIconColor',
-        thirdstateIconColor,
-      ))
-      ..add(ObjectFlagProperty<WidgetStateProperty<Color?>?>.has(
-        'uncheckedIconColor',
-        uncheckedIconColor,
-      ))
-      ..add(ObjectFlagProperty<WidgetStateProperty<Color?>?>.has(
-        'checkedIconColor',
-        checkedIconColor,
-      ))
-      ..add(IconDataProperty('icon', icon))
-      ..add(ObjectFlagProperty<WidgetStateProperty<Decoration?>?>.has(
-        'checkedDecoration',
-        checkedDecoration,
-      ))
-      ..add(ObjectFlagProperty<WidgetStateProperty<Decoration?>?>.has(
-        'uncheckedDecoration',
-        uncheckedDecoration,
-      ))
       ..add(
-        DiagnosticsProperty<EdgeInsetsGeometry?>('padding', padding),
+        ObjectFlagProperty<WidgetStateProperty<Decoration?>?>.has(
+          'thirdstateDecoration',
+          thirdstateDecoration,
+        ),
       )
+      ..add(
+        ObjectFlagProperty<WidgetStateProperty<Decoration?>?>.has(
+          'uncheckedDecoration',
+          uncheckedDecoration,
+        ),
+      )
+      ..add(
+        ObjectFlagProperty<WidgetStateProperty<Decoration?>?>.has(
+          'checkedDecoration',
+          checkedDecoration,
+        ),
+      )
+      ..add(
+        ObjectFlagProperty<WidgetStateProperty<Color?>?>.has(
+          'thirdstateIconColor',
+          thirdstateIconColor,
+        ),
+      )
+      ..add(
+        ObjectFlagProperty<WidgetStateProperty<Color?>?>.has(
+          'uncheckedIconColor',
+          uncheckedIconColor,
+        ),
+      )
+      ..add(
+        ObjectFlagProperty<WidgetStateProperty<Color?>?>.has(
+          'checkedIconColor',
+          checkedIconColor,
+        ),
+      )
+      ..add(IconDataProperty('icon', icon))
+      ..add(
+        ObjectFlagProperty<WidgetStateProperty<Decoration?>?>.has(
+          'checkedDecoration',
+          checkedDecoration,
+        ),
+      )
+      ..add(
+        ObjectFlagProperty<WidgetStateProperty<Decoration?>?>.has(
+          'uncheckedDecoration',
+          uncheckedDecoration,
+        ),
+      )
+      ..add(DiagnosticsProperty<EdgeInsetsGeometry?>('padding', padding))
       ..add(DiagnosticsProperty<EdgeInsetsGeometry?>('margin', margin))
       ..add(DiagnosticsProperty('foregroundColor', foregroundColor));
   }
@@ -494,9 +537,7 @@ class _Icon extends StatelessWidget {
       child: SizedBox(
         width: iconSize,
         height: iconSize,
-        child: Center(
-          child: iconWidget,
-        ),
+        child: Center(child: iconWidget),
       ),
     );
   }

@@ -6,12 +6,7 @@ void main() {
     await tester.pumpWidget(
       FluentApp(
         theme: FluentThemeData(
-          extensions: [
-            MyColors(
-              success: Colors.green,
-              failure: Colors.red,
-            ),
-          ],
+          extensions: [MyColors(success: Colors.green, failure: Colors.red)],
         ),
         builder: (context, child) {
           final ext = FluentTheme.of(context).extension<MyColors>();
@@ -30,10 +25,7 @@ void main() {
 @immutable
 class MyColors extends ThemeExtension<MyColors> {
   //
-  const MyColors({
-    required this.success,
-    required this.failure,
-  });
+  const MyColors({required this.success, required this.failure});
 
   final Color? success;
   final Color? failure;

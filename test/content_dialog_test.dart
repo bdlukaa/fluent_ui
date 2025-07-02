@@ -4,31 +4,31 @@ import 'package:flutter_test/flutter_test.dart';
 import 'app_test.dart';
 
 void main() {
-  testWidgets('ContentDialog displays title, content, and actions',
-      (tester) async {
-    await tester.pumpWidget(wrapApp(
-      child: Builder(
-        builder: (context) => Button(
-          child: const Text('Open Dialog'),
-          onPressed: () {
-            showDialog(
-              context: context,
-              builder: (_) => ContentDialog(
-                title: const Text('Dialog Title'),
-                content: const Text('Dialog Content'),
-                actions: [
-                  Button(
-                    child: const Text('OK'),
-                    onPressed: () {},
-                  ),
-                  Button(child: const Text('Cancel'), onPressed: () {}),
-                ],
-              ),
-            );
-          },
+  testWidgets('ContentDialog displays title, content, and actions', (
+    tester,
+  ) async {
+    await tester.pumpWidget(
+      wrapApp(
+        child: Builder(
+          builder: (context) => Button(
+            child: const Text('Open Dialog'),
+            onPressed: () {
+              showDialog(
+                context: context,
+                builder: (_) => ContentDialog(
+                  title: const Text('Dialog Title'),
+                  content: const Text('Dialog Content'),
+                  actions: [
+                    Button(child: const Text('OK'), onPressed: () {}),
+                    Button(child: const Text('Cancel'), onPressed: () {}),
+                  ],
+                ),
+              );
+            },
+          ),
         ),
       ),
-    ));
+    );
 
     await tester.tap(find.text('Open Dialog'));
     await tester.pumpAndSettle();
@@ -41,30 +41,32 @@ void main() {
 
   testWidgets('ContentDialog actions work and dialog closes', (tester) async {
     bool pressed = false;
-    await tester.pumpWidget(wrapApp(
-      child: Builder(
-        builder: (context) => Button(
-          child: const Text('Show Dialog'),
-          onPressed: () {
-            showDialog(
-              context: context,
-              builder: (_) => ContentDialog(
-                title: const Text('Title'),
-                actions: [
-                  Button(
-                    child: const Text('Close'),
-                    onPressed: () {
-                      pressed = true;
-                      Navigator.of(context).pop();
-                    },
-                  ),
-                ],
-              ),
-            );
-          },
+    await tester.pumpWidget(
+      wrapApp(
+        child: Builder(
+          builder: (context) => Button(
+            child: const Text('Show Dialog'),
+            onPressed: () {
+              showDialog(
+                context: context,
+                builder: (_) => ContentDialog(
+                  title: const Text('Title'),
+                  actions: [
+                    Button(
+                      child: const Text('Close'),
+                      onPressed: () {
+                        pressed = true;
+                        Navigator.of(context).pop();
+                      },
+                    ),
+                  ],
+                ),
+              );
+            },
+          ),
         ),
       ),
-    ));
+    );
 
     await tester.tap(find.text('Show Dialog'));
     await tester.pumpAndSettle();
@@ -79,23 +81,25 @@ void main() {
   });
 
   testWidgets('ContentDialog with one action aligns it to end', (tester) async {
-    await tester.pumpWidget(FluentApp(
-      home: Builder(
-        builder: (context) => Button(
-          child: const Text('Dialog'),
-          onPressed: () {
-            showDialog(
-              context: context,
-              builder: (_) => ContentDialog(
-                actions: [
-                  Button(child: const Text('Only'), onPressed: () {}),
-                ],
-              ),
-            );
-          },
+    await tester.pumpWidget(
+      FluentApp(
+        home: Builder(
+          builder: (context) => Button(
+            child: const Text('Dialog'),
+            onPressed: () {
+              showDialog(
+                context: context,
+                builder: (_) => ContentDialog(
+                  actions: [
+                    Button(child: const Text('Only'), onPressed: () {}),
+                  ],
+                ),
+              );
+            },
+          ),
         ),
       ),
-    ));
+    );
 
     await tester.tap(find.text('Dialog'));
     await tester.pumpAndSettle();
@@ -119,36 +123,33 @@ void main() {
       actionsPadding: EdgeInsets.all(40),
       titleStyle: TextStyle(fontSize: 30),
     );
-    await tester.pumpWidget(FluentApp(
-      home: Builder(
-        builder: (context) => Button(
-          child: const Text('Styled Dialog'),
-          onPressed: () {
-            showDialog(
-              context: context,
-              builder: (_) => const ContentDialog(
-                title: Text('Styled'),
-                content: Text('This dialog has custom styles.'),
-                actions: [
-                  Button(onPressed: null, child: Text('Close')),
-                ],
-                style: customStyle,
-              ),
-            );
-          },
+    await tester.pumpWidget(
+      FluentApp(
+        home: Builder(
+          builder: (context) => Button(
+            child: const Text('Styled Dialog'),
+            onPressed: () {
+              showDialog(
+                context: context,
+                builder: (_) => const ContentDialog(
+                  title: Text('Styled'),
+                  content: Text('This dialog has custom styles.'),
+                  actions: [Button(onPressed: null, child: Text('Close'))],
+                  style: customStyle,
+                ),
+              );
+            },
+          ),
         ),
       ),
-    ));
+    );
 
     await tester.tap(find.text('Styled Dialog'));
     await tester.pumpAndSettle();
 
     final titlePadding = tester.widget<Padding>(
       find
-          .ancestor(
-            of: find.text('Styled'),
-            matching: find.byType(Padding),
-          )
+          .ancestor(of: find.text('Styled'), matching: find.byType(Padding))
           .first,
     );
     final bodyPadding = tester.widget<Padding>(
@@ -161,10 +162,7 @@ void main() {
     );
     final actionsPadding = tester.widget<Padding>(
       find
-          .ancestor(
-            of: find.byType(Button),
-            matching: find.byType(Padding),
-          )
+          .ancestor(of: find.byType(Button), matching: find.byType(Padding))
           .first,
     );
     expect(bodyPadding.padding, const EdgeInsets.all(30));
@@ -182,21 +180,24 @@ void main() {
     expect(text.style.fontSize, 30);
   });
 
-  testWidgets('ContentDialog does not crash with no title/content/actions',
-      (tester) async {
-    await tester.pumpWidget(wrapApp(
-      child: Builder(
-        builder: (context) => Button(
-          child: const Text('Open'),
-          onPressed: () {
-            showDialog(
-              context: context,
-              builder: (_) => const ContentDialog(),
-            );
-          },
+  testWidgets('ContentDialog does not crash with no title/content/actions', (
+    tester,
+  ) async {
+    await tester.pumpWidget(
+      wrapApp(
+        child: Builder(
+          builder: (context) => Button(
+            child: const Text('Open'),
+            onPressed: () {
+              showDialog(
+                context: context,
+                builder: (_) => const ContentDialog(),
+              );
+            },
+          ),
         ),
       ),
-    ));
+    );
 
     await tester.tap(find.text('Open'));
     await tester.pumpAndSettle();

@@ -318,26 +318,28 @@ class NumberBox<T extends num> extends StatefulWidget {
     this.textDirection,
     this.textInputAction,
     this.onEditingComplete,
-  }) : assert((precision != null &&
-                pattern == null &&
-                formatter == null &&
-                format == null) ||
-            (precision == null &&
-                pattern != null &&
-                formatter == null &&
-                format == null) ||
-            (precision == null &&
-                pattern == null &&
-                formatter != null &&
-                format == null) ||
-            (precision == null &&
-                pattern == null &&
-                formatter == null &&
-                format != null) ||
-            (precision == null &&
-                pattern == null &&
-                formatter == null &&
-                format == null));
+  }) : assert(
+         (precision != null &&
+                 pattern == null &&
+                 formatter == null &&
+                 format == null) ||
+             (precision == null &&
+                 pattern != null &&
+                 formatter == null &&
+                 format == null) ||
+             (precision == null &&
+                 pattern == null &&
+                 formatter != null &&
+                 format == null) ||
+             (precision == null &&
+                 pattern == null &&
+                 formatter == null &&
+                 format != null) ||
+             (precision == null &&
+                 pattern == null &&
+                 formatter == null &&
+                 format == null),
+       );
 
   @override
   State<NumberBox<T>> createState() => NumberBoxState<T>();
@@ -467,38 +469,42 @@ class NumberBoxState<T extends num> extends State<NumberBox<T>> {
   }
 
   void _insertOverlay() {
-    _entry = OverlayEntry(builder: (context) {
-      assert(debugCheckHasMediaQuery(context));
-      assert(debugCheckHasFluentTheme(context));
+    _entry = OverlayEntry(
+      builder: (context) {
+        assert(debugCheckHasMediaQuery(context));
+        assert(debugCheckHasFluentTheme(context));
 
-      final boxContext = _textBoxKey.currentContext;
-      if (boxContext == null) return const SizedBox.shrink();
-      final box = boxContext.findRenderObject() as RenderBox;
+        final boxContext = _textBoxKey.currentContext;
+        if (boxContext == null) return const SizedBox.shrink();
+        final box = boxContext.findRenderObject() as RenderBox;
 
-      Widget child = PositionedDirectional(
-        width: kNumberBoxOverlayWidth,
-        child: CompositedTransformFollower(
-          link: _layerLink,
-          showWhenUnlinked: false,
-          offset: Offset(box.size.width - kNumberBoxOverlayWidth,
-              box.size.height / 2 - kNumberBoxOverlayHeight / 2),
-          child: SizedBox(
-            width: kNumberBoxOverlayWidth,
-            child: FluentTheme(
-              data: FluentTheme.of(context),
-              child: TextFieldTapRegion(
-                child: _NumberBoxCompactOverlay(
-                  onIncrement: incrementSmall,
-                  onDecrement: decrementSmall,
+        Widget child = PositionedDirectional(
+          width: kNumberBoxOverlayWidth,
+          child: CompositedTransformFollower(
+            link: _layerLink,
+            showWhenUnlinked: false,
+            offset: Offset(
+              box.size.width - kNumberBoxOverlayWidth,
+              box.size.height / 2 - kNumberBoxOverlayHeight / 2,
+            ),
+            child: SizedBox(
+              width: kNumberBoxOverlayWidth,
+              child: FluentTheme(
+                data: FluentTheme.of(context),
+                child: TextFieldTapRegion(
+                  child: _NumberBoxCompactOverlay(
+                    onIncrement: incrementSmall,
+                    onDecrement: decrementSmall,
+                  ),
                 ),
               ),
             ),
           ),
-        ),
-      );
+        );
 
-      return child;
-    });
+        return child;
+      },
+    );
 
     if (_textBoxKey.currentContext != null) {
       Overlay.of(context).insert(_entry!);
@@ -638,8 +644,9 @@ class NumberBoxState<T extends num> extends State<NumberBox<T>> {
         child: Listener(
           onPointerSignal: (event) {
             if (_hasPrimaryFocus && event is PointerScrollEvent) {
-              GestureBinding.instance.pointerSignalResolver.register(event,
-                  (PointerSignalEvent event) {
+              GestureBinding.instance.pointerSignalResolver.register(event, (
+                PointerSignalEvent event,
+              ) {
                 if (event is PointerScrollEvent) {
                   if (event.scrollDelta.direction < 0) {
                     incrementSmall();
@@ -662,28 +669,32 @@ class NumberBoxState<T extends num> extends State<NumberBox<T>> {
   }
 
   void incrementSmall() {
-    final value = (num.tryParse(controller.text) ?? widget.value ?? 0) +
+    final value =
+        (num.tryParse(controller.text) ?? widget.value ?? 0) +
         widget.smallChange;
     _updateController(value);
     updateValue();
   }
 
   void decrementSmall() {
-    final value = (num.tryParse(controller.text) ?? widget.value ?? 0) -
+    final value =
+        (num.tryParse(controller.text) ?? widget.value ?? 0) -
         widget.smallChange;
     _updateController(value);
     updateValue();
   }
 
   void incrementLarge() {
-    final value = (num.tryParse(controller.text) ?? widget.value ?? 0) +
+    final value =
+        (num.tryParse(controller.text) ?? widget.value ?? 0) +
         widget.largeChange;
     _updateController(value);
     updateValue();
   }
 
   void decrementLarge() {
-    final value = (num.tryParse(controller.text) ?? widget.value ?? 0) -
+    final value =
+        (num.tryParse(controller.text) ?? widget.value ?? 0) -
         widget.largeChange;
     _updateController(value);
     updateValue();
@@ -774,18 +785,12 @@ class _NumberBoxCompactOverlay extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
                 IconButton(
-                  icon: const Icon(
-                    FluentIcons.chevron_up,
-                    size: 16,
-                  ),
+                  icon: const Icon(FluentIcons.chevron_up, size: 16),
                   onPressed: onIncrement,
                   iconButtonMode: IconButtonMode.large,
                 ),
                 IconButton(
-                  icon: const Icon(
-                    FluentIcons.chevron_down,
-                    size: 16,
-                  ),
+                  icon: const Icon(FluentIcons.chevron_down, size: 16),
                   onPressed: onDecrement,
                   iconButtonMode: IconButtonMode.large,
                 ),
@@ -869,49 +874,51 @@ class NumberFormBox<T extends num> extends ControllableFormBox {
     num? min,
     int precision = 2,
     SpinButtonPlacementMode mode = SpinButtonPlacementMode.compact,
-  }) : super(builder: (FormFieldState<String> field) {
-          assert(debugCheckHasFluentTheme(field.context));
-          final theme = FluentTheme.of(field.context);
-          void onChangedHandler(T? value) {
-            field.didChange(value.toString());
-            onChanged?.call(value);
-          }
+  }) : super(
+         builder: (FormFieldState<String> field) {
+           assert(debugCheckHasFluentTheme(field.context));
+           final theme = FluentTheme.of(field.context);
+           void onChangedHandler(T? value) {
+             field.didChange(value.toString());
+             onChanged?.call(value);
+           }
 
-          return UnmanagedRestorationScope(
-            bucket: field.bucket,
-            child: FormRow(
-              padding: EdgeInsets.zero,
-              error: (field.errorText == null) ? null : Text(field.errorText!),
-              child: NumberBox<T>(
-                focusNode: focusNode,
-                autofocus: autofocus,
-                showCursor: showCursor,
-                cursorColor: cursorColor,
-                cursorHeight: cursorHeight,
-                cursorRadius: cursorRadius,
-                cursorWidth: cursorWidth,
-                onChanged: onChanged == null ? null : onChangedHandler,
-                highlightColor: (field.errorText == null)
-                    ? highlightColor
-                    : errorHighlightColor ??
-                        Colors.red.defaultBrushFor(theme.brightness),
-                placeholder: placeholder,
-                placeholderStyle: placeholderStyle,
-                leadingIcon: leadingIcon,
-                value: value,
-                max: max,
-                min: min,
-                allowExpressions: allowExpressions,
-                clearButton: clearButton,
-                largeChange: largeChange,
-                smallChange: smallChange,
-                precision: precision,
-                inputFormatters: inputFormatters,
-                mode: mode,
-              ),
-            ),
-          );
-        });
+           return UnmanagedRestorationScope(
+             bucket: field.bucket,
+             child: FormRow(
+               padding: EdgeInsets.zero,
+               error: (field.errorText == null) ? null : Text(field.errorText!),
+               child: NumberBox<T>(
+                 focusNode: focusNode,
+                 autofocus: autofocus,
+                 showCursor: showCursor,
+                 cursorColor: cursorColor,
+                 cursorHeight: cursorHeight,
+                 cursorRadius: cursorRadius,
+                 cursorWidth: cursorWidth,
+                 onChanged: onChanged == null ? null : onChangedHandler,
+                 highlightColor: (field.errorText == null)
+                     ? highlightColor
+                     : errorHighlightColor ??
+                           Colors.red.defaultBrushFor(theme.brightness),
+                 placeholder: placeholder,
+                 placeholderStyle: placeholderStyle,
+                 leadingIcon: leadingIcon,
+                 value: value,
+                 max: max,
+                 min: min,
+                 allowExpressions: allowExpressions,
+                 clearButton: clearButton,
+                 largeChange: largeChange,
+                 smallChange: smallChange,
+                 precision: precision,
+                 inputFormatters: inputFormatters,
+                 mode: mode,
+               ),
+             ),
+           );
+         },
+       );
 
   @override
   FormFieldState<String> createState() => TextFormBoxState();

@@ -458,45 +458,47 @@ class PasswordFormBox extends ControllableFormBox {
     String? placeholder,
     TextStyle? placeholderStyle,
     Widget? leadingIcon,
-  }) : super(builder: (FormFieldState<String> field) {
-          assert(debugCheckHasFluentTheme(field.context));
-          final theme = FluentTheme.of(field.context);
-          void onChangedHandler(String value) {
-            field.didChange(value);
-          }
+  }) : super(
+         builder: (FormFieldState<String> field) {
+           assert(debugCheckHasFluentTheme(field.context));
+           final theme = FluentTheme.of(field.context);
+           void onChangedHandler(String value) {
+             field.didChange(value);
+           }
 
-          return UnmanagedRestorationScope(
-            bucket: field.bucket,
-            child: FormRow(
-              padding: EdgeInsets.zero,
-              error: (field.errorText == null) ? null : Text(field.errorText!),
-              child: PasswordBox(
-                revealMode: revealMode,
-                focusNode: focusNode,
-                autofocus: autofocus,
-                readOnly: readOnly,
-                showCursor: showCursor,
-                obscuringCharacter: obscuringCharacter,
-                controller: controller,
-                cursorColor: cursorColor,
-                cursorHeight: cursorHeight,
-                cursorRadius: cursorRadius,
-                cursorWidth: cursorWidth,
-                enabled: enabled,
-                onEditingComplete: onEditingComplete,
-                onSubmitted: onFieldSubmitted,
-                onChanged: onChangedHandler,
-                highlightColor: (field.errorText == null)
-                    ? highlightColor
-                    : errorHighlightColor ??
-                        Colors.red.defaultBrushFor(theme.brightness),
-                placeholder: placeholder,
-                placeholderStyle: placeholderStyle,
-                leadingIcon: leadingIcon,
-              ),
-            ),
-          );
-        });
+           return UnmanagedRestorationScope(
+             bucket: field.bucket,
+             child: FormRow(
+               padding: EdgeInsets.zero,
+               error: (field.errorText == null) ? null : Text(field.errorText!),
+               child: PasswordBox(
+                 revealMode: revealMode,
+                 focusNode: focusNode,
+                 autofocus: autofocus,
+                 readOnly: readOnly,
+                 showCursor: showCursor,
+                 obscuringCharacter: obscuringCharacter,
+                 controller: controller,
+                 cursorColor: cursorColor,
+                 cursorHeight: cursorHeight,
+                 cursorRadius: cursorRadius,
+                 cursorWidth: cursorWidth,
+                 enabled: enabled,
+                 onEditingComplete: onEditingComplete,
+                 onSubmitted: onFieldSubmitted,
+                 onChanged: onChangedHandler,
+                 highlightColor: (field.errorText == null)
+                     ? highlightColor
+                     : errorHighlightColor ??
+                           Colors.red.defaultBrushFor(theme.brightness),
+                 placeholder: placeholder,
+                 placeholderStyle: placeholderStyle,
+                 leadingIcon: leadingIcon,
+               ),
+             ),
+           );
+         },
+       );
 
   @override
   FormFieldState<String> createState() => TextFormBoxState();

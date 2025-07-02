@@ -4,8 +4,9 @@ import 'package:flutter_test/flutter_test.dart';
 import 'app_test.dart';
 
 void main() {
-  testWidgets('ToggleSwitch change state accordingly',
-      (WidgetTester tester) async {
+  testWidgets('ToggleSwitch change state accordingly', (
+    WidgetTester tester,
+  ) async {
     var toggleSwitchValue = false;
 
     await tester.pumpWidget(

@@ -82,9 +82,8 @@ enum CommandBarOverflowBehavior {
 /// Signature of function that will build a [CommandBarItem] with some
 /// functionality to trigger an action (e.g., a clickable button), and
 /// it will call the given callback when the action is triggered.
-typedef CommandBarActionItemBuilder = CommandBarItem Function(
-  VoidCallback onPressed,
-);
+typedef CommandBarActionItemBuilder =
+    CommandBarItem Function(VoidCallback onPressed);
 
 /// Command bars provide quick access to common tasks. This could be
 /// application-level or page-level commands.
@@ -174,12 +173,13 @@ class CommandBar extends StatefulWidget {
     CrossAxisAlignment? crossAxisAlignment,
     this.overflowItemAlignment = MainAxisAlignment.end,
     this.direction = Axis.horizontal,
-  })  : _isExpanded = overflowBehavior != CommandBarOverflowBehavior.noWrap,
-        isCompact = isCompact ?? direction == Axis.vertical,
-        crossAxisAlignment = crossAxisAlignment ??
-            (direction == Axis.vertical
-                ? CrossAxisAlignment.start
-                : CrossAxisAlignment.center);
+  }) : _isExpanded = overflowBehavior != CommandBarOverflowBehavior.noWrap,
+       isCompact = isCompact ?? direction == Axis.vertical,
+       crossAxisAlignment =
+           crossAxisAlignment ??
+           (direction == Axis.vertical
+               ? CrossAxisAlignment.start
+               : CrossAxisAlignment.center);
 
   @override
   State<CommandBar> createState() => CommandBarState();
@@ -191,8 +191,9 @@ class CommandBarState extends State<CommandBar> {
 
   List<CommandBarItem> get allSecondaryItems {
     return <CommandBarItem>[
-      ..._dynamicallyHiddenPrimaryItems
-          .map((index) => widget.primaryItems[index]),
+      ..._dynamicallyHiddenPrimaryItems.map(
+        (index) => widget.primaryItems[index],
+      ),
       ...widget.secondaryItems,
     ];
   }
@@ -207,10 +208,11 @@ class CommandBarState extends State<CommandBar> {
     final future = secondaryFlyoutController.showFlyout(
       buildTarget: true,
       autoModeConfiguration: FlyoutAutoConfiguration(
-        preferredMode: (widget.direction == Axis.horizontal
-                ? FlyoutPlacementMode.bottomRight
-                : FlyoutPlacementMode.rightTop)
-            .resolve(Directionality.of(context)),
+        preferredMode:
+            (widget.direction == Axis.horizontal
+                    ? FlyoutPlacementMode.bottomRight
+                    : FlyoutPlacementMode.rightTop)
+                .resolve(Directionality.of(context)),
       ),
       additionalOffset: 0.0,
       builder: (context) {
@@ -283,8 +285,9 @@ class CommandBarState extends State<CommandBar> {
     CommandBarItemDisplayMode primaryMode,
   ) {
     final theme = FluentTheme.of(context);
-    final builtItems =
-        widget.primaryItems.map((item) => item.build(context, primaryMode));
+    final builtItems = widget.primaryItems.map(
+      (item) => item.build(context, primaryMode),
+    );
     Widget? overflowWidget;
 
     if (widget.secondaryItems.isNotEmpty ||
@@ -310,8 +313,9 @@ class CommandBarState extends State<CommandBar> {
       overflowWidget = overflowItem.build(context, primaryMode);
     }
 
-    var listBuilder =
-        widget.direction == Axis.horizontal ? Row.new : Column.new;
+    var listBuilder = widget.direction == Axis.horizontal
+        ? Row.new
+        : Column.new;
 
     late Widget w;
     switch (widget.overflowBehavior) {
@@ -334,10 +338,7 @@ class CommandBarState extends State<CommandBar> {
         w = listBuilder.call(
           mainAxisAlignment: widget.mainAxisAlignment,
           crossAxisAlignment: widget.crossAxisAlignment,
-          children: [
-            ...builtItems,
-            if (overflowWidget != null) overflowWidget,
-          ],
+          children: [...builtItems, if (overflowWidget != null) overflowWidget],
         );
         break;
       case CommandBarOverflowBehavior.wrap:
@@ -345,10 +346,7 @@ class CommandBarState extends State<CommandBar> {
           direction: widget.direction,
           alignment: _getWrapAlignment(),
           crossAxisAlignment: _getWrapCrossAlignment(),
-          children: [
-            ...builtItems,
-            if (overflowWidget != null) overflowWidget,
-          ],
+          children: [...builtItems, if (overflowWidget != null) overflowWidget],
         );
         break;
       case CommandBarOverflowBehavior.dynamicOverflow:
@@ -427,27 +425,35 @@ class CommandBarState extends State<CommandBar> {
       final displayMode = (widget.isCompact ?? false)
           ? CommandBarItemDisplayMode.inPrimaryCompact
           : CommandBarItemDisplayMode.inPrimary;
-      return Builder(builder: (context) {
-        return _buildForPrimaryMode(context, displayMode);
-      });
+      return Builder(
+        builder: (context) {
+          return _buildForPrimaryMode(context, displayMode);
+        },
+      );
     } else {
-      return LayoutBuilder(builder: (context, constraints) {
-        if (constraints.maxWidth > widget.compactBreakpointWidth!) {
-          return Builder(builder: (context) {
-            return _buildForPrimaryMode(
-              context,
-              CommandBarItemDisplayMode.inPrimary,
+      return LayoutBuilder(
+        builder: (context, constraints) {
+          if (constraints.maxWidth > widget.compactBreakpointWidth!) {
+            return Builder(
+              builder: (context) {
+                return _buildForPrimaryMode(
+                  context,
+                  CommandBarItemDisplayMode.inPrimary,
+                );
+              },
             );
-          });
-        } else {
-          return Builder(builder: (context) {
-            return _buildForPrimaryMode(
-              context,
-              CommandBarItemDisplayMode.inPrimaryCompact,
+          } else {
+            return Builder(
+              builder: (context) {
+                return _buildForPrimaryMode(
+                  context,
+                  CommandBarItemDisplayMode.inPrimaryCompact,
+                );
+              },
             );
-          });
-        }
-      });
+          }
+        },
+      );
     }
   }
 }
@@ -475,7 +481,7 @@ enum CommandBarItemDisplayMode {
   ///
   /// Normally you would want to render an item in this visual context as a
   /// [ListTile].
-  inSecondary;
+  inSecondary,
 }
 
 /// An individual control displayed within a [CommandBar]. Sub-class this to
@@ -496,11 +502,12 @@ abstract class CommandBarItem with Diagnosticable {
 /// Signature of function that can customize the widget returned by
 /// a CommandBarItem built in the given display mode. Can be useful to
 /// wrap the widget in a [Tooltip] etc.
-typedef CommandBarItemWidgetBuilder = Widget Function(
-  BuildContext context,
-  CommandBarItemDisplayMode displayMode,
-  Widget child,
-);
+typedef CommandBarItemWidgetBuilder =
+    Widget Function(
+      BuildContext context,
+      CommandBarItemDisplayMode displayMode,
+      Widget child,
+    );
 
 class CommandBarBuilderItem extends CommandBarItem {
   /// Function that is called with the built widget of the wrappedItem for
@@ -531,10 +538,7 @@ class CommandBarBuilderItem extends CommandBarItem {
 class CommandBarItemInPrimary extends StatelessWidget {
   final Widget child;
 
-  const CommandBarItemInPrimary({
-    super.key,
-    required this.child,
-  });
+  const CommandBarItemInPrimary({super.key, required this.child});
 
   @override
   Widget build(BuildContext context) {
@@ -604,7 +608,8 @@ class CommandBarButton extends CommandBarItem {
       case CommandBarItemDisplayMode.inPrimary:
       case CommandBarItemDisplayMode.inPrimaryCompact:
         final showIcon = icon != null;
-        final showLabel = label != null &&
+        final showLabel =
+            label != null &&
             (displayMode == CommandBarItemDisplayMode.inPrimary || !showIcon);
         final button = IconButton(
           key: key,
@@ -622,21 +627,21 @@ class CommandBarButton extends CommandBarItem {
               );
             }),
           ),
-          icon: Row(mainAxisSize: MainAxisSize.min, children: [
-            if (showIcon)
-              IconTheme.merge(
-                data: const IconThemeData(size: 16.0),
-                child: icon!,
-              ),
-            if (showIcon && showLabel) const SizedBox(width: 10),
-            if (showLabel) label!,
-          ]),
+          icon: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              if (showIcon)
+                IconTheme.merge(
+                  data: const IconThemeData(size: 16.0),
+                  child: icon!,
+                ),
+              if (showIcon && showLabel) const SizedBox(width: 10),
+              if (showLabel) label!,
+            ],
+          ),
         );
         if (tooltip != null) {
-          return Tooltip(
-            message: tooltip!,
-            child: button,
-          );
+          return Tooltip(message: tooltip!, child: button);
         }
         return button;
       case CommandBarItemDisplayMode.inSecondary:
@@ -668,11 +673,7 @@ class CommandBarButton extends CommandBarItem {
 ///   * [Divider], used to render the separator
 class CommandBarSeparator extends CommandBarItem {
   /// Creates a command bar item separator.
-  const CommandBarSeparator({
-    super.key,
-    this.color,
-    this.thickness,
-  });
+  const CommandBarSeparator({super.key, this.color, this.thickness});
 
   /// Override the color used by the [Divider].
   final Color? color;
@@ -684,8 +685,9 @@ class CommandBarSeparator extends CommandBarItem {
   Widget build(BuildContext context, CommandBarItemDisplayMode displayMode) {
     final parent = context.findAncestorWidgetOfExactType<CommandBar>();
     final parentDirection = parent?.direction ?? Axis.horizontal;
-    final direction =
-        parentDirection == Axis.horizontal ? Axis.vertical : Axis.horizontal;
+    final direction = parentDirection == Axis.horizontal
+        ? Axis.vertical
+        : Axis.horizontal;
     switch (displayMode) {
       case CommandBarItemDisplayMode.inPrimary:
       case CommandBarItemDisplayMode.inPrimaryCompact:

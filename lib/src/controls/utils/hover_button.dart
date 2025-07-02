@@ -2,10 +2,8 @@ import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
 
-typedef WidgetStateWidgetBuilder = Widget Function(
-  BuildContext,
-  Set<WidgetState> state,
-);
+typedef WidgetStateWidgetBuilder =
+    Widget Function(BuildContext, Set<WidgetState> state);
 
 class HoverButtonInherited extends InheritedWidget {
   const HoverButtonInherited({
@@ -359,10 +357,7 @@ class _HoverButtonState extends State<HoverButton> {
     );
     if (widget.margin != null) w = Padding(padding: widget.margin!, child: w);
 
-    w = HoverButtonInherited(
-      states: states,
-      child: w,
-    );
+    w = HoverButtonInherited(states: states, child: w);
     return w;
   }
 }

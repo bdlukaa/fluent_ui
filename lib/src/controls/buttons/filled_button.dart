@@ -53,10 +53,7 @@ class FilledButton extends Button {
     return super.defaultStyleOf(context).merge(def) ?? def;
   }
 
-  static Color backgroundColor(
-    FluentThemeData theme,
-    Set<WidgetState> states,
-  ) {
+  static Color backgroundColor(FluentThemeData theme, Set<WidgetState> states) {
     if (states.isDisabled) {
       return theme.resources.accentFillColorDisabled;
     } else if (states.isPressed) {
@@ -81,7 +78,9 @@ class FilledButton extends Button {
   }
 
   static ShapeBorder shapeBorder(
-      FluentThemeData theme, Set<WidgetState> states) {
+    FluentThemeData theme,
+    Set<WidgetState> states,
+  ) {
     return states.isPressed || states.isDisabled
         ? RoundedRectangleBorder(
             side: BorderSide(

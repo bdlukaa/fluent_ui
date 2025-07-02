@@ -21,10 +21,8 @@ const double _kDefaultAppBarHeight = 50.0;
 const double kPaneItemMinHeight = 40.0;
 const double kPaneItemHeaderMinHeight = 4.0;
 
-typedef NavigationContentBuilder = Widget Function(
-  PaneItem? item,
-  Widget? body,
-);
+typedef NavigationContentBuilder =
+    Widget Function(PaneItem? item, Widget? body);
 
 /// The NavigationView control provides top-level navigation for your app. It
 /// adapts to a variety of screen sizes and supports both top and left
@@ -53,10 +51,9 @@ class NavigationView extends StatefulWidget {
     this.paneBodyBuilder,
     this.onDisplayModeChanged,
   }) : assert(
-          (pane != null && content == null) ||
-              (pane == null && content != null),
-          'Either pane or content must be provided',
-        );
+         (pane != null && content == null) || (pane == null && content != null),
+         'Either pane or content must be provided',
+       );
 
   /// The app bar of the app.
   final NavigationAppBar? appBar;
@@ -164,11 +161,13 @@ class NavigationView extends StatefulWidget {
     properties
       ..add(DiagnosticsProperty('appBar', appBar))
       ..add(DiagnosticsProperty('pane', pane))
-      ..add(DiagnosticsProperty(
-        'clipBehavior',
-        clipBehavior,
-        defaultValue: Clip.hardEdge,
-      ))
+      ..add(
+        DiagnosticsProperty(
+          'clipBehavior',
+          clipBehavior,
+          defaultValue: Clip.hardEdge,
+        ),
+      )
       ..add(DiagnosticsProperty('contentShape', contentShape));
   }
 
@@ -255,18 +254,18 @@ class NavigationViewState extends State<NavigationView> {
   @override
   void initState() {
     super.initState();
-    paneScrollController = widget.pane?.scrollController ??
-        ScrollController(
-          debugLabel: '${widget.runtimeType} scroll controller',
-        );
+    paneScrollController =
+        widget.pane?.scrollController ??
+        ScrollController(debugLabel: '${widget.runtimeType} scroll controller');
     paneScrollController.addListener(_handleScrollControllerEvent);
 
     _generateKeys();
 
-    _compactOverlayOpen = PageStorage.of(context).readState(
-          context,
-          identifier: 'compactOverlayOpen',
-        ) as bool? ??
+    _compactOverlayOpen =
+        PageStorage.of(
+              context,
+            ).readState(context, identifier: 'compactOverlayOpen')
+            as bool? ??
         false;
   }
 
@@ -383,443 +382,467 @@ class NavigationViewState extends State<NavigationView> {
     final direction = Directionality.of(context);
 
     Widget? paneNavigationButton() {
-      final minimalLeading = PaneItem(
-        title: Text(
-          !minimalPaneOpen
-              ? localizations.openNavigationTooltip
-              : localizations.closeNavigationTooltip,
-        ),
-        icon: Icon(theme.paneNavigationButtonIcon),
-        body: const SizedBox.shrink(),
-      ).build(
-        context,
-        false,
-        () async {
-          minimalPaneOpen = !minimalPaneOpen;
-          _isTransitioning = true;
-        },
-        displayMode: PaneDisplayMode.compact,
-      );
+      final minimalLeading =
+          PaneItem(
+            title: Text(
+              !minimalPaneOpen
+                  ? localizations.openNavigationTooltip
+                  : localizations.closeNavigationTooltip,
+            ),
+            icon: Icon(theme.paneNavigationButtonIcon),
+            body: const SizedBox.shrink(),
+          ).build(context, false, () async {
+            minimalPaneOpen = !minimalPaneOpen;
+            _isTransitioning = true;
+          }, displayMode: PaneDisplayMode.compact);
       return minimalLeading;
     }
 
-    return LayoutBuilder(builder: (context, consts) {
-      var displayMode = widget.pane?.displayMode ?? PaneDisplayMode.auto;
+    return LayoutBuilder(
+      builder: (context, consts) {
+        var displayMode = widget.pane?.displayMode ?? PaneDisplayMode.auto;
 
-      if (displayMode == PaneDisplayMode.auto) {
-        /// For more info on the adaptive behavior, see
-        /// https://docs.microsoft.com/en-us/windows/apps/design/controls/navigationview#adaptive-behavior
-        ///
-        ///  DD/MM/YYYY
-        /// (06/04/2022)
-        ///
-        /// When PaneDisplayMode is set to its default value of Auto, the
-        /// adaptive behavior is to show:
-        /// - An expanded left pane on large window widths (1008px or greater).
-        /// - A left, icon-only, nav pane (compact) on medium window widths
-        /// (641px to 1007px).
-        /// - Only a menu button (minimal) on small window widths (640px or less).
-        var width = consts.biggest.width;
-        if (width.isInfinite) width = MediaQuery.sizeOf(context).width;
+        if (displayMode == PaneDisplayMode.auto) {
+          /// For more info on the adaptive behavior, see
+          /// https://docs.microsoft.com/en-us/windows/apps/design/controls/navigationview#adaptive-behavior
+          ///
+          ///  DD/MM/YYYY
+          /// (06/04/2022)
+          ///
+          /// When PaneDisplayMode is set to its default value of Auto, the
+          /// adaptive behavior is to show:
+          /// - An expanded left pane on large window widths (1008px or greater).
+          /// - A left, icon-only, nav pane (compact) on medium window widths
+          /// (641px to 1007px).
+          /// - Only a menu button (minimal) on small window widths (640px or less).
+          var width = consts.biggest.width;
+          if (width.isInfinite) width = MediaQuery.sizeOf(context).width;
 
-        PaneDisplayMode autoDisplayMode;
-        if (width <= 640) {
-          autoDisplayMode = PaneDisplayMode.minimal;
-        } else if (width >= 1008) {
-          autoDisplayMode = PaneDisplayMode.open;
-        } else {
-          autoDisplayMode = PaneDisplayMode.compact;
+          PaneDisplayMode autoDisplayMode;
+          if (width <= 640) {
+            autoDisplayMode = PaneDisplayMode.minimal;
+          } else if (width >= 1008) {
+            autoDisplayMode = PaneDisplayMode.open;
+          } else {
+            autoDisplayMode = PaneDisplayMode.compact;
+          }
+
+          if (autoDisplayMode != _autoDisplayMode) {
+            widget.onDisplayModeChanged?.call(autoDisplayMode);
+          }
+
+          displayMode = _autoDisplayMode = autoDisplayMode;
         }
+        assert(displayMode != PaneDisplayMode.auto);
 
-        if (autoDisplayMode != _autoDisplayMode) {
-          widget.onDisplayModeChanged?.call(autoDisplayMode);
-        }
-
-        displayMode = _autoDisplayMode = autoDisplayMode;
-      }
-      assert(displayMode != PaneDisplayMode.auto);
-
-      var appBar = () {
-        if (widget.appBar != null) {
-          return _NavigationAppBar(
-            appBar: widget.appBar!,
-            additionalLeading: () {
-              if (widget.pane != null) {
-                return displayMode == PaneDisplayMode.minimal
-                    ? paneNavigationButton()
-                    : null;
-              }
-            }(),
-          );
-        }
-        return LayoutBuilder(
-          builder: (context, constraints) => SizedBox(
-            width: constraints.maxWidth,
-            height: 0,
-          ),
-        );
-      }();
-
-      late Widget paneResult;
-      if (widget.pane != null) {
-        final pane = widget.pane!;
-        final body = _NavigationBody(
-          itemKey: ValueKey(pane.selected ?? -1),
-          transitionBuilder: widget.transitionBuilder,
-          paneBodyBuilder: widget.paneBodyBuilder,
-        );
-
-        if (pane.customPane != null) {
-          paneResult = Builder(builder: (context) {
-            return PaneScrollConfiguration(
-              child: pane.customPane!.build(
-                context,
-                NavigationPaneWidgetData(
-                  appBar: appBar,
-                  content: ClipRect(child: body),
-                  listKey: _listKey,
-                  paneKey: _panelKey,
-                  scrollController: paneScrollController,
-                  pane: pane,
-                ),
-              ),
+        var appBar = () {
+          if (widget.appBar != null) {
+            return _NavigationAppBar(
+              appBar: widget.appBar!,
+              additionalLeading: () {
+                if (widget.pane != null) {
+                  return displayMode == PaneDisplayMode.minimal
+                      ? paneNavigationButton()
+                      : null;
+                }
+              }(),
             );
-          });
-        } else {
-          final contentShape = widget.contentShape ??
-              RoundedRectangleBorder(
-                side: BorderSide(
-                  color:
-                      FluentTheme.of(context).resources.cardStrokeColorDefault,
-                ),
-                borderRadius: displayMode == PaneDisplayMode.top
-                    ? BorderRadius.zero
-                    : const BorderRadiusDirectional.only(
-                        topStart: Radius.circular(8.0),
-                      ).resolve(direction),
-              );
-          final Widget content = ClipRect(
-            key: _contentKey,
-            child: displayMode == PaneDisplayMode.minimal
-                ? body
-                : DecoratedBox(
-                    position: DecorationPosition.foreground,
-                    decoration: ShapeDecoration(shape: contentShape),
-                    child: ClipPath(
-                      clipBehavior: widget.clipBehavior,
-                      clipper: ShapeBorderClipper(shape: contentShape),
-                      child: body,
+          }
+          return LayoutBuilder(
+            builder: (context, constraints) =>
+                SizedBox(width: constraints.maxWidth, height: 0),
+          );
+        }();
+
+        late Widget paneResult;
+        if (widget.pane != null) {
+          final pane = widget.pane!;
+          final body = _NavigationBody(
+            itemKey: ValueKey(pane.selected ?? -1),
+            transitionBuilder: widget.transitionBuilder,
+            paneBodyBuilder: widget.paneBodyBuilder,
+          );
+
+          if (pane.customPane != null) {
+            paneResult = Builder(
+              builder: (context) {
+                return PaneScrollConfiguration(
+                  child: pane.customPane!.build(
+                    context,
+                    NavigationPaneWidgetData(
+                      appBar: appBar,
+                      content: ClipRect(child: body),
+                      listKey: _listKey,
+                      paneKey: _panelKey,
+                      scrollController: paneScrollController,
+                      pane: pane,
                     ),
                   ),
-          );
-          if (displayMode != PaneDisplayMode.compact) {
-            _compactOverlayOpen = false;
-          }
-          if (displayMode != PaneDisplayMode.open) {
-            PageStorage.of(context).writeState(
-              context,
-              false,
-              identifier: 'openModeOpen',
+                );
+              },
             );
-          }
-          switch (displayMode) {
-            case PaneDisplayMode.top:
-              _isTransitioning = false;
-              paneResult = Column(children: [
-                appBar,
-                PaneScrollConfiguration(
-                  child: _TopNavigationPane(
-                    pane: pane,
-                    listKey: _listKey,
-                    appBar: widget.appBar,
+          } else {
+            final contentShape =
+                widget.contentShape ??
+                RoundedRectangleBorder(
+                  side: BorderSide(
+                    color: FluentTheme.of(
+                      context,
+                    ).resources.cardStrokeColorDefault,
                   ),
-                ),
-                Expanded(child: content),
-              ]);
-              break;
-            case PaneDisplayMode.compact:
+                  borderRadius: displayMode == PaneDisplayMode.top
+                      ? BorderRadius.zero
+                      : const BorderRadiusDirectional.only(
+                          topStart: Radius.circular(8.0),
+                        ).resolve(direction),
+                );
+            final Widget content = ClipRect(
+              key: _contentKey,
+              child: displayMode == PaneDisplayMode.minimal
+                  ? body
+                  : DecoratedBox(
+                      position: DecorationPosition.foreground,
+                      decoration: ShapeDecoration(shape: contentShape),
+                      child: ClipPath(
+                        clipBehavior: widget.clipBehavior,
+                        clipper: ShapeBorderClipper(shape: contentShape),
+                        child: body,
+                      ),
+                    ),
+            );
+            if (displayMode != PaneDisplayMode.compact) {
+              _compactOverlayOpen = false;
+            }
+            if (displayMode != PaneDisplayMode.open) {
+              PageStorage.of(
+                context,
+              ).writeState(context, false, identifier: 'openModeOpen');
+            }
+            switch (displayMode) {
+              case PaneDisplayMode.top:
+                _isTransitioning = false;
+                paneResult = Column(
+                  children: [
+                    appBar,
+                    PaneScrollConfiguration(
+                      child: _TopNavigationPane(
+                        pane: pane,
+                        listKey: _listKey,
+                        appBar: widget.appBar,
+                      ),
+                    ),
+                    Expanded(child: content),
+                  ],
+                );
+                break;
+              case PaneDisplayMode.compact:
 
-              // Ensure the overlay state is correct
-              _compactOverlayOpen = PageStorage.of(context).readState(
-                    context,
-                    identifier: 'compactOverlayOpen',
-                  ) as bool? ??
-                  _compactOverlayOpen;
+                // Ensure the overlay state is correct
+                _compactOverlayOpen =
+                    PageStorage.of(
+                          context,
+                        ).readState(context, identifier: 'compactOverlayOpen')
+                        as bool? ??
+                    _compactOverlayOpen;
 
-              var openSize =
-                  pane.size?.openPaneWidth ?? kOpenNavigationPaneWidth;
+                var openSize =
+                    pane.size?.openPaneWidth ?? kOpenNavigationPaneWidth;
 
-              final noOverlayRequired = consts.maxWidth / 2.5 > openSize;
-              final openedWithoutOverlay =
-                  _compactOverlayOpen && consts.maxWidth / 2.5 > openSize;
+                final noOverlayRequired = consts.maxWidth / 2.5 > openSize;
+                final openedWithoutOverlay =
+                    _compactOverlayOpen && consts.maxWidth / 2.5 > openSize;
 
-              if (noOverlayRequired) {
-                paneResult = Column(children: [
-                  appBar,
-                  Expanded(
-                    child: Row(children: [
+                if (noOverlayRequired) {
+                  paneResult = Column(
+                    children: [
+                      appBar,
+                      Expanded(
+                        child: Row(
+                          children: [
+                            PaneScrollConfiguration(
+                              child: () {
+                                if (openedWithoutOverlay) {
+                                  return Mica(
+                                    key: _overlayKey,
+                                    backgroundColor: theme.backgroundColor,
+                                    child: Container(
+                                      margin: const EdgeInsets.symmetric(
+                                        vertical: 1.0,
+                                      ),
+                                      child: _OpenNavigationPane(
+                                        theme: theme,
+                                        pane: pane,
+                                        paneKey: _panelKey,
+                                        listKey: _listKey,
+                                        onToggle: pane.toggleable
+                                            ? toggleCompactOpenMode
+                                            : null,
+                                        initiallyOpen: true,
+                                        onAnimationEnd: _animationEndCallback,
+                                      ),
+                                    ),
+                                  );
+                                } else {
+                                  return KeyedSubtree(
+                                    key: _overlayKey,
+                                    child: _CompactNavigationPane(
+                                      pane: pane,
+                                      paneKey: _panelKey,
+                                      listKey: _listKey,
+                                      onToggle: pane.toggleable
+                                          ? toggleCompactOpenMode
+                                          : null,
+                                      onOpenSearch: widget.onOpenSearch,
+                                      onAnimationEnd: _animationEndCallback,
+                                    ),
+                                  );
+                                }
+                              }(),
+                            ),
+                            Expanded(child: content),
+                          ],
+                        ),
+                      ),
+                    ],
+                  );
+                } else {
+                  paneResult = Stack(
+                    children: [
+                      Padding(
+                        padding: EdgeInsetsDirectional.only(
+                          top: appBarPadding.resolve(direction).top,
+                          start:
+                              pane.size?.compactWidth ??
+                              kCompactNavigationPaneWidth,
+                        ),
+                        child: content,
+                      ),
+                      // If the overlay is open, add a gesture detector above the
+                      // content to close if the user click outside the overlay
+                      if (_compactOverlayOpen && !openedWithoutOverlay)
+                        Positioned.fill(
+                          child: GestureDetector(
+                            onTap: toggleCompactOpenMode,
+                            child: AbsorbPointer(
+                              child: Semantics(
+                                label: localizations.modalBarrierDismissLabel,
+                                child: const SizedBox.expand(),
+                              ),
+                            ),
+                          ),
+                        ),
                       PaneScrollConfiguration(
                         child: () {
-                          if (openedWithoutOverlay) {
-                            return Mica(
-                              key: _overlayKey,
-                              backgroundColor: theme.backgroundColor,
-                              child: Container(
-                                margin:
-                                    const EdgeInsets.symmetric(vertical: 1.0),
-                                child: _OpenNavigationPane(
-                                  theme: theme,
-                                  pane: pane,
-                                  paneKey: _panelKey,
-                                  listKey: _listKey,
-                                  onToggle: pane.toggleable
-                                      ? toggleCompactOpenMode
-                                      : null,
-                                  initiallyOpen: true,
-                                  onAnimationEnd: _animationEndCallback,
+                          if (_compactOverlayOpen) {
+                            return ClipRect(
+                              child: Mica(
+                                key: _overlayKey,
+                                backgroundColor: theme.overlayBackgroundColor,
+                                elevation: 10.0,
+                                child: Container(
+                                  decoration: BoxDecoration(
+                                    border: Border.all(
+                                      color: const Color(0xFF6c6c6c),
+                                      width: 0.15,
+                                    ),
+                                    borderRadius: BorderRadius.circular(8.0),
+                                  ),
+                                  margin: const EdgeInsets.symmetric(
+                                    vertical: 1.0,
+                                  ),
+                                  padding: appBarPadding,
+                                  child: _OpenNavigationPane(
+                                    theme: theme,
+                                    pane: pane,
+                                    paneKey: _panelKey,
+                                    listKey: _listKey,
+                                    onToggle: toggleCompactOpenMode,
+                                    onItemSelected: toggleCompactOpenMode,
+                                    onAnimationEnd: _animationEndCallback,
+                                  ),
                                 ),
                               ),
                             );
                           } else {
-                            return KeyedSubtree(
+                            return Mica(
                               key: _overlayKey,
-                              child: _CompactNavigationPane(
-                                pane: pane,
-                                paneKey: _panelKey,
-                                listKey: _listKey,
-                                onToggle: pane.toggleable
-                                    ? toggleCompactOpenMode
-                                    : null,
-                                onOpenSearch: widget.onOpenSearch,
-                                onAnimationEnd: _animationEndCallback,
+                              backgroundColor: theme.backgroundColor,
+                              child: Padding(
+                                padding: EdgeInsetsDirectional.only(
+                                  top: appBarPadding.resolve(direction).top,
+                                ),
+                                child: _CompactNavigationPane(
+                                  pane: pane,
+                                  paneKey: _panelKey,
+                                  listKey: _listKey,
+                                  onToggle: toggleCompactOpenMode,
+                                  onOpenSearch: widget.onOpenSearch,
+                                  onAnimationEnd: _animationEndCallback,
+                                ),
                               ),
                             );
                           }
                         }(),
                       ),
-                      Expanded(child: content),
-                    ]),
-                  ),
-                ]);
-              } else {
-                paneResult = Stack(children: [
-                  Padding(
-                    padding: EdgeInsetsDirectional.only(
-                      top: appBarPadding.resolve(direction).top,
-                      start: pane.size?.compactWidth ??
-                          kCompactNavigationPaneWidth,
-                    ),
-                    child: content,
-                  ),
-                  // If the overlay is open, add a gesture detector above the
-                  // content to close if the user click outside the overlay
-                  if (_compactOverlayOpen && !openedWithoutOverlay)
-                    Positioned.fill(
-                      child: GestureDetector(
-                        onTap: toggleCompactOpenMode,
-                        child: AbsorbPointer(
-                          child: Semantics(
-                            label: localizations.modalBarrierDismissLabel,
-                            child: const SizedBox.expand(),
-                          ),
-                        ),
-                      ),
-                    ),
-                  PaneScrollConfiguration(
-                    child: () {
-                      if (_compactOverlayOpen) {
-                        return ClipRect(
-                          child: Mica(
-                            key: _overlayKey,
-                            backgroundColor: theme.overlayBackgroundColor,
-                            elevation: 10.0,
-                            child: Container(
-                              decoration: BoxDecoration(
-                                border: Border.all(
-                                  color: const Color(0xFF6c6c6c),
-                                  width: 0.15,
-                                ),
-                                borderRadius: BorderRadius.circular(8.0),
-                              ),
-                              margin: const EdgeInsets.symmetric(
-                                vertical: 1.0,
-                              ),
-                              padding: appBarPadding,
-                              child: _OpenNavigationPane(
-                                theme: theme,
-                                pane: pane,
-                                paneKey: _panelKey,
-                                listKey: _listKey,
-                                onToggle: toggleCompactOpenMode,
-                                onItemSelected: toggleCompactOpenMode,
-                                onAnimationEnd: _animationEndCallback,
-                              ),
-                            ),
-                          ),
-                        );
-                      } else {
-                        return Mica(
-                          key: _overlayKey,
-                          backgroundColor: theme.backgroundColor,
-                          child: Padding(
-                            padding: EdgeInsetsDirectional.only(
-                              top: appBarPadding.resolve(direction).top,
-                            ),
-                            child: _CompactNavigationPane(
+                      appBar,
+                    ],
+                  );
+                }
+                break;
+              case PaneDisplayMode.open:
+                paneResult = Column(
+                  children: [
+                    appBar,
+                    Expanded(
+                      child: Row(
+                        children: [
+                          PaneScrollConfiguration(
+                            child: _OpenNavigationPane(
+                              theme: theme,
                               pane: pane,
                               paneKey: _panelKey,
                               listKey: _listKey,
-                              onToggle: toggleCompactOpenMode,
-                              onOpenSearch: widget.onOpenSearch,
+                              initiallyOpen:
+                                  PageStorage.of(context).readState(
+                                        context,
+                                        identifier: 'openModeOpen',
+                                      )
+                                      as bool? ??
+                                  mounted,
                               onAnimationEnd: _animationEndCallback,
                             ),
                           ),
-                        );
-                      }
-                    }(),
-                  ),
-                  appBar,
-                ]);
-              }
-              break;
-            case PaneDisplayMode.open:
-              paneResult = Column(children: [
-                appBar,
-                Expanded(
-                  child: Row(children: [
-                    PaneScrollConfiguration(
-                      child: _OpenNavigationPane(
-                        theme: theme,
-                        pane: pane,
-                        paneKey: _panelKey,
-                        listKey: _listKey,
-                        initiallyOpen: PageStorage.of(context).readState(
-                              context,
-                              identifier: 'openModeOpen',
-                            ) as bool? ??
-                            mounted,
-                        onAnimationEnd: _animationEndCallback,
+                          Expanded(child: content),
+                        ],
                       ),
                     ),
-                    Expanded(child: content),
-                  ]),
-                ),
-              ]);
-              break;
-            case PaneDisplayMode.minimal:
-              var openSize =
-                  pane.size?.openPaneWidth ?? kOpenNavigationPaneWidth;
+                  ],
+                );
+                break;
+              case PaneDisplayMode.minimal:
+                var openSize =
+                    pane.size?.openPaneWidth ?? kOpenNavigationPaneWidth;
 
-              paneResult = Stack(children: [
-                PositionedDirectional(
-                  top: 0,
-                  start: 0,
-                  end: 0,
-                  height: widget.appBar?.finalHeight(context) ?? 0.0,
-                  child: ColoredBox(
-                    color: FluentTheme.of(context).scaffoldBackgroundColor,
-                  ),
-                ),
-                PositionedDirectional(
-                  top: widget.appBar?.finalHeight(context) ?? 0.0,
-                  start: 0.0,
-                  end: 0.0,
-                  bottom: 0.0,
-                  child: content,
-                ),
-                if (minimalPaneOpen)
-                  Positioned.fill(
-                    child: GestureDetector(
-                      onTap: () => minimalPaneOpen = false,
-                      child: AbsorbPointer(
-                        child: Semantics(
-                          label: localizations.modalBarrierDismissLabel,
-                          child: const SizedBox.expand(),
-                        ),
+                paneResult = Stack(
+                  children: [
+                    PositionedDirectional(
+                      top: 0,
+                      start: 0,
+                      end: 0,
+                      height: widget.appBar?.finalHeight(context) ?? 0.0,
+                      child: ColoredBox(
+                        color: FluentTheme.of(context).scaffoldBackgroundColor,
                       ),
                     ),
-                  ),
-                AnimatedPositionedDirectional(
-                  key: _overlayKey,
-                  duration: theme.animationDuration ?? Duration.zero,
-                  curve: theme.animationCurve ?? Curves.linear,
-                  start: minimalPaneOpen ? 0.0 : -openSize,
-                  width: openSize,
-                  height: MediaQuery.sizeOf(context).height,
-                  onEnd: () {
-                    _isTransitioning = false;
-                    if (mounted) setState(() {});
-                  },
-                  child: PaneScrollConfiguration(
-                    child: Mica(
-                      backgroundColor: theme.overlayBackgroundColor,
-                      child: Container(
-                        decoration: BoxDecoration(
-                          border: Border.all(
-                            color: const Color(0xFF6c6c6c),
-                            width: 0.15,
+                    PositionedDirectional(
+                      top: widget.appBar?.finalHeight(context) ?? 0.0,
+                      start: 0.0,
+                      end: 0.0,
+                      bottom: 0.0,
+                      child: content,
+                    ),
+                    if (minimalPaneOpen)
+                      Positioned.fill(
+                        child: GestureDetector(
+                          onTap: () => minimalPaneOpen = false,
+                          child: AbsorbPointer(
+                            child: Semantics(
+                              label: localizations.modalBarrierDismissLabel,
+                              child: const SizedBox.expand(),
+                            ),
                           ),
-                          borderRadius: BorderRadius.circular(8.0),
                         ),
-                        margin: const EdgeInsets.symmetric(vertical: 1.0),
-                        padding: appBarPadding,
-                        child: _OpenNavigationPane(
-                          theme: theme,
-                          pane: pane,
-                          paneKey: _panelKey,
-                          listKey: _listKey,
-                          onItemSelected: () => minimalPaneOpen = false,
+                      ),
+                    AnimatedPositionedDirectional(
+                      key: _overlayKey,
+                      duration: theme.animationDuration ?? Duration.zero,
+                      curve: theme.animationCurve ?? Curves.linear,
+                      start: minimalPaneOpen ? 0.0 : -openSize,
+                      width: openSize,
+                      height: MediaQuery.sizeOf(context).height,
+                      onEnd: () {
+                        _isTransitioning = false;
+                        if (mounted) setState(() {});
+                      },
+                      child: PaneScrollConfiguration(
+                        child: Mica(
+                          backgroundColor: theme.overlayBackgroundColor,
+                          child: Container(
+                            decoration: BoxDecoration(
+                              border: Border.all(
+                                color: const Color(0xFF6c6c6c),
+                                width: 0.15,
+                              ),
+                              borderRadius: BorderRadius.circular(8.0),
+                            ),
+                            margin: const EdgeInsets.symmetric(vertical: 1.0),
+                            padding: appBarPadding,
+                            child: _OpenNavigationPane(
+                              theme: theme,
+                              pane: pane,
+                              paneKey: _panelKey,
+                              listKey: _listKey,
+                              onItemSelected: () => minimalPaneOpen = false,
+                            ),
+                          ),
                         ),
                       ),
                     ),
-                  ),
-                ),
-                appBar,
-              ]);
-              break;
-            default:
-              paneResult = content;
+                    appBar,
+                  ],
+                );
+                break;
+              default:
+                paneResult = content;
+            }
           }
+        } else if (widget.content != null) {
+          paneResult = Column(
+            children: [
+              appBar,
+              Expanded(child: widget.content!),
+            ],
+          );
+        } else {
+          return const SizedBox.shrink();
         }
-      } else if (widget.content != null) {
-        paneResult = Column(children: [
-          appBar,
-          Expanded(child: widget.content!),
-        ]);
-      } else {
-        return const SizedBox.shrink();
-      }
 
-      return Mica(
-        backgroundColor: theme.backgroundColor,
-        child: InheritedNavigationView(
-          displayMode: _compactOverlayOpen ? PaneDisplayMode.open : displayMode,
-          minimalPaneOpen: minimalPaneOpen,
-          pane: widget.pane,
-          previousItemIndex: _previousItemIndex,
-          isTransitioning: _isTransitioning,
-          child: PaneItemKeys(keys: _itemKeys, child: paneResult),
-        ),
-      );
-    });
+        return Mica(
+          backgroundColor: theme.backgroundColor,
+          child: InheritedNavigationView(
+            displayMode: _compactOverlayOpen
+                ? PaneDisplayMode.open
+                : displayMode,
+            minimalPaneOpen: minimalPaneOpen,
+            pane: widget.pane,
+            previousItemIndex: _previousItemIndex,
+            isTransitioning: _isTransitioning,
+            child: PaneItemKeys(keys: _itemKeys, child: paneResult),
+          ),
+        );
+      },
+    );
   }
 
   // ignore: non_constant_identifier_names
   Widget PaneScrollConfiguration({required Widget child}) {
-    return Builder(builder: (context) {
-      return PrimaryScrollController(
-        controller: paneScrollController,
-        child: ScrollConfiguration(
-          behavior: widget.pane?.scrollBehavior ??
-              const NavigationViewScrollBehavior(),
-          child: MediaQuery.removePadding(
-            context: context,
-            removeTop: widget.appBar != null,
-            child: RepaintBoundary(child: child),
+    return Builder(
+      builder: (context) {
+        return PrimaryScrollController(
+          controller: paneScrollController,
+          child: ScrollConfiguration(
+            behavior:
+                widget.pane?.scrollBehavior ??
+                const NavigationViewScrollBehavior(),
+            child: MediaQuery.removePadding(
+              context: context,
+              removeTop: widget.appBar != null,
+              child: RepaintBoundary(child: child),
+            ),
           ),
-        ),
-      );
-    });
+        );
+      },
+    );
   }
 }
 
@@ -881,78 +904,85 @@ class NavigationAppBar with Diagnosticable {
     this.backgroundColor,
     this.decoration,
   }) : assert(
-          (backgroundColor == null && decoration == null) ||
-              (backgroundColor != null && decoration == null) ||
-              (backgroundColor == null && decoration != null),
-          'Only one of backgroundColor or decoration can be provided',
-        );
+         (backgroundColor == null && decoration == null) ||
+             (backgroundColor != null && decoration == null) ||
+             (backgroundColor == null && decoration != null),
+         'Only one of backgroundColor or decoration can be provided',
+       );
 
   @override
   void debugFillProperties(DiagnosticPropertiesBuilder properties) {
     super.debugFillProperties(properties);
     properties
-      ..add(FlagProperty(
-        'automatically imply leading',
-        value: automaticallyImplyLeading,
-        ifFalse: 'do not imply leading',
-        defaultValue: true,
-      ))
+      ..add(
+        FlagProperty(
+          'automatically imply leading',
+          value: automaticallyImplyLeading,
+          ifFalse: 'do not imply leading',
+          defaultValue: true,
+        ),
+      )
       ..add(ColorProperty('backgroundColor', backgroundColor))
       ..add(DiagnosticsProperty<Decoration>('decoration', decoration))
-      ..add(DoubleProperty(
-        'height',
-        height,
-        defaultValue: _kDefaultAppBarHeight,
-      ));
+      ..add(
+        DoubleProperty('height', height, defaultValue: _kDefaultAppBarHeight),
+      );
   }
 
   Widget _buildLeading([bool imply = true]) {
-    return Builder(builder: (context) {
-      late Widget widget;
-      if (leading != null) {
-        widget = leading!;
-      } else if (automaticallyImplyLeading && imply) {
-        final ModalRoute<dynamic>? parentRoute = ModalRoute.of(context);
-        final canPop = parentRoute?.canPop ?? false;
+    return Builder(
+      builder: (context) {
+        late Widget widget;
+        if (leading != null) {
+          widget = leading!;
+        } else if (automaticallyImplyLeading && imply) {
+          final ModalRoute<dynamic>? parentRoute = ModalRoute.of(context);
+          final canPop = parentRoute?.canPop ?? false;
 
-        assert(debugCheckHasFluentLocalizations(context));
-        assert(debugCheckHasFluentTheme(context));
-        final localizations = FluentLocalizations.of(context);
-        final onPressed = canPop ? () => Navigator.maybePop(context) : null;
-        widget = NavigationPaneTheme(
-          data: NavigationPaneTheme.of(context).merge(NavigationPaneThemeData(
-            unselectedIconColor: WidgetStateProperty.resolveWith((states) {
-              if (states.isDisabled) {
-                return ButtonThemeData.buttonColor(context, states);
-              }
-              return ButtonThemeData.uncheckedInputColor(
-                FluentTheme.of(context),
-                states,
-              ).basedOnLuminance();
-            }),
-          )),
-          child: Builder(
-            builder: (context) => PaneItem(
-              icon: const Icon(FluentIcons.back, size: 14.0),
-              title: Text(localizations.backButtonTooltip),
-              body: const SizedBox.shrink(),
-            ).build(
-              context,
-              false,
-              onPressed,
-              displayMode: PaneDisplayMode.compact,
+          assert(debugCheckHasFluentLocalizations(context));
+          assert(debugCheckHasFluentTheme(context));
+          final localizations = FluentLocalizations.of(context);
+          final onPressed = canPop ? () => Navigator.maybePop(context) : null;
+          widget = NavigationPaneTheme(
+            data: NavigationPaneTheme.of(context).merge(
+              NavigationPaneThemeData(
+                unselectedIconColor: WidgetStateProperty.resolveWith((states) {
+                  if (states.isDisabled) {
+                    return ButtonThemeData.buttonColor(context, states);
+                  }
+                  return ButtonThemeData.uncheckedInputColor(
+                    FluentTheme.of(context),
+                    states,
+                  ).basedOnLuminance();
+                }),
+              ),
             ),
+            child: Builder(
+              builder: (context) =>
+                  PaneItem(
+                    icon: const Icon(FluentIcons.back, size: 14.0),
+                    title: Text(localizations.backButtonTooltip),
+                    body: const SizedBox.shrink(),
+                  ).build(
+                    context,
+                    false,
+                    onPressed,
+                    displayMode: PaneDisplayMode.compact,
+                  ),
+            ),
+          );
+        } else {
+          return const SizedBox.shrink();
+        }
+        widget = ConstrainedBox(
+          constraints: const BoxConstraints(
+            minWidth: kCompactNavigationPaneWidth,
           ),
+          child: widget,
         );
-      } else {
-        return const SizedBox.shrink();
-      }
-      widget = ConstrainedBox(
-          constraints:
-              const BoxConstraints(minWidth: kCompactNavigationPaneWidth),
-          child: widget);
-      return widget;
-    });
+        return widget;
+      },
+    );
   }
 
   /// Determines the height of this app bar based on its height and the top
@@ -979,7 +1009,8 @@ class _NavigationAppBar extends StatelessWidget {
     assert(debugCheckHasMediaQuery(context));
     assert(debugCheckHasFluentLocalizations(context));
 
-    final displayMode = InheritedNavigationView.maybeOf(context)?.displayMode ??
+    final displayMode =
+        InheritedNavigationView.maybeOf(context)?.displayMode ??
         PaneDisplayMode.top;
     final leading = appBar._buildLeading(displayMode != PaneDisplayMode.top);
     final title = () {
@@ -1007,40 +1038,49 @@ class _NavigationAppBar extends StatelessWidget {
     late Widget result;
     switch (displayMode) {
       case PaneDisplayMode.top:
-        result = Stack(children: [
-          Row(children: [
-            leading,
-            if (additionalLeading != null) additionalLeading!,
-            Expanded(child: title),
-          ]),
-          if (appBar.actions != null)
-            PositionedDirectional(end: 0, child: appBar.actions!),
-        ]);
+        result = Stack(
+          children: [
+            Row(
+              children: [
+                leading,
+                if (additionalLeading != null) additionalLeading!,
+                Expanded(child: title),
+              ],
+            ),
+            if (appBar.actions != null)
+              PositionedDirectional(end: 0, child: appBar.actions!),
+          ],
+        );
         break;
       case PaneDisplayMode.minimal:
       case PaneDisplayMode.open:
       case PaneDisplayMode.compact:
-        result = Stack(children: [
-          Align(
-            alignment: AlignmentDirectional.centerStart,
-            child: Row(mainAxisSize: MainAxisSize.min, children: [
-              leading,
-              if (additionalLeading != null) additionalLeading!,
-              Flexible(child: title),
-            ]),
-          ),
-          if (appBar.actions != null)
-            PositionedDirectional(
-              start: 0,
-              end: 0.0,
-              top: 0.0,
-              bottom: 0.0,
-              child: Align(
-                alignment: AlignmentDirectional.topEnd,
-                child: appBar.actions!,
+        result = Stack(
+          children: [
+            Align(
+              alignment: AlignmentDirectional.centerStart,
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  leading,
+                  if (additionalLeading != null) additionalLeading!,
+                  Flexible(child: title),
+                ],
               ),
             ),
-        ]);
+            if (appBar.actions != null)
+              PositionedDirectional(
+                start: 0,
+                end: 0.0,
+                top: 0.0,
+                bottom: 0.0,
+                child: Align(
+                  alignment: AlignmentDirectional.topEnd,
+                  child: appBar.actions!,
+                ),
+              ),
+          ],
+        );
         break;
       default:
         return const SizedBox.shrink();

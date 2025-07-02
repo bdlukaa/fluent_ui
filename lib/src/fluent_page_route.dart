@@ -68,9 +68,9 @@ class FluentPageRoute<T> extends PageRoute<T> {
     required WidgetBuilder builder,
     super.settings,
     super.fullscreenDialog,
-  })  : _maintainState = maintainState,
-        _barrierLabel = barrierLabel,
-        _builder = builder;
+  }) : _maintainState = maintainState,
+       _barrierLabel = barrierLabel,
+       _builder = builder;
 
   @override
   Color? get barrierColor => null;

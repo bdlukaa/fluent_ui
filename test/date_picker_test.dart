@@ -9,10 +9,7 @@ void main() {
 
     await tester.pumpWidget(
       wrapApp(
-        child: DatePicker(
-          selected: selectedDate,
-          onChanged: (_) {},
-        ),
+        child: DatePicker(selected: selectedDate, onChanged: (_) {}),
       ),
     );
 
@@ -22,8 +19,9 @@ void main() {
     expect(find.text('2022'), findsOneWidget);
   });
 
-  testWidgets('DatePicker opens popup and changes date',
-      (WidgetTester tester) async {
+  testWidgets('DatePicker opens popup and changes date', (
+    WidgetTester tester,
+  ) async {
     DateTime? picked;
     final selectedDate = DateTime(2022, 5, 15);
 
@@ -56,14 +54,12 @@ void main() {
     expect(picked?.year, 2022);
   });
 
-  testWidgets('DatePicker is disabled when onChanged is null',
-      (WidgetTester tester) async {
+  testWidgets('DatePicker is disabled when onChanged is null', (
+    WidgetTester tester,
+  ) async {
     await tester.pumpWidget(
       wrapApp(
-        child: DatePicker(
-          selected: DateTime(2022, 1, 1),
-          onChanged: null,
-        ),
+        child: DatePicker(selected: DateTime(2022, 1, 1), onChanged: null),
       ),
     );
 
@@ -73,8 +69,9 @@ void main() {
     expect(find.byIcon(FluentIcons.check_mark), findsNothing);
   });
 
-  testWidgets('DatePicker respects showDay/showMonth/showYear',
-      (WidgetTester tester) async {
+  testWidgets('DatePicker respects showDay/showMonth/showYear', (
+    WidgetTester tester,
+  ) async {
     await tester.pumpWidget(
       wrapApp(
         child: DatePicker(
@@ -107,8 +104,9 @@ void main() {
     expect(find.byType(InfoLabel), findsOneWidget);
   });
 
-  testWidgets('DatePicker onCancel is called when dismissed',
-      (WidgetTester tester) async {
+  testWidgets('DatePicker onCancel is called when dismissed', (
+    WidgetTester tester,
+  ) async {
     bool cancelled = false;
     await tester.pumpWidget(
       wrapApp(
@@ -131,8 +129,9 @@ void main() {
     expect(cancelled, isTrue);
   });
 
-  testWidgets('DatePicker respects startDate and endDate',
-      (WidgetTester tester) async {
+  testWidgets('DatePicker respects startDate and endDate', (
+    WidgetTester tester,
+  ) async {
     final start = DateTime(2020, 1, 1);
     final end = DateTime(2020, 12, 31);
     await tester.pumpWidget(

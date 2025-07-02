@@ -142,27 +142,32 @@ class Expander extends StatefulWidget {
   void debugFillProperties(DiagnosticPropertiesBuilder properties) {
     super.debugFillProperties(properties);
     properties
-      ..add(DiagnosticsProperty<Duration>(
-        'animationDuration',
-        animationDuration,
-      ))
+      ..add(
+        DiagnosticsProperty<Duration>('animationDuration', animationDuration),
+      )
       ..add(DiagnosticsProperty<Curve>('animationCurve', animationCurve))
-      ..add(DiagnosticsProperty<ExpanderDirection>(
-        'direction',
-        direction,
-        defaultValue: ExpanderDirection.down,
-      ))
-      ..add(DiagnosticsProperty<bool>(
-        'initiallyExpanded',
-        initiallyExpanded,
-        defaultValue: false,
-      ))
+      ..add(
+        DiagnosticsProperty<ExpanderDirection>(
+          'direction',
+          direction,
+          defaultValue: ExpanderDirection.down,
+        ),
+      )
+      ..add(
+        DiagnosticsProperty<bool>(
+          'initiallyExpanded',
+          initiallyExpanded,
+          defaultValue: false,
+        ),
+      )
       ..add(ColorProperty('contentBackgroundColor', contentBackgroundColor))
-      ..add(DiagnosticsProperty<EdgeInsetsGeometry>(
-        'contentPadding',
-        contentPadding,
-        defaultValue: const EdgeInsets.all(16.0),
-      ));
+      ..add(
+        DiagnosticsProperty<EdgeInsetsGeometry>(
+          'contentPadding',
+          contentPadding,
+          defaultValue: const EdgeInsets.all(16.0),
+        ),
+      );
   }
 
   @override
@@ -185,7 +190,8 @@ class ExpanderState extends State<Expander>
   void initState() {
     super.initState();
     _controller = AnimationController(vsync: this);
-    _isExpanded = PageStorage.of(context).readState(context) as bool? ??
+    _isExpanded =
+        PageStorage.of(context).readState(context) as bool? ??
         widget.initiallyExpanded;
     if (_isExpanded == true) {
       _controller.value = 1;
@@ -239,13 +245,13 @@ class ExpanderState extends State<Expander>
         hitTestBehavior: HitTestBehavior.deferToChild,
         builder: (context, states) {
           return Container(
-            constraints: const BoxConstraints(
-              minHeight: 42.0,
-            ),
+            constraints: const BoxConstraints(minHeight: 42.0),
             decoration: ShapeDecoration(
-              color: widget.headerBackgroundColor?.resolve(states) ??
+              color:
+                  widget.headerBackgroundColor?.resolve(states) ??
                   theme.resources.cardBackgroundFillColorDefault,
-              shape: widget.headerShape?.call(_isExpanded) ??
+              shape:
+                  widget.headerShape?.call(_isExpanded) ??
                   RoundedRectangleBorder(
                     side: BorderSide(
                       color: theme.resources.cardStrokeColorDefault,
@@ -258,72 +264,76 @@ class ExpanderState extends State<Expander>
             ),
             padding: const EdgeInsetsDirectional.only(start: 16.0),
             alignment: AlignmentDirectional.centerStart,
-            child: Row(mainAxisSize: MainAxisSize.min, children: [
-              if (widget.leading != null)
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                if (widget.leading != null)
+                  Padding(
+                    padding: const EdgeInsetsDirectional.only(end: 10.0),
+                    child: widget.leading!,
+                  ),
+                Expanded(child: widget.header),
+                if (widget.trailing != null)
+                  Padding(
+                    padding: const EdgeInsetsDirectional.only(start: 20.0),
+                    child: widget.trailing!,
+                  ),
                 Padding(
-                  padding: const EdgeInsetsDirectional.only(end: 10.0),
-                  child: widget.leading!,
-                ),
-              Expanded(child: widget.header),
-              if (widget.trailing != null)
-                Padding(
-                  padding: const EdgeInsetsDirectional.only(start: 20.0),
-                  child: widget.trailing!,
-                ),
-              Padding(
-                padding: EdgeInsetsDirectional.only(
-                  start: widget.trailing != null ? 8.0 : 20.0,
-                  end: 8.0,
-                  top: 8.0,
-                  bottom: 8.0,
-                ),
-                child: FocusBorder(
-                  focused: states.isFocused,
-                  child: Container(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 10.0,
-                      vertical: 10.0,
-                    ),
-                    decoration: BoxDecoration(
-                      color: ButtonThemeData.uncheckedInputColor(
-                        _theme,
-                        states,
-                        transparentWhenNone: true,
+                  padding: EdgeInsetsDirectional.only(
+                    start: widget.trailing != null ? 8.0 : 20.0,
+                    end: 8.0,
+                    top: 8.0,
+                    bottom: 8.0,
+                  ),
+                  child: FocusBorder(
+                    focused: states.isFocused,
+                    child: Container(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 10.0,
+                        vertical: 10.0,
                       ),
-                      borderRadius: BorderRadius.circular(6.0),
-                    ),
-                    child: widget.icon ??
-                        RotationTransition(
-                          turns: Tween<double>(
-                            begin: 0,
-                            end: 0.5,
-                          ).animate(CurvedAnimation(
-                            parent: _controller,
-                            curve: Interval(
-                              0.5,
-                              1.0,
-                              curve: widget.animationCurve ??
-                                  _theme.animationCurve,
+                      decoration: BoxDecoration(
+                        color: ButtonThemeData.uncheckedInputColor(
+                          _theme,
+                          states,
+                          transparentWhenNone: true,
+                        ),
+                        borderRadius: BorderRadius.circular(6.0),
+                      ),
+                      child:
+                          widget.icon ??
+                          RotationTransition(
+                            turns: Tween<double>(begin: 0, end: 0.5).animate(
+                              CurvedAnimation(
+                                parent: _controller,
+                                curve: Interval(
+                                  0.5,
+                                  1.0,
+                                  curve:
+                                      widget.animationCurve ??
+                                      _theme.animationCurve,
+                                ),
+                              ),
                             ),
-                          )),
-                          child: AnimatedSlide(
-                            duration: theme.fastAnimationDuration,
-                            curve: Curves.easeInCirc,
-                            offset: states.isPressed
-                                ? const Offset(0, 0.1)
-                                : Offset.zero,
-                            child: Icon(
-                              _isDown
-                                  ? FluentIcons.chevron_down
-                                  : FluentIcons.chevron_up,
-                              size: 8.0,
+                            child: AnimatedSlide(
+                              duration: theme.fastAnimationDuration,
+                              curve: Curves.easeInCirc,
+                              offset: states.isPressed
+                                  ? const Offset(0, 0.1)
+                                  : Offset.zero,
+                              child: Icon(
+                                _isDown
+                                    ? FluentIcons.chevron_down
+                                    : FluentIcons.chevron_up,
+                                size: 8.0,
+                              ),
                             ),
                           ),
-                        ),
+                    ),
                   ),
                 ),
-              ),
-            ]),
+              ],
+            ),
           );
         },
       ),
@@ -340,21 +350,21 @@ class ExpanderState extends State<Expander>
           width: double.infinity,
           padding: widget.contentPadding,
           decoration: ShapeDecoration(
-            shape: widget.contentShape?.call(_isExpanded) ??
+            shape:
+                widget.contentShape?.call(_isExpanded) ??
                 RoundedRectangleBorder(
                   side: BorderSide(
                     color: theme.resources.cardStrokeColorDefault,
                   ),
-                  borderRadius:
-                      const BorderRadius.vertical(bottom: Radius.circular(6.0)),
+                  borderRadius: const BorderRadius.vertical(
+                    bottom: Radius.circular(6.0),
+                  ),
                 ),
-            color: widget.contentBackgroundColor ??
+            color:
+                widget.contentBackgroundColor ??
                 theme.resources.cardBackgroundFillColorSecondary,
           ),
-          child: ExcludeFocus(
-            excluding: !_isExpanded,
-            child: widget.content,
-          ),
+          child: ExcludeFocus(excluding: !_isExpanded, child: widget.content),
         ),
       ),
     ];
