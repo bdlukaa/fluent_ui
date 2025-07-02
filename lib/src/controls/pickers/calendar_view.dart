@@ -820,22 +820,6 @@ class CalendarViewState extends State<CalendarView> {
   }
 
   Widget _buildMonthView() {
-    final firstMonth = widget.displayDateStart?.month ?? 1;
-    final reverseGridMonthCount =
-        (_anchorMonth.year - _minDisplayedYear) * 12 -
-        firstMonth +
-        _anchorMonth.month;
-    final reverseGridCount =
-        reverseGridMonthCount * 4; // Assuming each month have 04 weeks
-
-    final int lastMonth = widget.displayDateEnd?.month ?? 12;
-    final int forwardGridMonthCount =
-        (_maxDisplayedYear - _anchorMonth.year) * 12 +
-        lastMonth -
-        _anchorMonth.month +
-        1;
-    final forwardGridCount = forwardGridMonthCount * 4 + 1;
-
     return Column(
       mainAxisSize: MainAxisSize.min,
       spacing: 4,
@@ -866,6 +850,14 @@ class CalendarViewState extends State<CalendarView> {
                 mainAxisExtent: _rowHeight,
               );
 
+              final firstMonth = widget.displayDateStart?.month ?? 1;
+              final reverseGridMonthCount =
+                  (_anchorMonth.year - _minDisplayedYear) * 12 -
+                  firstMonth +
+                  _anchorMonth.month;
+              final reverseGridCount =
+                  reverseGridMonthCount *
+                  4; // Assuming each month have 04 weeks
               final reverseGrid = SliverGrid(
                 gridDelegate: gridDelegate,
                 delegate: SliverChildBuilderDelegate((context, index) {
@@ -885,6 +877,13 @@ class CalendarViewState extends State<CalendarView> {
                 }, childCount: reverseGridCount),
               );
 
+              final int lastMonth = widget.displayDateEnd?.month ?? 12;
+              final int forwardGridMonthCount =
+                  (_maxDisplayedYear - _anchorMonth.year) * 12 +
+                  lastMonth -
+                  _anchorMonth.month +
+                  1;
+              final forwardGridCount = forwardGridMonthCount * 4 + 1;
               final forwardGrid = SliverGrid(
                 key: forwardListKey,
                 gridDelegate: gridDelegate,
@@ -919,19 +918,6 @@ class CalendarViewState extends State<CalendarView> {
 
   double get _yearViewHeight => (widget.yearsPerView / 4) * _yearRowHeight;
   Widget _buildYearView() {
-    final firstMonth = widget.displayDateStart?.month ?? 1;
-    final reverseGridCount =
-        (_anchorMonth.year - _minDisplayedYear) * 12 -
-        firstMonth +
-        _anchorMonth.month;
-
-    final int lastMonth = widget.displayDateEnd?.month ?? 12;
-    final int forwardGridCount =
-        (_maxDisplayedYear - _anchorMonth.year) * 12 +
-        lastMonth -
-        _anchorMonth.month +
-        1;
-
     return Column(
       mainAxisSize: MainAxisSize.min,
       spacing: 4,
@@ -952,12 +938,33 @@ class CalendarViewState extends State<CalendarView> {
                 childAspectRatio: 1.1,
               );
 
+              final reverseGridCount =
+                  (_anchorMonth.year - _minDisplayedYear) * 12;
+
+              final int lastMonth = widget.displayDateEnd?.month ?? 12;
+              final int forwardGridCount =
+                  (_maxDisplayedYear - _anchorMonth.year) * 12 +
+                  lastMonth -
+                  _anchorMonth.month +
+                  1;
               final reverseGrid = SliverGrid(
                 gridDelegate: gridDelegate,
                 delegate: SliverChildBuilderDelegate((context, index) {
                   final nIndex = _getNegativeIndex(index, 4);
                   final year = _anchorMonth.year - 1 + (nIndex ~/ 13);
                   final monthNumber = (nIndex % 12) + 1;
+
+                  final isMonthVisible =
+                      widget.displayDateStart != null &&
+                      DateTime(
+                        year,
+                        monthNumber,
+                      ).isAfter(widget.displayDateStart!);
+
+                  if (!isMonthVisible) {
+                    return SizedBox.shrink(key: ValueKey(year));
+                  }
+
                   return _buildYearItem(year, monthNumber);
                 }, childCount: reverseGridCount),
               );
