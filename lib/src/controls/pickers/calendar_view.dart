@@ -346,6 +346,17 @@ class CalendarViewState extends State<CalendarView> {
   void didUpdateWidget(covariant CalendarView oldWidget) {
     super.didUpdateWidget(oldWidget);
 
+    if (widget.displayDateStart != oldWidget.displayDateStart ||
+        widget.displayDateEnd != oldWidget.displayDateEnd) {
+      final currentDate = DateTime.now();
+      _minDisplayedYear =
+          widget.displayDateStart?.year ??
+          currentDate.year - (_defaultDisplayedYearCount ~/ 2);
+      _maxDisplayedYear =
+          widget.displayDateEnd?.year ??
+          currentDate.year + (_defaultDisplayedYearCount ~/ 2);
+    }
+
     if (widget.selectionMode != oldWidget.selectionMode) {
       _selectedStart = widget.initialStart;
       _selectedEnd = widget.selectionMode == CalendarViewSelectionMode.range
@@ -1031,8 +1042,32 @@ class CalendarViewState extends State<CalendarView> {
                 delegate: SliverChildBuilderDelegate((context, index) {
                   final nIndex = _getNegativeIndex(index, 4);
                   final year = visibleDecade.year + nIndex;
-                  return _buildDecadeItem(year);
-                }, childCount: visibleDecade.year - _minDisplayedYear - 1),
+
+                  // If the year is not within the display range, we need to skip it.
+                  // This ensures the grid structure is maintained due to the
+                  // nature of the reverse grid.
+                  final isYearDisplayed =
+                      year >= _minDisplayedYear && year <= _maxDisplayedYear;
+                  if (!isYearDisplayed) {
+                    final yearsInCurrentRow = [
+                      visibleDecade.year + nIndex,
+                      visibleDecade.year + nIndex + 1,
+                      visibleDecade.year + nIndex + 2,
+                      visibleDecade.year + nIndex + 3,
+                    ];
+
+                    if (!yearsInCurrentRow.any((y) => y >= _minDisplayedYear)) {
+                      return null;
+                    }
+
+                    return SizedBox.shrink(key: ValueKey(year));
+                  }
+
+                  return KeyedSubtree(
+                    key: ValueKey(year),
+                    child: _buildDecadeItem(year),
+                  );
+                }),
               );
 
               final forwardGrid = SliverGrid(
