@@ -1,0 +1,16 @@
+{
+  "version": 3,
+  "engine": "v2",
+  "file": "main.dart.js_2.part.js",
+  "sourceRoot": "",
+  "sources": ["../../../../lib/src/controls/inputs/toggle_button.dart","../../../../lib/src/controls/buttons/theme.dart","/opt/hostedtoolcache/flutter/3.32.5-stable/x64/packages/flutter/lib/src/widgets/widget_state.dart","../../../../lib/src/styles/theme.dart","/opt/hostedtoolcache/flutter/3.32.5-stable/x64/packages/flutter/lib/src/widgets/basic.dart"],
+  "names": ["ToggleButton","ToggleButtonThemeData.standard","WidgetStateProperty.resolveWith","ToggleButton.build","ToggleButtonTheme.of","ToggleButtonTheme._getInheritedThemeData","ToggleButton.build.<anonymous function>","ToggleButtonThemeData.standard.<anonymous function>","","_getInheritedThemeData","checkedInputColor","of","resolveWith"],
+  "mappings": "A;;;0DAWQA;uCASJA,C;GAgIMC,IALFA;AAMJA,gBC/IIA,WC24BNC,SFzvBQD,gBEyvBRC,SFnvBQD,sBEmvBRC,SFtvBQD,uBAORA,C;;;;;;;;;;;;;;CAvGOE,IAgEwBA,oCGvGtBC,MAA0DA;AHwFnDA;AGxFPC,QAA0DA;AHuGpCF,QAbiBC,KAjDFD;AAIJA,GAA3BA;GACJA;AAJFA,KAIkBA,IAA2BA;AAJpDA,eIklOFA,SAmFmBA,0IAsEQA,mBJtuOmBA,uBAE9CA,C;;;EAJ0CG,GAAeA,UAATA;gBAAYA,GAAQA,C;;AC0Q9CC;EDnLdA,IAAYA,gBAAkCA,KAAcA,C;;AAGnCA;EAAzBA,IAAYA,iBAAyBA,KAAcA,C;;AAG1BA;EAAzBA,IAAYA,gBAA6BA,KAAcA,C",
+  "x_org_dartlang_dart2js": {
+    "minified_names": {
+      "global": "",
+      "instance": ""
+    },
+    "frames": "0QAqJWQiB;gBACeAW;AACmBIAEssBvCJS,A;gBFhsBuCIAEgsBvCJS,A;sBFnsB6BIAEmsB7BJS,A;oRFhyB8BGoCA+DlBAU,AACNFSAf0BEW,A,QAe1BFK,A;kEA1DCDsK;kHAqFyBEoB;"
+  }
+}
