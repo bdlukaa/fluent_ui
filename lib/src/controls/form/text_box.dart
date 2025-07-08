@@ -1018,7 +1018,7 @@ class _TextBoxState extends State<TextBox>
       return false;
     }
 
-    if (cause == SelectionChangedCause.scribble) {
+    if (cause == SelectionChangedCause.stylusHandwriting) {
       return true;
     }
 

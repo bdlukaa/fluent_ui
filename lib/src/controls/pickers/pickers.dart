@@ -348,7 +348,7 @@ class PickerState extends State<Picker> {
         opaque: false,
         barrierDismissible: true,
         fullscreenDialog: true,
-        pageBuilder: (context, primary, __) {
+        pageBuilder: (context, primary, _) {
           assert(debugCheckHasFluentTheme(context));
           assert(debugCheckHasMediaQuery(context));
 

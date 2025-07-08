@@ -1,5 +1,3 @@
-library fluent_ui;
-
 export 'package:flutter/material.dart'
     show
         Brightness,

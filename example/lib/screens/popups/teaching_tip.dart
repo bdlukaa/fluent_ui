@@ -5,7 +5,7 @@ import 'package:fluent_ui/fluent_ui.dart';
 import 'package:provider/provider.dart';
 
 class TeachingTipPage extends StatefulWidget {
-  const TeachingTipPage({Key? key}) : super(key: key);
+  const TeachingTipPage({super.key});
 
   @override
   State<TeachingTipPage> createState() => _TeachingTipPageState();

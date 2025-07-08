@@ -1020,7 +1020,7 @@ class CalendarViewState extends State<CalendarView> {
   Widget _buildYearItem(int year, int monthNumber) {
     return ValueListenableBuilder(
       valueListenable: _scrollDate,
-      builder: (context, _, __) {
+      builder: (context, _, _) {
         final locale = widget.locale ?? Localizations.localeOf(context);
 
         final isCurrentYear = visibleDate.year == year;
@@ -1129,7 +1129,7 @@ class CalendarViewState extends State<CalendarView> {
   Widget _buildDecadeItem(int year) {
     return ValueListenableBuilder(
       valueListenable: _scrollDate,
-      builder: (context, _, __) {
+      builder: (context, _, _) {
         final isCurrentYear = year == DateTime.now().year;
         final isDisabled =
             (widget.minDate != null &&

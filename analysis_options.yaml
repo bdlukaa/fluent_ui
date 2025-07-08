@@ -6,3 +6,5 @@ exclude:
 
 linter:
   rules:
+    unintended_html_in_doc_comment: false
+    prefer_const_constructors: true
