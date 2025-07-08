@@ -6,7 +6,7 @@ import 'package:flutter/foundation.dart';
 /// Eyeballed from Windows 10
 const double kPageDefaultVerticalPadding = 24.0;
 
-/// Creates a page that follows fluent-ui design guidelines.
+/// Creates a page that follows Windows-ui design guidelines.
 ///
 /// See also:
 ///
@@ -187,7 +187,8 @@ class _ScaffoldPageState extends State<ScaffoldPage> {
 ///
 /// See also:
 ///
-///   * [ScaffoldPage], which creates a page that follows fluent-ui design guidelines.
+///   * [ScaffoldPage], which creates a page that follows Windows-ui design
+///                     guidelines.
 ///   * [Typography.title], which is the default style used by the header
 ///   * [CommandBar], which provide quick access to common tasks on the page
 class PageHeader extends StatelessWidget {

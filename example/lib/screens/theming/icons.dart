@@ -56,7 +56,7 @@ class _IconsPageState extends State<IconsPage> {
 
     return ScaffoldPage(
       header: PageHeader(
-        title: const Text('Fluent Icons Gallery showcase'),
+        title: const Text('Windows Icons Gallery showcase'),
         commandBar: SizedBox(
           width: 240.0,
           child: Tooltip(

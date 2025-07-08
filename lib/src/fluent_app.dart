@@ -7,11 +7,11 @@ import 'package:flutter_localizations/flutter_localizations.dart'
         GlobalWidgetsLocalizations,
         GlobalCupertinoLocalizations;
 
-/// An application that uses fluent design.
+/// An application that uses Windows design.
 ///
 /// A convenience widget that wraps a number of widgets that are commonly
-/// required for fluent design applications. It builds upon a [WidgetsApp] by
-/// adding fluent-design specific functionality, such as [AnimatedFluentTheme].
+/// required for Windows design applications. It builds upon a [WidgetsApp] by
+/// adding windows-design specific functionality, such as [AnimatedFluentTheme].
 ///
 /// The [FluentApp] configures the top-level [Navigator] to search for routes
 /// in the following order:
@@ -38,10 +38,9 @@ import 'package:flutter_localizations/flutter_localizations.dart'
 ///
 /// See also:
 ///
-///  * [NavigationView], to provide fluent app-wide navigation
+///  * [NavigationView], to provide app-wide navigation
 ///  * [Navigator], which is used to manage the app's stack of pages.
-///  * [WidgetsApp], which defines the basic app elements but does not depend on
-/// the fluent library.
+///  * [WidgetsApp], which defines the basic app elements.
 class FluentApp extends StatefulWidget {
   /// Creates a FluentApp.
   ///
@@ -149,7 +148,7 @@ class FluentApp extends StatefulWidget {
        initialRoute = null;
 
   /// Default visual properties, like colors fonts and shapes, for this app's
-  /// fluent widgets.
+  /// Windows widgets.
   ///
   /// A second [darkTheme] [FluentThemeData] value, which is used to provide a dark
   /// version of the user interface can also be specified. [themeMode] will
@@ -238,7 +237,7 @@ class FluentApp extends StatefulWidget {
 
   /// {@macro flutter.widgets.widgetsApp.builder}
   ///
-  /// Fluent specific features such as [showDialog] and [showMenu], and widgets
+  /// Windows specific features such as [showDialog] and [showMenu], and widgets
   /// such as [Tooltip], [PopupMenuButton], also require a [Navigator] to properly
   /// function.
   final TransitionBuilder? builder;

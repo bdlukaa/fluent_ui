@@ -1,8 +1,7 @@
 // ignore_for_file: constant_identifier_names
 
-import 'package:flutter/foundation.dart';
-
 import 'package:fluent_ui/fluent_ui.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter_acrylic/flutter_acrylic.dart';
 import 'package:provider/provider.dart';
 
@@ -239,7 +238,7 @@ class _SettingsState extends State<Settings> with PageMixin {
         Text('Locale', style: FluentTheme.of(context).typography.subtitle),
         description(
           content: const Text(
-            'The locale used by the fluent_ui widgets, such as TimePicker and '
+            'The locale used by the Windows UI widgets, such as TimePicker and '
             'DatePicker. This does not reflect the language of this showcase app.',
           ),
         ),

@@ -29,7 +29,7 @@ enum SpinButtonPlacementMode {
   none,
 }
 
-/// A fluent design input form for numbers.
+/// A Windows design input form for numbers.
 ///
 /// A NumberBox lets the user enter a number. If the user input a wrong value
 /// (a NaN value), the previous valid value is used.

@@ -26,7 +26,7 @@ enum PasswordRevealMode {
   visible,
 }
 
-/// A fluent design input form for password.
+/// A Windows design input form for password.
 ///
 /// A password box is a text input box that conceals the characters typed into
 /// it for the purpose of privacy. A password box looks like a text box, except

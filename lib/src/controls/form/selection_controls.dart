@@ -199,7 +199,7 @@ class FluentTextSelectionToolbar extends StatelessWidget {
 
 final fluentTextSelectionControls = FluentTextSelectionControls();
 
-/// Fluent styled text selection handle controls.
+/// Windows styled text selection handle controls.
 ///
 /// Specifically does not manage the toolbar, which is left to
 /// [EditableText.contextMenuBuilder].
@@ -213,7 +213,7 @@ class FluentTextSelectionControls extends TextSelectionControls {
 
   FluentTextSelectionControls({this.undoHistoryController});
 
-  /// Fluent has no text selection handles.
+  /// Windows has no text selection handles.
   @override
   Size getHandleSize(double textLineHeight) {
     return Size.zero;
@@ -291,7 +291,7 @@ class FluentTextSelectionControls extends TextSelectionControls {
   }
 }
 
-// /// Text selection controls that loosely follows Fluent design conventions.
+// /// Text selection controls that loosely follows Windows design conventions.
 // Generates the child that's passed into FluentTextSelectionToolbar.
 class _FluentTextSelectionControlsToolbar extends StatefulWidget {
   const _FluentTextSelectionControlsToolbar({
@@ -474,7 +474,7 @@ class _FluentTextSelectionControlsToolbarState
   }
 }
 
-/// A Fluent-style desktop text selection toolbar.
+/// A Windows-style desktop text selection toolbar.
 ///
 /// Typically displays buttons for text manipulation, e.g. copying and pasting
 /// text.
@@ -546,7 +546,7 @@ class _FluentTextSelectionToolbar extends StatelessWidget {
   }
 }
 
-/// A button for the Fluent desktop text selection toolbar.
+/// A button for the Windows desktop text selection toolbar.
 class _FluentTextSelectionToolbarButton extends StatelessWidget {
   const _FluentTextSelectionToolbarButton({
     required this.onPressed,

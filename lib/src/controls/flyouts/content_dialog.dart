@@ -257,7 +257,7 @@ Future<T?> showDialog<T extends Object?>({
   );
 }
 
-/// A dialog route with Fluent entrance and exit animations.
+/// A dialog route with Windows entrance and exit animations.
 ///
 /// It is used internally by [showDialog] or can be directly pushed
 /// onto the [Navigator] stack to enable state restoration. See
@@ -295,7 +295,7 @@ Future<T?> showDialog<T extends Object?>({
 ///  * [showDialog], which is a way to display a DialogRoute.
 ///  * [showGeneralDialog], which allows for customization of the dialog popup.
 class FluentDialogRoute<T> extends RawDialogRoute<T> {
-  /// A dialog route with Fluent entrance and exit animations,
+  /// A dialog route with Windows entrance and exit animations,
   /// modal barrier color
   FluentDialogRoute({
     required WidgetBuilder builder,
