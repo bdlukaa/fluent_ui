@@ -26,7 +26,7 @@ void main(List<String> args) async {
     return;
   }
 
-  final iconsFile = File('bin/fabric-icons.json');
+  final iconsFile = File('bin/windows_icons/segoeicons.json');
   final iconsString = await iconsFile.readAsString();
   final iconsJson = json.decode(iconsString) as Map<String, dynamic>;
   final glyphs =
@@ -39,7 +39,7 @@ void main(List<String> args) async {
   final dartFileBuffer = StringBuffer(fileHeader);
   for (final glyph in glyphs) {
     dartFileBuffer.writeln(
-      "  static const IconData ${glyph.name} = IconData(0x${glyph.codepoint}, fontFamily: 'FluentIcons', fontPackage: 'fluent_ui',);\n",
+      "  static const IconData ${glyph.name} = IconData(0x${glyph.codepoint}, fontFamily: 'SegoeIcons', fontPackage: 'fluent_ui',);\n",
     );
   }
 
@@ -51,7 +51,7 @@ void main(List<String> args) async {
   dartFileBuffer
     ..writeln('  };')
     ..writeln('}');
-  final outputFile = File('lib/src/icons.dart');
+  final outputFile = File('lib/src/windows_icons.dart');
   final formatProcess = await Process.start('flutter', [
     'format',
     outputFile.path,
@@ -95,8 +95,8 @@ const String fileHeader = """
 
 import 'package:flutter/widgets.dart' show IconData;
 
-class FluentIcons {
-  const FluentIcons._();
+class WindowsIcons {
+  const WindowsIcons._();
 
 """;
 

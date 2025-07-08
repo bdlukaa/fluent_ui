@@ -31,7 +31,7 @@ dependencies:
   recase: ^4.1.0
 
   # Used on NumberBox
-  math_expressions: ^2.4.0
+  math_expressions: ^2.7.0
 
 dev_dependencies:
   flutter_test:
@@ -48,3 +48,6 @@ flutter:
     - family: FluentIcons
       fonts:
         - asset: fonts/FluentIcons.ttf
+    - family: SegoeIcons
+      fonts:
+        - asset: fonts/SegoeIcons.ttf

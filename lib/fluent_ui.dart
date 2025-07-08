@@ -99,6 +99,7 @@ export 'src/controls/utils/scrollbar.dart';
 export 'src/fluent_app.dart';
 export 'src/fluent_page_route.dart';
 export 'src/icons.dart';
+export 'src/windows_icons.dart';
 export 'src/styles/color.dart';
 export 'src/styles/color_resources.dart';
 export 'src/styles/page_transitions.dart';

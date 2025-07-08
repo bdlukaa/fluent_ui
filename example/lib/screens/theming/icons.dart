@@ -40,7 +40,7 @@ class _IconsPageState extends State<IconsPage> {
   Widget build(BuildContext context) {
     assert(debugCheckHasFluentTheme(context));
 
-    final entries = FluentIcons.allIcons.entries.where(
+    final entries = WindowsIcons.allIcons.entries.where(
       (icon) =>
           filterText.isEmpty ||
           // Remove '_'
@@ -95,7 +95,7 @@ class _IconsPageState extends State<IconsPage> {
           final e = entries.elementAt(index);
           return HoverButton(
             onPressed: () async {
-              final copyText = 'FluentIcons.${e.key}';
+              final copyText = 'WindowsIcons.${e.key}';
               await FlutterClipboard.copy(copyText);
               if (context.mounted) showCopiedSnackbar(context, copyText);
             },
@@ -107,7 +107,7 @@ class _IconsPageState extends State<IconsPage> {
                 child: Tooltip(
                   useMousePosition: false,
                   message:
-                      '\nFluentIcons.${e.key}\n(tap to copy to clipboard)\n',
+                      '\nWindowsIcons.${e.key}\n(tap to copy to clipboard)\n',
                   child: RepaintBoundary(
                     child: AnimatedContainer(
                       duration: FluentTheme.of(context).fasterAnimationDuration,
