@@ -25,9 +25,7 @@ class _CalendarViewPageState extends State<CalendarViewPage> with PageMixin {
         title: const Text('CalendarView'),
         commandBar: Button(
           onPressed: () {
-            setState(
-              () => isOutOfScopeEnabled = isGroupLabelVisible = false,
-            );
+            setState(() => isOutOfScopeEnabled = isGroupLabelVisible = false);
             key.currentState?.navigateToMonth(DateTime.now());
           },
           child: const Text('Reset'),
@@ -44,7 +42,8 @@ class _CalendarViewPageState extends State<CalendarViewPage> with PageMixin {
         ),
         subtitle(content: const Text('A basic calendar View')),
         CardHighlight(
-          codeSnippet: '''CalendarView(
+          codeSnippet:
+              '''CalendarView(
   selectionMode: $selectionMode,
   onSelectionChanged: (value) {
     debugPrint('\${value.selectedDates}');
@@ -90,33 +89,37 @@ class _CalendarViewPageState extends State<CalendarViewPage> with PageMixin {
                     const Text('SelectionMode'),
                     ComboBox<CalendarViewSelectionMode>(
                       value: selectionMode,
-                      items: CalendarViewSelectionMode.values.map(
-                        (e) {
-                          return ComboBoxItem(
-                            value: e,
-                            child: Text(e.name.uppercaseFirst()),
-                          );
-                        },
-                      ).toList(),
+                      items: CalendarViewSelectionMode.values.map((e) {
+                        return ComboBoxItem(
+                          value: e,
+                          child: Text(e.name.uppercaseFirst()),
+                        );
+                      }).toList(),
                       onChanged: (m) => setState(() => selectionMode = m!),
                     ),
                     const Text('Language'),
                     ComboBox<Locale>(
                       value: currentLocale,
                       items: FluentLocalizations.supportedLocales
-                          .map((e) => ComboBoxItem(
-                                value: e,
-                                child: Text(_LanguageLocal.getDisplayLanguage(
-                                        e.languageCode)['name'] ??
-                                    e.languageCode.uppercaseFirst()),
-                              ))
+                          .map(
+                            (e) => ComboBoxItem(
+                              value: e,
+                              child: Text(
+                                _LanguageLocal.getDisplayLanguage(
+                                      e.languageCode,
+                                    )['name'] ??
+                                    e.languageCode.uppercaseFirst(),
+                              ),
+                            ),
+                          )
                           .toList(),
                       onChanged: (v) {
                         setState(() {
                           locale = FluentLocalizations.supportedLocales
                               .singleWhere(
-                                  (l) => l.languageCode == v?.languageCode,
-                                  orElse: () => const Locale('en'));
+                                (l) => l.languageCode == v?.languageCode,
+                                orElse: () => const Locale('en'),
+                              );
                         });
                       },
                     ),
@@ -163,7 +166,7 @@ class _LanguageLocal {
     "ce": {"name": "Chechen", "nativeName": "нохчийн мотт"},
     "ny": {
       "name": "Chichewa; Chewa; Nyanja",
-      "nativeName": "chiCheŵa, chinyanja"
+      "nativeName": "chiCheŵa, chinyanja",
     },
     "zh": {"name": "Chinese", "nativeName": "中文 (Zhōngwén), 汉语, 漢語"},
     "cv": {"name": "Chuvash", "nativeName": "чӑваш чӗлхи"},
@@ -185,7 +188,7 @@ class _LanguageLocal {
     "fr": {"name": "French", "nativeName": "français, langue française"},
     "ff": {
       "name": "Fula; Fulah; Pulaar; Pular",
-      "nativeName": "Fulfulde, Pulaar, Pular"
+      "nativeName": "Fulfulde, Pulaar, Pular",
     },
     "gl": {"name": "Galician", "nativeName": "Galego"},
     "ka": {"name": "Georgian", "nativeName": "ქართული"},
@@ -204,7 +207,7 @@ class _LanguageLocal {
     "id": {"name": "Indonesian", "nativeName": "Bahasa Indonesia"},
     "ie": {
       "name": "Interlingue",
-      "nativeName": "Originally called Occidental; then Interlingue after WWII"
+      "nativeName": "Originally called Occidental; then Interlingue after WWII",
     },
     "ga": {"name": "Irish", "nativeName": "Gaeilge"},
     "ig": {"name": "Igbo", "nativeName": "Asụsụ Igbo"},
@@ -217,7 +220,7 @@ class _LanguageLocal {
     "jv": {"name": "Javanese", "nativeName": "basa Jawa"},
     "kl": {
       "name": "Kalaallisut, Greenlandic",
-      "nativeName": "kalaallisut, kalaallit oqaasii"
+      "nativeName": "kalaallisut, kalaallit oqaasii",
     },
     "kn": {"name": "Kannada", "nativeName": "ಕನ್ನಡ"},
     "kr": {"name": "Kanuri", "nativeName": "Kanuri"},
@@ -235,12 +238,12 @@ class _LanguageLocal {
     "la": {"name": "Latin", "nativeName": "latine, lingua latina"},
     "lb": {
       "name": "Luxembourgish, Letzeburgesch",
-      "nativeName": "Lëtzebuergesch"
+      "nativeName": "Lëtzebuergesch",
     },
     "lg": {"name": "Luganda", "nativeName": "Luganda"},
     "li": {
       "name": "Limburgish, Limburgan, Limburger",
-      "nativeName": "Limburgs"
+      "nativeName": "Limburgs",
     },
     "ln": {"name": "Lingala", "nativeName": "Lingála"},
     "lo": {"name": "Lao", "nativeName": "ພາສາລາວ"},
@@ -272,7 +275,7 @@ class _LanguageLocal {
     "cu": {
       "name":
           "Old Church Slavonic, Church Slavic, Church Slavonic, Old Bulgarian, Old Slavonic",
-      "nativeName": "ѩзыкъ словѣньскъ"
+      "nativeName": "ѩзыкъ словѣньскъ",
     },
     "om": {"name": "Oromo", "nativeName": "Afaan Oromoo"},
     "or": {"name": "Oriya", "nativeName": "ଓଡ଼ିଆ"},
@@ -314,7 +317,7 @@ class _LanguageLocal {
     "ti": {"name": "Tigrinya", "nativeName": "ትግርኛ"},
     "bo": {
       "name": "Tibetan Standard, Tibetan, Central",
-      "nativeName": "བོད་ཡིག"
+      "nativeName": "བོད་ཡིག",
     },
     "tk": {"name": "Turkmen", "nativeName": "Türkmen, Түркмен"},
     "tl": {"name": "Tagalog", "nativeName": "Wikang Tagalog, ᜏᜒᜃᜅ᜔ ᜆᜄᜎᜓᜄ᜔"},
@@ -339,7 +342,7 @@ class _LanguageLocal {
     "xh": {"name": "Xhosa", "nativeName": "isiXhosa"},
     "yi": {"name": "Yiddish", "nativeName": "ייִדיש"},
     "yo": {"name": "Yoruba", "nativeName": "Yorùbá"},
-    "za": {"name": "Zhuang, Chuang", "nativeName": "Saɯ cueŋƅ, Saw cuengh"}
+    "za": {"name": "Zhuang, Chuang", "nativeName": "Saɯ cueŋƅ, Saw cuengh"},
   };
 
   static Map<String, String> getDisplayLanguage(String key) =>

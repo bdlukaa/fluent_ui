@@ -22,9 +22,8 @@ class _TimePickerPageState extends State<TimePickerPage> with PageMixin {
       header: PageHeader(
         title: const Text('TimePicker'),
         commandBar: Button(
-          onPressed: () => setState(
-            () => simpleTime = arrivalTime = hhTime = null,
-          ),
+          onPressed: () =>
+              setState(() => simpleTime = arrivalTime = hhTime = null),
           child: const Text('Clear'),
         ),
       ),
@@ -47,18 +46,20 @@ TimePicker(
   selected: selected,
   onChanged: (time) => setState(() => selected = time),
 ),''',
-          child: Row(children: [
-            TimePicker(
-              key: timePickerKey,
-              selected: simpleTime,
-              onChanged: (time) => setState(() => simpleTime = time),
-            ),
-            const Spacer(),
-            Button(
-              onPressed: () => timePickerKey.currentState?.open(),
-              child: const Text('Show picker'),
-            ),
-          ]),
+          child: Row(
+            children: [
+              TimePicker(
+                key: timePickerKey,
+                selected: simpleTime,
+                onChanged: (time) => setState(() => simpleTime = time),
+              ),
+              const Spacer(),
+              Button(
+                onPressed: () => timePickerKey.currentState?.open(),
+                child: const Text('Show picker'),
+              ),
+            ],
+          ),
         ),
         subtitle(
           content: const Text(
@@ -74,20 +75,18 @@ TimePicker(
   header: 'Arrival time',
   minuteIncrement: 15,
 ),''',
-          child: Row(children: [
-            TimePicker(
-              header: 'Arrival time',
-              selected: arrivalTime,
-              onChanged: (time) => setState(() => arrivalTime = time),
-              minuteIncrement: 15,
-            ),
-          ]),
-        ),
-        subtitle(
-          content: const Text(
-            'A TimePicker using a 24-hour clock',
+          child: Row(
+            children: [
+              TimePicker(
+                header: 'Arrival time',
+                selected: arrivalTime,
+                onChanged: (time) => setState(() => arrivalTime = time),
+                minuteIncrement: 15,
+              ),
+            ],
           ),
         ),
+        subtitle(content: const Text('A TimePicker using a 24-hour clock')),
         CardHighlight(
           codeSnippet: '''DateTime? selected;
         

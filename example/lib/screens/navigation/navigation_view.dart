@@ -100,19 +100,24 @@ class _NavigationViewPageState extends State<NavigationViewPage>
       ],
     ),
     PaneItemWidgetAdapter(
-      child: Builder(builder: (context) {
-        if (NavigationView.of(context).displayMode == PaneDisplayMode.compact) {
-          return const FlutterLogo();
-        }
-        return ConstrainedBox(
-          constraints: const BoxConstraints(maxWidth: 200.0),
-          child: const Row(children: [
-            FlutterLogo(),
-            SizedBox(width: 6.0),
-            Text('This is a custom widget'),
-          ]),
-        );
-      }),
+      child: Builder(
+        builder: (context) {
+          if (NavigationView.of(context).displayMode ==
+              PaneDisplayMode.compact) {
+            return const FlutterLogo();
+          }
+          return ConstrainedBox(
+            constraints: const BoxConstraints(maxWidth: 200.0),
+            child: const Row(
+              children: [
+                FlutterLogo(),
+                SizedBox(width: 6.0),
+                Text('This is a custom widget'),
+              ],
+            ),
+          );
+        },
+      ),
     ),
   ];
 
@@ -160,73 +165,73 @@ class _NavigationViewPageState extends State<NavigationViewPage>
   ) {
     if (displayMode != this.displayMode) return [];
     return [
-      Wrap(runSpacing: 10.0, spacing: 10.0, children: [
-        InfoLabel(
-          label: 'Display mode',
-          child: ComboBox<PaneDisplayMode>(
-            value: displayMode,
-            items: ([...PaneDisplayMode.values]..remove(PaneDisplayMode.auto))
-                .map((mode) {
-              return ComboBoxItem(
-                value: mode,
-                child: Text(
-                  mode.name.uppercaseFirst(),
-                ),
-              );
-            }).toList(),
-            onChanged: (mode) => setState(
-              () => this.displayMode = mode ?? displayMode,
+      Wrap(
+        runSpacing: 10.0,
+        spacing: 10.0,
+        children: [
+          InfoLabel(
+            label: 'Display mode',
+            child: ComboBox<PaneDisplayMode>(
+              value: displayMode,
+              items: ([...PaneDisplayMode.values]..remove(PaneDisplayMode.auto))
+                  .map((mode) {
+                    return ComboBoxItem(
+                      value: mode,
+                      child: Text(mode.name.uppercaseFirst()),
+                    );
+                  })
+                  .toList(),
+              onChanged: (mode) =>
+                  setState(() => this.displayMode = mode ?? displayMode),
             ),
           ),
-        ),
-        InfoLabel(
-          label: 'Page Transition',
-          child: ComboBox<String>(
-            items: pageTransitions
-                .map((e) => ComboBoxItem(value: e, child: Text(e)))
-                .toList(),
-            value: pageTransition,
-            onChanged: (transition) => setState(
-              () => pageTransition = transition ?? pageTransition,
+          InfoLabel(
+            label: 'Page Transition',
+            child: ComboBox<String>(
+              items: pageTransitions
+                  .map((e) => ComboBoxItem(value: e, child: Text(e)))
+                  .toList(),
+              value: pageTransition,
+              onChanged: (transition) =>
+                  setState(() => pageTransition = transition ?? pageTransition),
             ),
           ),
-        ),
-        InfoLabel(
-          label: 'Indicator',
-          child: ComboBox<String>(
-            items: indicators.keys
-                .map((e) => ComboBoxItem(value: e, child: Text(e)))
-                .toList(),
-            value: indicator,
-            onChanged: (i) => setState(
-              () => indicator = i ?? indicator,
+          InfoLabel(
+            label: 'Indicator',
+            child: ComboBox<String>(
+              items: indicators.keys
+                  .map((e) => ComboBoxItem(value: e, child: Text(e)))
+                  .toList(),
+              value: indicator,
+              onChanged: (i) => setState(() => indicator = i ?? indicator),
             ),
           ),
-        ),
-        InfoLabel(
-          label: '',
-          child: Button(
-            onPressed: () {
-              Navigator.of(
-                context,
-                rootNavigator: true,
-              ).push(FluentPageRoute(builder: (context) {
-                return const NavigationViewShellRoute();
-              }));
-            },
-            child: const Text('Open in a new screen'),
+          InfoLabel(
+            label: '',
+            child: Button(
+              onPressed: () {
+                Navigator.of(context, rootNavigator: true).push(
+                  FluentPageRoute(
+                    builder: (context) {
+                      return const NavigationViewShellRoute();
+                    },
+                  ),
+                );
+              },
+              child: const Text('Open in a new screen'),
+            ),
           ),
-        ),
-        InfoLabel(
-          label: '',
-          child: Button(
-            onPressed: () {
-              context.push('/navigation_view');
-            },
-            child: const Text('Open in a new shell route'),
+          InfoLabel(
+            label: '',
+            child: Button(
+              onPressed: () {
+                context.push('/navigation_view');
+              },
+              child: const Text('Open in a new shell route'),
+            ),
           ),
-        ),
-      ]),
+        ],
+      ),
       subtitle(content: Text(title)),
       description(content: Text(desc)),
       CardHighlight(
@@ -366,9 +371,7 @@ NavigationView(
         child: SizedBox(
           height: itemHeight,
           child: NavigationView(
-            appBar: const NavigationAppBar(
-              title: Text('NavigationView'),
-            ),
+            appBar: const NavigationAppBar(title: Text('NavigationView')),
             onDisplayModeChanged: (mode) {
               debugPrint('Changed to $mode');
             },
@@ -404,9 +407,7 @@ NavigationView(
                         icon: const WindowsIcon(WindowsIcons.new_folder),
                         title: const Text('New Item'),
                         body: const Center(
-                          child: Text(
-                            'This is a newly added Item',
-                          ),
+                          child: Text('This is a newly added Item'),
                         ),
                       ),
                     );
@@ -448,9 +449,7 @@ NavigationView(
 }
 
 class NavigationViewShellRoute extends StatelessWidget {
-  const NavigationViewShellRoute({
-    super.key,
-  });
+  const NavigationViewShellRoute({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -469,22 +468,15 @@ class NavigationViewShellRoute extends StatelessWidget {
         ),
       ),
       content: const ScaffoldPage(
-        header: PageHeader(
-          title: Text('New Page'),
-        ),
-        content: Center(
-          child: Text('This is a new page'),
-        ),
+        header: PageHeader(title: Text('New Page')),
+        content: Center(child: Text('This is a new page')),
       ),
     );
   }
 }
 
 class _NavigationBodyItem extends StatelessWidget {
-  const _NavigationBodyItem({
-    this.header,
-    this.content,
-  });
+  const _NavigationBodyItem({this.header, this.content});
 
   final String? header;
   final Widget? content;

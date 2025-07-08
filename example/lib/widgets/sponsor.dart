@@ -54,7 +54,7 @@ class SponsorDialog extends StatelessWidget {
                 'Private channel on Discord with dedicated help',
               ],
             ),
-          )
+          ),
         ],
       ),
       actions: [
@@ -62,10 +62,7 @@ class SponsorDialog extends StatelessWidget {
           uri: Uri.parse('https://www.patreon.com/bdlukaa'),
           builder: (context, open) => FilledButton(
             onPressed: open,
-            child: Semantics(
-              link: true,
-              child: const Text('Become a Sponsor'),
-            ),
+            child: Semantics(link: true, child: const Text('Become a Sponsor')),
           ),
         ),
       ],

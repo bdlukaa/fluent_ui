@@ -66,38 +66,41 @@ const cats = <String>[
   'American Curl',
   ...
 ];''',
-          child: Row(children: [
-            SizedBox(
-              width: 350.0,
-              child: AutoSuggestBox<String>(
-                placeholder: 'Type a cat name',
-                enabled: enabled,
-                items: cats
-                    .map<AutoSuggestBoxItem<String>>(
-                      (cat) => AutoSuggestBoxItem<String>(
-                        value: cat,
-                        label: cat,
-                        onFocusChange: (focused) {
-                          if (focused) debugPrint('Focused $cat');
-                        },
-                      ),
-                    )
-                    .toList(),
-                onSelected: (item) {
-                  setState(() => selectedCat = item.value);
-                },
+          child: Row(
+            children: [
+              SizedBox(
+                width: 350.0,
+                child: AutoSuggestBox<String>(
+                  placeholder: 'Type a cat name',
+                  enabled: enabled,
+                  items: cats
+                      .map<AutoSuggestBoxItem<String>>(
+                        (cat) => AutoSuggestBoxItem<String>(
+                          value: cat,
+                          label: cat,
+                          onFocusChange: (focused) {
+                            if (focused) debugPrint('Focused $cat');
+                          },
+                        ),
+                      )
+                      .toList(),
+                  onSelected: (item) {
+                    setState(() => selectedCat = item.value);
+                  },
+                ),
               ),
-            ),
-            Expanded(
-              child: Padding(
-                padding: const EdgeInsetsDirectional.only(start: 8.0),
-                child: Text(selectedCat ?? ''),
+              Expanded(
+                child: Padding(
+                  padding: const EdgeInsetsDirectional.only(start: 8.0),
+                  child: Text(selectedCat ?? ''),
+                ),
               ),
-            ),
-          ]),
+            ],
+          ),
         ),
         subtitle(
-            content: const Text('A AutoSuggestBox with a custom type "Cat"')),
+          content: const Text('A AutoSuggestBox with a custom type "Cat"'),
+        ),
         description(
           content: const Text(
             'The control can be used with a custom value class. With this feature,'
@@ -144,38 +147,42 @@ const objectCats = [
   Cat(6, 'American Shorthair', true),
   ...
 ];''',
-          child: Row(children: [
-            SizedBox(
-              width: 350.0,
-              child: AutoSuggestBox<Cat>(
-                enabled: enabled,
-                items: objectCats
-                    .map<AutoSuggestBoxItem<Cat>>(
-                      (cat) => AutoSuggestBoxItem<Cat>(
-                        value: cat,
-                        label: cat.name,
-                        onFocusChange: (focused) {
-                          if (focused) {
-                            debugPrint('Focused $cat');
-                          }
-                        },
-                      ),
-                    )
-                    .toList(),
-                onSelected: (item) {
-                  setState(() => selectedObjectCat = item.value);
-                },
+          child: Row(
+            children: [
+              SizedBox(
+                width: 350.0,
+                child: AutoSuggestBox<Cat>(
+                  enabled: enabled,
+                  items: objectCats
+                      .map<AutoSuggestBoxItem<Cat>>(
+                        (cat) => AutoSuggestBoxItem<Cat>(
+                          value: cat,
+                          label: cat.name,
+                          onFocusChange: (focused) {
+                            if (focused) {
+                              debugPrint('Focused $cat');
+                            }
+                          },
+                        ),
+                      )
+                      .toList(),
+                  onSelected: (item) {
+                    setState(() => selectedObjectCat = item.value);
+                  },
+                ),
               ),
-            ),
-            Expanded(
-              child: Padding(
-                padding: const EdgeInsetsDirectional.only(start: 8.0),
-                child: Text(selectedObjectCat != null
-                    ? 'Cat #${selectedObjectCat!.id} "${selectedObjectCat!.name}" ${selectedObjectCat!.hasTag ? '[🏷 TAGGED]' : "[❌ NON TAGGED]"}'
-                    : ''),
+              Expanded(
+                child: Padding(
+                  padding: const EdgeInsetsDirectional.only(start: 8.0),
+                  child: Text(
+                    selectedObjectCat != null
+                        ? 'Cat #${selectedObjectCat!.id} "${selectedObjectCat!.name}" ${selectedObjectCat!.hasTag ? '[🏷 TAGGED]' : "[❌ NON TAGGED]"}'
+                        : '',
+                  ),
+                ),
               ),
-            ),
-          ]),
+            ],
+          ),
         ),
         subtitle(content: const Text('An AutoSuggestBox with manual control')),
         description(
@@ -216,39 +223,42 @@ if (isOverlayVisible) {
             runAlignment: WrapAlignment.spaceBetween,
             alignment: WrapAlignment.spaceBetween,
             children: [
-              Row(mainAxisSize: MainAxisSize.min, children: [
-                SizedBox(
-                  width: 350.0,
-                  child: AutoSuggestBox<String>(
-                    key: asgbKey,
-                    enabled: enabled,
-                    items: cats
-                        .map<AutoSuggestBoxItem<String>>(
-                          (cat) => AutoSuggestBoxItem<String>(
-                            value: cat,
-                            label: cat,
-                            onFocusChange: (focused) {
-                              if (focused) debugPrint('Focused $cat');
-                            },
-                          ),
-                        )
-                        .toList(),
-                    onSelected: (item) {
-                      setState(() => selectedCat = item.value);
-                    },
-                    onOverlayVisibilityChanged: (visible) {
-                      debugPrint('Overlay is visible: $visible');
-                      setState(() {});
-                    },
+              Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  SizedBox(
+                    width: 350.0,
+                    child: AutoSuggestBox<String>(
+                      key: asgbKey,
+                      enabled: enabled,
+                      items: cats
+                          .map<AutoSuggestBoxItem<String>>(
+                            (cat) => AutoSuggestBoxItem<String>(
+                              value: cat,
+                              label: cat,
+                              onFocusChange: (focused) {
+                                if (focused) debugPrint('Focused $cat');
+                              },
+                            ),
+                          )
+                          .toList(),
+                      onSelected: (item) {
+                        setState(() => selectedCat = item.value);
+                      },
+                      onOverlayVisibilityChanged: (visible) {
+                        debugPrint('Overlay is visible: $visible');
+                        setState(() {});
+                      },
+                    ),
                   ),
-                ),
-                Flexible(
-                  child: Padding(
-                    padding: const EdgeInsetsDirectional.only(start: 8.0),
-                    child: Text(selectedCat ?? ''),
+                  Flexible(
+                    child: Padding(
+                      padding: const EdgeInsetsDirectional.only(start: 8.0),
+                      child: Text(selectedCat ?? ''),
+                    ),
                   ),
-                ),
-              ]),
+                ],
+              ),
               ToggleButton(
                 checked: asgbKey.currentState?.isOverlayVisible ?? false,
                 onChanged: (_) {

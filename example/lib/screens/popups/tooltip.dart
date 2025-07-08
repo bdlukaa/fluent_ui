@@ -65,11 +65,7 @@ class TooltipPage extends StatelessWidget with PageMixin {
             ),
           ),
         ),
-        subtitle(
-          content: const Text(
-            'Multiple tooltips next to each other',
-          ),
-        ),
+        subtitle(content: const Text('Multiple tooltips next to each other')),
         const Text('This usually happen on a CommandBar inside an app bar.'),
         CardHighlight(
           codeSnippet: '''Tooltip(
@@ -106,11 +102,7 @@ class TooltipPage extends StatelessWidget with PageMixin {
             ),
           ),
         ),
-        subtitle(
-          content: const Text(
-            'Extra long tooltip content that wraps',
-          ),
-        ),
+        subtitle(content: const Text('Extra long tooltip content that wraps')),
         CardHighlight(
           codeSnippet: '''Tooltip(
   message:
@@ -130,9 +122,10 @@ class TooltipPage extends StatelessWidget with PageMixin {
           child: Align(
             alignment: AlignmentDirectional.centerStart,
             child: Tooltip(
-              message:
-                  List.generate(25, (_) => 'This is a really long tooltip! ')
-                      .join(" "),
+              message: List.generate(
+                25,
+                (_) => 'This is a really long tooltip! ',
+              ).join(" "),
               useMousePosition: false,
               style: const TooltipThemeData(
                 maxWidth: 500,

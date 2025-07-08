@@ -55,15 +55,17 @@ void showContentDialog(BuildContext context) async {
   );
   setState(() {});
 }''',
-          child: Row(children: [
-            Button(
-              child: const Text('Show dialog'),
-              onPressed: () => showContentDialog(context),
-            ),
-            const SizedBox(width: 10.0),
-            Text(result ?? ''),
-            const Spacer(),
-          ]),
+          child: Row(
+            children: [
+              Button(
+                child: const Text('Show dialog'),
+                onPressed: () => showContentDialog(context),
+              ),
+              const SizedBox(width: 10.0),
+              Text(result ?? ''),
+              const Spacer(),
+            ],
+          ),
         ),
       ],
     );

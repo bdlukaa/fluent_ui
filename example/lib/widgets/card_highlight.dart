@@ -41,93 +41,96 @@ class _CardHighlightState extends State<CardHighlight>
     return Container(
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(8.0),
-        border: Border.all(
-          color: theme.resources.controlStrokeColorSecondary,
-        ),
+        border: Border.all(color: theme.resources.controlStrokeColorSecondary),
       ),
       child: ClipRRect(
         borderRadius: BorderRadius.circular(8.0),
-        child: Column(children: [
-          Mica(
-            backgroundColor: widget.backgroundColor,
-            child: Padding(
-              padding: const EdgeInsets.all(12.0),
-              child: Align(
-                alignment: AlignmentDirectional.topStart,
-                child: SizedBox(
-                  width: double.infinity,
-                  child: widget.child,
+        child: Column(
+          children: [
+            Mica(
+              backgroundColor: widget.backgroundColor,
+              child: Padding(
+                padding: const EdgeInsets.all(12.0),
+                child: Align(
+                  alignment: AlignmentDirectional.topStart,
+                  child: SizedBox(width: double.infinity, child: widget.child),
                 ),
               ),
             ),
-          ),
-          Expander(
-            initiallyExpanded: widget.initiallyOpen,
-            key: expanderKey,
-            onStateChanged: (state) {
-              // this is done because [onStateChanges] is called while the [Expander]
-              // is updating. By using this, we schedule the rebuilt of this widget
-              // to the next frame
-              WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-                if (mounted) setState(() => isOpen = state);
-              });
-            },
-            trailing: isOpen
-                ? Container(
-                    height: 31,
-                    constraints: const BoxConstraints(minWidth: 75),
-                    child: Button(
-                      style: ButtonStyle(
-                        backgroundColor: isCopying
-                            ? WidgetStatePropertyAll(
-                                theme.accentColor
-                                    .defaultBrushFor(theme.brightness),
+            Expander(
+              initiallyExpanded: widget.initiallyOpen,
+              key: expanderKey,
+              onStateChanged: (state) {
+                // this is done because [onStateChanges] is called while the [Expander]
+                // is updating. By using this, we schedule the rebuilt of this widget
+                // to the next frame
+                WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+                  if (mounted) setState(() => isOpen = state);
+                });
+              },
+              trailing: isOpen
+                  ? Container(
+                      height: 31,
+                      constraints: const BoxConstraints(minWidth: 75),
+                      child: Button(
+                        style: ButtonStyle(
+                          backgroundColor: isCopying
+                              ? WidgetStatePropertyAll(
+                                  theme.accentColor.defaultBrushFor(
+                                    theme.brightness,
+                                  ),
+                                )
+                              : null,
+                        ),
+                        child: isCopying
+                            ? Icon(
+                                FluentIcons.check_mark,
+                                color: theme
+                                    .resources
+                                    .textOnAccentFillColorPrimary,
+                                size: 18,
                               )
-                            : null,
+                            : const Row(
+                                children: [
+                                  WindowsIcon(WindowsIcons.copy),
+                                  SizedBox(width: 6.0),
+                                  Text('Copy'),
+                                ],
+                              ),
+                        onPressed: () {
+                          Clipboard.setData(
+                            ClipboardData(text: widget.codeSnippet),
+                          );
+                          setState(() => isCopying = true);
+                          Future.delayed(
+                            const Duration(milliseconds: 1500),
+                            () {
+                              isCopying = false;
+                              if (mounted) setState(() {});
+                            },
+                          );
+                        },
                       ),
-                      child: isCopying
-                          ? Icon(
-                              FluentIcons.check_mark,
-                              color:
-                                  theme.resources.textOnAccentFillColorPrimary,
-                              size: 18,
-                            )
-                          : const Row(children: [
-                              WindowsIcon(WindowsIcons.copy),
-                              SizedBox(width: 6.0),
-                              Text('Copy')
-                            ]),
-                      onPressed: () {
-                        Clipboard.setData(
-                            ClipboardData(text: widget.codeSnippet));
-                        setState(() => isCopying = true);
-                        Future.delayed(const Duration(milliseconds: 1500), () {
-                          isCopying = false;
-                          if (mounted) setState(() {});
-                        });
-                      },
-                    ),
-                  )
-                : null,
-            header: widget.header ?? const Text('Source code'),
-            headerShape: (open) {
-              return const RoundedRectangleBorder(
-                borderRadius: BorderRadius.vertical(
-                  top: Radius.zero,
+                    )
+                  : null,
+              header: widget.header ?? const Text('Source code'),
+              headerShape: (open) {
+                return const RoundedRectangleBorder(
+                  borderRadius: BorderRadius.vertical(top: Radius.zero),
+                );
+              },
+              content: ClipRRect(
+                borderRadius: const BorderRadius.vertical(
+                  bottom: Radius.circular(6.0),
                 ),
-              );
-            },
-            content: ClipRRect(
-              borderRadius: const BorderRadius.vertical(
-                bottom: Radius.circular(6.0),
-              ),
-              child: SyntaxView(
-                code: widget.codeSnippet.trim(),
-                syntaxTheme: getSyntaxTheme(theme),
+                child: SyntaxView(
+                  code: widget.codeSnippet.trim(),
+                  syntaxTheme: getSyntaxTheme(theme),
+                ),
               ),
             ),
-          ),
-        ]),
+          ],
+        ),
       ),
     );
   }

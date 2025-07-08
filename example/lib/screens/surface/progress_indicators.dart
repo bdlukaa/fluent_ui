@@ -42,11 +42,9 @@ ProgressBar(),
 // indeterminate progress ring
 ProgressRing(),''',
           child: RepaintBoundary(
-            child: Row(children: [
-              ProgressBar(),
-              SizedBox(width: 20.0),
-              ProgressRing(),
-            ]),
+            child: Row(
+              children: [ProgressBar(), SizedBox(width: 20.0), ProgressRing()],
+            ),
           ),
         ),
         subtitle(content: const Text('Determinate Progress Indicators')),
@@ -58,12 +56,14 @@ ProgressRing(),''',
           ),
         ),
         CardHighlight(
-            codeSnippet: '''// determinate progress bar
+          codeSnippet:
+              '''// determinate progress bar
 ProgressBar(value: ${determinateValue.toInt()}),
 
 // determinate progress ring
 ProgressRing(value: ${determinateValue.toInt()}),''',
-            child: Row(children: [
+          child: Row(
+            children: [
               ProgressBar(value: determinateValue),
               const SizedBox(width: 20.0),
               ProgressRing(value: determinateValue),
@@ -75,7 +75,9 @@ ProgressRing(value: ${determinateValue.toInt()}),''',
                   onChanged: (v) => setState(() => determinateValue = v),
                 ),
               ),
-            ])),
+            ],
+          ),
+        ),
       ],
     );
   }

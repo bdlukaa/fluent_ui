@@ -46,29 +46,35 @@ class _TypographyPageState extends State<TypographyPage> {
               items: [
                 ComboBoxItem(
                   value: Colors.white,
-                  child: Row(children: [
-                    buildColorBox(Colors.white),
-                    const SizedBox(width: 10.0),
-                    const Text('White'),
-                  ]),
+                  child: Row(
+                    children: [
+                      buildColorBox(Colors.white),
+                      const SizedBox(width: 10.0),
+                      const Text('White'),
+                    ],
+                  ),
                 ),
                 ComboBoxItem(
                   value: const Color(0xE4000000),
-                  child: Row(children: [
-                    buildColorBox(const Color(0xE4000000)),
-                    const SizedBox(width: 10.0),
-                    const Text('Black'),
-                  ]),
+                  child: Row(
+                    children: [
+                      buildColorBox(const Color(0xE4000000)),
+                      const SizedBox(width: 10.0),
+                      const Text('Black'),
+                    ],
+                  ),
                 ),
                 ...List.generate(Colors.accentColors.length, (index) {
                   final color = Colors.accentColors[index];
                   return ComboBoxItem(
                     value: color,
-                    child: Row(children: [
-                      buildColorBox(color),
-                      const SizedBox(width: 10.0),
-                      Text(accentColorNames[index + 1]),
-                    ]),
+                    child: Row(
+                      children: [
+                        buildColorBox(color),
+                        const SizedBox(width: 10.0),
+                        Text(accentColorNames[index + 1]),
+                      ],
+                    ),
                   );
                 }),
               ],
@@ -76,68 +82,94 @@ class _TypographyPageState extends State<TypographyPage> {
           ),
         ),
       ),
-      content: Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
-        Expanded(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              const Divider(
-                style: DividerThemeData(horizontalMargin: EdgeInsets.zero),
-              ),
-              const SizedBox(height: 4.0),
-              const Text(
-                'The Windows type ramp establishes crucial relationships '
-                'between the type styles on a page, helping users read content '
-                'easily.',
-              ),
-              Expanded(
-                child: ListView(children: [
-                  Text('Display',
-                      style: typography.display?.apply(fontSizeFactor: scale)),
-                  spacer,
-                  Text('Title Large',
-                      style:
-                          typography.titleLarge?.apply(fontSizeFactor: scale)),
-                  spacer,
-                  Text('Title',
-                      style: typography.title?.apply(fontSizeFactor: scale)),
-                  spacer,
-                  Text('Subtitle',
-                      style: typography.subtitle?.apply(fontSizeFactor: scale)),
-                  spacer,
-                  Text('Body Large',
-                      style:
-                          typography.bodyLarge?.apply(fontSizeFactor: scale)),
-                  spacer,
-                  Text('Body Strong',
-                      style:
-                          typography.bodyStrong?.apply(fontSizeFactor: scale)),
-                  spacer,
-                  Text('Body',
-                      style: typography.body?.apply(fontSizeFactor: scale)),
-                  spacer,
-                  Text('Caption',
-                      style: typography.caption?.apply(fontSizeFactor: scale)),
-                  spacer,
-                ]),
-              ),
-            ],
+      content: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                const Divider(
+                  style: DividerThemeData(horizontalMargin: EdgeInsets.zero),
+                ),
+                const SizedBox(height: 4.0),
+                const Text(
+                  'The Windows type ramp establishes crucial relationships '
+                  'between the type styles on a page, helping users read content '
+                  'easily.',
+                ),
+                Expanded(
+                  child: ListView(
+                    children: [
+                      Text(
+                        'Display',
+                        style: typography.display?.apply(fontSizeFactor: scale),
+                      ),
+                      spacer,
+                      Text(
+                        'Title Large',
+                        style: typography.titleLarge?.apply(
+                          fontSizeFactor: scale,
+                        ),
+                      ),
+                      spacer,
+                      Text(
+                        'Title',
+                        style: typography.title?.apply(fontSizeFactor: scale),
+                      ),
+                      spacer,
+                      Text(
+                        'Subtitle',
+                        style: typography.subtitle?.apply(
+                          fontSizeFactor: scale,
+                        ),
+                      ),
+                      spacer,
+                      Text(
+                        'Body Large',
+                        style: typography.bodyLarge?.apply(
+                          fontSizeFactor: scale,
+                        ),
+                      ),
+                      spacer,
+                      Text(
+                        'Body Strong',
+                        style: typography.bodyStrong?.apply(
+                          fontSizeFactor: scale,
+                        ),
+                      ),
+                      spacer,
+                      Text(
+                        'Body',
+                        style: typography.body?.apply(fontSizeFactor: scale),
+                      ),
+                      spacer,
+                      Text(
+                        'Caption',
+                        style: typography.caption?.apply(fontSizeFactor: scale),
+                      ),
+                      spacer,
+                    ],
+                  ),
+                ),
+              ],
+            ),
           ),
-        ),
-        Semantics(
-          label: 'Scale',
-          child: Slider(
-            vertical: true,
-            value: scale,
-            onChanged: (v) => setState(() => scale = v),
-            label: scale.toStringAsFixed(2),
-            max: 2,
-            min: 0.5,
-            // style: SliderThemeData(useThumbBall: false),
+          Semantics(
+            label: 'Scale',
+            child: Slider(
+              vertical: true,
+              value: scale,
+              onChanged: (v) => setState(() => scale = v),
+              label: scale.toStringAsFixed(2),
+              max: 2,
+              min: 0.5,
+              // style: SliderThemeData(useThumbBall: false),
+            ),
           ),
-        ),
-      ]),
+        ],
+      ),
     );
   }
 }

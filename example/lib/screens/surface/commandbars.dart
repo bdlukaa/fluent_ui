@@ -197,12 +197,11 @@ class _CommandBarsPageState extends State<CommandBarsPage> with PageMixin {
           ),
         ),
         subtitle(
-          content: const Text(
-            'Command bar with many items (dynamic overflow)',
-          ),
+          content: const Text('Command bar with many items (dynamic overflow)'),
         ),
         CardHighlight(
-          codeSnippet: '''final commandBarKey = GlobalKey<CommandBarState>();
+          codeSnippet:
+              '''final commandBarKey = GlobalKey<CommandBarState>();
 
 CommandBar(
   key: commandBarKey, ${compactBreakpointWidth != null ? '\n  compactBreakpointWidth: compactBreakpointWidth,' : ''}${_vertical ? '\n  direction: Axis.vertical,' : ''}${_compact ? '\n  isCompact: true,' : ''}
