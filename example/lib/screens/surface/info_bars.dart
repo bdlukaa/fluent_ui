@@ -46,7 +46,7 @@ class _InfoBarsPageState extends State<InfoBarsPage> with PageMixin {
     content: const Text(
         'A proper warning message of why the user can not do that :/'),
     action: IconButton(
-      icon: const Icon(FluentIcons.clear),
+      icon: const WindowsIcon(WindowsIcons.clear),
       onPressed: close,
     ),
     severity: InfoBarSeverity.warning,
@@ -62,7 +62,7 @@ class _InfoBarsPageState extends State<InfoBarsPage> with PageMixin {
                     content: const Text(
                         'A proper warning message of why the user can not do that :/'),
                     action: IconButton(
-                      icon: const Icon(FluentIcons.clear),
+                      icon: const WindowsIcon(WindowsIcons.clear),
                       onPressed: close,
                     ),
                     severity: InfoBarSeverity.warning,

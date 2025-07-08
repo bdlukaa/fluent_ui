@@ -499,7 +499,7 @@ class MenuFlyoutSubItem extends MenuFlyoutItem {
     super.key,
     super.leading,
     required super.text,
-    super.trailing = const Icon(FluentIcons.chevron_right),
+    super.trailing = const WindowsIcon(WindowsIcons.chevron_right),
     required this.items,
     this.showBehavior = SubItemShowAction.hover,
     this.showHoverDelay = const Duration(milliseconds: 450),

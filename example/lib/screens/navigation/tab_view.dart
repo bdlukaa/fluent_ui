@@ -306,7 +306,7 @@ class MyCustomTabState extends TabState {
                 debugPrint('Item 1 pressed');
                 Navigator.of(context).maybePop();
               },
-              leading: const Icon(FluentIcons.add),
+              leading: const WindowsIcon(WindowsIcons.add),
               text: const Text('New tab'),
             ),
             MenuFlyoutItem(
@@ -314,7 +314,7 @@ class MyCustomTabState extends TabState {
                 debugPrint('Item 2 pressed');
                 Navigator.of(context).maybePop();
               },
-              leading: const Icon(FluentIcons.refresh),
+              leading: const WindowsIcon(WindowsIcons.refresh),
               text: const Text('Refresh'),
             ),
           ],
@@ -456,7 +456,7 @@ class MyCustomTabState extends TabState {
                 debugPrint('Item 1 pressed');
                 Navigator.of(context).maybePop();
               },
-              leading: const Icon(FluentIcons.add),
+              leading: const WindowsIcon(WindowsIcons.add),
               text: const Text('New tab'),
             ),
             MenuFlyoutItem(
@@ -464,7 +464,7 @@ class MyCustomTabState extends TabState {
                 debugPrint('Item 2 pressed');
                 Navigator.of(context).maybePop();
               },
-              leading: const Icon(FluentIcons.refresh),
+              leading: const WindowsIcon(WindowsIcons.refresh),
               text: const Text('Refresh'),
             ),
           ],

@@ -18,7 +18,7 @@ typedef InfoBarPopupBuilder =
 ///     return InfoBar(
 ///       title: Text('Title'),
 ///       action: IconButton(
-///         icon: const Icon(FluentIcons.clear),
+///         icon: const WindowsIcon(WindowsIcons.chrome_close),
 ///         onPressed: close,
 ///       ),
 ///     );

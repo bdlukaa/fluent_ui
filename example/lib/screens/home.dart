@@ -35,7 +35,7 @@ class _HomePageState extends State<HomePage> with PageMixin {
               child: Tooltip(
                 message: 'Source code',
                 child: IconButton(
-                  icon: const Icon(FluentIcons.open_source, size: 24.0),
+                  icon: const WindowsIcon(WindowsIcons.code, size: 24.0),
                   onPressed: open,
                 ),
               ),
@@ -123,7 +123,7 @@ class MyApp extends StatelessWidget {
               ),
               InfoLabel(
                 label: 'Icons',
-                child: const Icon(FluentIcons.graph_symbol, size: 30.0),
+                child: const WindowsIcon(FluentIcons.flag, size: 30.0),
               ),
               InfoLabel(
                 label: 'Colors',
@@ -199,7 +199,7 @@ class MyApp extends StatelessWidget {
         Row(children: [
           Text('SPONSORS', style: theme.typography.bodyStrong),
           const SizedBox(width: 4.0),
-          const Icon(FluentIcons.heart_fill, size: 16.0),
+          const WindowsIcon(WindowsIcons.heart_fill, size: 16.0),
         ]),
         const SizedBox(height: 4.0),
         Wrap(
@@ -230,7 +230,8 @@ class MyApp extends StatelessWidget {
                       ).createShader(rect);
                     },
                     blendMode: BlendMode.srcATop,
-                    child: const Icon(FluentIcons.diamond_user, size: 60),
+                    child:
+                        const WindowsIcon(FluentIcons.diamond_user, size: 60),
                   ),
                 ),
                 const Text('Become a Sponsor!'),

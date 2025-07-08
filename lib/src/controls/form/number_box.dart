@@ -534,7 +534,7 @@ class NumberBoxState<T extends num> extends State<NumberBox<T>> {
       if (widget.clearButton && _hasPrimaryFocus)
         IconButton(
           key: _clearButtonKey,
-          icon: const Icon(FluentIcons.clear),
+          icon: const WindowsIcon(WindowsIcons.clear),
           onPressed: _clearValue,
         ),
     ];
@@ -544,12 +544,12 @@ class NumberBoxState<T extends num> extends State<NumberBox<T>> {
         textFieldSuffix.addAll([
           IconButton(
             key: _incrementButtonKey,
-            icon: const Icon(FluentIcons.chevron_up),
+            icon: const WindowsIcon(WindowsIcons.chevron_up),
             onPressed: widget.onChanged != null ? incrementSmall : null,
           ),
           IconButton(
             key: _decrementButtonKey,
-            icon: const Icon(FluentIcons.chevron_down),
+            icon: const WindowsIcon(WindowsIcons.chevron_down),
             onPressed: widget.onChanged != null ? decrementSmall : null,
           ),
           const SizedBox(),
@@ -785,12 +785,12 @@ class _NumberBoxCompactOverlay extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
                 IconButton(
-                  icon: const Icon(FluentIcons.chevron_up, size: 16),
+                  icon: const WindowsIcon(WindowsIcons.chevron_up, size: 16),
                   onPressed: onIncrement,
                   iconButtonMode: IconButtonMode.large,
                 ),
                 IconButton(
-                  icon: const Icon(FluentIcons.chevron_down, size: 16),
+                  icon: const WindowsIcon(WindowsIcons.chevron_down, size: 16),
                   onPressed: onDecrement,
                   iconButtonMode: IconButtonMode.large,
                 ),

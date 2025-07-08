@@ -818,9 +818,9 @@
   NavigationView(
     pane: NavigationPane(
       items: [
-        PaneItem(icon: Icon(FluentIcons.add)),
-        PaneItem(icon: Icon(FluentIcons.add)),
-        PaneItem(icon: Icon(FluentIcons.add)),
+        PaneItem(icon: WindowsIcon(WindowsIcons.add)),
+        PaneItem(icon: WindowsIcon(WindowsIcons.add)),
+        PaneItem(icon: WindowsIcon(WindowsIcons.add)),
       ],
     ),
     content: NavigationBody(
@@ -841,15 +841,15 @@
     pane: NavigationPane(
       items: [
         PaneItem(
-          icon: Icon(FluentIcons.add),
+          icon: WindowsIcon(WindowsIcons.add),
           body: _Item1(),
         ),
         PaneItem(
-          icon: Icon(FluentIcons.add),
+          icon: WindowsIcon(WindowsIcons.add),
           body: _Item2(),
         ),
         PaneItem(
-          icon: Icon(FluentIcons.add),
+          icon: WindowsIcon(WindowsIcons.add),
           body: _Item3(),
         ),
       ],

@@ -52,7 +52,9 @@ class WindowsIcon extends Icon {
           return entry.value == icon;
         });
 
-        if (iconId == null) return icon;
+        if (iconId == null) {
+          return icon;
+        }
 
         final fallbackIcon = FluentIcons.allIcons.entries.firstWhereOrNull((
           entry,
@@ -63,6 +65,10 @@ class WindowsIcon extends Icon {
         if (fallbackIcon != null) {
           return fallbackIcon.value;
         } else {
+          debugPrint(
+            'The icon ${iconId.key} is not available in the current context. '
+            'Please provide a fallback icon or use a different icon.',
+          );
           return icon;
         }
       }

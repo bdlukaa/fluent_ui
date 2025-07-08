@@ -93,7 +93,7 @@ class _CardHighlightState extends State<CardHighlight>
                               size: 18,
                             )
                           : const Row(children: [
-                              Icon(FluentIcons.copy),
+                              WindowsIcon(WindowsIcons.copy),
                               SizedBox(width: 6.0),
                               Text('Copy')
                             ]),

@@ -188,7 +188,7 @@ showTeachingTip(
   placementMode: ${placements[placement]},
   builder: (context) {
     return TeachingTip(
-      leading: const Icon(FluentIcons.refresh),
+      leading: const WindowsIcon(WindowsIcons.refresh),
       title: const Text('This is the title'),
       subtitle: const Text('And this is the subtitle'),${showMediaContent ? '''\n      mediaContent: SizedBox(
         width: double.infinity,
@@ -256,7 +256,7 @@ showTeachingTip(
                           placementMode: placements[placement]!,
                           builder: (context) {
                             return TeachingTip(
-                              leading: const Icon(FluentIcons.refresh),
+                              leading: const WindowsIcon(WindowsIcons.refresh),
                               title: const Text('This is the title'),
                               subtitle: const Text('And this is the subtitle'),
                               mediaContent: showMediaContent

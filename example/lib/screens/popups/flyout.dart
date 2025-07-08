@@ -213,17 +213,17 @@ FlyoutTarget(
         builder: (context) {
           return MenuFlyout(items: [
             MenuFlyoutItem(
-              leading: const Icon(FluentIcons.share),
+              leading: const WindowsIcon(WindowsIcons.share),
               text: const Text('Share'),
               onPressed: Flyout.of(context).close,
             ),
             MenuFlyoutItem(
-              leading: const Icon(FluentIcons.copy),
+              leading: const WindowsIcon(WindowsIcons.copy),
               text: const Text('Copy'),
               onPressed: Flyout.of(context).close,
             ),
             MenuFlyoutItem(
-              leading: const Icon(FluentIcons.delete),
+              leading: const WindowsIcon(WindowsIcons.delete),
               text: const Text('Delete'),
               onPressed: Flyout.of(context).close,
             ),
@@ -291,17 +291,17 @@ FlyoutTarget(
                     builder: (context) {
                       return MenuFlyout(items: [
                         MenuFlyoutItem(
-                          leading: const Icon(FluentIcons.share),
+                          leading: const WindowsIcon(WindowsIcons.share),
                           text: const Text('Share'),
                           onPressed: Flyout.of(context).close,
                         ),
                         MenuFlyoutItem(
-                          leading: const Icon(FluentIcons.copy),
+                          leading: const WindowsIcon(WindowsIcons.copy),
                           text: const Text('Copy'),
                           onPressed: Flyout.of(context).close,
                         ),
                         MenuFlyoutItem(
-                          leading: const Icon(FluentIcons.delete),
+                          leading: const WindowsIcon(WindowsIcons.delete),
                           text: const Text('Delete'),
                           onPressed: Flyout.of(context).close,
                         ),
@@ -540,27 +540,27 @@ return GestureDetector(
             child: CommandBar(
               primaryItems: [
                 CommandBarButton(
-                  icon: const Icon(FluentIcons.add_favorite),
+                  icon: const WindowsIcon(WindowsIcons.add_favorite),
                   label: const Text('Favorite'),
                   onPressed: () {},
                 ),
                 CommandBarButton(
-                  icon: const Icon(FluentIcons.copy),
+                  icon: const WindowsIcon(WindowsIcons.copy),
                   label: const Text('Copy'),
                   onPressed: () {},
                 ),
                 CommandBarButton(
-                  icon: const Icon(FluentIcons.share),
+                  icon: const WindowsIcon(WindowsIcons.share),
                   label: const Text('Share'),
                   onPressed: () {},
                 ),
                 CommandBarButton(
-                  icon: const Icon(FluentIcons.save),
+                  icon: const WindowsIcon(WindowsIcons.save),
                   label: const Text('Save'),
                   onPressed: () {},
                 ),
                 CommandBarButton(
-                  icon: const Icon(FluentIcons.delete),
+                  icon: const WindowsIcon(WindowsIcons.delete),
                   label: const Text('Delete'),
                   onPressed: () {},
                 ),
@@ -618,27 +618,28 @@ return GestureDetector(
                           isCompact: true,
                           primaryItems: [
                             CommandBarButton(
-                              icon: const Icon(FluentIcons.add_favorite),
+                              icon:
+                                  const WindowsIcon(WindowsIcons.favorite_star),
                               label: const Text('Favorite'),
                               onPressed: () {},
                             ),
                             CommandBarButton(
-                              icon: const Icon(FluentIcons.copy),
+                              icon: const WindowsIcon(WindowsIcons.copy),
                               label: const Text('Copy'),
                               onPressed: () {},
                             ),
                             CommandBarButton(
-                              icon: const Icon(FluentIcons.share),
+                              icon: const WindowsIcon(WindowsIcons.share),
                               label: const Text('Share'),
                               onPressed: () {},
                             ),
                             CommandBarButton(
-                              icon: const Icon(FluentIcons.save),
+                              icon: const WindowsIcon(WindowsIcons.save),
                               label: const Text('Save'),
                               onPressed: () {},
                             ),
                             CommandBarButton(
-                              icon: const Icon(FluentIcons.delete),
+                              icon: const WindowsIcon(WindowsIcons.delete),
                               label: const Text('Delete'),
                               onPressed: () {},
                             ),

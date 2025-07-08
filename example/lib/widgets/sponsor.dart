@@ -11,14 +11,14 @@ class SponsorDialog extends StatelessWidget {
       constraints: const BoxConstraints(maxWidth: 600),
       title: Row(
         children: [
-          const Icon(FluentIcons.diamond_user, size: 24.0),
+          const WindowsIcon(FluentIcons.diamond_user, size: 24.0),
           const SizedBox(width: 8.0),
           const Expanded(child: Text('Benefits')),
           SmallIconButton(
             child: Tooltip(
               message: FluentLocalizations.of(context).closeButtonLabel,
               child: IconButton(
-                icon: const Icon(FluentIcons.chrome_close),
+                icon: const WindowsIcon(WindowsIcons.chrome_close),
                 onPressed: Navigator.of(context).pop,
               ),
             ),
@@ -107,7 +107,7 @@ class _Tier extends StatelessWidget {
             children: [
               const Padding(
                 padding: EdgeInsetsDirectional.only(end: 6.0, top: 9.0),
-                child: Icon(FluentIcons.circle_fill, size: 4.0),
+                child: WindowsIcon(WindowsIcons.circle_fill, size: 4.0),
               ),
               Expanded(child: Text(benefit)),
             ],

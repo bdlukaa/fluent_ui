@@ -36,14 +36,14 @@ class _NavigationViewPageState extends State<NavigationViewPage>
 
   List<NavigationPaneItem> items = [
     PaneItem(
-      icon: const Icon(FluentIcons.home),
+      icon: const WindowsIcon(WindowsIcons.home),
       title: const Text('Home'),
       body: const _NavigationBodyItem(),
       onTap: () => debugPrint('Tapped home'),
     ),
     PaneItemSeparator(),
     PaneItem(
-      icon: const Icon(FluentIcons.issue_tracking),
+      icon: const WindowsIcon(WindowsIcons.trackers),
       title: const Text('Track orders'),
       infoBadge: const InfoBadge(source: Text('8')),
       body: const _NavigationBodyItem(
@@ -60,7 +60,7 @@ class _NavigationViewPageState extends State<NavigationViewPage>
       onTap: () => debugPrint('Tapped track orders'),
     ),
     PaneItem(
-      icon: const Icon(FluentIcons.disable_updates),
+      icon: const WindowsIcon(WindowsIcons.disable_updates),
       title: const Text('Disabled Item'),
       body: const _NavigationBodyItem(),
       enabled: false,
@@ -68,7 +68,7 @@ class _NavigationViewPageState extends State<NavigationViewPage>
     ),
     PaneItemHeader(header: const Text('Apps')),
     PaneItemExpander(
-      icon: const Icon(FluentIcons.account_management),
+      icon: const WindowsIcon(WindowsIcons.switch_user),
       title: const Text('Account'),
       initiallyExpanded: true,
       body: const _NavigationBodyItem(
@@ -86,13 +86,13 @@ class _NavigationViewPageState extends State<NavigationViewPage>
       onTap: () => debugPrint('Tapped account'),
       items: [
         PaneItem(
-          icon: const Icon(FluentIcons.mail),
+          icon: const WindowsIcon(WindowsIcons.mail),
           title: const Text('Mail'),
           body: const _NavigationBodyItem(),
           onTap: () => debugPrint('Tapped mail'),
         ),
         PaneItem(
-          icon: const Icon(FluentIcons.calendar),
+          icon: const WindowsIcon(WindowsIcons.calendar),
           title: const Text('Calendar'),
           body: const _NavigationBodyItem(),
           onTap: () => debugPrint('Tapped calendar'),
@@ -236,13 +236,13 @@ class _NavigationViewPageState extends State<NavigationViewPage>
 
 List<NavigationPaneItem> items = [
   PaneItem(
-    icon: const Icon(FluentIcons.home),
+    icon: const WindowsIcon(WindowsIcons.home),
     title: const Text('Home'),
     body: const _NavigationBodyItem(),
   ),
   PaneItemSeparator(),
   PaneItem(
-    icon: const Icon(FluentIcons.issue_tracking),
+    icon: const WindowsIcon(WindowsIcons.issue_tracking),
     title: const Text('Track orders'),
     infoBadge: const InfoBadge(source: Text('8')),
     body: const _NavigationBodyItem(
@@ -258,13 +258,13 @@ List<NavigationPaneItem> items = [
     ),
   ),
   PaneItem(
-    icon: const Icon(FluentIcons.disable_updates),
+    icon: const WindowsIcon(WindowsIcons.disable_updates),
     title: const Text('Disabled Item'),
     body: const _NavigationBodyItem(),
     enabled: false,
   ),
   PaneItemExpander(
-    icon: const Icon(FluentIcons.account_management),
+    icon: const WindowsIcon(WindowsIcons.account_management),
     title: const Text('Account'),
     body: const _NavigationBodyItem(
       header: 'PaneItemExpander',
@@ -281,12 +281,12 @@ List<NavigationPaneItem> items = [
     items: [
       PaneItemHeader(header: const Text('Apps')),
       PaneItem(
-        icon: const Icon(FluentIcons.mail),
+        icon: const WindowsIcon(WindowsIcons.mail),
         title: const Text('Mail'),
         body: const _NavigationBodyItem(),
       ),
       PaneItem(
-        icon: const Icon(FluentIcons.calendar),
+        icon: const WindowsIcon(WindowsIcons.calendar),
         title: const Text('Calendar'),
         body: const _NavigationBodyItem(),
       ),
@@ -337,18 +337,18 @@ NavigationView(
     items: items,
     footerItems: [
       PaneItem(
-        icon: const Icon(FluentIcons.settings),
+        icon: const WindowsIcon(WindowsIcons.settings),
         title: const Text('Settings'),
         body: const _NavigationBodyItem(),
       ),
       PaneItemAction(
-        icon: const Icon(FluentIcons.add),
+        icon: const WindowsIcon(WindowsIcons.add),
         title: const Text('Add New Item'),
         onTap: () {
           // Your Logic to Add New `NavigationPaneItem`
           items.add(
             PaneItem(
-              icon: const Icon(FluentIcons.new_folder),
+              icon: const WindowsIcon(WindowsIcons.new_folder),
               title: const Text('New Item'),
               body: const Center(
                 child: Text(
@@ -391,17 +391,17 @@ NavigationView(
               items: items,
               footerItems: [
                 PaneItem(
-                  icon: const Icon(FluentIcons.settings),
+                  icon: const WindowsIcon(WindowsIcons.settings),
                   title: const Text('Settings'),
                   body: const _NavigationBodyItem(),
                 ),
                 PaneItemAction(
-                  icon: const Icon(FluentIcons.add),
+                  icon: const WindowsIcon(WindowsIcons.add),
                   title: const Text('Add New Item'),
                   onTap: () {
                     items.add(
                       PaneItem(
-                        icon: const Icon(FluentIcons.new_folder),
+                        icon: const WindowsIcon(WindowsIcons.new_folder),
                         title: const Text('New Item'),
                         body: const Center(
                           child: Text(
@@ -464,7 +464,7 @@ class NavigationViewShellRoute extends StatelessWidget {
           return const DragToMoveArea(child: title);
         }(),
         leading: IconButton(
-          icon: const Icon(FluentIcons.back),
+          icon: const WindowsIcon(WindowsIcons.back),
           onPressed: () => context.pop(),
         ),
       ),

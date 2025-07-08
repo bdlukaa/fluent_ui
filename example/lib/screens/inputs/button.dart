@@ -171,14 +171,14 @@ class _ButtonPageState extends State<ButtonPage> with PageMixin {
             if (iconSmall) {
               return '''SmallIconButton(
   child: IconButton(
-    icon: const Icon(FluentIcons.graph_symbol, size: 20.0),
+    icon: const WindowsIcon(WindowsIcons.graph_symbol, size: 20.0),
     onPressed: disabled ? null : () => debugPrint('pressed button'),
   ),
 )''';
             }
 
             return '''IconButton(
-  icon: const Icon(FluentIcons.graph_symbol, size: 24.0),
+  icon: const WindowsIcon(WindowsIcons.graph_symbol, size: 24.0),
   onPressed: disabled ? null : () => debugPrint('pressed button'),
 )''';
           }(),
@@ -286,20 +286,20 @@ ToggleButton(
             ),
             SizedBox(width: 10.0),
             DropDownButton(
-              title: Icon(FluentIcons.mail),
+              title: WindowsIcon(WindowsIcons.mail),
               items: [
                 MenuFlyoutItem(
-                  leading: Icon(FluentIcons.send),
+                  leading: WindowsIcon(WindowsIcons.send),
                   text: const Text('Send'),
                   onPressed: () {},
                 ),
                 MenuFlyoutItem(
-                  leading: Icon(FluentIcons.reply),
+                  leading: WindowsIcon(WindowsIcons.mail_reply),
                   text: const Text('Reply'),
                   onPressed: () {},
                 ),
                 MenuFlyoutItem(
-                  leading: Icon(FluentIcons.reply_all),
+                  leading: WindowsIcon(WindowsIcons.mail_reply_all),
                   text: const Text('Reply all'),
                   onPressed: () {},
                 ),

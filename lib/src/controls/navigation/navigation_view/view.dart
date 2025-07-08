@@ -960,7 +960,7 @@ class NavigationAppBar with Diagnosticable {
             child: Builder(
               builder: (context) =>
                   PaneItem(
-                    icon: const Icon(FluentIcons.back, size: 14.0),
+                    icon: const WindowsIcon(WindowsIcons.back, size: 14.0),
                     title: Text(localizations.backButtonTooltip),
                     body: const SizedBox.shrink(),
                   ).build(

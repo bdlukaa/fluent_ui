@@ -5,7 +5,7 @@ import '../settings.dart';
 
 const questionMark = Padding(
   padding: EdgeInsetsDirectional.only(start: 4.0),
-  child: Icon(FluentIcons.status_circle_question_mark, size: 14.0),
+  child: WindowsIcon(WindowsIcons.status_circle_question_mark, size: 14.0),
 );
 
 InlineSpan _buildLabel(String label, String description) {

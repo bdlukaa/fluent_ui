@@ -675,7 +675,7 @@ class AutoSuggestBoxState<T> extends State<AutoSuggestBox<T>> {
           Padding(
             padding: const EdgeInsetsDirectional.only(start: 2.0),
             child: IconButton(
-              icon: const Icon(FluentIcons.chrome_close, size: 9.0),
+              icon: const WindowsIcon(WindowsIcons.chrome_close, size: 9.0),
               onPressed: () {
                 _controller.clear();
                 widget.onChanged?.call(

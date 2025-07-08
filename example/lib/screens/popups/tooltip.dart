@@ -47,7 +47,7 @@ class TooltipPage extends StatelessWidget with PageMixin {
   useMousePosition: false,
   style: const TooltipThemeData(preferBelow: true),
   child: IconButton(
-    icon: const Icon(FluentIcons.graph_symbol, size: 24.0),
+    icon: const WindowsIcon(WindowsIcons.graph_symbol, size: 24.0),
     onPressed: () {},
   ),
 ),''',
@@ -59,7 +59,7 @@ class TooltipPage extends StatelessWidget with PageMixin {
               useMousePosition: false,
               style: const TooltipThemeData(preferBelow: true),
               child: IconButton(
-                icon: const Icon(FluentIcons.graph_symbol, size: 24.0),
+                icon: const WindowsIcon(FluentIcons.graph_symbol, size: 24.0),
                 onPressed: () {},
               ),
             ),
@@ -78,7 +78,7 @@ class TooltipPage extends StatelessWidget with PageMixin {
   useMousePosition: false,
   style: const TooltipThemeData(preferBelow: true),
   child: IconButton(
-    icon: const Icon(FluentIcons.graph_symbol, size: 24.0),
+    icon: const WindowsIcon(WindowsIcons.graph_symbol, size: 24.0),
     onPressed: () {},
   ),
 ),''',
@@ -123,7 +123,7 @@ class TooltipPage extends StatelessWidget with PageMixin {
     waitDuration: Duration(),
   ),
   child: IconButton(
-    icon: const Icon(FluentIcons.text_overflow, size: 24.0),
+    icon: const WindowsIcon(WindowsIcons.text_overflow, size: 24.0),
     onPressed: () {},
   ),
 ),''',
@@ -140,7 +140,7 @@ class TooltipPage extends StatelessWidget with PageMixin {
                 waitDuration: Duration(),
               ),
               child: IconButton(
-                icon: const Icon(FluentIcons.text_overflow, size: 24.0),
+                icon: const WindowsIcon(FluentIcons.text_overflow, size: 24.0),
                 onPressed: () {},
               ),
             ),
