@@ -128,7 +128,7 @@ class _ButtonPageState extends State<ButtonPage> with PageMixin {
   uri: Uri.parse('https://github.com/bdlukaa/fluent_ui')
   builder: (Context, open) {
     return HyperlinkButton(
-      child: Text('Fluent UI homepage'),
+      child: Text('Windows UI homepage'),
       onPressed: open,
     );
   },
@@ -145,7 +145,7 @@ class _ButtonPageState extends State<ButtonPage> with PageMixin {
                       onPressed: hyperlinkDisabled ? null : open,
                       child: Semantics(
                         link: true,
-                        child: Text('Fluent UI homepage'),
+                        child: Text('Windows UI homepage'),
                       ),
                     ),
                   );

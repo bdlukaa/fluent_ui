@@ -30,7 +30,7 @@ enum ExpanderDirection {
 ///
 ///   * <https://docs.microsoft.com/en-us/windows/apps/design/controls/expander>
 class Expander extends StatefulWidget {
-  /// Creates a fluent-styled expander.
+  /// Creates a windows-styled expander.
   const Expander({
     super.key,
     this.leading,

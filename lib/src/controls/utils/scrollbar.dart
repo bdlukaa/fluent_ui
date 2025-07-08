@@ -7,7 +7,7 @@ import 'package:flutter/gestures.dart';
 
 /// {@macro flutter.widgets.Scrollbar}
 class Scrollbar extends RawScrollbar {
-  /// Creates a fluent-styled scrollbar that wraps the given [child].
+  /// Creates a windows-styled scrollbar that wraps the given [child].
   ///
   /// The [child], or a descendant of the [child], should be a source of
   /// [ScrollNotification] notifications, typically a [Scrollable] widget.

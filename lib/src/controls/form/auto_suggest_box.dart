@@ -97,7 +97,7 @@ class AutoSuggestBoxItem<T> {
 ///  * [Overlay], which is used to show the suggestion popup
 ///  * <https://docs.microsoft.com/en-us/windows/apps/design/controls/auto-suggest-box>
 class AutoSuggestBox<T> extends StatefulWidget {
-  /// Creates a fluent-styled auto suggest box.
+  /// Creates a windows-styled auto suggest box.
   const AutoSuggestBox({
     super.key,
     required this.items,
@@ -137,7 +137,7 @@ class AutoSuggestBox<T> extends StatefulWidget {
   }) : autovalidateMode = AutovalidateMode.disabled,
        validator = null;
 
-  /// Creates a fluent-styled auto suggest form box.
+  /// Creates a windows-styled auto suggest form box.
   const AutoSuggestBox.form({
     super.key,
     required this.items,

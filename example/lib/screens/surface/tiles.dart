@@ -32,7 +32,7 @@ class _TilesPageState extends State<TilesPage> with PageMixin {
       children: [
         description(
           content: const Text(
-            'A fluent-styled list tile. Usually used inside a ListView',
+            'A windows-styled list tile. Usually used inside a ListView',
           ),
         ),
         subtitle(content: const Text('Basic ListView with selectable tiles')),

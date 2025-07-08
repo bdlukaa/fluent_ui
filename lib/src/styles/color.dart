@@ -1,8 +1,7 @@
+import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter/foundation.dart';
 
-import 'package:fluent_ui/fluent_ui.dart';
-
-/// A set of predefined colors used by Fluent UI widgets.
+/// A set of predefined colors used by Windows UI widgets.
 ///
 /// ![Colors used in fluent_ui widgets](https://learn.microsoft.com/en-us/windows/apps/design/style/images/color/windows-controls.svg)
 ///

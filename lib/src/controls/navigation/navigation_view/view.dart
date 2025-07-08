@@ -893,7 +893,7 @@ class NavigationAppBar with Diagnosticable {
   /// If this is provided, [backgroundColor] must be null.
   final Decoration? decoration;
 
-  /// Creates a fluent-styled app bar.
+  /// Creates a windows-styled app bar.
   const NavigationAppBar({
     this.key,
     this.leading,

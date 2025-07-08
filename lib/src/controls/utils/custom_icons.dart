@@ -51,7 +51,7 @@ class ChevronDown extends StatelessWidget {
   }
 }
 
-/// A fluent-styled rating icon.
+/// A windows-styled rating icon.
 ///
 /// The rating icon is a star icon that can be rated from 0 to 1.0.
 ///

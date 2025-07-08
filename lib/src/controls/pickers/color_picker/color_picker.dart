@@ -131,7 +131,7 @@ class ColorPicker extends StatefulWidget {
   /// The maximum allowed value/brightness (0-100)
   final int maxValue;
 
-  /// Creates a fluent-styled [ColorPicker].
+  /// Creates a windows-styled [ColorPicker].
   const ColorPicker({
     super.key,
     required this.color,

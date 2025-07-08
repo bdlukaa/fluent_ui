@@ -1,4 +1,4 @@
-name: Fluent UI for Flutter Client
+name: Windows UI for Flutter Client
 on:
   push:
     branches:

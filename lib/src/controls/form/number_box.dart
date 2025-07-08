@@ -34,7 +34,6 @@ enum SpinButtonPlacementMode {
 /// A NumberBox lets the user enter a number. If the user input a wrong value
 /// (a NaN value), the previous valid value is used.
 ///
-///
 /// The value can be changed in several ways:
 ///   - by input a new value in the text field
 ///   - with increment/decrement buttons (only with modes
@@ -74,7 +73,7 @@ class NumberBox<T extends num> extends StatefulWidget {
   ///
   /// See also:
   ///
-  ///   * [onChanging], called when the text of the number box change.
+  ///   * [onTextChange], called when the text of the number box change.
   final ValueChanged<T?>? onChanged;
 
   /// Called when the text of the number box change.
@@ -531,12 +530,14 @@ class NumberBoxState<T extends num> extends State<NumberBox<T>> {
       // is aligned correctly when there are no suffix actions.
       // See https://github.com/bdlukaa/fluent_ui/issues/1150
       const SizedBox(),
-      if (widget.clearButton && _hasPrimaryFocus)
+      if (widget.clearButton && _hasPrimaryFocus) ...[
         IconButton(
           key: _clearButtonKey,
           icon: const WindowsIcon(WindowsIcons.clear),
           onPressed: _clearValue,
         ),
+        const SizedBox(width: 4.0),
+      ],
     ];
 
     switch (widget.mode) {
@@ -552,7 +553,7 @@ class NumberBoxState<T extends num> extends State<NumberBox<T>> {
             icon: const WindowsIcon(WindowsIcons.chevron_down),
             onPressed: widget.onChanged != null ? decrementSmall : null,
           ),
-          const SizedBox(),
+          const SizedBox(width: 4.0),
         ]);
         break;
       case SpinButtonPlacementMode.compact:

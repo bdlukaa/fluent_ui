@@ -26,7 +26,7 @@ class _HomePageState extends State<HomePage> with PageMixin {
 
     return ScaffoldPage.scrollable(
       header: PageHeader(
-        title: const Text('Fluent UI for Flutter Showcase App'),
+        title: const Text('Windows UI for Flutter Showcase App'),
         commandBar: Row(mainAxisAlignment: MainAxisAlignment.end, children: [
           Link(
             uri: Uri.parse('https://github.com/bdlukaa/fluent_ui'),
@@ -56,7 +56,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return FluentApp(
-      title: 'Fluent UI for Flutter',
+      title: 'Windows UI for Flutter',
       theme: FluentThemeData(
         brightness: Brightness.light,
         accentColor: Colors.blue,

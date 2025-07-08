@@ -45,7 +45,7 @@ class MenuBarItem with Diagnosticable {
 class MenuBar extends StatefulWidget with Diagnosticable {
   final List<MenuBarItem> items;
 
-  /// Creates a fluent-styled menu bar.
+  /// Creates a windows-styled menu bar.
   MenuBar({super.key, required this.items})
     : assert(items.isNotEmpty, 'items must not be empty');
 

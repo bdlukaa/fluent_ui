@@ -401,7 +401,7 @@ class _UIEquivalentsState extends State<UIEquivalents> {
       [
         const Text('Tooltip'),
         const Tooltip(
-          message: 'A fluent-styled tooltip',
+          message: 'A windows-styled tooltip',
           child: Text('Hover'),
         ),
         const m.Tooltip(

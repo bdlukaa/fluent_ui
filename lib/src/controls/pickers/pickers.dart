@@ -141,7 +141,7 @@ class YesNoPickerControl extends StatelessWidget {
   }
 }
 
-/// A helper widget that creates fluent-styled controls for a list
+/// A helper widget that creates windows-styled controls for a list
 ///
 /// See also:
 ///

@@ -20,7 +20,7 @@ const kDefaultListTileMargin = EdgeInsetsDirectional.symmetric(
 
 enum ListTileSelectionMode { none, single, multiple }
 
-/// A fluent-styled list tile.
+/// A windows-styled list tile.
 ///
 /// ![ListViewItem inside a ListView](https://docs.microsoft.com/en-us/windows/apps/design/controls/images/listview-grouped-example-resized-final.png)
 ///
@@ -29,7 +29,7 @@ enum ListTileSelectionMode { none, single, multiple }
 ///  * [ListView], a scrollable list of widgets arranged linearly.
 ///  * <https://docs.microsoft.com/en-us/windows/apps/design/controls/item-templates-listview>
 class ListTile extends StatelessWidget {
-  /// A fluent-styled list tile
+  /// A windows-styled list tile
   const ListTile({
     super.key,
     this.tileColor,
