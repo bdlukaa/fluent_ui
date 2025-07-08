@@ -375,9 +375,15 @@ class _MyHomePageState extends State<MyHomePage> with WindowListener {
       body: const SizedBox.shrink(),
     ),
     PaneItem(
-      key: const ValueKey('/theming/icons'),
+      key: const ValueKey('/theming/icons/windows'),
       icon: const WindowsIcon(WindowsIcons.flag),
-      title: const Text('Icons'),
+      title: const Text('Windows Icons'),
+      body: const SizedBox.shrink(),
+    ),
+    PaneItem(
+      key: const ValueKey('/theming/icons/fluent'),
+      icon: const WindowsIcon(WindowsIcons.flag),
+      title: const Text('Fluent Icons'),
       body: const SizedBox.shrink(),
     ),
     PaneItem(
@@ -1058,10 +1064,18 @@ final router = GoRouter(navigatorKey: rootNavigatorKey, routes: [
 
       /// Icons
       GoRoute(
-        path: '/theming/icons',
+        path: '/theming/icons/windows',
         builder: (context, state) => DeferredWidget(
           theming.loadLibrary,
-          () => theming.IconsPage(),
+          () => theming.IconsPage(set: WindowsIcons.allIcons),
+        ),
+      ),
+
+      GoRoute(
+        path: '/theming/icons/fluent',
+        builder: (context, state) => DeferredWidget(
+          theming.loadLibrary,
+          () => theming.IconsPage(set: FluentIcons.allIcons),
         ),
       ),
 

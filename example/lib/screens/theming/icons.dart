@@ -13,7 +13,7 @@ Future<void> showCopiedSnackbar(BuildContext context, String copiedText) {
             TextSpan(
               text: copiedText,
               style: TextStyle(
-                color: Colors.blue.defaultBrushFor(
+                color: FluentTheme.of(context).accentColor.defaultBrushFor(
                   FluentTheme.of(context).brightness,
                 ),
                 fontWeight: FontWeight.w500,
@@ -27,7 +27,9 @@ Future<void> showCopiedSnackbar(BuildContext context, String copiedText) {
 }
 
 class IconsPage extends StatefulWidget {
-  const IconsPage({super.key});
+  final Map<String, IconData> set;
+
+  const IconsPage({super.key, required this.set});
 
   @override
   State<IconsPage> createState() => _IconsPageState();
@@ -40,7 +42,9 @@ class _IconsPageState extends State<IconsPage> {
   Widget build(BuildContext context) {
     assert(debugCheckHasFluentTheme(context));
 
-    final entries = WindowsIcons.allIcons.entries.where(
+    final theme = FluentTheme.of(context);
+
+    final entries = widget.set.entries.where(
       (icon) =>
           filterText.isEmpty ||
           // Remove '_'
@@ -48,21 +52,36 @@ class _IconsPageState extends State<IconsPage> {
               .replaceAll('_', '')
               // toLowerCase
               .toLowerCase()
-              .contains(filterText
-                  .toLowerCase()
-                  // Remove spaces
-                  .replaceAll(' ', '')),
+              .contains(
+                filterText.toLowerCase()
+                // Remove spaces
+                .replaceAll(' ', ''),
+              ),
     );
 
     return ScaffoldPage(
       header: PageHeader(
-        title: const Text('Windows Icons Gallery showcase'),
+        title: RichText(
+          text: TextSpan(
+            style: theme.typography.title,
+            children: [
+              const TextSpan(text: 'Windows Icons Gallery showcase '),
+              TextSpan(
+                text: '(${widget.set.length})',
+                style: theme.typography.caption,
+              ),
+            ],
+          ),
+        ),
         commandBar: SizedBox(
           width: 240.0,
           child: Tooltip(
             message: 'Filter by name',
             child: TextBox(
-              suffix: const WindowsIcon(WindowsIcons.search),
+              suffix: const Padding(
+                padding: EdgeInsetsDirectional.only(end: 8.0),
+                child: WindowsIcon(WindowsIcons.search, size: 16),
+              ),
               placeholder: 'Type to filter icons by name (e.g "logo")',
               onChanged: (value) => setState(() {
                 filterText = value;
@@ -95,7 +114,12 @@ class _IconsPageState extends State<IconsPage> {
           final e = entries.elementAt(index);
           return HoverButton(
             onPressed: () async {
-              final copyText = 'WindowsIcons.${e.key}';
+              final prefix = switch (e.value.fontFamily) {
+                'SegoeIcons' => 'WindowsIcons',
+                'FluentIcons' => 'FluentIcons',
+                _ => 'Icons',
+              };
+              final copyText = '$prefix.${e.key}';
               await FlutterClipboard.copy(copyText);
               if (context.mounted) showCopiedSnackbar(context, copyText);
             },
@@ -110,10 +134,10 @@ class _IconsPageState extends State<IconsPage> {
                       '\nWindowsIcons.${e.key}\n(tap to copy to clipboard)\n',
                   child: RepaintBoundary(
                     child: AnimatedContainer(
-                      duration: FluentTheme.of(context).fasterAnimationDuration,
+                      duration: theme.fasterAnimationDuration,
                       decoration: BoxDecoration(
                         color: ButtonThemeData.uncheckedInputColor(
-                          FluentTheme.of(context),
+                          theme,
                           states,
                           transparentWhenNone: true,
                         ),
@@ -146,7 +170,9 @@ class _IconsPageState extends State<IconsPage> {
   }
 
   static String snakeCasetoSentenceCase(String original) {
-    return '${original[0].toUpperCase()}${original.substring(1)}'
-        .replaceAll(RegExp(r'(_|-)+'), ' ');
+    return '${original[0].toUpperCase()}${original.substring(1)}'.replaceAll(
+      RegExp(r'(_|-)+'),
+      ' ',
+    );
   }
 }
