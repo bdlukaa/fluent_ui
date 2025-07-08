@@ -26,9 +26,8 @@ class _DatePickerPageState extends State<DatePickerPage> with PageMixin {
       header: PageHeader(
         title: const Text('DatePicker'),
         commandBar: Button(
-          onPressed: () => setState(
-            () => simpleTime = hiddenTime = flexTime = null,
-          ),
+          onPressed: () =>
+              setState(() => simpleTime = hiddenTime = flexTime = null),
           child: const Text('Clear'),
         ),
       ),
@@ -107,19 +106,21 @@ DatePicker(
   onChanged: (time) => setState(() => selected = time),
   showYear: false,
 ),''',
-          child: Row(children: [
-            DatePicker(
-              key: datePickerKey,
-              selected: hiddenTime,
-              onChanged: (v) => setState(() => hiddenTime = v),
-              showYear: false,
-            ),
-            const Spacer(),
-            Button(
-              onPressed: () => datePickerKey.currentState?.open(),
-              child: const Text('Show picker'),
-            ),
-          ]),
+          child: Row(
+            children: [
+              DatePicker(
+                key: datePickerKey,
+                selected: hiddenTime,
+                onChanged: (v) => setState(() => hiddenTime = v),
+                showYear: false,
+              ),
+              const Spacer(),
+              Button(
+                onPressed: () => datePickerKey.currentState?.open(),
+                child: const Text('Show picker'),
+              ),
+            ],
+          ),
         ),
         subtitle(content: const Text('A DatePicker with flex layout')),
         CardHighlight(

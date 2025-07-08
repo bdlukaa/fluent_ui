@@ -83,10 +83,7 @@ class RevealFocusPage extends StatelessWidget with PageMixin {
           useStackApproach: false,
           child: Card(
             backgroundColor: color,
-            child: const SizedBox(
-              width: 50.0,
-              height: 50.0,
-            ),
+            child: const SizedBox(width: 50.0, height: 50.0),
           ),
         );
       },

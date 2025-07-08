@@ -318,7 +318,7 @@ class NavigationPane with Diagnosticable {
       margin: padding,
       child: PaneItem(
         title: itemTitle,
-        icon: const Icon(FluentIcons.global_nav_button),
+        icon: const WindowsIcon(WindowsIcons.global_nav_button),
         body: const SizedBox.shrink(),
       ).build(context, false, onPressed, displayMode: PaneDisplayMode.compact),
     );
@@ -727,7 +727,7 @@ class _TopNavigationPaneState extends State<_TopNavigationPane> {
                 controller: overflowController,
                 child:
                     PaneItem(
-                      icon: const Icon(FluentIcons.more),
+                      icon: const WindowsIcon(WindowsIcons.more),
                       body: const SizedBox.shrink(),
                     ).build(
                       context,
@@ -1048,7 +1048,7 @@ class _MenuFlyoutPaneItemExpanderState
                 ),
                 child: child,
               ),
-              child: const Icon(FluentIcons.chevron_down, size: 10.0),
+              child: const WindowsIcon(WindowsIcons.chevron_down, size: 10.0),
             ),
           ).build(context),
           AnimatedSize(

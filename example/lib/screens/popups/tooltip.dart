@@ -47,7 +47,7 @@ class TooltipPage extends StatelessWidget with PageMixin {
   useMousePosition: false,
   style: const TooltipThemeData(preferBelow: true),
   child: IconButton(
-    icon: const Icon(FluentIcons.graph_symbol, size: 24.0),
+    icon: const WindowsIcon(WindowsIcons.graph_symbol, size: 24.0),
     onPressed: () {},
   ),
 ),''',
@@ -59,17 +59,13 @@ class TooltipPage extends StatelessWidget with PageMixin {
               useMousePosition: false,
               style: const TooltipThemeData(preferBelow: true),
               child: IconButton(
-                icon: const Icon(FluentIcons.graph_symbol, size: 24.0),
+                icon: const WindowsIcon(FluentIcons.graph_symbol, size: 24.0),
                 onPressed: () {},
               ),
             ),
           ),
         ),
-        subtitle(
-          content: const Text(
-            'Multiple tooltips next to each other',
-          ),
-        ),
+        subtitle(content: const Text('Multiple tooltips next to each other')),
         const Text('This usually happen on a CommandBar inside an app bar.'),
         CardHighlight(
           codeSnippet: '''Tooltip(
@@ -78,7 +74,7 @@ class TooltipPage extends StatelessWidget with PageMixin {
   useMousePosition: false,
   style: const TooltipThemeData(preferBelow: true),
   child: IconButton(
-    icon: const Icon(FluentIcons.graph_symbol, size: 24.0),
+    icon: const WindowsIcon(WindowsIcons.graph_symbol, size: 24.0),
     onPressed: () {},
   ),
 ),''',
@@ -106,11 +102,7 @@ class TooltipPage extends StatelessWidget with PageMixin {
             ),
           ),
         ),
-        subtitle(
-          content: const Text(
-            'Extra long tooltip content that wraps',
-          ),
-        ),
+        subtitle(content: const Text('Extra long tooltip content that wraps')),
         CardHighlight(
           codeSnippet: '''Tooltip(
   message:
@@ -123,16 +115,17 @@ class TooltipPage extends StatelessWidget with PageMixin {
     waitDuration: Duration(),
   ),
   child: IconButton(
-    icon: const Icon(FluentIcons.text_overflow, size: 24.0),
+    icon: const WindowsIcon(WindowsIcons.text_overflow, size: 24.0),
     onPressed: () {},
   ),
 ),''',
           child: Align(
             alignment: AlignmentDirectional.centerStart,
             child: Tooltip(
-              message:
-                  List.generate(25, (_) => 'This is a really long tooltip! ')
-                      .join(" "),
+              message: List.generate(
+                25,
+                (_) => 'This is a really long tooltip! ',
+              ).join(" "),
               useMousePosition: false,
               style: const TooltipThemeData(
                 maxWidth: 500,
@@ -140,7 +133,7 @@ class TooltipPage extends StatelessWidget with PageMixin {
                 waitDuration: Duration(),
               ),
               child: IconButton(
-                icon: const Icon(FluentIcons.text_overflow, size: 24.0),
+                icon: const WindowsIcon(FluentIcons.text_overflow, size: 24.0),
                 onPressed: () {},
               ),
             ),

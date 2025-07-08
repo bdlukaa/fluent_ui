@@ -1,8 +1,7 @@
 // ignore_for_file: constant_identifier_names
 
-import 'package:flutter/foundation.dart';
-
 import 'package:fluent_ui/fluent_ui.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter_acrylic/flutter_acrylic.dart';
 import 'package:provider/provider.dart';
 
@@ -30,10 +29,7 @@ bool get kIsWindowEffectsSupported {
       ].contains(defaultTargetPlatform);
 }
 
-const _LinuxWindowEffects = [
-  WindowEffect.disabled,
-  WindowEffect.transparent,
-];
+const _LinuxWindowEffects = [WindowEffect.disabled, WindowEffect.transparent];
 
 const _WindowsWindowEffects = [
   WindowEffect.disabled,
@@ -136,15 +132,15 @@ class _SettingsState extends State<Settings> with PageMixin {
               onChanged: (value) {
                 if (value) appTheme.displayMode = mode;
               },
-              content: Text(
-                mode.toString().replaceAll('PaneDisplayMode.', ''),
-              ),
+              content: Text(mode.toString().replaceAll('PaneDisplayMode.', '')),
             ),
           );
         }),
         biggerSpacer,
-        Text('Navigation Indicator',
-            style: FluentTheme.of(context).typography.subtitle),
+        Text(
+          'Navigation Indicator',
+          style: FluentTheme.of(context).typography.subtitle,
+        ),
         spacer,
         ...List.generate(NavigationIndicators.values.length, (index) {
           final mode = NavigationIndicators.values[index];
@@ -162,22 +158,26 @@ class _SettingsState extends State<Settings> with PageMixin {
           );
         }),
         biggerSpacer,
-        Text('Accent Color',
-            style: FluentTheme.of(context).typography.subtitle),
+        Text(
+          'Accent Color',
+          style: FluentTheme.of(context).typography.subtitle,
+        ),
         spacer,
-        Wrap(children: [
-          Tooltip(
-            message: accentColorNames[0],
-            child: _buildColorBlock(appTheme, systemAccentColor),
-          ),
-          ...List.generate(Colors.accentColors.length, (index) {
-            final color = Colors.accentColors[index];
-            return Tooltip(
-              message: accentColorNames[index + 1],
-              child: _buildColorBlock(appTheme, color),
-            );
-          }),
-        ]),
+        Wrap(
+          children: [
+            Tooltip(
+              message: accentColorNames[0],
+              child: _buildColorBlock(appTheme, systemAccentColor),
+            ),
+            ...List.generate(Colors.accentColors.length, (index) {
+              final color = Colors.accentColors[index];
+              return Tooltip(
+                message: accentColorNames[index + 1],
+                child: _buildColorBlock(appTheme, color),
+              );
+            }),
+          ],
+        ),
         if (kIsWindowEffectsSupported) ...[
           biggerSpacer,
           Text(
@@ -202,9 +202,7 @@ class _SettingsState extends State<Settings> with PageMixin {
                     appTheme.setEffect(mode, context);
                   }
                 },
-                content: Text(
-                  mode.toString().replaceAll('WindowEffect.', ''),
-                ),
+                content: Text(mode.toString().replaceAll('WindowEffect.', '')),
               ),
             );
           }),
@@ -239,7 +237,7 @@ class _SettingsState extends State<Settings> with PageMixin {
         Text('Locale', style: FluentTheme.of(context).typography.subtitle),
         description(
           content: const Text(
-            'The locale used by the fluent_ui widgets, such as TimePicker and '
+            'The locale used by the Windows UI widgets, such as TimePicker and '
             'DatePicker. This does not reflect the language of this showcase app.',
           ),
         ),
@@ -247,25 +245,22 @@ class _SettingsState extends State<Settings> with PageMixin {
         Wrap(
           spacing: 15.0,
           runSpacing: 10.0,
-          children: List.generate(
-            supportedLocales.length,
-            (index) {
-              final locale = supportedLocales[index];
+          children: List.generate(supportedLocales.length, (index) {
+            final locale = supportedLocales[index];
 
-              return Padding(
-                padding: const EdgeInsetsDirectional.only(bottom: 8.0),
-                child: RadioButton(
-                  checked: currentLocale == locale,
-                  onChanged: (value) {
-                    if (value) {
-                      appTheme.locale = locale;
-                    }
-                  },
-                  content: Text('$locale'),
-                ),
-              );
-            },
-          ),
+            return Padding(
+              padding: const EdgeInsetsDirectional.only(bottom: 8.0),
+              child: RadioButton(
+                checked: currentLocale == locale,
+                onChanged: (value) {
+                  if (value) {
+                    appTheme.locale = locale;
+                  }
+                },
+                content: Text('$locale'),
+              ),
+            );
+          }),
         ),
       ],
     );

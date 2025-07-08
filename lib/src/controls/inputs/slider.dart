@@ -22,7 +22,7 @@ import 'package:flutter/rendering.dart';
 ///   * [RatingBar], that allows users to view and set ratings
 ///   * <https://docs.microsoft.com/en-us/windows/apps/design/controls/slider>
 class Slider extends StatefulWidget {
-  /// Creates a fluent-styled slider.
+  /// Creates a windows-styled slider.
   const Slider({
     super.key,
     required this.value,
@@ -435,7 +435,7 @@ class _CustomTrackShape extends m.RoundedRectSliderTrackShape {
 ///
 /// There is a shadow for the resting, pressed, hovered, and focused state.
 class SliderThumbShape extends m.SliderComponentShape {
-  /// Create a fluent-styled slider thumb;
+  /// Create a windows-styled slider thumb;
   const SliderThumbShape({
     this.enabledThumbRadius = 10.0,
     this.disabledThumbRadius,

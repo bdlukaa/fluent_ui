@@ -163,7 +163,7 @@ class Tab extends StatefulWidget {
     this.foregroundColor,
     this.selectedForegroundColor,
     this.outlineColor,
-    this.closeIcon = const Icon(FluentIcons.chrome_close),
+    this.closeIcon = const WindowsIcon(WindowsIcons.chrome_close),
     this.onClosed,
     this.semanticLabel,
     this.disabled = false,

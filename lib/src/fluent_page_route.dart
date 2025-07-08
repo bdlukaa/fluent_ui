@@ -19,7 +19,7 @@ import 'package:fluent_ui/fluent_ui.dart';
 ///
 ///  * [FluentPageRoute], which is the [PageRoute] version of this class
 class FluentPage<T> extends Page<T> {
-  /// Creates a fluent-styled page.
+  /// Creates a windows-styled page.
   const FluentPage({
     required this.child,
     this.maintainState = true,

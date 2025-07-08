@@ -7,7 +7,7 @@
     <a title="GitHub License" href="https://github.com/bdlukaa/fluent_ui/blob/master/LICENSE">
       <img src="https://img.shields.io/github/license/bdlukaa/fluent_ui?style=flat-square&color=f12253" />
     </a>
-    <a title="Made with Fluent Design" href="https://github.com/bdlukaa/fluent_ui">
+    <a title="Made with Windows Design" href="https://github.com/bdlukaa/fluent_ui">
       <img src="https://img.shields.io/badge/fluent-design-blue?style=flat-square&color=gray&labelColor=0078D7">
     </a>
     <a title="Web Example" href="https://bdlukaa.github.io/fluent_ui">
@@ -28,7 +28,7 @@
   </p>
 
   <p>
-  Unofficial implementation of Fluent UI for <a href="https://flutter.dev">Flutter</a>. It's written based on the <a href="https://docs.microsoft.com/en-us/windows/uwp/design">official documentation</a>.
+  Unofficial implementation of Windows UI for <a href="https://flutter.dev">Flutter</a>. It's written based on the <a href="https://docs.microsoft.com/en-us/windows/uwp/design">official documentation</a>.
   </p>
   <h3>
   Read the <a href="https://bdlukaa.github.io/fluent_ui/">documentation</a>
@@ -100,7 +100,7 @@ Projects using this library should use the stable channel of Flutter
 
 Are you using this library on your app? You can use a badge to tell others:
 
-<a title="Made with Fluent Design" href="https://github.com/bdlukaa/fluent_ui">
+<a title="Made with Windows Design" href="https://github.com/bdlukaa/fluent_ui">
   <img
     src="https://img.shields.io/badge/fluent-design-blue?style=flat-square&color=gray&labelColor=0078D7"
   >
@@ -109,7 +109,7 @@ Are you using this library on your app? You can use a badge to tell others:
 Add the following code to your `README.md` or to your website:
 
 ```html
-<a title="Made with Fluent Design" href="https://github.com/bdlukaa/fluent_ui">
+<a title="Made with Windows Design" href="https://github.com/bdlukaa/fluent_ui">
   <img
     src="https://img.shields.io/badge/fluent-design-blue?style=flat-square&color=gray&labelColor=0078D7"
   />

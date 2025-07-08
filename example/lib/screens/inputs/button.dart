@@ -44,9 +44,7 @@ class _ButtonPageState extends State<ButtonPage> with PageMixin {
           return IconButton(
             autofocus: splitButtonColor == color,
             style: ButtonStyle(
-              padding: WidgetStatePropertyAll(
-                EdgeInsets.all(4.0),
-              ),
+              padding: WidgetStatePropertyAll(EdgeInsets.all(4.0)),
             ),
             onPressed: () {
               setState(() => splitButtonColor = color);
@@ -77,22 +75,24 @@ class _ButtonPageState extends State<ButtonPage> with PageMixin {
   child: const Text('Standard Button'),
   onPressed: disabled ? null : () => debugPrint('pressed button'),
 )''',
-          child: Row(children: [
-            Button(
-              onPressed: simpleDisabled ? null : () {},
-              child: const Text('Standard Button'),
-            ),
-            const Spacer(),
-            ToggleSwitch(
-              checked: simpleDisabled,
-              onChanged: (v) {
-                setState(() {
-                  simpleDisabled = v;
-                });
-              },
-              content: const Text('Disabled'),
-            ),
-          ]),
+          child: Row(
+            children: [
+              Button(
+                onPressed: simpleDisabled ? null : () {},
+                child: const Text('Standard Button'),
+              ),
+              const Spacer(),
+              ToggleSwitch(
+                checked: simpleDisabled,
+                onChanged: (v) {
+                  setState(() {
+                    simpleDisabled = v;
+                  });
+                },
+                content: const Text('Disabled'),
+              ),
+            ],
+          ),
         ),
         subtitle(content: const Text('Accent Style applied to Button')),
         CardHighlight(
@@ -100,22 +100,24 @@ class _ButtonPageState extends State<ButtonPage> with PageMixin {
   child: const Text('Filled Button'),
   onPressed: disabled ? null : () => debugPrint('pressed button'),
 )''',
-          child: Row(children: [
-            FilledButton(
-              onPressed: filledDisabled ? null : () {},
-              child: const Text('Filled Button'),
-            ),
-            const Spacer(),
-            ToggleSwitch(
-              checked: filledDisabled,
-              onChanged: (v) {
-                setState(() {
-                  filledDisabled = v;
-                });
-              },
-              content: const Text('Disabled'),
-            ),
-          ]),
+          child: Row(
+            children: [
+              FilledButton(
+                onPressed: filledDisabled ? null : () {},
+                child: const Text('Filled Button'),
+              ),
+              const Spacer(),
+              ToggleSwitch(
+                checked: filledDisabled,
+                onChanged: (v) {
+                  setState(() {
+                    filledDisabled = v;
+                  });
+                },
+                content: const Text('Disabled'),
+              ),
+            ],
+          ),
         ),
         subtitle(content: const Text('Hyperlink Button')),
         const Text(
@@ -128,7 +130,7 @@ class _ButtonPageState extends State<ButtonPage> with PageMixin {
   uri: Uri.parse('https://github.com/bdlukaa/fluent_ui')
   builder: (Context, open) {
     return HyperlinkButton(
-      child: Text('Fluent UI homepage'),
+      child: Text('Windows UI homepage'),
       onPressed: open,
     );
   },
@@ -145,7 +147,7 @@ class _ButtonPageState extends State<ButtonPage> with PageMixin {
                       onPressed: hyperlinkDisabled ? null : open,
                       child: Semantics(
                         link: true,
-                        child: Text('Fluent UI homepage'),
+                        child: Text('Windows UI homepage'),
                       ),
                     ),
                   );
@@ -171,57 +173,63 @@ class _ButtonPageState extends State<ButtonPage> with PageMixin {
             if (iconSmall) {
               return '''SmallIconButton(
   child: IconButton(
-    icon: const Icon(FluentIcons.graph_symbol, size: 20.0),
+    icon: const WindowsIcon(WindowsIcons.graph_symbol, size: 20.0),
     onPressed: disabled ? null : () => debugPrint('pressed button'),
   ),
 )''';
             }
 
             return '''IconButton(
-  icon: const Icon(FluentIcons.graph_symbol, size: 24.0),
+  icon: const WindowsIcon(WindowsIcons.graph_symbol, size: 24.0),
   onPressed: disabled ? null : () => debugPrint('pressed button'),
 )''';
           }(),
-          child: Row(children: [
-            () {
-              final button = IconButton(
-                icon: Icon(
-                  FluentIcons.graph_symbol,
-                  size: iconSmall ? 20.0 : 24.0,
-                ),
-                onPressed: iconDisabled ? null : () {},
-              );
+          child: Row(
+            children: [
+              () {
+                final button = IconButton(
+                  icon: Icon(
+                    FluentIcons.graph_symbol,
+                    size: iconSmall ? 20.0 : 24.0,
+                  ),
+                  onPressed: iconDisabled ? null : () {},
+                );
 
-              if (iconSmall) return SmallIconButton(child: button);
+                if (iconSmall) return SmallIconButton(child: button);
 
-              return button;
-            }(),
-            const Spacer(),
-            Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-              Checkbox(
-                checked: iconSmall,
-                onChanged: (v) {
-                  setState(() {
-                    iconSmall = v ?? !iconSmall;
-                  });
-                },
-                content: const Text('Small'),
+                return button;
+              }(),
+              const Spacer(),
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Checkbox(
+                    checked: iconSmall,
+                    onChanged: (v) {
+                      setState(() {
+                        iconSmall = v ?? !iconSmall;
+                      });
+                    },
+                    content: const Text('Small'),
+                  ),
+                  const SizedBox(height: 4.0),
+                  Checkbox(
+                    checked: iconDisabled,
+                    onChanged: (v) {
+                      setState(() {
+                        iconDisabled = v ?? !iconDisabled;
+                      });
+                    },
+                    content: const Text('Disabled'),
+                  ),
+                ],
               ),
-              const SizedBox(height: 4.0),
-              Checkbox(
-                checked: iconDisabled,
-                onChanged: (v) {
-                  setState(() {
-                    iconDisabled = v ?? !iconDisabled;
-                  });
-                },
-                content: const Text('Disabled'),
-              ),
-            ]),
-          ]),
+            ],
+          ),
         ),
         subtitle(
-            content: const Text('A simple ToggleButton with text content')),
+          content: const Text('A simple ToggleButton with text content'),
+        ),
         description(
           content: const Text(
             'A ToggleButton looks like a Button, but works like a CheckBox. It '
@@ -236,29 +244,31 @@ ToggleButton(
   checked: checked,
   onPressed: disabled ? null : (v) => setState(() => checked = v),
 )''',
-          child: Row(children: [
-            ToggleButton(
-              checked: toggleState,
-              onChanged: toggleDisabled
-                  ? null
-                  : (v) {
-                      setState(() {
-                        toggleState = v;
-                      });
-                    },
-              child: const Text('Toggle Button'),
-            ),
-            const Spacer(),
-            ToggleSwitch(
-              checked: toggleDisabled,
-              onChanged: (v) {
-                setState(() {
-                  toggleDisabled = v;
-                });
-              },
-              content: const Text('Disabled'),
-            ),
-          ]),
+          child: Row(
+            children: [
+              ToggleButton(
+                checked: toggleState,
+                onChanged: toggleDisabled
+                    ? null
+                    : (v) {
+                        setState(() {
+                          toggleState = v;
+                        });
+                      },
+                child: const Text('Toggle Button'),
+              ),
+              const Spacer(),
+              ToggleSwitch(
+                checked: toggleDisabled,
+                onChanged: (v) {
+                  setState(() {
+                    toggleDisabled = v;
+                  });
+                },
+                content: const Text('Disabled'),
+              ),
+            ],
+          ),
         ),
         subtitle(content: const Text('DropDownButton')),
         const Text(
@@ -274,38 +284,43 @@ ToggleButton(
     MenuFlyoutItem(text: const Text('Reply all'), onPressed: () {}),
   ],
 )''',
-          child: Row(children: [
-            DropDownButton(
-              title: Text('Email'),
-              items: [
-                MenuFlyoutItem(text: const Text('Send'), onPressed: () {}),
-                MenuFlyoutSeparator(),
-                MenuFlyoutItem(text: const Text('Reply'), onPressed: null),
-                MenuFlyoutItem(text: const Text('Reply all'), onPressed: () {}),
-              ],
-            ),
-            SizedBox(width: 10.0),
-            DropDownButton(
-              title: Icon(FluentIcons.mail),
-              items: [
-                MenuFlyoutItem(
-                  leading: Icon(FluentIcons.send),
-                  text: const Text('Send'),
-                  onPressed: () {},
-                ),
-                MenuFlyoutItem(
-                  leading: Icon(FluentIcons.reply),
-                  text: const Text('Reply'),
-                  onPressed: () {},
-                ),
-                MenuFlyoutItem(
-                  leading: Icon(FluentIcons.reply_all),
-                  text: const Text('Reply all'),
-                  onPressed: () {},
-                ),
-              ],
-            ),
-          ]),
+          child: Row(
+            children: [
+              DropDownButton(
+                title: Text('Email'),
+                items: [
+                  MenuFlyoutItem(text: const Text('Send'), onPressed: () {}),
+                  MenuFlyoutSeparator(),
+                  MenuFlyoutItem(text: const Text('Reply'), onPressed: null),
+                  MenuFlyoutItem(
+                    text: const Text('Reply all'),
+                    onPressed: () {},
+                  ),
+                ],
+              ),
+              SizedBox(width: 10.0),
+              DropDownButton(
+                title: WindowsIcon(WindowsIcons.mail),
+                items: [
+                  MenuFlyoutItem(
+                    leading: WindowsIcon(WindowsIcons.send),
+                    text: const Text('Send'),
+                    onPressed: () {},
+                  ),
+                  MenuFlyoutItem(
+                    leading: WindowsIcon(WindowsIcons.mail_reply),
+                    text: const Text('Reply'),
+                    onPressed: () {},
+                  ),
+                  MenuFlyoutItem(
+                    leading: WindowsIcon(WindowsIcons.mail_reply_all),
+                    text: const Text('Reply all'),
+                    onPressed: () {},
+                  ),
+                ],
+              ),
+            ],
+          ),
         ),
         subtitle(content: const Text('SplitButton')),
         description(
@@ -316,7 +331,8 @@ ToggleButton(
           ),
         ),
         CardHighlight(
-          codeSnippet: '''final splitButtonKey = GlobalKey<SplitButtonState>();
+          codeSnippet:
+              '''final splitButtonKey = GlobalKey<SplitButtonState>();
 
 // To create a toggle button, use the [SplitButton.toggle] constructor
 SplitButton(
@@ -365,63 +381,70 @@ SplitButton(
 // Show the flyout programmatically
 splitButtonKey.currentState?.showFlyout();
 ''',
-          child: Row(children: [
-            Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-              Padding(
-                padding: const EdgeInsets.only(bottom: 4.0),
-                child: Text(
-                  'SplitButton with custom content',
-                  style: theme.typography.caption,
-                ),
-              ),
-              SplitButton(
-                enabled: !splitButtonDisabled,
-                flyout: splitButtonFlyout,
-                child: Container(
-                  decoration: BoxDecoration(
-                    color: splitButtonDisabled
-                        ? splitButtonColor.secondaryBrushFor(theme.brightness)
-                        : splitButtonColor,
-                    borderRadius: const BorderRadiusDirectional.horizontal(
-                      start: Radius.circular(4.0),
+          child: Row(
+            children: [
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.only(bottom: 4.0),
+                    child: Text(
+                      'SplitButton with custom content',
+                      style: theme.typography.caption,
                     ),
                   ),
-                  height: _kSplitButtonHeight,
-                  width: _kSplitButtonWidth,
-                ),
+                  SplitButton(
+                    enabled: !splitButtonDisabled,
+                    flyout: splitButtonFlyout,
+                    child: Container(
+                      decoration: BoxDecoration(
+                        color: splitButtonDisabled
+                            ? splitButtonColor.secondaryBrushFor(
+                                theme.brightness,
+                              )
+                            : splitButtonColor,
+                        borderRadius: const BorderRadiusDirectional.horizontal(
+                          start: Radius.circular(4.0),
+                        ),
+                      ),
+                      height: _kSplitButtonHeight,
+                      width: _kSplitButtonWidth,
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.only(bottom: 4.0, top: 8.0),
+                    child: Text(
+                      'A toggleable SplitButton with text content',
+                      style: theme.typography.caption,
+                    ),
+                  ),
+                  SplitButton.toggle(
+                    enabled: !splitButtonDisabled,
+                    checked: splitButtonState,
+                    onInvoked: () {
+                      debugPrint('Invoked split button primary action');
+                      setState(() => splitButtonState = !splitButtonState);
+                    },
+                    flyout: splitButtonFlyout,
+                    child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Text('Choose color'),
+                    ),
+                  ),
+                ],
               ),
-              Padding(
-                padding: const EdgeInsets.only(bottom: 4.0, top: 8.0),
-                child: Text(
-                  'A toggleable SplitButton with text content',
-                  style: theme.typography.caption,
-                ),
-              ),
-              SplitButton.toggle(
-                enabled: !splitButtonDisabled,
-                checked: splitButtonState,
-                onInvoked: () {
-                  debugPrint('Invoked split button primary action');
-                  setState(() => splitButtonState = !splitButtonState);
+              const Spacer(),
+              ToggleSwitch(
+                checked: splitButtonDisabled,
+                onChanged: (v) {
+                  setState(() {
+                    splitButtonDisabled = v;
+                  });
                 },
-                flyout: splitButtonFlyout,
-                child: Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Text('Choose color'),
-                ),
+                content: const Text('Disabled'),
               ),
-            ]),
-            const Spacer(),
-            ToggleSwitch(
-              checked: splitButtonDisabled,
-              onChanged: (v) {
-                setState(() {
-                  splitButtonDisabled = v;
-                });
-              },
-              content: const Text('Disabled'),
-            ),
-          ]),
+            ],
+          ),
         ),
         subtitle(content: const Text('RadioButton')),
         description(
@@ -447,15 +470,15 @@ Column(
     );
   }),
 )''',
-          child: Row(children: [
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: List.generate(
-                3,
-                (index) {
+          child: Row(
+            children: [
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: List.generate(3, (index) {
                   return Padding(
                     padding: EdgeInsetsDirectional.only(
-                        bottom: index == 2 ? 0.0 : 14.0),
+                      bottom: index == 2 ? 0.0 : 14.0,
+                    ),
                     child: RadioButton(
                       checked: radioButtonSelected == index,
                       onChanged: radioButtonDisabled
@@ -470,20 +493,20 @@ Column(
                       content: Text('RadioButton ${index + 1}'),
                     ),
                   );
-                },
+                }),
               ),
-            ),
-            const Spacer(),
-            ToggleSwitch(
-              checked: radioButtonDisabled,
-              onChanged: (v) {
-                setState(() {
-                  radioButtonDisabled = v;
-                });
-              },
-              content: const Text('Disabled'),
-            )
-          ]),
+              const Spacer(),
+              ToggleSwitch(
+                checked: radioButtonDisabled,
+                onChanged: (v) {
+                  setState(() {
+                    radioButtonDisabled = v;
+                  });
+                },
+                content: const Text('Disabled'),
+              ),
+            ],
+          ),
         ),
       ],
     );

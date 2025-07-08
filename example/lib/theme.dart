@@ -45,10 +45,7 @@ class AppTheme extends ChangeNotifier {
   void setEffect(WindowEffect effect, BuildContext context) {
     Window.setEffect(
       effect: effect,
-      color: [
-        WindowEffect.solid,
-        WindowEffect.acrylic,
-      ].contains(effect)
+      color: [WindowEffect.solid, WindowEffect.acrylic].contains(effect)
           ? FluentTheme.of(context).micaBackgroundColor.withValues(alpha: 0.05)
           : Colors.transparent,
       dark: FluentTheme.of(context).brightness.isDark,

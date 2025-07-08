@@ -14,18 +14,9 @@ class _ExpanderPageState extends State<ExpanderPage> with PageMixin {
   final expanderKey = GlobalKey<ExpanderState>(debugLabel: 'Expander key');
 
   bool crostOpen = false;
-  List<String> crosts = [
-    'Classic',
-    'Whole wheat',
-    'Gluten free',
-  ];
+  List<String> crosts = ['Classic', 'Whole wheat', 'Gluten free'];
   String crost = 'Whole wheat';
-  List<String> sizes = [
-    'Regular',
-    'Thin',
-    'Pan',
-    'Stuffed',
-  ];
+  List<String> sizes = ['Regular', 'Thin', 'Pan', 'Stuffed'];
   String size = 'Pan';
   bool checked = false;
 
@@ -79,32 +70,37 @@ class _ExpanderPageState extends State<ExpanderPage> with PageMixin {
                     '$crost, $size',
                     style: FluentTheme.of(context).typography.caption,
                   ),
-            content:
-                Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: crosts
-                    .map(
-                      (e) => Padding(
-                        padding: const EdgeInsetsDirectional.only(bottom: 8.0),
-                        child: RadioButton(
-                          checked: crost == e,
-                          onChanged: (selected) {
-                            if (selected) setState(() => crost = e);
-                          },
-                          content: Text(e),
+            content: Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: crosts
+                      .map(
+                        (e) => Padding(
+                          padding: const EdgeInsetsDirectional.only(
+                            bottom: 8.0,
+                          ),
+                          child: RadioButton(
+                            checked: crost == e,
+                            onChanged: (selected) {
+                              if (selected) setState(() => crost = e);
+                            },
+                            content: Text(e),
+                          ),
                         ),
-                      ),
-                    )
-                    .toList(),
-              ),
-              const SizedBox(width: 12.0),
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: sizes
-                    .map((e) => Padding(
-                          padding:
-                              const EdgeInsetsDirectional.only(bottom: 8.0),
+                      )
+                      .toList(),
+                ),
+                const SizedBox(width: 12.0),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: sizes
+                      .map(
+                        (e) => Padding(
+                          padding: const EdgeInsetsDirectional.only(
+                            bottom: 8.0,
+                          ),
                           child: RadioButton(
                             checked: size == e,
                             onChanged: (selected) {
@@ -112,10 +108,12 @@ class _ExpanderPageState extends State<ExpanderPage> with PageMixin {
                             },
                             content: Text(e),
                           ),
-                        ))
-                    .toList(),
-              ),
-            ]),
+                        ),
+                      )
+                      .toList(),
+                ),
+              ],
+            ),
           ),
         ),
         subtitle(content: const Text('Scrollable content')),
@@ -152,8 +150,8 @@ Fusce nunc neque, imperdiet id justo non, porttitor finibus massa. Ut quis risus
         ),
         subtitle(content: const Text('Expander opened programatically')),
         CardHighlight(
-            codeSnippet:
-                '''final expanderKey = GlobalKey<ExpanderState>(debugLabel: 'Expander key');
+          codeSnippet:
+              '''final expanderKey = GlobalKey<ExpanderState>(debugLabel: 'Expander key');
 
 Expander(
   key: expanderKey,
@@ -172,7 +170,9 @@ void toggle() {
 
   expanderKey.currentState?.open = !open;
 }''',
-            child: Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
               Expanded(
                 child: Expander(
                   key: expanderKey,
@@ -191,7 +191,9 @@ void toggle() {
                 },
                 content: Text(open ? 'Close' : 'Open'),
               ),
-            ])),
+            ],
+          ),
+        ),
       ],
     );
   }

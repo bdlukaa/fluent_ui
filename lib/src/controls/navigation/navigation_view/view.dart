@@ -893,7 +893,7 @@ class NavigationAppBar with Diagnosticable {
   /// If this is provided, [backgroundColor] must be null.
   final Decoration? decoration;
 
-  /// Creates a fluent-styled app bar.
+  /// Creates a windows-styled app bar.
   const NavigationAppBar({
     this.key,
     this.leading,
@@ -960,7 +960,7 @@ class NavigationAppBar with Diagnosticable {
             child: Builder(
               builder: (context) =>
                   PaneItem(
-                    icon: const Icon(FluentIcons.back, size: 14.0),
+                    icon: const WindowsIcon(WindowsIcons.back, size: 14.0),
                     title: Text(localizations.backButtonTooltip),
                     body: const SizedBox.shrink(),
                   ).build(

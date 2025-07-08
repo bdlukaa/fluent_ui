@@ -616,7 +616,10 @@ class PaneItemExpander extends PaneItem {
   /// Whether the item is initially expanded. Defaults to false
   final bool initiallyExpanded;
 
-  static const kDefaultTrailing = Icon(FluentIcons.chevron_down, size: 8.0);
+  static const kDefaultTrailing = WindowsIcon(
+    WindowsIcons.chevron_down,
+    size: 8.0,
+  );
 
   @override
   Widget build(

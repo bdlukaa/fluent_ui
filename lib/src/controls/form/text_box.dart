@@ -54,7 +54,7 @@ class _TextBoxSelectionGestureDetectorBuilder
   }
 }
 
-/// A fluent-style text field.
+/// A Windows-style text field.
 ///
 /// A text field lets the user enter text, either with a hardware keyboard or with
 /// an onscreen keyboard.
@@ -90,7 +90,7 @@ class _TextBoxSelectionGestureDetectorBuilder
 ///    text field.
 ///  * <https://learn.microsoft.com/en-us/windows/apps/design/controls/text-box>
 class TextBox extends StatefulWidget {
-  /// Creates a fluent-style text field.
+  /// Creates a Windows-style text field.
   ///
   /// To provide a prefilled text entry, pass in a [TextEditingController] with
   /// an initial value to the [controller] parameter.
@@ -645,7 +645,7 @@ class TextBox extends StatefulWidget {
   /// {@macro flutter.painting.textPainter.textWidthBasis}
   final TextWidthBasis textWidthBasis;
 
-  /// The [TextStyle] used to indicate misspelled words in the Fluent style.
+  /// The [TextStyle] used to indicate misspelled words in the Windows style.
   ///
   /// See also:
   ///  * [SpellCheckConfiguration.misspelledTextStyle], the style configured to
@@ -1018,7 +1018,7 @@ class _TextBoxState extends State<TextBox>
       return false;
     }
 
-    if (cause == SelectionChangedCause.scribble) {
+    if (cause == SelectionChangedCause.stylusHandwriting) {
       return true;
     }
 
@@ -1285,7 +1285,7 @@ class _TextBoxState extends State<TextBox>
         themeData.accentColor.normal;
 
     // Set configuration as disabled if not otherwise specified. If specified,
-    // ensure that configuration uses Fluent text style for misspelled words
+    // ensure that configuration uses Windows text style for misspelled words
     // unless a custom style is specified.
     final spellCheckConfiguration =
         widget.spellCheckConfiguration != null &&

@@ -9,7 +9,7 @@ const kTeachingTipConstraints = BoxConstraints(
 
 typedef TooltipCloseCallback = void Function(BuildContext context);
 
-/// Displays a Fluent teaching tip at the desired position, with Fluent entrance
+/// Displays a Windows teaching tip at the desired position, with entrance
 /// and exit animations, modal barrier color, and modal barrier behavior
 /// (dialog is dismissible with a tap on the barrier).
 ///

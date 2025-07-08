@@ -97,7 +97,7 @@ class AutoSuggestBoxItem<T> {
 ///  * [Overlay], which is used to show the suggestion popup
 ///  * <https://docs.microsoft.com/en-us/windows/apps/design/controls/auto-suggest-box>
 class AutoSuggestBox<T> extends StatefulWidget {
-  /// Creates a fluent-styled auto suggest box.
+  /// Creates a windows-styled auto suggest box.
   const AutoSuggestBox({
     super.key,
     required this.items,
@@ -137,7 +137,7 @@ class AutoSuggestBox<T> extends StatefulWidget {
   }) : autovalidateMode = AutovalidateMode.disabled,
        validator = null;
 
-  /// Creates a fluent-styled auto suggest form box.
+  /// Creates a windows-styled auto suggest form box.
   const AutoSuggestBox.form({
     super.key,
     required this.items,
@@ -675,7 +675,7 @@ class AutoSuggestBoxState<T> extends State<AutoSuggestBox<T>> {
           Padding(
             padding: const EdgeInsetsDirectional.only(start: 2.0),
             child: IconButton(
-              icon: const Icon(FluentIcons.chrome_close, size: 9.0),
+              icon: const WindowsIcon(WindowsIcons.chrome_close, size: 9.0),
               onPressed: () {
                 _controller.clear();
                 widget.onChanged?.call(

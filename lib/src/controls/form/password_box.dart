@@ -26,7 +26,7 @@ enum PasswordRevealMode {
   visible,
 }
 
-/// A fluent design input form for password.
+/// A Windows design input form for password.
 ///
 /// A password box is a text input box that conceals the characters typed into
 /// it for the purpose of privacy. A password box looks like a text box, except
@@ -342,7 +342,7 @@ class _PasswordBoxState extends State<PasswordBox> {
       suffix: _canPeek
           ? SmallIconButton(
               child: IconButton(
-                icon: const Icon(FluentIcons.red_eye),
+                icon: const WindowsIcon(WindowsIcons.red_eye),
                 // todo: half eye icon, like WinUI3 ?
                 onPressed: null,
                 onTapDown: widget.enabled

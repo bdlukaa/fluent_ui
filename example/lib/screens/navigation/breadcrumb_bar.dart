@@ -44,13 +44,12 @@ class _BreadcrumbBarPageState extends State<BreadcrumbBarPage> with PageMixin {
         ),
         subtitle(content: const Text('A BreadcrumbBar control')),
         CardHighlight(
-          header: Row(children: [
-            const Expanded(child: Text('Source code')),
-            Button(
-              onPressed: resetItems,
-              child: const Text('Reset sample'),
-            ),
-          ]),
+          header: Row(
+            children: [
+              const Expanded(child: Text('Source code')),
+              Button(onPressed: resetItems, child: const Text('Reset sample')),
+            ],
+          ),
           codeSnippet: '''final _items = <BreadcrumbItem<int>>[
   BreadcrumbItem(label: Text('Home'), value: 0),
   BreadcrumbItem(label: Text('Documents'), value: 1),

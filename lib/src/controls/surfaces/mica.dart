@@ -10,7 +10,7 @@ import 'package:fluent_ui/fluent_ui.dart';
 ///
 /// ![Mica Header Preview](https://docs.microsoft.com/en-us/windows/apps/design/style/images/materials/mica-header.png)
 ///
-/// All fluent-widgets are developed to look good on a [Mica] surface, with
+/// All windows widgets are developed to look good on a [Mica] surface, with
 /// support for all transparency effects.
 ///
 /// See also:

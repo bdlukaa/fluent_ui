@@ -120,7 +120,7 @@ class YesNoPickerControl extends StatelessWidget {
               child: Button(
                 onPressed: onChanged,
                 style: buttonStyle,
-                child: const Icon(FluentIcons.check_mark),
+                child: const WindowsIcon(WindowsIcons.check_mark),
               ),
             ),
           ),
@@ -131,7 +131,7 @@ class YesNoPickerControl extends StatelessWidget {
               child: Button(
                 onPressed: onCancel,
                 style: buttonStyle,
-                child: const Icon(FluentIcons.chrome_close),
+                child: const WindowsIcon(WindowsIcons.chrome_close),
               ),
             ),
           ),
@@ -141,7 +141,7 @@ class YesNoPickerControl extends StatelessWidget {
   }
 }
 
-/// A helper widget that creates fluent-styled controls for a list
+/// A helper widget that creates windows-styled controls for a list
 ///
 /// See also:
 ///
@@ -348,7 +348,7 @@ class PickerState extends State<Picker> {
         opaque: false,
         barrierDismissible: true,
         fullscreenDialog: true,
-        pageBuilder: (context, primary, __) {
+        pageBuilder: (context, primary, _) {
           assert(debugCheckHasFluentTheme(context));
           assert(debugCheckHasMediaQuery(context));
 

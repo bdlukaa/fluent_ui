@@ -844,7 +844,7 @@ class ComboBoxItem<T> extends _ComboBoxItemContainer {
   final bool enabled;
 }
 
-/// A fluent design button for selecting from a list of items.
+/// A Windows design button for selecting from a list of items.
 ///
 /// A combo box button lets the user select from a number of items. The button
 /// shows the currently selected item as well as an arrow that opens a menu for
@@ -908,7 +908,7 @@ class ComboBox<T> extends StatefulWidget {
     this.onTap,
     this.elevation = 8,
     this.style,
-    this.icon = const Icon(FluentIcons.chevron_down),
+    this.icon = const WindowsIcon(WindowsIcons.chevron_down),
     this.iconDisabledColor,
     this.iconEnabledColor,
     this.iconSize = 8.0,

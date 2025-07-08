@@ -55,11 +55,7 @@ class Person {
     required this.imageUrl,
   });
 
-  Person copyWith({
-    String? username,
-    String? name,
-    String? imageUrl,
-  }) {
+  Person copyWith({String? username, String? name, String? imageUrl}) {
     return Person(
       username: username ?? this.username,
       name: name ?? this.name,
@@ -85,22 +81,24 @@ class Person {
   int get hashCode => username.hashCode ^ name.hashCode ^ imageUrl.hashCode;
 
   Widget build() {
-    return Builder(builder: (context) {
-      return Link(
-        uri: Uri.parse('https://www.github.com/$username'),
-        builder: (context, followLink) {
-          return Semantics(
-            link: true,
-            child: IconButton(
-              onPressed: followLink,
-              icon: SponsorButton(
-                imageUrl: imageUrl,
-                username: username ?? name,
+    return Builder(
+      builder: (context) {
+        return Link(
+          uri: Uri.parse('https://www.github.com/$username'),
+          builder: (context, followLink) {
+            return Semantics(
+              link: true,
+              child: IconButton(
+                onPressed: followLink,
+                icon: SponsorButton(
+                  imageUrl: imageUrl,
+                  username: username ?? name,
+                ),
               ),
-            ),
-          );
-        },
-      );
-    });
+            );
+          },
+        );
+      },
+    );
   }
 }

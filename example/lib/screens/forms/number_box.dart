@@ -52,13 +52,11 @@ class _NumberBoxPageState extends State<NumberBoxPage> with PageMixin {
         ),
       ),
       children: [
-        const Text('Use a number box to select a number. '
-            'The selection can be applied in compact or in inline mode.'),
-        subtitle(
-          content: const Text(
-            'A NumberBox in inline mode',
-          ),
+        const Text(
+          'Use a number box to select a number. '
+          'The selection can be applied in compact or in inline mode.',
         ),
+        subtitle(content: const Text('A NumberBox in inline mode')),
         CardHighlight(
           codeSnippet: '''NumberBox(
   value: numberBoxValue,
@@ -66,20 +64,18 @@ class _NumberBoxPageState extends State<NumberBoxPage> with PageMixin {
   mode: SpinButtonPlacementMode.inline,
 ),
 ''',
-          child:
-              Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-            NumberBox(
-              value: numberBoxValue,
-              onChanged: disabled ? null : _valueChanged,
-              mode: SpinButtonPlacementMode.inline,
-            ),
-          ]),
-        ),
-        subtitle(
-          content: const Text(
-            'A NumberBox in compact mode',
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              NumberBox(
+                value: numberBoxValue,
+                onChanged: disabled ? null : _valueChanged,
+                mode: SpinButtonPlacementMode.inline,
+              ),
+            ],
           ),
         ),
+        subtitle(content: const Text('A NumberBox in compact mode')),
         CardHighlight(
           codeSnippet: '''NumberBox(
   value: numberBoxValue,
@@ -87,20 +83,18 @@ class _NumberBoxPageState extends State<NumberBoxPage> with PageMixin {
   mode: SpinButtonPlacementMode.compact,
 ),
 ''',
-          child:
-              Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-            NumberBox(
-              value: numberBoxValue,
-              onChanged: disabled ? null : _valueChanged,
-              mode: SpinButtonPlacementMode.compact,
-            ),
-          ]),
-        ),
-        subtitle(
-          content: const Text(
-            'A NumberBox in none mode',
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              NumberBox(
+                value: numberBoxValue,
+                onChanged: disabled ? null : _valueChanged,
+                mode: SpinButtonPlacementMode.compact,
+              ),
+            ],
           ),
         ),
+        subtitle(content: const Text('A NumberBox in none mode')),
         CardHighlight(
           codeSnippet: '''NumberBox(
   value: numberBoxValue,
@@ -108,14 +102,16 @@ class _NumberBoxPageState extends State<NumberBoxPage> with PageMixin {
   mode: SpinButtonPlacementMode.none,
 ),
 ''',
-          child:
-              Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-            NumberBox(
-              value: numberBoxValue,
-              onChanged: disabled ? null : _valueChanged,
-              mode: SpinButtonPlacementMode.none,
-            ),
-          ]),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              NumberBox(
+                value: numberBoxValue,
+                onChanged: disabled ? null : _valueChanged,
+                mode: SpinButtonPlacementMode.none,
+              ),
+            ],
+          ),
         ),
         subtitle(
           content: const Text(
@@ -131,22 +127,20 @@ class _NumberBoxPageState extends State<NumberBoxPage> with PageMixin {
   mode: SpinButtonPlacementMode.inline,
 ),
 ''',
-          child:
-              Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-            NumberBox(
-              value: numberBoxValueMinMax,
-              onChanged: disabled ? null : _valueChangedMinMax,
-              min: 0,
-              max: 20,
-              mode: SpinButtonPlacementMode.inline,
-            ),
-          ]),
-        ),
-        subtitle(
-          content: const Text(
-            'A NumberBox mathematical expressions',
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              NumberBox(
+                value: numberBoxValueMinMax,
+                onChanged: disabled ? null : _valueChangedMinMax,
+                min: 0,
+                max: 20,
+                mode: SpinButtonPlacementMode.inline,
+              ),
+            ],
           ),
         ),
+        subtitle(content: const Text('A NumberBox mathematical expressions')),
         CardHighlight(
           codeSnippet: '''NumberBox(
   value: numberBoxValueMinMax,
@@ -155,15 +149,17 @@ class _NumberBoxPageState extends State<NumberBoxPage> with PageMixin {
   mode: SpinButtonPlacementMode.inline,
 ),
 ''',
-          child:
-              Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-            NumberBox(
-              value: numberBoxValueMinMax,
-              onChanged: disabled ? null : _valueChangedMinMax,
-              allowExpressions: true,
-              mode: SpinButtonPlacementMode.inline,
-            ),
-          ]),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              NumberBox(
+                value: numberBoxValueMinMax,
+                onChanged: disabled ? null : _valueChangedMinMax,
+                allowExpressions: true,
+                mode: SpinButtonPlacementMode.inline,
+              ),
+            ],
+          ),
         ),
         subtitle(content: const Text('A NumberBox with double value')),
         CardHighlight(
@@ -174,15 +170,17 @@ class _NumberBoxPageState extends State<NumberBoxPage> with PageMixin {
   mode: SpinButtonPlacementMode.none,
 ),
 ''',
-          child:
-              Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-            NumberBox(
-              value: numberBoxValueDouble,
-              onChanged: disabled ? null : _valueChangedDouble,
-              smallChange: 0.1,
-              mode: SpinButtonPlacementMode.none,
-            ),
-          ]),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              NumberBox(
+                value: numberBoxValueDouble,
+                onChanged: disabled ? null : _valueChangedDouble,
+                smallChange: 0.1,
+                mode: SpinButtonPlacementMode.none,
+              ),
+            ],
+          ),
         ),
         subtitle(content: const Text('A NumberFormBox')),
         CardHighlight(
@@ -191,25 +189,27 @@ class _NumberBoxPageState extends State<NumberBoxPage> with PageMixin {
   onChanged: disabled ? null : _valueChanged,
 ),
 ''',
-          child:
-              Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-            NumberFormBox(
-              value: numberBoxValue,
-              onChanged: disabled ? null : _valueChanged,
-              autovalidateMode: AutovalidateMode.always,
-              validator: (v) {
-                if (v == null || int.tryParse(v) == null) {
-                  return 'Provide a valid number';
-                }
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              NumberFormBox(
+                value: numberBoxValue,
+                onChanged: disabled ? null : _valueChanged,
+                autovalidateMode: AutovalidateMode.always,
+                validator: (v) {
+                  if (v == null || int.tryParse(v) == null) {
+                    return 'Provide a valid number';
+                  }
 
-                if (int.parse(v) > 10) {
-                  return 'Provide a number smaller than 10';
-                }
+                  if (int.parse(v) > 10) {
+                    return 'Provide a number smaller than 10';
+                  }
 
-                return null;
-              },
-            ),
-          ]),
+                  return null;
+                },
+              ),
+            ],
+          ),
         ),
       ],
     );

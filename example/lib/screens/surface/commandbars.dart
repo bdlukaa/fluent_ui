@@ -15,29 +15,29 @@ class _CommandBarsPageState extends State<CommandBarsPage> with PageMixin {
 
   final simpleCommandBarItems = <CommandBarItem>[
     CommandBarButton(
-      icon: const Icon(FluentIcons.add),
+      icon: const WindowsIcon(WindowsIcons.add),
       label: const Text('New'),
       tooltip: 'Create something new!',
       onPressed: () {},
     ),
     CommandBarButton(
-      icon: const Icon(FluentIcons.delete),
+      icon: const WindowsIcon(WindowsIcons.delete),
       label: const Text('Delete'),
       tooltip: 'Delete what is currently selected!',
       onPressed: () {},
     ),
     CommandBarButton(
-      icon: const Icon(FluentIcons.archive),
+      icon: const WindowsIcon(WindowsIcons.file_explorer),
       label: const Text('Archive'),
       onPressed: () {},
     ),
     CommandBarButton(
-      icon: const Icon(FluentIcons.move),
+      icon: const WindowsIcon(WindowsIcons.move),
       label: const Text('Move'),
       onPressed: () {},
     ),
     const CommandBarButton(
-      icon: Icon(FluentIcons.cancel),
+      icon: WindowsIcon(WindowsIcons.cancel),
       label: Text('Disabled'),
       onPressed: null,
     ),
@@ -45,32 +45,32 @@ class _CommandBarsPageState extends State<CommandBarsPage> with PageMixin {
 
   final moreCommandBarItems = <CommandBarItem>[
     CommandBarButton(
-      icon: const Icon(FluentIcons.reply),
+      icon: const WindowsIcon(WindowsIcons.mail_reply),
       label: const Text('Reply'),
       onPressed: () {},
     ),
     CommandBarButton(
-      icon: const Icon(FluentIcons.reply_all),
+      icon: const WindowsIcon(WindowsIcons.mail_reply_all),
       label: const Text('Reply All'),
       onPressed: () {},
     ),
     CommandBarButton(
-      icon: const Icon(FluentIcons.forward),
+      icon: const WindowsIcon(WindowsIcons.forward),
       label: const Text('Forward'),
       onPressed: () {},
     ),
     CommandBarButton(
-      icon: const Icon(FluentIcons.search),
+      icon: const WindowsIcon(WindowsIcons.search),
       label: const Text('Search'),
       onPressed: () {},
     ),
     CommandBarButton(
-      icon: const Icon(FluentIcons.pin),
+      icon: const WindowsIcon(WindowsIcons.pin),
       label: const Text('Pin'),
       onPressed: () {},
     ),
     CommandBarButton(
-      icon: const Icon(FluentIcons.unpin),
+      icon: const WindowsIcon(WindowsIcons.unpin),
       label: const Text('Unpin'),
       onPressed: () {},
     ),
@@ -78,32 +78,32 @@ class _CommandBarsPageState extends State<CommandBarsPage> with PageMixin {
 
   final evenMoreCommandBarItems = <CommandBarItem>[
     CommandBarButton(
-      icon: const Icon(FluentIcons.accept),
+      icon: const WindowsIcon(WindowsIcons.accept),
       label: const Text('Accept'),
       onPressed: () {},
     ),
     CommandBarButton(
-      icon: const Icon(FluentIcons.calculator_multiply),
+      icon: const WindowsIcon(WindowsIcons.calculator_multiply),
       label: const Text('Reject'),
       onPressed: () {},
     ),
     CommandBarButton(
-      icon: const Icon(FluentIcons.share),
+      icon: const WindowsIcon(WindowsIcons.share),
       label: const Text('Share'),
       onPressed: () {},
     ),
     CommandBarButton(
-      icon: const Icon(FluentIcons.add_favorite),
+      icon: const WindowsIcon(WindowsIcons.favorite_star),
       label: const Text('Add Favorite'),
       onPressed: () {},
     ),
     CommandBarButton(
-      icon: const Icon(FluentIcons.back),
+      icon: const WindowsIcon(WindowsIcons.back),
       label: const Text('Backward'),
       onPressed: () {},
     ),
     CommandBarButton(
-      icon: const Icon(FluentIcons.forward),
+      icon: const WindowsIcon(WindowsIcons.forward),
       label: const Text('Forward'),
       onPressed: () {},
     ),
@@ -197,19 +197,18 @@ class _CommandBarsPageState extends State<CommandBarsPage> with PageMixin {
           ),
         ),
         subtitle(
-          content: const Text(
-            'Command bar with many items (dynamic overflow)',
-          ),
+          content: const Text('Command bar with many items (dynamic overflow)'),
         ),
         CardHighlight(
-          codeSnippet: '''final commandBarKey = GlobalKey<CommandBarState>();
+          codeSnippet:
+              '''final commandBarKey = GlobalKey<CommandBarState>();
 
 CommandBar(
   key: commandBarKey, ${compactBreakpointWidth != null ? '\n  compactBreakpointWidth: compactBreakpointWidth,' : ''}${_vertical ? '\n  direction: Axis.vertical,' : ''}${_compact ? '\n  isCompact: true,' : ''}
   overflowBehavior: $overflowBehavior,
   primaryItems: [
     CommandBarButton(
-      icon: const Icon(FluentIcons.add),
+      icon: const WindowsIcon(WindowsIcons.add),
       label: const Text('New'),
       tooltip: 'Create something new!',
       onPressed: () {
@@ -218,7 +217,7 @@ CommandBar(
     ),
     const CommandBarSeparator(),
     CommandBarButton(
-      icon: const Icon(FluentIcons.delete),
+      icon: const WindowsIcon(WindowsIcons.delete),
       label: const Text('Delete'),
       tooltip: 'Delete what is currently selected!',
       onPressed: () {

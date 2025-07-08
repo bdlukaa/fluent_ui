@@ -79,35 +79,46 @@ class _TabViewPageState extends State<TabViewPage> with PageMixin {
               );
             }
 
-            return TextSpan(children: [
-              TextSpan(children: [
-                topicSpan,
-                shortcutSpan('Ctrl + T'),
-                const TextSpan(text: ' opens a new tab'),
-                lineBreakSpan
-              ]),
-              TextSpan(children: [
-                topicSpan,
-                shortcutSpan('Ctrl + W'),
-                const TextSpan(text: ' or '),
-                shortcutSpan('Ctrl + F4'),
-                const TextSpan(text: ' closes the selected tab'),
-                lineBreakSpan
-              ]),
-              TextSpan(children: [
-                topicSpan,
-                shortcutSpan('Ctrl + 1'),
-                const TextSpan(text: ' + '),
-                shortcutSpan('Ctrl + 8'),
-                const TextSpan(text: ' selects that number tab'),
-                lineBreakSpan
-              ]),
-              TextSpan(children: [
-                topicSpan,
-                shortcutSpan('Ctrl + 9'),
-                const TextSpan(text: ' selects the last tab'),
-              ]),
-            ], style: theme.typography.body);
+            return TextSpan(
+              children: [
+                TextSpan(
+                  children: [
+                    topicSpan,
+                    shortcutSpan('Ctrl + T'),
+                    const TextSpan(text: ' opens a new tab'),
+                    lineBreakSpan,
+                  ],
+                ),
+                TextSpan(
+                  children: [
+                    topicSpan,
+                    shortcutSpan('Ctrl + W'),
+                    const TextSpan(text: ' or '),
+                    shortcutSpan('Ctrl + F4'),
+                    const TextSpan(text: ' closes the selected tab'),
+                    lineBreakSpan,
+                  ],
+                ),
+                TextSpan(
+                  children: [
+                    topicSpan,
+                    shortcutSpan('Ctrl + 1'),
+                    const TextSpan(text: ' + '),
+                    shortcutSpan('Ctrl + 8'),
+                    const TextSpan(text: ' selects that number tab'),
+                    lineBreakSpan,
+                  ],
+                ),
+                TextSpan(
+                  children: [
+                    topicSpan,
+                    shortcutSpan('Ctrl + 9'),
+                    const TextSpan(text: ' selects the last tab'),
+                  ],
+                ),
+              ],
+              style: theme.typography.body,
+            );
           }(),
         ),
         subtitle(
@@ -150,10 +161,7 @@ class _TabViewPageState extends State<TabViewPage> with PageMixin {
                     isExpanded: true,
                     value: closeButtonVisibilityMode,
                     items: CloseButtonVisibilityMode.values.map((mode) {
-                      return ComboBoxItem(
-                        value: mode,
-                        child: Text(mode.name),
-                      );
+                      return ComboBoxItem(value: mode, child: Text(mode.name));
                     }).toList(),
                     onChanged: (mode) {
                       if (mode != null) {
@@ -177,7 +185,8 @@ class _TabViewPageState extends State<TabViewPage> with PageMixin {
           ),
         ),
         CardHighlight(
-          codeSnippet: '''int currentIndex = 0;
+          codeSnippet:
+              '''int currentIndex = 0;
 List<Tab> tabs = [];
 
 /// Creates a tab for the given index
@@ -306,7 +315,7 @@ class MyCustomTabState extends TabState {
                 debugPrint('Item 1 pressed');
                 Navigator.of(context).maybePop();
               },
-              leading: const Icon(FluentIcons.add),
+              leading: const WindowsIcon(WindowsIcons.add),
               text: const Text('New tab'),
             ),
             MenuFlyoutItem(
@@ -314,7 +323,7 @@ class MyCustomTabState extends TabState {
                 debugPrint('Item 2 pressed');
                 Navigator.of(context).maybePop();
               },
-              leading: const Icon(FluentIcons.refresh),
+              leading: const WindowsIcon(WindowsIcons.refresh),
               text: const Text('Refresh'),
             ),
           ],
@@ -393,26 +402,31 @@ TabView(
                   text: const Text('Tab that recognizes secondary tap'),
                   body: Container(color: Colors.red),
                   gestures: {
-                    TapGestureRecognizer: GestureRecognizerFactoryWithHandlers<
-                        TapGestureRecognizer>(
-                      () => TapGestureRecognizer(),
-                      (TapGestureRecognizer instance) {
-                        instance.onSecondaryTap = () {
-                          debugPrint('Secondary tap recognized');
-                          displayInfoBar(context, builder: (context, close) {
-                            return const InfoBar(
-                              title: Text('Secondary tap recognized'),
-                              severity: InfoBarSeverity.success,
+                    TapGestureRecognizer:
+                        GestureRecognizerFactoryWithHandlers<
+                          TapGestureRecognizer
+                        >(() => TapGestureRecognizer(), (
+                          TapGestureRecognizer instance,
+                        ) {
+                          instance.onSecondaryTap = () {
+                            debugPrint('Secondary tap recognized');
+                            displayInfoBar(
+                              context,
+                              builder: (context, close) {
+                                return const InfoBar(
+                                  title: Text('Secondary tap recognized'),
+                                  severity: InfoBarSeverity.success,
+                                );
+                              },
                             );
-                          });
-                        };
-                      },
-                    ),
+                          };
+                        }),
                   },
                 ),
                 MyCustomTab(
-                  text:
-                      const Text('Custom tab that opens menu on secondary tap'),
+                  text: const Text(
+                    'Custom tab that opens menu on secondary tap',
+                  ),
                   body: Container(color: Colors.blue),
                 ),
               ],
@@ -425,11 +439,7 @@ TabView(
 }
 
 class MyCustomTab extends Tab {
-  MyCustomTab({
-    super.key,
-    required super.body,
-    required super.text,
-  });
+  MyCustomTab({super.key, required super.body, required super.text});
 
   @override
   State<Tab> createState() => MyCustomTabState();
@@ -456,7 +466,7 @@ class MyCustomTabState extends TabState {
                 debugPrint('Item 1 pressed');
                 Navigator.of(context).maybePop();
               },
-              leading: const Icon(FluentIcons.add),
+              leading: const WindowsIcon(WindowsIcons.add),
               text: const Text('New tab'),
             ),
             MenuFlyoutItem(
@@ -464,7 +474,7 @@ class MyCustomTabState extends TabState {
                 debugPrint('Item 2 pressed');
                 Navigator.of(context).maybePop();
               },
-              leading: const Icon(FluentIcons.refresh),
+              leading: const WindowsIcon(WindowsIcons.refresh),
               text: const Text('Refresh'),
             ),
           ],

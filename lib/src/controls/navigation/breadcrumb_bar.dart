@@ -80,7 +80,7 @@ class BreadcrumbBar<T> extends StatefulWidget {
   ///   ...,
   ///   overflowButtonBuilder: (context, openFlyout) {
   ///     return IconButton(
-  ///       icon: const Icon(FluentIcons.more),
+  ///       icon: const WindowsIcon(WindowsIcons.more),
   ///       onPressed: openFlyout,
   ///     );
   ///   },
@@ -149,7 +149,11 @@ class BreadcrumbBar<T> extends StatefulWidget {
             states,
           );
 
-          return Icon(FluentIcons.more, color: foregroundColor, size: 12.0);
+          return WindowsIcon(
+            WindowsIcons.more,
+            color: foregroundColor,
+            size: 12.0,
+          );
         },
       ),
     );
