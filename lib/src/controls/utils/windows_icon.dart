@@ -5,9 +5,8 @@ import 'package:flutter/foundation.dart';
 ///
 /// This widget is used to display icons that are part of the Windows icon set.
 /// These icons can only be used in a Windows environment and are not available
-/// on other platforms. This widget will attempt to render the specified icon
-/// if it is available in the current context, fallbacking to the fluent icon
-/// equivalent.
+/// on other platforms. This widget will automatically resolve the icon to the
+/// appropriate icon based on the current platform.
 ///
 /// See also:
 ///
