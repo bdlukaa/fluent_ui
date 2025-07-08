@@ -1,3 +1,5 @@
+// ignore_for_file: avoid_print
+
 import 'dart:convert';
 import 'dart:io';
 
@@ -56,7 +58,7 @@ void main() async {
   final jsonOutput = {'glyphs': glyphs};
 
   // Use JsonEncoder for a nicely formatted ("pretty-printed") JSON output.
-  final encoder = JsonEncoder.withIndent('  ');
+  const encoder = JsonEncoder.withIndent('  ');
   final jsonString = encoder.convert(jsonOutput);
 
   // Write the JSON string to the output file.

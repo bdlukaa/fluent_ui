@@ -62,7 +62,7 @@ class _IconsPageState extends State<IconsPage> {
           child: Tooltip(
             message: 'Filter by name',
             child: TextBox(
-              suffix: const Icon(FluentIcons.search),
+              suffix: const WindowsIcon(WindowsIcons.search),
               placeholder: 'Type to filter icons by name (e.g "logo")',
               onChanged: (value) => setState(() {
                 filterText = value;

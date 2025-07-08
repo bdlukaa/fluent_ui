@@ -2,6 +2,7 @@ include: package:flutter_lints/flutter.yaml
 
 exclude:
   - lib/l10n/
+  - bin/**
 
 linter:
   rules:
