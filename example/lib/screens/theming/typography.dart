@@ -9,21 +9,21 @@ class TypographyPage extends StatefulWidget {
   State<TypographyPage> createState() => _TypographyPageState();
 }
 
+Widget buildColorBox(Color color) {
+  const double boxSize = 25.0;
+  return Container(
+    height: boxSize,
+    width: boxSize,
+    decoration: BoxDecoration(
+      color: color,
+      borderRadius: BorderRadius.circular(4.0),
+    ),
+  );
+}
+
 class _TypographyPageState extends State<TypographyPage> {
   Color? color;
   double scale = 1.0;
-
-  Widget buildColorBox(Color color) {
-    const double boxSize = 25.0;
-    return Container(
-      height: boxSize,
-      width: boxSize,
-      decoration: BoxDecoration(
-        color: color,
-        borderRadius: BorderRadius.circular(4.0),
-      ),
-    );
-  }
 
   @override
   Widget build(BuildContext context) {
