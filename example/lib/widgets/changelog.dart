@@ -33,7 +33,9 @@ class _ChangelogState extends State<Changelog> {
 
     if (response.statusCode == 200) {
       final changelogResult = response.body.split('\n')..removeRange(0, 2);
-      setState(() => changelog = changelogResult);
+      if (mounted) {
+        setState(() => changelog = changelogResult);
+      }
     } else {
       debugPrint(response.body);
     }
