@@ -619,12 +619,6 @@ class WindowsIcons {
     fontPackage: 'fluent_ui',
   );
 
-  static const IconData blocked_site = IconData(
-    0xe72f,
-    fontFamily: 'SegoeIcons',
-    fontPackage: 'fluent_ui',
-  );
-
   static const IconData blue_light = IconData(
     0xf08c,
     fontFamily: 'SegoeIcons',
@@ -8351,7 +8345,6 @@ class WindowsIcons {
     'block_contact': block_contact,
     'blocked': blocked,
     'blocked2': blocked2,
-    'blocked_site': blocked_site,
     'blue_light': blue_light,
     'bluetooth': bluetooth,
     'body_cam': body_cam,

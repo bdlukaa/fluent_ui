@@ -45,7 +45,6 @@
 <tr><td><img src="images/glyphs/segoe-fluent-icons/e72c.png" width="32" height="32" alt="Refresh" /></td><td>e72c</td><td>Refresh</td></tr>
 <tr><td><img src="images/glyphs/segoe-fluent-icons/e72d.png" width="32" height="32" alt="Share" /></td><td>e72d</td><td>Share</td></tr>
 <tr><td><img src="images/glyphs/segoe-fluent-icons/e72e.png" width="32" height="32" alt="Lock" /></td><td>e72e</td><td>Lock</td></tr>
-<tr><td><img src="images/glyphs/segoe-fluent-icons/e72f.png" width="32" height="32" alt="BlockedSite" /></td><td>e72f</td><td>BlockedSite</td></tr>
 <tr><td><img src="images/glyphs/segoe-fluent-icons/e730.png" width="32" height="32" alt="ReportHacked" /></td><td>e730</td><td>ReportHacked</td></tr>
 <tr><td><img src="images/glyphs/segoe-fluent-icons/e731.png" width="32" height="32" alt="EMI" /></td><td>e731</td><td>EMI</td></tr>
 <tr><td><img src="images/glyphs/segoe-fluent-icons/e733.png" width="32" height="32" alt="Blocked" /></td><td>e733</td><td>Blocked</td></tr>
