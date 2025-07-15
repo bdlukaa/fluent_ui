@@ -109,6 +109,9 @@ class FluentLocalizationsUz extends FluentLocalizations {
   String get year => 'yil';
 
   @override
+  String get pickADate => 'Pick a date';
+
+  @override
   String get seeMore => 'See more';
 
   @override

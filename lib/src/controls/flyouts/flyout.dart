@@ -1076,6 +1076,7 @@ class _FlyoutPageState extends State<_FlyoutPage> {
                         widget.shouldConstrainToRootBounds,
                     forceAvailableSpace: widget.forceAvailableSpace,
                     onAutoModeChange: (mode) {
+                      // TODO(bdlukaa): Find a better way to handle this
                       _autoMode = mode;
                       WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
                         _key.currentState?.setState(() {});

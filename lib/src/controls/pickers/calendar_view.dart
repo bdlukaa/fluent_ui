@@ -2,6 +2,8 @@ import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter/foundation.dart';
 import 'package:intl/intl.dart';
 
+part 'calendar_date_picker.dart';
+
 typedef CalendarViewBlackoutRule = bool Function(DateTime date);
 
 /// Defines the selection modes available for the [CalendarView].
@@ -75,6 +77,7 @@ class CalendarSelectionData {
 ///
 /// See also:
 ///
+///  * [CalendarDatePicker], which provides a more compact date selection interface.
 ///  * [DatePicker], which provides a more compact date selection interface.
 ///  * [TimePicker], which allows users to select a time.
 ///  * <https://learn.microsoft.com/en-us/windows/apps/design/controls/calendar-view>

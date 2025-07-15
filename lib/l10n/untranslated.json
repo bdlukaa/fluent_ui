@@ -2,6 +2,7 @@
   "ar": [
     "undoActionLabel",
     "undoActionTooltip",
+    "pickADate",
     "seeMore",
     "seeLess"
   ],
@@ -11,6 +12,7 @@
     "undoActionTooltip",
     "am",
     "pm",
+    "pickADate",
     "seeMore",
     "seeLess",
     "colorBlack",
@@ -156,6 +158,7 @@
   "bn": [
     "undoActionLabel",
     "undoActionTooltip",
+    "pickADate",
     "seeMore",
     "seeLess"
   ],
@@ -163,6 +166,7 @@
   "ca": [
     "undoActionLabel",
     "undoActionTooltip",
+    "pickADate",
     "seeMore",
     "seeLess"
   ],
@@ -170,6 +174,7 @@
   "cs": [
     "undoActionLabel",
     "undoActionTooltip",
+    "pickADate",
     "seeMore",
     "seeLess"
   ],
@@ -177,6 +182,7 @@
   "de": [
     "undoActionLabel",
     "undoActionTooltip",
+    "pickADate",
     "seeMore",
     "seeLess"
   ],
@@ -184,20 +190,31 @@
   "el": [
     "undoActionLabel",
     "undoActionTooltip",
+    "pickADate",
     "seeMore",
     "seeLess"
+  ],
+
+  "es": [
+    "pickADate"
   ],
 
   "fa": [
     "undoActionLabel",
     "undoActionTooltip",
+    "pickADate",
     "seeMore",
     "seeLess"
+  ],
+
+  "fr": [
+    "pickADate"
   ],
 
   "he": [
     "undoActionLabel",
     "undoActionTooltip",
+    "pickADate",
     "seeMore",
     "seeLess"
   ],
@@ -205,6 +222,7 @@
   "hi": [
     "undoActionLabel",
     "undoActionTooltip",
+    "pickADate",
     "seeMore",
     "seeLess"
   ],
@@ -212,6 +230,7 @@
   "hr": [
     "undoActionLabel",
     "undoActionTooltip",
+    "pickADate",
     "seeMore",
     "seeLess"
   ],
@@ -219,6 +238,7 @@
   "hu": [
     "undoActionLabel",
     "undoActionTooltip",
+    "pickADate",
     "seeMore",
     "seeLess"
   ],
@@ -226,6 +246,7 @@
   "id": [
     "undoActionLabel",
     "undoActionTooltip",
+    "pickADate",
     "seeMore",
     "seeLess"
   ],
@@ -233,6 +254,7 @@
   "it": [
     "undoActionLabel",
     "undoActionTooltip",
+    "pickADate",
     "seeMore",
     "seeLess"
   ],
@@ -240,6 +262,7 @@
   "ja": [
     "undoActionLabel",
     "undoActionTooltip",
+    "pickADate",
     "seeMore",
     "seeLess"
   ],
@@ -247,6 +270,7 @@
   "ko": [
     "undoActionLabel",
     "undoActionTooltip",
+    "pickADate",
     "seeMore",
     "seeLess"
   ],
@@ -254,6 +278,7 @@
   "ku": [
     "undoActionLabel",
     "undoActionTooltip",
+    "pickADate",
     "seeMore",
     "seeLess",
     "colorBlack",
@@ -406,6 +431,7 @@
     "month",
     "day",
     "year",
+    "pickADate",
     "seeMore",
     "seeLess"
   ],
@@ -415,6 +441,7 @@
     "undoActionTooltip",
     "am",
     "pm",
+    "pickADate",
     "seeMore",
     "seeLess",
     "colorBlack",
@@ -557,9 +584,14 @@
     "colorWhite"
   ],
 
+  "ne": [
+    "pickADate"
+  ],
+
   "nl": [
     "undoActionLabel",
     "undoActionTooltip",
+    "pickADate",
     "seeMore",
     "seeLess"
   ],
@@ -574,6 +606,7 @@
     "month",
     "day",
     "year",
+    "pickADate",
     "seeMore",
     "seeLess"
   ],
@@ -581,6 +614,7 @@
   "ro": [
     "undoActionLabel",
     "undoActionTooltip",
+    "pickADate",
     "seeMore",
     "seeLess"
   ],
@@ -595,6 +629,7 @@
     "month",
     "day",
     "year",
+    "pickADate",
     "seeMore",
     "seeLess"
   ],
@@ -602,6 +637,7 @@
   "sk": [
     "undoActionLabel",
     "undoActionTooltip",
+    "pickADate",
     "seeMore",
     "seeLess"
   ],
@@ -609,6 +645,7 @@
   "sv": [
     "undoActionLabel",
     "undoActionTooltip",
+    "pickADate",
     "seeMore",
     "seeLess"
   ],
@@ -616,6 +653,7 @@
   "ta": [
     "undoActionLabel",
     "undoActionTooltip",
+    "pickADate",
     "seeMore",
     "seeLess"
   ],
@@ -623,13 +661,19 @@
   "th": [
     "undoActionLabel",
     "undoActionTooltip",
+    "pickADate",
     "seeMore",
     "seeLess"
+  ],
+
+  "tl": [
+    "pickADate"
   ],
 
   "tr": [
     "undoActionLabel",
     "undoActionTooltip",
+    "pickADate",
     "seeMore",
     "seeLess"
   ],
@@ -639,6 +683,7 @@
     "undoActionTooltip",
     "am",
     "pm",
+    "pickADate",
     "seeMore",
     "seeLess"
   ],
@@ -646,6 +691,7 @@
   "ur": [
     "undoActionLabel",
     "undoActionTooltip",
+    "pickADate",
     "seeMore",
     "seeLess"
   ],
@@ -655,6 +701,7 @@
     "undoActionTooltip",
     "am",
     "pm",
+    "pickADate",
     "seeMore",
     "seeLess",
     "colorBlack",
@@ -800,6 +847,7 @@
   "vi": [
     "undoActionLabel",
     "undoActionTooltip",
+    "pickADate",
     "seeMore",
     "seeLess"
   ],
@@ -807,6 +855,7 @@
   "zh": [
     "undoActionLabel",
     "undoActionTooltip",
+    "pickADate",
     "seeMore",
     "seeLess"
   ],
@@ -814,6 +863,7 @@
   "zh_Hant": [
     "undoActionLabel",
     "undoActionTooltip",
+    "pickADate",
     "seeMore",
     "seeLess"
   ]

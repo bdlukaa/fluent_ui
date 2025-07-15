@@ -110,6 +110,9 @@ class FluentLocalizationsId extends FluentLocalizations {
   String get year => 'tahun';
 
   @override
+  String get pickADate => 'Pick a date';
+
+  @override
   String get seeMore => 'See more';
 
   @override

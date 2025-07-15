@@ -109,6 +109,9 @@ class FluentLocalizationsVi extends FluentLocalizations {
   String get year => 'năm';
 
   @override
+  String get pickADate => 'Pick a date';
+
+  @override
   String get seeMore => 'See more';
 
   @override

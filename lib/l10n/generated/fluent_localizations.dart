@@ -371,6 +371,12 @@ abstract class FluentLocalizations {
   /// **'year'**
   String get year;
 
+  /// The text used by [CalendarDatePicker] to prompt the user to pick a date.
+  ///
+  /// In en, this message translates to:
+  /// **'Pick a date'**
+  String get pickADate;
+
   /// The text used by [CommandBar] to show more items.
   ///
   /// In en, this message translates to:

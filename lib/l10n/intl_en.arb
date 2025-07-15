@@ -132,6 +132,10 @@
   "@year": {
     "description": "The text used by [DatePicker] for the year field"
   },
+  "pickADate": "Pick a date",
+  "@pickADate": {
+    "description": "The text used by [CalendarDatePicker] to prompt the user to pick a date."
+  },
   "seeMore": "See more",
   "@seeMore": {
     "description": "The text used by [CommandBar] to show more items."

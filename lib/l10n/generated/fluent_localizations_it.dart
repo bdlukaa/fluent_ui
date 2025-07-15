@@ -108,6 +108,9 @@ class FluentLocalizationsIt extends FluentLocalizations {
   String get year => 'anno';
 
   @override
+  String get pickADate => 'Pick a date';
+
+  @override
   String get seeMore => 'See more';
 
   @override
