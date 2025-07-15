@@ -1,0 +1,16 @@
+{
+  "version": 3,
+  "engine": "v2",
+  "file": "main.dart.js_13.part.js",
+  "sourceRoot": "",
+  "sources": ["/opt/hostedtoolcache/flutter/3.32.6-stable/x64/packages/flutter/lib/src/widgets/scroll_view.dart"],
+  "names": ["CustomScrollView","CustomScrollView.buildSlivers",""],
+  "mappings": "A;;;;EAmrBQA,sDAziB+CA;AAyiB/CA,KAxiBeA;AAwiBfA,kDAkBEA,SAlBFA,AAmBJA,C;;;;;;;;;;;;;;;;;;;;;;;;GAqGWC,IAAsCA,cAAOA,C",
+  "x_org_dartlang_dart2js": {
+    "minified_names": {
+      "global": "",
+      "instance": ""
+    },
+    "frames": "kRAmrBQEG;KAAAAS;"
+  }
+}
