@@ -146,4 +146,48 @@ void main() {
     );
     expect(find.text('Custom Strip'), findsOneWidget);
   });
+
+  testWidgets('TabView supports custom dragRegionBuilder', (tester) async {
+    final tabs = [Tab(text: const Text('Tab 1'), body: const Text('Body 1'))];
+    bool dragRegionBuilderCalled = false;
+    
+    await tester.pumpWidget(
+      wrapApp(
+        child: TabView(
+          currentIndex: 0,
+          tabs: tabs,
+          dragRegionBuilder: (context, tabBar) {
+            dragRegionBuilderCalled = true;
+            return Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                const Text('Drag Region'),
+                Expanded(child: tabBar),
+              ],
+            );
+          },
+        ),
+      ),
+    );
+    
+    expect(dragRegionBuilderCalled, isTrue);
+    expect(find.text('Drag Region'), findsOneWidget);
+  });
+
+  testWidgets('TabView dragRegionBuilder can be null', (tester) async {
+    final tabs = [Tab(text: const Text('Tab 1'), body: const Text('Body 1'))];
+    
+    await tester.pumpWidget(
+      wrapApp(
+        child: TabView(
+          currentIndex: 0,
+          tabs: tabs,
+          dragRegionBuilder: null,
+        ),
+      ),
+    );
+    
+    expect(find.text('Tab 1'), findsOneWidget);
+    expect(find.text('Body 1'), findsOneWidget);
+  });
 }
