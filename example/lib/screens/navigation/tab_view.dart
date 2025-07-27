@@ -287,7 +287,8 @@ TabView(
           ),
         ),
         CardHighlight(
-          codeSnippet: '''int currentIndex = 0;
+          codeSnippet:
+              '''int currentIndex = 0;
 List<Tab> tabs = [];
 
 /// Creates a tab for the given index
