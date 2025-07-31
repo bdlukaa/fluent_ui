@@ -15,10 +15,7 @@ void main() {
             child: MediaQuery(
               data: const MediaQueryData(viewInsets: viewInsets),
               child: ScaffoldPage(
-                content: Container(
-                  color: Colors.black,
-                  height: 300.0,
-                ),
+                content: Container(color: Colors.black, height: 300.0),
               ),
             ),
           ),

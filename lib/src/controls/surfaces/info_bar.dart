@@ -4,10 +4,8 @@ import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart' show Icons;
 
-typedef InfoBarPopupBuilder = Widget Function(
-  BuildContext context,
-  VoidCallback close,
-);
+typedef InfoBarPopupBuilder =
+    Widget Function(BuildContext context, VoidCallback close);
 
 /// Displays an InfoBar as a popup
 ///
@@ -20,7 +18,7 @@ typedef InfoBarPopupBuilder = Widget Function(
 ///     return InfoBar(
 ///       title: Text('Title'),
 ///       action: IconButton(
-///         icon: const Icon(FluentIcons.clear),
+///         icon: const WindowsIcon(WindowsIcons.chrome_close),
 ///         onPressed: close,
 ///       ),
 ///     );
@@ -44,52 +42,56 @@ Future<void> displayInfoBar(
 
   var alreadyInitialized = false;
 
-  entry = OverlayEntry(builder: (context) {
-    return SafeArea(
-      child: Align(
-        alignment: alignment,
-        child: Padding(
-          padding: const EdgeInsets.symmetric(
-            vertical: 24.0,
-            horizontal: 16.0,
+  entry = OverlayEntry(
+    builder: (context) {
+      return SafeArea(
+        child: Align(
+          alignment: alignment,
+          child: Padding(
+            padding: const EdgeInsets.symmetric(
+              vertical: 24.0,
+              horizontal: 16.0,
+            ),
+            child: StatefulBuilder(
+              builder: (context, setState) {
+                Future<void> close() async {
+                  if (!entry.mounted) return;
+                  setState(() => isFading = true);
+                  await Future.delayed(theme.mediumAnimationDuration);
+                  if (!entry.mounted) return;
+                  entry.remove();
+                }
+
+                if (!alreadyInitialized) {
+                  alreadyInitialized = true;
+                  () async {
+                    await Future.delayed(theme.mediumAnimationDuration);
+                    if (!entry.mounted) return;
+                    setState(() => isFading = false);
+                    await Future.delayed(duration);
+                    await close();
+                  }();
+                }
+
+                return AnimatedSwitcher(
+                  duration: theme.mediumAnimationDuration,
+                  switchInCurve: theme.animationCurve,
+                  switchOutCurve: theme.animationCurve,
+                  child: isFading
+                      ? const SizedBox.shrink()
+                      : PhysicalModel(
+                          color: Colors.transparent,
+                          elevation: 8.0,
+                          child: builder(context, close),
+                        ),
+                );
+              },
+            ),
           ),
-          child: StatefulBuilder(builder: (context, setState) {
-            Future<void> close() async {
-              if (!entry.mounted) return;
-              setState(() => isFading = true);
-              await Future.delayed(theme.mediumAnimationDuration);
-              if (!entry.mounted) return;
-              entry.remove();
-            }
-
-            if (!alreadyInitialized) {
-              alreadyInitialized = true;
-              () async {
-                await Future.delayed(theme.mediumAnimationDuration);
-                if (!entry.mounted) return;
-                setState(() => isFading = false);
-                await Future.delayed(duration);
-                await close();
-              }();
-            }
-
-            return AnimatedSwitcher(
-              duration: theme.mediumAnimationDuration,
-              switchInCurve: theme.animationCurve,
-              switchOutCurve: theme.animationCurve,
-              child: isFading
-                  ? const SizedBox.shrink()
-                  : PhysicalModel(
-                      color: Colors.transparent,
-                      elevation: 8.0,
-                      child: builder(context, close),
-                    ),
-            );
-          }),
         ),
-      ),
-    );
-  });
+      );
+    },
+  );
 
   Overlay.of(context).insert(entry);
 }
@@ -166,23 +168,29 @@ class InfoBar extends StatelessWidget {
   void debugFillProperties(DiagnosticPropertiesBuilder properties) {
     super.debugFillProperties(properties);
     properties
-      ..add(FlagProperty(
-        'long',
-        value: isLong,
-        ifFalse: 'short',
-        defaultValue: false,
-      ))
-      ..add(FlagProperty(
-        'isIconVisible',
-        value: isIconVisible,
-        ifFalse: 'icon not visible',
-        defaultValue: true,
-      ))
-      ..add(EnumProperty<InfoBarSeverity>(
-        'severity',
-        severity,
-        defaultValue: InfoBarSeverity.info,
-      ))
+      ..add(
+        FlagProperty(
+          'long',
+          value: isLong,
+          ifFalse: 'short',
+          defaultValue: false,
+        ),
+      )
+      ..add(
+        FlagProperty(
+          'isIconVisible',
+          value: isIconVisible,
+          ifFalse: 'icon not visible',
+          defaultValue: true,
+        ),
+      )
+      ..add(
+        EnumProperty<InfoBarSeverity>(
+          'severity',
+          severity,
+          defaultValue: InfoBarSeverity.info,
+        ),
+      )
       ..add(ObjectFlagProperty.has('onClose', onClose))
       ..add(DiagnosticsProperty('style', style, ifNull: 'no style'));
   }
@@ -225,8 +233,9 @@ class InfoBar extends StatelessWidget {
       padding: style.padding ?? const EdgeInsets.all(10),
       child: Row(
         mainAxisSize: MainAxisSize.min,
-        crossAxisAlignment:
-            isLong ? CrossAxisAlignment.start : CrossAxisAlignment.center,
+        crossAxisAlignment: isLong
+            ? CrossAxisAlignment.start
+            : CrossAxisAlignment.center,
         children: [
           if (icon != null)
             Padding(
@@ -295,11 +304,7 @@ class InfoBar extends StatelessWidget {
 class InfoBarTheme extends InheritedTheme {
   /// Creates a info bar theme that controls the configurations for
   /// [InfoBar].
-  const InfoBarTheme({
-    super.key,
-    required this.data,
-    required super.child,
-  });
+  const InfoBarTheme({super.key, required this.data, required super.child});
 
   /// The properties for descendant [InfoBar] widgets.
   final InfoBarThemeData data;
@@ -311,13 +316,15 @@ class InfoBarTheme extends InheritedTheme {
     required InfoBarThemeData data,
     required Widget child,
   }) {
-    return Builder(builder: (BuildContext context) {
-      return InfoBarTheme(
-        key: key,
-        data: _getInheritedThemeData(context).merge(data),
-        child: child,
-      );
-    });
+    return Builder(
+      builder: (BuildContext context) {
+        return InfoBarTheme(
+          key: key,
+          data: _getInheritedThemeData(context).merge(data),
+          child: child,
+        );
+      },
+    );
   }
 
   static InfoBarThemeData _getInheritedThemeData(BuildContext context) {
@@ -336,9 +343,9 @@ class InfoBarTheme extends InheritedTheme {
   /// ```
   static InfoBarThemeData of(BuildContext context) {
     final theme = context.dependOnInheritedWidgetOfExactType<InfoBarTheme>();
-    return InfoBarThemeData.standard(FluentTheme.of(context)).merge(
-      theme?.data ?? FluentTheme.of(context).infoBarTheme,
-    );
+    return InfoBarThemeData.standard(
+      FluentTheme.of(context),
+    ).merge(theme?.data ?? FluentTheme.of(context).infoBarTheme);
   }
 
   @override
@@ -402,9 +409,7 @@ class InfoBarThemeData with Diagnosticable {
         return BoxDecoration(
           color: color,
           borderRadius: BorderRadius.circular(4.0),
-          border: Border.all(
-            color: theme.resources.cardStrokeColorDefault,
-          ),
+          border: Border.all(color: theme.resources.cardStrokeColorDefault),
         );
       },
       closeIcon: FluentIcons.chrome_close,
@@ -435,8 +440,9 @@ class InfoBarThemeData with Diagnosticable {
       actionStyle: const ButtonStyle(
         padding: WidgetStatePropertyAll(EdgeInsets.all(6)),
       ),
-      closeButtonStyle:
-          const ButtonStyle(iconSize: WidgetStatePropertyAll(16.0)),
+      closeButtonStyle: const ButtonStyle(
+        iconSize: WidgetStatePropertyAll(16.0),
+      ),
     );
   }
 
@@ -448,8 +454,11 @@ class InfoBarThemeData with Diagnosticable {
     return InfoBarThemeData(
       closeIconSize: lerpDouble(a?.closeIconSize, b?.closeIconSize, t),
       closeIcon: t < 0.5 ? a?.closeIcon : b?.closeIcon,
-      closeButtonStyle:
-          ButtonStyle.lerp(a?.closeButtonStyle, b?.closeButtonStyle, t),
+      closeButtonStyle: ButtonStyle.lerp(
+        a?.closeButtonStyle,
+        b?.closeButtonStyle,
+        t,
+      ),
       icon: t < 0.5 ? a?.icon : b?.icon,
       decoration: (severity) {
         return Decoration.lerp(
@@ -491,14 +500,17 @@ class InfoBarThemeData with Diagnosticable {
       ..add(ObjectFlagProperty.has('icon', icon))
       ..add(IconDataProperty('closeIcon', closeIcon))
       ..add(DoubleProperty('closeIconSize', closeIconSize))
-      ..add(DiagnosticsProperty<ButtonStyle>(
-          'closeButtonStyle', closeButtonStyle))
+      ..add(
+        DiagnosticsProperty<ButtonStyle>('closeButtonStyle', closeButtonStyle),
+      )
       ..add(ObjectFlagProperty.has('decoration', decoration))
       ..add(ObjectFlagProperty.has('iconColor', iconColor))
-      ..add(DiagnosticsProperty<ButtonStyle>(
-        'actionStyle',
-        actionStyle,
-        ifNull: 'no style',
-      ));
+      ..add(
+        DiagnosticsProperty<ButtonStyle>(
+          'actionStyle',
+          actionStyle,
+          ifNull: 'no style',
+        ),
+      );
   }
 }

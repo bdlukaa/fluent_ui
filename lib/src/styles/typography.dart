@@ -58,17 +58,15 @@ class Typography with Diagnosticable {
   ///
   /// If [color] is null, [Colors.black] is used if [brightness] is light,
   /// otherwise [Colors.white] is used. If it's not null, [color] will be used.
-  factory Typography.fromBrightness({
-    Brightness? brightness,
-    Color? color,
-  }) {
+  factory Typography.fromBrightness({Brightness? brightness, Color? color}) {
     assert(
       brightness != null || color != null,
       'Either brightness or color must be provided',
     );
     // If color is null, brightness will not be null
-    color ??=
-        brightness == Brightness.light ? const Color(0xE4000000) : Colors.white;
+    color ??= brightness == Brightness.light
+        ? const Color(0xE4000000)
+        : Colors.white;
     return Typography.raw(
       display: TextStyle(
         fontSize: 68,
@@ -80,11 +78,7 @@ class Typography with Diagnosticable {
         color: color,
         fontWeight: FontWeight.w600,
       ),
-      title: TextStyle(
-        fontSize: 28,
-        color: color,
-        fontWeight: FontWeight.w600,
-      ),
+      title: TextStyle(fontSize: 28, color: color, fontWeight: FontWeight.w600),
       subtitle: TextStyle(
         fontSize: 20,
         color: color,

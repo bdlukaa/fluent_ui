@@ -7,9 +7,7 @@ void main() {
   group('FlyoutListTile', () {
     testWidgets('can be used outside of a Flyout', (tester) async {
       await tester.pumpWidget(
-        wrapApp(
-          child: const FlyoutListTile(text: Text('Copy')),
-        ),
+        wrapApp(child: const FlyoutListTile(text: Text('Copy'))),
       );
     });
 
@@ -110,11 +108,7 @@ void main() {
   group('FlyoutContent', () {
     testWidgets('renders child', (tester) async {
       await tester.pumpWidget(
-        wrapApp(
-          child: const FlyoutContent(
-            child: Text('Flyout Child'),
-          ),
-        ),
+        wrapApp(child: const FlyoutContent(child: Text('Flyout Child'))),
       );
       expect(find.text('Flyout Child'), findsOneWidget);
     });
@@ -122,10 +116,7 @@ void main() {
     testWidgets('applies custom color', (tester) async {
       await tester.pumpWidget(
         wrapApp(
-          child: FlyoutContent(
-            color: Colors.red,
-            child: const Text('Colored'),
-          ),
+          child: FlyoutContent(color: Colors.red, child: const Text('Colored')),
         ),
       );
       final container = tester.widget<Container>(
@@ -144,10 +135,7 @@ void main() {
       );
       await tester.pumpWidget(
         wrapApp(
-          child: FlyoutContent(
-            shape: shape,
-            child: const Text('Shaped'),
-          ),
+          child: FlyoutContent(shape: shape, child: const Text('Shaped')),
         ),
       );
       final acrylic = tester.widget<Acrylic>(find.byType(Acrylic));

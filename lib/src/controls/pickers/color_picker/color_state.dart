@@ -67,8 +67,15 @@ class ColorState extends ChangeNotifier {
   /// All components must be within their valid ranges:
   /// - [red], [green], [blue], [alpha], [saturation], [value]: 0–1
   /// - [hue]: 0–360
-  ColorState(this._red, this._green, this._blue, this._alpha, this._hue,
-      this._saturation, this._value) {
+  ColorState(
+    this._red,
+    this._green,
+    this._blue,
+    this._alpha,
+    this._hue,
+    this._saturation,
+    this._value,
+  ) {
     _validateColorValues();
   }
 
@@ -219,8 +226,10 @@ class ColorState extends ChangeNotifier {
   ///
   /// If [includeAlpha] is true, the alpha channel will be included in the string.
   String toHexString(bool includeAlpha) {
-    final colorValue =
-        toColor().colorValue.toRadixString(16).padLeft(8, '0').toUpperCase();
+    final colorValue = toColor().colorValue
+        .toRadixString(16)
+        .padLeft(8, '0')
+        .toUpperCase();
     return includeAlpha ? '#$colorValue' : '#${colorValue.substring(2)}';
   }
 
@@ -240,20 +249,27 @@ class ColorState extends ChangeNotifier {
     int minValue = 0,
     int maxValue = 100,
   }) {
-    assert(minHue >= 0 && minHue <= maxHue && maxHue <= 360,
-        'Hue values must be between 0 and 360');
     assert(
-        minSaturation >= 0 &&
-            minSaturation <= maxSaturation &&
-            maxSaturation <= 100,
-        'Saturation values must be between 0 and 100');
-    assert(minValue >= 0 && minValue <= maxValue && maxValue <= 100,
-        'Value/brightness values must be between 0 and 100');
+      minHue >= 0 && minHue <= maxHue && maxHue <= 360,
+      'Hue values must be between 0 and 360',
+    );
+    assert(
+      minSaturation >= 0 &&
+          minSaturation <= maxSaturation &&
+          maxSaturation <= 100,
+      'Saturation values must be between 0 and 100',
+    );
+    assert(
+      minValue >= 0 && minValue <= maxValue && maxValue <= 100,
+      'Value/brightness values must be between 0 and 100',
+    );
 
     // Clamp values to allowed ranges
     final clampedHue = _hue.clamp(minHue.toDouble(), maxHue.toDouble());
-    final clampedSaturation =
-        _saturation.clamp(minSaturation / 100, maxSaturation / 100);
+    final clampedSaturation = _saturation.clamp(
+      minSaturation / 100,
+      maxSaturation / 100,
+    );
     final clampedValue = _value.clamp(minValue / 100, maxValue / 100);
 
     // Only update and recalculate if values actually changed
@@ -302,8 +318,10 @@ class ColorState extends ChangeNotifier {
     assert(_blue >= 0 && _blue <= 1, "Blue must be between 0 and 1");
     assert(_alpha >= 0 && _alpha <= 1, "Alpha must be between 0 and 1");
     assert(_hue >= 0 && _hue <= 360, "Hue must be between 0 and 360");
-    assert(_saturation >= 0 && _saturation <= 1,
-        "Saturation must be between 0 and 1");
+    assert(
+      _saturation >= 0 && _saturation <= 1,
+      "Saturation must be between 0 and 1",
+    );
     assert(_value >= 0 && _value <= 1, "Value must be between 0 and 1");
   }
 
@@ -452,8 +470,9 @@ class ColorState extends ChangeNotifier {
       return RgbComponents(hsl.l, hsl.l, hsl.l); // achromatic (grey)
     }
 
-    final q =
-        hsl.l < 0.5 ? hsl.l * (1.0 + hsl.s) : hsl.l + hsl.s - hsl.l * hsl.s;
+    final q = hsl.l < 0.5
+        ? hsl.l * (1.0 + hsl.s)
+        : hsl.l + hsl.s - hsl.l * hsl.s;
     final p = 2.0 * hsl.l - q;
     final r = _hueToRgb(p, q, hsl.h + 1.0 / 3.0);
     final g = _hueToRgb(p, q, hsl.h);
@@ -526,20 +545,26 @@ class ColorState extends ChangeNotifier {
   }
 
   /// Distance calculation between two colors in RGB and HSL spaces.
-  static double _rgbHslDistance(RgbComponents rgb1, HslComponents hsl1,
-      RgbComponents rgb2, HslComponents hsl2) {
+  static double _rgbHslDistance(
+    RgbComponents rgb1,
+    HslComponents hsl1,
+    RgbComponents rgb2,
+    HslComponents hsl2,
+  ) {
     final (r1, g1, b1) = (rgb1.r, rgb1.g, rgb1.b);
     final (h1, s1, l1) = (hsl1.h, hsl1.s, hsl1.l);
     final (r2, g2, b2) = (rgb2.r, rgb2.g, rgb2.b);
     final (h2, s2, l2) = (hsl2.h, hsl2.s, hsl2.l);
 
     // RGB distance = (R1 - R2)^2 + (G1 - G2)^2 + (B1 - B2)^2
-    final rgbDiff = math.pow((r1 - r2) * 255, 2) +
+    final rgbDiff =
+        math.pow((r1 - r2) * 255, 2) +
         math.pow((g1 - g2) * 255, 2) +
         math.pow((b1 - b2) * 255, 2);
 
     // HSL distance = ((H1 - H2)/360)^2 + (S1 - S2)^2 + (L1 - L2)^2
-    final hslDiff = math.pow((h1 - h2) / 360, 2) +
+    final hslDiff =
+        math.pow((h1 - h2) / 360, 2) +
         math.pow(s1 - s2, 2) +
         math.pow(l1 - l2, 2);
 

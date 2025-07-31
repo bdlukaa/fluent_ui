@@ -7,11 +7,7 @@ class FluentTheme extends StatelessWidget {
   /// Applies the given theme [data] to [child].
   ///
   /// The [data] and [child] arguments must not be null.
-  const FluentTheme({
-    super.key,
-    required this.data,
-    required this.child,
-  });
+  const FluentTheme({super.key, required this.data, required this.child});
 
   /// Specifies the color and typography values for descendant widgets.
   final FluentThemeData data;
@@ -35,20 +31,14 @@ class FluentTheme extends StatelessWidget {
       data: data,
       child: IconTheme(
         data: data.iconTheme,
-        child: DefaultTextStyle(
-          style: data.typography.body!,
-          child: child,
-        ),
+        child: DefaultTextStyle(style: data.typography.body!, child: child),
       ),
     );
   }
 }
 
 class _FluentTheme extends InheritedTheme {
-  const _FluentTheme({
-    required this.data,
-    required super.child,
-  });
+  const _FluentTheme({required this.data, required super.child});
 
   final FluentThemeData data;
 
@@ -127,27 +117,32 @@ class _AnimatedFluentThemeState
 
   @override
   void forEachTween(TweenVisitor<dynamic> visitor) {
-    _data = visitor(
-            _data,
-            widget.data,
-            (dynamic value) =>
-                FluentThemeDataTween(begin: value as FluentThemeData))!
-        as FluentThemeDataTween;
+    _data =
+        visitor(
+              _data,
+              widget.data,
+              (dynamic value) =>
+                  FluentThemeDataTween(begin: value as FluentThemeData),
+            )!
+            as FluentThemeDataTween;
   }
 
   @override
   Widget build(BuildContext context) {
-    return FluentTheme(
-      data: _data!.evaluate(animation),
-      child: widget.child,
-    );
+    return FluentTheme(data: _data!.evaluate(animation), child: widget.child);
   }
 
   @override
   void debugFillProperties(DiagnosticPropertiesBuilder description) {
     super.debugFillProperties(description);
-    description.add(DiagnosticsProperty<FluentThemeDataTween>('data', _data,
-        showName: false, defaultValue: null));
+    description.add(
+      DiagnosticsProperty<FluentThemeDataTween>(
+        'data',
+        _data,
+        showName: false,
+        defaultValue: null,
+      ),
+    );
   }
 }
 
@@ -284,8 +279,9 @@ class FluentThemeData with Diagnosticable {
     accentColor ??= Colors.blue;
     activeColor ??= Colors.white;
     inactiveColor ??= isLight ? Colors.black : Colors.white;
-    inactiveBackgroundColor ??=
-        isLight ? const Color(0xFFd6d6d6) : const Color(0xFF292929);
+    inactiveBackgroundColor ??= isLight
+        ? const Color(0xFFd6d6d6)
+        : const Color(0xFF292929);
     shadowColor ??= isLight ? Colors.black : Colors.grey[130];
     scaffoldBackgroundColor ??= resources.layerOnAcrylicFillColorDefault;
     acrylicBackgroundColor ??= isLight
@@ -422,49 +418,95 @@ class FluentThemeData with Diagnosticable {
       typography: Typography.lerp(a.typography, b.typography, t),
       activeColor: Color.lerp(a.activeColor, b.activeColor, t)!,
       inactiveColor: Color.lerp(a.inactiveColor, b.inactiveColor, t)!,
-      inactiveBackgroundColor:
-          Color.lerp(a.inactiveBackgroundColor, b.inactiveBackgroundColor, t)!,
-      scaffoldBackgroundColor:
-          Color.lerp(a.scaffoldBackgroundColor, b.scaffoldBackgroundColor, t)!,
-      acrylicBackgroundColor:
-          Color.lerp(a.acrylicBackgroundColor, b.acrylicBackgroundColor, t)!,
-      micaBackgroundColor:
-          Color.lerp(a.micaBackgroundColor, b.micaBackgroundColor, t)!,
+      inactiveBackgroundColor: Color.lerp(
+        a.inactiveBackgroundColor,
+        b.inactiveBackgroundColor,
+        t,
+      )!,
+      scaffoldBackgroundColor: Color.lerp(
+        a.scaffoldBackgroundColor,
+        b.scaffoldBackgroundColor,
+        t,
+      )!,
+      acrylicBackgroundColor: Color.lerp(
+        a.acrylicBackgroundColor,
+        b.acrylicBackgroundColor,
+        t,
+      )!,
+      micaBackgroundColor: Color.lerp(
+        a.micaBackgroundColor,
+        b.micaBackgroundColor,
+        t,
+      )!,
       shadowColor: Color.lerp(a.shadowColor, b.shadowColor, t)!,
       cardColor: Color.lerp(a.cardColor, b.cardColor, t)!,
-      fasterAnimationDuration:
-          lerpDuration(a.fasterAnimationDuration, b.fasterAnimationDuration, t),
-      fastAnimationDuration:
-          lerpDuration(a.fastAnimationDuration, b.fastAnimationDuration, t),
-      mediumAnimationDuration:
-          lerpDuration(a.mediumAnimationDuration, b.mediumAnimationDuration, t),
-      slowAnimationDuration:
-          lerpDuration(a.slowAnimationDuration, b.slowAnimationDuration, t),
+      fasterAnimationDuration: lerpDuration(
+        a.fasterAnimationDuration,
+        b.fasterAnimationDuration,
+        t,
+      ),
+      fastAnimationDuration: lerpDuration(
+        a.fastAnimationDuration,
+        b.fastAnimationDuration,
+        t,
+      ),
+      mediumAnimationDuration: lerpDuration(
+        a.mediumAnimationDuration,
+        b.mediumAnimationDuration,
+        t,
+      ),
+      slowAnimationDuration: lerpDuration(
+        a.slowAnimationDuration,
+        b.slowAnimationDuration,
+        t,
+      ),
       animationCurve: t < 0.5 ? a.animationCurve : b.animationCurve,
-      cursorOpacityAnimates:
-          t < 0.5 ? a.cursorOpacityAnimates : b.cursorOpacityAnimates,
+      cursorOpacityAnimates: t < 0.5
+          ? a.cursorOpacityAnimates
+          : b.cursorOpacityAnimates,
       buttonTheme: ButtonThemeData.lerp(a.buttonTheme, b.buttonTheme, t),
-      checkboxTheme:
-          CheckboxThemeData.lerp(a.checkboxTheme, b.checkboxTheme, t),
+      checkboxTheme: CheckboxThemeData.lerp(
+        a.checkboxTheme,
+        b.checkboxTheme,
+        t,
+      ),
       toggleSwitchTheme: ToggleSwitchThemeData.lerp(
-          a.toggleSwitchTheme, b.toggleSwitchTheme, t),
+        a.toggleSwitchTheme,
+        b.toggleSwitchTheme,
+        t,
+      ),
       iconTheme: IconThemeData.lerp(a.iconTheme, b.iconTheme, t),
       dialogTheme: ContentDialogThemeData.lerp(a.dialogTheme, b.dialogTheme, t),
       tooltipTheme: TooltipThemeData.lerp(a.tooltipTheme, b.tooltipTheme, t),
       dividerTheme: DividerThemeData.lerp(a.dividerTheme, b.dividerTheme, t),
       navigationPaneTheme: NavigationPaneThemeData.lerp(
-          a.navigationPaneTheme, b.navigationPaneTheme, t),
-      radioButtonTheme:
-          RadioButtonThemeData.lerp(a.radioButtonTheme, b.radioButtonTheme, t),
+        a.navigationPaneTheme,
+        b.navigationPaneTheme,
+        t,
+      ),
+      radioButtonTheme: RadioButtonThemeData.lerp(
+        a.radioButtonTheme,
+        b.radioButtonTheme,
+        t,
+      ),
       toggleButtonTheme: ToggleButtonThemeData.lerp(
-          a.toggleButtonTheme, b.toggleButtonTheme, t),
+        a.toggleButtonTheme,
+        b.toggleButtonTheme,
+        t,
+      ),
       sliderTheme: SliderThemeData.lerp(a.sliderTheme, b.sliderTheme, t),
       infoBarTheme: InfoBarThemeData.lerp(a.infoBarTheme, b.infoBarTheme, t),
       focusTheme: FocusThemeData.lerp(a.focusTheme, b.focusTheme, t),
-      scrollbarTheme:
-          ScrollbarThemeData.lerp(a.scrollbarTheme, b.scrollbarTheme, t),
+      scrollbarTheme: ScrollbarThemeData.lerp(
+        a.scrollbarTheme,
+        b.scrollbarTheme,
+        t,
+      ),
       bottomNavigationTheme: BottomNavigationThemeData.lerp(
-          a.bottomNavigationTheme, b.bottomNavigationTheme, t),
+        a.bottomNavigationTheme,
+        b.bottomNavigationTheme,
+        t,
+      ),
       menuColor: Color.lerp(a.menuColor, b.menuColor, t)!,
       selectionColor: Color.lerp(a.selectionColor, b.selectionColor, t)!,
     );
@@ -480,13 +522,15 @@ class FluentThemeData with Diagnosticable {
   /// Convert the [extensionsIterable] passed to [FluentThemeData.new] or [copyWith]
   /// to the stored [extensions] map, where each entry's key consists of the extension's type.
   static Map<Object, ThemeExtension<dynamic>> _themeExtensionIterableToMap(
-      Iterable<ThemeExtension<dynamic>> extensionsIterable) {
-    return Map<Object, ThemeExtension<dynamic>>.unmodifiable(<Object,
-        ThemeExtension<dynamic>>{
-      // Strangely, the cast is necessary for tests to run.
-      for (final ThemeExtension<dynamic> extension in extensionsIterable)
-        extension.type: extension as ThemeExtension<ThemeExtension<dynamic>>,
-    });
+    Iterable<ThemeExtension<dynamic>> extensionsIterable,
+  ) {
+    return Map<Object, ThemeExtension<dynamic>>.unmodifiable(
+      <Object, ThemeExtension<dynamic>>{
+        // Strangely, the cast is necessary for tests to run.
+        for (final ThemeExtension<dynamic> extension in extensionsIterable)
+          extension.type: extension as ThemeExtension<ThemeExtension<dynamic>>,
+      },
+    );
   }
 
   FluentThemeData copyWith({
@@ -561,8 +605,9 @@ class FluentThemeData with Diagnosticable {
       cursorOpacityAnimates:
           cursorOpacityAnimates ?? this.cursorOpacityAnimates,
       buttonTheme: this.buttonTheme.merge(buttonTheme),
-      bottomNavigationTheme:
-          this.bottomNavigationTheme.merge(bottomNavigationTheme),
+      bottomNavigationTheme: this.bottomNavigationTheme.merge(
+        bottomNavigationTheme,
+      ),
       checkboxTheme: this.checkboxTheme.merge(checkboxTheme),
       dialogTheme: this.dialogTheme.merge(dialogTheme),
       dividerTheme: this.dividerTheme.merge(dividerTheme),
@@ -596,16 +641,36 @@ class FluentThemeData with Diagnosticable {
       ..add(ColorProperty('cardColor', cardColor))
       ..add(ColorProperty('selectionColor', selectionColor))
       ..add(EnumProperty('brightness', brightness))
-      ..add(DiagnosticsProperty<Duration>(
-          'slowAnimationDuration', slowAnimationDuration))
-      ..add(DiagnosticsProperty<Duration>(
-          'mediumAnimationDuration', mediumAnimationDuration))
-      ..add(DiagnosticsProperty<Duration>(
-          'fastAnimationDuration', fastAnimationDuration))
-      ..add(DiagnosticsProperty<Duration>(
-          'fasterAnimationDuration', fasterAnimationDuration))
+      ..add(
+        DiagnosticsProperty<Duration>(
+          'slowAnimationDuration',
+          slowAnimationDuration,
+        ),
+      )
+      ..add(
+        DiagnosticsProperty<Duration>(
+          'mediumAnimationDuration',
+          mediumAnimationDuration,
+        ),
+      )
+      ..add(
+        DiagnosticsProperty<Duration>(
+          'fastAnimationDuration',
+          fastAnimationDuration,
+        ),
+      )
+      ..add(
+        DiagnosticsProperty<Duration>(
+          'fasterAnimationDuration',
+          fasterAnimationDuration,
+        ),
+      )
       ..add(DiagnosticsProperty<Curve>('animationCurve', animationCurve))
-      ..add(DiagnosticsProperty<bool>(
-          'cursorOpacityAnimates', cursorOpacityAnimates));
+      ..add(
+        DiagnosticsProperty<bool>(
+          'cursorOpacityAnimates',
+          cursorOpacityAnimates,
+        ),
+      );
   }
 }

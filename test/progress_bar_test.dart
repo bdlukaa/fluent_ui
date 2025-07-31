@@ -6,9 +6,7 @@ import 'app_test.dart';
 void main() {
   testWidgets('ProgressBar exposes correct semantics', (tester) async {
     await tester.pumpWidget(
-      wrapApp(
-        child: const ProgressBar(value: 66, semanticLabel: 'Loading'),
-      ),
+      wrapApp(child: const ProgressBar(value: 66, semanticLabel: 'Loading')),
     );
 
     final semantics = tester

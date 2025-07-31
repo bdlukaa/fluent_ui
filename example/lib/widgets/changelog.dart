@@ -33,7 +33,9 @@ class _ChangelogState extends State<Changelog> {
 
     if (response.statusCode == 200) {
       final changelogResult = response.body.split('\n')..removeRange(0, 2);
-      setState(() => changelog = changelogResult);
+      if (mounted) {
+        setState(() => changelog = changelogResult);
+      }
     } else {
       debugPrint(response.body);
     }
@@ -52,47 +54,53 @@ class _ChangelogState extends State<Changelog> {
           return SingleChildScrollView(
             child: flutter_markdown.Markdown(
               shrinkWrap: true,
-              data: changelog!.map<String>((line) {
-                if (line.startsWith('## [')) {
-                  final version = line.split(']').first.replaceAll('## [', '');
-                  // if (line.split('-').length == 2) {
-                  //   print('GO- ${line.split('-')[0]} - ${line.split('-')[1]}');
-                  // }
-                  String date = line
-                      .split('-')
-                      .last
-                      .replaceAll('[', '')
-                      .replaceAll(']', '');
+              data: changelog!
+                  .map<String>((line) {
+                    if (line.startsWith('## [')) {
+                      final version = line
+                          .split(']')
+                          .first
+                          .replaceAll('## [', '');
+                      // if (line.split('-').length == 2) {
+                      //   print('GO- ${line.split('-')[0]} - ${line.split('-')[1]}');
+                      // }
+                      String date = line
+                          .split('-')
+                          .last
+                          .replaceAll('[', '')
+                          .replaceAll(']', '');
 
-                  if (!date.startsWith('##')) {
-                    final splitDate = date.split('/');
-                    final dateTime = DateTime(
-                      int.parse(splitDate[2]),
-                      int.parse(splitDate[1]),
-                      int.parse(splitDate[0]),
-                    );
-                    final formatter = DateFormat.MMMMEEEEd();
-                    date = '${formatter.format(dateTime)}\n';
-                  } else {
-                    date = '';
-                  }
-                  return '## $version\n$date';
-                }
-                return line;
-              }).join('\n'),
+                      if (!date.startsWith('##')) {
+                        final splitDate = date.split('/');
+                        final dateTime = DateTime(
+                          int.parse(splitDate[2]),
+                          int.parse(splitDate[1]),
+                          int.parse(splitDate[0]),
+                        );
+                        final formatter = DateFormat.MMMMEEEEd();
+                        date = '${formatter.format(dateTime)}\n';
+                      } else {
+                        date = '';
+                      }
+                      return '## $version\n$date';
+                    }
+                    return line;
+                  })
+                  .join('\n'),
               onTapLink: (text, href, title) {
                 launchUrl(Uri.parse(href!));
               },
-              styleSheet: flutter_markdown.MarkdownStyleSheet.fromTheme(
-                m.Theme.of(context),
-              ).copyWith(
-                a: TextStyle(
-                  color: theme.accentColor.defaultBrushFor(
-                    theme.brightness,
-                    // level: 1,
+              styleSheet:
+                  flutter_markdown.MarkdownStyleSheet.fromTheme(
+                    m.Theme.of(context),
+                  ).copyWith(
+                    a: TextStyle(
+                      color: theme.accentColor.defaultBrushFor(
+                        theme.brightness,
+                        // level: 1,
+                      ),
+                    ),
                   ),
-                ),
-              ),
               padding: const EdgeInsets.all(20.0),
             ),
           );

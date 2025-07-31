@@ -23,16 +23,15 @@ class TextBoxPage extends StatelessWidget with PageMixin {
         subtitle(content: const Text('A simple TextBox')),
         const CardHighlight(
           codeSnippet: '''TextBox()''',
-          child: Row(children: [
-            Expanded(child: TextBox()),
-            SizedBox(width: 10.0),
-            Expanded(
-              child: TextBox(
-                enabled: false,
-                placeholder: 'Disabled TextBox',
+          child: Row(
+            children: [
+              Expanded(child: TextBox()),
+              SizedBox(width: 10.0),
+              Expanded(
+                child: TextBox(enabled: false, placeholder: 'Disabled TextBox'),
               ),
-            )
-          ]),
+            ],
+          ),
         ),
         subtitle(
           content: const Text('A TextBox with a header and placeholder text'),
@@ -47,15 +46,13 @@ class TextBoxPage extends StatelessWidget with PageMixin {
 )''',
           child: InfoLabel(
             label: 'Enter your name:',
-            child: const TextBox(
-              placeholder: 'Name',
-              expands: false,
-            ),
+            child: const TextBox(placeholder: 'Name', expands: false),
           ),
         ),
         subtitle(
-          content:
-              const Text('A read-only TextBox with various properties set'),
+          content: const Text(
+            'A read-only TextBox with various properties set',
+          ),
         ),
         const CardHighlight(
           codeSnippet: '''TextBox(
@@ -86,9 +83,7 @@ class TextBoxPage extends StatelessWidget with PageMixin {
           codeSnippet: '''TextBox(
   maxLines: null,
 ),''',
-          child: TextBox(
-            maxLines: null,
-          ),
+          child: TextBox(maxLines: null),
         ),
         subtitle(content: const Text('A big TextBox')),
         const CardHighlight(
@@ -98,12 +93,7 @@ class TextBoxPage extends StatelessWidget with PageMixin {
     maxLines: null,
   ),
 )''',
-          child: SizedBox(
-            height: 200.0,
-            child: TextBox(
-              maxLines: null,
-            ),
-          ),
+          child: SizedBox(height: 200.0, child: TextBox(maxLines: null)),
         ),
       ],
     );

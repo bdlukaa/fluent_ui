@@ -5,16 +5,18 @@ import 'app_test.dart';
 
 void main() {
   testWidgets('DropdownButton leading is shown correctly', (tester) async {
-    await tester.pumpWidget(wrapApp(
-      child: DropDownButton(
-        items: [
-          MenuFlyoutItem(text: const Text('one'), onPressed: () {}),
-          MenuFlyoutItem(text: const Text('two'), onPressed: () {}),
-        ],
-        leading: const Icon(FluentIcons.number),
-        title: const Text('Numbers'),
+    await tester.pumpWidget(
+      wrapApp(
+        child: DropDownButton(
+          items: [
+            MenuFlyoutItem(text: const Text('one'), onPressed: () {}),
+            MenuFlyoutItem(text: const Text('two'), onPressed: () {}),
+          ],
+          leading: const Icon(FluentIcons.number),
+          title: const Text('Numbers'),
+        ),
       ),
-    ));
+    );
 
     expect(find.byIcon(FluentIcons.number), findsOneWidget);
   });
@@ -23,22 +25,26 @@ void main() {
     'DropdownButton flyout should be displayed above if not enough space',
     (tester) async {
       const screenSize = Size(600, 600);
-      await tester.pumpWidget(SizedBox.fromSize(
-        size: screenSize,
-        child: wrapApp(
-          child: Column(children: [
-            const Spacer(),
-            DropDownButton(
-              items: [
-                MenuFlyoutItem(text: const Text('one'), onPressed: () {}),
-                MenuFlyoutItem(text: const Text('two'), onPressed: () {}),
+      await tester.pumpWidget(
+        SizedBox.fromSize(
+          size: screenSize,
+          child: wrapApp(
+            child: Column(
+              children: [
+                const Spacer(),
+                DropDownButton(
+                  items: [
+                    MenuFlyoutItem(text: const Text('one'), onPressed: () {}),
+                    MenuFlyoutItem(text: const Text('two'), onPressed: () {}),
+                  ],
+                  leading: const Icon(FluentIcons.number),
+                  title: const Text('Numbers'),
+                ),
               ],
-              leading: const Icon(FluentIcons.number),
-              title: const Text('Numbers'),
             ),
-          ]),
+          ),
         ),
-      ));
+      );
 
       await tester.tap(find.text('Numbers'));
       await tester.pump();

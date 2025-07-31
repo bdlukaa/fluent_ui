@@ -54,8 +54,8 @@ class BottomNavigation extends StatelessWidget {
     required this.index,
     this.onChanged,
     this.style,
-  })  : assert(items.length >= 2),
-        assert(index >= 0 && index < items.length);
+  }) : assert(items.length >= 2),
+       assert(index >= 0 && index < items.length);
 
   /// The items displayed by this widget. There must be at least 2
   /// items in the list.
@@ -138,27 +138,29 @@ class _BottomNavigationItem extends StatelessWidget {
       child: HoverButton(
         onPressed: onPressed,
         builder: (context, state) {
-          final content =
-              Column(mainAxisAlignment: MainAxisAlignment.center, children: [
-            IconTheme.merge(
-              data: IconThemeData(
-                color: selected ? style.selectedColor : style.inactiveColor,
-              ),
-              child: selected ? item.selectedIcon ?? item.icon : item.icon,
-            ),
-            if (item.title != null)
-              Padding(
-                padding: const EdgeInsetsDirectional.only(top: 1.0),
-                child: DefaultTextStyle.merge(
-                  style: FluentTheme.of(context).typography.caption!.copyWith(
-                        color: selected
-                            ? style.selectedColor
-                            : style.inactiveColor,
-                      ),
-                  child: item.title!,
+          final content = Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              IconTheme.merge(
+                data: IconThemeData(
+                  color: selected ? style.selectedColor : style.inactiveColor,
                 ),
+                child: selected ? item.selectedIcon ?? item.icon : item.icon,
               ),
-          ]);
+              if (item.title != null)
+                Padding(
+                  padding: const EdgeInsetsDirectional.only(top: 1.0),
+                  child: DefaultTextStyle.merge(
+                    style: FluentTheme.of(context).typography.caption!.copyWith(
+                      color: selected
+                          ? style.selectedColor
+                          : style.inactiveColor,
+                    ),
+                    child: item.title!,
+                  ),
+                ),
+            ],
+          );
           return FocusBorder(
             focused: state.isFocused,
             renderOutside: false,
@@ -200,13 +202,15 @@ class BottomNavigationTheme extends InheritedTheme {
     required BottomNavigationThemeData data,
     required Widget child,
   }) {
-    return Builder(builder: (BuildContext context) {
-      return BottomNavigationTheme(
-        key: key,
-        data: _getInheritedBottomNavigationThemeData(context).merge(data),
-        child: child,
-      );
-    });
+    return Builder(
+      builder: (BuildContext context) {
+        return BottomNavigationTheme(
+          key: key,
+          data: _getInheritedBottomNavigationThemeData(context).merge(data),
+          child: child,
+        );
+      },
+    );
   }
 
   /// The data from the closest instance of this class that encloses the given
@@ -221,15 +225,16 @@ class BottomNavigationTheme extends InheritedTheme {
   /// ```
   static BottomNavigationThemeData of(BuildContext context) {
     assert(debugCheckHasFluentTheme(context));
-    return BottomNavigationThemeData.standard(FluentTheme.of(context)).merge(
-      _getInheritedBottomNavigationThemeData(context),
-    );
+    return BottomNavigationThemeData.standard(
+      FluentTheme.of(context),
+    ).merge(_getInheritedBottomNavigationThemeData(context));
   }
 
   static BottomNavigationThemeData _getInheritedBottomNavigationThemeData(
-      BuildContext context) {
-    final theme =
-        context.dependOnInheritedWidgetOfExactType<BottomNavigationTheme>();
+    BuildContext context,
+  ) {
+    final theme = context
+        .dependOnInheritedWidgetOfExactType<BottomNavigationTheme>();
     return theme?.data ?? FluentTheme.of(context).bottomNavigationTheme;
   }
 
@@ -264,8 +269,9 @@ class BottomNavigationThemeData with Diagnosticable {
   factory BottomNavigationThemeData.standard(FluentThemeData theme) {
     final isLight = theme.brightness.isLight;
     return BottomNavigationThemeData(
-      backgroundColor:
-          isLight ? const Color(0xFFf8f8f8) : const Color(0xFF0c0c0c),
+      backgroundColor: isLight
+          ? const Color(0xFFf8f8f8)
+          : const Color(0xFF0c0c0c),
       selectedColor: theme.accentColor,
       inactiveColor: theme.resources.controlFillColorDisabled,
     );

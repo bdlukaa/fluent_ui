@@ -5,7 +5,7 @@ import 'package:fluent_ui/fluent_ui.dart';
 import 'package:provider/provider.dart';
 
 class TeachingTipPage extends StatefulWidget {
-  const TeachingTipPage({Key? key}) : super(key: key);
+  const TeachingTipPage({super.key});
 
   @override
   State<TeachingTipPage> createState() => _TeachingTipPageState();
@@ -69,7 +69,8 @@ class _TeachingTipPageState extends State<TeachingTipPage> with PageMixin {
           content: const Text('Show a non-targeted TeachingTip with buttons.'),
         ),
         CardHighlight(
-          codeSnippet: '''final flyoutController = FlyoutController();
+          codeSnippet:
+              '''final flyoutController = FlyoutController();
 
 FlyoutTarget(
   controller: flyoutController,
@@ -111,68 +112,69 @@ showTeachingTip(
   },
 );
 ''',
-          child: Row(children: [
-            FlyoutTarget(
-              controller: nonTargetedController,
-              child: Button(
-                child: const Text('Show TeachingTip'),
-                onPressed: () {
-                  showTeachingTip(
-                    flyoutController: nonTargetedController,
-                    nonTargetedAlignment: alignments[alignment],
-                    builder: (context) => TeachingTip(
-                      title: const Text('Change themes without hassle'),
-                      subtitle: const Text(
-                        'It\'s easier to see control samples in both light and dark theme',
+          child: Row(
+            children: [
+              FlyoutTarget(
+                controller: nonTargetedController,
+                child: Button(
+                  child: const Text('Show TeachingTip'),
+                  onPressed: () {
+                    showTeachingTip(
+                      flyoutController: nonTargetedController,
+                      nonTargetedAlignment: alignments[alignment],
+                      builder: (context) => TeachingTip(
+                        title: const Text('Change themes without hassle'),
+                        subtitle: const Text(
+                          'It\'s easier to see control samples in both light and dark theme',
+                        ),
+                        buttons: [
+                          Button(
+                            child: const Text('Toggle theme now'),
+                            onPressed: () {
+                              if (theme.brightness.isDark) {
+                                appTheme.mode = ThemeMode.light;
+                              } else {
+                                appTheme.mode = ThemeMode.dark;
+                              }
+                              nonTargetedController.close();
+                            },
+                          ),
+                          Button(
+                            onPressed: () => nonTargetedController.close(),
+                            child: const Text('Got it'),
+                          ),
+                        ],
                       ),
-                      buttons: [
-                        Button(
-                          child: const Text('Toggle theme now'),
-                          onPressed: () {
-                            if (theme.brightness.isDark) {
-                              appTheme.mode = ThemeMode.light;
-                            } else {
-                              appTheme.mode = ThemeMode.dark;
-                            }
-                            nonTargetedController.close();
-                          },
-                        ),
-                        Button(
-                          onPressed: () => nonTargetedController.close(),
-                          child: const Text('Got it'),
-                        ),
-                      ],
-                    ),
-                  );
-                },
+                    );
+                  },
+                ),
               ),
-            ),
-            const SizedBox(width: 18.0),
-            SizedBox(
-              width: 150.0,
-              child: ComboBox<String>(
-                placeholder: const Text('Alignment'),
-                items: List.generate(alignments.length, (index) {
-                  final entry = alignments.entries.elementAt(index);
+              const SizedBox(width: 18.0),
+              SizedBox(
+                width: 150.0,
+                child: ComboBox<String>(
+                  placeholder: const Text('Alignment'),
+                  items: List.generate(alignments.length, (index) {
+                    final entry = alignments.entries.elementAt(index);
 
-                  return ComboBoxItem(
-                    value: entry.key,
-                    child: Text(entry.key.uppercaseFirst()),
-                  );
-                }),
-                value: alignment,
-                onChanged: (a) {
-                  if (a != null) setState(() => alignment = a);
-                },
+                    return ComboBoxItem(
+                      value: entry.key,
+                      child: Text(entry.key.uppercaseFirst()),
+                    );
+                  }),
+                  value: alignment,
+                  onChanged: (a) {
+                    if (a != null) setState(() => alignment = a);
+                  },
+                ),
               ),
-            ),
-          ]),
+            ],
+          ),
         ),
-        subtitle(
-          content: const Text('Show a targeted TeachingTip.'),
-        ),
+        subtitle(content: const Text('Show a targeted TeachingTip.')),
         CardHighlight(
-          codeSnippet: '''final flyoutController = FlyoutController();
+          codeSnippet:
+              '''final flyoutController = FlyoutController();
 
 final target = FlyoutTarget(
   controller: flyoutController,
@@ -188,7 +190,7 @@ showTeachingTip(
   placementMode: ${placements[placement]},
   builder: (context) {
     return TeachingTip(
-      leading: const Icon(FluentIcons.refresh),
+      leading: const WindowsIcon(WindowsIcons.refresh),
       title: const Text('This is the title'),
       subtitle: const Text('And this is the subtitle'),${showMediaContent ? '''\n      mediaContent: SizedBox(
         width: double.infinity,
@@ -201,84 +203,93 @@ showTeachingTip(
   },
 );
 ''',
-          child: Row(children: [
-            Expanded(
-              child: Center(
-                child: FlyoutTarget(
-                  controller: targetedController,
-                  child: Container(
-                    height: 100,
-                    width: 200,
-                    color: theme.accentColor.defaultBrushFor(theme.brightness),
+          child: Row(
+            children: [
+              Expanded(
+                child: Center(
+                  child: FlyoutTarget(
+                    controller: targetedController,
+                    child: Container(
+                      height: 100,
+                      width: 200,
+                      color: theme.accentColor.defaultBrushFor(
+                        theme.brightness,
+                      ),
+                    ),
                   ),
                 ),
               ),
-            ),
-            IntrinsicWidth(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.end,
-                spacing: 8.0,
-                children: [
-                  InfoLabel(
-                    label: 'Placement',
-                    child: ComboBox<String>(
-                      placeholder: const Text('Placement'),
-                      items: List.generate(placements.length, (index) {
-                        final entry = placements.entries.elementAt(index);
+              IntrinsicWidth(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.end,
+                  spacing: 8.0,
+                  children: [
+                    InfoLabel(
+                      label: 'Placement',
+                      child: ComboBox<String>(
+                        placeholder: const Text('Placement'),
+                        items: List.generate(placements.length, (index) {
+                          final entry = placements.entries.elementAt(index);
 
-                        return ComboBoxItem(
-                          value: entry.key,
-                          child: Text(entry.key.uppercaseFirst()),
-                        );
-                      }),
-                      value: placement,
-                      onChanged: (a) {
-                        if (a != null) setState(() => placement = a);
-                      },
-                      isExpanded: true,
+                          return ComboBoxItem(
+                            value: entry.key,
+                            child: Text(entry.key.uppercaseFirst()),
+                          );
+                        }),
+                        value: placement,
+                        onChanged: (a) {
+                          if (a != null) setState(() => placement = a);
+                        },
+                        isExpanded: true,
+                      ),
                     ),
-                  ),
-                  Checkbox(
-                    checked: showMediaContent,
-                    onChanged: (v) {
-                      if (v != null) setState(() => showMediaContent = v);
-                    },
-                    content: const Text('Show media content'),
-                  ),
-                  const Divider(),
-                  SizedBox(
-                    width: double.infinity,
-                    child: FilledButton(
-                      child: const Text('Show TeachingTip'),
-                      onPressed: () {
-                        showTeachingTip(
-                          flyoutController: targetedController,
-                          placementMode: placements[placement]!,
-                          builder: (context) {
-                            return TeachingTip(
-                              leading: const Icon(FluentIcons.refresh),
-                              title: const Text('This is the title'),
-                              subtitle: const Text('And this is the subtitle'),
-                              mediaContent: showMediaContent
-                                  ? SizedBox(
-                                      width: double.infinity,
-                                      child: ColoredBox(
-                                        color: Colors.blue
-                                            .defaultBrushFor(theme.brightness),
-                                        child: const FlutterLogo(size: 100),
-                                      ),
-                                    )
-                                  : null,
-                            );
-                          },
-                        );
+                    Checkbox(
+                      checked: showMediaContent,
+                      onChanged: (v) {
+                        if (v != null) setState(() => showMediaContent = v);
                       },
+                      content: const Text('Show media content'),
                     ),
-                  ),
-                ],
+                    const Divider(),
+                    SizedBox(
+                      width: double.infinity,
+                      child: FilledButton(
+                        child: const Text('Show TeachingTip'),
+                        onPressed: () {
+                          showTeachingTip(
+                            flyoutController: targetedController,
+                            placementMode: placements[placement]!,
+                            builder: (context) {
+                              return TeachingTip(
+                                leading: const WindowsIcon(
+                                  WindowsIcons.refresh,
+                                ),
+                                title: const Text('This is the title'),
+                                subtitle: const Text(
+                                  'And this is the subtitle',
+                                ),
+                                mediaContent: showMediaContent
+                                    ? SizedBox(
+                                        width: double.infinity,
+                                        child: ColoredBox(
+                                          color: Colors.blue.defaultBrushFor(
+                                            theme.brightness,
+                                          ),
+                                          child: const FlutterLogo(size: 100),
+                                        ),
+                                      )
+                                    : null,
+                              );
+                            },
+                          );
+                        },
+                      ),
+                    ),
+                  ],
+                ),
               ),
-            ),
-          ]),
+            ],
+          ),
         ),
       ],
     );

@@ -111,6 +111,9 @@ class FluentLocalizationsTl extends FluentLocalizations {
   String get year => 'taon';
 
   @override
+  String get pickADate => 'Pick a date';
+
+  @override
   String get seeMore => 'Tignan pa';
 
   @override

@@ -38,9 +38,9 @@ class RatingBar extends StatefulWidget {
     this.autofocus = false,
     this.starSpacing = 0,
     this.dragStartBehavior = DragStartBehavior.down,
-  })  : assert(rating >= 0 && rating <= amount),
-        assert(starSpacing >= 0),
-        assert(amount > 0);
+  }) : assert(rating >= 0 && rating <= amount),
+       assert(starSpacing >= 0),
+       assert(amount > 0);
 
   /// The amount of stars in the bar. The default amount is 5
   final int amount;
@@ -104,22 +104,23 @@ class RatingBar extends StatefulWidget {
       ..add(
         DiagnosticsProperty<Duration>('animationDuration', animationDuration),
       )
-      ..add(
-        DiagnosticsProperty<Curve>('animationCurve', animationCurve),
-      )
+      ..add(DiagnosticsProperty<Curve>('animationCurve', animationCurve))
       ..add(DoubleProperty('iconSize', iconSize))
       ..add(IconDataProperty('icon', icon))
       ..add(ColorProperty('ratedIconColor', ratedIconColor))
       ..add(ColorProperty('unratedIconColor', unratedIconColor))
       ..add(ObjectFlagProperty<FocusNode>.has('focusNode', focusNode))
       ..add(
-          FlagProperty('autofocus', value: autofocus, ifFalse: 'manual focus'))
+        FlagProperty('autofocus', value: autofocus, ifFalse: 'manual focus'),
+      )
       ..add(DoubleProperty('starSpacing', starSpacing, defaultValue: 0))
-      ..add(EnumProperty(
-        'dragStartBehavior',
-        dragStartBehavior,
-        defaultValue: DragStartBehavior.down,
-      ));
+      ..add(
+        EnumProperty(
+          'dragStartBehavior',
+          dragStartBehavior,
+          defaultValue: DragStartBehavior.down,
+        ),
+      );
   }
 }
 
@@ -302,9 +303,4 @@ class _AdjustSliderIntent extends Intent {
   final _SliderAdjustmentType type;
 }
 
-enum _SliderAdjustmentType {
-  right,
-  left,
-  up,
-  down,
-}
+enum _SliderAdjustmentType { right, left, up, down }

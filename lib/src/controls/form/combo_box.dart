@@ -34,17 +34,17 @@ class _ComboBoxMenuPainter extends CustomPainter {
     Color borderColor = Colors.black,
     Color? backgroundColor,
     int elevation = 0,
-  })  : _painter = BoxDecoration(
-          // If you add an image here, you must provide a real
-          // configuration in the paint() function and you must provide some sort
-          // of onChanged callback here.
-          // color: color,
-          borderRadius: const BorderRadius.all(kComboBoxRadius),
-          border: Border.all(color: borderColor),
-          boxShadow: kElevationToShadow[elevation],
-          color: backgroundColor,
-        ).createBoxPainter(),
-        super(repaint: resize);
+  }) : _painter = BoxDecoration(
+         // If you add an image here, you must provide a real
+         // configuration in the paint() function and you must provide some sort
+         // of onChanged callback here.
+         // color: color,
+         borderRadius: const BorderRadius.all(kComboBoxRadius),
+         border: Border.all(color: borderColor),
+         boxShadow: kElevationToShadow[elevation],
+         color: backgroundColor,
+       ).createBoxPainter(),
+       super(repaint: resize);
 
   final int? selectedIndex;
   final Animation<double> resize;
@@ -68,7 +68,11 @@ class _ComboBoxMenuPainter extends CustomPainter {
     );
 
     final rect = Rect.fromLTRB(
-        0.0, top.evaluate(resize), size.width, bottom.evaluate(resize));
+      0.0,
+      top.evaluate(resize),
+      size.width,
+      bottom.evaluate(resize),
+    );
 
     _painter.paint(canvas, rect.topLeft, ImageConfiguration(size: rect.size));
   }
@@ -130,7 +134,10 @@ class _ComboBoxItemButtonState<T> extends State<_ComboBoxItemButton<T>> {
 
     if (focused && inTraditionalMode && scrollable) {
       final menuLimits = widget.route.getMenuLimits(
-          widget.buttonRect, widget.constraints.maxHeight, widget.itemIndex);
+        widget.buttonRect,
+        widget.constraints.maxHeight,
+        widget.itemIndex,
+      );
       widget.route.scrollController!.animateTo(
         menuLimits.scrollOffset,
         curve: Curves.easeInOut,
@@ -146,16 +153,13 @@ class _ComboBoxItemButtonState<T> extends State<_ComboBoxItemButton<T>> {
       comboboxMenuItem.onTap!();
     }
 
-    Navigator.pop(
-      context,
-      _ComboBoxRouteResult<T>(comboboxMenuItem.value),
-    );
+    Navigator.pop(context, _ComboBoxRouteResult<T>(comboboxMenuItem.value));
   }
 
   static final Map<LogicalKeySet, Intent> _webShortcuts =
       <LogicalKeySet, Intent>{
-    LogicalKeySet(LogicalKeyboardKey.enter): const ActivateIntent(),
-  };
+        LogicalKeySet(LogicalKeyboardKey.enter): const ActivateIntent(),
+      };
 
   @override
   Widget build(BuildContext context) {
@@ -170,34 +174,38 @@ class _ComboBoxItemButtonState<T> extends State<_ComboBoxItemButton<T>> {
             start: 6.0,
             // bottom: 4.0,
           ),
-          child: Stack(children: [
-            Container(
-              decoration: BoxDecoration(
-                color: ButtonThemeData.uncheckedInputColor(
-                  theme,
-                  states.isFocused ? {WidgetState.hovered} : states,
-                  transparentWhenNone: true,
+          child: Stack(
+            children: [
+              Container(
+                decoration: BoxDecoration(
+                  color: ButtonThemeData.uncheckedInputColor(
+                    theme,
+                    states.isFocused ? {WidgetState.hovered} : states,
+                    transparentWhenNone: true,
+                  ),
+                  borderRadius: BorderRadius.circular(4.0),
                 ),
-                borderRadius: BorderRadius.circular(4.0),
+                padding: widget.padding,
+                child: widget.route.items[widget.itemIndex],
               ),
-              padding: widget.padding,
-              child: widget.route.items[widget.itemIndex],
-            ),
-            if (states.isFocused)
-              AnimatedPositionedDirectional(
-                duration: theme.fastAnimationDuration,
-                curve: theme.animationCurve,
-                top: states.isPressed ? 10.0 : 8.0,
-                bottom: states.isPressed ? 10.0 : 8.0,
-                child: Container(
-                  width: 3.0,
-                  decoration: BoxDecoration(
-                    color: theme.accentColor.defaultBrushFor(theme.brightness),
-                    borderRadius: BorderRadius.circular(50.0),
+              if (states.isFocused)
+                AnimatedPositionedDirectional(
+                  duration: theme.fastAnimationDuration,
+                  curve: theme.animationCurve,
+                  top: states.isPressed ? 10.0 : 8.0,
+                  bottom: states.isPressed ? 10.0 : 8.0,
+                  child: Container(
+                    width: 3.0,
+                    decoration: BoxDecoration(
+                      color: theme.accentColor.defaultBrushFor(
+                        theme.brightness,
+                      ),
+                      borderRadius: BorderRadius.circular(50.0),
+                    ),
                   ),
                 ),
-              ),
-          ]),
+            ],
+          ),
         );
       },
       onPressed: comboboxMenuItem.enabled ? _handleOnTap : null,
@@ -206,10 +214,7 @@ class _ComboBoxItemButtonState<T> extends State<_ComboBoxItemButton<T>> {
     if (kIsWeb) {
       // On the web, enter doesn't select things, *except* in a <select>
       // element, which is what a combo box emulates.
-      child = Shortcuts(
-        shortcuts: _webShortcuts,
-        child: child,
-      );
+      child = Shortcuts(shortcuts: _webShortcuts, child: child);
     }
 
     if (kIsWeb) {
@@ -237,8 +242,9 @@ class _ComboBoxItemButtonState<T> extends State<_ComboBoxItemButton<T>> {
     }
 
     return Padding(
-      padding:
-          const EdgeInsetsDirectional.only(bottom: _kMenuItemBottomPadding),
+      padding: const EdgeInsetsDirectional.only(
+        bottom: _kMenuItemBottomPadding,
+      ),
       child: child,
     );
   }
@@ -435,8 +441,10 @@ class _ComboBoxMenuRouteLayout<T> extends SingleChildLayoutDelegate {
     // the view height. This ensures a tappable area outside of the simple menu
     // with which to dismiss the menu.
     //   -- https://material.io/design/components/menus.html#usage
-    final double maxHeight =
-        math.max(0.0, constraints.maxHeight - 2 * kComboBoxItemHeight);
+    final double maxHeight = math.max(
+      0.0,
+      constraints.maxHeight - 2 * kComboBoxItemHeight,
+    );
     // The width of a menu should be at most the view width. This ensures that
     // the menu does not extend past the left and right edges of the screen.
     final double width = math.min(constraints.maxWidth, buttonRect.width);
@@ -554,21 +562,23 @@ class _ComboBoxRoute<T> extends PopupRoute<_ComboBoxRouteResult<T>> {
 
   @override
   Widget buildPage(context, animation, secondaryAnimation) {
-    return LayoutBuilder(builder: (context, constraints) {
-      final page = _ComboBoxRoutePage<T>(
-        route: this,
-        constraints: constraints,
-        padding: padding,
-        buttonRect: buttonRect,
-        selectedIndex: selectedIndex,
-        elevation: elevation,
-        capturedThemes: capturedThemes,
-        style: style,
-        popupColor: popupColor,
-      );
-      if (acrylicEnabled) return page;
-      return DisableAcrylic(child: page);
-    });
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        final page = _ComboBoxRoutePage<T>(
+          route: this,
+          constraints: constraints,
+          padding: padding,
+          buttonRect: buttonRect,
+          selectedIndex: selectedIndex,
+          elevation: elevation,
+          capturedThemes: capturedThemes,
+          style: style,
+          popupColor: popupColor,
+        );
+        if (acrylicEnabled) return page;
+        return DisableAcrylic(child: page);
+      },
+    );
   }
 
   void _dismiss() {
@@ -593,7 +603,10 @@ class _ComboBoxRoute<T> extends PopupRoute<_ComboBoxRouteResult<T>> {
   // selected item is aligned with the button's vertical center, as far as
   // that's possible given availableHeight.
   _MenuLimits getMenuLimits(
-      Rect buttonRect, double availableHeight, int index) {
+    Rect buttonRect,
+    double availableHeight,
+    int index,
+  ) {
     var computedMaxHeight = availableHeight - 2.0 * kComboBoxItemHeight;
     // if (menuMaxHeight != null) {
     //   computedMaxHeight = math.min(computedMaxHeight, menuMaxHeight!);
@@ -607,16 +620,20 @@ class _ComboBoxRoute<T> extends PopupRoute<_ComboBoxRouteResult<T>> {
     // In this case, we want to change the menu limits to align with the top
     // or bottom edge of the button.
     const topLimit = _kMenuItemBottomPadding;
-    final double bottomLimit =
-        math.max(availableHeight - kComboBoxItemHeight, buttonBottom);
+    final double bottomLimit = math.max(
+      availableHeight - kComboBoxItemHeight,
+      buttonBottom,
+    );
 
-    var menuTop = (buttonTop - selectedItemOffset) -
+    var menuTop =
+        (buttonTop - selectedItemOffset) -
         (itemHeights[selectedIndex ?? 0] - buttonRect.height) / 2.0;
 
     var preferredMenuHeight = _kListPadding.vertical;
     if (items.isNotEmpty) {
-      preferredMenuHeight +=
-          itemHeights.reduce((double total, double height) => total + height);
+      preferredMenuHeight += itemHeights.reduce(
+        (double total, double height) => total + height,
+      );
     }
     // If there are too many elements in the menu, we need to shrink it down
     // so it is at most the computedMaxHeight.
@@ -640,7 +657,8 @@ class _ComboBoxRoute<T> extends PopupRoute<_ComboBoxRouteResult<T>> {
 
     if (menuBottom - itemHeights[selectedIndex ?? 0] / 2.0 <
         buttonBottom - buttonRect.height / 2.0) {
-      menuBottom = buttonBottom -
+      menuBottom =
+          buttonBottom -
           buttonRect.height / 2.0 +
           itemHeights[selectedIndex ?? 0] / 2.0;
       menuTop = menuBottom - menuHeight;
@@ -747,10 +765,7 @@ class _ComboBoxItemContainer extends StatelessWidget {
   /// Creates an item for a combo box menu.
   ///
   /// The [child] argument is required.
-  const _ComboBoxItemContainer({
-    super.key,
-    required this.child,
-  });
+  const _ComboBoxItemContainer({super.key, required this.child});
 
   /// The widget below this widget in the tree.
   ///
@@ -766,10 +781,10 @@ class _ComboBoxItemContainer extends StatelessWidget {
     final foregroundColor = state.isDisabled
         ? theme.resources.textFillColorDisabled
         : state.isPressed
-            ? theme.resources.textFillColorTertiary
-            : state.isHovered
-                ? theme.resources.textFillColorSecondary
-                : theme.resources.textFillColorPrimary;
+        ? theme.resources.textFillColorTertiary
+        : state.isHovered
+        ? theme.resources.textFillColorSecondary
+        : theme.resources.textFillColorPrimary;
 
     return Container(
       height: hasPadding
@@ -829,7 +844,7 @@ class ComboBoxItem<T> extends _ComboBoxItemContainer {
   final bool enabled;
 }
 
-/// A fluent design button for selecting from a list of items.
+/// A Windows design button for selecting from a list of items.
 ///
 /// A combo box button lets the user select from a number of items. The button
 /// shows the currently selected item as well as an arrow that opens a menu for
@@ -893,7 +908,7 @@ class ComboBox<T> extends StatefulWidget {
     this.onTap,
     this.elevation = 8,
     this.style,
-    this.icon = const Icon(FluentIcons.chevron_down),
+    this.icon = const WindowsIcon(WindowsIcons.chevron_down),
     this.iconDisabledColor,
     this.iconEnabledColor,
     this.iconSize = 8.0,
@@ -1171,8 +1186,9 @@ class ComboBoxState<T> extends State<ComboBox<T>> {
     }
 
     // only update the selected value if it exists
-    if (widget.items!
-        .any((ComboBoxItem<T> item) => item.value == widget.value)) {
+    if (widget.items!.any(
+      (ComboBoxItem<T> item) => item.value == widget.value,
+    )) {
       for (var itemIndex = 0; itemIndex < widget.items!.length; itemIndex++) {
         if (widget.items![itemIndex].value == widget.value) {
           _selectedIndex = itemIndex;
@@ -1195,8 +1211,11 @@ class ComboBoxState<T> extends State<ComboBox<T>> {
     final navigator = Navigator.of(context);
     assert(_comboboxRoute == null);
     final itemBox = context.findRenderObject()! as RenderBox;
-    final itemRect = itemBox.localToGlobal(Offset.zero,
-            ancestor: navigator.context.findRenderObject()) &
+    final itemRect =
+        itemBox.localToGlobal(
+          Offset.zero,
+          ancestor: navigator.context.findRenderObject(),
+        ) &
         itemBox.size;
     _comboboxRoute = _ComboBoxRoute<T>(
       acrylicEnabled: DisableAcrylic.of(context) == null,
@@ -1205,16 +1224,18 @@ class ComboBoxState<T> extends State<ComboBox<T>> {
       padding: _kMenuItemPadding.resolve(textDirection),
       selectedIndex: _selectedIndex,
       elevation: widget.elevation,
-      capturedThemes:
-          InheritedTheme.capture(from: context, to: navigator.context),
+      capturedThemes: InheritedTheme.capture(
+        from: context,
+        to: navigator.context,
+      ),
       style: textStyle!,
       barrierLabel: FluentLocalizations.of(context).modalBarrierDismissLabel,
       popupColor: widget.popupColor,
     );
 
-    navigator
-        .push(_comboboxRoute!)
-        .then<void>((_ComboBoxRouteResult<T>? newValue) {
+    navigator.push(_comboboxRoute!).then<void>((
+      _ComboBoxRouteResult<T>? newValue,
+    ) {
       closePopup();
       if (!mounted || newValue == null) return;
       onChanged(newValue.result);
@@ -1279,14 +1300,14 @@ class ComboBoxState<T> extends State<ComboBox<T>> {
       }
 
       placeholderIndex = items.length;
-      items.add(DefaultTextStyle.merge(
-        style: textStyle!.copyWith(
-          color: theme.resources.textFillColorDisabled,
+      items.add(
+        DefaultTextStyle.merge(
+          style: textStyle!.copyWith(
+            color: theme.resources.textFillColorDisabled,
+          ),
+          child: IgnorePointer(child: displayedHint),
         ),
-        child: IgnorePointer(
-          child: displayedHint,
-        ),
-      ));
+      );
     }
 
     const padding = _kAlignedButtonPadding;
@@ -1309,38 +1330,40 @@ class ComboBoxState<T> extends State<ComboBox<T>> {
       );
     }
 
-    Widget result = Builder(builder: (context) {
-      return DefaultTextStyle.merge(
-        style: isEnabled
-            ? textStyle!
-            : textStyle!.copyWith(
-                color: theme.resources.textFillColorDisabled,
-              ),
-        child: Container(
-          padding: padding.resolve(Directionality.of(context)),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            mainAxisSize: MainAxisSize.min,
-            children: <Widget>[
-              if (widget.isExpanded)
-                Expanded(child: innerItemsWidget)
-              else
-                innerItemsWidget,
-              Padding(
-                padding: const EdgeInsetsDirectional.only(start: 8.0),
-                child: IconTheme.merge(
-                  data: IconThemeData(
-                    color: iconColor(context),
-                    size: widget.iconSize,
-                  ),
-                  child: widget.icon,
+    Widget result = Builder(
+      builder: (context) {
+        return DefaultTextStyle.merge(
+          style: isEnabled
+              ? textStyle!
+              : textStyle!.copyWith(
+                  color: theme.resources.textFillColorDisabled,
                 ),
-              ),
-            ],
+          child: Container(
+            padding: padding.resolve(Directionality.of(context)),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              mainAxisSize: MainAxisSize.min,
+              children: <Widget>[
+                if (widget.isExpanded)
+                  Expanded(child: innerItemsWidget)
+                else
+                  innerItemsWidget,
+                Padding(
+                  padding: const EdgeInsetsDirectional.only(start: 8.0),
+                  child: IconTheme.merge(
+                    data: IconThemeData(
+                      color: iconColor(context),
+                      size: widget.iconSize,
+                    ),
+                    child: widget.icon,
+                  ),
+                ),
+              ],
+            ),
           ),
-        ),
-      );
-    });
+        );
+      },
+    );
 
     return Semantics(
       button: true,
@@ -1351,7 +1374,8 @@ class ComboBoxState<T> extends State<ComboBox<T>> {
           autofocus: widget.autofocus,
           focusNode: focusNode,
           style: const ButtonStyle(
-              padding: WidgetStatePropertyAll(EdgeInsets.zero)),
+            padding: WidgetStatePropertyAll(EdgeInsets.zero),
+          ),
           child: result,
         ),
       ),

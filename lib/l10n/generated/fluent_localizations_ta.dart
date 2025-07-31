@@ -112,6 +112,9 @@ class FluentLocalizationsTa extends FluentLocalizations {
   String get year => 'ஆண்டு';
 
   @override
+  String get pickADate => 'Pick a date';
+
+  @override
   String get seeMore => 'See more';
 
   @override

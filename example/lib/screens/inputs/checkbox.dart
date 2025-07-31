@@ -31,25 +31,27 @@ Checkbox(
   checked: checked,
   onPressed: disabled ? null : (v) => setState(() => checked = v),
 )''',
-          child: Row(children: [
-            Checkbox(
-              checked: firstChecked,
-              onChanged: firstDisabled
-                  ? null
-                  : (v) => setState(() => firstChecked = v!),
-              content: const Text('Two-state Checkbox'),
-            ),
-            const Spacer(),
-            ToggleSwitch(
-              checked: firstDisabled,
-              onChanged: (v) {
-                setState(() {
-                  firstDisabled = v;
-                });
-              },
-              content: const Text('Disabled'),
-            ),
-          ]),
+          child: Row(
+            children: [
+              Checkbox(
+                checked: firstChecked,
+                onChanged: firstDisabled
+                    ? null
+                    : (v) => setState(() => firstChecked = v!),
+                content: const Text('Two-state Checkbox'),
+              ),
+              const Spacer(),
+              ToggleSwitch(
+                checked: firstDisabled,
+                onChanged: (v) {
+                  setState(() {
+                    firstDisabled = v;
+                  });
+                },
+                content: const Text('Disabled'),
+              ),
+            ],
+          ),
         ),
         subtitle(content: const Text('A 3-state Checkbox')),
         CardHighlight(
@@ -73,40 +75,40 @@ Checkbox(
     });
   },
 )''',
-          child: Row(children: [
-            Checkbox(
-              checked: secondChecked,
-              // checked: null,
-              onChanged: secondDisabled
-                  ? null
-                  : (v) {
-                      setState(() {
-                        secondChecked = v == true
-                            ? true
-                            : v == false
-                                ? null
-                                : v == null
-                                    ? false
-                                    : true;
-                      });
-                    },
-              content: const Text('Three-state Checkbox'),
-            ),
-            const Spacer(),
-            ToggleSwitch(
-              checked: secondDisabled,
-              onChanged: (v) {
-                setState(() {
-                  secondDisabled = v;
-                });
-              },
-              content: const Text('Disabled'),
-            ),
-          ]),
+          child: Row(
+            children: [
+              Checkbox(
+                checked: secondChecked,
+                // checked: null,
+                onChanged: secondDisabled
+                    ? null
+                    : (v) {
+                        setState(() {
+                          secondChecked = v == true
+                              ? true
+                              : v == false
+                              ? null
+                              : v == null
+                              ? false
+                              : true;
+                        });
+                      },
+                content: const Text('Three-state Checkbox'),
+              ),
+              const Spacer(),
+              ToggleSwitch(
+                checked: secondDisabled,
+                onChanged: (v) {
+                  setState(() {
+                    secondDisabled = v;
+                  });
+                },
+                content: const Text('Disabled'),
+              ),
+            ],
+          ),
         ),
-        subtitle(
-          content: const Text('Using a 3-state Checkbox (TreeView)'),
-        ),
+        subtitle(content: const Text('Using a 3-state Checkbox (TreeView)')),
         Card(
           child: TreeView(
             items: [

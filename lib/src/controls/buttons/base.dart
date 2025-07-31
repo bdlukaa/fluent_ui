@@ -108,21 +108,19 @@ abstract class BaseButton extends StatefulWidget {
     super.debugFillProperties(properties);
     properties
       ..add(FlagProperty('enabled', value: enabled, ifFalse: 'disabled'))
-      ..add(DiagnosticsProperty<ButtonStyle>(
-        'style',
-        style,
-        defaultValue: null,
-      ))
-      ..add(DiagnosticsProperty<FocusNode>(
-        'focusNode',
-        focusNode,
-        defaultValue: null,
-      ))
-      ..add(DiagnosticsProperty<bool>(
-        'autofocus',
-        autofocus,
-        defaultValue: false,
-      ));
+      ..add(
+        DiagnosticsProperty<ButtonStyle>('style', style, defaultValue: null),
+      )
+      ..add(
+        DiagnosticsProperty<FocusNode>(
+          'focusNode',
+          focusNode,
+          defaultValue: null,
+        ),
+      )
+      ..add(
+        DiagnosticsProperty<bool>('autofocus', autofocus, defaultValue: false),
+      );
   }
 }
 
@@ -153,34 +151,44 @@ class _BaseButtonState extends State<BaseButton> {
       onTapUp: widget.onTapUp,
       builder: (context, states) {
         T? resolve<T>(
-            WidgetStateProperty<T>? Function(ButtonStyle? style) getProperty) {
+          WidgetStateProperty<T>? Function(ButtonStyle? style) getProperty,
+        ) {
           return effectiveValue(
             (ButtonStyle? style) => getProperty(style)?.resolve(states),
           );
         }
 
-        final resolvedElevation =
-            resolve<double?>((ButtonStyle? style) => style?.elevation);
+        final resolvedElevation = resolve<double?>(
+          (ButtonStyle? style) => style?.elevation,
+        );
         final resolvedTextStyle = theme.typography.body?.merge(
-            resolve<TextStyle?>((ButtonStyle? style) => style?.textStyle));
-        final resolvedBackgroundColor =
-            resolve<Color?>((ButtonStyle? style) => style?.backgroundColor);
-        final resolvedForegroundColor =
-            resolve<Color?>((ButtonStyle? style) => style?.foregroundColor);
-        final resolvedShadowColor =
-            resolve<Color?>((ButtonStyle? style) => style?.shadowColor);
-        final resolvedPadding = resolve<EdgeInsetsGeometry?>(
-                (ButtonStyle? style) => style?.padding) ??
+          resolve<TextStyle?>((ButtonStyle? style) => style?.textStyle),
+        );
+        final resolvedBackgroundColor = resolve<Color?>(
+          (ButtonStyle? style) => style?.backgroundColor,
+        );
+        final resolvedForegroundColor = resolve<Color?>(
+          (ButtonStyle? style) => style?.foregroundColor,
+        );
+        final resolvedShadowColor = resolve<Color?>(
+          (ButtonStyle? style) => style?.shadowColor,
+        );
+        final resolvedPadding =
+            resolve<EdgeInsetsGeometry?>(
+              (ButtonStyle? style) => style?.padding,
+            ) ??
             EdgeInsets.zero;
         final resolvedShape =
             resolve<ShapeBorder?>((ButtonStyle? style) => style?.shape) ??
-                const RoundedRectangleBorder();
+            const RoundedRectangleBorder();
 
         final padding = resolvedPadding
-            .add(EdgeInsets.symmetric(
-              horizontal: theme.visualDensity.horizontal,
-              vertical: theme.visualDensity.vertical,
-            ))
+            .add(
+              EdgeInsets.symmetric(
+                horizontal: theme.visualDensity.horizontal,
+                vertical: theme.visualDensity.vertical,
+              ),
+            )
             .clamp(EdgeInsets.zero, EdgeInsetsGeometry.infinity);
         final iconSize = resolve<double?>((style) => style?.iconSize);
         Widget result = PhysicalModel(
@@ -189,8 +197,8 @@ class _BaseButtonState extends State<BaseButton> {
           elevation: resolvedElevation ?? 0.0,
           borderRadius: resolvedShape is RoundedRectangleBorder
               ? resolvedShape.borderRadius is BorderRadius
-                  ? resolvedShape.borderRadius as BorderRadius
-                  : BorderRadius.zero
+                    ? resolvedShape.borderRadius as BorderRadius
+                    : BorderRadius.zero
               : BorderRadius.zero,
           child: AnimatedContainer(
             duration: FluentTheme.of(context).fasterAnimationDuration,
@@ -209,9 +217,10 @@ class _BaseButtonState extends State<BaseButton> {
                 duration: FluentTheme.of(context).fastAnimationDuration,
                 curve: FluentTheme.of(context).animationCurve,
                 style: DefaultTextStyle.of(context).style.merge(
-                      (resolvedTextStyle ?? const TextStyle())
-                          .copyWith(color: resolvedForegroundColor),
-                    ),
+                  (resolvedTextStyle ?? const TextStyle()).copyWith(
+                    color: resolvedForegroundColor,
+                  ),
+                ),
                 textAlign: TextAlign.center,
                 // used to align the child without expanding the button
                 child: Center(

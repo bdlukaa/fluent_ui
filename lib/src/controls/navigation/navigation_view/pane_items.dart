@@ -124,7 +124,8 @@ class PaneItem extends NavigationPaneItem {
     bool? autofocus,
   }) {
     final maybeBody = InheritedNavigationView.maybeOf(context);
-    final mode = displayMode ??
+    final mode =
+        displayMode ??
         maybeBody?.displayMode ??
         maybeBody?.pane?.displayMode ??
         PaneDisplayMode.minimal;
@@ -144,11 +145,11 @@ class PaneItem extends NavigationPaneItem {
 
     final onItemTapped =
         (onPressed == null && onTap == null) || !enabled || isTransitioning
-            ? null
-            : () {
-                onPressed?.call();
-                onTap?.call();
-              };
+        ? null
+        : () {
+            onPressed?.call();
+            onTap?.call();
+          };
 
     final button = HoverButton(
       autofocus: autofocus ?? this.autofocus,
@@ -161,11 +162,11 @@ class PaneItem extends NavigationPaneItem {
         var textStyle = () {
           var style = !isTop
               ? (selected
-                  ? theme.selectedTextStyle?.resolve(states)
-                  : theme.unselectedTextStyle?.resolve(states))
+                    ? theme.selectedTextStyle?.resolve(states)
+                    : theme.unselectedTextStyle?.resolve(states))
               : (selected
-                  ? theme.selectedTopTextStyle?.resolve(states)
-                  : theme.unselectedTopTextStyle?.resolve(states));
+                    ? theme.selectedTopTextStyle?.resolve(states)
+                    : theme.unselectedTopTextStyle?.resolve(states));
           if (style == null) return baseStyle;
           return style.merge(baseStyle);
         }();
@@ -180,14 +181,16 @@ class PaneItem extends NavigationPaneItem {
                   softWrap: false,
                   textAlign: title?.getProperty<TextAlign>() ?? TextAlign.start,
                   textHeightBehavior: title?.getProperty<TextHeightBehavior>(),
-                  textWidthBasis: title?.getProperty<TextWidthBasis>() ??
+                  textWidthBasis:
+                      title?.getProperty<TextWidthBasis>() ??
                       TextWidthBasis.parent,
                 ),
               )
             : const SizedBox.shrink();
         Widget result() {
           final iconThemeData = IconThemeData(
-            color: textStyle.color ??
+            color:
+                textStyle.color ??
                 (selected
                     ? theme.selectedIconColor?.resolve(states)
                     : theme.unselectedIconColor?.resolve(states)),
@@ -237,7 +240,35 @@ class PaneItem extends NavigationPaneItem {
                 constraints: const BoxConstraints(
                   minHeight: kPaneItemMinHeight,
                 ),
-                child: Row(children: [
+                child: Row(
+                  children: [
+                    Padding(
+                      padding: theme.iconPadding ?? EdgeInsets.zero,
+                      child: IconTheme.merge(
+                        data: iconThemeData,
+                        child: Center(child: icon),
+                      ),
+                    ),
+                    Expanded(child: textResult),
+                    if (shouldShowTrailing) ...[
+                      if (infoBadge != null)
+                        Padding(
+                          padding: const EdgeInsetsDirectional.only(end: 8.0),
+                          child: infoBadge!,
+                        ),
+                      if (trailing != null)
+                        IconTheme.merge(
+                          data: const IconThemeData(size: 16.0),
+                          child: trailing!,
+                        ),
+                    ],
+                  ],
+                ),
+              );
+            case PaneDisplayMode.top:
+              Widget result = Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
                   Padding(
                     padding: theme.iconPadding ?? EdgeInsets.zero,
                     child: IconTheme.merge(
@@ -245,47 +276,24 @@ class PaneItem extends NavigationPaneItem {
                       child: Center(child: icon),
                     ),
                   ),
-                  Expanded(child: textResult),
-                  if (shouldShowTrailing) ...[
-                    if (infoBadge != null)
-                      Padding(
-                        padding: const EdgeInsetsDirectional.only(end: 8.0),
-                        child: infoBadge!,
-                      ),
-                    if (trailing != null)
-                      IconTheme.merge(
-                        data: const IconThemeData(size: 16.0),
-                        child: trailing!,
-                      ),
-                  ],
-                ]),
-              );
-            case PaneDisplayMode.top:
-              Widget result = Row(mainAxisSize: MainAxisSize.min, children: [
-                Padding(
-                  padding: theme.iconPadding ?? EdgeInsets.zero,
-                  child: IconTheme.merge(
-                    data: iconThemeData,
-                    child: Center(child: icon),
-                  ),
-                ),
-                if (showTextOnTop) textResult,
-                if (trailing != null)
-                  IconTheme.merge(
-                    data: const IconThemeData(size: 16.0),
-                    child: trailing!,
-                  ),
-              ]);
-              if (infoBadge != null) {
-                return Stack(key: itemKey, clipBehavior: Clip.none, children: [
-                  result,
-                  if (infoBadge != null)
-                    PositionedDirectional(
-                      end: -3,
-                      top: 3,
-                      child: infoBadge!,
+                  if (showTextOnTop) textResult,
+                  if (trailing != null)
+                    IconTheme.merge(
+                      data: const IconThemeData(size: 16.0),
+                      child: trailing!,
                     ),
-                ]);
+                ],
+              );
+              if (infoBadge != null) {
+                return Stack(
+                  key: itemKey,
+                  clipBehavior: Clip.none,
+                  children: [
+                    result,
+                    if (infoBadge != null)
+                      PositionedDirectional(end: -3, top: 3, child: infoBadge!),
+                  ],
+                );
               }
               return KeyedSubtree(key: itemKey, child: result);
             default:
@@ -300,7 +308,8 @@ class PaneItem extends NavigationPaneItem {
             margin: const EdgeInsets.symmetric(horizontal: 6.0),
             decoration: BoxDecoration(
               color: () {
-                final tileColor = this.tileColor ??
+                final tileColor =
+                    this.tileColor ??
                     theme.tileColor ??
                     kDefaultPaneItemColor(context, isTop);
                 final newStates = states.toSet()..remove(WidgetState.disabled);
@@ -323,7 +332,8 @@ class PaneItem extends NavigationPaneItem {
               focused: states.isFocused,
               renderOutside: false,
               child: () {
-                final showTooltip = ((isTop && !showTextOnTop) || isCompact) &&
+                final showTooltip =
+                    ((isTop && !showTextOnTop) || isCompact) &&
                     titleText.isNotEmpty &&
                     !states.isDisabled;
 
@@ -360,19 +370,21 @@ class PaneItem extends NavigationPaneItem {
             !index.isNegative) {
           final key = PaneItemKeys.of(index, context);
 
-          return Stack(children: [
-            button,
-            Positioned.fill(
-              child: InheritedNavigationView.merge(
-                currentItemIndex: index,
-                currentItemSelected: selected,
-                child: KeyedSubtree(
-                  key: key,
-                  child: maybeBody!.pane!.indicator!,
+          return Stack(
+            children: [
+              button,
+              Positioned.fill(
+                child: InheritedNavigationView.merge(
+                  currentItemIndex: index,
+                  currentItemSelected: selected,
+                  child: KeyedSubtree(
+                    key: key,
+                    child: maybeBody!.pane!.indicator!,
+                  ),
                 ),
               ),
-            ),
-          ]);
+            ],
+          );
         }
 
         return button;
@@ -423,11 +435,7 @@ class PaneItem extends NavigationPaneItem {
 ///   * [PaneItemExpander], which creates hierhical navigation
 class PaneItemSeparator extends NavigationPaneItem {
   /// Creates an item separator.
-  PaneItemSeparator({
-    super.key,
-    this.color,
-    this.thickness,
-  });
+  PaneItemSeparator({super.key, this.color, this.thickness});
 
   /// The color used by the [Divider].
   final Color? color;
@@ -599,16 +607,19 @@ class PaneItemExpander extends PaneItem {
     super.onTap,
     this.initiallyExpanded = false,
   }) : assert(
-          items.any((item) => item is PaneItemExpander) == false,
-          'There can not be nested PaneItemExpanders',
-        );
+         items.any((item) => item is PaneItemExpander) == false,
+         'There can not be nested PaneItemExpanders',
+       );
 
   final List<NavigationPaneItem> items;
 
   /// Whether the item is initially expanded. Defaults to false
   final bool initiallyExpanded;
 
-  static const kDefaultTrailing = Icon(FluentIcons.chevron_down, size: 8.0);
+  static const kDefaultTrailing = WindowsIcon(
+    WindowsIcons.chevron_down,
+    size: 8.0,
+  );
 
   @override
   Widget build(
@@ -622,7 +633,8 @@ class PaneItemExpander extends PaneItem {
     int? itemIndex,
   }) {
     final maybeBody = InheritedNavigationView.maybeOf(context);
-    final mode = displayMode ??
+    final mode =
+        displayMode ??
         maybeBody?.displayMode ??
         maybeBody?.pane?.displayMode ??
         PaneDisplayMode.minimal;
@@ -686,10 +698,11 @@ class __PaneItemExpanderState extends State<_PaneItemExpander>
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    _open = PageStorage.of(context).readState(
-          context,
-          identifier: 'paneItemExpanderOpen$index',
-        ) as bool? ??
+    _open =
+        PageStorage.of(
+              context,
+            ).readState(context, identifier: 'paneItemExpanderOpen$index')
+            as bool? ??
         widget.initiallyExpanded;
 
     if (_open) {
@@ -720,11 +733,9 @@ class __PaneItemExpanderState extends State<_PaneItemExpander>
   void toggleOpen({bool doFlyout = true}) {
     setState(() => _open = !_open);
 
-    PageStorage.of(context).writeState(
+    PageStorage.of(
       context,
-      _open,
-      identifier: 'paneItemExpanderOpen$index',
-    );
+    ).writeState(context, _open, identifier: 'paneItemExpanderOpen$index');
     if (_open) {
       if (useFlyout && doFlyout && flyoutController.isAttached) {
         final body = InheritedNavigationView.of(context);
@@ -753,22 +764,24 @@ class __PaneItemExpanderState extends State<_PaneItemExpander>
                 } else if (item is PaneItemSeparator) {
                   return const MenuFlyoutSeparator();
                 } else if (item is PaneItemHeader) {
-                  return MenuFlyoutItemBuilder(builder: (context) {
-                    return Container(
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 10.0,
-                        vertical: 8.0,
-                      ),
-                      margin: const EdgeInsetsDirectional.only(bottom: 4.0),
-                      child: DefaultTextStyle.merge(
-                        style: navigationTheme.itemHeaderTextStyle,
-                        softWrap: false,
-                        maxLines: 1,
-                        overflow: TextOverflow.fade,
-                        child: item.header,
-                      ),
-                    );
-                  });
+                  return MenuFlyoutItemBuilder(
+                    builder: (context) {
+                      return Container(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 10.0,
+                          vertical: 8.0,
+                        ),
+                        margin: const EdgeInsetsDirectional.only(bottom: 4.0),
+                        child: DefaultTextStyle.merge(
+                          style: navigationTheme.itemHeaderTextStyle,
+                          softWrap: false,
+                          maxLines: 1,
+                          overflow: TextOverflow.fade,
+                          child: item.header,
+                        ),
+                      );
+                    },
+                  );
                 } else {
                   throw UnsupportedError(
                     '${item.runtimeType} is not a supported item type',
@@ -795,22 +808,27 @@ class __PaneItemExpanderState extends State<_PaneItemExpander>
     final theme = FluentTheme.of(context);
     final body = InheritedNavigationView.of(context);
 
-    assert(body.pane!.selected != null,
-        'The selected of NavigationPane can not be null!Try offer a value in NavigationPane!');
+    assert(
+      body.pane!.selected != null,
+      'The selected of NavigationPane can not be null!Try offer a value in NavigationPane!',
+    );
 
-    _open = PageStorage.of(context).readState(
-          context,
-          identifier: 'paneItemExpanderOpen$index',
-        ) as bool? ??
+    _open =
+        PageStorage.of(
+              context,
+            ).readState(context, identifier: 'paneItemExpanderOpen$index')
+            as bool? ??
         _open;
 
     // Indexes
     // Ensure, if the child item is not visible, this is shown as the selected
     // item
     var realIndex = body.pane!.effectiveIndexOf(widget.item);
-    final childrenIndexes = body.pane!.effectiveItems.where((item) {
-      return widget.items.contains(item);
-    }).map((item) => body.pane!.effectiveIndexOf(item));
+    final childrenIndexes = body.pane!.effectiveItems
+        .where((item) {
+          return widget.items.contains(item);
+        })
+        .map((item) => body.pane!.effectiveIndexOf(item));
     if (childrenIndexes.contains(body.pane!.selected!) && !_open) {
       realIndex = body.pane!.selected!;
     }
@@ -819,35 +837,37 @@ class __PaneItemExpanderState extends State<_PaneItemExpander>
     // and rotation animation
     final item = widget.item
         .copyWith(
-      trailing: GestureDetector(
-        onTap: toggleOpen,
-        child: Padding(
-          padding: const EdgeInsetsDirectional.only(end: 14.0),
-          child: AnimatedBuilder(
-            animation: controller,
-            builder: (context, child) => RotationTransition(
-              turns: controller.drive(Tween<double>(
-                begin: _open ? 0 : 1.0,
-                end: _open ? 0.5 : 0.5,
-              )),
-              child: child,
+          trailing: GestureDetector(
+            onTap: toggleOpen,
+            child: Padding(
+              padding: const EdgeInsetsDirectional.only(end: 14.0),
+              child: AnimatedBuilder(
+                animation: controller,
+                builder: (context, child) => RotationTransition(
+                  turns: controller.drive(
+                    Tween<double>(
+                      begin: _open ? 0 : 1.0,
+                      end: _open ? 0.5 : 0.5,
+                    ),
+                  ),
+                  child: child,
+                ),
+                child: widget.item.trailing!,
+              ),
             ),
-            child: widget.item.trailing!,
           ),
-        ),
-      ),
-    )
+        )
         .build(
-      context,
-      widget.selected,
-      () {
-        widget.onPressed?.call();
-        toggleOpen();
-      },
-      displayMode: widget.displayMode,
-      showTextOnTop: widget.showTextOnTop,
-      itemIndex: realIndex,
-    );
+          context,
+          widget.selected,
+          () {
+            widget.onPressed?.call();
+            toggleOpen();
+          },
+          displayMode: widget.displayMode,
+          showTextOnTop: widget.showTextOnTop,
+          itemIndex: realIndex,
+        );
     if (widget.items.isEmpty) {
       return item;
     }
@@ -855,59 +875,59 @@ class __PaneItemExpanderState extends State<_PaneItemExpander>
     switch (displayMode) {
       case PaneDisplayMode.open:
       case PaneDisplayMode.minimal:
-        return Column(mainAxisSize: MainAxisSize.min, children: [
-          item,
-          AnimatedSize(
-            duration: theme.fastAnimationDuration,
-            curve: Curves.easeIn,
-            child: !_open
-                ? const SizedBox(width: double.infinity)
-                : Column(
-                    mainAxisSize: MainAxisSize.min,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: widget.items.map((item) {
-                      if (item is PaneItem) {
-                        final i = item.copyWith(
-                          icon: Padding(
+        return Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            item,
+            AnimatedSize(
+              duration: theme.fastAnimationDuration,
+              curve: Curves.easeIn,
+              child: !_open
+                  ? const SizedBox(width: double.infinity)
+                  : Column(
+                      mainAxisSize: MainAxisSize.min,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: widget.items.map((item) {
+                        if (item is PaneItem) {
+                          final i = item.copyWith(
+                            icon: Padding(
+                              padding: _PaneItemExpander.leadingPadding,
+                              child: item.icon,
+                            ),
+                          );
+                          return i.build(
+                            context,
+                            body.pane!.isSelected(item),
+                            () => widget.onItemPressed?.call(item),
+                            displayMode: widget.displayMode,
+                            showTextOnTop: widget.showTextOnTop,
+                            itemIndex: body.pane!.effectiveIndexOf(item),
+                          );
+                        } else if (item is PaneItemHeader) {
+                          return Padding(
                             padding: _PaneItemExpander.leadingPadding,
-                            child: item.icon,
-                          ),
-                        );
-                        return i.build(
-                          context,
-                          body.pane!.isSelected(item),
-                          () => widget.onItemPressed?.call(item),
-                          displayMode: widget.displayMode,
-                          showTextOnTop: widget.showTextOnTop,
-                          itemIndex: body.pane!.effectiveIndexOf(item),
-                        );
-                      } else if (item is PaneItemHeader) {
-                        return Padding(
-                          padding: _PaneItemExpander.leadingPadding,
-                          child: item.build(context),
-                        );
-                      } else if (item is PaneItemSeparator) {
-                        return item.build(
-                          context,
-                          widget.displayMode == PaneDisplayMode.top
-                              ? Axis.vertical
-                              : Axis.horizontal,
-                        );
-                      } else {
-                        throw UnsupportedError(
-                          '${item.runtimeType} is not a supported item type',
-                        );
-                      }
-                    }).toList(),
-                  ),
-          ),
-        ]);
+                            child: item.build(context),
+                          );
+                        } else if (item is PaneItemSeparator) {
+                          return item.build(
+                            context,
+                            widget.displayMode == PaneDisplayMode.top
+                                ? Axis.vertical
+                                : Axis.horizontal,
+                          );
+                        } else {
+                          throw UnsupportedError(
+                            '${item.runtimeType} is not a supported item type',
+                          );
+                        }
+                      }).toList(),
+                    ),
+            ),
+          ],
+        );
       case PaneDisplayMode.top:
       case PaneDisplayMode.compact:
-        return FlyoutTarget(
-          controller: flyoutController,
-          child: item,
-        );
+        return FlyoutTarget(controller: flyoutController, child: item);
       case PaneDisplayMode.auto:
         return item;
     }
@@ -932,12 +952,14 @@ class _PaneItemExpanderMenuItem extends MenuFlyoutItemBase {
       onPressed: item.enabled ? onPressed : null,
       forceEnabled: item.enabled,
       builder: (context, states) {
-        final textStyle = (isSelected
+        final textStyle =
+            (isSelected
                 ? navigationTheme.selectedTextStyle?.resolve(states)
                 : navigationTheme.unselectedTextStyle?.resolve(states)) ??
             const TextStyle();
         final iconTheme = IconThemeData(
-          color: textStyle.color ??
+          color:
+              textStyle.color ??
               (isSelected
                   ? navigationTheme.selectedIconColor?.resolve(states)
                   : navigationTheme.unselectedIconColor?.resolve(states)),
@@ -946,10 +968,7 @@ class _PaneItemExpanderMenuItem extends MenuFlyoutItemBase {
         return MenuFlyoutItem(
           selected: isSelected,
           onPressed: onPressed,
-          leading: IconTheme.merge(
-            data: iconTheme,
-            child: item.icon,
-          ),
+          leading: IconTheme.merge(data: iconTheme, child: item.icon),
           text: DefaultTextStyle(
             style: textStyle,
             child: item.title ?? const SizedBox.shrink(),
@@ -1028,18 +1047,19 @@ extension _ItemsExtension on List<NavigationPaneItem> {
     GlobalKey<State<StatefulWidget>> paneKey,
   ) {
     return map((e) {
-      // Gets the item global position
-      final itemContext = e.itemKey.currentContext;
-      if (itemContext == null || !itemContext.mounted) return Offset.zero;
-      final box = itemContext.findRenderObject()! as RenderBox;
-      final globalPosition = box.localToGlobal(Offset.zero);
-      // And then convert it to the local position
-      final paneContext = paneKey.currentContext;
-      if (paneContext == null || !paneContext.mounted) return Offset.zero;
-      final paneBox = paneKey.currentContext!.findRenderObject() as RenderBox;
-      final position = paneBox.globalToLocal(globalPosition);
-      return position;
-    })
+          // Gets the item global position
+          final itemContext = e.itemKey.currentContext;
+          if (itemContext == null || !itemContext.mounted) return Offset.zero;
+          final box = itemContext.findRenderObject()! as RenderBox;
+          final globalPosition = box.localToGlobal(Offset.zero);
+          // And then convert it to the local position
+          final paneContext = paneKey.currentContext;
+          if (paneContext == null || !paneContext.mounted) return Offset.zero;
+          final paneBox =
+              paneKey.currentContext!.findRenderObject() as RenderBox;
+          final position = paneBox.globalToLocal(globalPosition);
+          return position;
+        })
         // Calling .toList here ensures that all the pane items positions are
         // calculated. Without it, a lazy Iterable would be returned resulting
         // in RenderObject bugs due to the widget not being in the tree
@@ -1056,12 +1076,15 @@ extension ItemExtension on Widget {
           return (title.data ?? title.textSpan?.toPlainText()) as T?;
         case const (InlineSpan):
           return (title.textSpan ??
-              TextSpan(
-                text: title.data ?? '',
-                style:
-                    title.getProperty<TextStyle>()?.merge(def as TextStyle?) ??
+                  TextSpan(
+                    text: title.data ?? '',
+                    style:
+                        title.getProperty<TextStyle>()?.merge(
+                          def as TextStyle?,
+                        ) ??
                         def as TextStyle?,
-              )) as T?;
+                  ))
+              as T?;
         case const (TextStyle):
           return title.style as T?;
         case const (TextAlign):
@@ -1100,16 +1123,18 @@ extension ItemExtension on Widget {
           return String.fromCharCode(title.icon!.codePoint) as T?;
         case const (InlineSpan):
           return TextSpan(
-            text: String.fromCharCode(title.icon!.codePoint),
-            style: title.getProperty<TextStyle>(),
-          ) as T?;
+                text: String.fromCharCode(title.icon!.codePoint),
+                style: title.getProperty<TextStyle>(),
+              )
+              as T?;
         case const (TextStyle):
           return TextStyle(
-            color: title.color,
-            fontSize: title.size,
-            fontFamily: title.icon?.fontFamily,
-            package: title.icon?.fontPackage,
-          ) as T?;
+                color: title.color,
+                fontSize: title.size,
+                fontFamily: title.icon?.fontFamily,
+                package: title.icon?.fontPackage,
+              )
+              as T?;
         case const (TextAlign):
           return null;
         case const (TextHeightBehavior):

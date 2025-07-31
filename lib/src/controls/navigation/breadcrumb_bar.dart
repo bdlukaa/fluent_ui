@@ -26,10 +26,8 @@ enum ChevronAlignment {
   }
 }
 
-typedef ChevronIconBuilder<T> = Widget Function(
-  BuildContext context,
-  int index,
-);
+typedef ChevronIconBuilder<T> =
+    Widget Function(BuildContext context, int index);
 
 class BreadcrumbItem<T> {
   /// The label of the item
@@ -82,7 +80,7 @@ class BreadcrumbBar<T> extends StatefulWidget {
   ///   ...,
   ///   overflowButtonBuilder: (context, openFlyout) {
   ///     return IconButton(
-  ///       icon: const Icon(FluentIcons.more),
+  ///       icon: const WindowsIcon(WindowsIcons.more),
   ///       onPressed: openFlyout,
   ///     );
   ///   },
@@ -102,10 +100,8 @@ class BreadcrumbBar<T> extends StatefulWidget {
   ///
   /// key.currentState.flyoutController.showFlyout(...);
   /// ```
-  final Widget Function(
-    BuildContext context,
-    VoidCallback openFlyout,
-  ) overflowButtonBuilder;
+  final Widget Function(BuildContext context, VoidCallback openFlyout)
+  overflowButtonBuilder;
 
   /// Called when an item is pressed.
   final ValueChanged<BreadcrumbItem<T>>? onItemPressed;
@@ -153,8 +149,8 @@ class BreadcrumbBar<T> extends StatefulWidget {
             states,
           );
 
-          return Icon(
-            FluentIcons.more,
+          return WindowsIcon(
+            WindowsIcons.more,
             color: foregroundColor,
             size: 12.0,
           );
@@ -266,8 +262,8 @@ class BreadcrumbBarState<T> extends State<BreadcrumbBar<T>> {
           onPressed:
               // we do not want to enable click on the last item
               widget.onItemPressed == null || item == widget.items.last
-                  ? null
-                  : () => widget.onItemPressed!(item),
+              ? null
+              : () => widget.onItemPressed!(item),
           builder: (context, states) {
             final foregroundColor = ButtonThemeData.buttonForegroundColor(
               context,
@@ -317,10 +313,10 @@ class _BreadcrumbBar extends MultiChildRenderObjectWidget {
     required this.onIndexOverflow,
     required this.textDirection,
   }) : super(
-          children: textDirection == TextDirection.ltr
-              ? [overflowButton, ...children]
-              : [...children, overflowButton],
-        );
+         children: textDirection == TextDirection.ltr
+             ? [overflowButton, ...children]
+             : [...children, overflowButton],
+       );
 
   @override
   RenderObject createRenderObject(BuildContext context) {
@@ -356,9 +352,9 @@ class RenderBreadcrumbBar extends RenderBox
     required List<BreadcrumbItem> items,
     required ValueChanged<Set<int>> onIndexOverflow,
     required TextDirection textDirection,
-  })  : _items = items,
-        _onIndexOverflow = onIndexOverflow,
-        _textDirection = textDirection;
+  }) : _items = items,
+       _onIndexOverflow = onIndexOverflow,
+       _textDirection = textDirection;
 
   ValueChanged<Set<int>> _onIndexOverflow;
   ValueChanged<Set<int>> get onIndexOverflow => _onIndexOverflow;
@@ -471,7 +467,8 @@ class RenderBreadcrumbBar extends RenderBox
     if (!hasOverflowed) maxExtent -= overflowButton.size.width;
 
     var currentOffsetX = (textDirection == TextDirection.rtl
-        ? constraints.maxWidth - realExtent // align to the end
+        ? constraints.maxWidth -
+              realExtent // align to the end
         : 0.0);
     if (hasOverflowed) {
       if (overflowButton.size.height > height) {

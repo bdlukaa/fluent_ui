@@ -45,19 +45,21 @@ Slider(
   onChanged: disabled ? null : (v) => setState(() => value = v),
 ),
 ''',
-          child: Row(children: [
-            Slider(
-              label: '${firstValue.toInt()}',
-              value: firstValue,
-              onChanged: disabled
-                  ? null
-                  : (v) {
-                      setState(() => firstValue = v);
-                    },
-            ),
-            const Spacer(),
-            Text('Output:\n${firstValue.toInt()}'),
-          ]),
+          child: Row(
+            children: [
+              Slider(
+                label: '${firstValue.toInt()}',
+                value: firstValue,
+                onChanged: disabled
+                    ? null
+                    : (v) {
+                        setState(() => firstValue = v);
+                      },
+              ),
+              const Spacer(),
+              Text('Output:\n${firstValue.toInt()}'),
+            ],
+          ),
         ),
         subtitle(content: const Text('A vertical slider')),
         description(
@@ -80,17 +82,20 @@ Slider(
   onChanged: disabled ? null : (v) => setState(() => value = v),
 ),
 ''',
-          child: Row(children: [
-            Slider(
-              vertical: true,
-              label: '${verticalValue.toInt()}',
-              value: verticalValue,
-              onChanged:
-                  disabled ? null : (v) => setState(() => verticalValue = v),
-            ),
-            const Spacer(),
-            Text('Output:\n${verticalValue.toInt()}'),
-          ]),
+          child: Row(
+            children: [
+              Slider(
+                vertical: true,
+                label: '${verticalValue.toInt()}',
+                value: verticalValue,
+                onChanged: disabled
+                    ? null
+                    : (v) => setState(() => verticalValue = v),
+              ),
+              const Spacer(),
+              Text('Output:\n${verticalValue.toInt()}'),
+            ],
+          ),
         ),
       ],
     );

@@ -11,11 +11,7 @@ void main() {
     await tester.pumpWidget(
       StatefulBuilder(
         builder: (BuildContext context, StateSetter setState) {
-          return wrapApp(
-            child: TextBox(
-              controller: controller,
-            ),
-          );
+          return wrapApp(child: TextBox(controller: controller));
         },
       ),
     );
@@ -26,8 +22,9 @@ void main() {
 
     expect(controller.text, inputText);
   });
-  testWidgets('TextBox updates value via onChanged callback when user types',
-      (tester) async {
+  testWidgets('TextBox updates value via onChanged callback when user types', (
+    tester,
+  ) async {
     String text = "";
     const inputText = "fluent_ui";
     await tester.pumpWidget(
@@ -53,30 +50,28 @@ void main() {
     expect(text, inputText);
   });
 
-  testWidgets('TextBox should maintain cursor position correctly during edits',
-      (tester) async {
-    final controller = TextEditingController();
-    const inputText = "fluent_ui";
+  testWidgets(
+    'TextBox should maintain cursor position correctly during edits',
+    (tester) async {
+      final controller = TextEditingController();
+      const inputText = "fluent_ui";
 
-    await tester.pumpWidget(
-      StatefulBuilder(
-        builder: (BuildContext context, StateSetter setState) {
-          return wrapApp(
-            child: TextBox(
-              controller: controller,
-            ),
-          );
-        },
-      ),
-    );
-    final textBoxFinder = find.byType(TextBox);
-    expect(textBoxFinder, findsOneWidget);
-    await tester.enterText(textBoxFinder, inputText);
-    await tester.pumpAndSettle();
+      await tester.pumpWidget(
+        StatefulBuilder(
+          builder: (BuildContext context, StateSetter setState) {
+            return wrapApp(child: TextBox(controller: controller));
+          },
+        ),
+      );
+      final textBoxFinder = find.byType(TextBox);
+      expect(textBoxFinder, findsOneWidget);
+      await tester.enterText(textBoxFinder, inputText);
+      await tester.pumpAndSettle();
 
-    expect(controller.selection.baseOffset, equals(inputText.length));
-    expect(controller.selection.extentOffset, equals(inputText.length));
-  });
+      expect(controller.selection.baseOffset, equals(inputText.length));
+      expect(controller.selection.extentOffset, equals(inputText.length));
+    },
+  );
 
   testWidgets('TextBox should respect maxLength property', (tester) async {
     final controller = TextEditingController();
@@ -85,10 +80,7 @@ void main() {
       StatefulBuilder(
         builder: (BuildContext context, StateSetter setState) {
           return wrapApp(
-            child: TextBox(
-              maxLength: maxLength,
-              controller: controller,
-            ),
+            child: TextBox(maxLength: maxLength, controller: controller),
           );
         },
       ),
@@ -107,20 +99,14 @@ void main() {
     await tester.pumpWidget(
       StatefulBuilder(
         builder: (BuildContext context, StateSetter setState) {
-          return wrapApp(
-            child: TextBox(
-              focusNode: focusNode,
-            ),
-          );
+          return wrapApp(child: TextBox(focusNode: focusNode));
         },
       ),
     );
     final textBoxFinder = find.byType(TextBox);
     expect(textBoxFinder, findsOneWidget);
     expect(focusNode.hasFocus, false);
-    await tester.tap(
-      textBoxFinder,
-    );
+    await tester.tap(textBoxFinder);
     await tester.pumpAndSettle();
     expect(focusNode.hasFocus, true);
   });
@@ -133,13 +119,8 @@ void main() {
           return wrapApp(
             child: Column(
               children: [
-                TextBox(
-                  key: const Key("TextBox1"),
-                  focusNode: focusNode,
-                ),
-                const TextBox(
-                  key: Key("TextBox2"),
-                )
+                TextBox(key: const Key("TextBox1"), focusNode: focusNode),
+                const TextBox(key: Key("TextBox2")),
               ],
             ),
           );
@@ -152,19 +133,16 @@ void main() {
     expect(textBoxFinder1, findsOneWidget);
     expect(textBoxFinder2, findsOneWidget);
     expect(focusNode.hasFocus, false);
-    await tester.tap(
-      textBoxFinder1,
-    );
+    await tester.tap(textBoxFinder1);
     expect(focusNode.hasFocus, true);
-    await tester.tap(
-      textBoxFinder2,
-    );
+    await tester.tap(textBoxFinder2);
     await tester.pumpAndSettle();
     expect(focusNode.hasFocus, false);
   });
 
-  testWidgets('TextBox moves focus to next TextBox when Tab key is pressed',
-      (tester) async {
+  testWidgets('TextBox moves focus to next TextBox when Tab key is pressed', (
+    tester,
+  ) async {
     final focusNode1 = FocusNode();
     final focusNode2 = FocusNode();
     await tester.pumpWidget(
@@ -178,10 +156,7 @@ void main() {
                   key: const Key("TextBox1"),
                   focusNode: focusNode1,
                 ),
-                TextBox(
-                  focusNode: focusNode2,
-                  key: const Key("TextBox2"),
-                )
+                TextBox(focusNode: focusNode2, key: const Key("TextBox2")),
               ],
             ),
           );

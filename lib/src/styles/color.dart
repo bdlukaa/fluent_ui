@@ -1,8 +1,7 @@
+import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter/foundation.dart';
 
-import 'package:fluent_ui/fluent_ui.dart';
-
-/// A set of predefined colors used by Fluent UI widgets.
+/// A set of predefined colors used by Windows UI widgets.
 ///
 /// ![Colors used in fluent_ui widgets](https://learn.microsoft.com/en-us/windows/apps/design/style/images/color/windows-controls.svg)
 ///
@@ -223,15 +222,12 @@ class AccentColor extends ColorSwatch<String> {
 
   /// Creates a new accent color.
   AccentColor(this.primary, this.swatch)
-      : super(
-          swatch[primary]!.colorValue,
-          swatch,
-        );
+    : super(swatch[primary]!.colorValue, swatch);
 
   /// Creates a new accent color based on a swatch
   AccentColor.swatch(this.swatch)
-      : primary = 'normal',
-        super(swatch['normal']!.colorValue, swatch);
+    : primary = 'normal',
+      super(swatch['normal']!.colorValue, swatch);
 
   /// The darkest shade of the color.
   Color get darkest => swatch['darkest'] ?? darker.withValues(alpha: 0.7);

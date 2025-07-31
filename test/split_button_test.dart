@@ -4,14 +4,18 @@ import 'package:flutter_test/flutter_test.dart';
 import 'app_test.dart';
 
 void main() {
-  testWidgets('SplitButton displays child and flyout',
-      (WidgetTester tester) async {
+  testWidgets('SplitButton displays child and flyout', (
+    WidgetTester tester,
+  ) async {
     bool invoked = false;
     await tester.pumpWidget(
       wrapApp(
         child: SplitButton(
           flyout: const SizedBox(
-              key: Key('flyout-content'), width: 100, height: 100),
+            key: Key('flyout-content'),
+            width: 100,
+            height: 100,
+          ),
           onInvoked: () => invoked = true,
           child: const Text('Primary'),
         ),
@@ -29,8 +33,9 @@ void main() {
     expect(find.byKey(const Key('flyout-content')), findsOneWidget);
   });
 
-  testWidgets('SplitButton invokes onInvoked when primary button is tapped',
-      (WidgetTester tester) async {
+  testWidgets('SplitButton invokes onInvoked when primary button is tapped', (
+    WidgetTester tester,
+  ) async {
     bool invoked = false;
     await tester.pumpWidget(
       wrapApp(
@@ -58,12 +63,16 @@ void main() {
           content: Center(
             child: SplitButton(
               flyout: const SizedBox(
-                  key: Key('custom-flyout'), width: 80, height: 80),
+                key: Key('custom-flyout'),
+                width: 80,
+                height: 80,
+              ),
               secondaryBuilder: (context, showFlyout, controller) {
                 return IconButton(
-                    key: const Key('custom-secondary-button'),
-                    icon: const Icon(FluentIcons.add),
-                    onPressed: showFlyout);
+                  key: const Key('custom-secondary-button'),
+                  icon: const Icon(FluentIcons.add),
+                  onPressed: showFlyout,
+                );
               },
               child: const Text('Custom Secondary'),
             ),
@@ -77,8 +86,9 @@ void main() {
     expect(find.byType(ChevronDown), findsNothing);
   });
 
-  testWidgets('SplitButton disables buttons when enabled is false',
-      (WidgetTester tester) async {
+  testWidgets('SplitButton disables buttons when enabled is false', (
+    WidgetTester tester,
+  ) async {
     bool invoked = false;
     await tester.pumpWidget(
       wrapApp(

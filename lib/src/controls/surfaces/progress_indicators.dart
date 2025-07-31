@@ -33,8 +33,8 @@ class ProgressBar extends StatefulWidget {
     this.semanticLabel,
     this.backgroundColor,
     this.activeColor,
-  })  : assert(value == null || value >= 0 && value <= 100),
-        assert(strokeWidth >= 0);
+  }) : assert(value == null || value >= 0 && value <= 100),
+       assert(strokeWidth >= 0);
 
   /// The current value of the indicator. If non-null, a determinate progress
   /// bar is created:
@@ -129,7 +129,8 @@ class _ProgressBarState extends State<ProgressBar>
               painter: _ProgressBarPainter(
                 value: widget.value == null ? null : widget.value! / 100,
                 strokeWidth: widget.strokeWidth,
-                activeColor: widget.activeColor ??
+                activeColor:
+                    widget.activeColor ??
                     theme.accentColor.defaultBrushFor(theme.brightness),
                 backgroundColor:
                     widget.backgroundColor ?? theme.inactiveBackgroundColor,
@@ -230,10 +231,7 @@ class _ProgressBarPainter extends CustomPainter {
     }
 
     Offset coords(double percentage) {
-      return Offset(
-        size.width * percentage,
-        size.height,
-      );
+      return Offset(size.width * percentage, size.height);
     }
 
     double calcVelocity(double p) {
@@ -345,48 +343,26 @@ class ProgressRing extends StatefulWidget {
       ..add(DoubleProperty('strokeWidth', strokeWidth, defaultValue: 4.5))
       ..add(ColorProperty('backgroundColor', backgroundColor))
       ..add(ColorProperty('activeColor', activeColor))
-      ..add(FlagProperty(
-        'backwards',
-        value: backwards,
-        defaultValue: false,
-        ifFalse: 'forwards',
-      ));
+      ..add(
+        FlagProperty(
+          'backwards',
+          value: backwards,
+          defaultValue: false,
+          ifFalse: 'forwards',
+        ),
+      );
   }
 }
 
 class _ProgressRingState extends State<ProgressRing>
     with SingleTickerProviderStateMixin {
   static final TweenSequence<double> _startAngleTween = TweenSequence([
-    TweenSequenceItem(
-      tween: Tween<double>(
-        begin: 0,
-        end: 450,
-      ),
-      weight: 1,
-    ),
-    TweenSequenceItem(
-      tween: Tween<double>(
-        begin: 450,
-        end: 1080,
-      ),
-      weight: 1,
-    ),
+    TweenSequenceItem(tween: Tween<double>(begin: 0, end: 450), weight: 1),
+    TweenSequenceItem(tween: Tween<double>(begin: 450, end: 1080), weight: 1),
   ]);
   static final TweenSequence<double> _sweepAngleTween = TweenSequence([
-    TweenSequenceItem(
-      tween: Tween<double>(
-        begin: 0,
-        end: 180,
-      ),
-      weight: 1,
-    ),
-    TweenSequenceItem(
-      tween: Tween<double>(
-        begin: 180,
-        end: 0,
-      ),
-      weight: 1,
-    ),
+    TweenSequenceItem(tween: Tween<double>(begin: 0, end: 180), weight: 1),
+    TweenSequenceItem(tween: Tween<double>(begin: 180, end: 0), weight: 1),
   ]);
 
   late final AnimationController _controller;
@@ -437,7 +413,8 @@ class _ProgressRingState extends State<ProgressRing>
                 backgroundColor:
                     widget.backgroundColor ?? theme.inactiveBackgroundColor,
                 value: widget.value,
-                color: widget.activeColor ??
+                color:
+                    widget.activeColor ??
                     theme.accentColor.defaultBrushFor(theme.brightness),
                 strokeWidth: widget.strokeWidth,
                 startAngle: _startAngleTween.evaluate(_controller),

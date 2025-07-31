@@ -58,9 +58,7 @@ void main() {
     await gesture.addPointer(location: Offset.zero);
     await tester.pump();
     await gesture.moveTo(tester.getCenter(find.byKey(const Key('Button'))));
-    await tester.pumpAndSettle(
-      const Duration(milliseconds: 1500),
-    );
+    await tester.pumpAndSettle(const Duration(milliseconds: 1500));
 
     expect(find.text('Test Tooltip'), findsOneWidget);
 
@@ -77,15 +75,9 @@ void main() {
             children: [
               Tooltip(
                 message: 'Tooltip 1',
-                child: Button(
-                  child: const Text('Button 1'),
-                  onPressed: () {},
-                ),
+                child: Button(child: const Text('Button 1'), onPressed: () {}),
               ),
-              Button(
-                child: const Text('Button 2'),
-                onPressed: () {},
-              ),
+              Button(child: const Text('Button 2'), onPressed: () {}),
             ],
           ),
         ),
@@ -99,9 +91,7 @@ void main() {
     await tester.pumpAndSettle();
 
     await gesture.moveTo(tester.getCenter(find.text('Button 1')));
-    await tester.pumpAndSettle(
-      const Duration(milliseconds: 1500),
-    );
+    await tester.pumpAndSettle(const Duration(milliseconds: 1500));
     expect(find.text('Tooltip 1'), findsOneWidget);
 
     await tester.tap(find.text('Button 2'));
@@ -126,10 +116,7 @@ void main() {
           content: Center(
             child: Tooltip(
               richMessage: richMessage,
-              child: Button(
-                child: const Text('Tap Me'),
-                onPressed: () {},
-              ),
+              child: Button(child: const Text('Tap Me'), onPressed: () {}),
             ),
           ),
         ),
@@ -143,9 +130,7 @@ void main() {
     await gesture.addPointer(location: Offset.zero);
 
     await gesture.moveTo(tester.getCenter(find.text('Tap Me')));
-    await tester.pumpAndSettle(
-      const Duration(milliseconds: 1500),
-    );
+    await tester.pumpAndSettle(const Duration(milliseconds: 1500));
     expect(find.text('Rich Tooltip'), findsOneWidget);
   });
 
@@ -157,17 +142,11 @@ void main() {
             children: [
               Tooltip(
                 message: 'Tooltip 1',
-                child: Button(
-                  child: const Text('Button 1'),
-                  onPressed: () {},
-                ),
+                child: Button(child: const Text('Button 1'), onPressed: () {}),
               ),
               Tooltip(
                 message: 'Tooltip 2',
-                child: Button(
-                  child: const Text('Button 2'),
-                  onPressed: () {},
-                ),
+                child: Button(child: const Text('Button 2'), onPressed: () {}),
               ),
             ],
           ),
@@ -182,16 +161,12 @@ void main() {
     await gesture.addPointer(location: Offset.zero);
 
     await gesture.moveTo(tester.getCenter(find.text('Button 1')));
-    await tester.pumpAndSettle(
-      const Duration(milliseconds: 1500),
-    );
+    await tester.pumpAndSettle(const Duration(milliseconds: 1500));
 
     expect(find.text('Tooltip 1'), findsOneWidget);
 
     await gesture.moveTo(tester.getCenter(find.text('Button 2')));
-    await tester.pumpAndSettle(
-      const Duration(milliseconds: 1500),
-    );
+    await tester.pumpAndSettle(const Duration(milliseconds: 1500));
     expect(find.text('Tooltip 2'), findsOneWidget);
 
     final dismissed = Tooltip.dismissAllToolTips();
@@ -211,10 +186,7 @@ void main() {
             child: Center(
               child: Tooltip(
                 message: 'Should not show',
-                child: Button(
-                  child: const Text('Tap Me'),
-                  onPressed: () {},
-                ),
+                child: Button(child: const Text('Tap Me'), onPressed: () {}),
               ),
             ),
           ),
@@ -227,9 +199,7 @@ void main() {
     );
     await gesture.addPointer(location: Offset.zero);
     await gesture.moveTo(tester.getCenter(find.text('Tap Me')));
-    await tester.pumpAndSettle(
-      const Duration(milliseconds: 1500),
-    );
+    await tester.pumpAndSettle(const Duration(milliseconds: 1500));
 
     expect(find.text('Should not show'), findsNothing);
   });
@@ -241,10 +211,7 @@ void main() {
           content: Center(
             child: Tooltip(
               message: '',
-              child: Button(
-                child: const Text('Tap Me'),
-                onPressed: () {},
-              ),
+              child: Button(child: const Text('Tap Me'), onPressed: () {}),
             ),
           ),
         ),
@@ -257,9 +224,7 @@ void main() {
     );
     await gesture.addPointer(location: Offset.zero);
     await gesture.moveTo(tester.getCenter(find.text('Tap Me')));
-    await tester.pumpAndSettle(
-      const Duration(milliseconds: 1500),
-    );
+    await tester.pumpAndSettle(const Duration(milliseconds: 1500));
 
     expect(find.text(''), findsNothing);
   });

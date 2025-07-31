@@ -16,10 +16,7 @@ class _UIEquivalentsState extends State<UIEquivalents> {
   bool radioChecked = true;
   bool switchChecked = true;
 
-  final List<String> comboboxItems = [
-    'Item 1',
-    'Item 2',
-  ];
+  final List<String> comboboxItems = ['Item 1', 'Item 2'];
   String? comboboxItem;
   String dropdownItem = 'Item 1';
   final popupKey = GlobalKey<m.PopupMenuButtonState>();
@@ -40,14 +37,8 @@ class _UIEquivalentsState extends State<UIEquivalents> {
     List<List<Widget>> children = [
       [
         const Text('Button'),
-        Button(
-          child: const Text('Content'),
-          onPressed: () {},
-        ),
-        m.OutlinedButton(
-          child: const Text('Content'),
-          onPressed: () {},
-        ),
+        Button(child: const Text('Content'), onPressed: () {}),
+        m.OutlinedButton(child: const Text('Content'), onPressed: () {}),
         c.CupertinoButton.tinted(
           child: const Text('Content'),
           onPressed: () {},
@@ -55,29 +46,14 @@ class _UIEquivalentsState extends State<UIEquivalents> {
       ],
       [
         const Text('HyperlinkButton'),
-        HyperlinkButton(
-          child: const Text('Content'),
-          onPressed: () {},
-        ),
-        m.TextButton(
-          child: const Text('Content'),
-          onPressed: () {},
-        ),
-        c.CupertinoButton(
-          child: const Text('Content'),
-          onPressed: () {},
-        ),
+        HyperlinkButton(child: const Text('Content'), onPressed: () {}),
+        m.TextButton(child: const Text('Content'), onPressed: () {}),
+        c.CupertinoButton(child: const Text('Content'), onPressed: () {}),
       ],
       [
         const Text('FilledButton'),
-        FilledButton(
-          child: const Text('Content'),
-          onPressed: () {},
-        ),
-        m.ElevatedButton(
-          child: const Text('Content'),
-          onPressed: () {},
-        ),
+        FilledButton(child: const Text('Content'), onPressed: () {}),
+        m.ElevatedButton(child: const Text('Content'), onPressed: () {}),
         c.CupertinoButton.filled(
           child: const Text('Content'),
           onPressed: () {},
@@ -86,11 +62,11 @@ class _UIEquivalentsState extends State<UIEquivalents> {
       [
         const Text('IconButton'),
         IconButton(
-          icon: const Icon(FluentIcons.graph_symbol),
+          icon: const WindowsIcon(FluentIcons.graph_symbol),
           onPressed: () {},
         ),
         m.IconButton(
-          icon: const Icon(FluentIcons.graph_symbol),
+          icon: const WindowsIcon(FluentIcons.graph_symbol),
           onPressed: () {},
         ),
         // c.CupertinoNavigationBarBackButton(
@@ -217,12 +193,7 @@ class _UIEquivalentsState extends State<UIEquivalents> {
           key: popupKey,
           itemBuilder: (context) {
             return comboboxItems
-                .map(
-                  (e) => m.PopupMenuItem(
-                    value: e,
-                    child: Text(e),
-                  ),
-                )
+                .map((e) => m.PopupMenuItem(value: e, child: Text(e)))
                 .toList();
           },
           onSelected: (e) => setState(() => dropdownItem = e),
@@ -265,19 +236,13 @@ class _UIEquivalentsState extends State<UIEquivalents> {
       ],
       [
         const Text('TimePicker'),
-        TimePicker(
-          selected: time,
-          onChanged: (value) => setState(() => time),
-        ),
+        TimePicker(selected: time, onChanged: (value) => setState(() => time)),
         m.TextButton(
           child: const Text('Show Picker'),
           onPressed: () async {
             final newTime = await m.showTimePicker(
               context: context,
-              initialTime: m.TimeOfDay(
-                hour: time.hour,
-                minute: time.minute,
-              ),
+              initialTime: m.TimeOfDay(hour: time.hour, minute: time.minute),
             );
             if (newTime != null) {
               time = DateTime(
@@ -304,9 +269,11 @@ class _UIEquivalentsState extends State<UIEquivalents> {
                     height: 216,
                     padding: const EdgeInsets.only(top: 6.0),
                     margin: EdgeInsets.only(
-                        bottom: MediaQuery.of(context).viewInsets.bottom),
-                    color:
-                        c.CupertinoColors.systemBackground.resolveFrom(context),
+                      bottom: MediaQuery.of(context).viewInsets.bottom,
+                    ),
+                    color: c.CupertinoColors.systemBackground.resolveFrom(
+                      context,
+                    ),
                     child: SafeArea(
                       top: false,
                       child: c.CupertinoDatePicker(
@@ -327,10 +294,7 @@ class _UIEquivalentsState extends State<UIEquivalents> {
       ],
       [
         const Text('DatePicker'),
-        DatePicker(
-          selected: time,
-          onChanged: (value) => setState(() => time),
-        ),
+        DatePicker(selected: time, onChanged: (value) => setState(() => time)),
         m.TextButton(
           child: const Text('Show Picker'),
           onPressed: () async {
@@ -358,9 +322,11 @@ class _UIEquivalentsState extends State<UIEquivalents> {
                     height: 216,
                     padding: const EdgeInsets.only(top: 6.0),
                     margin: EdgeInsets.only(
-                        bottom: MediaQuery.of(context).viewInsets.bottom),
-                    color:
-                        c.CupertinoColors.systemBackground.resolveFrom(context),
+                      bottom: MediaQuery.of(context).viewInsets.bottom,
+                    ),
+                    color: c.CupertinoColors.systemBackground.resolveFrom(
+                      context,
+                    ),
                     child: SafeArea(
                       top: false,
                       child: c.CupertinoDatePicker(
@@ -383,17 +349,17 @@ class _UIEquivalentsState extends State<UIEquivalents> {
       [
         const Text('ListTile'),
         ListTile(
-          leading: const Icon(FluentIcons.graph_symbol),
+          leading: const WindowsIcon(FluentIcons.graph_symbol),
           title: const Text('Content'),
           onPressed: () {},
         ),
         m.ListTile(
-          leading: const Icon(FluentIcons.graph_symbol),
+          leading: const WindowsIcon(FluentIcons.graph_symbol),
           title: const Text('Content'),
           onTap: () {},
         ),
         c.CupertinoListTile(
-          leading: const Icon(FluentIcons.graph_symbol),
+          leading: const WindowsIcon(FluentIcons.graph_symbol),
           title: const Text('Content'),
           onTap: () {},
         ),
@@ -401,7 +367,7 @@ class _UIEquivalentsState extends State<UIEquivalents> {
       [
         const Text('Tooltip'),
         const Tooltip(
-          message: 'A fluent-styled tooltip',
+          message: 'A windows-styled tooltip',
           child: Text('Hover'),
         ),
         const m.Tooltip(
@@ -432,15 +398,17 @@ class _UIEquivalentsState extends State<UIEquivalents> {
 
     return m.Material(
       type: m.MaterialType.transparency,
-      child: Row(children: [
-        Expanded(child: buildColumn(0)),
-        const m.VerticalDivider(),
-        Expanded(child: buildColumn(1)),
-        const m.VerticalDivider(),
-        Expanded(child: buildColumn(2)),
-        const m.VerticalDivider(),
-        Expanded(child: buildColumn(3)),
-      ]),
+      child: Row(
+        children: [
+          Expanded(child: buildColumn(0)),
+          const m.VerticalDivider(),
+          Expanded(child: buildColumn(1)),
+          const m.VerticalDivider(),
+          Expanded(child: buildColumn(2)),
+          const m.VerticalDivider(),
+          Expanded(child: buildColumn(3)),
+        ],
+      ),
     );
   }
 }

@@ -111,35 +111,37 @@ class YesNoPickerControl extends StatelessWidget {
 
     return FocusTheme(
       data: const FocusThemeData(renderOutside: false),
-      child: Row(children: [
-        Expanded(
-          child: Container(
-            margin: const EdgeInsets.all(4.0),
-            height: kOneLineTileHeight / 1.2,
-            child: Button(
-              onPressed: onChanged,
-              style: buttonStyle,
-              child: const Icon(FluentIcons.check_mark),
+      child: Row(
+        children: [
+          Expanded(
+            child: Container(
+              margin: const EdgeInsets.all(4.0),
+              height: kOneLineTileHeight / 1.2,
+              child: Button(
+                onPressed: onChanged,
+                style: buttonStyle,
+                child: const WindowsIcon(WindowsIcons.check_mark),
+              ),
             ),
           ),
-        ),
-        Expanded(
-          child: Container(
-            margin: const EdgeInsets.all(4.0),
-            height: kOneLineTileHeight / 1.2,
-            child: Button(
-              onPressed: onCancel,
-              style: buttonStyle,
-              child: const Icon(FluentIcons.chrome_close),
+          Expanded(
+            child: Container(
+              margin: const EdgeInsets.all(4.0),
+              height: kOneLineTileHeight / 1.2,
+              child: Button(
+                onPressed: onCancel,
+                style: buttonStyle,
+                child: const WindowsIcon(WindowsIcons.chrome_close),
+              ),
             ),
           ),
-        ),
-      ]),
+        ],
+      ),
     );
   }
 }
 
-/// A helper widget that creates fluent-styled controls for a list
+/// A helper widget that creates windows-styled controls for a list
 ///
 /// See also:
 ///
@@ -202,61 +204,66 @@ class PickerNavigatorIndicator extends StatelessWidget {
         return FocusBorder(
           focused: states.isFocused,
           child: ButtonTheme.merge(
-            data: ButtonThemeData.all(ButtonStyle(
-              padding: const WidgetStatePropertyAll(EdgeInsets.symmetric(
-                vertical: 10.0,
-              )),
-              backgroundColor:
-                  WidgetStatePropertyAll(FluentTheme.of(context).menuColor),
-              shape: const WidgetStatePropertyAll(RoundedRectangleBorder()),
-              elevation: const WidgetStatePropertyAll(0.0),
-              iconSize: WidgetStateProperty.resolveWith((states) {
-                if (states.isPressed) {
-                  return 8.0;
-                } else {
-                  return 10.0;
-                }
-              }),
-            )),
+            data: ButtonThemeData.all(
+              ButtonStyle(
+                padding: const WidgetStatePropertyAll(
+                  EdgeInsets.symmetric(vertical: 10.0),
+                ),
+                backgroundColor: WidgetStatePropertyAll(
+                  FluentTheme.of(context).menuColor,
+                ),
+                shape: const WidgetStatePropertyAll(RoundedRectangleBorder()),
+                elevation: const WidgetStatePropertyAll(0.0),
+                iconSize: WidgetStateProperty.resolveWith((states) {
+                  if (states.isPressed) {
+                    return 8.0;
+                  } else {
+                    return 10.0;
+                  }
+                }),
+              ),
+            ),
             child: FocusTheme(
               data: const FocusThemeData(renderOutside: false),
-              child: Stack(children: [
-                child,
-                if (show) ...[
-                  PositionedDirectional(
-                    top: 0,
-                    start: 0,
-                    end: 0,
-                    height: kOneLineTileHeight,
-                    child: Button(
-                      focusable: false,
-                      onPressed: onBackward,
-                      child: const Center(
-                        child: Icon(
-                          FluentIcons.caret_up_solid8,
-                          color: Color(0xFFcfcfcf),
+              child: Stack(
+                children: [
+                  child,
+                  if (show) ...[
+                    PositionedDirectional(
+                      top: 0,
+                      start: 0,
+                      end: 0,
+                      height: kOneLineTileHeight,
+                      child: Button(
+                        focusable: false,
+                        onPressed: onBackward,
+                        child: const Center(
+                          child: Icon(
+                            FluentIcons.caret_up_solid8,
+                            color: Color(0xFFcfcfcf),
+                          ),
                         ),
                       ),
                     ),
-                  ),
-                  PositionedDirectional(
-                    bottom: 0,
-                    start: 0,
-                    end: 0,
-                    height: kOneLineTileHeight,
-                    child: Button(
-                      focusable: false,
-                      onPressed: onForward,
-                      child: const Center(
-                        child: Icon(
-                          FluentIcons.caret_down_solid8,
-                          color: Color(0xFFcfcfcf),
+                    PositionedDirectional(
+                      bottom: 0,
+                      start: 0,
+                      end: 0,
+                      height: kOneLineTileHeight,
+                      child: Button(
+                        focusable: false,
+                        onPressed: onForward,
+                        child: const Center(
+                          child: Icon(
+                            FluentIcons.caret_down_solid8,
+                            color: Color(0xFFcfcfcf),
+                          ),
                         ),
                       ),
                     ),
-                  ),
+                  ],
                 ],
-              ]),
+              ),
             ),
           ),
         );
@@ -283,29 +290,19 @@ extension FixedExtentScrollControllerExtension on FixedExtentScrollController {
       var to = currentItem + 1;
       if (currentItem == amount - 1) to = 0;
 
-      return animateToItem(
-        to,
-        duration: duration,
-        curve: curve,
-      );
+      return animateToItem(to, duration: duration, curve: curve);
     } else {
       final currentItem = selectedItem;
       var to = currentItem - 1;
       if (currentItem == 0) to = amount - 1;
 
-      return animateToItem(
-        to,
-        duration: duration,
-        curve: curve,
-      );
+      return animateToItem(to, duration: duration, curve: curve);
     }
   }
 }
 
-typedef PickerBuilder = Widget Function(
-  BuildContext context,
-  Future<void> Function() open,
-);
+typedef PickerBuilder =
+    Widget Function(BuildContext context, Future<void> Function() open);
 
 class Picker extends StatefulWidget {
   /// Creates a picker flyout
@@ -345,82 +342,86 @@ class PickerState extends State<Picker> {
 
     final isAcrylicDisabled = DisableAcrylic.of(context) != null;
 
-    return navigator.push(PageRouteBuilder(
-      barrierColor: Colors.transparent,
-      opaque: false,
-      barrierDismissible: true,
-      fullscreenDialog: true,
-      pageBuilder: (context, primary, __) {
-        assert(debugCheckHasFluentTheme(context));
-        assert(debugCheckHasMediaQuery(context));
+    return navigator.push(
+      PageRouteBuilder(
+        barrierColor: Colors.transparent,
+        opaque: false,
+        barrierDismissible: true,
+        fullscreenDialog: true,
+        pageBuilder: (context, primary, _) {
+          assert(debugCheckHasFluentTheme(context));
+          assert(debugCheckHasMediaQuery(context));
 
-        final rootHeight = rootBox.size.height;
+          final rootHeight = rootBox.size.height;
 
-        // centeredOffset is the y of the highlight tile. 0.41 is a eyeballed
-        // value from the Win UI 3 Gallery
-        final centeredOffset = widget.pickerHeight * 0.41;
-        // the popup menu y is the [button y] - [y of highlight tile]
-        var y = childOffset.dy - centeredOffset;
+          // centeredOffset is the y of the highlight tile. 0.41 is a eyeballed
+          // value from the Win UI 3 Gallery
+          final centeredOffset = widget.pickerHeight * 0.41;
+          // the popup menu y is the [button y] - [y of highlight tile]
+          var y = childOffset.dy - centeredOffset;
 
-        // if the popup menu [y] + picker height overlaps the screen height, make
-        // it to the bottom of the screen
-        if (y + widget.pickerHeight > rootHeight) {
-          const bottomMargin = 8.0;
-          y = rootHeight - widget.pickerHeight - bottomMargin;
-          // y = 0;
-          // if the popup menu [y] is off screen on the top, make it to the top of
-          // the screen
-        } else if (y < 0) {
-          y = 0;
-        }
+          // if the popup menu [y] + picker height overlaps the screen height, make
+          // it to the bottom of the screen
+          if (y + widget.pickerHeight > rootHeight) {
+            const bottomMargin = 8.0;
+            y = rootHeight - widget.pickerHeight - bottomMargin;
+            // y = 0;
+            // if the popup menu [y] is off screen on the top, make it to the top of
+            // the screen
+          } else if (y < 0) {
+            y = 0;
+          }
 
-        y = y.clamp(0.0, rootHeight);
+          y = y.clamp(0.0, rootHeight);
 
-        final theme = FluentTheme.of(context);
+          final theme = FluentTheme.of(context);
 
-        // If the screen is smaller than 260, we ensure the popup will fit in the
-        // screen. https://github.com/bdlukaa/fluent_ui/issues/544
-        final minWidth = min(260.0, MediaQuery.sizeOf(context).width);
-        final width = max(box.size.width, minWidth);
-        final x = () {
-          if (box.size.width > minWidth) return childOffset.dx;
+          // If the screen is smaller than 260, we ensure the popup will fit in the
+          // screen. https://github.com/bdlukaa/fluent_ui/issues/544
+          final minWidth = min(260.0, MediaQuery.sizeOf(context).width);
+          final width = max(box.size.width, minWidth);
+          final x = () {
+            if (box.size.width > minWidth) return childOffset.dx;
 
-          // if the box width is less than [minWidth], center the popup
-          return childOffset.dx - (width / 4);
-        }();
+            // if the box width is less than [minWidth], center the popup
+            return childOffset.dx - (width / 4);
+          }();
 
-        final view = Stack(children: [
-          // We can not use PositionedDirectional here
-          // See https://github.com/bdlukaa/fluent_ui/issues/675
-          Positioned(
-            left: x,
-            top: y,
-            height: widget.pickerHeight,
-            width: width,
-            child: FadeTransition(
-              opacity: primary,
-              child: Container(
+          final view = Stack(
+            children: [
+              // We can not use PositionedDirectional here
+              // See https://github.com/bdlukaa/fluent_ui/issues/675
+              Positioned(
+                left: x,
+                top: y,
                 height: widget.pickerHeight,
-                width: box.size.width,
-                decoration: ShapeDecoration(
-                  color: theme.menuColor,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(4.0),
-                    side: BorderSide(
-                      color: theme.resources.surfaceStrokeColorFlyout,
-                      width: 0.6,
+                width: width,
+                child: FadeTransition(
+                  opacity: primary,
+                  child: Container(
+                    height: widget.pickerHeight,
+                    width: box.size.width,
+                    decoration: ShapeDecoration(
+                      color: theme.menuColor,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(4.0),
+                        side: BorderSide(
+                          color: theme.resources.surfaceStrokeColorFlyout,
+                          width: 0.6,
+                        ),
+                      ),
                     ),
+                    child: widget.pickerContent(context),
                   ),
                 ),
-                child: widget.pickerContent(context),
               ),
-            ),
-          ),
-        ]);
-        if (isAcrylicDisabled) return DisableAcrylic(child: view);
-        return view;
-      },
-    ));
+            ],
+          );
+          if (isAcrylicDisabled) return DisableAcrylic(child: view);
+          return view;
+        },
+      ),
+    );
   }
 
   @override
@@ -433,9 +434,7 @@ class PickerState extends State<Picker> {
       child: ConstrainedBox(
         constraints: const BoxConstraints(maxWidth: 296),
         child: DefaultTextStyle.merge(
-          style: TextStyle(
-            color: theme.resources.textFillColorPrimary,
-          ),
+          style: TextStyle(color: theme.resources.textFillColorPrimary),
           child: widget.child(context, open),
         ),
       ),

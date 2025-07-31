@@ -1,7 +1,9 @@
 ## [next]
 
 - fix: NavigationView transition when in top ([#1220](https://github.com/bdlukaa/fluent_ui/pull/1220))
-- fix: `ToggleSwitch` outdated usage in the demo.
+- feat: Added `CalendarView` widget ([#1232](https://github.com/bdlukaa/fluent_ui/pull/1232) thanks to [@asmitta-01](https://github.com/Asmitta-01), [#236](https://github.com/bdlukaa/fluent_ui/issues/236))
+- feat: Added `CalendarDatePicker` ([#236](https://github.com/bdlukaa/fluent_ui/issues/236))
+- feat: Added `WindowsIcon` and `WindowsIcons` ([#1237](https://github.com/bdlukaa/fluent_ui/pull/1237))
 
 ## 4.12.0
 
@@ -31,6 +33,7 @@
 - feat: Add `BreadcrumbBar.chevronAlignment` ([#1213](https://github.com/bdlukaa/fluent_ui/issues/1213))
 - **MINOR BREAKING** feat: `Tab.backgroundColor`, `Tab.selectedBackgroundColor`, `Tab.foregroundColor`, `Tab.selectedForegroundColor` and `Tab.outlineColor` are now instance of `WidgetStateProperty<Color>`. ([#1214](https://github.com/bdlukaa/fluent_ui/issues/1214))
   Before:
+
   ```dart
   Tab(
     backgroundColor: FluentTheme.of(context).inactiveColor,
@@ -42,6 +45,7 @@
   ```
 
   After:
+
   ```dart
   Tab(
     backgroundColor: WidgetStateProperty.resolveWith((_) {
@@ -156,7 +160,7 @@
 
 - feat: Add `TabView.gestures`, which allows the manipulation of the tab gestures ([#1138](https://github.com/bdlukaa/fluent_ui/issues/1138))
 - feat: Add `DropDownButton.style` ([#1139](https://github.com/bdlukaa/fluent_ui/issues/1139))
-- feat: Possibility to open date and time pickers programatically ([#1142](https://github.com/bdlukaa/fluent_ui/issues/1142))
+- feat: Possibility to open date and time pickers programmatically ([#1142](https://github.com/bdlukaa/fluent_ui/issues/1142))
 - fix: `TimePicker` hour offset
 - feat: Add `ColorPicker` ([#1152](https://github.com/bdlukaa/fluent_ui/pull/1152))
 - fix: `NumberBox` initial value formatting ([#1153](https://github.com/bdlukaa/fluent_ui/issues/1153))
@@ -170,9 +174,9 @@
 - fix: Correctly apply `EditableComboBox.style` ([#1121](https://github.com/bdlukaa/fluent_ui/pull/1121))
 - feat: Add `BreadcrumbBar.chevronIconBuilder` and `BreadcrumbBar.chevronIconSize` ([#1111](https://github.com/bdlukaa/fluent_ui/issues/1111))
 
-* fix: Consider object translation on Menu Flyouts ([#1104](https://github.com/bdlukaa/fluent_ui/issues/1104))
-* fix: Correctly disable `DropDownButton` items if `onPressed` is not provided ([#1116](https://github.com/bdlukaa/fluent_ui/issues/1116#issuecomment-2347153074))
-* feat: Add `ToggleMenuFlyoutItem` and `RadioMenuFlyoutItem` ([#1108](https://github.com/bdlukaa/fluent_ui/issues/1108))
+- fix: Consider object translation on Menu Flyouts ([#1104](https://github.com/bdlukaa/fluent_ui/issues/1104))
+- fix: Correctly disable `DropDownButton` items if `onPressed` is not provided ([#1116](https://github.com/bdlukaa/fluent_ui/issues/1116#issuecomment-2347153074))
+- feat: Add `ToggleMenuFlyoutItem` and `RadioMenuFlyoutItem` ([#1108](https://github.com/bdlukaa/fluent_ui/issues/1108))
 
 ## 4.9.1
 
@@ -817,9 +821,9 @@
   NavigationView(
     pane: NavigationPane(
       items: [
-        PaneItem(icon: Icon(FluentIcons.add)),
-        PaneItem(icon: Icon(FluentIcons.add)),
-        PaneItem(icon: Icon(FluentIcons.add)),
+        PaneItem(icon: WindowsIcon(WindowsIcons.add)),
+        PaneItem(icon: WindowsIcon(WindowsIcons.add)),
+        PaneItem(icon: WindowsIcon(WindowsIcons.add)),
       ],
     ),
     content: NavigationBody(
@@ -840,15 +844,15 @@
     pane: NavigationPane(
       items: [
         PaneItem(
-          icon: Icon(FluentIcons.add),
+          icon: WindowsIcon(WindowsIcons.add),
           body: _Item1(),
         ),
         PaneItem(
-          icon: Icon(FluentIcons.add),
+          icon: WindowsIcon(WindowsIcons.add),
           body: _Item2(),
         ),
         PaneItem(
-          icon: Icon(FluentIcons.add),
+          icon: WindowsIcon(WindowsIcons.add),
           body: _Item3(),
         ),
       ],
@@ -1293,7 +1297,7 @@
 - Allow custom height on `NavigationPane` header. ([#260](https://github.com/bdlukaa/fluent_ui/pull/260/))
 - Allow to define the minimal tab width ([#282](https://github.com/bdlukaa/fluent_ui/pull/282/))
 - Allow applying custom leading Widget to NavigationPane ([#288](https://github.com/bdlukaa/fluent_ui/pull/288/))
-- `TextFormBox.expands` now works properly ([#291]](https://github.com/bdlukaa/fluent_ui/pull/291))
+- `TextFormBox.expands` now works properly ([#291]](<https://github.com/bdlukaa/fluent_ui/pull/291>))
 - Focus on `TextBox` is no longer duplicated ([#290](https://github.com/bdlukaa/fluent_ui/pull/290))
 
 ## [3.10.2] - [09/04/2022]

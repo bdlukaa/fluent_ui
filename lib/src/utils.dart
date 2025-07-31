@@ -66,7 +66,8 @@ bool debugCheckHasFluentLocalizations(BuildContext context) {
           'FluentLocalizations delegate.',
         ),
         ...context.describeMissingAncestor(
-            expectedAncestorType: FluentLocalizations)
+          expectedAncestorType: FluentLocalizations,
+        ),
       ]);
     }
     return true;
@@ -96,7 +97,7 @@ bool debugCheckHasFlyout(BuildContext context) {
         ErrorHint(
           'To introduce a Flyout, use the showFlyout method or related methods.',
         ),
-        ...context.describeMissingAncestor(expectedAncestorType: Flyout)
+        ...context.describeMissingAncestor(expectedAncestorType: Flyout),
       ]);
     }
     return true;
@@ -128,8 +129,9 @@ Offset horizontalPositionDependentBox({
   final fitsLeft =
       target.dx + horizontalOffset + childSize.width <= size.width - margin;
   final fitsRight = target.dx - horizontalOffset - childSize.width >= margin;
-  final tooltipLeft =
-      preferLeft ? fitsLeft || !fitsRight : !(fitsRight || !fitsLeft);
+  final tooltipLeft = preferLeft
+      ? fitsLeft || !fitsRight
+      : !(fitsRight || !fitsLeft);
   final double x;
   if (tooltipLeft) {
     x = math.min(target.dx + horizontalOffset, size.width - margin);

@@ -31,8 +31,9 @@ class ColorsPage extends StatelessWidget {
         width: double.infinity,
         child: InfoBar(
           title: Text('Tip:'),
-          content:
-              Text('You can click on any color to copy it to the clipboard!'),
+          content: Text(
+            'You can click on any color to copy it to the clipboard!',
+          ),
         ),
       ),
       children: [
@@ -96,38 +97,38 @@ class ColorsPage extends StatelessWidget {
         divider,
         InfoLabel(
           label: 'All Shades',
-          child:
-              Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-            const Row(children: [
-              ColorBlock(
-                name: 'Black',
-                color: Colors.black,
-                clipboard: 'Colors.black',
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const Row(
+                children: [
+                  ColorBlock(
+                    name: 'Black',
+                    color: Colors.black,
+                    clipboard: 'Colors.black',
+                  ),
+                  ColorBlock(
+                    name: 'White',
+                    color: Colors.white,
+                    clipboard: 'Colors.white',
+                  ),
+                ],
               ),
-              ColorBlock(
-                name: 'White',
-                color: Colors.white,
-                clipboard: 'Colors.white',
+              const SizedBox(height: 10),
+              Wrap(
+                children: List.generate(22, (index) {
+                  final factor = (index + 1) * 10;
+                  return ColorBlock(
+                    name: 'Grey#$factor',
+                    color: Colors.grey[factor],
+                    clipboard: 'Colors.grey[$factor]',
+                  );
+                }),
               ),
-            ]),
-            const SizedBox(height: 10),
-            Wrap(
-              children: List.generate(22, (index) {
-                final factor = (index + 1) * 10;
-                return ColorBlock(
-                  name: 'Grey#$factor',
-                  color: Colors.grey[factor],
-                  clipboard: 'Colors.grey[$factor]',
-                );
-              }),
-            ),
-            const SizedBox(height: 10),
-            Wrap(
-              runSpacing: 10,
-              spacing: 10,
-              children: accent,
-            ),
-          ]),
+              const SizedBox(height: 10),
+              Wrap(runSpacing: 10, spacing: 10, children: accent),
+            ],
+          ),
         ),
       ],
     );
@@ -207,10 +208,7 @@ class ColorBlock extends StatelessWidget {
                   ),
                   const Spacer(),
                   if (variant != null)
-                    Text(
-                      variant!,
-                      style: TextStyle(color: textColor),
-                    ),
+                    Text(variant!, style: TextStyle(color: textColor)),
                 ],
               ),
             ),

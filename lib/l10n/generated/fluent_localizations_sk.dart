@@ -110,6 +110,9 @@ class FluentLocalizationsSk extends FluentLocalizations {
   String get year => 'rok';
 
   @override
+  String get pickADate => 'Pick a date';
+
+  @override
   String get seeMore => 'See more';
 
   @override

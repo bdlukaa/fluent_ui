@@ -22,7 +22,7 @@ import 'package:flutter/rendering.dart';
 ///   * [RatingBar], that allows users to view and set ratings
 ///   * <https://docs.microsoft.com/en-us/windows/apps/design/controls/slider>
 class Slider extends StatefulWidget {
-  /// Creates a fluent-styled slider.
+  /// Creates a windows-styled slider.
   const Slider({
     super.key,
     required this.value,
@@ -38,8 +38,8 @@ class Slider extends StatefulWidget {
     this.vertical = false,
     this.autofocus = false,
     this.mouseCursor = MouseCursor.defer,
-  })  : assert(value >= min && value <= max),
-        assert(divisions == null || divisions > 0);
+  }) : assert(value >= min && value <= max),
+       assert(divisions == null || divisions > 0);
 
   /// The currently selected value for this slider.
   ///
@@ -289,7 +289,8 @@ class _SliderState extends State<Slider> {
           duration: theme.fastAnimationDuration,
           tween: Tween<double>(
             begin: 1.0,
-            end: style.thumbBallInnerFactor?.resolve({
+            end:
+                style.thumbBallInnerFactor?.resolve({
                   ...states,
                   if (_sliding) WidgetState.pressed,
                 }) ??
@@ -320,10 +321,12 @@ class _SliderState extends State<Slider> {
               trackHeight: style.trackHeight?.resolve(states),
               trackShape: _CustomTrackShape(),
               disabledThumbColor: style.thumbColor?.resolve(disabledState),
-              disabledInactiveTrackColor:
-                  style.inactiveColor?.resolve(disabledState),
-              disabledActiveTrackColor:
-                  style.activeColor?.resolve(disabledState),
+              disabledInactiveTrackColor: style.inactiveColor?.resolve(
+                disabledState,
+              ),
+              disabledActiveTrackColor: style.activeColor?.resolve(
+                disabledState,
+              ),
             ),
             child: child!,
           ),
@@ -432,7 +435,7 @@ class _CustomTrackShape extends m.RoundedRectSliderTrackShape {
 ///
 /// There is a shadow for the resting, pressed, hovered, and focused state.
 class SliderThumbShape extends m.SliderComponentShape {
-  /// Create a fluent-styled slider thumb;
+  /// Create a windows-styled slider thumb;
   const SliderThumbShape({
     this.enabledThumbRadius = 10.0,
     this.disabledThumbRadius,
@@ -482,7 +485,8 @@ class SliderThumbShape extends m.SliderComponentShape {
   @override
   Size getPreferredSize(bool isEnabled, bool isDiscrete) {
     return Size.fromRadius(
-        isEnabled == true ? enabledThumbRadius : _disabledThumbRadius);
+      isEnabled == true ? enabledThumbRadius : _disabledThumbRadius,
+    );
   }
 
   @override
@@ -535,22 +539,18 @@ class SliderThumbShape extends m.SliderComponentShape {
       final evaluatedElevation = elevationTween.evaluate(activationAnimation);
       final path = Path()
         ..addArc(
-            Rect.fromCenter(
-                center: center, width: 2 * radius, height: 2 * radius),
-            0,
-            math.pi * 2);
+          Rect.fromCenter(
+            center: center,
+            width: 2 * radius,
+            height: 2 * radius,
+          ),
+          0,
+          math.pi * 2,
+        );
       canvas
         ..drawShadow(path, Colors.black, evaluatedElevation, true)
-        ..drawCircle(
-          center,
-          radius,
-          Paint()..color = borderColor,
-        )
-        ..drawCircle(
-          center,
-          radius * innerFactor,
-          Paint()..color = color,
-        );
+        ..drawCircle(center, radius, Paint()..color = borderColor)
+        ..drawCircle(center, radius * innerFactor, Paint()..color = color);
     }
   }
 }
@@ -563,11 +563,7 @@ class SliderThumbShape extends m.SliderComponentShape {
 class SliderTheme extends InheritedTheme {
   /// Creates a slider theme that controls the configurations for
   /// [Slider].
-  const SliderTheme({
-    super.key,
-    required this.data,
-    required super.child,
-  });
+  const SliderTheme({super.key, required this.data, required super.child});
 
   /// The properties for descendant [Slider] widgets.
   final SliderThemeData data;
@@ -579,13 +575,15 @@ class SliderTheme extends InheritedTheme {
     required SliderThemeData data,
     required Widget child,
   }) {
-    return Builder(builder: (BuildContext context) {
-      return SliderTheme(
-        key: key,
-        data: _getInheritedThemeData(context).merge(data),
-        child: child,
-      );
-    });
+    return Builder(
+      builder: (BuildContext context) {
+        return SliderTheme(
+          key: key,
+          data: _getInheritedThemeData(context).merge(data),
+          child: child,
+        );
+      },
+    );
   }
 
   static SliderThemeData _getInheritedThemeData(BuildContext context) {
@@ -603,9 +601,9 @@ class SliderTheme extends InheritedTheme {
   /// SliderThemeData theme = SliderTheme.of(context);
   /// ```
   static SliderThemeData of(BuildContext context) {
-    return SliderThemeData.standard(FluentTheme.of(context)).merge(
-      _getInheritedThemeData(context),
-    );
+    return SliderThemeData.standard(
+      FluentTheme.of(context),
+    ).merge(_getInheritedThemeData(context));
   }
 
   @override
@@ -671,8 +669,8 @@ class SliderThemeData with Diagnosticable {
         return states.isPressed
             ? 0.45
             : states.isHovered
-                ? 0.66
-                : 0.5;
+            ? 0.66
+            : 0.5;
       }),
       labelBackgroundColor: theme.resources.controlSolidFillColorDefault,
       labelForegroundColor: theme.resources.textFillColorPrimary,
@@ -686,22 +684,52 @@ class SliderThemeData with Diagnosticable {
     return SliderThemeData(
       margin: EdgeInsetsGeometry.lerp(a.margin, b.margin, t),
       thumbColor: WidgetStateProperty.lerp<Color?>(
-          a.thumbColor, b.thumbColor, t, Color.lerp),
+        a.thumbColor,
+        b.thumbColor,
+        t,
+        Color.lerp,
+      ),
       thumbRadius: WidgetStateProperty.lerp<double?>(
-          a.thumbRadius, b.thumbRadius, t, lerpDouble),
+        a.thumbRadius,
+        b.thumbRadius,
+        t,
+        lerpDouble,
+      ),
       trackHeight: WidgetStateProperty.lerp<double?>(
-          a.trackHeight, b.trackHeight, t, lerpDouble),
+        a.trackHeight,
+        b.trackHeight,
+        t,
+        lerpDouble,
+      ),
       activeColor: WidgetStateProperty.lerp<Color?>(
-          a.activeColor, b.activeColor, t, Color.lerp),
+        a.activeColor,
+        b.activeColor,
+        t,
+        Color.lerp,
+      ),
       inactiveColor: WidgetStateProperty.lerp<Color?>(
-          a.inactiveColor, b.inactiveColor, t, Color.lerp),
-      labelBackgroundColor:
-          Color.lerp(a.labelBackgroundColor, b.labelBackgroundColor, t),
-      labelForegroundColor:
-          Color.lerp(a.labelForegroundColor, b.labelForegroundColor, t),
+        a.inactiveColor,
+        b.inactiveColor,
+        t,
+        Color.lerp,
+      ),
+      labelBackgroundColor: Color.lerp(
+        a.labelBackgroundColor,
+        b.labelBackgroundColor,
+        t,
+      ),
+      labelForegroundColor: Color.lerp(
+        a.labelForegroundColor,
+        b.labelForegroundColor,
+        t,
+      ),
       useThumbBall: t < 0.5 ? a.useThumbBall : b.useThumbBall,
       thumbBallInnerFactor: WidgetStateProperty.lerp<double?>(
-          a.thumbBallInnerFactor, b.thumbBallInnerFactor, t, lerpDouble),
+        a.thumbBallInnerFactor,
+        b.thumbBallInnerFactor,
+        t,
+        lerpDouble,
+      ),
     );
   }
 
@@ -750,10 +778,7 @@ class _RectangularSliderValueIndicatorShape extends m.SliderComponentShape {
   });
 
   _RectangularSliderValueIndicatorPathPainter get _pathPainter =>
-      _RectangularSliderValueIndicatorPathPainter(
-        vertical,
-        ltr,
-      );
+      _RectangularSliderValueIndicatorPathPainter(vertical, ltr);
 
   @override
   Size getPreferredSize(
@@ -835,8 +860,11 @@ class _RectangularSliderValueIndicatorPathPainter {
     assert(!sizeWithOverflow.isEmpty);
 
     const edgePadding = 8.0;
-    final rectangleWidth =
-        _upperRectangleWidth(labelPainter, scale, textScaleFactor);
+    final rectangleWidth = _upperRectangleWidth(
+      labelPainter,
+      scale,
+      textScaleFactor,
+    );
 
     /// Value indicator draws on the Overlay and by using the global Offset
     /// we are making sure we use the bounds of the Overlay instead of the Slider.
@@ -846,12 +874,15 @@ class _RectangularSliderValueIndicatorPathPainter {
     // chance of it rendering outside the bounds of the render box. If the shift
     // is negative, then the lobe is shifted from right to left, and if it is
     // positive, then the lobe is shifted from left to right.
-    final double overflowLeft =
-        math.max(0, rectangleWidth / 2 - globalCenter.dx + edgePadding);
+    final double overflowLeft = math.max(
+      0,
+      rectangleWidth / 2 - globalCenter.dx + edgePadding,
+    );
     final double overflowRight = math.max(
-        0,
-        rectangleWidth / 2 -
-            (sizeWithOverflow.width - globalCenter.dx - edgePadding));
+      0,
+      rectangleWidth / 2 -
+          (sizeWithOverflow.width - globalCenter.dx - edgePadding),
+    );
 
     if (rectangleWidth < sizeWithOverflow.width) {
       return overflowLeft - overflowRight;
@@ -869,7 +900,7 @@ class _RectangularSliderValueIndicatorPathPainter {
   ) {
     final unscaledWidth =
         math.max(_minLabelWidth * textScaleFactor, labelPainter.width) +
-            _labelPadding;
+        _labelPadding;
     return unscaledWidth * scale;
   }
 
@@ -933,15 +964,15 @@ class _RectangularSliderValueIndicatorPathPainter {
         center.dx +
             (vertical
                 ? ltr
-                    ? -verticalFactor
-                    : verticalFactor * 2
+                      ? -verticalFactor
+                      : verticalFactor * 2
                 : 0),
         center.dy -
             _bottomTipYOffset +
             (vertical
                 ? ltr
-                    ? -verticalFactor
-                    : -verticalFactor * 2
+                      ? -verticalFactor
+                      : -verticalFactor * 2
                 : 0),
       )
       ..scale(scale, scale);
@@ -961,16 +992,19 @@ class _RectangularSliderValueIndicatorPathPainter {
         -_preferredHalfHeight / 2 - upperRect.height;
     canvas.translate(0, bottomTipToUpperRectTranslateY);
     final boxCenter = Offset(horizontalShift, upperRect.height / 2);
-    final halfLabelPainterOffset =
-        Offset(labelPainter.width / 2, labelPainter.height / 2);
+    final halfLabelPainterOffset = Offset(
+      labelPainter.width / 2,
+      labelPainter.height / 2,
+    );
     final labelOffset = boxCenter - halfLabelPainterOffset;
 
     final span = labelPainter.text as TextSpan;
     labelPainter
       ..text = TextSpan(
         text: span.text,
-        style: span.style
-            ?.copyWith(color: span.style?.color?.withValues(alpha: opacity)),
+        style: span.style?.copyWith(
+          color: span.style?.color?.withValues(alpha: opacity),
+        ),
       )
       ..paint(canvas, labelOffset);
 

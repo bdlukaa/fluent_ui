@@ -37,13 +37,9 @@ class _PasswordBoxPageState extends State<PasswordBoxPage> with PageMixin {
         ),
         CardHighlight(
           codeSnippet: '''PasswordBox()''',
-          child: Row(children: [
-            Expanded(
-              child: PasswordBox(
-                enabled: !disabled,
-              ),
-            ),
-          ]),
+          child: Row(
+            children: [Expanded(child: PasswordBox(enabled: !disabled))],
+          ),
         ),
         subtitle(
           content: const Text('A simple PasswordBox in peekAlways mode'),
@@ -52,18 +48,21 @@ class _PasswordBoxPageState extends State<PasswordBoxPage> with PageMixin {
           codeSnippet: '''PasswordBox(
   revealMode: PasswordRevealMode.peekAlways,
 )''',
-          child: Row(children: [
-            Expanded(
-              child: PasswordBox(
-                enabled: !disabled,
-                revealMode: PasswordRevealMode.peekAlways,
+          child: Row(
+            children: [
+              Expanded(
+                child: PasswordBox(
+                  enabled: !disabled,
+                  revealMode: PasswordRevealMode.peekAlways,
+                ),
               ),
-            ),
-          ]),
+            ],
+          ),
         ),
         subtitle(
           content: const Text(
-              'A simple PasswordBox in visible (left) and hidden (right) mode'),
+            'A simple PasswordBox in visible (left) and hidden (right) mode',
+          ),
         ),
         CardHighlight(
           codeSnippet: '''PasswordBox(
@@ -73,52 +72,53 @@ class _PasswordBoxPageState extends State<PasswordBoxPage> with PageMixin {
 PasswordBox(
   revealMode: PasswordRevealMode.hidden,
 );''',
-          child: Row(children: [
-            Expanded(
-              child: PasswordBox(
-                enabled: !disabled,
-                revealMode: PasswordRevealMode.visible,
-                placeholder: 'Visible Password',
+          child: Row(
+            children: [
+              Expanded(
+                child: PasswordBox(
+                  enabled: !disabled,
+                  revealMode: PasswordRevealMode.visible,
+                  placeholder: 'Visible Password',
+                ),
               ),
-            ),
-            const SizedBox(width: 10.0),
-            Expanded(
-              child: PasswordBox(
-                enabled: !disabled,
-                revealMode: PasswordRevealMode.hidden,
-                placeholder: 'Hidden Password',
+              const SizedBox(width: 10.0),
+              Expanded(
+                child: PasswordBox(
+                  enabled: !disabled,
+                  revealMode: PasswordRevealMode.hidden,
+                  placeholder: 'Hidden Password',
+                ),
               ),
-            )
-          ]),
+            ],
+          ),
         ),
         subtitle(content: const Text('Update programmatically the visibility')),
         CardHighlight(
           codeSnippet: '''PasswordBox(
   revealMode: revealMode,
 )''',
-          child: Row(children: [
-            Expanded(
-              child: PasswordBox(
-                enabled: !disabled,
-                revealMode: revealMode,
+          child: Row(
+            children: [
+              Expanded(
+                child: PasswordBox(enabled: !disabled, revealMode: revealMode),
               ),
-            ),
-            const SizedBox(width: 10),
-            SizedBox(
-              // width: 50,
-              child: ComboBox<PasswordRevealMode>(
-                onChanged: (e) {
-                  setState(() {
-                    revealMode = e ?? PasswordRevealMode.peek;
-                  });
-                },
-                value: revealMode,
-                items: PasswordRevealMode.values.map((e) {
-                  return ComboBoxItem(value: e, child: Text(e.name));
-                }).toList(),
+              const SizedBox(width: 10),
+              SizedBox(
+                // width: 50,
+                child: ComboBox<PasswordRevealMode>(
+                  onChanged: (e) {
+                    setState(() {
+                      revealMode = e ?? PasswordRevealMode.peek;
+                    });
+                  },
+                  value: revealMode,
+                  items: PasswordRevealMode.values.map((e) {
+                    return ComboBoxItem(value: e, child: Text(e.name));
+                  }).toList(),
+                ),
               ),
-            ),
-          ]),
+            ],
+          ),
         ),
         subtitle(content: const Text('PasswordFormBox')),
         CardHighlight(

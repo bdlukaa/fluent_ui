@@ -67,7 +67,8 @@ class FlyoutContent extends StatelessWidget {
     final theme = FluentTheme.of(context);
     final textDirection = Directionality.of(context);
 
-    final resolvedShape = shape ??
+    final resolvedShape =
+        shape ??
         RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(8.0),
           side: BorderSide(
@@ -201,72 +202,79 @@ class FlyoutListTile extends StatelessWidget {
           states = {WidgetState.hovered};
         }
 
-        final foregroundColor =
-            ButtonThemeData.buttonForegroundColor(context, states);
+        final foregroundColor = ButtonThemeData.buttonForegroundColor(
+          context,
+          states,
+        );
 
-        Widget content = Stack(children: [
-          Container(
-            decoration: BoxDecoration(
-              color: ButtonThemeData.uncheckedInputColor(
-                theme,
-                states,
-                transparentWhenNone: true,
-              ),
-              borderRadius: radius,
-            ),
-            padding: const EdgeInsetsDirectional.only(
-              top: 4.0,
-              bottom: 4.0,
-              start: 10.0,
-              end: 8.0,
-            ),
-            child: Row(mainAxisSize: MainAxisSize.min, children: [
-              if (icon != null)
-                Padding(
-                  padding: const EdgeInsetsDirectional.only(end: 10.0),
-                  child: IconTheme.merge(
-                    data: IconThemeData(size: 16.0, color: foregroundColor),
-                    child: icon!,
-                  ),
+        Widget content = Stack(
+          children: [
+            Container(
+              decoration: BoxDecoration(
+                color: ButtonThemeData.uncheckedInputColor(
+                  theme,
+                  states,
+                  transparentWhenNone: true,
                 ),
-              Expanded(
-                child: Padding(
-                  padding: const EdgeInsetsDirectional.only(end: 10.0),
-                  child: DefaultTextStyle.merge(
-                    style: TextStyle(
-                      fontSize: 14.0,
-                      letterSpacing: -0.15,
-                      color: foregroundColor,
+                borderRadius: radius,
+              ),
+              padding: const EdgeInsetsDirectional.only(
+                top: 4.0,
+                bottom: 4.0,
+                start: 10.0,
+                end: 8.0,
+              ),
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  if (icon != null)
+                    Padding(
+                      padding: const EdgeInsetsDirectional.only(end: 10.0),
+                      child: IconTheme.merge(
+                        data: IconThemeData(size: 16.0, color: foregroundColor),
+                        child: icon!,
+                      ),
                     ),
-                    child: text,
+                  Expanded(
+                    child: Padding(
+                      padding: const EdgeInsetsDirectional.only(end: 10.0),
+                      child: DefaultTextStyle.merge(
+                        style: TextStyle(
+                          fontSize: 14.0,
+                          letterSpacing: -0.15,
+                          color: foregroundColor,
+                        ),
+                        child: text,
+                      ),
+                    ),
                   ),
-                ),
-              ),
-              if (trailing != null)
-                DefaultTextStyle.merge(
-                  style: TextStyle(
-                    fontSize: 12.0,
-                    color: theme.resources.controlStrokeColorDefault,
-                    height: 0.7,
-                  ),
-                  child: trailing!,
-                ),
-            ]),
-          ),
-          if (selected && showSelectedIndicator)
-            PositionedDirectional(
-              top: 0,
-              bottom: 0,
-              child: Container(
-                margin: const EdgeInsets.symmetric(vertical: 6.0),
-                width: 2.5,
-                decoration: BoxDecoration(
-                  color: theme.accentColor.defaultBrushFor(theme.brightness),
-                  borderRadius: BorderRadius.circular(100),
-                ),
+                  if (trailing != null)
+                    DefaultTextStyle.merge(
+                      style: TextStyle(
+                        fontSize: 12.0,
+                        color: theme.resources.controlStrokeColorDefault,
+                        height: 0.7,
+                      ),
+                      child: trailing!,
+                    ),
+                ],
               ),
             ),
-        ]);
+            if (selected && showSelectedIndicator)
+              PositionedDirectional(
+                top: 0,
+                bottom: 0,
+                child: Container(
+                  margin: const EdgeInsets.symmetric(vertical: 6.0),
+                  width: 2.5,
+                  decoration: BoxDecoration(
+                    color: theme.accentColor.defaultBrushFor(theme.brightness),
+                    borderRadius: BorderRadius.circular(100),
+                  ),
+                ),
+              ),
+          ],
+        );
 
         if (tooltip != null) {
           content = Tooltip(message: tooltip, child: content);

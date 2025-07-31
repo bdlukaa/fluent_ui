@@ -109,7 +109,8 @@ class MyApp extends StatelessWidget {
               textDirection: appTheme.textDirection,
               child: NavigationPaneTheme(
                 data: NavigationPaneThemeData(
-                  backgroundColor: appTheme.windowEffect !=
+                  backgroundColor:
+                      appTheme.windowEffect !=
                           flutter_acrylic.WindowEffect.disabled
                       ? Colors.transparent
                       : null,
@@ -151,243 +152,295 @@ class _MyHomePageState extends State<MyHomePage> with WindowListener {
   final searchFocusNode = FocusNode();
   final searchController = TextEditingController();
 
-  late final List<NavigationPaneItem> originalItems = [
-    PaneItem(
-      key: const ValueKey('/'),
-      icon: const Icon(FluentIcons.home),
-      title: const Text('Home'),
-      body: const SizedBox.shrink(),
-    ),
-    PaneItemHeader(header: const Text('Inputs')),
-    PaneItem(
-      key: const ValueKey('/inputs/buttons'),
-      icon: const Icon(FluentIcons.button_control),
-      title: const Text('Button'),
-      body: const SizedBox.shrink(),
-    ),
-    PaneItem(
-      key: const ValueKey('/inputs/checkbox'),
-      icon: const Icon(FluentIcons.checkbox_composite),
-      title: const Text('Checkbox'),
-      body: const SizedBox.shrink(),
-    ),
-    PaneItem(
-      key: const ValueKey('/inputs/slider'),
-      icon: const Icon(FluentIcons.slider),
-      title: const Text('Slider'),
-      body: const SizedBox.shrink(),
-    ),
-    PaneItem(
-      key: const ValueKey('/inputs/toggle_switch'),
-      icon: const Icon(FluentIcons.toggle_left),
-      title: const Text('ToggleSwitch'),
-      body: const SizedBox.shrink(),
-    ),
-    PaneItemHeader(header: const Text('Form')),
-    PaneItem(
-      key: const ValueKey('/forms/text_box'),
-      icon: const Icon(FluentIcons.text_field),
-      title: const Text('TextBox'),
-      body: const SizedBox.shrink(),
-    ),
-    PaneItem(
-      key: const ValueKey('/forms/auto_suggest_box'),
-      icon: const Icon(FluentIcons.page_list),
-      title: const Text('AutoSuggestBox'),
-      body: const SizedBox.shrink(),
-    ),
-    PaneItem(
-      key: const ValueKey('/forms/combobox'),
-      icon: const Icon(FluentIcons.combobox),
-      title: const Text('ComboBox'),
-      body: const SizedBox.shrink(),
-    ),
-    PaneItem(
-      key: const ValueKey('/forms/numberbox'),
-      icon: const Icon(FluentIcons.number),
-      title: const Text('NumberBox'),
-      body: const SizedBox.shrink(),
-    ),
-    PaneItem(
-      key: const ValueKey('/forms/passwordbox'),
-      icon: const Icon(FluentIcons.password_field),
-      title: const Text('PasswordBox'),
-      body: const SizedBox.shrink(),
-    ),
-    PaneItem(
-      key: const ValueKey('/forms/time_picker'),
-      icon: const Icon(FluentIcons.time_picker),
-      title: const Text('TimePicker'),
-      body: const SizedBox.shrink(),
-    ),
-    PaneItem(
-      key: const ValueKey('/forms/date_picker'),
-      icon: const Icon(FluentIcons.date_time),
-      title: const Text('DatePicker'),
-      body: const SizedBox.shrink(),
-    ),
-    PaneItem(
-      key: const ValueKey('/forms/color_picker'),
-      icon: const Icon(FluentIcons.color),
-      title: const Text('ColorPicker'),
-      body: const SizedBox.shrink(),
-    ),
-    PaneItemHeader(header: const Text('Navigation')),
-    PaneItem(
-      key: const ValueKey('/navigation/navigation_view'),
-      icon: const Icon(FluentIcons.navigation_flipper),
-      title: const Text('NavigationView'),
-      body: const SizedBox.shrink(),
-    ),
-    PaneItem(
-      key: const ValueKey('/navigation/tab_view'),
-      icon: const Icon(FluentIcons.table_header_row),
-      title: const Text('TabView'),
-      body: const SizedBox.shrink(),
-    ),
-    PaneItem(
-      key: const ValueKey('/navigation/tree_view'),
-      icon: const Icon(FluentIcons.bulleted_tree_list),
-      title: const Text('TreeView'),
-      body: const SizedBox.shrink(),
-    ),
-    PaneItem(
-      key: const ValueKey('/navigation/breadcrumb_bar'),
-      icon: const Icon(FluentIcons.breadcrumb),
-      title: const Text('BreadcrumbBar'),
-      body: const SizedBox.shrink(),
-    ),
-    PaneItemHeader(header: const Text('Surfaces')),
-    PaneItem(
-      key: const ValueKey('/surfaces/acrylic'),
-      icon: const Icon(FluentIcons.un_set_color),
-      title: const Text('Acrylic'),
-      body: const SizedBox.shrink(),
-    ),
-    PaneItem(
-      key: const ValueKey('/surfaces/command_bar'),
-      icon: const Icon(FluentIcons.customize_toolbar),
-      title: const Text('CommandBar'),
-      body: const SizedBox.shrink(),
-    ),
-    PaneItem(
-      key: const ValueKey('/surfaces/expander'),
-      icon: const Icon(FluentIcons.expand_all),
-      title: const Text('Expander'),
-      body: const SizedBox.shrink(),
-    ),
-    PaneItem(
-      key: const ValueKey('/surfaces/info_bar'),
-      icon: const Icon(FluentIcons.info_solid),
-      title: const Text('InfoBar'),
-      body: const SizedBox.shrink(),
-    ),
-    PaneItem(
-      key: const ValueKey('/surfaces/progress_indicators'),
-      icon: const Icon(FluentIcons.progress_ring_dots),
-      title: const Text('Progress Indicators'),
-      body: const SizedBox.shrink(),
-    ),
-    PaneItem(
-      key: const ValueKey('/surfaces/tiles'),
-      icon: const Icon(FluentIcons.tiles),
-      title: const Text('Tiles'),
-      body: const SizedBox.shrink(),
-    ),
-    PaneItemHeader(header: const Text('Popups')),
-    PaneItem(
-      key: const ValueKey('/popups/content_dialog'),
-      icon: const Icon(FluentIcons.comment_urgent),
-      title: const Text('ContentDialog'),
-      body: const SizedBox.shrink(),
-    ),
-    PaneItem(
-      key: const ValueKey('/popups/flyout'),
-      icon: const Icon(FluentIcons.pop_expand),
-      title: const Text('Flyout'),
-      body: const SizedBox.shrink(),
-    ),
-    PaneItem(
-      key: const ValueKey('/popups/menu_bar'),
-      icon: const Icon(FluentIcons.expand_menu),
-      title: const Text('MenuBar'),
-      body: const SizedBox.shrink(),
-    ),
-    PaneItem(
-      key: const ValueKey('/popups/teaching_tip'),
-      icon: const Icon(FluentIcons.field_filled),
-      title: const Text('Teaching Tip'),
-      body: const SizedBox.shrink(),
-    ),
-    PaneItem(
-      key: const ValueKey('/popups/tooltip'),
-      icon: const Icon(FluentIcons.hint_text),
-      title: const Text('Tooltip'),
-      body: const SizedBox.shrink(),
-    ),
-    PaneItemHeader(header: const Text('Theming')),
-    PaneItem(
-      key: const ValueKey('/theming/colors'),
-      icon: const Icon(FluentIcons.color_solid),
-      title: const Text('Colors'),
-      body: const SizedBox.shrink(),
-    ),
-    PaneItem(
-      key: const ValueKey('/theming/typography'),
-      icon: const Icon(FluentIcons.font_color_a),
-      title: const Text('Typography'),
-      body: const SizedBox.shrink(),
-    ),
-    PaneItem(
-      key: const ValueKey('/theming/icons'),
-      icon: const Icon(FluentIcons.icon_sets_flag),
-      title: const Text('Icons'),
-      body: const SizedBox.shrink(),
-    ),
-    PaneItem(
-      key: const ValueKey('/theming/reveal_focus'),
-      icon: const Icon(FluentIcons.focus),
-      title: const Text('Reveal Focus'),
-      body: const SizedBox.shrink(),
-    ),
-    // TODO: Scrollbar, RatingBar
-  ].map<NavigationPaneItem>((e) {
-    PaneItem buildPaneItem(PaneItem item) {
-      return PaneItem(
-        key: item.key,
-        icon: item.icon,
-        title: item.title,
-        body: item.body,
-        onTap: () {
-          final path = (item.key as ValueKey).value;
-          if (GoRouterState.of(context).uri.toString() != path) {
-            context.go(path);
-          }
-          item.onTap?.call();
-        },
-      );
-    }
+  late final List<NavigationPaneItem> originalItems =
+      [
+        PaneItem(
+          key: const ValueKey('/'),
+          icon: const WindowsIcon(WindowsIcons.home),
+          title: const Text('Home'),
+          body: const SizedBox.shrink(),
+        ),
+        PaneItemHeader(header: const Text('Inputs')),
+        PaneItem(
+          key: const ValueKey('/inputs/buttons'),
+          icon: const WindowsIcon(
+            WindowsIcons.n_u_i_f_p_press_hand,
+            fallbackIcon: FluentIcons.button_control,
+          ),
+          title: const Text('Button'),
+          body: const SizedBox.shrink(),
+        ),
+        PaneItem(
+          key: const ValueKey('/inputs/checkbox'),
+          icon: const WindowsIcon(WindowsIcons.checkbox_composite),
+          title: const Text('Checkbox'),
+          body: const SizedBox.shrink(),
+        ),
+        PaneItem(
+          key: const ValueKey('/inputs/slider'),
+          icon: const WindowsIcon(FluentIcons.slider),
+          title: const Text('Slider'),
+          body: const SizedBox.shrink(),
+        ),
+        PaneItem(
+          key: const ValueKey('/inputs/toggle_switch'),
+          icon: const WindowsIcon(WindowsIcons.toggle_left),
+          title: const Text('ToggleSwitch'),
+          body: const SizedBox.shrink(),
+        ),
+        PaneItemHeader(header: const Text('Form')),
+        PaneItem(
+          key: const ValueKey('/forms/text_box'),
+          icon: const WindowsIcon(
+            WindowsIcons.text_select,
+            fallbackIcon: FluentIcons.text_field,
+          ),
+          title: const Text('TextBox'),
+          body: const SizedBox.shrink(),
+        ),
+        PaneItem(
+          key: const ValueKey('/forms/auto_suggest_box'),
+          icon: const WindowsIcon(
+            WindowsIcons.text_bullet_list_square,
+            fallbackIcon: FluentIcons.page_list,
+          ),
+          title: const Text('AutoSuggestBox'),
+          body: const SizedBox.shrink(),
+        ),
+        PaneItem(
+          key: const ValueKey('/forms/combobox'),
+          icon: const WindowsIcon(FluentIcons.combobox),
+          title: const Text('ComboBox'),
+          body: const SizedBox.shrink(),
+        ),
+        PaneItem(
+          key: const ValueKey('/forms/numberbox'),
+          icon: const WindowsIcon(WindowsIcons.dialpad),
+          title: const Text('NumberBox'),
+          body: const SizedBox.shrink(),
+        ),
+        PaneItem(
+          key: const ValueKey('/forms/passwordbox'),
+          icon: const WindowsIcon(WindowsIcons.more),
+          title: const Text('PasswordBox'),
+          body: const SizedBox.shrink(),
+        ),
+        PaneItem(
+          key: const ValueKey('/forms/time_picker'),
+          icon: const WindowsIcon(WindowsIcons.screen_time),
+          title: const Text('TimePicker'),
+          body: const SizedBox.shrink(),
+        ),
+        PaneItem(
+          key: const ValueKey('/forms/date_picker'),
+          icon: const WindowsIcon(WindowsIcons.date_time),
+          title: const Text('DatePicker'),
+          body: const SizedBox.shrink(),
+        ),
+        PaneItem(
+          key: const ValueKey('/forms/calendar_view'),
+          icon: const WindowsIcon(WindowsIcons.calendar),
+          title: const Text('CalendarView'),
+          body: const SizedBox.shrink(),
+        ),
+        PaneItem(
+          key: const ValueKey('/forms/calendar_date_picker'),
+          icon: const WindowsIcon(WindowsIcons.calendar_day),
+          title: const Text('CalendarDatePicker'),
+          body: const SizedBox.shrink(),
+        ),
+        PaneItem(
+          key: const ValueKey('/forms/color_picker'),
+          icon: const WindowsIcon(WindowsIcons.color),
+          title: const Text('ColorPicker'),
+          body: const SizedBox.shrink(),
+        ),
+        PaneItemHeader(header: const Text('Navigation')),
+        PaneItem(
+          key: const ValueKey('/navigation/navigation_view'),
+          icon: const WindowsIcon(WindowsIcons.view_dashboard),
+          title: const Text('NavigationView'),
+          body: const SizedBox.shrink(),
+        ),
+        PaneItem(
+          key: const ValueKey('/navigation/tab_view'),
+          icon: const WindowsIcon(
+            WindowsIcons.stapling_landscape_two_top,
+            fallbackIcon: FluentIcons.table_header_row,
+          ),
+          title: const Text('TabView'),
+          body: const SizedBox.shrink(),
+        ),
+        PaneItem(
+          key: const ValueKey('/navigation/tree_view'),
+          icon: const WindowsIcon(WindowsIcons.all_apps),
+          title: const Text('TreeView'),
+          body: const SizedBox.shrink(),
+        ),
+        PaneItem(
+          key: const ValueKey('/navigation/breadcrumb_bar'),
+          icon: const WindowsIcon(WindowsIcons.list_mirrored),
+          title: const Text('BreadcrumbBar'),
+          body: const SizedBox.shrink(),
+        ),
+        PaneItemHeader(header: const Text('Surfaces')),
+        PaneItem(
+          key: const ValueKey('/surfaces/acrylic'),
+          icon: const WindowsIcon(
+            WindowsIcons.device_monitor_no_pic,
+            fallbackIcon: FluentIcons.un_set_color,
+          ),
+          title: const Text('Acrylic'),
+          body: const SizedBox.shrink(),
+        ),
+        PaneItem(
+          key: const ValueKey('/surfaces/command_bar'),
+          icon: const WindowsIcon(WindowsIcons.dock_left),
+          title: const Text('CommandBar'),
+          body: const SizedBox.shrink(),
+        ),
+        PaneItem(
+          key: const ValueKey('/surfaces/expander'),
+          icon: const WindowsIcon(
+            WindowsIcons.task_view_expanded,
+            fallbackIcon: FluentIcons.expand_all,
+          ),
+          title: const Text('Expander'),
+          body: const SizedBox.shrink(),
+        ),
+        PaneItem(
+          key: const ValueKey('/surfaces/info_bar'),
+          icon: const WindowsIcon(WindowsIcons.info_solid),
+          title: const Text('InfoBar'),
+          body: const SizedBox.shrink(),
+        ),
+        PaneItem(
+          key: const ValueKey('/surfaces/progress_indicators'),
+          icon: const WindowsIcon(WindowsIcons.progress_ring_dots),
+          title: const Text('Progress Indicators'),
+          body: const SizedBox.shrink(),
+        ),
+        PaneItem(
+          key: const ValueKey('/surfaces/tiles'),
+          icon: const WindowsIcon(WindowsIcons.tiles),
+          title: const Text('Tiles'),
+          body: const SizedBox.shrink(),
+        ),
+        PaneItemHeader(header: const Text('Popups')),
+        PaneItem(
+          key: const ValueKey('/popups/content_dialog'),
+          icon: const WindowsIcon(WindowsIcons.comment),
+          title: const Text('ContentDialog'),
+          body: const SizedBox.shrink(),
+        ),
+        PaneItem(
+          key: const ValueKey('/popups/flyout'),
+          icon: const WindowsIcon(
+            WindowsIcons.open_local,
+            fallbackIcon: FluentIcons.pop_expand,
+          ),
+          title: const Text('Flyout'),
+          body: const SizedBox.shrink(),
+        ),
+        PaneItem(
+          key: const ValueKey('/popups/menu_bar'),
+          icon: const WindowsIcon(
+            WindowsIcons.switch_apps,
+            fallbackIcon: FluentIcons.expand_menu,
+          ),
+          title: const Text('MenuBar'),
+          body: const SizedBox.shrink(),
+        ),
+        PaneItem(
+          key: const ValueKey('/popups/teaching_tip'),
+          icon: const WindowsIcon(
+            WindowsIcons.wind_direction,
+            fallbackIcon: FluentIcons.field_filled,
+          ),
+          title: const Text('Teaching Tip'),
+          body: const SizedBox.shrink(),
+        ),
+        PaneItem(
+          key: const ValueKey('/popups/tooltip'),
+          icon: const WindowsIcon(
+            WindowsIcons.tool_tip,
+            fallbackIcon: FluentIcons.hint_text,
+          ),
+          title: const Text('Tooltip'),
+          body: const SizedBox.shrink(),
+        ),
+        PaneItemHeader(header: const Text('Theming')),
+        PaneItem(
+          key: const ValueKey('/theming/colors'),
+          icon: const WindowsIcon(WindowsIcons.color_solid),
+          title: const Text('Colors'),
+          body: const SizedBox.shrink(),
+        ),
+        PaneItem(
+          key: const ValueKey('/theming/typography'),
+          icon: const WindowsIcon(WindowsIcons.font),
+          title: const Text('Typography'),
+          body: const SizedBox.shrink(),
+        ),
+        PaneItem(
+          key: const ValueKey('/theming/icons/windows'),
+          icon: const WindowsIcon(WindowsIcons.flag),
+          title: const Text('Windows Icons'),
+          body: const SizedBox.shrink(),
+        ),
+        PaneItem(
+          key: const ValueKey('/theming/icons/fluent'),
+          icon: const WindowsIcon(WindowsIcons.flag),
+          title: const Text('Fluent Icons'),
+          body: const SizedBox.shrink(),
+        ),
+        PaneItem(
+          key: const ValueKey('/theming/reveal_focus'),
+          icon: const WindowsIcon(
+            WindowsIcons.pagination_dot_outline10,
+            fallbackIcon: FluentIcons.focus,
+          ),
+          title: const Text('Reveal Focus'),
+          body: const SizedBox.shrink(),
+        ),
+        // TODO: Scrollbar, RatingBar
+      ].map<NavigationPaneItem>((e) {
+        PaneItem buildPaneItem(PaneItem item) {
+          return PaneItem(
+            key: item.key,
+            icon: item.icon,
+            title: item.title,
+            body: item.body,
+            onTap: () {
+              final path = (item.key as ValueKey).value;
+              if (GoRouterState.of(context).uri.toString() != path) {
+                context.go(path);
+              }
+              item.onTap?.call();
+            },
+          );
+        }
 
-    if (e is PaneItemExpander) {
-      return PaneItemExpander(
-        key: e.key,
-        icon: e.icon,
-        title: e.title,
-        body: e.body,
-        items: e.items.map((item) {
-          if (item is PaneItem) return buildPaneItem(item);
-          return item;
-        }).toList(),
-      );
-    }
-    if (e is PaneItem) return buildPaneItem(e);
-    return e;
-  }).toList();
+        if (e is PaneItemExpander) {
+          return PaneItemExpander(
+            key: e.key,
+            icon: e.icon,
+            title: e.title,
+            body: e.body,
+            items: e.items.map((item) {
+              if (item is PaneItem) return buildPaneItem(item);
+              return item;
+            }).toList(),
+          );
+        }
+        if (e is PaneItem) return buildPaneItem(e);
+        return e;
+      }).toList();
   late final List<NavigationPaneItem> footerItems = [
     PaneItemSeparator(),
     PaneItem(
       key: const ValueKey('/settings'),
-      icon: const Icon(FluentIcons.settings),
+      icon: const WindowsIcon(WindowsIcons.settings),
       title: const Text('Settings'),
       body: const SizedBox.shrink(),
       onTap: () {
@@ -397,7 +450,7 @@ class _MyHomePageState extends State<MyHomePage> with WindowListener {
       },
     ),
     _LinkPaneItemAction(
-      icon: const Icon(FluentIcons.open_source),
+      icon: const WindowsIcon(WindowsIcons.code),
       title: const Text('Source code'),
       link: 'https://github.com/bdlukaa/fluent_ui',
       body: const SizedBox.shrink(),
@@ -470,29 +523,34 @@ class _MyHomePageState extends State<MyHomePage> with WindowListener {
                 }
               : null;
           return NavigationPaneTheme(
-            data: NavigationPaneTheme.of(context).merge(NavigationPaneThemeData(
-              unselectedIconColor: WidgetStateProperty.resolveWith((states) {
-                if (states.isDisabled) {
-                  return ButtonThemeData.buttonColor(context, states);
-                }
-                return ButtonThemeData.uncheckedInputColor(
-                  FluentTheme.of(context),
-                  states,
-                ).basedOnLuminance();
-              }),
-            )),
-            child: Builder(
-              builder: (context) => PaneItem(
-                icon: const Center(child: Icon(FluentIcons.back, size: 12.0)),
-                title: Text(localizations.backButtonTooltip),
-                body: const SizedBox.shrink(),
-                enabled: enabled,
-              ).build(
-                context,
-                false,
-                onPressed,
-                displayMode: PaneDisplayMode.compact,
+            data: NavigationPaneTheme.of(context).merge(
+              NavigationPaneThemeData(
+                unselectedIconColor: WidgetStateProperty.resolveWith((states) {
+                  if (states.isDisabled) {
+                    return ButtonThemeData.buttonColor(context, states);
+                  }
+                  return ButtonThemeData.uncheckedInputColor(
+                    FluentTheme.of(context),
+                    states,
+                  ).basedOnLuminance();
+                }),
               ),
+            ),
+            child: Builder(
+              builder: (context) =>
+                  PaneItem(
+                    icon: const Center(
+                      child: WindowsIcon(WindowsIcons.back, size: 12.0),
+                    ),
+                    title: Text(localizations.backButtonTooltip),
+                    body: const SizedBox.shrink(),
+                    enabled: enabled,
+                  ).build(
+                    context,
+                    false,
+                    onPressed,
+                    displayMode: PaneDisplayMode.compact,
+                  ),
             ),
           );
         }(),
@@ -510,30 +568,34 @@ class _MyHomePageState extends State<MyHomePage> with WindowListener {
             ),
           );
         }(),
-        actions: Row(mainAxisAlignment: MainAxisAlignment.end, children: [
-          Align(
-            alignment: AlignmentDirectional.centerEnd,
-            child: Padding(
-              padding: const EdgeInsetsDirectional.only(end: 8.0),
-              child: ToggleSwitch(
-                content: const Text('Dark Mode'),
-                checked: FluentTheme.of(context).brightness.isDark,
-                onChanged: (v) {
-                  if (v) {
-                    appTheme.mode = ThemeMode.dark;
-                  } else {
-                    appTheme.mode = ThemeMode.light;
-                  }
-                },
+        actions: Row(
+          mainAxisAlignment: MainAxisAlignment.end,
+          children: [
+            Align(
+              alignment: AlignmentDirectional.centerEnd,
+              child: Padding(
+                padding: const EdgeInsetsDirectional.only(end: 8.0),
+                child: ToggleButton(
+                  checked: FluentTheme.of(context).brightness.isDark,
+                  onChanged: (v) {
+                    if (v) {
+                      appTheme.mode = ThemeMode.dark;
+                    } else {
+                      appTheme.mode = ThemeMode.light;
+                    }
+                  },
+                  child: const Text('Dark Mode'),
+                ),
               ),
             ),
-          ),
-          if (!kIsWeb) const WindowButtons(),
-        ]),
+            if (!kIsWeb) const WindowButtons(),
+          ],
+        ),
       ),
       paneBodyBuilder: (item, child) {
-        final name =
-            item?.key is ValueKey ? (item!.key as ValueKey).value : null;
+        final name = item?.key is ValueKey
+            ? (item!.key as ValueKey).value
+            : null;
         return FocusTraversalGroup(
           key: ValueKey('body$name'),
           child: widget.child,
@@ -545,15 +607,8 @@ class _MyHomePageState extends State<MyHomePage> with WindowListener {
           height: kOneLineTileHeight,
           child: ShaderMask(
             shaderCallback: (rect) {
-              final color = appTheme.color.defaultBrushFor(
-                theme.brightness,
-              );
-              return LinearGradient(
-                colors: [
-                  color,
-                  color,
-                ],
-              ).createShader(rect);
+              final color = appTheme.color.defaultBrushFor(theme.brightness);
+              return LinearGradient(colors: [color, color]).createShader(rect);
             },
             child: const FlutterLogo(
               style: FlutterLogoStyle.horizontal,
@@ -573,56 +628,57 @@ class _MyHomePageState extends State<MyHomePage> with WindowListener {
           }
         }(),
         items: originalItems,
-        autoSuggestBox: Builder(builder: (context) {
-          return AutoSuggestBox(
-            key: searchKey,
-            focusNode: searchFocusNode,
-            controller: searchController,
-            unfocusedColor: Colors.transparent,
-            // also need to include sub items from [PaneItemExpander] items
-            items: <PaneItem>[
-              ...originalItems
-                  .whereType<PaneItemExpander>()
-                  .expand<PaneItem>((item) {
-                return [
-                  item,
-                  ...item.items.whereType<PaneItem>(),
-                ];
-              }),
-              ...originalItems
-                  .where(
-                    (item) => item is PaneItem && item is! PaneItemExpander,
-                  )
-                  .cast<PaneItem>(),
-            ].map((item) {
-              assert(item.title is Text);
-              final text = (item.title as Text).data!;
-              return AutoSuggestBoxItem(
-                label: text,
-                value: text,
-                onSelected: () {
-                  item.onTap?.call();
-                  searchController.clear();
-                  searchFocusNode.unfocus();
-                  final view = NavigationView.of(context);
-                  if (view.compactOverlayOpen) {
-                    view.compactOverlayOpen = false;
-                  } else if (view.minimalPaneOpen) {
-                    view.minimalPaneOpen = false;
-                  }
-                },
-              );
-            }).toList(),
-            trailingIcon: IgnorePointer(
-              child: IconButton(
-                onPressed: () {},
-                icon: const Icon(FluentIcons.search),
+        autoSuggestBox: Builder(
+          builder: (context) {
+            return AutoSuggestBox(
+              key: searchKey,
+              focusNode: searchFocusNode,
+              controller: searchController,
+              unfocusedColor: Colors.transparent,
+              // also need to include sub items from [PaneItemExpander] items
+              items:
+                  <PaneItem>[
+                    ...originalItems
+                        .whereType<PaneItemExpander>()
+                        .expand<PaneItem>((item) {
+                          return [item, ...item.items.whereType<PaneItem>()];
+                        }),
+                    ...originalItems
+                        .where(
+                          (item) =>
+                              item is PaneItem && item is! PaneItemExpander,
+                        )
+                        .cast<PaneItem>(),
+                  ].map((item) {
+                    assert(item.title is Text);
+                    final text = (item.title as Text).data!;
+                    return AutoSuggestBoxItem(
+                      label: text,
+                      value: text,
+                      onSelected: () {
+                        item.onTap?.call();
+                        searchController.clear();
+                        searchFocusNode.unfocus();
+                        final view = NavigationView.of(context);
+                        if (view.compactOverlayOpen) {
+                          view.compactOverlayOpen = false;
+                        } else if (view.minimalPaneOpen) {
+                          view.minimalPaneOpen = false;
+                        }
+                      },
+                    );
+                  }).toList(),
+              trailingIcon: IgnorePointer(
+                child: IconButton(
+                  onPressed: () {},
+                  icon: const WindowsIcon(WindowsIcons.search),
+                ),
               ),
-            ),
-            placeholder: 'Search',
-          );
-        }),
-        autoSuggestBoxReplacement: const Icon(FluentIcons.search),
+              placeholder: 'Search',
+            );
+          },
+        ),
+        autoSuggestBoxReplacement: const WindowsIcon(WindowsIcons.search),
         footerItems: footerItems,
       ),
       onOpenSearch: searchFocusNode.requestFocus,
@@ -719,312 +775,311 @@ class _LinkPaneItemAction extends PaneItem {
 
 final rootNavigatorKey = GlobalKey<NavigatorState>();
 final _shellNavigatorKey = GlobalKey<NavigatorState>();
-final router = GoRouter(navigatorKey: rootNavigatorKey, routes: [
-  ShellRoute(
-    navigatorKey: _shellNavigatorKey,
-    builder: (context, state, child) {
-      return MyHomePage(
-        shellContext: _shellNavigatorKey.currentContext,
-        child: child,
-      );
-    },
-    routes: <GoRoute>[
-      /// Home
-      GoRoute(path: '/', builder: (context, state) => const HomePage()),
+final router = GoRouter(
+  navigatorKey: rootNavigatorKey,
+  routes: [
+    ShellRoute(
+      navigatorKey: _shellNavigatorKey,
+      builder: (context, state, child) {
+        return MyHomePage(
+          shellContext: _shellNavigatorKey.currentContext,
+          child: child,
+        );
+      },
+      routes: <GoRoute>[
+        /// Home
+        GoRoute(path: '/', builder: (context, state) => const HomePage()),
 
-      /// Settings
-      GoRoute(path: '/settings', builder: (context, state) => const Settings()),
+        /// Settings
+        GoRoute(
+          path: '/settings',
+          builder: (context, state) => const Settings(),
+        ),
 
-      /// /// Input
-      /// Buttons
-      GoRoute(
-        path: '/inputs/buttons',
-        builder: (context, state) => DeferredWidget(
-          inputs.loadLibrary,
-          () => inputs.ButtonPage(),
+        /// /// Input
+        /// Buttons
+        GoRoute(
+          path: '/inputs/buttons',
+          builder: (context, state) =>
+              DeferredWidget(inputs.loadLibrary, () => inputs.ButtonPage()),
         ),
-      ),
 
-      /// Checkbox
-      GoRoute(
-        path: '/inputs/checkbox',
-        builder: (context, state) => DeferredWidget(
-          inputs.loadLibrary,
-          () => inputs.CheckBoxPage(),
+        /// Checkbox
+        GoRoute(
+          path: '/inputs/checkbox',
+          builder: (context, state) =>
+              DeferredWidget(inputs.loadLibrary, () => inputs.CheckBoxPage()),
         ),
-      ),
 
-      /// Slider
-      GoRoute(
-        path: '/inputs/slider',
-        builder: (context, state) => DeferredWidget(
-          inputs.loadLibrary,
-          () => inputs.SliderPage(),
+        /// Slider
+        GoRoute(
+          path: '/inputs/slider',
+          builder: (context, state) =>
+              DeferredWidget(inputs.loadLibrary, () => inputs.SliderPage()),
         ),
-      ),
 
-      /// ToggleSwitch
-      GoRoute(
-        path: '/inputs/toggle_switch',
-        builder: (context, state) => DeferredWidget(
-          inputs.loadLibrary,
-          () => inputs.ToggleSwitchPage(),
+        /// ToggleSwitch
+        GoRoute(
+          path: '/inputs/toggle_switch',
+          builder: (context, state) => DeferredWidget(
+            inputs.loadLibrary,
+            () => inputs.ToggleSwitchPage(),
+          ),
         ),
-      ),
 
-      /// /// Form
-      /// TextBox
-      GoRoute(
-        path: '/forms/text_box',
-        builder: (context, state) => DeferredWidget(
-          forms.loadLibrary,
-          () => forms.TextBoxPage(),
+        /// /// Form
+        /// TextBox
+        GoRoute(
+          path: '/forms/text_box',
+          builder: (context, state) =>
+              DeferredWidget(forms.loadLibrary, () => forms.TextBoxPage()),
         ),
-      ),
 
-      /// AutoSuggestBox
-      GoRoute(
-        path: '/forms/auto_suggest_box',
-        builder: (context, state) => DeferredWidget(
-          forms.loadLibrary,
-          () => forms.AutoSuggestBoxPage(),
+        /// AutoSuggestBox
+        GoRoute(
+          path: '/forms/auto_suggest_box',
+          builder: (context, state) => DeferredWidget(
+            forms.loadLibrary,
+            () => forms.AutoSuggestBoxPage(),
+          ),
         ),
-      ),
 
-      /// ComboBox
-      GoRoute(
-        path: '/forms/combobox',
-        builder: (context, state) => DeferredWidget(
-          forms.loadLibrary,
-          () => forms.ComboBoxPage(),
+        /// ComboBox
+        GoRoute(
+          path: '/forms/combobox',
+          builder: (context, state) =>
+              DeferredWidget(forms.loadLibrary, () => forms.ComboBoxPage()),
         ),
-      ),
 
-      /// NumberBox
-      GoRoute(
-        path: '/forms/numberbox',
-        builder: (context, state) => DeferredWidget(
-          forms.loadLibrary,
-          () => forms.NumberBoxPage(),
+        /// NumberBox
+        GoRoute(
+          path: '/forms/numberbox',
+          builder: (context, state) =>
+              DeferredWidget(forms.loadLibrary, () => forms.NumberBoxPage()),
         ),
-      ),
 
-      GoRoute(
-        path: '/forms/passwordbox',
-        builder: (context, state) => DeferredWidget(
-          forms.loadLibrary,
-          () => forms.PasswordBoxPage(),
+        GoRoute(
+          path: '/forms/passwordbox',
+          builder: (context, state) =>
+              DeferredWidget(forms.loadLibrary, () => forms.PasswordBoxPage()),
         ),
-      ),
 
-      /// TimePicker
-      GoRoute(
-        path: '/forms/time_picker',
-        builder: (context, state) => DeferredWidget(
-          forms.loadLibrary,
-          () => forms.TimePickerPage(),
+        /// TimePicker
+        GoRoute(
+          path: '/forms/time_picker',
+          builder: (context, state) =>
+              DeferredWidget(forms.loadLibrary, () => forms.TimePickerPage()),
         ),
-      ),
 
-      /// DatePicker
-      GoRoute(
-        path: '/forms/date_picker',
-        builder: (context, state) => DeferredWidget(
-          forms.loadLibrary,
-          () => forms.DatePickerPage(),
+        /// DatePicker
+        GoRoute(
+          path: '/forms/date_picker',
+          builder: (context, state) =>
+              DeferredWidget(forms.loadLibrary, () => forms.DatePickerPage()),
         ),
-      ),
 
-      /// ColorPicker
-      GoRoute(
-        path: '/forms/color_picker',
-        builder: (context, state) => DeferredWidget(
-          forms.loadLibrary,
-          () => forms.ColorPickerPage(),
+        GoRoute(
+          path: '/forms/calendar_view',
+          builder: (context, state) =>
+              DeferredWidget(forms.loadLibrary, () => forms.CalendarViewPage()),
         ),
-      ),
+        GoRoute(
+          path: '/forms/calendar_date_picker',
+          builder: (context, state) => DeferredWidget(
+            forms.loadLibrary,
+            () => forms.CalendarDatePickerPage(),
+          ),
+        ),
 
-      /// /// Navigation
-      /// NavigationView
-      GoRoute(
-        path: '/navigation/navigation_view',
-        builder: (context, state) => DeferredWidget(
-          navigation.loadLibrary,
-          () => navigation.NavigationViewPage(),
+        /// ColorPicker
+        GoRoute(
+          path: '/forms/color_picker',
+          builder: (context, state) =>
+              DeferredWidget(forms.loadLibrary, () => forms.ColorPickerPage()),
         ),
-      ),
-      GoRoute(
-        path: '/navigation_view',
-        builder: (context, state) => DeferredWidget(
-          navigation.loadLibrary,
-          () => navigation.NavigationViewShellRoute(),
-        ),
-      ),
 
-      /// TabView
-      GoRoute(
-        path: '/navigation/tab_view',
-        builder: (context, state) => DeferredWidget(
-          navigation.loadLibrary,
-          () => navigation.TabViewPage(),
+        /// /// Navigation
+        /// NavigationView
+        GoRoute(
+          path: '/navigation/navigation_view',
+          builder: (context, state) => DeferredWidget(
+            navigation.loadLibrary,
+            () => navigation.NavigationViewPage(),
+          ),
         ),
-      ),
+        GoRoute(
+          path: '/navigation_view',
+          builder: (context, state) => DeferredWidget(
+            navigation.loadLibrary,
+            () => navigation.NavigationViewShellRoute(),
+          ),
+        ),
 
-      /// TreeView
-      GoRoute(
-        path: '/navigation/tree_view',
-        builder: (context, state) => DeferredWidget(
-          navigation.loadLibrary,
-          () => navigation.TreeViewPage(),
+        /// TabView
+        GoRoute(
+          path: '/navigation/tab_view',
+          builder: (context, state) => DeferredWidget(
+            navigation.loadLibrary,
+            () => navigation.TabViewPage(),
+          ),
         ),
-      ),
 
-      /// BreadcrumbBar
-      GoRoute(
-        path: '/navigation/breadcrumb_bar',
-        builder: (context, state) => DeferredWidget(
-          navigation.loadLibrary,
-          () => navigation.BreadcrumbBarPage(),
+        /// TreeView
+        GoRoute(
+          path: '/navigation/tree_view',
+          builder: (context, state) => DeferredWidget(
+            navigation.loadLibrary,
+            () => navigation.TreeViewPage(),
+          ),
         ),
-      ),
 
-      /// /// Surfaces
-      /// Acrylic
-      GoRoute(
-        path: '/surfaces/acrylic',
-        builder: (context, state) => DeferredWidget(
-          surfaces.loadLibrary,
-          () => surfaces.AcrylicPage(),
+        /// BreadcrumbBar
+        GoRoute(
+          path: '/navigation/breadcrumb_bar',
+          builder: (context, state) => DeferredWidget(
+            navigation.loadLibrary,
+            () => navigation.BreadcrumbBarPage(),
+          ),
         ),
-      ),
 
-      /// CommandBar
-      GoRoute(
-        path: '/surfaces/command_bar',
-        builder: (context, state) => DeferredWidget(
-          surfaces.loadLibrary,
-          () => surfaces.CommandBarsPage(),
+        /// /// Surfaces
+        /// Acrylic
+        GoRoute(
+          path: '/surfaces/acrylic',
+          builder: (context, state) => DeferredWidget(
+            surfaces.loadLibrary,
+            () => surfaces.AcrylicPage(),
+          ),
         ),
-      ),
 
-      /// Expander
-      GoRoute(
-        path: '/surfaces/expander',
-        builder: (context, state) => DeferredWidget(
-          surfaces.loadLibrary,
-          () => surfaces.ExpanderPage(),
+        /// CommandBar
+        GoRoute(
+          path: '/surfaces/command_bar',
+          builder: (context, state) => DeferredWidget(
+            surfaces.loadLibrary,
+            () => surfaces.CommandBarsPage(),
+          ),
         ),
-      ),
 
-      /// InfoBar
-      GoRoute(
-        path: '/surfaces/info_bar',
-        builder: (context, state) => DeferredWidget(
-          surfaces.loadLibrary,
-          () => surfaces.InfoBarsPage(),
+        /// Expander
+        GoRoute(
+          path: '/surfaces/expander',
+          builder: (context, state) => DeferredWidget(
+            surfaces.loadLibrary,
+            () => surfaces.ExpanderPage(),
+          ),
         ),
-      ),
 
-      /// Progress Indicators
-      GoRoute(
-        path: '/surfaces/progress_indicators',
-        builder: (context, state) => DeferredWidget(
-          surfaces.loadLibrary,
-          () => surfaces.ProgressIndicatorsPage(),
+        /// InfoBar
+        GoRoute(
+          path: '/surfaces/info_bar',
+          builder: (context, state) => DeferredWidget(
+            surfaces.loadLibrary,
+            () => surfaces.InfoBarsPage(),
+          ),
         ),
-      ),
 
-      /// Tiles
-      GoRoute(
-        path: '/surfaces/tiles',
-        builder: (context, state) => DeferredWidget(
-          surfaces.loadLibrary,
-          () => surfaces.TilesPage(),
+        /// Progress Indicators
+        GoRoute(
+          path: '/surfaces/progress_indicators',
+          builder: (context, state) => DeferredWidget(
+            surfaces.loadLibrary,
+            () => surfaces.ProgressIndicatorsPage(),
+          ),
         ),
-      ),
 
-      /// Popups
-      /// ContentDialog
-      GoRoute(
-        path: '/popups/content_dialog',
-        builder: (context, state) => DeferredWidget(
-          surfaces.loadLibrary,
-          () => popups.ContentDialogPage(),
+        /// Tiles
+        GoRoute(
+          path: '/surfaces/tiles',
+          builder: (context, state) =>
+              DeferredWidget(surfaces.loadLibrary, () => surfaces.TilesPage()),
         ),
-      ),
 
-      /// MenuBar
-      GoRoute(
-        path: '/popups/menu_bar',
-        builder: (context, state) => DeferredWidget(
-          surfaces.loadLibrary,
-          () => popups.MenuBarPage(),
+        /// Popups
+        /// ContentDialog
+        GoRoute(
+          path: '/popups/content_dialog',
+          builder: (context, state) => DeferredWidget(
+            surfaces.loadLibrary,
+            () => popups.ContentDialogPage(),
+          ),
         ),
-      ),
 
-      /// Tooltip
-      GoRoute(
-        path: '/popups/tooltip',
-        builder: (context, state) => DeferredWidget(
-          surfaces.loadLibrary,
-          () => popups.TooltipPage(),
+        /// MenuBar
+        GoRoute(
+          path: '/popups/menu_bar',
+          builder: (context, state) =>
+              DeferredWidget(surfaces.loadLibrary, () => popups.MenuBarPage()),
         ),
-      ),
 
-      /// Flyout
-      GoRoute(
-        path: '/popups/flyout',
-        builder: (context, state) => DeferredWidget(
-          surfaces.loadLibrary,
-          () => popups.Flyout2Screen(),
+        /// Tooltip
+        GoRoute(
+          path: '/popups/tooltip',
+          builder: (context, state) =>
+              DeferredWidget(surfaces.loadLibrary, () => popups.TooltipPage()),
         ),
-      ),
 
-      /// Teaching Tip
-      GoRoute(
-        path: '/popups/teaching_tip',
-        builder: (context, state) => DeferredWidget(
-          surfaces.loadLibrary,
-          () => popups.TeachingTipPage(),
+        /// Flyout
+        GoRoute(
+          path: '/popups/flyout',
+          builder: (context, state) => DeferredWidget(
+            surfaces.loadLibrary,
+            () => popups.Flyout2Screen(),
+          ),
         ),
-      ),
 
-      /// /// Theming
-      /// Colors
-      GoRoute(
-        path: '/theming/colors',
-        builder: (context, state) => DeferredWidget(
-          theming.loadLibrary,
-          () => theming.ColorsPage(),
+        /// Teaching Tip
+        GoRoute(
+          path: '/popups/teaching_tip',
+          builder: (context, state) => DeferredWidget(
+            surfaces.loadLibrary,
+            () => popups.TeachingTipPage(),
+          ),
         ),
-      ),
 
-      /// Typography
-      GoRoute(
-        path: '/theming/typography',
-        builder: (context, state) => DeferredWidget(
-          theming.loadLibrary,
-          () => theming.TypographyPage(),
+        /// /// Theming
+        /// Colors
+        GoRoute(
+          path: '/theming/colors',
+          builder: (context, state) =>
+              DeferredWidget(theming.loadLibrary, () => theming.ColorsPage()),
         ),
-      ),
 
-      /// Icons
-      GoRoute(
-        path: '/theming/icons',
-        builder: (context, state) => DeferredWidget(
-          theming.loadLibrary,
-          () => theming.IconsPage(),
+        /// Typography
+        GoRoute(
+          path: '/theming/typography',
+          builder: (context, state) => DeferredWidget(
+            theming.loadLibrary,
+            () => theming.TypographyPage(),
+          ),
         ),
-      ),
 
-      /// Reveal Focus
-      GoRoute(
-        path: '/theming/reveal_focus',
-        builder: (context, state) => DeferredWidget(
-          theming.loadLibrary,
-          () => theming.RevealFocusPage(),
+        /// Icons
+        GoRoute(
+          path: '/theming/icons/windows',
+          builder: (context, state) => DeferredWidget(
+            theming.loadLibrary,
+            () => theming.IconsPage(set: WindowsIcons.allIcons),
+          ),
         ),
-      ),
-    ],
-  ),
-]);
+
+        GoRoute(
+          path: '/theming/icons/fluent',
+          builder: (context, state) => DeferredWidget(
+            theming.loadLibrary,
+            () => theming.IconsPage(set: FluentIcons.allIcons),
+          ),
+        ),
+
+        /// Reveal Focus
+        GoRoute(
+          path: '/theming/reveal_focus',
+          builder: (context, state) => DeferredWidget(
+            theming.loadLibrary,
+            () => theming.RevealFocusPage(),
+          ),
+        ),
+      ],
+    ),
+  ],
+);

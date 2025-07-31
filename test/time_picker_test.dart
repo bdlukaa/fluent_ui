@@ -4,8 +4,9 @@ import 'package:flutter_test/flutter_test.dart';
 import 'app_test.dart';
 
 void main() {
-  testWidgets('TimePicker displays selected time in 24-hour format',
-      (tester) async {
+  testWidgets('TimePicker displays selected time in 24-hour format', (
+    tester,
+  ) async {
     final selectedTime = DateTime(2023, 1, 1, 14, 30);
     await tester.pumpWidget(
       wrapApp(
@@ -23,8 +24,9 @@ void main() {
     expect(find.text('PM'), findsNothing); // AM/PM indicator
   });
 
-  testWidgets('TimePicker displays selected time in 12-hour format',
-      (tester) async {
+  testWidgets('TimePicker displays selected time in 12-hour format', (
+    tester,
+  ) async {
     final selectedTime = DateTime(2023, 1, 1, 15, 30);
     await tester.pumpWidget(
       wrapApp(
@@ -40,8 +42,9 @@ void main() {
     expect(find.text('30'), findsOneWidget); // minute
     expect(find.text('PM'), findsOneWidget); // AM/PM indicator
   });
-  testWidgets('TimePicker calls onChanged when time is changed',
-      (tester) async {
+  testWidgets('TimePicker calls onChanged when time is changed', (
+    tester,
+  ) async {
     DateTime? changedTime;
     final selectedTime = DateTime(2023, 1, 1, 10, 15);
     await tester.pumpWidget(
@@ -54,7 +57,7 @@ void main() {
         ),
       ),
     );
-// Open the picker
+    // Open the picker
     await tester.tap(find.byType(TimePicker));
     await tester.pumpAndSettle();
 
@@ -73,17 +76,12 @@ void main() {
   testWidgets('TimePicker is disabled when onChanged is null', (tester) async {
     final selectedTime = DateTime(2023, 1, 1, 8, 0);
     await tester.pumpWidget(
-      wrapApp(
-        child: TimePicker(
-          selected: selectedTime,
-          onChanged: null,
-        ),
-      ),
+      wrapApp(child: TimePicker(selected: selectedTime, onChanged: null)),
     );
-// Open the picker
+    // Open the picker
     await tester.tap(find.byType(TimePicker));
     await tester.pumpAndSettle();
-// Check that the picker is disabled
+    // Check that the picker is disabled
     expect(find.byIcon(FluentIcons.check_mark), findsNothing);
   });
 

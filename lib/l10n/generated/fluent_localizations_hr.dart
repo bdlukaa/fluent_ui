@@ -110,6 +110,9 @@ class FluentLocalizationsHr extends FluentLocalizations {
   String get year => 'godina';
 
   @override
+  String get pickADate => 'Pick a date';
+
+  @override
   String get seeMore => 'See more';
 
   @override

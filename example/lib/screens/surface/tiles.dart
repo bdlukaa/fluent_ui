@@ -32,7 +32,7 @@ class _TilesPageState extends State<TilesPage> with PageMixin {
       children: [
         description(
           content: const Text(
-            'A fluent-styled list tile. Usually used inside a ListView',
+            'A windows-styled list tile. Usually used inside a ListView',
           ),
         ),
         subtitle(content: const Text('Basic ListView with selectable tiles')),
@@ -105,46 +105,47 @@ ListView.builder(
     );
   } 
 ),''',
-          child: Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
-            Container(
-              height: 400,
-              width: 350,
-              decoration: BoxDecoration(
-                border: Border.all(
-                  color: theme.resources.surfaceStrokeColorDefault,
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Container(
+                height: 400,
+                width: 350,
+                decoration: BoxDecoration(
+                  border: Border.all(
+                    color: theme.resources.surfaceStrokeColorDefault,
+                  ),
+                ),
+                child: ListView.builder(
+                  controller: secondController,
+                  shrinkWrap: true,
+                  itemCount: contacts.length,
+                  itemBuilder: (context, index) {
+                    final contact = contacts[index];
+                    return ListTile.selectable(
+                      leading: const CircleAvatar(radius: 15.0),
+                      title: Text(contact),
+                      subtitle: const Text('With a custom subtitle'),
+                      trailing: Icon(shuffledIcons[index]),
+                      selectionMode: ListTileSelectionMode.multiple,
+                      selected: selected.contains(contact),
+                      onSelectionChange: (selected) {
+                        setState(() {
+                          if (selected) {
+                            this.selected.add(contact);
+                          } else {
+                            this.selected.remove(contact);
+                          }
+                        });
+                      },
+                    );
+                  },
                 ),
               ),
-              child: ListView.builder(
-                controller: secondController,
-                shrinkWrap: true,
-                itemCount: contacts.length,
-                itemBuilder: (context, index) {
-                  final contact = contacts[index];
-                  return ListTile.selectable(
-                    leading: const CircleAvatar(radius: 15.0),
-                    title: Text(contact),
-                    subtitle: const Text('With a custom subtitle'),
-                    trailing: Icon(shuffledIcons[index]),
-                    selectionMode: ListTileSelectionMode.multiple,
-                    selected: selected.contains(contact),
-                    onSelectionChange: (selected) {
-                      setState(() {
-                        if (selected) {
-                          this.selected.add(contact);
-                        } else {
-                          this.selected.remove(contact);
-                        }
-                      });
-                    },
-                  );
-                },
-              ),
-            ),
-          ]),
+            ],
+          ),
         ),
-        subtitle(
-          content: const Text('ListViewItems with images'),
-        ),
+        subtitle(content: const Text('ListViewItems with images')),
         CardHighlight(
           codeSnippet: '''String selectedContact = '';
 
@@ -173,48 +174,51 @@ ListView.builder(
     );
   } 
 ),''',
-          child: Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
-            Container(
-              height: 400,
-              width: 550,
-              decoration: BoxDecoration(
-                border: Border.all(
-                  color: theme.resources.surfaceStrokeColorDefault,
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Container(
+                height: 400,
+                width: 550,
+                decoration: BoxDecoration(
+                  border: Border.all(
+                    color: theme.resources.surfaceStrokeColorDefault,
+                  ),
                 ),
-              ),
-              child: ListView.builder(
-                controller: thirdController,
-                shrinkWrap: true,
-                itemCount: contacts.length,
-                itemBuilder: (context, index) {
-                  final contact = contacts[index];
-                  return ListTile.selectable(
-                    leading: SizedBox(
-                      height: 100,
-                      child: AspectRatio(
-                        aspectRatio: 16 / 9,
-                        child: ColoredBox(
-                          color: Colors.accentColors[index ~/ 20],
-                          child: const Placeholder(),
+                child: ListView.builder(
+                  controller: thirdController,
+                  shrinkWrap: true,
+                  itemCount: contacts.length,
+                  itemBuilder: (context, index) {
+                    final contact = contacts[index];
+                    return ListTile.selectable(
+                      leading: SizedBox(
+                        height: 100,
+                        child: AspectRatio(
+                          aspectRatio: 16 / 9,
+                          child: ColoredBox(
+                            color: Colors.accentColors[index ~/ 20],
+                            child: const Placeholder(),
+                          ),
                         ),
                       ),
-                    ),
-                    title: Text(contact),
-                    subtitle: const Text('With a custom subtitle'),
-                    selectionMode: ListTileSelectionMode.single,
-                    selected: thirdSelected == contact,
-                    onSelectionChange: (selected) {
-                      setState(() {
-                        if (selected) {
-                          thirdSelected = contact;
-                        }
-                      });
-                    },
-                  );
-                },
+                      title: Text(contact),
+                      subtitle: const Text('With a custom subtitle'),
+                      selectionMode: ListTileSelectionMode.single,
+                      selected: thirdSelected == contact,
+                      onSelectionChange: (selected) {
+                        setState(() {
+                          if (selected) {
+                            thirdSelected = contact;
+                          }
+                        });
+                      },
+                    );
+                  },
+                ),
               ),
-            ),
-          ]),
+            ],
+          ),
         ),
       ],
     );

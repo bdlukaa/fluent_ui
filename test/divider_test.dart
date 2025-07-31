@@ -5,9 +5,7 @@ import 'app_test.dart';
 
 void main() {
   testWidgets('horizontal Divider correct height', (WidgetTester tester) async {
-    await tester.pumpWidget(
-      wrapApp(child: const Center(child: Divider())),
-    );
+    await tester.pumpWidget(wrapApp(child: const Center(child: Divider())));
 
     final box = tester.firstRenderObject(find.byType(Divider)) as RenderBox;
     expect(box.size.height, 1.0);
@@ -15,15 +13,18 @@ void main() {
 
   testWidgets('vertical Divider correct width', (WidgetTester tester) async {
     await tester.pumpWidget(
-      wrapApp(child: const Center(child: Divider(direction: Axis.vertical))),
+      wrapApp(
+        child: const Center(child: Divider(direction: Axis.vertical)),
+      ),
     );
 
     final box = tester.firstRenderObject(find.byType(Divider)) as RenderBox;
     expect(box.size.width, 1.0);
   });
 
-  testWidgets('Divider thickness applied correctly',
-      (WidgetTester tester) async {
+  testWidgets('Divider thickness applied correctly', (
+    WidgetTester tester,
+  ) async {
     await tester.pumpWidget(
       wrapApp(
         child: const Center(

@@ -140,8 +140,10 @@ class _AcrylicState extends State<Acrylic> {
     assert(debugCheckHasFluentTheme(context));
     assert(widget.elevation >= 0, 'The elevation must be always positive');
     assert(_properties.tintAlpha >= 0, 'The tintAlpha must be always positive');
-    assert(_properties.luminosityAlpha >= 0,
-        'The luminosityAlpha must be always positive');
+    assert(
+      _properties.luminosityAlpha >= 0,
+      'The luminosityAlpha must be always positive',
+    );
 
     final shadowColor =
         widget.shadowColor ?? FluentTheme.of(context).shadowColor;
@@ -259,25 +261,56 @@ class _AnimatedAcrylicState extends AnimatedWidgetBaseState<AnimatedAcrylic> {
 
   @override
   void forEachTween(TweenVisitor<dynamic> visitor) {
-    _tint = visitor(_tint, widget.tint,
-        (dynamic value) => ColorTween(begin: value as Color)) as ColorTween?;
-    _tintAlpha = visitor(_tintAlpha, widget.tintAlpha,
-            (dynamic value) => Tween<double>(begin: value as double))
-        as Tween<double>?;
-    _luminosityAlpha = visitor(_luminosityAlpha, widget.luminosityAlpha,
-            (dynamic value) => Tween<double>(begin: value as double))
-        as Tween<double>?;
-    _blurAmount = visitor(_blurAmount, widget.blurAmount,
-            (dynamic value) => Tween<double>(begin: value as double))
-        as Tween<double>?;
-    _shape = visitor(_shape, widget.shape,
-            (dynamic value) => m.ShapeBorderTween(begin: value as ShapeBorder))
-        as m.ShapeBorderTween?;
-    _shadowColor = visitor(_shadowColor, widget.shadowColor,
-        (dynamic value) => ColorTween(begin: value as Color)) as ColorTween?;
-    _elevation = visitor(_elevation, widget.elevation,
-            (dynamic value) => Tween<double>(begin: value as double))
-        as Tween<double>?;
+    _tint =
+        visitor(
+              _tint,
+              widget.tint,
+              (dynamic value) => ColorTween(begin: value as Color),
+            )
+            as ColorTween?;
+    _tintAlpha =
+        visitor(
+              _tintAlpha,
+              widget.tintAlpha,
+              (dynamic value) => Tween<double>(begin: value as double),
+            )
+            as Tween<double>?;
+    _luminosityAlpha =
+        visitor(
+              _luminosityAlpha,
+              widget.luminosityAlpha,
+              (dynamic value) => Tween<double>(begin: value as double),
+            )
+            as Tween<double>?;
+    _blurAmount =
+        visitor(
+              _blurAmount,
+              widget.blurAmount,
+              (dynamic value) => Tween<double>(begin: value as double),
+            )
+            as Tween<double>?;
+    _shape =
+        visitor(
+              _shape,
+              widget.shape,
+              (dynamic value) =>
+                  m.ShapeBorderTween(begin: value as ShapeBorder),
+            )
+            as m.ShapeBorderTween?;
+    _shadowColor =
+        visitor(
+              _shadowColor,
+              widget.shadowColor,
+              (dynamic value) => ColorTween(begin: value as Color),
+            )
+            as ColorTween?;
+    _elevation =
+        visitor(
+              _elevation,
+              widget.elevation,
+              (dynamic value) => Tween<double>(begin: value as double),
+            )
+            as Tween<double>?;
   }
 
   @override
@@ -313,20 +346,15 @@ class AcrylicProperties {
   });
 
   const AcrylicProperties.empty()
-      : tint = Colors.black,
-        tintAlpha = kDefaultAcrylicAlpha,
-        luminosityAlpha = kDefaultAcrylicAlpha,
-        blurAmount = kBlurAmount,
-        shape = const RoundedRectangleBorder();
+    : tint = Colors.black,
+      tintAlpha = kDefaultAcrylicAlpha,
+      luminosityAlpha = kDefaultAcrylicAlpha,
+      blurAmount = kBlurAmount,
+      shape = const RoundedRectangleBorder();
 
   @override
-  int get hashCode => Object.hash(
-        tint,
-        tintAlpha,
-        luminosityAlpha,
-        blurAmount,
-        shape,
-      );
+  int get hashCode =>
+      Object.hash(tint, tintAlpha, luminosityAlpha, blurAmount, shape);
 
   @override
   bool operator ==(Object other) {
@@ -352,10 +380,7 @@ class AcrylicProperties {
 class _AcrylicInheritedWidget extends InheritedWidget {
   final _AcrylicState state;
 
-  const _AcrylicInheritedWidget({
-    required this.state,
-    required super.child,
-  });
+  const _AcrylicInheritedWidget({required this.state, required super.child});
 
   @override
   bool updateShouldNotify(_AcrylicInheritedWidget old) {
@@ -396,26 +421,29 @@ class _AcrylicGuts extends StatelessWidget {
                   sigmaX: properties.blurAmount,
                   sigmaY: properties.blurAmount,
                 ),
-                child: Stack(fit: StackFit.passthrough, children: [
-                  const Opacity(
-                    opacity: 0.02,
-                    child: DecoratedBox(
-                      decoration: BoxDecoration(
-                        image: DecorationImage(
-                          image: AssetImage(
-                            'assets/AcrylicNoise.png',
-                            package: 'fluent_ui',
+                child: Stack(
+                  fit: StackFit.passthrough,
+                  children: [
+                    const Opacity(
+                      opacity: 0.02,
+                      child: DecoratedBox(
+                        decoration: BoxDecoration(
+                          image: DecorationImage(
+                            image: AssetImage(
+                              'assets/AcrylicNoise.png',
+                              package: 'fluent_ui',
+                            ),
+                            alignment: AlignmentDirectional.topStart,
+                            repeat: ImageRepeat.repeat,
                           ),
-                          alignment: AlignmentDirectional.topStart,
-                          repeat: ImageRepeat.repeat,
+                          backgroundBlendMode: BlendMode.srcOver,
+                          color: Colors.transparent,
                         ),
-                        backgroundBlendMode: BlendMode.srcOver,
-                        color: Colors.transparent,
                       ),
                     ),
-                  ),
-                  child,
-                ]),
+                    child,
+                  ],
+                ),
               ),
       ),
     );
@@ -489,7 +517,7 @@ class AcrylicHelper {
           maxLuminosityOpacity - minLuminosityOpacity;
       var mappedTintOpacity =
           ((tintColor.a / 255.0) * luminosityOpacityRangeMax) +
-              minLuminosityOpacity;
+          minLuminosityOpacity;
 
       return rgbLuminosityColor.withValues(
         alpha: math.min(mappedTintOpacity, 1.0),
@@ -557,11 +585,13 @@ class _NoiseTextureCacher {
       package: 'fluent_ui',
     );
 
-    provider.resolve(const ImageConfiguration()).addListener(
-      ImageStreamListener((image, synchronousCall) {
-        texture = image.image;
-      }),
-    );
+    provider
+        .resolve(const ImageConfiguration())
+        .addListener(
+          ImageStreamListener((image, synchronousCall) {
+            texture = image.image;
+          }),
+        );
   }
 }
 

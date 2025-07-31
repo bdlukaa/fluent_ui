@@ -4,8 +4,9 @@ import 'package:flutter_test/flutter_test.dart';
 import 'app_test.dart';
 
 void main() {
-  testWidgets('ListTile displays title, subtitle, leading, and trailing',
-      (tester) async {
+  testWidgets('ListTile displays title, subtitle, leading, and trailing', (
+    tester,
+  ) async {
     await tester.pumpWidget(
       wrapApp(
         child: const ListTile(
@@ -41,8 +42,9 @@ void main() {
     expect(pressed, isTrue);
   });
 
-  testWidgets('ListTile.selectable (single) calls onSelectionChange',
-      (tester) async {
+  testWidgets('ListTile.selectable (single) calls onSelectionChange', (
+    tester,
+  ) async {
     bool? selected;
     await tester.pumpWidget(
       wrapApp(
@@ -62,8 +64,9 @@ void main() {
     expect(selected, isTrue);
   });
 
-  testWidgets('ListTile.selectable (multiple) toggles selection',
-      (tester) async {
+  testWidgets('ListTile.selectable (multiple) toggles selection', (
+    tester,
+  ) async {
     bool? selected = false;
     await tester.pumpWidget(
       wrapApp(
@@ -71,9 +74,7 @@ void main() {
           title: const Text('Multi'),
           selected: selected,
           selectionMode: ListTileSelectionMode.multiple,
-          onSelectionChange: (v) => {
-            selected = v,
-          },
+          onSelectionChange: (v) => {selected = v},
         ),
       ),
     );

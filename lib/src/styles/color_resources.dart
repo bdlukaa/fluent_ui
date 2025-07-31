@@ -746,135 +746,341 @@ class ResourceDictionary with Diagnosticable {
       ..add(ColorProperty('textFillColorTertiary', textFillColorTertiary))
       ..add(ColorProperty('textFillColorDisabled', textFillColorDisabled))
       ..add(ColorProperty('textFillColorInverse', textFillColorInverse))
-      ..add(ColorProperty(
-          'accentTextFillColorDisabled', accentTextFillColorDisabled))
-      ..add(ColorProperty('textOnAccentFillColorSelectedText',
-          textOnAccentFillColorSelectedText))
-      ..add(ColorProperty(
-          'textOnAccentFillColorPrimary', textOnAccentFillColorPrimary))
-      ..add(ColorProperty(
-          'textOnAccentFillColorSecondary', textOnAccentFillColorSecondary))
-      ..add(ColorProperty(
-          'textOnAccentFillColorDisabled', textOnAccentFillColorDisabled))
+      ..add(
+        ColorProperty(
+          'accentTextFillColorDisabled',
+          accentTextFillColorDisabled,
+        ),
+      )
+      ..add(
+        ColorProperty(
+          'textOnAccentFillColorSelectedText',
+          textOnAccentFillColorSelectedText,
+        ),
+      )
+      ..add(
+        ColorProperty(
+          'textOnAccentFillColorPrimary',
+          textOnAccentFillColorPrimary,
+        ),
+      )
+      ..add(
+        ColorProperty(
+          'textOnAccentFillColorSecondary',
+          textOnAccentFillColorSecondary,
+        ),
+      )
+      ..add(
+        ColorProperty(
+          'textOnAccentFillColorDisabled',
+          textOnAccentFillColorDisabled,
+        ),
+      )
       ..add(ColorProperty('controlFillColorDefault', controlFillColorDefault))
       ..add(
-          ColorProperty('controlFillColorSecondary', controlFillColorSecondary))
+        ColorProperty('controlFillColorSecondary', controlFillColorSecondary),
+      )
       ..add(ColorProperty('controlFillColorTertiary', controlFillColorTertiary))
       ..add(ColorProperty('controlFillColorDisabled', controlFillColorDisabled))
-      ..add(ColorProperty(
-          'controlFillColorTransparent', controlFillColorTransparent))
-      ..add(ColorProperty(
-          'controlFillColorInputActive', controlFillColorInputActive))
-      ..add(ColorProperty(
-          'controlStrongFillColorDefault', controlStrongFillColorDefault))
-      ..add(ColorProperty(
-          'controlStrongFillColorDisabled', controlStrongFillColorDisabled))
-      ..add(ColorProperty(
-          'controlSolidFillColorDefault', controlSolidFillColorDefault))
-      ..add(ColorProperty(
-          'subtleFillColorTransparent', subtleFillColorTransparent))
+      ..add(
+        ColorProperty(
+          'controlFillColorTransparent',
+          controlFillColorTransparent,
+        ),
+      )
+      ..add(
+        ColorProperty(
+          'controlFillColorInputActive',
+          controlFillColorInputActive,
+        ),
+      )
+      ..add(
+        ColorProperty(
+          'controlStrongFillColorDefault',
+          controlStrongFillColorDefault,
+        ),
+      )
+      ..add(
+        ColorProperty(
+          'controlStrongFillColorDisabled',
+          controlStrongFillColorDisabled,
+        ),
+      )
+      ..add(
+        ColorProperty(
+          'controlSolidFillColorDefault',
+          controlSolidFillColorDefault,
+        ),
+      )
+      ..add(
+        ColorProperty('subtleFillColorTransparent', subtleFillColorTransparent),
+      )
       ..add(ColorProperty('subtleFillColorSecondary', subtleFillColorSecondary))
       ..add(ColorProperty('subtleFillColorTertiary', subtleFillColorTertiary))
       ..add(ColorProperty('subtleFillColorDisabled', subtleFillColorDisabled))
-      ..add(ColorProperty(
-          'controlAltFillColorTransparent', controlAltFillColorTransparent))
-      ..add(ColorProperty(
-          'controlAltFillColorSecondary', controlAltFillColorSecondary))
-      ..add(ColorProperty(
-          'controlAltFillColorTertiary', controlAltFillColorTertiary))
-      ..add(ColorProperty(
-          'controlAltFillColorQuarternary', controlAltFillColorQuarternary))
-      ..add(ColorProperty(
-          'controlAltFillColorDisabled', controlAltFillColorDisabled))
-      ..add(ColorProperty(
-          'controlOnImageFillColorDefault', controlOnImageFillColorDefault))
-      ..add(ColorProperty(
-          'controlOnImageFillColorSecondary', controlOnImageFillColorSecondary))
-      ..add(ColorProperty(
-          'controlOnImageFillColorTertiary', controlOnImageFillColorTertiary))
-      ..add(ColorProperty(
-          'controlOnImageFillColorDisabled', controlOnImageFillColorDisabled))
+      ..add(
+        ColorProperty(
+          'controlAltFillColorTransparent',
+          controlAltFillColorTransparent,
+        ),
+      )
+      ..add(
+        ColorProperty(
+          'controlAltFillColorSecondary',
+          controlAltFillColorSecondary,
+        ),
+      )
+      ..add(
+        ColorProperty(
+          'controlAltFillColorTertiary',
+          controlAltFillColorTertiary,
+        ),
+      )
+      ..add(
+        ColorProperty(
+          'controlAltFillColorQuarternary',
+          controlAltFillColorQuarternary,
+        ),
+      )
+      ..add(
+        ColorProperty(
+          'controlAltFillColorDisabled',
+          controlAltFillColorDisabled,
+        ),
+      )
+      ..add(
+        ColorProperty(
+          'controlOnImageFillColorDefault',
+          controlOnImageFillColorDefault,
+        ),
+      )
+      ..add(
+        ColorProperty(
+          'controlOnImageFillColorSecondary',
+          controlOnImageFillColorSecondary,
+        ),
+      )
+      ..add(
+        ColorProperty(
+          'controlOnImageFillColorTertiary',
+          controlOnImageFillColorTertiary,
+        ),
+      )
+      ..add(
+        ColorProperty(
+          'controlOnImageFillColorDisabled',
+          controlOnImageFillColorDisabled,
+        ),
+      )
       ..add(ColorProperty('accentFillColorDisabled', accentFillColorDisabled))
       ..add(
-          ColorProperty('controlStrokeColorDefault', controlStrokeColorDefault))
-      ..add(ColorProperty(
-          'controlStrokeColorSecondary', controlStrokeColorSecondary))
-      ..add(ColorProperty('controlStrokeColorOnAccentDefault',
-          controlStrokeColorOnAccentDefault))
-      ..add(ColorProperty('controlStrokeColorOnAccentSecondary',
-          controlStrokeColorOnAccentSecondary))
-      ..add(ColorProperty('controlStrokeColorOnAccentTertiary',
-          controlStrokeColorOnAccentTertiary))
-      ..add(ColorProperty('controlStrokeColorOnAccentDisabled',
-          controlStrokeColorOnAccentDisabled))
-      ..add(ColorProperty('controlStrokeColorForStrongFillWhenOnImage',
-          controlStrokeColorForStrongFillWhenOnImage))
-      ..add(ColorProperty('cardStrokeColorDefault', cardStrokeColorDefault))
-      ..add(ColorProperty(
-          'cardStrokeColorDefaultSolid', cardStrokeColorDefaultSolid))
-      ..add(ColorProperty(
-          'controlStrongStrokeColorDefault', controlStrongStrokeColorDefault))
-      ..add(ColorProperty(
-          'controlStrongStrokeColorDisabled', controlStrongStrokeColorDisabled))
+        ColorProperty('controlStrokeColorDefault', controlStrokeColorDefault),
+      )
       ..add(
-          ColorProperty('surfaceStrokeColorDefault', surfaceStrokeColorDefault))
+        ColorProperty(
+          'controlStrokeColorSecondary',
+          controlStrokeColorSecondary,
+        ),
+      )
+      ..add(
+        ColorProperty(
+          'controlStrokeColorOnAccentDefault',
+          controlStrokeColorOnAccentDefault,
+        ),
+      )
+      ..add(
+        ColorProperty(
+          'controlStrokeColorOnAccentSecondary',
+          controlStrokeColorOnAccentSecondary,
+        ),
+      )
+      ..add(
+        ColorProperty(
+          'controlStrokeColorOnAccentTertiary',
+          controlStrokeColorOnAccentTertiary,
+        ),
+      )
+      ..add(
+        ColorProperty(
+          'controlStrokeColorOnAccentDisabled',
+          controlStrokeColorOnAccentDisabled,
+        ),
+      )
+      ..add(
+        ColorProperty(
+          'controlStrokeColorForStrongFillWhenOnImage',
+          controlStrokeColorForStrongFillWhenOnImage,
+        ),
+      )
+      ..add(ColorProperty('cardStrokeColorDefault', cardStrokeColorDefault))
+      ..add(
+        ColorProperty(
+          'cardStrokeColorDefaultSolid',
+          cardStrokeColorDefaultSolid,
+        ),
+      )
+      ..add(
+        ColorProperty(
+          'controlStrongStrokeColorDefault',
+          controlStrongStrokeColorDefault,
+        ),
+      )
+      ..add(
+        ColorProperty(
+          'controlStrongStrokeColorDisabled',
+          controlStrongStrokeColorDisabled,
+        ),
+      )
+      ..add(
+        ColorProperty('surfaceStrokeColorDefault', surfaceStrokeColorDefault),
+      )
       ..add(ColorProperty('surfaceStrokeColorFlyout', surfaceStrokeColorFlyout))
       ..add(
-          ColorProperty('surfaceStrokeColorInverse', surfaceStrokeColorInverse))
+        ColorProperty('surfaceStrokeColorInverse', surfaceStrokeColorInverse),
+      )
       ..add(
-          ColorProperty('dividerStrokeColorDefault', dividerStrokeColorDefault))
+        ColorProperty('dividerStrokeColorDefault', dividerStrokeColorDefault),
+      )
       ..add(ColorProperty('focusStrokeColorOuter', focusStrokeColorOuter))
       ..add(ColorProperty('focusStrokeColorInner', focusStrokeColorInner))
-      ..add(ColorProperty(
-          'cardBackgroundFillColorDefault', cardBackgroundFillColorDefault))
-      ..add(ColorProperty(
-          'cardBackgroundFillColorSecondary', cardBackgroundFillColorSecondary))
+      ..add(
+        ColorProperty(
+          'cardBackgroundFillColorDefault',
+          cardBackgroundFillColorDefault,
+        ),
+      )
+      ..add(
+        ColorProperty(
+          'cardBackgroundFillColorSecondary',
+          cardBackgroundFillColorSecondary,
+        ),
+      )
       ..add(ColorProperty('smokeFillColorDefault', smokeFillColorDefault))
       ..add(ColorProperty('layerFillColorDefault', layerFillColorDefault))
       ..add(ColorProperty('layerFillColorAlt', layerFillColorAlt))
-      ..add(ColorProperty(
-          'layerOnAcrylicFillColorDefault', layerOnAcrylicFillColorDefault))
-      ..add(ColorProperty('layerOnAccentAcrylicFillColorDefault',
-          layerOnAccentAcrylicFillColorDefault))
-      ..add(ColorProperty('layerOnMicaBaseAltFillColorDefault',
-          layerOnMicaBaseAltFillColorDefault))
-      ..add(ColorProperty('layerOnMicaBaseAltFillColorSecondary',
-          layerOnMicaBaseAltFillColorSecondary))
-      ..add(ColorProperty('layerOnMicaBaseAltFillColorTertiary',
-          layerOnMicaBaseAltFillColorTertiary))
-      ..add(ColorProperty('layerOnMicaBaseAltFillColorTransparent',
-          layerOnMicaBaseAltFillColorTransparent))
-      ..add(ColorProperty(
-          'solidBackgroundFillColorBase', solidBackgroundFillColorBase))
-      ..add(ColorProperty('solidBackgroundFillColorSecondary',
-          solidBackgroundFillColorSecondary))
-      ..add(ColorProperty(
-          'solidBackgroundFillColorTertiary', solidBackgroundFillColorTertiary))
-      ..add(ColorProperty('solidBackgroundFillColorQuarternary',
-          solidBackgroundFillColorQuarternary))
-      ..add(ColorProperty('solidBackgroundFillColorTransparent',
-          solidBackgroundFillColorTransparent))
-      ..add(ColorProperty(
-          'solidBackgroundFillColorBaseAlt', solidBackgroundFillColorBaseAlt))
+      ..add(
+        ColorProperty(
+          'layerOnAcrylicFillColorDefault',
+          layerOnAcrylicFillColorDefault,
+        ),
+      )
+      ..add(
+        ColorProperty(
+          'layerOnAccentAcrylicFillColorDefault',
+          layerOnAccentAcrylicFillColorDefault,
+        ),
+      )
+      ..add(
+        ColorProperty(
+          'layerOnMicaBaseAltFillColorDefault',
+          layerOnMicaBaseAltFillColorDefault,
+        ),
+      )
+      ..add(
+        ColorProperty(
+          'layerOnMicaBaseAltFillColorSecondary',
+          layerOnMicaBaseAltFillColorSecondary,
+        ),
+      )
+      ..add(
+        ColorProperty(
+          'layerOnMicaBaseAltFillColorTertiary',
+          layerOnMicaBaseAltFillColorTertiary,
+        ),
+      )
+      ..add(
+        ColorProperty(
+          'layerOnMicaBaseAltFillColorTransparent',
+          layerOnMicaBaseAltFillColorTransparent,
+        ),
+      )
+      ..add(
+        ColorProperty(
+          'solidBackgroundFillColorBase',
+          solidBackgroundFillColorBase,
+        ),
+      )
+      ..add(
+        ColorProperty(
+          'solidBackgroundFillColorSecondary',
+          solidBackgroundFillColorSecondary,
+        ),
+      )
+      ..add(
+        ColorProperty(
+          'solidBackgroundFillColorTertiary',
+          solidBackgroundFillColorTertiary,
+        ),
+      )
+      ..add(
+        ColorProperty(
+          'solidBackgroundFillColorQuarternary',
+          solidBackgroundFillColorQuarternary,
+        ),
+      )
+      ..add(
+        ColorProperty(
+          'solidBackgroundFillColorTransparent',
+          solidBackgroundFillColorTransparent,
+        ),
+      )
+      ..add(
+        ColorProperty(
+          'solidBackgroundFillColorBaseAlt',
+          solidBackgroundFillColorBaseAlt,
+        ),
+      )
       ..add(ColorProperty('systemFillColorSuccess', systemFillColorSuccess))
       ..add(ColorProperty('systemFillColorCaution', systemFillColorCaution))
       ..add(ColorProperty('systemFillColorCritical', systemFillColorCritical))
       ..add(ColorProperty('systemFillColorNeutral', systemFillColorNeutral))
-      ..add(ColorProperty(
-          'systemFillColorSolidNeutral', systemFillColorSolidNeutral))
-      ..add(ColorProperty('systemFillColorAttentionBackground',
-          systemFillColorAttentionBackground))
-      ..add(ColorProperty(
-          'systemFillColorSuccessBackground', systemFillColorSuccessBackground))
-      ..add(ColorProperty(
-          'systemFillColorCautionBackground', systemFillColorCautionBackground))
-      ..add(ColorProperty('systemFillColorCriticalBackground',
-          systemFillColorCriticalBackground))
-      ..add(ColorProperty(
-          'systemFillColorNeutralBackground', systemFillColorNeutralBackground))
-      ..add(ColorProperty('systemFillColorSolidAttentionBackground',
-          systemFillColorSolidAttentionBackground))
-      ..add(ColorProperty('systemFillColorSolidNeutralBackground',
-          systemFillColorSolidNeutralBackground));
+      ..add(
+        ColorProperty(
+          'systemFillColorSolidNeutral',
+          systemFillColorSolidNeutral,
+        ),
+      )
+      ..add(
+        ColorProperty(
+          'systemFillColorAttentionBackground',
+          systemFillColorAttentionBackground,
+        ),
+      )
+      ..add(
+        ColorProperty(
+          'systemFillColorSuccessBackground',
+          systemFillColorSuccessBackground,
+        ),
+      )
+      ..add(
+        ColorProperty(
+          'systemFillColorCautionBackground',
+          systemFillColorCautionBackground,
+        ),
+      )
+      ..add(
+        ColorProperty(
+          'systemFillColorCriticalBackground',
+          systemFillColorCriticalBackground,
+        ),
+      )
+      ..add(
+        ColorProperty(
+          'systemFillColorNeutralBackground',
+          systemFillColorNeutralBackground,
+        ),
+      )
+      ..add(
+        ColorProperty(
+          'systemFillColorSolidAttentionBackground',
+          systemFillColorSolidAttentionBackground,
+        ),
+      )
+      ..add(
+        ColorProperty(
+          'systemFillColorSolidNeutralBackground',
+          systemFillColorSolidNeutralBackground,
+        ),
+      );
   }
 }

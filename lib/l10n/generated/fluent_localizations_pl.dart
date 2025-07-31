@@ -108,6 +108,9 @@ class FluentLocalizationsPl extends FluentLocalizations {
   String get year => 'year';
 
   @override
+  String get pickADate => 'Pick a date';
+
+  @override
   String get seeMore => 'See more';
 
   @override

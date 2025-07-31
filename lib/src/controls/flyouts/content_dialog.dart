@@ -79,9 +79,9 @@ class ContentDialog extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     assert(debugCheckHasFluentTheme(context));
-    final style = ContentDialogThemeData.standard(FluentTheme.of(
-      context,
-    )).merge(FluentTheme.of(context).dialogTheme.merge(this.style));
+    final style = ContentDialogThemeData.standard(
+      FluentTheme.of(context),
+    ).merge(FluentTheme.of(context).dialogTheme.merge(this.style));
 
     return Align(
       alignment: AlignmentDirectional.center,
@@ -235,32 +235,29 @@ Future<T?> showDialog<T extends Object?>({
 
   final themes = InheritedTheme.capture(
     from: context,
-    to: Navigator.of(
-      context,
-      rootNavigator: useRootNavigator,
-    ).context,
+    to: Navigator.of(context, rootNavigator: useRootNavigator).context,
   );
 
-  return Navigator.of(
-    context,
-    rootNavigator: useRootNavigator,
-  ).push<T>(FluentDialogRoute<T>(
-    context: context,
-    builder: builder,
-    barrierColor: barrierColor,
-    barrierDismissible: barrierDismissible,
-    barrierLabel: FluentLocalizations.of(context).modalBarrierDismissLabel,
-    dismissWithEsc: dismissWithEsc,
-    settings: routeSettings,
-    transitionBuilder: transitionBuilder,
-    transitionDuration: transitionDuration ??
-        FluentTheme.maybeOf(context)?.fastAnimationDuration ??
-        const Duration(milliseconds: 300),
-    themes: themes,
-  ));
+  return Navigator.of(context, rootNavigator: useRootNavigator).push<T>(
+    FluentDialogRoute<T>(
+      context: context,
+      builder: builder,
+      barrierColor: barrierColor,
+      barrierDismissible: barrierDismissible,
+      barrierLabel: FluentLocalizations.of(context).modalBarrierDismissLabel,
+      dismissWithEsc: dismissWithEsc,
+      settings: routeSettings,
+      transitionBuilder: transitionBuilder,
+      transitionDuration:
+          transitionDuration ??
+          FluentTheme.maybeOf(context)?.fastAnimationDuration ??
+          const Duration(milliseconds: 300),
+      themes: themes,
+    ),
+  );
 }
 
-/// A dialog route with Fluent entrance and exit animations.
+/// A dialog route with Windows entrance and exit animations.
 ///
 /// It is used internally by [showDialog] or can be directly pushed
 /// onto the [Navigator] stack to enable state restoration. See
@@ -298,7 +295,7 @@ Future<T?> showDialog<T extends Object?>({
 ///  * [showDialog], which is a way to display a DialogRoute.
 ///  * [showGeneralDialog], which allows for customization of the dialog popup.
 class FluentDialogRoute<T> extends RawDialogRoute<T> {
-  /// A dialog route with Fluent entrance and exit animations,
+  /// A dialog route with Windows entrance and exit animations,
   /// modal barrier color
   FluentDialogRoute({
     required WidgetBuilder builder,
@@ -312,24 +309,22 @@ class FluentDialogRoute<T> extends RawDialogRoute<T> {
     super.settings,
     bool dismissWithEsc = true,
   }) : super(
-          pageBuilder: (context, animation, secondaryAnimation) {
-            final pageChild = Builder(builder: builder);
-            final dialog = themes?.wrap(pageChild) ?? pageChild;
-            return SafeArea(
-              child: Actions(
-                actions: {
-                  if (dismissWithEsc) DismissIntent: _DismissAction(context),
-                },
-                child: FocusScope(
-                  autofocus: true,
-                  child: dialog,
-                ),
-              ),
-            );
-          },
-          barrierLabel: barrierLabel ??
-              FluentLocalizations.of(context).modalBarrierDismissLabel,
-        );
+         pageBuilder: (context, animation, secondaryAnimation) {
+           final pageChild = Builder(builder: builder);
+           final dialog = themes?.wrap(pageChild) ?? pageChild;
+           return SafeArea(
+             child: Actions(
+               actions: {
+                 if (dismissWithEsc) DismissIntent: _DismissAction(context),
+               },
+               child: FocusScope(autofocus: true, child: dialog),
+             ),
+           );
+         },
+         barrierLabel:
+             barrierLabel ??
+             FluentLocalizations.of(context).modalBarrierDismissLabel,
+       );
 
   static Widget _defaultTransitionBuilder(
     BuildContext context,
@@ -338,16 +333,10 @@ class FluentDialogRoute<T> extends RawDialogRoute<T> {
     Widget child,
   ) {
     return FadeTransition(
-      opacity: CurvedAnimation(
-        parent: animation,
-        curve: Curves.easeOut,
-      ),
+      opacity: CurvedAnimation(parent: animation, curve: Curves.easeOut),
       child: ScaleTransition(
         scale: CurvedAnimation(
-          parent: Tween<double>(
-            begin: 1,
-            end: 0.85,
-          ).animate(animation),
+          parent: Tween<double>(begin: 1, end: 0.85).animate(animation),
           curve: Curves.easeOut,
         ),
         child: child,
@@ -430,15 +419,27 @@ class ContentDialogThemeData {
       barrierColor: Color.lerp(a?.barrierColor, b?.barrierColor, t),
       padding: EdgeInsetsGeometry.lerp(a?.padding, b?.padding, t),
       bodyPadding: EdgeInsetsGeometry.lerp(a?.bodyPadding, b?.bodyPadding, t),
-      titlePadding:
-          EdgeInsetsGeometry.lerp(a?.titlePadding, b?.titlePadding, t),
+      titlePadding: EdgeInsetsGeometry.lerp(
+        a?.titlePadding,
+        b?.titlePadding,
+        t,
+      ),
       actionsSpacing: lerpDouble(a?.actionsSpacing, b?.actionsSpacing, t),
-      actionThemeData:
-          ButtonThemeData.lerp(a?.actionThemeData, b?.actionThemeData, t),
-      actionsDecoration:
-          Decoration.lerp(a?.actionsDecoration, b?.actionsDecoration, t),
-      actionsPadding:
-          EdgeInsetsGeometry.lerp(a?.actionsPadding, b?.actionsPadding, t),
+      actionThemeData: ButtonThemeData.lerp(
+        a?.actionThemeData,
+        b?.actionThemeData,
+        t,
+      ),
+      actionsDecoration: Decoration.lerp(
+        a?.actionsDecoration,
+        b?.actionsDecoration,
+        t,
+      ),
+      actionsPadding: EdgeInsetsGeometry.lerp(
+        a?.actionsPadding,
+        b?.actionsPadding,
+        t,
+      ),
       titleStyle: TextStyle.lerp(a?.titleStyle, b?.titleStyle, t),
       bodyStyle: TextStyle.lerp(a?.bodyStyle, b?.bodyStyle, t),
     );

@@ -57,54 +57,64 @@ class _ColorPickerPageState extends State<ColorPickerPage> with PageMixin {
         Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text('Spectrum Shape:',
-                style: FluentTheme.of(context).typography.bodyStrong),
+            Text(
+              'Spectrum Shape:',
+              style: FluentTheme.of(context).typography.bodyStrong,
+            ),
             const SizedBox(height: 8),
-            Row(children: [
-              RadioButton(
-                checked: _spectrumShape == ColorSpectrumShape.box,
-                onChanged: (v) {
-                  if (v) {
-                    setState(() => _spectrumShape = ColorSpectrumShape.box);
-                  }
-                },
-                content: const Text('Box'),
-              ),
-              const SizedBox(width: 20),
-              RadioButton(
-                checked: _spectrumShape == ColorSpectrumShape.ring,
-                onChanged: (v) {
-                  if (v) {
-                    setState(() => _spectrumShape = ColorSpectrumShape.ring);
-                  }
-                },
-                content: const Text('Ring'),
-              ),
-            ]),
+            Row(
+              children: [
+                RadioButton(
+                  checked: _spectrumShape == ColorSpectrumShape.box,
+                  onChanged: (v) {
+                    if (v) {
+                      setState(() => _spectrumShape = ColorSpectrumShape.box);
+                    }
+                  },
+                  content: const Text('Box'),
+                ),
+                const SizedBox(width: 20),
+                RadioButton(
+                  checked: _spectrumShape == ColorSpectrumShape.ring,
+                  onChanged: (v) {
+                    if (v) {
+                      setState(() => _spectrumShape = ColorSpectrumShape.ring);
+                    }
+                  },
+                  content: const Text('Ring'),
+                ),
+              ],
+            ),
             const SizedBox(height: 20),
-            Text('Layout:',
-                style: FluentTheme.of(context).typography.bodyStrong),
+            Text(
+              'Layout:',
+              style: FluentTheme.of(context).typography.bodyStrong,
+            ),
             const SizedBox(height: 8),
-            Row(children: [
-              RadioButton(
-                checked: _orientation == Axis.vertical,
-                onChanged: (v) {
-                  if (v) setState(() => _orientation = Axis.vertical);
-                },
-                content: const Text('Vertical'),
-              ),
-              const SizedBox(width: 20),
-              RadioButton(
-                checked: _orientation == Axis.horizontal,
-                onChanged: (v) {
-                  if (v) setState(() => _orientation = Axis.horizontal);
-                },
-                content: const Text('Horizontal'),
-              ),
-            ]),
+            Row(
+              children: [
+                RadioButton(
+                  checked: _orientation == Axis.vertical,
+                  onChanged: (v) {
+                    if (v) setState(() => _orientation = Axis.vertical);
+                  },
+                  content: const Text('Vertical'),
+                ),
+                const SizedBox(width: 20),
+                RadioButton(
+                  checked: _orientation == Axis.horizontal,
+                  onChanged: (v) {
+                    if (v) setState(() => _orientation = Axis.horizontal);
+                  },
+                  content: const Text('Horizontal'),
+                ),
+              ],
+            ),
             const SizedBox(height: 20),
-            Text('Options:',
-                style: FluentTheme.of(context).typography.bodyStrong),
+            Text(
+              'Options:',
+              style: FluentTheme.of(context).typography.bodyStrong,
+            ),
             const SizedBox(height: 8),
             Wrap(
               spacing: 10,
@@ -173,14 +183,12 @@ class _ColorPickerPageState extends State<ColorPickerPage> with PageMixin {
               ],
             ),
             const SizedBox(height: 20),
-            Text('Selected Color:',
-                style: FluentTheme.of(context).typography.bodyStrong),
-            const SizedBox(height: 8),
-            Container(
-              color: _selectedColor,
-              width: 200,
-              height: 50,
+            Text(
+              'Selected Color:',
+              style: FluentTheme.of(context).typography.bodyStrong,
             ),
+            const SizedBox(height: 8),
+            Container(color: _selectedColor, width: 200, height: 50),
           ],
         ),
         const SizedBox(height: 20),
@@ -199,22 +207,24 @@ ColorPicker(
   isHexInputVisible: true,
   isAlphaEnabled: false,
 ),''',
-          child: Row(children: [
-            ColorPicker(
-              color: _selectedColor,
-              onChanged: (color) => setState(() => _selectedColor = color),
-              colorSpectrumShape: _spectrumShape,
-              orientation: _orientation,
-              isMoreButtonVisible: _isMoreButtonVisible,
-              isColorSliderVisible: _isColorSliderVisible,
-              isColorChannelTextInputVisible: _isColorChannelTextInputVisible,
-              isHexInputVisible: _isHexInputVisible,
-              isColorPreviewVisible: _isColorPreviewVisible,
-              isAlphaEnabled: _isAlphaEnabled,
-              isAlphaSliderVisible: _isAlphaSliderVisible,
-              isAlphaTextInputVisible: _isAlphaTextInputVisible,
-            ),
-          ]),
+          child: Row(
+            children: [
+              ColorPicker(
+                color: _selectedColor,
+                onChanged: (color) => setState(() => _selectedColor = color),
+                colorSpectrumShape: _spectrumShape,
+                orientation: _orientation,
+                isMoreButtonVisible: _isMoreButtonVisible,
+                isColorSliderVisible: _isColorSliderVisible,
+                isColorChannelTextInputVisible: _isColorChannelTextInputVisible,
+                isHexInputVisible: _isHexInputVisible,
+                isColorPreviewVisible: _isColorPreviewVisible,
+                isAlphaEnabled: _isAlphaEnabled,
+                isAlphaSliderVisible: _isAlphaSliderVisible,
+                isAlphaTextInputVisible: _isAlphaTextInputVisible,
+              ),
+            ],
+          ),
         ),
       ],
     );

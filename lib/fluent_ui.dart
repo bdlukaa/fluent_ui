@@ -1,5 +1,3 @@
-library fluent_ui;
-
 export 'package:flutter/material.dart'
     show
         Brightness,
@@ -76,6 +74,7 @@ export 'src/controls/navigation/breadcrumb_bar.dart';
 export 'src/controls/navigation/navigation_view/view.dart';
 export 'src/controls/navigation/tab_view/tab_view.dart';
 export 'src/controls/navigation/tree_view.dart';
+export 'src/controls/pickers/calendar_view.dart';
 export 'src/controls/pickers/color_picker/color_picker.dart';
 export 'src/controls/pickers/date_picker.dart';
 export 'src/controls/pickers/time_picker.dart';
@@ -95,6 +94,7 @@ export 'src/controls/utils/info_badge.dart';
 export 'src/controls/utils/info_label.dart';
 export 'src/controls/utils/rounded_rectangle_gradient_border.dart';
 export 'src/controls/utils/scrollbar.dart';
+export 'src/controls/utils/windows_icon.dart';
 export 'src/fluent_app.dart';
 export 'src/fluent_page_route.dart';
 export 'src/icons.dart';
@@ -104,3 +104,4 @@ export 'src/styles/page_transitions.dart';
 export 'src/styles/theme.dart';
 export 'src/styles/typography.dart';
 export 'src/utils.dart';
+export 'src/windows_icons.dart';

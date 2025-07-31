@@ -132,10 +132,7 @@ class _NavigationBodyState extends State<_NavigationBody> {
             );
           }
 
-          return EntrancePageTransition(
-            animation: animation,
-            child: child,
-          );
+          return EntrancePageTransition(animation: animation, child: child);
         },
         child: () {
           final paneBodyBuilder = widget.paneBodyBuilder;
@@ -143,9 +140,7 @@ class _NavigationBodyState extends State<_NavigationBody> {
             return paneBodyBuilder.call(
               view.pane?.selected != null ? view.pane!.selectedItem : null,
               view.pane?.selected != null
-                  ? FocusTraversalGroup(
-                      child: view.pane!.selectedItem.body,
-                    )
+                  ? FocusTraversalGroup(child: view.pane!.selectedItem.body)
                   : null,
             );
           } else {
@@ -238,20 +233,23 @@ class InheritedNavigationView extends InheritedWidget {
     bool? currentItemSelected,
     bool? isTransitioning,
   }) {
-    return Builder(builder: (context) {
-      final current = InheritedNavigationView.maybeOf(context);
-      return InheritedNavigationView(
-        key: key,
-        displayMode:
-            displayMode ?? current?.displayMode ?? PaneDisplayMode.open,
-        minimalPaneOpen: minimalPaneOpen ?? current?.minimalPaneOpen ?? false,
-        currentItemIndex: currentItemIndex ?? current?.currentItemIndex ?? -1,
-        pane: pane ?? current?.pane,
-        previousItemIndex: previousItemIndex ?? current?.previousItemIndex ?? 0,
-        isTransitioning: isTransitioning ?? current?.isTransitioning ?? false,
-        child: child,
-      );
-    });
+    return Builder(
+      builder: (context) {
+        final current = InheritedNavigationView.maybeOf(context);
+        return InheritedNavigationView(
+          key: key,
+          displayMode:
+              displayMode ?? current?.displayMode ?? PaneDisplayMode.open,
+          minimalPaneOpen: minimalPaneOpen ?? current?.minimalPaneOpen ?? false,
+          currentItemIndex: currentItemIndex ?? current?.currentItemIndex ?? -1,
+          pane: pane ?? current?.pane,
+          previousItemIndex:
+              previousItemIndex ?? current?.previousItemIndex ?? 0,
+          isTransitioning: isTransitioning ?? current?.isTransitioning ?? false,
+          child: child,
+        );
+      },
+    );
   }
 
   @override
@@ -267,18 +265,14 @@ class InheritedNavigationView extends InheritedWidget {
 
 /// Makes the [GlobalKey]s for [PaneItem]s accesible on the scope.
 class PaneItemKeys extends InheritedWidget {
-  const PaneItemKeys({
-    super.key,
-    required super.child,
-    required this.keys,
-  });
+  const PaneItemKeys({super.key, required super.child, required this.keys});
 
   final Map<int, GlobalKey> keys;
 
   /// Gets the item global key based on the index
   static GlobalKey of(int index, BuildContext context) {
-    final reference =
-        context.dependOnInheritedWidgetOfExactType<PaneItemKeys>()!;
+    final reference = context
+        .dependOnInheritedWidgetOfExactType<PaneItemKeys>()!;
     return reference.keys[index]!;
   }
 

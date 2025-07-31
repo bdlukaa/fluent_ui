@@ -20,12 +20,7 @@ import 'package:fluent_ui/fluent_ui.dart';
 ///  * [NavigationView], which provides top-level navigation for your app
 class InfoBadge extends StatelessWidget {
   /// Creates an info badge.
-  const InfoBadge({
-    super.key,
-    this.source,
-    this.color,
-    this.foregroundColor,
-  });
+  const InfoBadge({super.key, this.source, this.color, this.foregroundColor});
 
   /// The source of the badge.
   ///
@@ -59,10 +54,7 @@ class InfoBadge extends StatelessWidget {
 
     return Container(
       constraints: source == null
-          ? const BoxConstraints(
-              maxWidth: 10.0,
-              maxHeight: 10.0,
-            )
+          ? const BoxConstraints(maxWidth: 10.0, maxHeight: 10.0)
           : const BoxConstraints(
               minWidth: 16.0,
               minHeight: 16.0,
@@ -76,15 +68,9 @@ class InfoBadge extends StatelessWidget {
           ? null
           : DefaultTextStyle.merge(
               textAlign: TextAlign.center,
-              style: TextStyle(
-                color: foregroundColor,
-                fontSize: 11.0,
-              ),
+              style: TextStyle(color: foregroundColor, fontSize: 11.0),
               child: IconTheme.merge(
-                data: IconThemeData(
-                  color: foregroundColor,
-                  size: 8.0,
-                ),
+                data: IconThemeData(color: foregroundColor, size: 8.0),
                 child: source!,
               ),
             ),

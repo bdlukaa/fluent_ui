@@ -11,10 +11,7 @@ class MenuBarItem with Diagnosticable {
   final List<MenuFlyoutItemBase> items;
 
   /// Creates a menu bar item.
-  const MenuBarItem({
-    required this.title,
-    required this.items,
-  });
+  const MenuBarItem({required this.title, required this.items});
 
   @override
   bool operator ==(Object other) {
@@ -48,11 +45,9 @@ class MenuBarItem with Diagnosticable {
 class MenuBar extends StatefulWidget with Diagnosticable {
   final List<MenuBarItem> items;
 
-  /// Creates a fluent-styled menu bar.
-  MenuBar({
-    super.key,
-    required this.items,
-  }) : assert(items.isNotEmpty, 'items must not be empty');
+  /// Creates a windows-styled menu bar.
+  MenuBar({super.key, required this.items})
+    : assert(items.isNotEmpty, 'items must not be empty');
 
   @override
   State<MenuBar> createState() => MenuBarState();
@@ -222,66 +217,71 @@ class MenuBarState extends State<MenuBar> {
         alignment: AlignmentDirectional.centerStart,
         child: FlyoutTarget(
           controller: _controller,
-          child: Builder(builder: (context) {
-            // Do not use the [Flyout] object because it is only available for the
-            // flyout content. [MenuInfoProvider] is available for the entire Flyout
-            // popup. This is only available after [FlyoutTarget].
-            final flyout = MenuInfoProvider.maybeOf(context);
+          child: Builder(
+            builder: (context) {
+              // Do not use the [Flyout] object because it is only available for the
+              // flyout content. [MenuInfoProvider] is available for the entire Flyout
+              // popup. This is only available after [FlyoutTarget].
+              final flyout = MenuInfoProvider.maybeOf(context);
 
-            /// The flyout menu bar must be invisible because it has transparent
-            /// components, which can lead to visual inconsistencies.
-            return Visibility.maintain(
-              visible: flyout == null,
-              child: Row(children: [
-                for (final item in widget.items)
-                  Builder(
-                    key: _controller.isOpen ? null : _keyOf(item),
-                    builder: (context) {
-                      final isSelected = _currentOpenItem == item;
-                      return HoverButton(
-                        margin: EdgeInsetsDirectional.only(
-                          start: barMargin.start,
-                          end: barMargin.end,
-                        ),
-                        onPressed: () {
-                          _locked = false;
-                          _showFlyout(context, item);
-                        },
-                        onPointerEnter: _controller.isOpen
-                            ? (_) {
-                                if (_currentOpenItem != item) {
-                                  _showFlyout(context, item);
-                                }
-                              }
-                            : null,
-                        onFocusChange: (focused) {
-                          if (focused && _controller.isOpen) {
-                            _showFlyout(context, item);
-                          }
-                        },
-                        builder: (context, states) {
-                          if (isSelected) {
-                            states = {...states, WidgetState.hovered};
-                          }
-                          return FocusBorder(
-                            focused: states.isFocused,
-                            child: Container(
-                              padding: barPadding,
-                              decoration: BoxDecoration(
-                                color: HyperlinkButton.backgroundColor(theme)
-                                    .resolve(states),
-                                borderRadius: BorderRadius.circular(4.0),
-                              ),
-                              child: Text(item.title),
+              /// The flyout menu bar must be invisible because it has transparent
+              /// components, which can lead to visual inconsistencies.
+              return Visibility.maintain(
+                visible: flyout == null,
+                child: Row(
+                  children: [
+                    for (final item in widget.items)
+                      Builder(
+                        key: _controller.isOpen ? null : _keyOf(item),
+                        builder: (context) {
+                          final isSelected = _currentOpenItem == item;
+                          return HoverButton(
+                            margin: EdgeInsetsDirectional.only(
+                              start: barMargin.start,
+                              end: barMargin.end,
                             ),
+                            onPressed: () {
+                              _locked = false;
+                              _showFlyout(context, item);
+                            },
+                            onPointerEnter: _controller.isOpen
+                                ? (_) {
+                                    if (_currentOpenItem != item) {
+                                      _showFlyout(context, item);
+                                    }
+                                  }
+                                : null,
+                            onFocusChange: (focused) {
+                              if (focused && _controller.isOpen) {
+                                _showFlyout(context, item);
+                              }
+                            },
+                            builder: (context, states) {
+                              if (isSelected) {
+                                states = {...states, WidgetState.hovered};
+                              }
+                              return FocusBorder(
+                                focused: states.isFocused,
+                                child: Container(
+                                  padding: barPadding,
+                                  decoration: BoxDecoration(
+                                    color: HyperlinkButton.backgroundColor(
+                                      theme,
+                                    ).resolve(states),
+                                    borderRadius: BorderRadius.circular(4.0),
+                                  ),
+                                  child: Text(item.title),
+                                ),
+                              );
+                            },
                           );
                         },
-                      );
-                    },
-                  ),
-              ]),
-            );
-          }),
+                      ),
+                  ],
+                ),
+              );
+            },
+          ),
         ),
       ),
     );

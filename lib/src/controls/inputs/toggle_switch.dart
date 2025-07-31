@@ -2,10 +2,8 @@ import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/rendering.dart';
 
-typedef ToggleSwitchKnobBuilder = Widget Function(
-  BuildContext context,
-  Set<WidgetState> states,
-);
+typedef ToggleSwitchKnobBuilder =
+    Widget Function(BuildContext context, Set<WidgetState> states);
 
 /// The toggle switch represents a physical switch that allows users to turn
 /// things on or off, like a light switch. Use toggle switch controls to present
@@ -101,11 +99,17 @@ class ToggleSwitch extends StatefulWidget {
     super.debugFillProperties(properties);
     properties
       ..add(FlagProperty('checked', value: checked, ifFalse: 'unchecked'))
-      ..add(FlagProperty('leadingContent',
-          value: leadingContent, ifFalse: 'trailingContent'))
+      ..add(
+        FlagProperty(
+          'leadingContent',
+          value: leadingContent,
+          ifFalse: 'trailingContent',
+        ),
+      )
       ..add(ObjectFlagProperty('onChanged', onChanged, ifNull: 'disabled'))
       ..add(
-          FlagProperty('autofocus', value: autofocus, ifFalse: 'manual focus'))
+        FlagProperty('autofocus', value: autofocus, ifFalse: 'manual focus'),
+      )
       ..add(DiagnosticsProperty<ToggleSwitchThemeData>('style', style))
       ..add(StringProperty('semanticLabel', semanticLabel))
       ..add(ObjectFlagProperty<FocusNode>.has('focusNode', focusNode));
@@ -173,7 +177,8 @@ class _ToggleSwitchState extends State<ToggleSwitch> {
             },
       builder: (context, states) {
         Widget child = AnimatedContainer(
-          alignment: _alignment ??
+          alignment:
+              _alignment ??
               (widget.checked
                   ? AlignmentDirectional.centerEnd
                   : AlignmentDirectional.centerStart),
@@ -185,7 +190,8 @@ class _ToggleSwitchState extends State<ToggleSwitch> {
           decoration: widget.checked
               ? style.checkedDecoration?.resolve(states)
               : style.uncheckedDecoration?.resolve(states),
-          child: widget.knob ??
+          child:
+              widget.knob ??
               widget.knobBuilder?.call(context, states) ??
               DefaultToggleSwitchKnob(
                 checked: widget.checked,
@@ -203,26 +209,15 @@ class _ToggleSwitchState extends State<ToggleSwitch> {
               child: Row(
                 mainAxisSize: MainAxisSize.min,
                 children: widget.leadingContent
-                    ? [
-                        widget.content!,
-                        const SizedBox(width: 10.0),
-                        child,
-                      ]
-                    : [
-                        child,
-                        const SizedBox(width: 10.0),
-                        widget.content!,
-                      ],
+                    ? [widget.content!, const SizedBox(width: 10.0), child]
+                    : [child, const SizedBox(width: 10.0), widget.content!],
               ),
             ),
           );
         }
         return Semantics(
           toggled: widget.checked,
-          child: FocusBorder(
-            focused: states.isFocused,
-            child: child,
-          ),
+          child: FocusBorder(focused: states.isFocused, child: child),
         );
       },
     );
@@ -281,13 +276,15 @@ class ToggleSwitchTheme extends InheritedTheme {
     required ToggleSwitchThemeData data,
     required Widget child,
   }) {
-    return Builder(builder: (BuildContext context) {
-      return ToggleSwitchTheme(
-        key: key,
-        data: _getInheritedToggleSwitchThemeData(context).merge(data),
-        child: child,
-      );
-    });
+    return Builder(
+      builder: (BuildContext context) {
+        return ToggleSwitchTheme(
+          key: key,
+          data: _getInheritedToggleSwitchThemeData(context).merge(data),
+          child: child,
+        );
+      },
+    );
   }
 
   /// The data from the closest instance of this class that encloses the given
@@ -302,15 +299,16 @@ class ToggleSwitchTheme extends InheritedTheme {
   /// ```
   static ToggleSwitchThemeData of(BuildContext context) {
     assert(debugCheckHasFluentTheme(context));
-    return ToggleSwitchThemeData.standard(FluentTheme.of(context)).merge(
-      _getInheritedToggleSwitchThemeData(context),
-    );
+    return ToggleSwitchThemeData.standard(
+      FluentTheme.of(context),
+    ).merge(_getInheritedToggleSwitchThemeData(context));
   }
 
   static ToggleSwitchThemeData _getInheritedToggleSwitchThemeData(
-      BuildContext context) {
-    final checkboxTheme =
-        context.dependOnInheritedWidgetOfExactType<ToggleSwitchTheme>();
+    BuildContext context,
+  ) {
+    final checkboxTheme = context
+        .dependOnInheritedWidgetOfExactType<ToggleSwitchTheme>();
     return checkboxTheme?.data ?? FluentTheme.of(context).toggleSwitchTheme;
   }
 
@@ -434,24 +432,41 @@ class ToggleSwitchThemeData with Diagnosticable {
       margin: EdgeInsetsGeometry.lerp(a?.margin, b?.margin, t),
       padding: EdgeInsetsGeometry.lerp(a?.padding, b?.padding, t),
       animationCurve: t < 0.5 ? a?.animationCurve : b?.animationCurve,
-      animationDuration: lerpDuration(a?.animationDuration ?? Duration.zero,
-          b?.animationDuration ?? Duration.zero, t),
+      animationDuration: lerpDuration(
+        a?.animationDuration ?? Duration.zero,
+        b?.animationDuration ?? Duration.zero,
+        t,
+      ),
       checkedKnobDecoration: WidgetStateProperty.lerp<Decoration?>(
-          a?.checkedKnobDecoration,
-          b?.checkedKnobDecoration,
-          t,
-          Decoration.lerp),
+        a?.checkedKnobDecoration,
+        b?.checkedKnobDecoration,
+        t,
+        Decoration.lerp,
+      ),
       uncheckedKnobDecoration: WidgetStateProperty.lerp<Decoration?>(
-          a?.uncheckedKnobDecoration,
-          b?.uncheckedKnobDecoration,
-          t,
-          Decoration.lerp),
+        a?.uncheckedKnobDecoration,
+        b?.uncheckedKnobDecoration,
+        t,
+        Decoration.lerp,
+      ),
       checkedDecoration: WidgetStateProperty.lerp<Decoration?>(
-          a?.checkedDecoration, b?.checkedDecoration, t, Decoration.lerp),
+        a?.checkedDecoration,
+        b?.checkedDecoration,
+        t,
+        Decoration.lerp,
+      ),
       uncheckedDecoration: WidgetStateProperty.lerp<Decoration?>(
-          a?.uncheckedDecoration, b?.uncheckedDecoration, t, Decoration.lerp),
+        a?.uncheckedDecoration,
+        b?.uncheckedDecoration,
+        t,
+        Decoration.lerp,
+      ),
       foregroundColor: WidgetStateProperty.lerp<Color?>(
-          a?.foregroundColor, b?.foregroundColor, t, Color.lerp),
+        a?.foregroundColor,
+        b?.foregroundColor,
+        t,
+        Color.lerp,
+      ),
     );
   }
 
@@ -478,24 +493,33 @@ class ToggleSwitchThemeData with Diagnosticable {
       ..add(DiagnosticsProperty<EdgeInsetsGeometry?>('margin', margin))
       ..add(DiagnosticsProperty<EdgeInsetsGeometry?>('padding', padding))
       ..add(DiagnosticsProperty<Curve?>('animationCurve', animationCurve))
-      ..add(DiagnosticsProperty<Duration?>(
-          'animationDuration', animationDuration))
-      ..add(ObjectFlagProperty<WidgetStateProperty<Decoration?>?>.has(
-        'checkedDecoration',
-        checkedDecoration,
-      ))
-      ..add(ObjectFlagProperty<WidgetStateProperty<Decoration?>?>.has(
-        'uncheckedDecoration',
-        uncheckedDecoration,
-      ))
-      ..add(ObjectFlagProperty<WidgetStateProperty<Decoration?>?>.has(
-        'checkedKnobDecoration',
-        checkedKnobDecoration,
-      ))
-      ..add(ObjectFlagProperty<WidgetStateProperty<Decoration?>?>.has(
-        'uncheckedKnobDecoration',
-        uncheckedKnobDecoration,
-      ))
+      ..add(
+        DiagnosticsProperty<Duration?>('animationDuration', animationDuration),
+      )
+      ..add(
+        ObjectFlagProperty<WidgetStateProperty<Decoration?>?>.has(
+          'checkedDecoration',
+          checkedDecoration,
+        ),
+      )
+      ..add(
+        ObjectFlagProperty<WidgetStateProperty<Decoration?>?>.has(
+          'uncheckedDecoration',
+          uncheckedDecoration,
+        ),
+      )
+      ..add(
+        ObjectFlagProperty<WidgetStateProperty<Decoration?>?>.has(
+          'checkedKnobDecoration',
+          checkedKnobDecoration,
+        ),
+      )
+      ..add(
+        ObjectFlagProperty<WidgetStateProperty<Decoration?>?>.has(
+          'uncheckedKnobDecoration',
+          uncheckedKnobDecoration,
+        ),
+      )
       ..add(DiagnosticsProperty('foregroundColor', foregroundColor));
   }
 }

@@ -27,18 +27,18 @@ class Divider extends StatelessWidget {
   void debugFillProperties(DiagnosticPropertiesBuilder properties) {
     super.debugFillProperties(properties);
     properties
-      ..add(DoubleProperty(
-        'size',
-        size,
-        ifNull: 'indeterminate',
-        defaultValue: 1.0,
-      ))
+      ..add(
+        DoubleProperty(
+          'size',
+          size,
+          ifNull: 'indeterminate',
+          defaultValue: 1.0,
+        ),
+      )
       ..add(DiagnosticsProperty('style', style))
-      ..add(EnumProperty(
-        'direction',
-        direction,
-        defaultValue: Axis.horizontal,
-      ));
+      ..add(
+        EnumProperty('direction', direction, defaultValue: Axis.horizontal),
+      );
   }
 
   @override
@@ -64,11 +64,7 @@ class Divider extends StatelessWidget {
 class DividerTheme extends InheritedTheme {
   /// Creates a divider theme that controls the configurations for
   /// [Divider].
-  const DividerTheme({
-    super.key,
-    required this.data,
-    required super.child,
-  });
+  const DividerTheme({super.key, required this.data, required super.child});
 
   /// The properties for descendant [Divider] widgets.
   final DividerThemeData data;
@@ -80,13 +76,15 @@ class DividerTheme extends InheritedTheme {
     required DividerThemeData data,
     required Widget child,
   }) {
-    return Builder(builder: (BuildContext context) {
-      return DividerTheme(
-        key: key,
-        data: _getInheritedThemeData(context).merge(data),
-        child: child,
-      );
-    });
+    return Builder(
+      builder: (BuildContext context) {
+        return DividerTheme(
+          key: key,
+          data: _getInheritedThemeData(context).merge(data),
+          child: child,
+        );
+      },
+    );
   }
 
   static DividerThemeData _getInheritedThemeData(BuildContext context) {
@@ -104,9 +102,9 @@ class DividerTheme extends InheritedTheme {
   /// DividerThemeData theme = DividerTheme.of(context);
   /// ```
   static DividerThemeData of(BuildContext context) {
-    return DividerThemeData.standard(FluentTheme.of(context)).merge(
-      _getInheritedThemeData(context),
-    );
+    return DividerThemeData.standard(
+      FluentTheme.of(context),
+    ).merge(_getInheritedThemeData(context));
   }
 
   @override
@@ -156,14 +154,23 @@ class DividerThemeData with Diagnosticable {
   }
 
   static DividerThemeData lerp(
-      DividerThemeData? a, DividerThemeData? b, double t) {
+    DividerThemeData? a,
+    DividerThemeData? b,
+    double t,
+  ) {
     return DividerThemeData(
       decoration: Decoration.lerp(a?.decoration, b?.decoration, t),
       thickness: lerpDouble(a?.thickness, b?.thickness, t),
-      horizontalMargin:
-          EdgeInsetsGeometry.lerp(a?.horizontalMargin, b?.horizontalMargin, t),
-      verticalMargin:
-          EdgeInsetsGeometry.lerp(a?.verticalMargin, b?.verticalMargin, t),
+      horizontalMargin: EdgeInsetsGeometry.lerp(
+        a?.horizontalMargin,
+        b?.horizontalMargin,
+        t,
+      ),
+      verticalMargin: EdgeInsetsGeometry.lerp(
+        a?.verticalMargin,
+        b?.verticalMargin,
+        t,
+      ),
     );
   }
 

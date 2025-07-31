@@ -131,7 +131,7 @@ class ColorPicker extends StatefulWidget {
   /// The maximum allowed value/brightness (0-100)
   final int maxValue;
 
-  /// Creates a fluent-styled [ColorPicker].
+  /// Creates a windows-styled [ColorPicker].
   const ColorPicker({
     super.key,
     required this.color,
@@ -152,15 +152,20 @@ class ColorPicker extends StatefulWidget {
     this.maxSaturation = 100,
     this.minValue = 0,
     this.maxValue = 100,
-  })  : assert(minHue >= 0 && minHue <= maxHue && maxHue <= 359,
-            'Hue values must be between 0 and 359'),
-        assert(
-            minSaturation >= 0 &&
-                minSaturation <= maxSaturation &&
-                maxSaturation <= 100,
-            'Saturation values must be between 0 and 100'),
-        assert(minValue >= 0 && minValue <= maxValue && maxValue <= 100,
-            'Value/brightness values must be between 0 and 100');
+  }) : assert(
+         minHue >= 0 && minHue <= maxHue && maxHue <= 359,
+         'Hue values must be between 0 and 359',
+       ),
+       assert(
+         minSaturation >= 0 &&
+             minSaturation <= maxSaturation &&
+             maxSaturation <= 100,
+         'Saturation values must be between 0 and 100',
+       ),
+       assert(
+         minValue >= 0 && minValue <= maxValue && maxValue <= 100,
+         'Value/brightness values must be between 0 and 100',
+       );
 
   @override
   State<ColorPicker> createState() => _ColorPickerState();
@@ -171,56 +176,76 @@ class ColorPicker extends StatefulWidget {
     properties
       ..add(ColorProperty('color', color))
       ..add(EnumProperty<Axis>('orientation', orientation))
-      ..add(EnumProperty<ColorSpectrumShape>(
-          'colorSpectrumShape', colorSpectrumShape))
-      ..add(FlagProperty(
-        'isColorPreviewVisible',
-        value: isColorPreviewVisible,
-        defaultValue: true,
-        ifFalse: 'color preview hidden',
-      ))
-      ..add(FlagProperty(
-        'isColorSliderVisible',
-        value: isColorSliderVisible,
-        defaultValue: true,
-        ifFalse: 'color slider hidden',
-      ))
-      ..add(FlagProperty(
-        'isMoreButtonVisible',
-        value: isMoreButtonVisible,
-        defaultValue: true,
-        ifFalse: 'more button hidden',
-      ))
-      ..add(FlagProperty(
-        'isHexInputVisible',
-        value: isHexInputVisible,
-        defaultValue: true,
-        ifFalse: 'hex input hidden',
-      ))
-      ..add(FlagProperty(
-        'isColorChannelTextInputVisible',
-        value: isColorChannelTextInputVisible,
-        defaultValue: true,
-        ifFalse: 'color channel text input hidden',
-      ))
-      ..add(FlagProperty(
-        'isAlphaEnabled',
-        value: isAlphaEnabled,
-        defaultValue: true,
-        ifFalse: 'alpha disabled',
-      ))
-      ..add(FlagProperty(
-        'isAlphaSliderVisible',
-        value: isAlphaSliderVisible,
-        defaultValue: true,
-        ifFalse: 'alpha slider hidden',
-      ))
-      ..add(FlagProperty(
-        'isAlphaTextInputVisible',
-        value: isAlphaTextInputVisible,
-        defaultValue: true,
-        ifFalse: 'alpha text input hidden',
-      ))
+      ..add(
+        EnumProperty<ColorSpectrumShape>(
+          'colorSpectrumShape',
+          colorSpectrumShape,
+        ),
+      )
+      ..add(
+        FlagProperty(
+          'isColorPreviewVisible',
+          value: isColorPreviewVisible,
+          defaultValue: true,
+          ifFalse: 'color preview hidden',
+        ),
+      )
+      ..add(
+        FlagProperty(
+          'isColorSliderVisible',
+          value: isColorSliderVisible,
+          defaultValue: true,
+          ifFalse: 'color slider hidden',
+        ),
+      )
+      ..add(
+        FlagProperty(
+          'isMoreButtonVisible',
+          value: isMoreButtonVisible,
+          defaultValue: true,
+          ifFalse: 'more button hidden',
+        ),
+      )
+      ..add(
+        FlagProperty(
+          'isHexInputVisible',
+          value: isHexInputVisible,
+          defaultValue: true,
+          ifFalse: 'hex input hidden',
+        ),
+      )
+      ..add(
+        FlagProperty(
+          'isColorChannelTextInputVisible',
+          value: isColorChannelTextInputVisible,
+          defaultValue: true,
+          ifFalse: 'color channel text input hidden',
+        ),
+      )
+      ..add(
+        FlagProperty(
+          'isAlphaEnabled',
+          value: isAlphaEnabled,
+          defaultValue: true,
+          ifFalse: 'alpha disabled',
+        ),
+      )
+      ..add(
+        FlagProperty(
+          'isAlphaSliderVisible',
+          value: isAlphaSliderVisible,
+          defaultValue: true,
+          ifFalse: 'alpha slider hidden',
+        ),
+      )
+      ..add(
+        FlagProperty(
+          'isAlphaTextInputVisible',
+          value: isAlphaTextInputVisible,
+          defaultValue: true,
+          ifFalse: 'alpha text input hidden',
+        ),
+      )
       ..add(IntProperty('minHue', minHue, defaultValue: 0))
       ..add(IntProperty('maxHue', maxHue, defaultValue: 359))
       ..add(IntProperty('minSaturation', minSaturation, defaultValue: 0))
@@ -280,7 +305,8 @@ class _ColorPickerState extends State<ColorPicker> {
     final theme = FluentTheme.of(context);
     final localizations = FluentLocalizations.of(context);
 
-    final bool hasVisibleInputs = widget.isHexInputVisible ||
+    final bool hasVisibleInputs =
+        widget.isHexInputVisible ||
         widget.isColorChannelTextInputVisible ||
         (widget.isAlphaEnabled && widget.isAlphaTextInputVisible);
 
@@ -380,54 +406,52 @@ class _ColorPickerState extends State<ColorPicker> {
 
   /// Builds the "More" button to expand the color picker inputs.
   Widget _buildMoreButton(
-      FluentThemeData theme, FluentLocalizations localizations) {
+    FluentThemeData theme,
+    FluentLocalizations localizations,
+  ) {
     final moreButton = SizedBox(
-        width: _ColorPickerSizes.inputBox.size,
-        child: Button(
-          style: ButtonStyle(
-            padding: const WidgetStatePropertyAll(
-              EdgeInsets.only(left: 8, right: 4, top: 8, bottom: 8),
-            ),
-            shape: const WidgetStatePropertyAll(
-              RoundedRectangleBorder(
-                side: BorderSide.none,
-              ),
-            ),
-            backgroundColor: const WidgetStatePropertyAll(Colors.transparent),
-            foregroundColor: WidgetStateColor.resolveWith((states) {
-              if (states.isPressed) {
-                return theme.resources.textFillColorTertiary;
-              }
-              if (states.isHovered || states.isFocused) {
-                return theme.resources.textFillColorSecondary;
-              }
-              return theme.resources.textFillColorPrimary;
-            }),
+      width: _ColorPickerSizes.inputBox.size,
+      child: Button(
+        style: ButtonStyle(
+          padding: const WidgetStatePropertyAll(
+            EdgeInsets.only(left: 8, right: 4, top: 8, bottom: 8),
           ),
-          onPressed: () => setState(() => _isMoreExpanded = !_isMoreExpanded),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.end,
-            children: [
-              Text(_isMoreExpanded
-                  ? localizations.lessText
-                  : localizations.moreText),
-              const SizedBox(width: 8),
-              Icon(
-                _isMoreExpanded
-                    ? FluentIcons.chevron_up
-                    : FluentIcons.chevron_down,
-                size: 10,
-              ),
-            ],
+          shape: const WidgetStatePropertyAll(
+            RoundedRectangleBorder(side: BorderSide.none),
           ),
-        ));
+          backgroundColor: const WidgetStatePropertyAll(Colors.transparent),
+          foregroundColor: WidgetStateColor.resolveWith((states) {
+            if (states.isPressed) {
+              return theme.resources.textFillColorTertiary;
+            }
+            if (states.isHovered || states.isFocused) {
+              return theme.resources.textFillColorSecondary;
+            }
+            return theme.resources.textFillColorPrimary;
+          }),
+        ),
+        onPressed: () => setState(() => _isMoreExpanded = !_isMoreExpanded),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.end,
+          children: [
+            Text(
+              _isMoreExpanded ? localizations.lessText : localizations.moreText,
+            ),
+            const SizedBox(width: 8),
+            Icon(
+              _isMoreExpanded
+                  ? FluentIcons.chevron_up
+                  : FluentIcons.chevron_down,
+              size: 10,
+            ),
+          ],
+        ),
+      ),
+    );
 
     return SizedBox(
       width: _ColorPickerSizes.maxWidth,
-      child: Align(
-        alignment: Alignment.centerRight,
-        child: moreButton,
-      ),
+      child: Align(alignment: Alignment.centerRight, child: moreButton),
     );
   }
 
@@ -591,20 +615,14 @@ class _ColorSpectrumAndPreview extends StatelessWidget {
           Positioned.fill(
             child: ClipRRect(
               borderRadius: BorderRadius.circular(borderRadius),
-              child: CustomPaint(
-                painter: CheckerboardPainter(
-                  theme: theme,
-                ),
-              ),
+              child: CustomPaint(painter: CheckerboardPainter(theme: theme)),
             ),
           ),
           // Color overlay
           Positioned.fill(
             child: ClipRRect(
               borderRadius: BorderRadius.circular(borderRadius),
-              child: Container(
-                color: color,
-              ),
+              child: Container(color: color),
             ),
           ),
           // Border on top
@@ -675,27 +693,22 @@ class _ColorSliders extends StatelessWidget {
       if (isColorSliderVisible && isAlphaSliderVisible && isAlphaEnabled)
         orientation == Axis.vertical
             ? SizedBox(height: _ColorPickerSpacing.large.size)
-            : SizedBox(
-                width: _ColorPickerSpacing.large.size,
-              ),
+            : SizedBox(width: _ColorPickerSpacing.large.size),
       if (isAlphaSliderVisible && isAlphaEnabled)
         _buildAlphaSlider(theme, localizations, isVertical),
     ];
 
     return orientation == Axis.horizontal
-        ? Row(
-            mainAxisSize: MainAxisSize.min,
-            children: sliders,
-          )
-        : Column(
-            mainAxisSize: MainAxisSize.min,
-            children: sliders,
-          );
+        ? Row(mainAxisSize: MainAxisSize.min, children: sliders)
+        : Column(mainAxisSize: MainAxisSize.min, children: sliders);
   }
 
   /// Builds the value slider for the color picker.
-  Widget _buildValueSlider(FluentThemeData theme,
-      FluentLocalizations localizations, bool isVertical) {
+  Widget _buildValueSlider(
+    FluentThemeData theme,
+    FluentLocalizations localizations,
+    bool isVertical,
+  ) {
     final thumbColor = theme.resources.focusStrokeColorOuter;
 
     final colorKey = colorState.guessColorName();
@@ -703,8 +716,9 @@ class _ColorSliders extends StatelessWidget {
 
     // Format the value text with color name : "Value 100 (Color Name)"
     final valueText = localizations.valueSliderTooltip(
-        (colorState.value * 100).round(),
-        displayName.isNotEmpty ? displayName : "");
+      (colorState.value * 100).round(),
+      displayName.isNotEmpty ? displayName : "",
+    );
 
     return SizedBox(
       width: isVertical
@@ -713,58 +727,70 @@ class _ColorSliders extends StatelessWidget {
       height: isVertical
           ? _ColorPickerSizes.spectrum.size
           : _ColorPickerSizes.slider.size,
-      child: Stack(clipBehavior: Clip.none, children: [
-        Container(
-          decoration: BoxDecoration(
-            gradient: LinearGradient(
-              begin: isVertical ? Alignment.bottomCenter : Alignment.centerLeft,
-              end: isVertical ? Alignment.topCenter : Alignment.centerRight,
-              colors: [
-                const Color(0xFF000000),
-                HSVColor.fromAHSV(1, math.max(0, colorState.hue),
-                        math.max(0, colorState.saturation), 1.0)
-                    .toColor(),
-              ],
+      child: Stack(
+        clipBehavior: Clip.none,
+        children: [
+          Container(
+            decoration: BoxDecoration(
+              gradient: LinearGradient(
+                begin: isVertical
+                    ? Alignment.bottomCenter
+                    : Alignment.centerLeft,
+                end: isVertical ? Alignment.topCenter : Alignment.centerRight,
+                colors: [
+                  const Color(0xFF000000),
+                  HSVColor.fromAHSV(
+                    1,
+                    math.max(0, colorState.hue),
+                    math.max(0, colorState.saturation),
+                    1.0,
+                  ).toColor(),
+                ],
+              ),
+              borderRadius: BorderRadius.circular(6),
             ),
-            borderRadius: BorderRadius.circular(6),
           ),
-        ),
-        SliderTheme(
-          data: SliderThemeData(
-            activeColor: WidgetStatePropertyAll(thumbColor),
-            trackHeight: const WidgetStatePropertyAll(0.0),
-            thumbRadius: const WidgetStatePropertyAll(8.0),
-            thumbBallInnerFactor: const WidgetStatePropertyAll(0.6),
+          SliderTheme(
+            data: SliderThemeData(
+              activeColor: WidgetStatePropertyAll(thumbColor),
+              trackHeight: const WidgetStatePropertyAll(0.0),
+              thumbRadius: const WidgetStatePropertyAll(8.0),
+              thumbBallInnerFactor: const WidgetStatePropertyAll(0.6),
+            ),
+            child: Slider(
+              label: valueText,
+              vertical: isVertical,
+              value: colorState.value,
+              min: minValue / 100,
+              max: maxValue / 100,
+              onChanged: (value) =>
+                  onColorChanged(colorState.copyWith(value: value)),
+            ),
           ),
-          child: Slider(
-            label: valueText,
-            vertical: isVertical,
-            value: colorState.value,
-            min: minValue / 100,
-            max: maxValue / 100,
-            onChanged: (value) =>
-                onColorChanged(colorState.copyWith(value: value)),
-          ),
-        ),
-      ]),
+        ],
+      ),
     );
   }
 
   /// Builds the alpha slider for the color picker.
-  Widget _buildAlphaSlider(FluentThemeData theme,
-      FluentLocalizations localizations, bool isVertical) {
+  Widget _buildAlphaSlider(
+    FluentThemeData theme,
+    FluentLocalizations localizations,
+    bool isVertical,
+  ) {
     final thumbColor = theme.resources.focusStrokeColorOuter;
 
     // Format the opacity text : "100% opacity"
-    final opacityText =
-        localizations.alphaSliderTooltip((colorState.alpha * 100).round());
+    final opacityText = localizations.alphaSliderTooltip(
+      (colorState.alpha * 100).round(),
+    );
 
     return SizedBox(
       width: isVertical
           ? _ColorPickerSizes.slider.size
           : _ColorPickerSizes.spectrum.size +
-              _ColorPickerSpacing.small.size +
-              _ColorPickerSizes.preview.size,
+                _ColorPickerSpacing.small.size +
+                _ColorPickerSizes.preview.size,
       height: isVertical
           ? _ColorPickerSizes.spectrum.size
           : _ColorPickerSizes.slider.size,
@@ -778,8 +804,9 @@ class _ColorSliders extends StatelessWidget {
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(6),
               gradient: LinearGradient(
-                begin:
-                    isVertical ? Alignment.bottomCenter : Alignment.centerLeft,
+                begin: isVertical
+                    ? Alignment.bottomCenter
+                    : Alignment.centerLeft,
                 end: isVertical ? Alignment.topCenter : Alignment.centerRight,
                 colors: [
                   colorState.toColor().withAlpha(0),
@@ -916,10 +943,7 @@ class _ColorInputs extends StatelessWidget {
         );
 
         return orientation == Axis.vertical
-            ? SizedBox(
-                width: _ColorPickerSizes.maxWidth,
-                child: inputsContent,
-              )
+            ? SizedBox(width: _ColorPickerSizes.maxWidth, child: inputsContent)
             : SizedBox(
                 height: _ColorPickerSizes.spectrum.size,
                 width: 200, // arbitrary width, but more than enough
@@ -960,23 +984,20 @@ class _ColorInputs extends StatelessWidget {
     );
 
     final hexInput = SizedBox(
-        width: _ColorPickerSizes.inputBox.size,
-        child: TextBox(
-          controller: hexController,
-          placeholder: isAlphaEnabled ? '#AARRGGBB' : '#RRGGBB',
-          onSubmitted: _updateHexColor,
-        ));
+      width: _ColorPickerSizes.inputBox.size,
+      child: TextBox(
+        controller: hexController,
+        placeholder: isAlphaEnabled ? '#AARRGGBB' : '#RRGGBB',
+        onSubmitted: _updateHexColor,
+      ),
+    );
 
     if (orientation == Axis.vertical) {
       return Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          if (isColorChannelTextInputVisible) ...[
-            modeSelector,
-          ],
-          if (isHexInputVisible) ...[
-            hexInput,
-          ],
+          if (isColorChannelTextInputVisible) ...[modeSelector],
+          if (isHexInputVisible) ...[hexInput],
         ],
       );
     } else {
@@ -985,17 +1006,11 @@ class _ColorInputs extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           if (isHexInputVisible) ...[
-            Align(
-              alignment: Alignment.centerLeft,
-              child: hexInput,
-            ),
+            Align(alignment: Alignment.centerLeft, child: hexInput),
             SizedBox(height: _ColorPickerSpacing.small.size),
           ],
           if (isColorChannelTextInputVisible) ...[
-            Align(
-              alignment: Alignment.centerLeft,
-              child: modeSelector,
-            ),
+            Align(alignment: Alignment.centerLeft, child: modeSelector),
           ],
         ],
       );
@@ -1114,31 +1129,33 @@ class _ColorInputs extends StatelessWidget {
     required double min,
     required double max,
   }) {
-    return Column(children: [
-      SizedBox(height: _ColorPickerSpacing.small.size),
-      Row(
-        mainAxisAlignment: MainAxisAlignment.start,
-        children: [
-          SizedBox(
-            width: _ColorPickerSizes.inputBox.size,
-            child: NumberBox<double>(
-              value: value,
-              min: min,
-              max: max,
-              mode: SpinButtonPlacementMode.none,
-              clearButton: false,
-              onChanged: (v) {
-                if (v == null || v.isNaN || v.isInfinite) return;
-                onChanged(v);
-              },
-              format: (v) => v?.round().toString(),
+    return Column(
+      children: [
+        SizedBox(height: _ColorPickerSpacing.small.size),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: [
+            SizedBox(
+              width: _ColorPickerSizes.inputBox.size,
+              child: NumberBox<double>(
+                value: value,
+                min: min,
+                max: max,
+                mode: SpinButtonPlacementMode.none,
+                clearButton: false,
+                onChanged: (v) {
+                  if (v == null || v.isNaN || v.isInfinite) return;
+                  onChanged(v);
+                },
+                format: (v) => v?.round().toString(),
+              ),
             ),
-          ),
-          const SizedBox(width: 5),
-          Text(label),
-        ],
-      ),
-    ]);
+            const SizedBox(width: 5),
+            Text(label),
+          ],
+        ),
+      ],
+    );
   }
 
   /// Updates the hex color value.

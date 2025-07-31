@@ -1,16 +1,13 @@
 import 'package:fluent_ui/fluent_ui.dart';
 
-typedef SplitButtonSecondaryBuilder = Widget Function(
-  BuildContext context,
-  VoidCallback showFlyout,
-  FlyoutController flyoutController,
-);
+typedef SplitButtonSecondaryBuilder =
+    Widget Function(
+      BuildContext context,
+      VoidCallback showFlyout,
+      FlyoutController flyoutController,
+    );
 
-enum _SplitButtonType {
-  normal,
-
-  toggle
-}
+enum _SplitButtonType { normal, toggle }
 
 /// Represents a button with two parts that can be invoked separately. One part
 /// behaves like a standard button and the other part invokes a flyout.
@@ -93,8 +90,8 @@ class SplitButton extends StatefulWidget {
     required this.flyout,
     this.onInvoked,
     this.enabled = true,
-  })  : _type = _SplitButtonType.normal,
-        checked = false;
+  }) : _type = _SplitButtonType.normal,
+       checked = false;
 
   /// Creates a split toggle button
   const SplitButton.toggle({
@@ -153,99 +150,106 @@ class SplitButtonState extends State<SplitButton> {
         borderRadius: radius,
         child: DecoratedBox(
           decoration: ShapeDecoration(
-              shape: widget.checked
-                  ? FilledButton.shapeBorder(theme, {})
-                  : ButtonThemeData.shapeBorder(context, {})),
+            shape: widget.checked
+                ? FilledButton.shapeBorder(theme, {})
+                : ButtonThemeData.shapeBorder(context, {}),
+          ),
           child: IntrinsicHeight(
-            child: Row(mainAxisSize: MainAxisSize.min, children: [
-              HoverButton(
-                onPressed: widget.enabled ? widget.onInvoked : null,
-                onFocusChange: _updateFocusHighlight,
-                focusEnabled: widget._type == _SplitButtonType.toggle ||
-                    widget.secondaryBuilder != null,
-                builder: (context, states) {
-                  return DecoratedBox(
-                    decoration: BoxDecoration(
-                      color: widget.checked
-                          ? FilledButton.backgroundColor(theme, states)
-                          : ButtonThemeData.buttonColor(
-                              context,
-                              widget.enabled &&
-                                      widget.onInvoked == null &&
-                                      states.isDisabled
-                                  ? {}
-                                  : states,
-                              transparentWhenNone: true,
-                            ),
-                    ),
-                    child: DefaultTextStyle.merge(
-                      style: widget.checked
-                          ? TextStyle(
-                              color:
-                                  FilledButton.foregroundColor(theme, states),
-                            )
-                          : null,
-                      child: IconTheme.merge(
-                        data: IconThemeData(
-                          color: widget.checked
-                              ? FilledButton.foregroundColor(theme, states)
-                              : null,
-                        ),
-                        child: widget.child,
-                      ),
-                    ),
-                  );
-                },
-              ),
-              const Divider(
-                direction: Axis.vertical,
-                style: DividerThemeData(
-                  horizontalMargin: EdgeInsets.zero,
-                  verticalMargin: EdgeInsets.zero,
-                ),
-              ),
-              if (widget.secondaryBuilder == null)
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
                 HoverButton(
-                  onPressed: widget.enabled ? showFlyout : null,
+                  onPressed: widget.enabled ? widget.onInvoked : null,
                   onFocusChange: _updateFocusHighlight,
-                  focusEnabled: widget._type == _SplitButtonType.normal,
+                  focusEnabled:
+                      widget._type == _SplitButtonType.toggle ||
+                      widget.secondaryBuilder != null,
                   builder: (context, states) {
-                    return FlyoutTarget(
-                      controller: flyoutController,
-                      child: Container(
+                    return DecoratedBox(
+                      decoration: BoxDecoration(
                         color: widget.checked
-                            ? ButtonThemeData.checkedInputColor(theme, states)
+                            ? FilledButton.backgroundColor(theme, states)
                             : ButtonThemeData.buttonColor(
                                 context,
-                                flyoutController.isOpen
-                                    ? {WidgetState.pressed}
+                                widget.enabled &&
+                                        widget.onInvoked == null &&
+                                        states.isDisabled
+                                    ? {}
                                     : states,
                                 transparentWhenNone: true,
                               ),
-                        padding: const EdgeInsetsDirectional.symmetric(
-                          horizontal: 12.0,
-                        ),
-                        alignment: Alignment.center,
-                        child: AnimatedOpacity(
-                          duration: const Duration(milliseconds: 100),
-                          opacity: flyoutController.isOpen ? 0.5 : 1,
-                          child: ChevronDown(
-                            iconColor: widget.checked
+                      ),
+                      child: DefaultTextStyle.merge(
+                        style: widget.checked
+                            ? TextStyle(
+                                color: FilledButton.foregroundColor(
+                                  theme,
+                                  states,
+                                ),
+                              )
+                            : null,
+                        child: IconTheme.merge(
+                          data: IconThemeData(
+                            color: widget.checked
                                 ? FilledButton.foregroundColor(theme, states)
                                 : null,
                           ),
+                          child: widget.child,
                         ),
                       ),
                     );
                   },
-                )
-              else
-                widget.secondaryBuilder!(
-                  context,
-                  showFlyout,
-                  flyoutController,
                 ),
-            ]),
+                const Divider(
+                  direction: Axis.vertical,
+                  style: DividerThemeData(
+                    horizontalMargin: EdgeInsets.zero,
+                    verticalMargin: EdgeInsets.zero,
+                  ),
+                ),
+                if (widget.secondaryBuilder == null)
+                  HoverButton(
+                    onPressed: widget.enabled ? showFlyout : null,
+                    onFocusChange: _updateFocusHighlight,
+                    focusEnabled: widget._type == _SplitButtonType.normal,
+                    builder: (context, states) {
+                      return FlyoutTarget(
+                        controller: flyoutController,
+                        child: Container(
+                          color: widget.checked
+                              ? ButtonThemeData.checkedInputColor(theme, states)
+                              : ButtonThemeData.buttonColor(
+                                  context,
+                                  flyoutController.isOpen
+                                      ? {WidgetState.pressed}
+                                      : states,
+                                  transparentWhenNone: true,
+                                ),
+                          padding: const EdgeInsetsDirectional.symmetric(
+                            horizontal: 12.0,
+                          ),
+                          alignment: Alignment.center,
+                          child: AnimatedOpacity(
+                            duration: const Duration(milliseconds: 100),
+                            opacity: flyoutController.isOpen ? 0.5 : 1,
+                            child: ChevronDown(
+                              iconColor: widget.checked
+                                  ? FilledButton.foregroundColor(theme, states)
+                                  : null,
+                            ),
+                          ),
+                        ),
+                      );
+                    },
+                  )
+                else
+                  widget.secondaryBuilder!(
+                    context,
+                    showFlyout,
+                    flyoutController,
+                  ),
+              ],
+            ),
           ),
         ),
       ),

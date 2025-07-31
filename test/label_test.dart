@@ -4,16 +4,14 @@ import 'package:flutter_test/flutter_test.dart';
 import 'app_test.dart';
 
 void main() {
-  testWidgets('InfoLabel labelStyle is applied correctly to Text',
-      (WidgetTester tester) async {
+  testWidgets('InfoLabel labelStyle is applied correctly to Text', (
+    WidgetTester tester,
+  ) async {
     const labelStyle = TextStyle();
 
     await tester.pumpWidget(
       wrapApp(
-        child: InfoLabel(
-          label: 'Label text',
-          labelStyle: labelStyle,
-        ),
+        child: InfoLabel(label: 'Label text', labelStyle: labelStyle),
       ),
     );
 
