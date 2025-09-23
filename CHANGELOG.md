@@ -1,4 +1,4 @@
-## [next]
+## 4.13.0
 
 - fix: NavigationView transition when in top ([#1220](https://github.com/bdlukaa/fluent_ui/pull/1220))
 - feat: Added `CalendarView` widget ([#1232](https://github.com/bdlukaa/fluent_ui/pull/1232) thanks to [@asmitta-01](https://github.com/Asmitta-01), [#236](https://github.com/bdlukaa/fluent_ui/issues/236))
