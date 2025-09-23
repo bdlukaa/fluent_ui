@@ -6,7 +6,27 @@
 - feat: Added `WindowsIcon` and `WindowsIcons` ([#1237](https://github.com/bdlukaa/fluent_ui/pull/1237))
 - fix: `Slider` label on drag ([#1248](https://github.com/bdlukaa/fluent_ui/issues/1248))
 - fix: `closeAfterClick` at the item level is no longer ignored on `DropDownButton` ([#1245](https://github.com/bdlukaa/fluent_ui/issues/1245))
+- **MINOR BREAKING** feat: `FlyoutController.close` can now return a value to the previous route. ([#1246](https://github.com/bdlukaa/fluent_ui/issues/1246))
+  Before:
 
+  ```dart
+  // normally close the flyout
+  flyoutController.close();
+
+  // forcefully close the flyout
+  flyoutController.close(true);
+  ```
+
+  After:
+
+  ```dart
+  // normally close the flyout
+  final result = flyoutController.close<String>('my result');
+
+  // forcefully close the flyout
+  flyoutController.forceClose();
+  ```
+  
 ## 4.12.0
 
 - feat: Support Flutter 3.32

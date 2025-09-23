@@ -877,18 +877,37 @@ class FlyoutController with ChangeNotifier, WidgetsBindingObserver {
   /// be closed. It is a good practice to close the flyout before pushing new
   /// routes.
   ///
-  /// If [force] is true, the flyout is removed from the navigator stack without
-  /// completing the transition.
-  void close([bool force = false]) {
+  /// See also:
+  ///
+  ///   * [forceClose], which forcefully closes the flyout without completing
+  ///     the transition.
+  void close<T>([T? result]) {
     _ensureAttached();
     _ensureOpen();
     if (_route == null) return; // safe for release
-    if (force) {
-      _currentNavigator!.removeRoute(_route!);
-    } else {
-      _currentNavigator!.maybePop();
-    }
+    _currentNavigator!.maybePop(result);
+    _route = _currentNavigator = null;
+  }
 
+  /// Forcefully closes the flyout.
+  ///
+  /// The flyout must be open, otherwise an error is thrown.
+  ///
+  /// If any other route is pushed above the Flyout, this route is likely to
+  /// be closed. It is a good practice to close the flyout before pushing new
+  /// routes.
+  ///
+  /// The flyout will be removed from the navigator stack without completing the
+  /// transition.
+  ///
+  /// See also:
+  ///
+  ///   * [close], which closes the flyout completing the transition.
+  void forceClose() {
+    _ensureAttached();
+    _ensureOpen();
+    if (_route == null) return; // safe for release
+    _currentNavigator!.removeRoute(_route!);
     _route = _currentNavigator = null;
   }
 
