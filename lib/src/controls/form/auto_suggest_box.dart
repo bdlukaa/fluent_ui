@@ -448,7 +448,11 @@ class AutoSuggestBoxState<T> extends State<AutoSuggestBox<T>> {
 
     // Update the overlay when the text box size has changed
     WidgetsBinding.instance.addPostFrameCallback((_) async {
-      if (!mounted) return;
+      if (!mounted ||
+          _textBoxKey.currentContext == null ||
+          !_textBoxKey.currentContext!.mounted) {
+        return;
+      }
 
       final box = _textBoxKey.currentContext!.findRenderObject() as RenderBox;
       if (_boxSize != box.size) {

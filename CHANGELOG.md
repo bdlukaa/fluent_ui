@@ -26,7 +26,8 @@
   // forcefully close the flyout
   flyoutController.forceClose();
   ```
-  
+- fix: Check if `AutoSuggestBox` is mounted before dismissing overlay ([#1228](https://github.com/bdlukaa/fluent_ui/issues/1228))
+
 ## 4.12.0
 
 - feat: Support Flutter 3.32
