@@ -4,6 +4,7 @@
 - feat: Added `CalendarView` widget ([#1232](https://github.com/bdlukaa/fluent_ui/pull/1232) thanks to [@asmitta-01](https://github.com/Asmitta-01), [#236](https://github.com/bdlukaa/fluent_ui/issues/236))
 - feat: Added `CalendarDatePicker` ([#236](https://github.com/bdlukaa/fluent_ui/issues/236))
 - feat: Added `WindowsIcon` and `WindowsIcons` ([#1237](https://github.com/bdlukaa/fluent_ui/pull/1237))
+- fix: `Slider` label on drag ([#1248](https://github.com/bdlukaa/fluent_ui/issues/1248))
 
 ## 4.12.0
 
