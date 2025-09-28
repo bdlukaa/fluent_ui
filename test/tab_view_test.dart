@@ -162,7 +162,7 @@ void main() {
               mainAxisSize: MainAxisSize.min,
               children: [
                 const Text('Drag Region'),
-                Expanded(child: tabBar),
+                Flexible(child: tabBar),
               ],
             );
           },
