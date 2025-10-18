@@ -17,6 +17,8 @@
   "month": "Месяц",
   "day": "День",
   "year": "Год",
+  "seeMore": "Показать больше",
+  "seeLess": "Показать меньше",
   "dialogLabel": "Диалог",
   "cutActionLabel": "Вырезать",
   "copyActionLabel": "Копировать",
