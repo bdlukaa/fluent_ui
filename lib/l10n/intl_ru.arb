@@ -18,6 +18,8 @@
   "day": "День",
   "year": "Год",
   "pickADate": "Выбрать дату",  
+  "undoActionLabel": "Отменить",
+  "undoActionTooltip": "Отменить последнее действие",
   "seeMore": "Показать больше",
   "seeLess": "Показать меньше",
   "dialogLabel": "Диалог",

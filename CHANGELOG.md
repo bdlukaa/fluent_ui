@@ -1,5 +1,6 @@
 ## [next]
 
+-   fix: Completed russian translation implementation.
 -   fix: Fixed russian localization: added missing localization for DatePicker.
 -   fix: Fixed russian localization: added localization to the CommandBar
 -   fix: Fixed russian localization: added localization for DatePicker and TimePicker.
