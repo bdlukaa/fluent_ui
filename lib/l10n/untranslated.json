@@ -621,17 +621,7 @@
 
   "ru": [
     "undoActionLabel",
-    "undoActionTooltip",
-    "hour",
-    "minute",
-    "am",
-    "pm",
-    "month",
-    "day",
-    "year",
-    "pickADate",
-    "seeMore",
-    "seeLess"
+    "undoActionTooltip"   
   ],
 
   "sk": [
