@@ -87,10 +87,10 @@ class FluentLocalizationsRu extends FluentLocalizations {
   String get undoActionTooltip => 'Undo the last action';
 
   @override
-  String get hour => 'hour';
+  String get hour => 'Час';
 
   @override
-  String get minute => 'minute';
+  String get minute => 'Минута';
 
   @override
   String get am => 'AM';
@@ -99,22 +99,22 @@ class FluentLocalizationsRu extends FluentLocalizations {
   String get pm => 'PM';
 
   @override
-  String get month => 'month';
+  String get month => 'Месяц';
 
   @override
-  String get day => 'day';
+  String get day => 'День';
 
   @override
-  String get year => 'year';
+  String get year => 'Год';
 
   @override
-  String get pickADate => 'Pick a date';
+  String get pickADate => 'Выбрать дату';
 
   @override
-  String get seeMore => 'See more';
+  String get seeMore => 'Показать больше';
 
   @override
-  String get seeLess => 'See less';
+  String get seeLess => 'Показать меньше';
 
   @override
   String get redLabel => 'Красный';
