@@ -242,7 +242,7 @@ class _ButtonPageState extends State<ButtonPage> with PageMixin {
 ToggleButton(
   child: const Text('Toggle Button'),
   checked: checked,
-  onPressed: disabled ? null : (v) => setState(() => checked = v),
+  onChanged: disabled ? null : (v) => setState(() => checked = v),
 )''',
           child: Row(
             children: [
