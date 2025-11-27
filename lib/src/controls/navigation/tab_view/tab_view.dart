@@ -54,6 +54,7 @@ class TabView extends StatefulWidget {
     this.footer,
     this.reservedStripWidth,
     this.stripBuilder,
+    this.dragRegionBuilder,
     this.closeDelayDuration = const Duration(seconds: 1),
   });
 
@@ -166,6 +167,14 @@ class TabView extends StatefulWidget {
   /// The builder for the strip that contains the tabs.
   final Widget Function(BuildContext context, Widget strip)? stripBuilder;
 
+  /// A builder to create a draggable region in the empty space of the tab strip.
+  ///
+  /// This is useful for frameless windows where the tab bar should be used
+  /// to drag the window.
+  ///
+  /// The `child` passed to the builder is the default empty space widget.
+  final Widget Function(BuildContext context, Widget child)? dragRegionBuilder;
+
   /// The delay duration to animate the tab after it's closed. Only applied when
   /// [tabWidthBehavior] is [TabWidthBehavior.equal].
   ///
@@ -250,7 +259,14 @@ class TabView extends StatefulWidget {
       )
       ..add(DoubleProperty('minTabWidth', minTabWidth, defaultValue: 80.0))
       ..add(DoubleProperty('maxTabWidth', maxTabWidth, defaultValue: 240.0))
-      ..add(DoubleProperty('minFooterWidth', reservedStripWidth));
+      ..add(DoubleProperty('minFooterWidth', reservedStripWidth))
+      ..add(
+        ObjectFlagProperty(
+          'dragRegionBuilder',
+          dragRegionBuilder,
+          ifNull: 'no drag region',
+        ),
+      );
   }
 }
 
@@ -663,11 +679,18 @@ class _TabViewState extends State<TabView> {
                         ],
                       );
 
+                      Widget stripWidget = strip;
+
                       if (widget.stripBuilder != null) {
-                        return widget.stripBuilder!(context, strip);
+                        stripWidget = widget.stripBuilder!(context, strip);
                       }
 
-                      return strip;
+                      // Add drag region builder for empty space
+                      if (widget.dragRegionBuilder != null) {
+                        return widget.dragRegionBuilder!(context, stripWidget);
+                      }
+
+                      return stripWidget;
                     },
                   ),
                 ),
