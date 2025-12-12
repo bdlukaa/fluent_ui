@@ -232,8 +232,6 @@ class ExpanderState extends State<Expander>
     super.dispose();
   }
 
-  static const Duration expanderAnimationDuration = Duration(milliseconds: 70);
-
   @override
   Widget build(BuildContext context) {
     assert(debugCheckHasFluentTheme(context));

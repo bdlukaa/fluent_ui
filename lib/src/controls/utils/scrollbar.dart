@@ -385,7 +385,7 @@ class ScrollbarThemeData with Diagnosticable {
       hoveringTrackBorderColor: Colors.transparent,
       padding: const EdgeInsets.symmetric(horizontal: 4.0, vertical: 4.0),
       hoveringPadding: const EdgeInsets.symmetric(vertical: 4.0),
-      expandContractAnimationDuration: theme.fastAnimationDuration,
+      expandContractAnimationDuration: theme.fasterAnimationDuration,
       contractDelay: const Duration(milliseconds: 500),
     );
   }
@@ -535,14 +535,13 @@ class ScrollbarThemeData with Diagnosticable {
         DiagnosticsProperty<Duration>(
           'expandContractAnimationDuration',
           expandContractAnimationDuration,
-          defaultValue: const Duration(milliseconds: 100),
         ),
       )
       ..add(
         DiagnosticsProperty<Duration>(
           'contractDelay',
           contractDelay,
-          defaultValue: const Duration(seconds: 2),
+          defaultValue: const Duration(milliseconds: 500),
         ),
       )
       ..add(

@@ -2,28 +2,22 @@
 
 part of 'view.dart';
 
-const kIndicatorAnimationDuration = Duration(milliseconds: 500);
-
 /// A indicator used by [NavigationPane] to render the selected
 /// indicator.
 class NavigationIndicator extends StatefulWidget {
   /// Creates a navigation indicator used by [NavigationPane]
   /// to render the selected indicator.
-  const NavigationIndicator({
-    this.curve = Curves.linear,
-    this.color,
-    this.duration = kIndicatorAnimationDuration,
-  });
+  const NavigationIndicator({this.curve, this.color, this.duration});
 
   /// The curve used on the animation, if any
   ///
   /// For sticky navigation indicator, [Curves.easeIn] is recommended
-  final Curve curve;
+  final Curve? curve;
 
   /// The duration used on the animation, if any
   ///
   /// 500 milliseconds is used by default
-  final Duration duration;
+  final Duration? duration;
 
   /// The highlight color
   final Color? color;
@@ -34,13 +28,7 @@ class NavigationIndicator extends StatefulWidget {
     properties
       ..add(DiagnosticsProperty('curve', curve, defaultValue: Curves.linear))
       ..add(ColorProperty('highlight color', color))
-      ..add(
-        DiagnosticsProperty<Duration>(
-          'duration',
-          duration,
-          defaultValue: kIndicatorAnimationDuration,
-        ),
-      );
+      ..add(DiagnosticsProperty<Duration>('duration', duration));
   }
 
   @override
@@ -274,6 +262,8 @@ class _StickyNavigationIndicatorState
       return;
     }
 
+    final theme = FluentTheme.of(context);
+
     _old =
         (PageStorage.of(
                   context,
@@ -292,17 +282,23 @@ class _StickyNavigationIndicatorState
         if (isSelected) {
           downAnimation = Tween<double>(begin: 0, end: 1.0).animate(
             CurvedAnimation(
-              curve: Interval(0.5, 1.0, curve: widget.curve),
+              curve: Interval(
+                0.5,
+                1.0,
+                curve: widget.curve ?? theme.animationCurve,
+              ),
               parent: downController,
             ),
           );
           upAnimation = null;
           downController.forward(from: 0.0);
         } else {
-          upAnimation = Tween<double>(
-            begin: 0,
-            end: 1.0,
-          ).animate(CurvedAnimation(curve: widget.curve, parent: upController));
+          upAnimation = Tween<double>(begin: 0, end: 1.0).animate(
+            CurvedAnimation(
+              curve: widget.curve ?? theme.animationCurve,
+              parent: upController,
+            ),
+          );
           downAnimation = null;
           upController.reverse(from: 1.0);
         }
@@ -310,7 +306,11 @@ class _StickyNavigationIndicatorState
         if (isSelected) {
           upAnimation = Tween<double>(begin: 0, end: 1.0).animate(
             CurvedAnimation(
-              curve: Interval(0.5, 1.0, curve: widget.curve),
+              curve: Interval(
+                0.5,
+                1.0,
+                curve: widget.curve ?? theme.animationCurve,
+              ),
               parent: upController,
             ),
           );
@@ -318,7 +318,10 @@ class _StickyNavigationIndicatorState
           upController.forward(from: 0.0);
         } else {
           downAnimation = Tween<double>(begin: 0, end: 1.0).animate(
-            CurvedAnimation(curve: widget.curve, parent: downController),
+            CurvedAnimation(
+              curve: widget.curve ?? theme.animationCurve,
+              parent: downController,
+            ),
           );
           upAnimation = null;
           downController.reverse(from: 1.0);

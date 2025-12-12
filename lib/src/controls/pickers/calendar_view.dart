@@ -1152,7 +1152,7 @@ class CalendarViewState extends State<CalendarView> {
           ),
       constraints: const BoxConstraints(maxWidth: 300, minHeight: 350),
       child: AnimatedSwitcher(
-        duration: const Duration(milliseconds: 167),
+        duration: theme.fastAnimationDuration,
         switchInCurve: Curves.easeInOut,
         switchOutCurve: Curves.easeInOut,
         child: switch (_displayMode) {

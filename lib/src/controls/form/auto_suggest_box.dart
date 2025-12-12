@@ -875,11 +875,13 @@ class _AutoSuggestBoxOverlayState<T> extends State<_AutoSuggestBoxOverlay<T>> {
     focusSubscription = widget.focusStream.listen((index) {
       if (!mounted) return;
 
+      final theme = FluentTheme.of(context);
+
       final currentSelectedOffset = tileHeight * index;
 
       scrollController.animateTo(
         currentSelectedOffset,
-        duration: const Duration(milliseconds: 100),
+        duration: theme.fastAnimationDuration,
         curve: Curves.easeInOut,
       );
       setState(() {});
@@ -1003,8 +1005,14 @@ class __AutoSuggestBoxOverlayTileState extends State<_AutoSuggestBoxOverlayTile>
     controller = AnimationController(
       vsync: this,
       duration: const Duration(milliseconds: 125),
-    );
-    controller.forward();
+    )..forward();
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    final theme = FluentTheme.of(context);
+    controller.duration = theme.fastAnimationDuration;
   }
 
   @override

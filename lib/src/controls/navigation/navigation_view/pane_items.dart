@@ -696,6 +696,12 @@ class __PaneItemExpanderState extends State<_PaneItemExpander>
   );
 
   @override
+  void initState() {
+    super.initState();
+    flyoutController.addListener(_controllerListener);
+  }
+
+  @override
   void didChangeDependencies() {
     super.didChangeDependencies();
     _open =
@@ -709,12 +715,15 @@ class __PaneItemExpanderState extends State<_PaneItemExpander>
       controller.value = 1;
     }
 
-    flyoutController.addListener(() {
-      if (_open && !flyoutController.isOpen ||
-          !_open && flyoutController.isOpen) {
-        toggleOpen(doFlyout: false);
-      }
-    });
+    final theme = FluentTheme.of(context);
+    controller.duration = theme.fastAnimationDuration;
+  }
+
+  void _controllerListener() {
+    if (_open && !flyoutController.isOpen ||
+        !_open && flyoutController.isOpen) {
+      toggleOpen(doFlyout: false);
+    }
   }
 
   @override
@@ -731,6 +740,7 @@ class __PaneItemExpanderState extends State<_PaneItemExpander>
   }
 
   void toggleOpen({bool doFlyout = true}) {
+    if (!mounted) return;
     setState(() => _open = !_open);
 
     PageStorage.of(

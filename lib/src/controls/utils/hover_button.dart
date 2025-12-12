@@ -193,14 +193,6 @@ class _HoverButtonState extends State<HoverButton> {
   void initState() {
     super.initState();
     node = widget.focusNode ?? _createFocusNode();
-    Future<void> handleActionTap() async {
-      if (!enabled) return;
-      setState(() => _pressing = true);
-      widget.onFocusTap?.call();
-      widget.onPressed?.call();
-      await Future.delayed(const Duration(milliseconds: 100));
-      if (mounted) setState(() => _pressing = false);
-    }
 
     defaultActions = {
       ActivateIntent: CallbackAction<ActivateIntent>(
@@ -215,6 +207,16 @@ class _HoverButtonState extends State<HoverButton> {
       ...defaultActions,
       if (widget.customActions != null) ...widget.customActions!,
     };
+  }
+
+  Future<void> handleActionTap() async {
+    if (!enabled) return;
+    final theme = FluentTheme.of(context);
+    setState(() => _pressing = true);
+    widget.onFocusTap?.call();
+    widget.onPressed?.call();
+    await Future.delayed(theme.fastAnimationDuration);
+    if (mounted) setState(() => _pressing = false);
   }
 
   @override
@@ -271,6 +273,7 @@ class _HoverButtonState extends State<HoverButton> {
 
   @override
   Widget build(BuildContext context) {
+    assert(debugCheckHasFluentTheme(context));
     Widget w = GestureDetector(
       behavior: widget.hitTestBehavior,
       onTap: enabled ? widget.onPressed : null,

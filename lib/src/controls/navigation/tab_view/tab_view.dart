@@ -272,6 +272,13 @@ class _TabViewState extends State<TabView> {
   }
 
   @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    final theme = FluentTheme.of(context);
+    scrollController.animationDuration = theme.fastAnimationDuration;
+  }
+
+  @override
   void dispose() {
     if (widget.scrollController == null) {
       // only dispose the local controller

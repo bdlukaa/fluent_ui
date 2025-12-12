@@ -1011,12 +1011,20 @@ class _MenuFlyoutPaneItemExpanderState
   );
 
   void toggleOpen() {
+    if (!mounted) return;
     setState(() => _open = !_open);
     if (_open) {
       controller.forward();
     } else {
       controller.reverse();
     }
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    final theme = FluentTheme.of(context);
+    controller.duration = theme.fastAnimationDuration;
   }
 
   @override

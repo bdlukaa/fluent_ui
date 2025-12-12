@@ -14,10 +14,8 @@ class _NavigationBody extends StatefulWidget {
     required this.itemKey,
     this.paneBodyBuilder,
     this.transitionBuilder,
-    // ignore: unused_element_parameter
-    this.animationCurve = Curves.ease,
-    // ignore: unused_element_parameter
-    this.animationDuration = const Duration(milliseconds: 300),
+    this.animationCurve,
+    this.animationDuration,
   });
 
   final ValueKey<int>? itemKey;
@@ -51,14 +49,14 @@ class _NavigationBody extends StatefulWidget {
   /// See also:
   ///
   ///   * [Curves], a collection of common animation easing curves.
-  final Curve animationCurve;
+  final Curve? animationCurve;
 
   /// The duration of the transition. [NavigationPaneThemeData.animationDuration]
   /// is used by default.
   ///
   /// See also:
   ///   * [FluentThemeData.fastAnimationDuration], the duration used by default.
-  final Duration animationDuration;
+  final Duration? animationDuration;
 
   @override
   void debugFillProperties(DiagnosticPropertiesBuilder properties) {
@@ -105,10 +103,11 @@ class _NavigationBodyState extends State<_NavigationBody> {
     return ColoredBox(
       color: theme.scaffoldBackgroundColor,
       child: AnimatedSwitcher(
-        switchInCurve: widget.animationCurve,
-        switchOutCurve: widget.animationCurve,
-        duration: widget.animationDuration,
-        reverseDuration: widget.animationDuration ~/ 2,
+        switchInCurve: widget.animationCurve ?? theme.animationCurve,
+        switchOutCurve: widget.animationCurve ?? theme.animationCurve,
+        duration: widget.animationDuration ?? theme.fastAnimationDuration,
+        reverseDuration:
+            (widget.animationDuration ?? theme.fastAnimationDuration) ~/ 2,
         layoutBuilder: (child, children) {
           return SizedBox(child: child);
         },

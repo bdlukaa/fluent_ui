@@ -5,13 +5,9 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/rendering.dart';
 
 part 'body.dart';
-
 part 'indicators.dart';
-
 part 'pane.dart';
-
 part 'pane_items.dart';
-
 part 'style.dart';
 
 /// The default size used by the app top bar.
@@ -461,6 +457,8 @@ class NavigationViewState extends State<NavigationView> {
             itemKey: ValueKey(pane.selected ?? -1),
             transitionBuilder: widget.transitionBuilder,
             paneBodyBuilder: widget.paneBodyBuilder,
+            animationCurve: theme.animationCurve,
+            animationDuration: theme.animationDuration,
           );
 
           if (pane.customPane != null) {

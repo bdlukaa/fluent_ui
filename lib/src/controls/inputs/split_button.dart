@@ -230,7 +230,7 @@ class SplitButtonState extends State<SplitButton> {
                           ),
                           alignment: Alignment.center,
                           child: AnimatedOpacity(
-                            duration: const Duration(milliseconds: 100),
+                            duration: theme.fastAnimationDuration,
                             opacity: flyoutController.isOpen ? 0.5 : 1,
                             child: ChevronDown(
                               iconColor: widget.checked
