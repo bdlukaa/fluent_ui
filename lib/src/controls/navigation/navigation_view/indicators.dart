@@ -131,12 +131,14 @@ class _EndNavigationIndicatorState
             : AlignmentDirectional.centerStart,
         child: AnimatedContainer(
           duration: const Duration(milliseconds: 150),
+          // Match WinUI3 NavigationView indicator padding and sizing
+          // See: https://github.com/bdlukaa/fluent_ui/issues/1181
           margin: EdgeInsetsDirectional.symmetric(
             vertical: isTop ? 0.0 : 10.0,
-            horizontal: isTop ? 10.0 : 0.0,
+            horizontal: isTop ? 12.0 : 0.0,
           ),
-          width: isTop ? 20.0 : 6.0,
-          height: isTop ? 4.5 : double.infinity,
+          width: isTop ? 20.0 : 3.0,
+          height: isTop ? 3.0 : double.infinity,
           decoration: BoxDecoration(
             color: isSelected
                 ? (widget.color ?? theme.highlightColor)
@@ -170,13 +172,20 @@ class _EndNavigationIndicatorState
 /// pulled from one item to another.
 class StickyNavigationIndicator extends NavigationIndicator {
   /// Creates a sticky navigation indicator.
+  ///
+  /// Defaults are set according to WinUI3 NavigationView specifications:
+  /// - Indicator width: 3.0px
+  /// - Vertical padding: 10.0px on each side (for 40px item height)
+  /// - Horizontal padding: 12.0px on each side (for top display mode)
+  ///
+  /// See: https://github.com/bdlukaa/fluent_ui/issues/1181
   const StickyNavigationIndicator({
     super.curve,
     super.color,
     super.duration,
     this.topPadding = 12.0,
-    this.leftPadding = kPaneItemMinHeight * 0.3,
-    this.indicatorSize = 2.75,
+    this.leftPadding = 10.0,
+    this.indicatorSize = 3.0,
   });
 
   /// The padding used on both horizontal sides of the indicator when the
@@ -188,7 +197,8 @@ class StickyNavigationIndicator extends NavigationIndicator {
   /// The padding used on both vertical sides of the indicator when the current
   /// display mode is not top.
   ///
-  /// Defaults to 10.0
+  /// Defaults to 10.0px, which provides 10px padding on each side for a
+  /// properly sized indicator that matches WinUI3 specifications.
   final double leftPadding;
 
   /// The size of the indicator.
@@ -196,7 +206,7 @@ class StickyNavigationIndicator extends NavigationIndicator {
   /// On top display mode, this represents the height of the indicator. On other
   /// display modes, this represents the width of the indicator.
   ///
-  /// Defaults to 2.75
+  /// Defaults to 3.0px to match WinUI3 NavigationView standard.
   final double indicatorSize;
 
   @override

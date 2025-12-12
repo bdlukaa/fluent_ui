@@ -279,12 +279,18 @@ class NavigationViewState extends State<NavigationView> {
   bool get minimalPaneOpen => _minimalPaneOpen;
   set minimalPaneOpen(bool open) {
     if (displayMode == PaneDisplayMode.minimal) {
-      setState(() => _minimalPaneOpen = open);
-      widget.onDisplayModeChanged?.call(
-        open ? PaneDisplayMode.open : PaneDisplayMode.minimal,
-      );
+      // Avoid double rebuilds by checking if value is already set
+      // See: https://github.com/bdlukaa/fluent_ui/issues/1101
+      if (_minimalPaneOpen != open) {
+        setState(() => _minimalPaneOpen = open);
+        widget.onDisplayModeChanged?.call(
+          open ? PaneDisplayMode.open : PaneDisplayMode.minimal,
+        );
+      }
     } else {
-      setState(() => _minimalPaneOpen = false);
+      if (_minimalPaneOpen) {
+        setState(() => _minimalPaneOpen = false);
+      }
     }
   }
 
@@ -835,7 +841,15 @@ class NavigationViewState extends State<NavigationView> {
                               pane: pane,
                               paneKey: _panelKey,
                               listKey: _listKey,
-                              onItemSelected: () => minimalPaneOpen = false,
+                              onItemSelected: () {
+                                // Defer closing the minimal pane to avoid double rebuilds
+                                // when the page changes. See: https://github.com/bdlukaa/fluent_ui/issues/1101
+                                WidgetsBinding.instance.addPostFrameCallback((_) {
+                                  if (mounted && displayMode == PaneDisplayMode.minimal) {
+                                    minimalPaneOpen = false;
+                                  }
+                                });
+                              },
                             ),
                           ),
                         ),

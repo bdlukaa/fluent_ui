@@ -220,6 +220,8 @@ class PaneItem extends NavigationPaneItem {
                       alignment: AlignmentDirectional.centerStart,
                       child: () {
                         if (infoBadge != null) {
+                          // InfoBadge should be centered vertically on the icon, not top-aligned
+                          // See: https://github.com/bdlukaa/fluent_ui/issues/1181
                           return Stack(
                             alignment: AlignmentDirectional.center,
                             clipBehavior: Clip.none,
@@ -227,7 +229,7 @@ class PaneItem extends NavigationPaneItem {
                               icon,
                               PositionedDirectional(
                                 end: -8,
-                                top: -8,
+                                // Center vertically by not specifying top/bottom
                                 child: infoBadge!,
                               ),
                             ],
@@ -309,7 +311,9 @@ class PaneItem extends NavigationPaneItem {
                   children: [
                     result,
                     if (infoBadge != null)
-                      PositionedDirectional(end: -3, top: 3, child: infoBadge!),
+                      // Center InfoBadge vertically on the icon for top display mode
+                      // See: https://github.com/bdlukaa/fluent_ui/issues/1181
+                      PositionedDirectional(end: -3, child: infoBadge!),
                   ],
                 );
               }
