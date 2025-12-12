@@ -917,6 +917,7 @@ class ComboBox<T> extends StatefulWidget {
     this.focusNode,
     this.autofocus = false,
     this.popupColor,
+    this.onOpenChanged,
     // When adding new arguments, consider adding similar arguments to
     // ComboBoxFormField.
   });
@@ -970,6 +971,12 @@ class ComboBox<T> extends StatefulWidget {
   ///
   /// The callback will not be invoked if the combo box button is disabled.
   final VoidCallback? onTap;
+
+  /// Called when the dropdown opens or closes.
+  ///
+  /// This callback is invoked with `true` when the dropdown is shown
+  /// and `false` when it's hidden.
+  final ValueChanged<bool>? onOpenChanged;
 
   /// A builder to customize the combo box buttons corresponding to the
   /// [ComboBoxItem]s in [items].
@@ -1155,6 +1162,7 @@ class ComboBoxState<T> extends State<ComboBox<T>> {
   void closePopup() {
     _comboboxRoute?._dismiss();
     _comboboxRoute = null;
+    widget.onOpenChanged?.call(false);
   }
 
   void _handleFocusChanged() {
@@ -1232,7 +1240,7 @@ class ComboBoxState<T> extends State<ComboBox<T>> {
       barrierLabel: FluentLocalizations.of(context).modalBarrierDismissLabel,
       popupColor: widget.popupColor,
     );
-
+    widget.onOpenChanged?.call(true);
     navigator.push(_comboboxRoute!).then<void>((
       _ComboBoxRouteResult<T>? newValue,
     ) {
