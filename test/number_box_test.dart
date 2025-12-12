@@ -1,7 +1,8 @@
+import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:fluent_ui/fluent_ui.dart';
+import 'package:intl/intl.dart';
 
 import 'app_test.dart';
 
@@ -352,5 +353,311 @@ void main() {
     );
 
     expect(find.byIcon(FluentIcons.number_field), findsOneWidget);
+  });
+
+  group('NumberBox with custom format and parse functions', () {
+    testWidgets('NumberBox displays formatted value with custom format', (
+      WidgetTester tester,
+    ) async {
+      final currencyFormat = NumberFormat.currency(symbol: r'$');
+
+      await tester.pumpWidget(
+        wrapApp(
+          child: NumberBox<double>(
+            value: 1234.56,
+            format: (number) =>
+                number == null ? null : currencyFormat.format(number),
+            parse: (text) {
+              try {
+                return currencyFormat.parse(text).toDouble();
+              } catch (_) {
+                return null;
+              }
+            },
+            onChanged: (value) {},
+          ),
+        ),
+      );
+
+      // The value should be formatted as currency
+      expect(find.textContaining(r'$'), findsOneWidget);
+      expect(find.textContaining('1,234'), findsOneWidget);
+    });
+
+    testWidgets('NumberBox increments correctly with custom parse function', (
+      WidgetTester tester,
+    ) async {
+      double? newValue;
+      final currencyFormat = NumberFormat.currency(symbol: r'$');
+
+      await tester.pumpWidget(
+        wrapApp(
+          child: NumberBox<double>(
+            value: 100.0,
+            format: (number) =>
+                number == null ? null : currencyFormat.format(number),
+            parse: (text) {
+              try {
+                return currencyFormat.parse(text).toDouble();
+              } catch (_) {
+                return null;
+              }
+            },
+            mode: SpinButtonPlacementMode.inline,
+            onChanged: (value) {
+              newValue = value;
+            },
+          ),
+        ),
+      );
+
+      await tester.tap(find.byIcon(FluentIcons.chevron_up));
+      await tester.pumpAndSettle();
+
+      expect(newValue, equals(101.0));
+    });
+
+    testWidgets('NumberBox decrements correctly with custom parse function', (
+      WidgetTester tester,
+    ) async {
+      double? newValue;
+      final currencyFormat = NumberFormat.currency(symbol: r'$');
+
+      await tester.pumpWidget(
+        wrapApp(
+          child: NumberBox<double>(
+            value: 100.0,
+            format: (number) =>
+                number == null ? null : currencyFormat.format(number),
+            parse: (text) {
+              try {
+                return currencyFormat.parse(text).toDouble();
+              } catch (_) {
+                return null;
+              }
+            },
+            mode: SpinButtonPlacementMode.inline,
+            onChanged: (value) {
+              newValue = value;
+            },
+          ),
+        ),
+      );
+
+      await tester.tap(find.byIcon(FluentIcons.chevron_down));
+      await tester.pumpAndSettle();
+
+      expect(newValue, equals(99.0));
+    });
+
+    testWidgets(
+      'NumberBox handles keyboard arrows with custom parse function',
+      (WidgetTester tester) async {
+        double? newValue;
+        final currencyFormat = NumberFormat.currency(symbol: r'$');
+
+        await tester.pumpWidget(
+          wrapApp(
+            child: NumberBox<double>(
+              value: 50.0,
+              format: (number) =>
+                  number == null ? null : currencyFormat.format(number),
+              parse: (text) {
+                try {
+                  return currencyFormat.parse(text).toDouble();
+                } catch (_) {
+                  return null;
+                }
+              },
+              onChanged: (value) {
+                newValue = value;
+              },
+            ),
+          ),
+        );
+
+        await tester.tap(find.byType(TextBox));
+        await tester.pump();
+        await tester.sendKeyEvent(LogicalKeyboardKey.arrowUp);
+        await tester.pump();
+
+        expect(newValue, equals(51.0));
+
+        await tester.sendKeyEvent(LogicalKeyboardKey.arrowDown);
+        await tester.pump();
+
+        expect(newValue, equals(50.0));
+      },
+    );
+
+    testWidgets('NumberBox handles page up/down with custom parse function', (
+      WidgetTester tester,
+    ) async {
+      double? newValue;
+      final currencyFormat = NumberFormat.currency(symbol: r'$');
+
+      await tester.pumpWidget(
+        wrapApp(
+          child: NumberBox<double>(
+            value: 100.0,
+            largeChange: 50,
+            format: (number) =>
+                number == null ? null : currencyFormat.format(number),
+            parse: (text) {
+              try {
+                return currencyFormat.parse(text).toDouble();
+              } catch (_) {
+                return null;
+              }
+            },
+            onChanged: (value) {
+              newValue = value;
+            },
+          ),
+        ),
+      );
+
+      await tester.tap(find.byType(TextBox));
+      await tester.pump();
+      await tester.sendKeyEvent(LogicalKeyboardKey.pageUp);
+      await tester.pump();
+
+      expect(newValue, equals(150.0));
+
+      await tester.sendKeyEvent(LogicalKeyboardKey.pageDown);
+      await tester.pump();
+
+      expect(newValue, equals(100.0));
+    });
+
+    testWidgets('NumberBox handles mouse scroll with custom parse function', (
+      WidgetTester tester,
+    ) async {
+      double? newValue;
+      final currencyFormat = NumberFormat.currency(symbol: r'$');
+
+      await tester.pumpWidget(
+        wrapApp(
+          child: NumberBox<double>(
+            value: 200.0,
+            format: (number) =>
+                number == null ? null : currencyFormat.format(number),
+            parse: (text) {
+              try {
+                return currencyFormat.parse(text).toDouble();
+              } catch (_) {
+                return null;
+              }
+            },
+            onChanged: (value) {
+              newValue = value;
+            },
+          ),
+        ),
+      );
+
+      final numberBoxFinder = find.byType(NumberBox<double>);
+      await tester.tap(numberBoxFinder);
+      await tester.pumpAndSettle();
+
+      final box = tester.getRect(numberBoxFinder);
+      final center = box.center;
+
+      await tester.sendEventToBinding(
+        PointerScrollEvent(position: center, scrollDelta: const Offset(0, -10)),
+      );
+      await tester.pumpAndSettle();
+
+      expect(newValue, equals(201.0));
+
+      await tester.sendEventToBinding(
+        PointerScrollEvent(position: center, scrollDelta: const Offset(0, 10)),
+      );
+      await tester.pumpAndSettle();
+
+      expect(newValue, equals(200.0));
+    });
+
+    testWidgets('NumberBox respects min/max with custom parse function', (
+      WidgetTester tester,
+    ) async {
+      double? newValue;
+      final currencyFormat = NumberFormat.currency(symbol: r'$');
+
+      await tester.pumpWidget(
+        wrapApp(
+          child: NumberBox<double>(
+            value: 50.0,
+            min: 0,
+            max: 100,
+            format: (number) =>
+                number == null ? null : currencyFormat.format(number),
+            parse: (text) {
+              try {
+                return currencyFormat.parse(text).toDouble();
+              } catch (_) {
+                return null;
+              }
+            },
+            mode: SpinButtonPlacementMode.inline,
+            onChanged: (value) {
+              newValue = value;
+            },
+          ),
+        ),
+      );
+
+      // Try to exceed max
+      await tester.enterText(find.byType(TextBox), r'$150.00');
+      await tester.testTextInput.receiveAction(TextInputAction.done);
+      await tester.pumpAndSettle();
+
+      expect(newValue, equals(100.0));
+
+      // Try to go below min
+      await tester.enterText(find.byType(TextBox), r'-$50.00');
+      await tester.testTextInput.receiveAction(TextInputAction.done);
+      await tester.pumpAndSettle();
+
+      expect(newValue, equals(0.0));
+    });
+
+    testWidgets(
+      'NumberBox with thousand separators formats and parses correctly',
+      (WidgetTester tester) async {
+        int? newValue;
+        final numberFormat = NumberFormat('#,###');
+
+        await tester.pumpWidget(
+          wrapApp(
+            child: NumberBox<int>(
+              value: 1000000,
+              format: (number) =>
+                  number == null ? null : numberFormat.format(number),
+              parse: (text) {
+                try {
+                  return numberFormat.parse(text).toInt();
+                } catch (_) {
+                  return null;
+                }
+              },
+              mode: SpinButtonPlacementMode.inline,
+              onChanged: (value) {
+                newValue = value;
+              },
+            ),
+          ),
+        );
+
+        // Should display with thousand separators
+        expect(find.text('1,000,000'), findsOneWidget);
+
+        // Increment should work
+        await tester.tap(find.byIcon(FluentIcons.chevron_up));
+        await tester.pumpAndSettle();
+
+        expect(newValue, equals(1000001));
+      },
+    );
   });
 }

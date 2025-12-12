@@ -1,6 +1,7 @@
 import 'package:example/widgets/card_highlight.dart';
 import 'package:example/widgets/page.dart';
 import 'package:fluent_ui/fluent_ui.dart';
+import 'package:intl/intl.dart';
 
 class NumberBoxPage extends StatefulWidget {
   const NumberBoxPage({super.key});
@@ -19,6 +20,9 @@ class _NumberBoxPageState extends State<NumberBoxPage> with PageMixin {
   int? numberBoxValue = 0;
   int? numberBoxValueMinMax = 0;
   double? numberBoxValueDouble = 0;
+  double? numberBoxValueCurrency = 1234.56;
+
+  final currencyFormat = NumberFormat.currency(symbol: r'$');
 
   void _valueChanged(int? newValue) {
     setState(() {
@@ -35,6 +39,12 @@ class _NumberBoxPageState extends State<NumberBoxPage> with PageMixin {
   void _valueChangedDouble(double? newValue) {
     setState(() {
       numberBoxValueDouble = newValue;
+    });
+  }
+
+  void _valueChangedCurrency(double? newValue) {
+    setState(() {
+      numberBoxValueCurrency = newValue;
     });
   }
 
@@ -178,6 +188,54 @@ class _NumberBoxPageState extends State<NumberBoxPage> with PageMixin {
                 onChanged: disabled ? null : _valueChangedDouble,
                 smallChange: 0.1,
                 mode: SpinButtonPlacementMode.none,
+              ),
+            ],
+          ),
+        ),
+        subtitle(
+          content: const Text('A NumberBox with custom format and parse'),
+        ),
+        description(
+          content: const Text(
+            'Use the format and parse parameters to display and input '
+            'values with custom formatting, such as currency.',
+          ),
+        ),
+        CardHighlight(
+          codeSnippet: '''import 'package:intl/intl.dart';
+
+final currencyFormat = NumberFormat.currency(symbol: r'\$');
+
+NumberBox<double>(
+  value: numberBoxValueCurrency,
+  onChanged: _valueChangedCurrency,
+  format: (number) => number == null ? null : currencyFormat.format(number),
+  parse: (text) {
+    try {
+      return currencyFormat.parse(text).toDouble();
+    } catch (_) {
+      return null;
+    }
+  },
+  mode: SpinButtonPlacementMode.inline,
+),
+''',
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              NumberBox<double>(
+                value: numberBoxValueCurrency,
+                onChanged: disabled ? null : _valueChangedCurrency,
+                format: (number) =>
+                    number == null ? null : currencyFormat.format(number),
+                parse: (text) {
+                  try {
+                    return currencyFormat.parse(text).toDouble();
+                  } catch (_) {
+                    return null;
+                  }
+                },
+                mode: SpinButtonPlacementMode.inline,
               ),
             ],
           ),

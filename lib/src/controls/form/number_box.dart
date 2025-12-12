@@ -10,6 +10,7 @@ const kNumberBoxOverlayWidth = 60.0;
 const kNumberBoxOverlayHeight = 100.0;
 
 typedef NumberBoxFormatFunction = String? Function(num? number);
+typedef NumberBoxParseFunction = num? Function(String text);
 
 abstract interface class NumberBoxFormatter {
   String format(dynamic number);
@@ -123,6 +124,25 @@ class NumberBox<T extends num> extends StatefulWidget {
   ///
   /// If set, [pattern], [formatter] and [precision] must be `null`.
   final NumberBoxFormatFunction? format;
+
+  /// The parse function for the number box. The parse function is used to
+  /// parse the formatted text back to a number.
+  ///
+  /// This is useful when using a custom [format] function that adds
+  /// non-numeric characters (e.g., currency symbols, thousand separators).
+  ///
+  /// If not provided, [num.tryParse] is used by default.
+  ///
+  /// Example:
+  /// ```dart
+  /// NumberBox<double>(
+  ///   value: value,
+  ///   onChanged: (v) => setState(() => value = v),
+  ///   format: (number) => NumberFormat.currency().format(number),
+  ///   parse: (text) => NumberFormat.currency().parse(text).toDouble(),
+  /// )
+  /// ```
+  final NumberBoxParseFunction parse;
 
   /// The minimum value allowed. If the user input a value below than min,
   /// the value is replaced by min.
@@ -285,6 +305,7 @@ class NumberBox<T extends num> extends StatefulWidget {
     this.pattern,
     this.formatter,
     this.format,
+    this.parse = defaultParse,
     this.min,
     this.max,
     this.allowExpressions = false,
@@ -339,6 +360,10 @@ class NumberBox<T extends num> extends StatefulWidget {
                  formatter == null &&
                  format == null),
        );
+
+  /// The default parse function for the number box. It uses [num.tryParse] to
+  /// parse the text back to a number.
+  static num? defaultParse(String text) => num.tryParse(text);
 
   @override
   State<NumberBox<T>> createState() => NumberBoxState<T>();
@@ -673,7 +698,7 @@ class NumberBoxState<T extends num> extends State<NumberBox<T>> {
 
   void incrementSmall() {
     final value =
-        (num.tryParse(controller.text) ?? widget.value ?? 0) +
+        (widget.parse(controller.text) ?? widget.value ?? 0) +
         widget.smallChange;
     _updateController(value);
     updateValue();
@@ -681,7 +706,7 @@ class NumberBoxState<T extends num> extends State<NumberBox<T>> {
 
   void decrementSmall() {
     final value =
-        (num.tryParse(controller.text) ?? widget.value ?? 0) -
+        (widget.parse(controller.text) ?? widget.value ?? 0) -
         widget.smallChange;
     _updateController(value);
     updateValue();
@@ -689,7 +714,7 @@ class NumberBoxState<T extends num> extends State<NumberBox<T>> {
 
   void incrementLarge() {
     final value =
-        (num.tryParse(controller.text) ?? widget.value ?? 0) +
+        (widget.parse(controller.text) ?? widget.value ?? 0) +
         widget.largeChange;
     _updateController(value);
     updateValue();
@@ -697,7 +722,7 @@ class NumberBoxState<T extends num> extends State<NumberBox<T>> {
 
   void decrementLarge() {
     final value =
-        (num.tryParse(controller.text) ?? widget.value ?? 0) -
+        (widget.parse(controller.text) ?? widget.value ?? 0) -
         widget.largeChange;
     _updateController(value);
     updateValue();
@@ -712,7 +737,7 @@ class NumberBoxState<T extends num> extends State<NumberBox<T>> {
   void updateValue() {
     num? value;
     if (controller.text.isNotEmpty) {
-      value = num.tryParse(controller.text);
+      value = widget.parse(controller.text);
       if (value == null && widget.allowExpressions) {
         try {
           final expression = parser.parse(controller.text);
@@ -879,6 +904,8 @@ class NumberFormBox<T extends num> extends ControllableFormBox {
     num? min,
     int precision = 2,
     SpinButtonPlacementMode mode = SpinButtonPlacementMode.compact,
+    NumberBoxFormatFunction? format,
+    NumberBoxParseFunction parse = NumberBox.defaultParse,
   }) : super(
          builder: (FormFieldState<String> field) {
            assert(debugCheckHasFluentTheme(field.context));
@@ -916,7 +943,9 @@ class NumberFormBox<T extends num> extends ControllableFormBox {
                  clearButton: clearButton,
                  largeChange: largeChange,
                  smallChange: smallChange,
-                 precision: precision,
+                 precision: format != null ? null : precision,
+                 format: format,
+                 parse: parse,
                  inputFormatters: inputFormatters,
                  mode: mode,
                ),
