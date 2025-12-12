@@ -360,6 +360,8 @@ class NumberBoxState<T extends num> extends State<NumberBox<T>> {
   late final NumberBoxFormatFunction _format;
 
   final controller = TextEditingController();
+  final evaluator = RealEvaluator();
+  final parser = ShuntingYardParser();
 
   final LayerLink _layerLink = LayerLink();
   final GlobalKey _textBoxKey = GlobalKey(
@@ -713,13 +715,12 @@ class NumberBoxState<T extends num> extends State<NumberBox<T>> {
       value = num.tryParse(controller.text);
       if (value == null && widget.allowExpressions) {
         try {
-          value = ShuntingYardParser()
-              .parse(controller.text)
-              .evaluate(EvaluationType.REAL, ContextModel());
+          final expression = parser.parse(controller.text);
+          value = evaluator.evaluate(expression);
           // If the value is infinite or not a number, we reset the value with
           // the previous valid value. For example, if the user tap 1024^200
           // (the result is too big), the condition value.isInfinite is true.
-          if (value!.isInfinite || value.isNaN) {
+          if (value.isInfinite || value.isNaN) {
             value = previousValidValue;
           }
         } catch (_) {

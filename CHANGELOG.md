@@ -1,5 +1,6 @@
 ## [next]
 
+- refactor: Consistent theme classes
 - fix: `CalendarDatePicker` throws state error when selecting date ([#1251](https://github.com/bdlukaa/fluent_ui/issues/1251))
 
 ## 4.13.0
