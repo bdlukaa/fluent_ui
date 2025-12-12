@@ -136,6 +136,54 @@ class InfoBar extends StatelessWidget {
     this.isIconVisible = true,
   });
 
+  /// Creates an info bar with [InfoBarSeverity.info] severity.
+  const InfoBar.info({
+    super.key,
+    required this.title,
+    this.content,
+    this.action,
+    this.style,
+    this.isLong = false,
+    this.onClose,
+    this.isIconVisible = true,
+  }) : severity = InfoBarSeverity.info;
+
+  /// Creates an info bar with [InfoBarSeverity.warning] severity.
+  const InfoBar.warning({
+    super.key,
+    required this.title,
+    this.content,
+    this.action,
+    this.style,
+    this.isLong = false,
+    this.onClose,
+    this.isIconVisible = true,
+  }) : severity = InfoBarSeverity.warning;
+
+  /// Creates an info bar with [InfoBarSeverity.success] severity.
+  const InfoBar.success({
+    super.key,
+    required this.title,
+    this.content,
+    this.action,
+    this.style,
+    this.isLong = false,
+    this.onClose,
+    this.isIconVisible = true,
+  }) : severity = InfoBarSeverity.success;
+
+  /// Creates an info bar with [InfoBarSeverity.error] severity.
+  const InfoBar.error({
+    super.key,
+    required this.title,
+    this.content,
+    this.action,
+    this.style,
+    this.isLong = false,
+    this.onClose,
+    this.isIconVisible = true,
+  }) : severity = InfoBarSeverity.error;
+
   /// The severity of this InfoBar.
   ///
   /// Defaults to [InfoBarSeverity.info]
