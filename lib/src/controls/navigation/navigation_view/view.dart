@@ -543,17 +543,23 @@ class NavigationViewState extends State<NavigationView> {
                           topStart: Radius.circular(8),
                         ).resolve(direction),
                 );
+            // Wrap the body in RepaintBoundary to isolate repaints from
+            // nested children. This prevents the entire pane from repainting
+            // when a deeply nested child (e.g., CircularProgressIndicator)
+            // animates. See: https://github.com/bdlukaa/fluent_ui/issues/1180
+            final isolatedBody = RepaintBoundary(child: body);
+
             final Widget content = ClipRect(
               key: _contentKey,
               child: displayMode == PaneDisplayMode.minimal
-                  ? body
+                  ? isolatedBody
                   : DecoratedBox(
                       position: DecorationPosition.foreground,
                       decoration: ShapeDecoration(shape: contentShape),
                       child: ClipPath(
                         clipBehavior: widget.clipBehavior,
                         clipper: ShapeBorderClipper(shape: contentShape),
-                        child: body,
+                        child: isolatedBody,
                       ),
                     ),
             );

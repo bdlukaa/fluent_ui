@@ -185,11 +185,18 @@ class _NavigationBodyState extends State<_NavigationBody> {
   }
 }
 
-/// A wrapper widget that enables keep-alive functionality for navigation pages.
+/// A wrapper widget that enables keep-alive functionality for navigation pages
+/// and isolates repaints.
 ///
-/// This widget uses [AutomaticKeepAliveClientMixin] to help preserve the state
-/// of navigation pages when switching between them. For full state preservation,
-/// the page widget itself should also implement [AutomaticKeepAliveClientMixin].
+/// This widget:
+/// - Uses [AutomaticKeepAliveClientMixin] to help preserve the state
+///   of navigation pages when switching between them
+/// - Wraps content in [RepaintBoundary] to prevent deeply nested child
+///   repaints from causing the entire navigation body to repaint
+///   (fixes https://github.com/bdlukaa/fluent_ui/issues/1180)
+///
+/// For full state preservation, the page widget itself should also implement
+/// [AutomaticKeepAliveClientMixin].
 class _KeepAlivePage extends StatefulWidget {
   const _KeepAlivePage({required this.child, super.key});
 
@@ -207,7 +214,9 @@ class _KeepAlivePageState extends State<_KeepAlivePage>
   @override
   Widget build(BuildContext context) {
     super.build(context);
-    return widget.child;
+    // RepaintBoundary isolates this page's repaints from affecting
+    // the parent navigation body or other pages
+    return RepaintBoundary(child: widget.child);
   }
 }
 
