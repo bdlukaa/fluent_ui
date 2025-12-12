@@ -334,7 +334,6 @@ class NavigationViewState extends State<NavigationView> {
     paneScrollController =
         widget.pane?.scrollController ??
         ScrollController(debugLabel: '${widget.runtimeType} scroll controller');
-    paneScrollController.addListener(_handleScrollControllerEvent);
 
     _generateKeys();
 
@@ -344,10 +343,6 @@ class NavigationViewState extends State<NavigationView> {
             ).readState(context, identifier: 'compactOverlayOpen')
             as bool? ??
         false;
-  }
-
-  void _handleScrollControllerEvent() {
-    if (mounted) setState(() {});
   }
 
   @override
@@ -412,8 +407,6 @@ class NavigationViewState extends State<NavigationView> {
     // If the controller was created locally, dispose it
     if (widget.pane?.scrollController == null) {
       paneScrollController.dispose();
-    } else {
-      paneScrollController.removeListener(_handleScrollControllerEvent);
     }
     super.dispose();
   }

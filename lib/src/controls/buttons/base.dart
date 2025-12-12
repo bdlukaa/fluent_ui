@@ -213,8 +213,8 @@ class _BaseButtonState extends State<BaseButton> {
                     : BorderRadius.zero
               : BorderRadius.zero,
           child: AnimatedContainer(
-            duration: FluentTheme.of(context).fasterAnimationDuration,
-            curve: FluentTheme.of(context).animationCurve,
+            duration: theme.fasterAnimationDuration,
+            curve: theme.animationCurve,
             decoration: ShapeDecoration(
               shape: resolvedShape,
               color: resolvedBackgroundColor,
@@ -226,8 +226,8 @@ class _BaseButtonState extends State<BaseButton> {
                 size: iconSize ?? 14.0,
               ),
               child: AnimatedDefaultTextStyle(
-                duration: FluentTheme.of(context).fastAnimationDuration,
-                curve: FluentTheme.of(context).animationCurve,
+                duration: theme.fastAnimationDuration,
+                curve: theme.animationCurve,
                 style: DefaultTextStyle.of(context).style.merge(
                   (resolvedTextStyle ?? const TextStyle()).copyWith(
                     color: resolvedForegroundColor,

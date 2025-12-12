@@ -132,6 +132,8 @@ class Acrylic extends StatefulWidget {
 
 class _AcrylicState extends State<Acrylic> {
   AcrylicProperties _properties = const AcrylicProperties.empty();
+  ImageFilter? _cachedBlurFilter;
+  double _cachedBlurAmount = kBlurAmount;
 
   @override
   void initState() {
@@ -170,14 +172,27 @@ class _AcrylicState extends State<Acrylic> {
   }
 
   void _updateProperties() {
+    final blurAmount = widget.blurAmount ?? 30;
     _properties = AcrylicProperties(
       tint: widget.tint ?? FluentTheme.of(context).acrylicBackgroundColor,
       tintAlpha: widget.tintAlpha ?? kDefaultAcrylicAlpha,
       luminosityAlpha: widget.luminosityAlpha ?? kDefaultAcrylicAlpha,
-      blurAmount: widget.blurAmount ?? 30,
+      blurAmount: blurAmount,
       shape: widget.shape ?? const RoundedRectangleBorder(),
     );
+    // Only recreate the filter when blur amount changes
+    if (_cachedBlurFilter == null || _cachedBlurAmount != blurAmount) {
+      _cachedBlurAmount = blurAmount;
+      _cachedBlurFilter = ImageFilter.blur(
+        sigmaX: blurAmount,
+        sigmaY: blurAmount,
+      );
+    }
   }
+
+  ImageFilter get blurFilter =>
+      _cachedBlurFilter ??
+      ImageFilter.blur(sigmaX: _cachedBlurAmount, sigmaY: _cachedBlurAmount);
 
   @override
   Widget build(BuildContext context) {
@@ -458,7 +473,9 @@ class _AcrylicGuts extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final properties = AcrylicProperties.of(context);
+    final inherited = context
+        .dependOnInheritedWidgetOfExactType<_AcrylicInheritedWidget>()!;
+    final properties = inherited.state._properties;
     final tint = AcrylicHelper.getEffectiveTintColor(
       properties.tint,
       AcrylicHelper.getTintOpacityModifier(properties.tint),
@@ -480,10 +497,7 @@ class _AcrylicGuts extends StatelessWidget {
         child: disabled
             ? child
             : BackdropFilter(
-                filter: ImageFilter.blur(
-                  sigmaX: properties.blurAmount,
-                  sigmaY: properties.blurAmount,
-                ),
+                filter: inherited.state.blurFilter,
                 child: Stack(
                   fit: StackFit.passthrough,
                   children: [

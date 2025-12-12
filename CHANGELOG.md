@@ -18,7 +18,8 @@
 - refactor: Encourage usage of `EdgeInsetsDirectional` instead of `EdgeInsets`
 - refactor: Remove `BottomNavigationBar` and all its related widgets
 - **MINOR BREAKING** refactor: Remove `Brightness.isLight`, `Brightness.isDark` and `Brightness.opposite` extension methods. Use `switch` statements instead.
-- feat: Add latest color resources from Microsoft UI XAML
+- feat: Add latest color resources from Microsoft UI XAML.
+- refactor(perf): Optimize animation handling in Scrollbar, NavigationView, Acrylic and buttons.
 
 ## 4.13.0
 

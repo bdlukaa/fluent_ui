@@ -42,6 +42,10 @@ class _ScrollbarState extends RawScrollbarState<Scrollbar> {
   bool _dragIsActive = false;
   bool _hoverIsActive = false;
 
+  late Tween<double> _thicknessTween;
+  late Tween<double> _crossAxisMarginTween;
+  late Tween<double> _mainAxisMarginTween;
+
   @override
   void initState() {
     super.initState();
@@ -58,6 +62,18 @@ class _ScrollbarState extends RawScrollbarState<Scrollbar> {
     _scrollbarTheme = ScrollbarTheme.of(context).merge(widget.style);
     _hoverAnimationController.duration =
         _scrollbarTheme.expandContractAnimationDuration ?? Duration.zero;
+    _thicknessTween = Tween<double>(
+      begin: _scrollbarTheme.thickness ?? 2.0,
+      end: _scrollbarTheme.hoveringThickness ?? 16.0,
+    );
+    _crossAxisMarginTween = Tween<double>(
+      begin: _scrollbarTheme.crossAxisMargin ?? 0.0,
+      end: _scrollbarTheme.hoveringCrossAxisMargin ?? 0.0,
+    );
+    _mainAxisMarginTween = Tween<double>(
+      begin: _scrollbarTheme.mainAxisMargin ?? 6.0,
+      end: _scrollbarTheme.hoveringMainAxisMargin ?? 0.0,
+    );
     super.didChangeDependencies();
   }
 
@@ -101,33 +117,23 @@ class _ScrollbarState extends RawScrollbarState<Scrollbar> {
           ) ??
           Colors.transparent
       ..trackRadius = const Radius.circular(6)
-      ..textDirection = Directionality.of(context)
-      ..thickness = Tween<double>(
-        begin: _scrollbarTheme.thickness ?? 2.0,
-        end: _scrollbarTheme.hoveringThickness ?? 16.0,
-      ).evaluate(animation)
+      ..textDirection = direction
+      ..thickness = _thicknessTween.evaluate(animation)
       ..radius = _hoverAnimationController.status != AnimationStatus.dismissed
           ? _scrollbarTheme.hoveringRadius
           : _scrollbarTheme.radius
-      ..crossAxisMargin = Tween<double>(
-        begin: _scrollbarTheme.crossAxisMargin ?? 0.0,
-        end: _scrollbarTheme.hoveringCrossAxisMargin ?? 0.0,
-      ).evaluate(animation)
-      ..mainAxisMargin = Tween<double>(
-        begin: _scrollbarTheme.mainAxisMargin ?? 6.0,
-        end: _scrollbarTheme.hoveringMainAxisMargin ?? 0.0,
-      ).evaluate(animation)
+      ..crossAxisMargin = _crossAxisMarginTween.evaluate(animation)
+      ..mainAxisMargin = _mainAxisMarginTween.evaluate(animation)
       ..minLength = _scrollbarTheme.minThumbLength ?? 48.0
       ..minOverscrollLength =
           widget.minOverscrollLength ?? _scrollbarTheme.minThumbLength ?? 48.0
       ..padding =
-          Tween<EdgeInsets>(
-            begin:
-                _scrollbarTheme.padding?.resolve(direction) ?? EdgeInsets.zero,
-            end:
-                _scrollbarTheme.hoveringPadding?.resolve(direction) ??
+          EdgeInsets.lerp(
+            _scrollbarTheme.padding?.resolve(direction) ?? EdgeInsets.zero,
+            _scrollbarTheme.hoveringPadding?.resolve(direction) ??
                 EdgeInsets.zero,
-          ).evaluate(animation) +
+            animation.value,
+          )! +
           viewPadding;
   }
 

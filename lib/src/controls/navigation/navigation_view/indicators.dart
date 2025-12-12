@@ -46,9 +46,6 @@ class NavigationIndicatorState<T extends NavigationIndicator> extends State<T> {
   void initState() {
     super.initState();
     fetch();
-    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-      if (mounted) setState(() {});
-    });
   }
 
   /// Fetches the current offsets of all pane items.
@@ -62,6 +59,8 @@ class NavigationIndicatorState<T extends NavigationIndicator> extends State<T> {
       if (offsets != localOffsets) {
         offsets = localOffsets;
       }
+
+      if (mounted) setState(() {});
     });
   }
 
@@ -216,8 +215,12 @@ class StickyNavigationIndicator extends NavigationIndicator {
 class _StickyNavigationIndicatorState
     extends NavigationIndicatorState<StickyNavigationIndicator>
     with TickerProviderStateMixin, AutomaticKeepAliveClientMixin {
+  static final _kAnimationTween = Tween<double>(begin: 0, end: 1);
+
   late AnimationController upController;
   late AnimationController downController;
+
+  Curve _cachedCurve = Curves.easeInOut;
 
   @override
   void initState() {
@@ -250,6 +253,7 @@ class _StickyNavigationIndicatorState
   void didChangeDependencies() {
     super.didChangeDependencies();
     final theme = FluentTheme.of(context);
+    _cachedCurve = widget.curve ?? theme.animationCurve;
     if (widget.duration == null) {
       upController.duration = downController.duration =
           theme.fasterAnimationDuration;
@@ -263,6 +267,9 @@ class _StickyNavigationIndicatorState
     super.didUpdateWidget(oldWidget);
     if (widget.duration != oldWidget.duration) {
       upController.duration = downController.duration = widget.duration;
+    }
+    if (widget.curve != oldWidget.curve) {
+      _cachedCurve = widget.curve ?? FluentTheme.of(context).animationCurve;
     }
   }
 
@@ -281,8 +288,6 @@ class _StickyNavigationIndicatorState
       return;
     }
 
-    final theme = FluentTheme.of(context);
-
     _old =
         (PageStorage.of(
                   context,
@@ -299,48 +304,34 @@ class _StickyNavigationIndicatorState
     if (isShowing) {
       if (isBelow) {
         if (isSelected) {
-          downAnimation = Tween<double>(begin: 0, end: 1).animate(
+          downAnimation = _kAnimationTween.animate(
             CurvedAnimation(
-              curve: Interval(
-                0.5,
-                1,
-                curve: widget.curve ?? theme.animationCurve,
-              ),
+              curve: Interval(0.5, 1, curve: _cachedCurve),
               parent: downController,
             ),
           );
           upAnimation = null;
           downController.forward(from: 0);
         } else {
-          upAnimation = Tween<double>(begin: 0, end: 1).animate(
-            CurvedAnimation(
-              curve: widget.curve ?? theme.animationCurve,
-              parent: upController,
-            ),
+          upAnimation = _kAnimationTween.animate(
+            CurvedAnimation(curve: _cachedCurve, parent: upController),
           );
           downAnimation = null;
           upController.reverse(from: 1);
         }
       } else if (isAbove) {
         if (isSelected) {
-          upAnimation = Tween<double>(begin: 0, end: 1).animate(
+          upAnimation = _kAnimationTween.animate(
             CurvedAnimation(
-              curve: Interval(
-                0.5,
-                1,
-                curve: widget.curve ?? theme.animationCurve,
-              ),
+              curve: Interval(0.5, 1, curve: _cachedCurve),
               parent: upController,
             ),
           );
           downAnimation = null;
           upController.forward(from: 0);
         } else {
-          downAnimation = Tween<double>(begin: 0, end: 1).animate(
-            CurvedAnimation(
-              curve: widget.curve ?? theme.animationCurve,
-              parent: downController,
-            ),
+          downAnimation = _kAnimationTween.animate(
+            CurvedAnimation(curve: _cachedCurve, parent: downController),
           );
           upAnimation = null;
           downController.reverse(from: 1);
