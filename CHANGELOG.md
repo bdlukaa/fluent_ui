@@ -9,6 +9,8 @@
   InfoBar.success(title: Text(error));
   InfoBar.error(title: Text(error));
   ```
+- refactor: Expose `TooltipState`
+- fix: `NumberBox` calls `onChanged()` when clicked on ([#1196](https://github.com/bdlukaa/fluent_ui/issues/1196))
 
 ## 4.13.0
 

@@ -744,10 +744,13 @@ class NumberBoxState<T extends num> extends State<NumberBox<T>> {
 
       controller.text = _format(value) ?? '';
     }
-    previousValidValue = value;
 
-    if (widget.onChanged != null) {
-      widget.onChanged!(value as T?);
+    if (previousValidValue != value) {
+      previousValidValue = value;
+
+      if (widget.onChanged != null) {
+        widget.onChanged!(value as T?);
+      }
     }
   }
 }
