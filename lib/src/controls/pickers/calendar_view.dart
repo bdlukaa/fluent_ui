@@ -618,13 +618,6 @@ class CalendarViewState extends State<CalendarView> {
               ? null
               : day;
           _selectedEnd = null;
-          widget.onSelectionChanged?.call(
-            CalendarSelectionData(
-              selectedDates: _selectedStart != null ? [_selectedStart!] : [],
-              startDate: _selectedStart,
-              endDate: null,
-            ),
-          );
           break;
         case CalendarViewSelectionMode.range:
           if (_selectedStart == null || _selectedEnd != null) {
@@ -637,13 +630,6 @@ class CalendarViewState extends State<CalendarView> {
             } else {
               _selectedEnd = day;
             }
-            widget.onSelectionChanged?.call(
-              CalendarSelectionData(
-                selectedDates: [?_selectedStart, ?_selectedEnd],
-                startDate: _selectedStart,
-                endDate: _selectedEnd,
-              ),
-            );
           }
           break;
         case CalendarViewSelectionMode.multiple:
@@ -656,22 +642,12 @@ class CalendarViewState extends State<CalendarView> {
             _selectedMultiple.add(day);
           }
           _selectedMultiple.sort((a, b) => a.compareTo(b));
-          widget.onSelectionChanged?.call(
-            CalendarSelectionData(
-              selectedDates: List.unmodifiable(_selectedMultiple),
-              startDate: _selectedMultiple.isNotEmpty
-                  ? _selectedMultiple.first
-                  : null,
-              endDate: _selectedMultiple.length > 1
-                  ? _selectedMultiple.last
-                  : null,
-            ),
-          );
           break;
         default:
           return;
       }
     });
+    _notifySelectionChanged();
   }
 
   /// Gets the first day of the week based on the current locale.
