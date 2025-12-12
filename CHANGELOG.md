@@ -2,6 +2,13 @@
 
 - refactor: Consistent theme classes
 - fix: `CalendarDatePicker` throws state error when selecting date ([#1251](https://github.com/bdlukaa/fluent_ui/issues/1251))
+- feat: Named constructors for `InfoBar` ([#1247](https://github.com/bdlukaa/fluent_ui/pull/1247))
+  ```dart
+  InfoBar.info(title: Text(error));
+  InfoBar.warning(title: Text(error));
+  InfoBar.success(title: Text(error));
+  InfoBar.error(title: Text(error));
+  ```
 
 ## 4.13.0
 
