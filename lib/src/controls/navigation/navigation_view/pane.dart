@@ -253,7 +253,9 @@ class NavigationPane with Diagnosticable {
 
   /// A list of all of the items displayed on this pane.
   List<NavigationPaneItem> get allItems {
-    final all = items + footerItems;
+    // Use spread to ensure proper type inference when items/footerItems
+    // might be List<PaneItem> instead of List<NavigationPaneItem>
+    final all = <NavigationPaneItem>[...items, ...footerItems];
 
     {
       final expandItems = LinkedList<_PaneItemExpanderItem>();
@@ -1202,13 +1204,16 @@ class _CompactNavigationPane extends StatelessWidget {
                     }),
               ),
             Expanded(
-              child: ListView(
-                shrinkWrap: true,
+              // Use ListView.builder for lazy item building to handle
+              // large lists efficiently. See: https://github.com/bdlukaa/fluent_ui/issues/742
+              child: ListView.builder(
                 key: listKey,
                 primary: true,
-                children: pane.items.map(_buildItem).toList(),
+                itemCount: pane.items.length,
+                itemBuilder: (context, index) => _buildItem(pane.items[index]),
               ),
             ),
+            // Footer items are typically small, so ListView is fine here
             ListView(
               shrinkWrap: true,
               physics: const NeverScrollableScrollPhysics(),
@@ -1403,21 +1408,23 @@ class _OpenNavigationPaneState extends State<_OpenNavigationPane> {
                         ),
                   ),
               Expanded(
-                child: ListView(
-                  shrinkWrap: true,
+                // Use ListView.builder for lazy item building to handle
+                // large lists efficiently. See: https://github.com/bdlukaa/fluent_ui/issues/742
+                child: ListView.builder(
                   key: widget.listKey,
                   primary: true,
-                  addAutomaticKeepAlives: false,
-                  children: widget.pane.items.map((item) {
+                  itemCount: widget.pane.items.length,
+                  itemBuilder: (context, index) {
                     return _OpenNavigationPane.buildItem(
                       widget.pane,
-                      item,
+                      widget.pane.items[index],
                       widget.onItemSelected,
                       width,
                     );
-                  }).toList(),
+                  },
                 ),
               ),
+              // Footer items are typically small, so ListView is fine here
               ListView(
                 primary: false,
                 shrinkWrap: true,

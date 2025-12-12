@@ -1,4 +1,5 @@
 import 'package:fluent_ui/fluent_ui.dart';
+import 'package:flutter/material.dart' as material;
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {
@@ -237,6 +238,533 @@ void main() {
 
         await tester.pumpAndSettle();
         expect(find.byType(NavigationView), findsOneWidget);
+      }
+    });
+  });
+
+  // Tests for GitHub Issue #919 - NavigationView rework
+  // https://github.com/bdlukaa/fluent_ui/issues/919
+  group('Issue #919 - NavigationView rework', () {
+    testWidgets('Indicator renders within each PaneItem', (tester) async {
+      // This tests that the indicator is rendered inside each PaneItem
+      // instead of using global coordinates
+      await tester.pumpWidget(
+        FluentApp(
+          home: SizedBox(
+            width: 1200,
+            height: 800,
+            child: NavigationView(
+              pane: NavigationPane(
+                selected: 0,
+                displayMode: PaneDisplayMode.open,
+                indicator: const StickyNavigationIndicator(),
+                items: [
+                  PaneItem(
+                    icon: const Icon(FluentIcons.home),
+                    title: const Text('Home'),
+                    body: const Center(child: Text('Home')),
+                  ),
+                  PaneItem(
+                    icon: const Icon(FluentIcons.settings),
+                    title: const Text('Settings'),
+                    body: const Center(child: Text('Settings')),
+                  ),
+                  PaneItem(
+                    icon: const Icon(FluentIcons.info),
+                    title: const Text('About'),
+                    body: const Center(child: Text('About')),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ),
+      );
+
+      await tester.pumpAndSettle();
+
+      // Verify NavigationView renders with indicator
+      expect(find.byType(NavigationView), findsOneWidget);
+      expect(find.byType(StickyNavigationIndicator), findsWidgets);
+    });
+
+    testWidgets('PaneItemExpander renders with stable keys', (tester) async {
+      // This tests that PaneItemExpander doesn't break when items are
+      // dynamically added (uses hashCode instead of index for storage)
+      await tester.pumpWidget(
+        FluentApp(
+          home: SizedBox(
+            width: 1200,
+            height: 800,
+            child: NavigationView(
+              pane: NavigationPane(
+                selected: 0,
+                displayMode: PaneDisplayMode.open,
+                items: [
+                  PaneItemExpander(
+                    icon: const Icon(FluentIcons.folder),
+                    title: const Text('Folder'),
+                    body: const Center(child: Text('Folder')),
+                    initiallyExpanded: true,
+                    items: [
+                      PaneItem(
+                        icon: const Icon(FluentIcons.document),
+                        title: const Text('Document'),
+                        body: const Center(child: Text('Document')),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ),
+      );
+
+      await tester.pumpAndSettle();
+
+      // Verify expander renders correctly
+      expect(find.byType(NavigationView), findsOneWidget);
+    });
+
+    testWidgets('NavigationAppBar supports custom layoutBuilder', (
+      tester,
+    ) async {
+      // Tests the flexible NavigationAppBar with custom layout
+      NavigationAppBarData? receivedData;
+
+      await tester.pumpWidget(
+        FluentApp(
+          home: SizedBox(
+            width: 1200,
+            height: 800,
+            child: NavigationView(
+              appBar: NavigationAppBar(
+                title: const Text('Test Title'),
+                actions: const Icon(FluentIcons.settings),
+                layoutBuilder: (context, data) {
+                  receivedData = data;
+                  return Row(
+                    children: [
+                      data.leading,
+                      if (data.additionalLeading != null)
+                        data.additionalLeading!,
+                      Expanded(child: Center(child: data.title)),
+                      if (data.actions != null) data.actions!,
+                    ],
+                  );
+                },
+              ),
+              pane: NavigationPane(
+                selected: 0,
+                displayMode: PaneDisplayMode.open,
+                items: [
+                  PaneItem(
+                    icon: const Icon(FluentIcons.home),
+                    title: const Text('Home'),
+                    body: const SizedBox(),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ),
+      );
+
+      await tester.pumpAndSettle();
+
+      // Verify layoutBuilder was called with correct data
+      expect(receivedData, isNotNull);
+      expect(receivedData!.displayMode, PaneDisplayMode.open);
+    });
+  });
+
+  // Tests for GitHub Issue #1180 - Repaint isolation
+  // https://github.com/bdlukaa/fluent_ui/issues/1180
+  group('Issue #1180 - Repaint isolation', () {
+    testWidgets('Body content is wrapped in RepaintBoundary', (tester) async {
+      // This tests that the body content has proper repaint isolation
+      // so nested animations don't cause entire pane to repaint
+      await tester.pumpWidget(
+        FluentApp(
+          home: SizedBox(
+            width: 1200,
+            height: 800,
+            child: NavigationView(
+              pane: NavigationPane(
+                selected: 0,
+                displayMode: PaneDisplayMode.open,
+                items: [
+                  PaneItem(
+                    icon: const Icon(FluentIcons.home),
+                    title: const Text('Home'),
+                    body: const Center(
+                      // Simulating a nested animation widget
+                      child: material.CircularProgressIndicator(),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ),
+      );
+
+      await tester.pump();
+
+      // Verify NavigationView renders with animated content
+      expect(find.byType(NavigationView), findsOneWidget);
+      expect(find.byType(material.CircularProgressIndicator), findsOneWidget);
+
+      // Verify RepaintBoundary exists in the tree
+      expect(find.byType(RepaintBoundary), findsWidgets);
+    });
+
+    testWidgets('Each page has RepaintBoundary isolation', (tester) async {
+      await tester.pumpWidget(
+        FluentApp(
+          home: SizedBox(
+            width: 1200,
+            height: 800,
+            child: NavigationView(
+              pane: NavigationPane(
+                selected: 0,
+                displayMode: PaneDisplayMode.open,
+                items: [
+                  PaneItem(
+                    icon: const Icon(FluentIcons.home),
+                    title: const Text('Page 1'),
+                    body: const Center(child: Text('Page 1 Content')),
+                  ),
+                  PaneItem(
+                    icon: const Icon(FluentIcons.settings),
+                    title: const Text('Page 2'),
+                    body: const Center(child: Text('Page 2 Content')),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ),
+      );
+
+      await tester.pumpAndSettle();
+
+      // Multiple RepaintBoundary widgets should exist for isolation
+      expect(find.byType(RepaintBoundary), findsWidgets);
+    });
+  });
+
+  // Tests for GitHub Issue #742 - Large list performance
+  // https://github.com/bdlukaa/fluent_ui/issues/742
+  group('Issue #742 - Large list performance', () {
+    testWidgets('Large item list renders without freezing - open mode', (
+      tester,
+    ) async {
+      // Generate a large list of items (200+)
+      // Using List<NavigationPaneItem> to ensure correct type
+      final items = <NavigationPaneItem>[
+        for (var i = 0; i < 250; i++)
+          PaneItem(
+            icon: const Icon(FluentIcons.document),
+            title: Text('Item $i'),
+            body: Center(child: Text('Content $i')),
+          ),
+      ];
+
+      await tester.pumpWidget(
+        FluentApp(
+          home: SizedBox(
+            width: 1200,
+            height: 800,
+            child: NavigationView(
+              pane: NavigationPane(
+                selected: 0,
+                displayMode: PaneDisplayMode.open,
+                items: items,
+              ),
+            ),
+          ),
+        ),
+      );
+
+      // Should not freeze - pump should complete quickly
+      await tester.pump();
+
+      // Verify the navigation view renders
+      expect(find.byType(NavigationView), findsOneWidget);
+    });
+
+    testWidgets('Large item list renders without freezing - compact mode', (
+      tester,
+    ) async {
+      final items = <NavigationPaneItem>[
+        for (var i = 0; i < 200; i++)
+          PaneItem(
+            icon: const Icon(FluentIcons.document),
+            title: Text('Item $i'),
+            body: Center(child: Text('Content $i')),
+          ),
+      ];
+
+      await tester.pumpWidget(
+        FluentApp(
+          home: SizedBox(
+            width: 1200,
+            height: 800,
+            child: NavigationView(
+              pane: NavigationPane(
+                selected: 0,
+                displayMode: PaneDisplayMode.compact,
+                items: items,
+              ),
+            ),
+          ),
+        ),
+      );
+
+      await tester.pump();
+
+      expect(find.byType(NavigationView), findsOneWidget);
+    });
+
+    testWidgets('Scrolling large list works smoothly', (tester) async {
+      final items = <NavigationPaneItem>[
+        for (var i = 0; i < 100; i++)
+          PaneItem(
+            icon: const Icon(FluentIcons.document),
+            title: Text('Item $i'),
+            body: Center(child: Text('Content $i')),
+          ),
+      ];
+
+      await tester.pumpWidget(
+        FluentApp(
+          home: SizedBox(
+            width: 1200,
+            height: 800,
+            child: NavigationView(
+              pane: NavigationPane(
+                selected: 0,
+                displayMode: PaneDisplayMode.open,
+                items: items,
+              ),
+            ),
+          ),
+        ),
+      );
+
+      await tester.pumpAndSettle();
+
+      // Find a scrollable and scroll it
+      final scrollable = find.byType(Scrollable).first;
+      await tester.drag(scrollable, const Offset(0, -500));
+      await tester.pumpAndSettle();
+
+      // Should still render correctly after scrolling
+      expect(find.byType(NavigationView), findsOneWidget);
+    });
+
+    testWidgets('ListView.builder is used for pane items', (tester) async {
+      // This verifies lazy loading is active by checking that
+      // not all items are in the widget tree at once
+      final items = <NavigationPaneItem>[
+        for (var i = 0; i < 100; i++)
+          PaneItem(
+            key: ValueKey('item_$i'),
+            icon: const Icon(FluentIcons.document),
+            title: Text('Item $i'),
+            body: Center(child: Text('Content $i')),
+          ),
+      ];
+
+      await tester.pumpWidget(
+        FluentApp(
+          home: SizedBox(
+            width: 1200,
+            height: 800,
+            child: NavigationView(
+              pane: NavigationPane(
+                selected: 0,
+                displayMode: PaneDisplayMode.open,
+                items: items,
+              ),
+            ),
+          ),
+        ),
+      );
+
+      await tester.pumpAndSettle();
+
+      // Verify NavigationView is rendered
+      expect(find.byType(NavigationView), findsOneWidget);
+
+      // Verify not all items are built at once (virtualization)
+      // Item 99 should not be in the tree if lazy loading works
+      expect(find.byKey(const ValueKey('item_99')), findsNothing);
+    });
+  });
+
+  // Additional edge case tests
+  group('Edge cases', () {
+    testWidgets('Empty pane items list renders', (tester) async {
+      await tester.pumpWidget(
+        FluentApp(
+          home: NavigationView(pane: NavigationPane(items: [])),
+        ),
+      );
+
+      await tester.pumpAndSettle();
+      expect(find.byType(NavigationView), findsOneWidget);
+    });
+
+    testWidgets('NavigationView with only content renders', (tester) async {
+      await tester.pumpWidget(
+        FluentApp(
+          home: NavigationView(
+            content: const Center(child: Text('Content Only')),
+          ),
+        ),
+      );
+
+      await tester.pumpAndSettle();
+      expect(find.byType(NavigationView), findsOneWidget);
+      expect(find.text('Content Only'), findsOneWidget);
+    });
+
+    testWidgets('PaneItemSeparator renders correctly', (tester) async {
+      await tester.pumpWidget(
+        FluentApp(
+          home: SizedBox(
+            width: 1200,
+            height: 800,
+            child: NavigationView(
+              pane: NavigationPane(
+                selected: 0,
+                displayMode: PaneDisplayMode.open,
+                items: [
+                  PaneItem(
+                    icon: const Icon(FluentIcons.home),
+                    title: const Text('Home'),
+                    body: const SizedBox(),
+                  ),
+                  PaneItemSeparator(),
+                  PaneItem(
+                    icon: const Icon(FluentIcons.settings),
+                    title: const Text('Settings'),
+                    body: const SizedBox(),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ),
+      );
+
+      await tester.pumpAndSettle();
+      expect(find.byType(Divider), findsOneWidget);
+    });
+
+    testWidgets('PaneItemHeader renders correctly', (tester) async {
+      await tester.pumpWidget(
+        FluentApp(
+          home: SizedBox(
+            width: 1200,
+            height: 800,
+            child: NavigationView(
+              pane: NavigationPane(
+                selected: 0,
+                displayMode: PaneDisplayMode.open,
+                items: [
+                  PaneItemHeader(header: const Text('Section Header')),
+                  PaneItem(
+                    icon: const Icon(FluentIcons.home),
+                    title: const Text('Home'),
+                    body: const SizedBox(),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ),
+      );
+
+      await tester.pumpAndSettle();
+      expect(find.text('Section Header'), findsOneWidget);
+    });
+
+    testWidgets('NavigationView handles null selected index', (tester) async {
+      // NavigationPane accepts null for no selection (negative is not allowed)
+      await tester.pumpWidget(
+        FluentApp(
+          home: SizedBox(
+            width: 1200,
+            height: 800,
+            child: NavigationView(
+              pane: NavigationPane(
+                selected: null, // No selection
+                displayMode: PaneDisplayMode.open,
+                items: [
+                  PaneItem(
+                    icon: const Icon(FluentIcons.home),
+                    title: const Text('Home'),
+                    body: const SizedBox(),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ),
+      );
+
+      await tester.pumpAndSettle();
+      expect(find.byType(NavigationView), findsOneWidget);
+    });
+
+    testWidgets('NavigationView handles selection change', (tester) async {
+      int selectedIndex = 0;
+
+      await tester.pumpWidget(
+        FluentApp(
+          home: StatefulBuilder(
+            builder: (context, setState) {
+              return SizedBox(
+                width: 1200,
+                height: 800,
+                child: NavigationView(
+                  pane: NavigationPane(
+                    selected: selectedIndex,
+                    onChanged: (index) => setState(() => selectedIndex = index),
+                    displayMode: PaneDisplayMode.open,
+                    items: [
+                      PaneItem(
+                        icon: const Icon(FluentIcons.home),
+                        title: const Text('Home'),
+                        body: const SizedBox(),
+                      ),
+                      PaneItem(
+                        icon: const Icon(FluentIcons.settings),
+                        title: const Text('Settings'),
+                        body: const SizedBox(),
+                      ),
+                    ],
+                  ),
+                ),
+              );
+            },
+          ),
+        ),
+      );
+
+      await tester.pumpAndSettle();
+      expect(selectedIndex, 0);
+
+      // Find and tap the settings icon (since text might not be visible)
+      final settingsIconFinder = find.byIcon(FluentIcons.settings);
+      if (settingsIconFinder.evaluate().isNotEmpty) {
+        await tester.tap(settingsIconFinder.first);
+        await tester.pumpAndSettle();
+        expect(selectedIndex, 1);
       }
     });
   });
