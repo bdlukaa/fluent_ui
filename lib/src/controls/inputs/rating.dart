@@ -3,6 +3,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/services.dart';
 
+/// The default icon data for the rating bar.
 const IconData kRatingBarIcon = FluentIcons.favorite_star_fill;
 
 /// A control for viewing and setting star ratings.
@@ -45,7 +46,8 @@ class RatingBar extends StatefulWidget {
   ///
   /// [starSpacing] and [amount] must be greater than 0
   const RatingBar({
-    required this.rating, super.key,
+    required this.rating,
+    super.key,
     this.onChanged,
     this.amount = 5,
     this.animationDuration = Duration.zero,

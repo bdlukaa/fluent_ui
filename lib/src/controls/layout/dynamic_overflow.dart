@@ -3,6 +3,8 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
+// ignore_for_file: public_member_api_docs
+
 import 'dart:math' as math;
 
 import 'package:fluent_ui/fluent_ui.dart';
@@ -55,8 +57,11 @@ class DynamicOverflow extends MultiChildRenderObjectWidget {
   /// hidden because of the dynamic overflow has changed.
   final DynamicOverflowChangedCallback? overflowChangedCallback;
 
+  /// Creates a dynamic overflow widget.
   DynamicOverflow({
-    required List<Widget> children, required Widget overflowWidget, super.key,
+    required List<Widget> children,
+    required Widget overflowWidget,
+    super.key,
     this.direction = Axis.horizontal,
     this.alignment = MainAxisAlignment.start,
     this.crossAxisAlignment = CrossAxisAlignment.center,
@@ -142,6 +147,7 @@ class DynamicOverflow extends MultiChildRenderObjectWidget {
 
 /// Parent data for use with [RenderDynamicOverflow].
 class DynamicOverflowParentData extends ContainerBoxParentData<RenderBox> {
+  /// Whether this child is currently hidden due to overflow.
   bool _isHidden = false;
 }
 
@@ -171,6 +177,8 @@ class RenderDynamicOverflow extends RenderBox
        _alwaysDisplayOverflowWidget = alwaysDisplayOverflowWidget;
 
   Axis _direction;
+
+  /// The direction in which to lay out children.
   Axis get direction => _direction;
   set direction(Axis value) {
     if (_direction != value) {
@@ -180,6 +188,8 @@ class RenderDynamicOverflow extends RenderBox
   }
 
   MainAxisAlignment _alignment;
+
+  /// How children should be placed along the main axis.
   MainAxisAlignment get alignment => _alignment;
   set alignment(MainAxisAlignment value) {
     if (_alignment != value) {
@@ -189,6 +199,8 @@ class RenderDynamicOverflow extends RenderBox
   }
 
   CrossAxisAlignment _crossAxisAlignment;
+
+  /// How children should be placed along the cross axis.
   CrossAxisAlignment get crossAxisAlignment => _crossAxisAlignment;
   set crossAxisAlignment(CrossAxisAlignment value) {
     if (_crossAxisAlignment != value) {

@@ -1,6 +1,8 @@
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter/foundation.dart';
 
+// TODO(bdlukaa): Remove this
+
 const double _kBottomNavigationHeight = 48;
 
 /// The navigation item used by [BottomNavigation]
@@ -49,7 +51,9 @@ class BottomNavigation extends StatelessWidget {
   ///
   /// [index] must be in the range of 0 to [items.length]
   const BottomNavigation({
-    required this.items, required this.index, super.key,
+    required this.items,
+    required this.index,
+    super.key,
     this.onChanged,
     this.style,
   }) : assert(items.length >= 2),
@@ -118,7 +122,10 @@ class BottomNavigation extends StatelessWidget {
 
 class _BottomNavigationItem extends StatelessWidget {
   const _BottomNavigationItem({
-    required this.item, required this.selected, required this.style, super.key,
+    required this.item,
+    required this.selected,
+    required this.style,
+    super.key,
     this.onPressed,
   });
 
@@ -182,7 +189,9 @@ class BottomNavigationTheme extends InheritedTheme {
   /// Creates a theme that controls how descendant [BottomNavigation]s should
   /// look like.
   const BottomNavigationTheme({
-    required super.child, required this.data, super.key,
+    required super.child,
+    required this.data,
+    super.key,
   });
 
   /// The properties for descendant [BottomNavigation] widgets.
@@ -191,7 +200,9 @@ class BottomNavigationTheme extends InheritedTheme {
   /// Creates a theme that merges the nearest [BottomNavigationTheme] with
   /// [data].
   static Widget merge({
-    required BottomNavigationThemeData data, required Widget child, Key? key,
+    required BottomNavigationThemeData data,
+    required Widget child,
+    Key? key,
   }) {
     return Builder(
       builder: (context) {

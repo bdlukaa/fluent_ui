@@ -1,5 +1,18 @@
 part of 'combo_box.dart';
 
+/// A function that submits the text of an editable combo box.
+///
+/// The function should return the new value of the text.
+///
+/// In the following example, everytime the user submits the text box, the
+/// text is uppercased
+/// ```dart
+/// EditableComboBox(
+///   onFieldSubmitted: (text) {
+///     return text.toUpperCase();
+///   },
+/// ),
+/// ```
 typedef SubmitEditableCombobox = String Function(String text);
 
 /// By default, a combo box lets the user select from a pre-defined list of
@@ -12,7 +25,8 @@ typedef SubmitEditableCombobox = String Function(String text);
 class EditableComboBox<T> extends ComboBox<T> {
   /// Creates an editable combo box.
   const EditableComboBox({
-    required this.onFieldSubmitted, super.key,
+    required this.onFieldSubmitted,
+    super.key,
     super.autofocus,
     super.popupColor,
     super.disabledPlaceholder,
@@ -97,8 +111,8 @@ class _EditableComboboxState<T> extends ComboBoxState<T> {
   }
 
   @override
-  void onChanged(T? newValue) {
-    super.onChanged(newValue);
+  void _onChanged(T? newValue) {
+    super._onChanged(newValue);
 
     // when the popup is closed, we set the new text and select the text
     _setText(newValue?.toString());
@@ -179,7 +193,7 @@ class _EditableComboboxState<T> extends ComboBoxState<T> {
             return IconButton(
               icon: IconTheme.merge(
                 data: IconThemeData(
-                  color: iconColor(context),
+                  color: _iconColor(context),
                   size: widget.iconSize,
                 ),
                 child: widget.icon,
@@ -222,7 +236,9 @@ class ComboboxFormField<T> extends FormField<T> {
   /// The `items`, `elevation`, `iconSize`, `isExpanded` and `autofocus`
   /// parameters must not be null.
   ComboboxFormField({
-    required List<ComboBoxItem<T>>? items, required this.onChanged, super.key,
+    required List<ComboBoxItem<T>>? items,
+    required this.onChanged,
+    super.key,
     ComboBoxBuilder? selectedItemBuilder,
     T? value,
     Widget? placeholder,
@@ -339,7 +355,10 @@ class EditableComboboxFormField<T> extends FormField<T> {
   /// The `items`, `elevation`, `iconSize`, `isExpanded` and `autofocus`
   /// parameters must not be null.
   EditableComboboxFormField({
-    required List<ComboBoxItem<T>>? items, required this.onChanged, required SubmitEditableCombobox onFieldSubmitted, super.key,
+    required List<ComboBoxItem<T>>? items,
+    required this.onChanged,
+    required SubmitEditableCombobox onFieldSubmitted,
+    super.key,
     ComboBoxBuilder? selectedItemBuilder,
     super.initialValue,
     Widget? placeholder,

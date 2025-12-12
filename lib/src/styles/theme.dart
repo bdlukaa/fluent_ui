@@ -191,6 +191,9 @@ class _AnimatedFluentThemeState
   }
 }
 
+// TODO(bdlukaa): Remove this
+/// An extension on [Brightness] that adds methods to check if the brightness
+/// is light or dark.
 extension BrightnessExtension on Brightness {
   /// Whether this is light
   ///
@@ -416,6 +419,7 @@ class FluentThemeData with Diagnosticable {
   /// throughout the theme for consistent styling.
   final ResourceDictionary resources;
 
+  /// Creates a new instance of [FluentThemeData].
   factory FluentThemeData({
     Iterable<ThemeExtension<dynamic>>? extensions,
     Brightness? brightness,
@@ -555,6 +559,7 @@ class FluentThemeData with Diagnosticable {
     );
   }
 
+  /// Creates a new instance of [FluentThemeData].
   const FluentThemeData.raw({
     required this.typography,
     required this.extensions,

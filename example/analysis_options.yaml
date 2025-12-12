@@ -70,7 +70,6 @@ linter:
     prefer_expression_function_bodies: false
     prefer_final_in_for_each: true
     prefer_final_locals: true
-    prefer_final_parameters: true
     prefer_foreach: false
     prefer_if_elements_to_conditional_expressions: true
     prefer_int_literals: true

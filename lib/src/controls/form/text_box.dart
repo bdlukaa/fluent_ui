@@ -614,6 +614,10 @@ class TextBox extends StatefulWidget {
   ///  * [AdaptiveTextSelectionToolbar], which is built by default.
   final EditableTextContextMenuBuilder? contextMenuBuilder;
 
+  /// The default context menu builder for [TextBox].
+  ///
+  /// Builds a [FluentTextSelectionToolbar] with the standard context menu items
+  /// plus an undo action if an [UndoHistoryController] is available.
   static Widget defaultContextMenuBuilder(
     BuildContext context,
     EditableTextState editableTextState,
@@ -684,7 +688,7 @@ class TextBox extends StatefulWidget {
   /// {@macro flutter.widgets.editableText.scrollBehavior}
   final ScrollBehavior? scrollBehavior;
 
-  // {@macro flutter.painting.textPainter.textScaler}
+  /// {@macro flutter.painting.textPainter.textScaler}
   final TextScaler? textScaler;
 
   /// {@macro dart.ui.textHeightBehavior}

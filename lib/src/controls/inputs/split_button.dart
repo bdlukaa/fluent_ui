@@ -1,5 +1,14 @@
 import 'package:fluent_ui/fluent_ui.dart';
 
+/// A builder for the secondary part of a split button.
+///
+/// The builder should return a widget that will be displayed when the secondary
+/// part of the button is pressed.
+///
+/// See also:
+///
+/// * [SplitButton], which is the widget that uses this builder.
+/// * [FlyoutController], which is the controller for the flyout.
 typedef SplitButtonSecondaryBuilder =
     Widget Function(
       BuildContext context,
@@ -129,6 +138,7 @@ class SplitButton extends StatefulWidget {
 }
 
 class SplitButtonState extends State<SplitButton> {
+  /// The controller for the flyout.
   late final FlyoutController flyoutController = FlyoutController();
 
   bool _showFocusHighlight = false;

@@ -1,5 +1,8 @@
 import 'package:fluent_ui/fluent_ui.dart';
 
+/// The default constraints for a [TeachingTip].
+///
+/// Based on Windows UI guidelines.
 /// https://github.com/microsoft/microsoft-ui-xaml/blob/main/src/controls/dev/TeachingTip/TeachingTip_themeresources.xaml
 const kTeachingTipConstraints = BoxConstraints(
   minHeight: 40,
@@ -7,6 +10,7 @@ const kTeachingTipConstraints = BoxConstraints(
   maxWidth: 336,
 );
 
+/// A callback function for closing a teaching tip.
 typedef TooltipCloseCallback = void Function(BuildContext context);
 
 /// Displays a Windows teaching tip at the desired position, with entrance
@@ -190,6 +194,9 @@ class TeachingTip extends StatelessWidget {
     Navigator.of(context).pop();
   }
 
+  /// The default transition animation builder for teaching tips.
+  ///
+  /// Creates a scale and fade animation from the placement direction.
   static Widget defaultTransitionBuilder(
     BuildContext context,
     Animation<double> animation,
@@ -386,6 +393,12 @@ class TeachingTip extends StatelessWidget {
   }
 }
 
+/// The default teaching tip border.
+///
+/// See also:
+///
+/// * [ShapeBorder], which is the base class for this class.
+/// * [TeachingTip], which is the widget that uses this border.
 class TeachingTipBorder extends ShapeBorder {
   /// The placement of the teaching tip.
   final FlyoutPlacementMode placement;
@@ -405,6 +418,7 @@ class TeachingTipBorder extends ShapeBorder {
   /// The width of the arrow in the cross axis.
   final double arrowCrossAxisWidth;
 
+  /// Creates a border for the teaching tip.
   const TeachingTipBorder({
     required this.placement,
     required this.borderColor,

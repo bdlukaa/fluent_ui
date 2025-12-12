@@ -223,7 +223,14 @@ class _AcrylicState extends State<Acrylic> {
   }
 }
 
+/// An animated acrylic widget.
+///
+/// See also:
+///
+///  * [Acrylic], the non-animated version of this widget
+///  * [ImplicitlyAnimatedWidget], the base class for this widget
 class AnimatedAcrylic extends ImplicitlyAnimatedWidget {
+  /// Creates an animated acrylic widget.
   const AnimatedAcrylic({
     required super.duration,
     super.key,
@@ -375,12 +382,22 @@ class _AnimatedAcrylicState extends AnimatedWidgetBaseState<AnimatedAcrylic> {
 /// Represents the properties of an Acrylic material
 @immutable
 class AcrylicProperties {
+  /// The tint color of the acrylic.
   final Color tint;
+
+  /// The opacity of the tint color.
   final double tintAlpha;
+
+  /// The opacity of the luminosity color.
   final double luminosityAlpha;
+
+  /// The amount of blur to apply to the content behind the acrylic.
   final double blurAmount;
+
+  /// The shape of the acrylic.
   final ShapeBorder shape;
 
+  /// Creates a new instance of [AcrylicProperties].
   const AcrylicProperties({
     required this.tint,
     required this.tintAlpha,
@@ -389,6 +406,7 @@ class AcrylicProperties {
     required this.shape,
   });
 
+  /// Creates a new instance of [AcrylicProperties] with default values.
   const AcrylicProperties.empty()
     : tint = Colors.black,
       tintAlpha = kDefaultAcrylicAlpha,
@@ -413,6 +431,7 @@ class AcrylicProperties {
     return false;
   }
 
+  /// Gets the properties of the acrylic from the context.
   static AcrylicProperties of(BuildContext context) {
     return context
         .dependOnInheritedWidgetOfExactType<_AcrylicInheritedWidget>()!
@@ -529,12 +548,14 @@ class _AcrylicPainter extends CustomPainter {
 // Credits: @HrX03 (https://github.com/hrx03)
 /// Microsoft utils converted from C# to dart
 class AcrylicHelper {
+  /// Gets the effective tint color of the acrylic.
   static Color getEffectiveTintColor(Color color, double opacity) {
     // Update tintColor's alpha with the combined opacity value
     // If LuminosityOpacity was specified, we don't intervene into users parameters
     return color.withValues(alpha: opacity);
   }
 
+  /// Gets the luminosity color of the acrylic.
   static Color getLuminosityColor(Color tintColor, double? luminosityOpacity) {
     // If luminosity opacity is specified, just use the values as is
     if (luminosityOpacity != null) {
@@ -569,6 +590,7 @@ class AcrylicHelper {
     }
   }
 
+  /// Gets the opacity modifier of the tint color.
   static double getTintOpacityModifier(Color color) {
     // Mid point of HsvV range that these calculations are based on. This is here for easy tuning.
     const midPoint = 0.50;
@@ -639,9 +661,16 @@ class _NoiseTextureCacher {
   }
 }
 
+/// A widget that disables the acrylic effect for its descendants.
+///
+/// See also:
+///
+///   * [Acrylic], the widget that applies the acrylic effect
 class DisableAcrylic extends InheritedWidget {
+  /// Creates a new instance of [DisableAcrylic].
   const DisableAcrylic({required super.child, super.key});
 
+  /// Gets the nearest [DisableAcrylic] ancestor, if any.
   static DisableAcrylic? of(BuildContext context) {
     return context.dependOnInheritedWidgetOfExactType<DisableAcrylic>();
   }

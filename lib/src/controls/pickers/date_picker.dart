@@ -85,7 +85,8 @@ enum DatePickerField {
 class DatePicker extends StatefulWidget {
   /// Creates a date picker.
   DatePicker({
-    required this.selected, super.key,
+    required this.selected,
+    super.key,
     this.onChanged,
     this.onCancel,
     this.header,
@@ -246,19 +247,23 @@ class DatePicker extends StatefulWidget {
 }
 
 class DatePickerState extends State<DatePicker> {
-  late DateTime date;
+  late DateTime _date;
 
   late FixedExtentScrollController _monthController;
   late FixedExtentScrollController _dayController;
   late FixedExtentScrollController _yearController;
 
+  /// The year that the date picker starts from
   int get startYear => widget.startDate.year;
+
+  /// The year that the date picker ends at
   int get endYear => widget.endDate.year;
 
+  /// The current year that the date picker is currently displaying
   int get currentYear {
     return List.generate(endYear - startYear + 1, (index) {
       return startYear + index;
-    }).firstWhere((v) => v == date.year, orElse: () => 0);
+    }).firstWhere((v) => v == _date.year, orElse: () => 0);
   }
 
   final _pickerKey = GlobalKey<PickerState>();
@@ -266,22 +271,22 @@ class DatePickerState extends State<DatePicker> {
   @override
   void initState() {
     super.initState();
-    date = widget.selected ?? DateTime.now();
-    initControllers();
+    _date = widget.selected ?? DateTime.now();
+    _initControllers();
   }
 
-  void initControllers() {
+  void _initControllers() {
     if (widget.selected == null && mounted) {
-      setState(() => date = DateTime.now());
+      setState(() => _date = DateTime.now());
     }
     _monthController = FixedExtentScrollController(
       initialItem: _monthsInYear(
-        date,
+        _date,
         widget.startDate,
         widget.endDate,
-      ).toList().indexOf(date.month),
+      ).toList().indexOf(_date.month),
     );
-    _dayController = FixedExtentScrollController(initialItem: date.day - 1);
+    _dayController = FixedExtentScrollController(initialItem: _date.day - 1);
     _yearController = FixedExtentScrollController(
       initialItem: currentYear - startYear,
     );
@@ -298,20 +303,22 @@ class DatePickerState extends State<DatePicker> {
   @override
   void didUpdateWidget(DatePicker oldWidget) {
     super.didUpdateWidget(oldWidget);
-    if (widget.selected != date) {
+    if (widget.selected != _date) {
       WidgetsBinding.instance.addPostFrameCallback((_) {
-        date = widget.selected ?? DateTime.now();
-        _monthController.jumpToItem(date.month - 1);
-        _dayController.jumpToItem(date.day - 1);
+        _date = widget.selected ?? DateTime.now();
+        _monthController.jumpToItem(_date.month - 1);
+        _dayController.jumpToItem(_date.day - 1);
         _yearController.jumpToItem(currentYear - startYear - 1);
       });
     }
   }
 
+  /// Update the current date with a new date.
   void handleDateChanged(DateTime newDate) {
-    if (mounted) setState(() => date = newDate);
+    if (mounted) setState(() => _date = newDate);
   }
 
+  /// Open the date picker popup.
   Future<void> open() async {
     await _pickerKey.currentState?.open();
   }
@@ -345,7 +352,7 @@ class DatePickerState extends State<DatePicker> {
       key: _pickerKey,
       pickerContent: (context) {
         return _DatePickerContentPopUp(
-          date: date,
+          date: _date,
           dayController: _dayController,
           monthController: _monthController,
           onCancel: () => widget.onCancel?.call(),
@@ -371,7 +378,7 @@ class DatePickerState extends State<DatePicker> {
                 _monthController.dispose();
                 _dayController.dispose();
                 _yearController.dispose();
-                initControllers();
+                _initControllers();
                 await open();
               },
         builder: (context, states) {

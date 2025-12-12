@@ -540,6 +540,7 @@ class PaneItemHeader extends NavigationPaneItem {
 ///   * [PaneItemHeader], used to label groups of items.
 ///   * [PaneItemExpander], which creates hierhical navigation
 class PaneItemAction extends PaneItem {
+  /// Creates a pane item action.
   PaneItemAction({
     required super.icon,
     required VoidCallback super.onTap,
@@ -599,8 +600,13 @@ typedef PaneItemExpanderKey = GlobalKey<__PaneItemExpanderState>;
 ///  * [PaneItemSeparator], used to group navigation items
 ///  * [PaneItemHeader], used to label groups of items.
 class PaneItemExpander extends PaneItem {
+  /// The key used for the expander.
+  ///
+  /// This key is used to find the position and size of the expander within the
+  /// screen.
   final PaneItemExpanderKey expanderKey = PaneItemExpanderKey();
 
+  /// Creates a pane item expander.
   PaneItemExpander({
     required super.icon,
     required this.items,

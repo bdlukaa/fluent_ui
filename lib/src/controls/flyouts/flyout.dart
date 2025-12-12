@@ -412,21 +412,25 @@ extension on double {
   double _ensurePositive() => clampDouble(this, 0, double.infinity);
 }
 
+/// Configuration for automatic flyout placement.
+///
+/// When using [FlyoutPlacementMode.auto], this configuration determines
+/// how the flyout position is calculated based on available space.
 class FlyoutAutoConfiguration {
   /// The amount of necessary available space.
   ///
-  /// If not provided, it falls back to the flyout size
+  /// If not provided, it falls back to the flyout size.
   final double? autoAvailableSpace;
 
-  /// Whether the flyout should be displayed horizontally
+  /// Whether the flyout should be displayed horizontally.
   ///
-  /// If true, [preferredMode] must be either .left or .right
+  /// If true, [preferredMode] must be either .left or .right.
   final bool horizontal;
 
-  /// The preferred mode
+  /// The preferred placement mode when auto-positioning.
   final FlyoutPlacementMode preferredMode;
 
-  /// The configuration for flyout auto mode
+  /// Creates the configuration for flyout auto mode.
   FlyoutAutoConfiguration({
     required this.preferredMode,
     this.autoAvailableSpace,
@@ -595,6 +599,10 @@ class _FlyoutPositionDelegate extends SingleChildLayoutDelegate {
   }
 }
 
+/// A builder function for creating flyout transition animations.
+///
+/// The [animation] drives the transition, [placement] indicates where the
+/// flyout is positioned, and [child] is the flyout content to animate.
 typedef FlyoutTransitionBuilder =
     Widget Function(
       BuildContext context,
@@ -638,6 +646,7 @@ typedef FlyoutTransitionBuilder =
 ///  * [Flyout], for displaying contextual UI
 ///  * <https://learn.microsoft.com/en-us/windows/apps/design/controls/dialogs-and-flyouts/flyouts>
 class FlyoutController with ChangeNotifier, WidgetsBindingObserver {
+  /// Creates a flyout controller.
   FlyoutController() {
     WidgetsBinding.instance.addObserver(this);
   }

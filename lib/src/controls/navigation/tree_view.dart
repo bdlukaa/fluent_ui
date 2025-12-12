@@ -29,6 +29,9 @@ typedef TreeViewItemOnSecondaryTap =
 typedef TreeViewItemOnExpandToggle =
     Future<void> Function(TreeViewItem item, bool getsExpanded);
 
+/// A callback that returns the gestures for a [TreeViewItem].
+///
+/// Used by [TreeView.gesturesBuilder]
 typedef TreeViewItemGesturesCallback =
     Map<Type, GestureRecognizerFactory> Function(TreeViewItem item);
 
@@ -38,13 +41,17 @@ const double _whiteSpace = 8;
 const Widget kTreeViewLoadingIndicator = Padding(
   // Padding to make it the same width as the expand icon
   padding: EdgeInsetsDirectional.only(start: 6, end: 6),
-  child: SizedBox(
-    height: 12,
-    width: 12,
-    child: ProgressRing(strokeWidth: 3),
-  ),
+  child: SizedBox(height: 12, width: 12, child: ProgressRing(strokeWidth: 3)),
 );
 
+/// The selection mode of a [TreeView].
+///
+/// See also:
+///
+///   * [TreeView], which uses this to determine the selection mode
+///   * [TreeViewSelectionMode.none], which is used by default
+///   * [TreeViewSelectionMode.single], which is used when only one item can be selected
+///   * [TreeViewSelectionMode.multiple], which is used when multiple items can be selected
 enum TreeViewSelectionMode {
   /// Selection is disabled
   none,
@@ -109,16 +116,17 @@ enum TreeViewItemInvokeReason {
 ///  * [TreeView], which renders a collection of [TreeViewItem]s
 ///  * <https://learn.microsoft.com/en-us/windows/apps/design/controls/tree-view>
 class TreeViewItem with Diagnosticable {
+  /// {@macro flutter.widgets.Widget.key}
   final Key? key;
 
   /// The item leading
   ///
-  /// Usually an [Icon]
+  /// Usually an [Icon] widget
   final Widget? leading;
 
   /// The item content
   ///
-  /// Usually a [Text]
+  /// Usually a [Text] widget
   final Widget content;
 
   /// An optional/arbitrary value associated with the item.
@@ -218,7 +226,8 @@ class TreeViewItem with Diagnosticable {
 
   /// Creates a tree view item.
   TreeViewItem({
-    required this.content, this.key,
+    required this.content,
+    this.key,
     this.leading,
     this.value,
     this.children = const [],
@@ -483,6 +492,7 @@ class TreeViewItem with Diagnosticable {
   }
 }
 
+/// An extension on [List<TreeViewItem>] that adds methods to build the tree view.
 extension TreeViewItemCollection on List<TreeViewItem> {
   /// Adds the [TreeViewItem.parent] property to the [TreeViewItem]s
   /// and calculates other internal properties.
@@ -523,6 +533,8 @@ extension TreeViewItemCollection on List<TreeViewItem> {
     return this;
   }
 
+  /// Executes the [callback] for all items in the tree view and all their
+  /// children, recursively.
   void executeForAll(ValueChanged<TreeViewItem> callback) {
     for (final child in this) {
       callback(child);
@@ -530,6 +542,8 @@ extension TreeViewItemCollection on List<TreeViewItem> {
     }
   }
 
+  /// Returns an iteration of all items in the tree view and all their
+  /// children, recursively, that satisfy the [t] predicate.
   Iterable<TreeViewItem> whereForAll(bool Function(TreeViewItem element) t) {
     var result = where(t);
     for (final child in this) {
@@ -594,7 +608,8 @@ class TreeView extends StatefulWidget {
   ///
   /// [items] must not be empty
   const TreeView({
-    required this.items, super.key,
+    required this.items,
+    super.key,
     this.selectionMode = TreeViewSelectionMode.none,
     this.onSelectionChanged,
     this.onItemInvoked,
@@ -964,7 +979,16 @@ class TreeViewState extends State<TreeView> with AutomaticKeepAliveClientMixin {
 
 class _TreeViewItem extends StatelessWidget {
   const _TreeViewItem({
-    required this.item, required this.selectionMode, required this.onSelect, required this.onSecondaryTap, required this.gestures, required this.onExpandToggle, required this.onInvoked, required this.loadingWidgetFallback, required this.narrowSpacing, super.key,
+    required this.item,
+    required this.selectionMode,
+    required this.onSelect,
+    required this.onSecondaryTap,
+    required this.gestures,
+    required this.onExpandToggle,
+    required this.onInvoked,
+    required this.loadingWidgetFallback,
+    required this.narrowSpacing,
+    super.key,
   });
 
   final TreeViewItem item;

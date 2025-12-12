@@ -29,8 +29,18 @@ import 'package:flutter/foundation.dart';
 ///  * [ToggleButton], a button that can be toggled on and off
 ///  * <https://learn.microsoft.com/en-us/windows/apps/design/controls/buttons>
 abstract class BaseButton extends StatefulWidget {
+  /// Creates a base button.
   const BaseButton({
-    required this.onPressed, required this.onLongPress, required this.onTapDown, required this.onTapUp, required this.style, required this.focusNode, required this.autofocus, required this.child, required this.focusable, super.key,
+    required this.onPressed,
+    required this.onLongPress,
+    required this.onTapDown,
+    required this.onTapUp,
+    required this.style,
+    required this.focusNode,
+    required this.autofocus,
+    required this.child,
+    required this.focusable,
+    super.key,
   });
 
   /// Called when the button is tapped or otherwise activated.
@@ -90,9 +100,11 @@ abstract class BaseButton extends StatefulWidget {
   /// Whether this button can be focused.
   final bool focusable;
 
+  /// Returns the default style for this button type based on the context.
   @protected
   ButtonStyle defaultStyleOf(BuildContext context);
 
+  /// Returns the theme style for this button type, if defined.
   @protected
   ButtonStyle? themeStyleOf(BuildContext context);
 
@@ -159,14 +171,10 @@ class _BaseButtonState extends State<BaseButton> {
         T? resolve<T>(
           WidgetStateProperty<T>? Function(ButtonStyle? style) getProperty,
         ) {
-          return effectiveValue(
-            (style) => getProperty(style)?.resolve(states),
-          );
+          return effectiveValue((style) => getProperty(style)?.resolve(states));
         }
 
-        final resolvedElevation = resolve<double?>(
-          (style) => style?.elevation,
-        );
+        final resolvedElevation = resolve<double?>((style) => style?.elevation);
         final resolvedTextStyle = theme.typography.body?.merge(
           resolve<TextStyle?>((style) => style?.textStyle),
         );
@@ -180,9 +188,7 @@ class _BaseButtonState extends State<BaseButton> {
           (style) => style?.shadowColor,
         );
         final resolvedPadding =
-            resolve<EdgeInsetsGeometry?>(
-              (style) => style?.padding,
-            ) ??
+            resolve<EdgeInsetsGeometry?>((style) => style?.padding) ??
             EdgeInsetsDirectional.zero;
         final resolvedShape =
             resolve<ShapeBorder?>((style) => style?.shape) ??

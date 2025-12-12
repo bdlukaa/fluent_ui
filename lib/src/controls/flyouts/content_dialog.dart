@@ -429,23 +429,46 @@ class ContentDialogTheme extends InheritedTheme {
       data != oldWidget.data;
 }
 
+/// Theme data for [ContentDialog] widgets.
+///
+/// This class defines the visual appearance of content dialogs, including
+/// their decoration, padding, and action button styling.
 @immutable
 class ContentDialogThemeData with Diagnosticable {
+  /// The padding around the entire dialog content.
   final EdgeInsetsGeometry? padding;
+
+  /// The padding around the title.
   final EdgeInsetsGeometry? titlePadding;
+
+  /// The padding around the body content.
   final EdgeInsetsGeometry? bodyPadding;
 
+  /// The decoration of the dialog background.
   final Decoration? decoration;
+
+  /// The color of the barrier behind the dialog.
   final Color? barrierColor;
 
+  /// The theme data for action buttons in the dialog.
   final ButtonThemeData? actionThemeData;
+
+  /// The spacing between action buttons.
   final double? actionsSpacing;
+
+  /// The decoration of the actions area.
   final Decoration? actionsDecoration;
+
+  /// The padding around the actions area.
   final EdgeInsetsGeometry? actionsPadding;
 
+  /// The text style for the dialog title.
   final TextStyle? titleStyle;
+
+  /// The text style for the dialog body.
   final TextStyle? bodyStyle;
 
+  /// Creates content dialog theme data.
   const ContentDialogThemeData({
     this.decoration,
     this.barrierColor,
@@ -460,6 +483,7 @@ class ContentDialogThemeData with Diagnosticable {
     this.bodyStyle,
   });
 
+  /// Creates the standard [ContentDialogThemeData] based on the given [theme].
   factory ContentDialogThemeData.standard(FluentThemeData theme) {
     return ContentDialogThemeData(
       decoration: BoxDecoration(
@@ -482,6 +506,9 @@ class ContentDialogThemeData with Diagnosticable {
     );
   }
 
+  /// Linearly interpolates between two [ContentDialogThemeData] objects.
+  ///
+  /// {@macro fluent_ui.lerp.t}
   static ContentDialogThemeData lerp(
     ContentDialogThemeData? a,
     ContentDialogThemeData? b,
@@ -518,6 +545,8 @@ class ContentDialogThemeData with Diagnosticable {
     );
   }
 
+  /// Merges this [ContentDialogThemeData] with another, with the other taking
+  /// precedence.
   ContentDialogThemeData merge(ContentDialogThemeData? style) {
     if (style == null) return this;
     return ContentDialogThemeData(

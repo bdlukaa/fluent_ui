@@ -99,6 +99,7 @@ class NavigationPane with Diagnosticable {
          'The selected index must not be negative',
        );
 
+  /// {@macro flutter.widgets.Widget.key}
   final Key? key;
 
   /// The key for the pane view
@@ -306,6 +307,9 @@ class NavigationPane with Diagnosticable {
     return effectiveItems.indexOf(item);
   }
 
+  /// Builds the hamburger menu button for the navigation pane.
+  ///
+  /// If the [pane] has a [menuButton] set, it will be returned instead.
   static Widget buildMenuButton(
     BuildContext context,
     Widget itemTitle,

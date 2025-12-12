@@ -218,9 +218,12 @@ class CommandBar extends StatefulWidget {
 }
 
 class CommandBarState extends State<CommandBar> {
+  /// The controller for the secondary menu popup.
   final secondaryFlyoutController = FlyoutController();
   List<int> _dynamicallyHiddenPrimaryItems = [];
 
+  /// The list of all secondary items, including the dynamically hidden primary
+  /// items.
   List<CommandBarItem> get allSecondaryItems {
     return <CommandBarItem>[
       ..._dynamicallyHiddenPrimaryItems.map(
@@ -230,6 +233,13 @@ class CommandBarState extends State<CommandBar> {
     ];
   }
 
+  /// Toggle the secondary menu popup.
+  ///
+  /// If the secondary menu is open, it will be closed.
+  /// If the secondary menu is closed, it will be opened.
+  ///
+  /// This function will return a future that will be completed when the action
+  /// is completed.
   Future<void> toggleSecondaryMenu() async {
     if (secondaryFlyoutController.isOpen) {
       secondaryFlyoutController.close<void>();
@@ -515,8 +525,12 @@ enum CommandBarItemDisplayMode {
 /// how to build an appropriate widget for the given [CommandBarItemDisplayMode]
 /// during build time.
 abstract class CommandBarItem with Diagnosticable {
+  /// The key of this item.
+  ///
+  /// {@macro flutter.widgets.Widget.key}
   final Key? key;
 
+  /// Creates a command bar item.
   const CommandBarItem({required this.key});
 
   /// Builds the final widget for this display mode for this item.
@@ -535,13 +549,17 @@ typedef CommandBarItemWidgetBuilder =
       Widget child,
     );
 
+/// A command bar item that wraps another item with a builder.
 class CommandBarBuilderItem extends CommandBarItem {
   /// Function that is called with the built widget of the wrappedItem for
   /// a given display mode before it is returned. For example, to wrap a
   /// widget in a [Tooltip].
   final CommandBarItemWidgetBuilder builder;
+
+  /// The item to wrapped by the builder.
   final CommandBarItem wrappedItem;
 
+  /// Creates a command bar builder item.
   const CommandBarBuilderItem({
     required this.builder,
     required this.wrappedItem,
@@ -562,8 +580,10 @@ class CommandBarBuilderItem extends CommandBarItem {
 /// the proper margin so the item has the proper minimum height and width
 /// expected of a control within the primary command area of a [CommandBar].
 class CommandBarItemInPrimary extends StatelessWidget {
+  /// The content of this item.
   final Widget child;
 
+  /// Creates a command bar item in primary mode.
   const CommandBarItemInPrimary({required this.child, super.key});
 
   @override

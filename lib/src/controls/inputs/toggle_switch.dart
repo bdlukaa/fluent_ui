@@ -318,6 +318,11 @@ class DefaultToggleSwitchKnob extends StatelessWidget {
   }
 }
 
+/// An inherited widget that defines the configuration for
+/// [ToggleSwitch]s in this widget's subtree.
+///
+/// Values specified here are used for [ToggleSwitch] properties that are not
+/// given an explicit non-null value.
 class ToggleSwitchTheme extends InheritedTheme {
   /// Creates a theme that controls how descendant [ToggleSwitch]es should
   /// look like.
@@ -327,6 +332,7 @@ class ToggleSwitchTheme extends InheritedTheme {
     super.key,
   });
 
+  /// The theme data for the toggle switch theme.
   final ToggleSwitchThemeData data;
 
   /// Creates a theme that merges the nearest [ToggleSwitchTheme] with [data].
@@ -379,6 +385,7 @@ class ToggleSwitchTheme extends InheritedTheme {
       data != oldWidget.data;
 }
 
+/// Theme data for [ToggleSwitch] widgets.
 @immutable
 class ToggleSwitchThemeData with Diagnosticable {
   /// The decoration of the knob when the switch is checked

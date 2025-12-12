@@ -21,6 +21,7 @@ const EdgeInsets _kAlignedMenuMargin = EdgeInsets.zero;
 const EdgeInsetsDirectional _kListPadding = EdgeInsetsDirectional.only(
   top: _kMenuItemBottomPadding,
 );
+
 /// The default corner radius for combo box elements.
 const kComboBoxRadius = Radius.circular(4);
 
@@ -1153,10 +1154,14 @@ class ComboBox<T> extends StatefulWidget {
 
 class ComboBoxState<T> extends State<ComboBox<T>> {
   int? _selectedIndex;
+
+  /// The index of the selected item.
   int? get selectedIndex => _selectedIndex;
 
   _ComboBoxRoute<T>? _comboboxRoute;
   FocusNode? _internalNode;
+
+  /// The focus node for the combo box.
   FocusNode? get focusNode => widget.focusNode ?? _internalNode;
   bool _hasPrimaryFocus = false;
   late Map<Type, Action<Intent>> _actionMap;
@@ -1192,6 +1197,9 @@ class ComboBoxState<T> extends State<ComboBox<T>> {
     super.dispose();
   }
 
+  /// Closes the combo box popup.
+  ///
+  /// If the combo box popup is not open, this method does nothing.
   void closePopup() {
     _comboboxRoute?._dismiss();
     _comboboxRoute = null;
@@ -1238,9 +1246,14 @@ class ComboBoxState<T> extends State<ComboBox<T>> {
     }
   }
 
-  TextStyle? get textStyle =>
+  TextStyle? get _textStyle =>
       widget.style ?? FluentTheme.of(context).typography.body;
 
+  /// Opens the combo box popup.
+  ///
+  /// If the combo box is not enabled, this method does nothing.
+  ///
+  /// If the combo box popup is already open, this method does nothing.
   void openPopup() {
     assert(isEnabled, 'The ComboBox must be enabled to open a popup');
     final textDirection = Directionality.maybeOf(context);
@@ -1266,7 +1279,7 @@ class ComboBoxState<T> extends State<ComboBox<T>> {
         from: context,
         to: navigator.context,
       ),
-      style: textStyle!,
+      style: _textStyle!,
       barrierLabel: FluentLocalizations.of(context).modalBarrierDismissLabel,
       popupColor: widget.popupColor,
     );
@@ -1274,17 +1287,17 @@ class ComboBoxState<T> extends State<ComboBox<T>> {
     navigator.push(_comboboxRoute!).then<void>((newValue) {
       closePopup();
       if (!mounted || newValue == null) return;
-      onChanged(newValue.result);
+      _onChanged(newValue.result);
     });
 
     widget.onTap?.call();
   }
 
-  void onChanged(T? newValue) {
+  void _onChanged(T? newValue) {
     widget.onChanged?.call(newValue);
   }
 
-  Color iconColor(BuildContext context) {
+  Color _iconColor(BuildContext context) {
     final res = FluentTheme.of(context).resources;
     if (isEnabled) {
       if (widget.iconEnabledColor != null) return widget.iconEnabledColor!;
@@ -1301,6 +1314,7 @@ class ComboBoxState<T> extends State<ComboBox<T>> {
     }
   }
 
+  /// Whether the combo box is enabled.
   bool get isEnabled =>
       widget.items != null &&
       widget.items!.isNotEmpty &&
@@ -1336,7 +1350,7 @@ class ComboBoxState<T> extends State<ComboBox<T>> {
       placeholderIndex = items.length;
       items.add(
         DefaultTextStyle.merge(
-          style: textStyle!.copyWith(
+          style: _textStyle!.copyWith(
             color: theme.resources.textFillColorDisabled,
           ),
           child: IgnorePointer(child: displayedHint),
@@ -1368,8 +1382,8 @@ class ComboBoxState<T> extends State<ComboBox<T>> {
       builder: (context) {
         return DefaultTextStyle.merge(
           style: isEnabled
-              ? textStyle!
-              : textStyle!.copyWith(
+              ? _textStyle!
+              : _textStyle!.copyWith(
                   color: theme.resources.textFillColorDisabled,
                 ),
           child: Container(
@@ -1386,7 +1400,7 @@ class ComboBoxState<T> extends State<ComboBox<T>> {
                   padding: const EdgeInsetsDirectional.only(start: 8),
                   child: IconTheme.merge(
                     data: IconThemeData(
-                      color: iconColor(context),
+                      color: _iconColor(context),
                       size: widget.iconSize,
                     ),
                     child: widget.icon,

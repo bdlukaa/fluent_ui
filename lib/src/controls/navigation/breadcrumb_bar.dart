@@ -14,6 +14,7 @@ enum ChevronAlignment {
   /// The chevron icon is aligned to the bottom of the item.
   bottom;
 
+  /// The cross axis alignment of the chevron icon based on its alignment.
   CrossAxisAlignment get crossAxisAlignment {
     switch (this) {
       case ChevronAlignment.top:
@@ -26,13 +27,28 @@ enum ChevronAlignment {
   }
 }
 
+/// A builder for the chevron icon.
+///
+/// The builder should return a widget that will be displayed as the chevron icon.
+///
+/// See also:
+///
+/// * [ChevronAlignment], the alignment of the chevron icon.
+/// * [BreadcrumbBar], the widget that uses this builder.
 typedef ChevronIconBuilder = Widget Function(BuildContext context, int index);
 
+/// A item in the breadcrumb bar.
+///
+/// The item contains a label and a value.
+///
+/// See also:
+///
+/// * [BreadcrumbBar], the widget that uses this item.
 @immutable
 class BreadcrumbItem<T> {
   /// The label of the item
   ///
-  /// Usually a [Text] widget
+  /// Usually a [Text] widget.
   final Widget label;
 
   /// The value of the item

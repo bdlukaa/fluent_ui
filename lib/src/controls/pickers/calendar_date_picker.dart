@@ -144,7 +144,7 @@ class CalendarDatePickerState extends CalendarViewState {
 
   /// Closes the calendar date picker flyout.
   void close({bool force = false}) {
-    _flyoutController.close<void>(force);
+    _flyoutController.close<bool>(force);
   }
 
   @override

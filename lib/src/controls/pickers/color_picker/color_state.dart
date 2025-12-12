@@ -6,25 +6,46 @@ part 'color_names.dart';
 
 /// Represents components of a color in the HSV (Hue, Saturation, Value) color space.
 final class HsvComponents {
+  /// Creates a HSV components.
   const HsvComponents(this.h, this.s, this.v);
+
+  /// The hue component (0-360).
   final double h;
+
+  /// The saturation component (0-1).
   final double s;
+
+  /// The value component (0-1).
   final double v;
 }
 
 /// Represents components of a color in the HSL (Hue, Saturation, Lightness) color space.
 final class HslComponents {
+  /// Creates a HSL components.
   const HslComponents(this.h, this.s, this.l);
+
+  /// The hue component (0-360).
   final double h;
+
+  /// The saturation component (0-1).
   final double s;
+
+  /// The lightness component (0-1).
   final double l;
 }
 
 /// Represents components of a color in the RGB (Red, Green, Blue) color space.
 final class RgbComponents {
+  /// Creates a RGB components.
   const RgbComponents(this.r, this.g, this.b);
+
+  /// The red component (0-1).
   final double r;
+
+  /// The green component (0-1).
   final double g;
+
+  /// The blue component (0-1).
   final double b;
 }
 

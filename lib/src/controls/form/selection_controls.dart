@@ -12,6 +12,10 @@ const double _kToolbarScreenPadding = 8;
 // These values were measured from a screenshot of TextBox on Windows 11.
 const double _kToolbarWidth = 222;
 
+/// A Windows-styled text selection toolbar.
+///
+/// This toolbar appears when text is selected in a [TextBox] or [EditableText],
+/// providing options like cut, copy, paste, and select all.
 class FluentTextSelectionToolbar extends StatelessWidget {
   /// {@macro flutter.material.AdaptiveTextSelectionToolbar.buttonItems}
   final List<ContextMenuButtonItem> buttonItems;
@@ -19,6 +23,7 @@ class FluentTextSelectionToolbar extends StatelessWidget {
   /// {@macro flutter.material.AdaptiveTextSelectionToolbar.anchors}
   final TextSelectionToolbarAnchors anchors;
 
+  /// Creates a Fluent text selection toolbar.
   const FluentTextSelectionToolbar({
     required this.buttonItems,
     required this.anchors,
@@ -40,6 +45,7 @@ class FluentTextSelectionToolbar extends StatelessWidget {
   }) : buttonItems = editableTextState.contextMenuButtonItems,
        anchors = editableTextState.contextMenuAnchors;
 
+  /// Returns the icon for a context menu button type.
   IconData? contextMenuTypeToIcon(ContextMenuButtonType type) {
     return switch (type) {
       ContextMenuButtonType.cut => FluentIcons.cut,
@@ -55,6 +61,7 @@ class FluentTextSelectionToolbar extends StatelessWidget {
     };
   }
 
+  /// Returns the localized label for a context menu button type.
   String? contextMenuTypeToLabel(
     ContextMenuButtonType type,
     BuildContext context,
@@ -74,6 +81,7 @@ class FluentTextSelectionToolbar extends StatelessWidget {
     };
   }
 
+  /// Returns the localized tooltip for a context menu button type.
   String? contextMenuTypeToTooltip(
     ContextMenuButtonType type,
     BuildContext context,
@@ -93,6 +101,7 @@ class FluentTextSelectionToolbar extends StatelessWidget {
     };
   }
 
+  /// Returns the keyboard shortcut text for a context menu button type.
   String? contextMenuTypeToShortcut(
     ContextMenuButtonType type,
     BuildContext context,
@@ -197,6 +206,7 @@ class FluentTextSelectionToolbar extends StatelessWidget {
   }
 }
 
+/// The default [FluentTextSelectionControls] instance.
 final fluentTextSelectionControls = FluentTextSelectionControls();
 
 /// Windows styled text selection handle controls.
@@ -205,12 +215,18 @@ final fluentTextSelectionControls = FluentTextSelectionControls();
 /// [EditableText.contextMenuBuilder].
 class FluentTextSelectionHandleControls extends FluentTextSelectionControls
     with TextSelectionHandleControls {
+  /// Creates Fluent text selection handle controls.
   FluentTextSelectionHandleControls({super.undoHistoryController});
 }
 
+/// Windows-styled text selection controls.
+///
+/// Provides the selection handles and gesture handling for text selection.
 class FluentTextSelectionControls extends TextSelectionControls {
+  /// The undo history controller for undo/redo functionality.
   final UndoHistoryController? undoHistoryController;
 
+  /// Creates Fluent text selection controls.
   FluentTextSelectionControls({this.undoHistoryController});
 
   /// Windows has no text selection handles.
@@ -639,7 +655,14 @@ class _FluentTextSelectionToolbarButton extends StatelessWidget {
   }
 }
 
+/// A context menu button item for the undo action.
+///
+/// See also:
+///
+/// * [ContextMenuButtonItem], which is the base class for this class.
+/// * [FluentTextSelectionToolbar], which is the widget that displays the undo action.
 class UndoContextMenuButtonItem extends ContextMenuButtonItem {
+  /// Creates a context menu button item for the undo action.
   const UndoContextMenuButtonItem({required super.onPressed})
     : super(type: ContextMenuButtonType.custom, label: 'Undo');
 }

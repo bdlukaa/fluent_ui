@@ -4,6 +4,7 @@ import 'package:intl/intl.dart';
 
 part 'calendar_date_picker.dart';
 
+/// A callback that returns whether a date is blacked out.
 typedef CalendarViewBlackoutRule = bool Function(DateTime date);
 
 /// Defines the selection modes available for the [CalendarView].
@@ -45,6 +46,10 @@ class CalendarSelectionData {
   /// The end date of the selection range, if applicable.
   final DateTime? endDate;
 
+  /// Creates a calendar selection data.
+  ///
+  /// If both the [startDate] and [endDate] are provided, the [startDate] must
+  /// be before the [endDate].
   CalendarSelectionData({
     required this.selectedDates,
     this.startDate,

@@ -129,6 +129,7 @@ class EndNavigationIndicator extends NavigationIndicator {
   /// The color of the indicator when the item is not selected
   final Color unselectedColor;
 
+  /// Creates an end navigation indicator.
   const EndNavigationIndicator({
     super.color,
     this.unselectedColor = Colors.transparent,

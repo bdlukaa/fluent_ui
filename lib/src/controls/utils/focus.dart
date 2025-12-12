@@ -10,7 +10,8 @@ import 'package:flutter/foundation.dart';
 class FocusBorder extends StatelessWidget {
   /// Creates a focus border.
   const FocusBorder({
-    required this.child, super.key,
+    required this.child,
+    super.key,
     this.focused = true,
     this.style,
     this.renderOutside,
@@ -124,11 +125,14 @@ class FocusTheme extends InheritedTheme {
   /// look like.
   const FocusTheme({required this.data, required super.child, super.key});
 
+  /// The theme data for the focus border.
   final FocusThemeData data;
 
   /// Creates a theme that merges the nearest [FocusTheme] with [data].
   static Widget merge({
-    required FocusThemeData data, required Widget child, Key? key,
+    required FocusThemeData data,
+    required Widget child,
+    Key? key,
   }) {
     return Builder(
       builder: (context) {
@@ -172,14 +176,27 @@ class FocusTheme extends InheritedTheme {
   bool updateShouldNotify(FocusTheme oldWidget) => data != oldWidget.data;
 }
 
+/// Theme data for [FocusBorder] widgets.
 class FocusThemeData with Diagnosticable {
+  /// The border radius of the focus border.
   final BorderRadius? borderRadius;
+
+  /// The primary border of the focus border.
   final BorderSide? primaryBorder;
+
+  /// The secondary border of the focus border.
   final BorderSide? secondaryBorder;
+
+  /// The glow color of the focus border.
   final Color? glowColor;
+
+  /// The glow factor of the focus border.
   final double? glowFactor;
+
+  /// Whether the focus border should be rendered outside of the box or not.
   final bool? renderOutside;
 
+  /// Creates a theme data for [FocusBorder] widgets.
   const FocusThemeData({
     this.borderRadius,
     this.primaryBorder,
@@ -189,6 +206,7 @@ class FocusThemeData with Diagnosticable {
     this.renderOutside,
   }) : assert(glowFactor == null || glowFactor >= 0);
 
+  /// Creates the standard [FocusThemeData] based on the given [theme].
   factory FocusThemeData.standard(FluentThemeData theme) {
     return FocusThemeData(
       borderRadius: BorderRadius.circular(6),
@@ -203,6 +221,9 @@ class FocusThemeData with Diagnosticable {
     );
   }
 
+  /// Lerps between two [FocusThemeData] objects.
+  ///
+  /// {@macro fluent_ui.lerp.t}
   static FocusThemeData lerp(FocusThemeData? a, FocusThemeData? b, double t) {
     return FocusThemeData(
       borderRadius: BorderRadius.lerp(a?.borderRadius, b?.borderRadius, t),
@@ -222,6 +243,8 @@ class FocusThemeData with Diagnosticable {
     );
   }
 
+  /// Merges this [FocusThemeData] with another, with the other taking
+  /// precedence.
   FocusThemeData merge(FocusThemeData? other) {
     if (other == null) return this;
     return FocusThemeData(
@@ -234,6 +257,7 @@ class FocusThemeData with Diagnosticable {
     );
   }
 
+  /// Builds the primary decoration for the focus border.
   Decoration buildPrimaryDecoration(bool focused) {
     return ShapeDecoration(
       shape: RoundedRectangleBorder(
@@ -271,6 +295,7 @@ class FocusThemeData with Diagnosticable {
     );
   }
 
+  /// Builds the secondary decoration for the focus border.
   Decoration buildSecondaryDecoration(bool focused) {
     return ShapeDecoration(
       shape: RoundedRectangleBorder(

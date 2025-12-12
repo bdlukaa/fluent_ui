@@ -4,6 +4,9 @@ import 'package:flutter/foundation.dart';
 const double _kVerticalOffset = 6;
 const Widget _kDefaultDropdownButtonTrailing = ChevronDown();
 
+/// A builder function for creating a custom dropdown button widget.
+///
+/// The [onOpen] callback opens the dropdown menu.
 typedef DropDownButtonBuilder =
     Widget Function(BuildContext context, VoidCallback? onOpen);
 

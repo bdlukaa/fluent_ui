@@ -141,6 +141,7 @@ class TimePicker extends StatefulWidget {
   /// If null, the system locale will be used.
   final Locale? locale;
 
+  /// Whether the time picker is using the 24-hour format.
   bool get use24Format => [HourFormat.HH, HourFormat.H].contains(hourFormat);
 
   @override
@@ -187,7 +188,7 @@ class TimePicker extends StatefulWidget {
 
 class TimePickerState extends State<TimePicker>
     with IntlScriptLocaleApplyMixin {
-  late DateTime time;
+  late DateTime _time;
 
   final GlobalKey _buttonKey = GlobalKey(debugLabel: 'Time Picker button key');
 
@@ -195,15 +196,13 @@ class TimePickerState extends State<TimePicker>
   late FixedExtentScrollController _minuteController;
   late FixedExtentScrollController _amPmController;
 
-  bool am = true;
-
   final _pickerKey = GlobalKey<PickerState>();
 
   @override
   void initState() {
     super.initState();
-    time = widget.selected ?? DateTime.now();
-    initControllers();
+    _time = widget.selected ?? DateTime.now();
+    _initControllers();
   }
 
   @override
@@ -217,46 +216,49 @@ class TimePickerState extends State<TimePicker>
   @override
   void didUpdateWidget(TimePicker oldWidget) {
     super.didUpdateWidget(oldWidget);
-    if (widget.selected != time) {
+    if (widget.selected != _time) {
       WidgetsBinding.instance.addPostFrameCallback((_) {
-        time = widget.selected ?? DateTime.now();
+        _time = widget.selected ?? DateTime.now();
         _hourController.jumpToItem(() {
-          var hour = time.hour;
+          var hour = _time.hour;
           if (!widget.use24Format) {
             hour -= 12;
           }
           return hour;
         }());
-        _minuteController.jumpToItem(time.minute);
-        _amPmController.jumpToItem(_isPm ? 1 : 0);
+        _minuteController.jumpToItem(_time.minute);
+        _amPmController.jumpToItem(isPm ? 1 : 0);
       });
     }
   }
 
+  /// Update the current time with a new time.
   void handleDateChanged(DateTime date) {
-    setState(() => time = date);
+    setState(() => _time = date);
   }
 
-  void initControllers() {
+  void _initControllers() {
     if (widget.selected == null && mounted) {
-      setState(() => time = DateTime.now());
+      setState(() => _time = DateTime.now());
     }
     _hourController = FixedExtentScrollController(
       initialItem: () {
-        var hour = time.hour;
+        var hour = _time.hour;
         if (!widget.use24Format) {
           hour -= 12;
         }
         return hour;
       }(),
     );
-    _minuteController = FixedExtentScrollController(initialItem: time.minute);
+    _minuteController = FixedExtentScrollController(initialItem: _time.minute);
 
-    _amPmController = FixedExtentScrollController(initialItem: _isPm ? 1 : 0);
+    _amPmController = FixedExtentScrollController(initialItem: isPm ? 1 : 0);
   }
 
-  bool get _isPm => time.hour >= 12;
+  /// Whether the current time is in the PM period.
+  bool get isPm => _time.hour >= 12;
 
+  /// Open the time picker popup.
   void open() {
     _pickerKey.currentState?.open();
   }
@@ -298,7 +300,7 @@ class TimePickerState extends State<TimePicker>
                 _hourController.dispose();
                 _minuteController.dispose();
                 _amPmController.dispose();
-                initControllers();
+                _initControllers();
                 await open();
               },
         builder: (context, states) {
@@ -333,7 +335,7 @@ class TimePickerState extends State<TimePicker>
                             return localizations.hour;
                           }
                           late int finalHour;
-                          final hour = time.hour;
+                          final hour = _time.hour;
                           if (!widget.use24Format && hour > 12) {
                             finalHour = hour - 12;
                           } else {
@@ -351,7 +353,7 @@ class TimePickerState extends State<TimePicker>
                         child: Text(
                           widget.selected == null
                               ? localizations.minute
-                              : _formatMinute(time.minute, '$locale'),
+                              : _formatMinute(_time.minute, '$locale'),
                           textAlign: TextAlign.center,
                         ),
                       ),
@@ -362,7 +364,7 @@ class TimePickerState extends State<TimePicker>
                         child: Padding(
                           padding: widget.contentPadding,
                           child: Text(() {
-                            if (_isPm) return localizations.pm;
+                            if (isPm) return localizations.pm;
                             return localizations.am;
                           }(), textAlign: TextAlign.center),
                         ),

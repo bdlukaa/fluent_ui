@@ -44,6 +44,9 @@ class MenuBarItem with Diagnosticable {
 ///  * [MenuFlyout], a popup that shows a list of items
 ///  * [CommandBar], a toolbar that provides a customizable layout for commands
 class MenuBar extends StatefulWidget with Diagnosticable {
+  /// The items to display in the menu bar.
+  ///
+  /// Must not be empty.
   final List<MenuBarItem> items;
 
   /// Creates a windows-styled menu bar.

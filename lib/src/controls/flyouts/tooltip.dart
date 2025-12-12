@@ -738,8 +738,13 @@ class TooltipThemeData with Diagnosticable {
   final TextStyle? textStyle;
 
   /// If non-null, the maximum width of the tooltip text before it wraps.
+  ///
+  /// Defaults to double.infinity.
+  ///
+  /// If the tooltip text is longer than this width, it will wrap to the next line.
   final double? maxWidth;
 
+  /// Creates a theme data for [Tooltip] widgets.
   const TooltipThemeData({
     this.height,
     this.verticalOffset,
@@ -753,6 +758,7 @@ class TooltipThemeData with Diagnosticable {
     this.maxWidth,
   });
 
+  /// Creates the standard [TooltipThemeData] based on the given [theme].
   factory TooltipThemeData.standard(FluentThemeData theme) {
     return TooltipThemeData(
       height: 32,

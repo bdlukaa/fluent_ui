@@ -1,24 +1,38 @@
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter/rendering.dart';
 
+/// The default height of a one-line list tile.
 const kOneLineTileHeight = 40.0;
 
+/// The default padding of a list tile.
 const kDefaultListTilePadding = EdgeInsetsDirectional.only(
   end: 12,
   top: 6,
   bottom: 6,
 );
 
+/// The default shape of a list tile.
 const kDefaultListTileShape = RoundedRectangleBorder(
   borderRadius: BorderRadius.all(Radius.circular(4)),
 );
 
+/// The default margin of a list tile.
 const kDefaultListTileMargin = EdgeInsetsDirectional.symmetric(
   horizontal: 4,
   vertical: 2,
 );
 
-enum ListTileSelectionMode { none, single, multiple }
+/// The selection mode of a list tile.
+enum ListTileSelectionMode {
+  /// The list tile is not selectable.
+  none,
+
+  /// Only one item can be selected at a time.
+  single,
+
+  /// Multiple items can be selected at a time.
+  multiple,
+}
 
 /// A windows-styled list tile.
 ///

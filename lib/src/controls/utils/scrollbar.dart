@@ -258,6 +258,7 @@ class ScrollbarTheme extends InheritedTheme {
 }
 
 @immutable
+/// Theme data for [Scrollbar] widgets.
 class ScrollbarThemeData with Diagnosticable {
   /// Thickness of the scrollbar in its cross-axis in logical
   /// pixels. If null, `2.0` is used

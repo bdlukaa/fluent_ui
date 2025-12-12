@@ -4,9 +4,12 @@ import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/services.dart';
 
+/// A base class for form fields that can have a [TextEditingController].
 abstract class ControllableFormBox extends FormField<String> {
+  /// The controller for the text input.
   final TextEditingController? controller;
 
+  /// Creates a controllable form box.
   const ControllableFormBox({
     required super.builder,
     super.autovalidateMode,

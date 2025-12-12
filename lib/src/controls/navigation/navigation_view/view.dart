@@ -217,6 +217,9 @@ class NavigationView extends StatefulWidget {
     return maybeOf(context)!;
   }
 
+  /// Gets the closest [NavigationViewState] ancestor, if any.
+  ///
+  /// Use this when the state might not exist in the widget tree.
   static NavigationViewState? maybeOf(BuildContext context) {
     return context.findAncestorStateOfType<NavigationViewState>();
   }
@@ -542,7 +545,7 @@ class NavigationViewState extends State<NavigationView> {
           if (pane.customPane != null) {
             paneResult = Builder(
               builder: (context) {
-                return PaneScrollConfiguration(
+                return _PaneScrollConfiguration(
                   child: pane.customPane!.build(
                     context,
                     NavigationPaneWidgetData(
@@ -600,7 +603,7 @@ class NavigationViewState extends State<NavigationView> {
                 paneResult = Column(
                   children: [
                     appBar,
-                    PaneScrollConfiguration(
+                    _PaneScrollConfiguration(
                       child: _TopNavigationPane(
                         pane: pane,
                         listKey: _listKey,
@@ -634,7 +637,7 @@ class NavigationViewState extends State<NavigationView> {
                       Expanded(
                         child: Row(
                           children: [
-                            PaneScrollConfiguration(
+                            _PaneScrollConfiguration(
                               child: () {
                                 if (openedWithoutOverlay) {
                                   return Mica(
@@ -707,7 +710,7 @@ class NavigationViewState extends State<NavigationView> {
                             ),
                           ),
                         ),
-                      PaneScrollConfiguration(
+                      _PaneScrollConfiguration(
                         child: () {
                           if (_compactOverlayOpen) {
                             return ClipRect(
@@ -771,7 +774,7 @@ class NavigationViewState extends State<NavigationView> {
                     Expanded(
                       child: Row(
                         children: [
-                          PaneScrollConfiguration(
+                          _PaneScrollConfiguration(
                             child: _OpenNavigationPane(
                               theme: theme,
                               pane: pane,
@@ -838,7 +841,7 @@ class NavigationViewState extends State<NavigationView> {
                         _isTransitioning = false;
                         if (mounted) setState(() {});
                       },
-                      child: PaneScrollConfiguration(
+                      child: _PaneScrollConfiguration(
                         child: Mica(
                           backgroundColor: theme.overlayBackgroundColor,
                           child: Container(
@@ -900,7 +903,7 @@ class NavigationViewState extends State<NavigationView> {
   }
 
   // ignore: non_constant_identifier_names
-  Widget PaneScrollConfiguration({required Widget child}) {
+  Widget _PaneScrollConfiguration({required Widget child}) {
     return Builder(
       builder: (context) {
         return PrimaryScrollController(
@@ -928,6 +931,7 @@ class NavigationViewState extends State<NavigationView> {
 ///
 ///   * [NavigationView], which uses this to render the app bar
 class NavigationAppBar with Diagnosticable {
+  /// {@macro flutter.widgets.Widget.key}
   final Key? key;
 
   /// The widget at the beggining of the app bar, before [title].
@@ -1174,6 +1178,7 @@ class _NavigationAppBar extends StatelessWidget {
 /// It generates a [Scrollbar] using the global scroll controller provided by
 /// [NavigationView]
 class NavigationViewScrollBehavior extends FluentScrollBehavior {
+  /// Creates a navigation view scroll behavior.
   const NavigationViewScrollBehavior();
 
   @override

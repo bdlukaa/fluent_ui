@@ -627,6 +627,9 @@ class InfoBarThemeData with Diagnosticable {
     );
   }
 
+  /// Lerps between two [InfoBarThemeData] objects.
+  ///
+  /// {@macro fluent_ui.lerp.t}
   static InfoBarThemeData lerp(
     InfoBarThemeData? a,
     InfoBarThemeData? b,
@@ -679,6 +682,8 @@ class InfoBarThemeData with Diagnosticable {
     );
   }
 
+  /// Merges this [InfoBarThemeData] with another, with the other taking
+  /// precedence.
   InfoBarThemeData merge(InfoBarThemeData? style) {
     if (style == null) return this;
     return InfoBarThemeData(

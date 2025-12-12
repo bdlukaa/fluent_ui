@@ -7,23 +7,36 @@ const EdgeInsetsGeometry _kDefaultPadding = EdgeInsetsDirectional.fromSTEB(
   6,
 );
 
+/// A row widget used in forms to display a child with optional helper and error text.
+///
+/// This widget wraps a form field and provides consistent padding and styling
+/// for helper text and error messages.
 class FormRow extends StatelessWidget {
+  /// Creates a form row.
   const FormRow({
-    required this.child, super.key,
+    required this.child,
+    super.key,
     this.padding = _kDefaultPadding,
     this.helper,
     this.error,
     this.textStyle,
   });
 
+  /// The padding around the form row.
+  ///
+  /// Defaults to [EdgeInsetsDirectional.fromSTEB(20, 6, 6, 6)].
   final EdgeInsetsGeometry padding;
 
+  /// The text style for the helper text.
   final TextStyle? textStyle;
 
+  /// The helper text displayed below the child.
   final Widget? helper;
 
+  /// The error text displayed below the child in red.
   final Widget? error;
 
+  /// The main content of the form row.
   final Widget child;
 
   @override

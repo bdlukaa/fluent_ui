@@ -1,5 +1,11 @@
 import 'package:fluent_ui/fluent_ui.dart';
 
+/// The mode of the password reveal button.
+///
+/// See also:
+///
+/// * [PasswordBox], which is the widget that uses this mode.
+/// * [PasswordFormBox], which is the form field that contains a [PasswordBox].
 enum PasswordRevealMode {
   /// The password reveal button is visible. The password is not obscured while
   /// the button is pressed.
@@ -37,9 +43,9 @@ enum PasswordRevealMode {
 ///
 /// See also:
 ///
-///  * <https://learn.microsoft.com/en-us/windows/apps/design/controls/password-box>
 ///  * [PasswordRevealMode], the different modes that the password box can have
 ///  * [TextBox], the underlaying widget that renders the text box
+///  * <https://learn.microsoft.com/en-us/windows/apps/design/controls/password-box>
 class PasswordBox extends StatefulWidget {
   /// Controls the text being edited.
   ///

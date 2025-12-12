@@ -155,6 +155,7 @@ class DividerTheme extends InheritedTheme {
 }
 
 @immutable
+/// Theme data for [Divider] widgets.
 class DividerThemeData with Diagnosticable {
   /// The thickness of the style.
   ///

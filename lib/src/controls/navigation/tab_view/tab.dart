@@ -1,5 +1,6 @@
 part of 'tab_view.dart';
 
+/// The visibility mode of the close button.
 enum CloseButtonVisibilityMode {
   /// The close button will never be visible
   never,
@@ -33,8 +34,18 @@ enum TabWidthBehavior {
 ///   * [Tab], the widget that uses this data.
 ///   * [TabView], the widget that uses the [Tab] widget.
 class TabData extends InheritedWidget {
+  /// Creates a data class that describes the state of a tab.
   const TabData({
-    required super.child, required this.selected, required this.onPressed, required this.onClose, required this.reorderIndex, required this.animationDuration, required this.animationCurve, required this.visibilityMode, required this.tabWidthBehavior, super.key,
+    required super.child,
+    required this.selected,
+    required this.onPressed,
+    required this.onClose,
+    required this.reorderIndex,
+    required this.animationDuration,
+    required this.animationCurve,
+    required this.visibilityMode,
+    required this.tabWidthBehavior,
+    super.key,
   });
 
   /// Whether the tab is selected or not.
@@ -75,6 +86,9 @@ class TabData extends InheritedWidget {
   ///     of the tab width.
   final TabWidthBehavior tabWidthBehavior;
 
+  /// Gets the closest [TabData] ancestor, if any.
+  ///
+  /// Use this when the data might not exist in the widget tree.
   static TabData of(BuildContext context) {
     return context.dependOnInheritedWidgetOfExactType<TabData>()!;
   }
@@ -145,7 +159,9 @@ class Tab extends StatefulWidget {
 
   /// Creates a tab.
   Tab({
-    required this.text, required this.body, super.key,
+    required this.text,
+    required this.body,
+    super.key,
     this.icon = const SizedBox.shrink(),
     this.backgroundColor,
     this.selectedBackgroundColor,
@@ -269,25 +285,26 @@ class Tab extends StatefulWidget {
 
 class TabState extends State<Tab>
     with SingleTickerProviderStateMixin, AutomaticKeepAliveClientMixin {
-  late final controller = AnimationController(vsync: this);
+  late final _animationController = AnimationController(vsync: this);
 
+  /// The data of the tab.
   TabData get tab => TabData.of(context);
 
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    if (controller.duration == null) {
-      controller
+    if (_animationController.duration == null) {
+      _animationController
         ..duration = tab.animationDuration
         ..forward();
     } else {
-      controller.duration = tab.animationDuration;
+      _animationController.duration = tab.animationDuration;
     }
   }
 
   @override
   void dispose() {
-    controller.dispose();
+    _animationController.dispose();
     super.dispose();
   }
 
@@ -359,10 +376,7 @@ class TabState extends State<Tab>
             height: _kTileHeight,
             constraints: tab.tabWidthBehavior == TabWidthBehavior.sizeToContent
                 ? const BoxConstraints(minHeight: 28)
-                : const BoxConstraints(
-                    maxWidth: _kMaxTileWidth,
-                    minHeight: 28,
-                  ),
+                : const BoxConstraints(maxWidth: _kMaxTileWidth, minHeight: 28),
             padding: tab.selected
                 ? const EdgeInsetsDirectional.only(
                     start: 9,
@@ -414,9 +428,7 @@ class TabState extends State<Tab>
                       children: [
                         if (widget.icon != null)
                           Padding(
-                            padding: const EdgeInsetsDirectional.only(
-                              end: 10,
-                            ),
+                            padding: const EdgeInsetsDirectional.only(end: 10),
                             child: widget.icon,
                           ),
                         if (tab.tabWidthBehavior != TabWidthBehavior.compact ||
@@ -427,9 +439,7 @@ class TabState extends State<Tab>
                                 ? FlexFit.tight
                                 : FlexFit.loose,
                             child: Padding(
-                              padding: const EdgeInsetsDirectional.only(
-                                end: 4,
-                              ),
+                              padding: const EdgeInsetsDirectional.only(end: 4),
                               child: DefaultTextStyle.merge(
                                 softWrap: false,
                                 maxLines: 1,
@@ -447,9 +457,7 @@ class TabState extends State<Tab>
                                         CloseButtonVisibilityMode.onHover &&
                                     states.isHovered)))
                           Padding(
-                            padding: const EdgeInsetsDirectional.only(
-                              start: 4,
-                            ),
+                            padding: const EdgeInsetsDirectional.only(start: 4),
                             child: FocusTheme(
                               data: const FocusThemeData(
                                 primaryBorder: BorderSide.none,
@@ -562,7 +570,11 @@ class _TabViewScrollBehavior extends ScrollBehavior {
   const _TabViewScrollBehavior();
 
   @override
-  Widget buildScrollbar(BuildContext context, Widget child, ScrollableDetails details) {
+  Widget buildScrollbar(
+    BuildContext context,
+    Widget child,
+    ScrollableDetails details,
+  ) {
     return child;
   }
 }

@@ -57,7 +57,9 @@ class FilledButton extends Button {
   /// The [child] is typically a [Text] widget. The [onPressed] callback is
   /// required—set it to null to disable the button.
   const FilledButton({
-    required super.child, required super.onPressed, super.key,
+    required super.child,
+    required super.onPressed,
+    super.key,
     super.onLongPress,
     super.onTapDown,
     super.onTapUp,
@@ -94,6 +96,7 @@ class FilledButton extends Button {
     return super.defaultStyleOf(context).merge(def) ?? def;
   }
 
+  /// Returns the background color for a filled button based on its state.
   static Color backgroundColor(FluentThemeData theme, Set<WidgetState> states) {
     if (states.isDisabled) {
       return theme.resources.accentFillColorDisabled;
@@ -106,6 +109,7 @@ class FilledButton extends Button {
     }
   }
 
+  /// Returns the foreground color for a filled button based on its state.
   static Color foregroundColor(FluentThemeData theme, Set<WidgetState> states) {
     final res = theme.resources;
     if (states.isPressed) {
@@ -118,6 +122,7 @@ class FilledButton extends Button {
     return res.textOnAccentFillColorPrimary;
   }
 
+  /// Returns the shape border for a filled button based on its state.
   static ShapeBorder shapeBorder(
     FluentThemeData theme,
     Set<WidgetState> states,

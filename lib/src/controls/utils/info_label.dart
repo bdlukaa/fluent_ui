@@ -13,7 +13,8 @@ import 'package:flutter/foundation.dart';
 class InfoLabel extends StatelessWidget {
   /// Creates an info label.
   InfoLabel({
-    required String label, super.key,
+    required String label,
+    super.key,
     this.child,
     TextStyle? labelStyle,
     this.isHeader = true,
@@ -21,11 +22,13 @@ class InfoLabel extends StatelessWidget {
 
   /// Creates an info label.
   const InfoLabel.rich({
-    required this.label, super.key,
+    required this.label,
+    super.key,
     this.child,
     this.isHeader = true,
   });
 
+  /// The label to display.
   final InlineSpan label;
 
   /// The widget to apply the label.

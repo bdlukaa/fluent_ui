@@ -79,7 +79,9 @@ class IconButton extends BaseButton {
   ///
   /// The [icon] is typically an [Icon] widget.
   const IconButton({
-    required Widget icon, required super.onPressed, super.key,
+    required Widget icon,
+    required super.onPressed,
+    super.key,
     super.onLongPress,
     super.onTapDown,
     super.onTapUp,
@@ -148,6 +150,7 @@ class SmallIconButton extends InheritedWidget {
   /// Creates a small icon button.
   const SmallIconButton({required super.child, super.key});
 
+  /// Returns the closest [SmallIconButton] ancestor, if any.
   static SmallIconButton? of(BuildContext context) {
     return context.dependOnInheritedWidgetOfExactType<SmallIconButton>();
   }

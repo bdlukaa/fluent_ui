@@ -25,6 +25,7 @@ class HoverButtonInherited extends InheritedWidget {
     return context.dependOnInheritedWidgetOfExactType<HoverButtonInherited>()!;
   }
 
+  /// Returns the closest [HoverButtonInherited] ancestor, if any.
   static HoverButtonInherited? maybeOf(BuildContext context) {
     return context.dependOnInheritedWidgetOfExactType<HoverButtonInherited>();
   }

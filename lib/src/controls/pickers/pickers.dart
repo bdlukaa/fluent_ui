@@ -98,8 +98,13 @@ class YesNoPickerControl extends StatelessWidget {
     super.key,
   });
 
+  /// Called when the user selects the continue button.
   final VoidCallback onChanged;
-  final VoidCallback onCancel;
+
+  /// Called when the user selects the cancel button.
+  ///
+  /// If null, no cancel button is shown.
+  final VoidCallback? onCancel;
 
   @override
   Widget build(BuildContext context) {

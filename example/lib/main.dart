@@ -31,6 +31,8 @@ bool get isDesktop {
 }
 
 void main() async {
+  // main_test.main();
+  // return;
   WidgetsFlutterBinding.ensureInitialized();
 
   // if it's not on the web, windows or android, load the accent color
@@ -130,7 +132,9 @@ class MyApp extends StatelessWidget {
 
 class MyHomePage extends StatefulWidget {
   const MyHomePage({
-    required this.child, required this.shellContext, super.key,
+    required this.child,
+    required this.shellContext,
+    super.key,
   });
 
   final Widget child;
@@ -523,7 +527,9 @@ class _MyHomePageState extends State<MyHomePage> with WindowListener {
           return NavigationPaneTheme(
             data: NavigationPaneTheme.of(context).merge(
               NavigationPaneThemeData(
-                unselectedIconColor: WidgetStateProperty.resolveWith((final states) {
+                unselectedIconColor: WidgetStateProperty.resolveWith((
+                  final states,
+                ) {
                   if (states.isDisabled) {
                     return ButtonThemeData.buttonColor(context, states);
                   }
@@ -786,7 +792,10 @@ final router = GoRouter(
       },
       routes: <GoRoute>[
         /// Home
-        GoRoute(path: '/', builder: (final context, final state) => const HomePage()),
+        GoRoute(
+          path: '/',
+          builder: (final context, final state) => const HomePage(),
+        ),
 
         /// Settings
         GoRoute(

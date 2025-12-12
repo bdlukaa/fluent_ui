@@ -155,6 +155,7 @@ class ToggleButtonThemeData with Diagnosticable {
     this.uncheckedButtonStyle,
   });
 
+  /// Creates the standard [ToggleButtonThemeData] based on the given [theme].
   factory ToggleButtonThemeData.standard(FluentThemeData theme) {
     return ToggleButtonThemeData(
       checkedButtonStyle: ButtonStyle(

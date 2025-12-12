@@ -1,5 +1,6 @@
 part of 'view.dart';
 
+/// The default color for a pane item.
 WidgetStateProperty<Color?> kDefaultPaneItemColor(
   BuildContext context,
   bool isTop,
@@ -28,7 +29,9 @@ class NavigationPaneTheme extends InheritedTheme {
   /// Creates a theme that controls how descendant [NavigationPane]s should
   /// look like.
   const NavigationPaneTheme({
-    required this.data, required super.child, super.key,
+    required this.data,
+    required super.child,
+    super.key,
   });
 
   /// The properties for descendant [NavigationPane] widgets.
@@ -36,7 +39,9 @@ class NavigationPaneTheme extends InheritedTheme {
 
   /// Creates a theme that merges the nearest [NavigationPaneTheme] with [data].
   static Widget merge({
-    required NavigationPaneThemeData data, required Widget child, Key? key,
+    required NavigationPaneThemeData data,
+    required Widget child,
+    Key? key,
   }) {
     return Builder(
       builder: (context) {
@@ -99,26 +104,47 @@ class NavigationPaneThemeData with Diagnosticable {
   /// If null, [FluentThemeData.accentColor] is used.
   final Color? highlightColor;
 
+  /// The padding applied to the label.
   final EdgeInsetsGeometry? labelPadding;
+
+  /// The padding applied to the icon.
   final EdgeInsetsGeometry? iconPadding;
 
   /// The padding applied to the header. This padding is not applied when
   /// display mode is top
   final EdgeInsetsGeometry? headerPadding;
 
+  /// The text style applied to the item header.
   final TextStyle? itemHeaderTextStyle;
+
+  /// The text style applied to the selected item.
   final WidgetStateProperty<TextStyle?>? selectedTextStyle;
+
+  /// The text style applied to the unselected item.
   final WidgetStateProperty<TextStyle?>? unselectedTextStyle;
+
+  /// The text style applied to the selected top item.
   final WidgetStateProperty<TextStyle?>? selectedTopTextStyle;
+
+  /// The text style applied to the unselected top item.
   final WidgetStateProperty<TextStyle?>? unselectedTopTextStyle;
+
+  /// The color applied to the selected icon.
   final WidgetStateProperty<Color?>? selectedIconColor;
+
+  /// The color applied to the unselected icon.
   final WidgetStateProperty<Color?>? unselectedIconColor;
 
+  /// The icon used for the pane navigation button.
   final IconData? paneNavigationButtonIcon;
 
+  /// The duration of the animation.
   final Duration? animationDuration;
+
+  /// The curve of the animation.
   final Curve? animationCurve;
 
+  /// Creates a navigation pane theme data.
   const NavigationPaneThemeData({
     this.backgroundColor,
     this.overlayBackgroundColor,
@@ -199,6 +225,9 @@ class NavigationPaneThemeData with Diagnosticable {
     );
   }
 
+  /// Lerps the navigation pane theme data.
+  ///
+  /// {@macro fluent_ui.lerp.t}
   static NavigationPaneThemeData lerp(
     NavigationPaneThemeData? a,
     NavigationPaneThemeData? b,
@@ -282,6 +311,7 @@ class NavigationPaneThemeData with Diagnosticable {
     );
   }
 
+  /// Merges the navigation pane theme data with another.
   NavigationPaneThemeData merge(NavigationPaneThemeData? style) {
     return NavigationPaneThemeData(
       iconPadding: style?.iconPadding ?? iconPadding,

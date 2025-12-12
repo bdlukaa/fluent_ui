@@ -249,6 +249,15 @@ class RadioButtonTheme extends InheritedTheme {
   bool updateShouldNotify(RadioButtonTheme oldWidget) => data != oldWidget.data;
 }
 
+/// Theme data for [RadioButton] widgets.
+///
+/// This class defines the default styles for different states of a radio button.
+///
+/// See also:
+///
+/// * [RadioButtonTheme], which is the theme that uses this data.
+/// * [RadioButton], which is the widget that uses this data.
+/// * [WidgetStateProperty], which is the property that controls the style of the radio button.
 @immutable
 class RadioButtonThemeData with Diagnosticable {
   /// The decoration of the radio button when it's checked.

@@ -238,11 +238,18 @@ class _ThirdStateDash extends StatelessWidget {
   }
 }
 
+/// A theme that controls how descendant [Checkbox]es should look like.
+///
+/// See also:
+///
+/// * [Checkbox], which is the widget that uses this theme.
+/// * [CheckboxThemeData], which is the theme data for [Checkbox] widgets.
 class CheckboxTheme extends InheritedTheme {
   /// Creates a theme that controls how descendant [Checkbox]es should
   /// look like.
   const CheckboxTheme({required super.child, required this.data, super.key});
 
+  /// The theme data for the checkbox theme.
   final CheckboxThemeData data;
 
   /// Creates a theme that merges the nearest [CheckboxTheme] with [data].
@@ -294,6 +301,15 @@ class CheckboxTheme extends InheritedTheme {
 }
 
 @immutable
+/// Theme data for [Checkbox] widgets.
+///
+/// This class defines the default styles for different states of a checkbox.
+///
+/// See also:
+///
+///  * [CheckboxTheme], which is the theme that uses this data.
+///  * [Checkbox], which is the widget that uses this data.
+///  * [WidgetStateProperty], which is the property that controls the style of the checkbox.
 class CheckboxThemeData with Diagnosticable {
   /// The decoration of the checkbox when it's checked
   final WidgetStateProperty<Decoration?>? checkedDecoration;
