@@ -168,6 +168,13 @@ class Typography with Diagnosticable {
     );
   }
 
+  /// Linearly interpolates between two [Typography] objects.
+  ///
+  /// {@template fluent_ui.lerp.t}
+  /// The [t] argument represents position on the timeline, with 0.0 meaning
+  /// that the interpolation has not started, returning [a], and 1.0 meaning
+  /// that the interpolation has finished, returning [b].
+  /// {@endtemplate}
   static Typography lerp(Typography? a, Typography? b, double t) {
     return Typography.raw(
       display: TextStyle.lerp(a?.display, b?.display, t),
@@ -196,6 +203,10 @@ class Typography with Diagnosticable {
     );
   }
 
+  /// Returns a new [Typography] with transformations applied to all text styles.
+  ///
+  /// This method is useful for applying uniform changes like font family
+  /// or text decorations across all typography styles.
   Typography apply({
     String? fontFamily,
     double fontSizeFactor = 1.0,

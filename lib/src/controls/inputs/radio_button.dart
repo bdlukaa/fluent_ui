@@ -60,7 +60,9 @@ import 'package:flutter/rendering.dart';
 class RadioButton extends StatelessWidget {
   /// Creates a radio button.
   const RadioButton({
-    required this.checked, required this.onChanged, super.key,
+    required this.checked,
+    required this.onChanged,
+    super.key,
     this.style,
     this.content,
     this.semanticLabel,
@@ -200,7 +202,9 @@ class RadioButtonTheme extends InheritedTheme {
 
   /// Creates a theme that merges the nearest [RadioButtonTheme] with [data].
   static Widget merge({
-    required RadioButtonThemeData data, required Widget child, Key? key,
+    required RadioButtonThemeData data,
+    required Widget child,
+    Key? key,
   }) {
     return Builder(
       builder: (context) {
@@ -263,6 +267,7 @@ class RadioButtonThemeData with Diagnosticable {
     this.foregroundColor,
   });
 
+  /// Creates the standard [RadioButtonThemeData] based on the given [theme].
   factory RadioButtonThemeData.standard(FluentThemeData theme) {
     return RadioButtonThemeData(
       foregroundColor: WidgetStateProperty.resolveWith((states) {
@@ -306,6 +311,9 @@ class RadioButtonThemeData with Diagnosticable {
     );
   }
 
+  /// Linearly interpolates between two [RadioButtonThemeData] objects.
+  ///
+  /// {@macro fluent_ui.lerp.t}
   static RadioButtonThemeData lerp(
     RadioButtonThemeData? a,
     RadioButtonThemeData? b,
@@ -333,6 +341,8 @@ class RadioButtonThemeData with Diagnosticable {
     );
   }
 
+  /// Merges this [RadioButtonThemeData] with another, with the other taking
+  /// precedence.
   RadioButtonThemeData merge(RadioButtonThemeData? style) {
     return RadioButtonThemeData(
       checkedDecoration: style?.checkedDecoration ?? checkedDecoration,

@@ -10,7 +10,9 @@ import 'package:flutter/foundation.dart';
 class ToggleButton extends StatelessWidget {
   /// Creates a toggle button.
   const ToggleButton({
-    required this.checked, required this.onChanged, super.key,
+    required this.checked,
+    required this.onChanged,
+    super.key,
     this.child,
     this.style,
     this.semanticLabel,
@@ -77,7 +79,9 @@ class ToggleButtonTheme extends InheritedTheme {
   /// Creates a theme that controls how descendant [ToggleButton]s should
   /// look like.
   const ToggleButtonTheme({
-    required this.data, required super.child, super.key,
+    required this.data,
+    required super.child,
+    super.key,
   });
 
   /// The properties for descendant [ToggleButton] widgets.
@@ -85,7 +89,9 @@ class ToggleButtonTheme extends InheritedTheme {
 
   /// Creates a theme that merges the nearest [ToggleButtonTheme] with [data].
   static Widget merge({
-    required ToggleButtonThemeData data, required Widget child, Key? key,
+    required ToggleButtonThemeData data,
+    required Widget child,
+    Key? key,
   }) {
     return Builder(
       builder: (context) {
@@ -131,11 +137,19 @@ class ToggleButtonTheme extends InheritedTheme {
       data != oldWidget.data;
 }
 
+/// Theme data for [ToggleButton] widgets.
+///
+/// This class defines the styles for toggle buttons in their checked
+/// and unchecked states.
 @immutable
 class ToggleButtonThemeData with Diagnosticable {
+  /// The style applied when the toggle button is checked.
   final ButtonStyle? checkedButtonStyle;
+
+  /// The style applied when the toggle button is unchecked.
   final ButtonStyle? uncheckedButtonStyle;
 
+  /// Creates toggle button theme data.
   const ToggleButtonThemeData({
     this.checkedButtonStyle,
     this.uncheckedButtonStyle,
@@ -157,6 +171,7 @@ class ToggleButtonThemeData with Diagnosticable {
     );
   }
 
+  /// Linearly interpolates between two [ToggleButtonThemeData] objects.
   static ToggleButtonThemeData lerp(
     ToggleButtonThemeData? a,
     ToggleButtonThemeData? b,
@@ -176,6 +191,8 @@ class ToggleButtonThemeData with Diagnosticable {
     );
   }
 
+  /// Merges this [ToggleButtonThemeData] with another, with the other taking
+  /// precedence.
   ToggleButtonThemeData merge(ToggleButtonThemeData? other) {
     if (other == null) return this;
     return ToggleButtonThemeData(

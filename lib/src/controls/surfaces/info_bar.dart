@@ -4,6 +4,9 @@ import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart' show Icons;
 
+/// A builder function for creating an [InfoBar] within a popup.
+///
+/// The [close] callback should be called to dismiss the popup.
 typedef InfoBarPopupBuilder =
     Widget Function(BuildContext context, VoidCallback close);
 
@@ -521,20 +524,39 @@ class InfoBarTheme extends InheritedTheme {
   bool updateShouldNotify(InfoBarTheme oldWidget) => data != oldWidget.data;
 }
 
+/// A function that returns a value based on the [InfoBarSeverity].
 typedef InfoBarSeverityCheck<T> = T Function(InfoBarSeverity severity);
 
+/// Theme data for [InfoBar] widgets.
+///
+/// This class defines the visual appearance of info bars, including their
+/// decoration, icons, and styling for different severity levels.
 class InfoBarThemeData with Diagnosticable {
+  /// Returns the decoration based on the severity level.
   final InfoBarSeverityCheck<Decoration?>? decoration;
+
+  /// Returns the icon color based on the severity level.
   final InfoBarSeverityCheck<Color?>? iconColor;
+
+  /// Returns the icon to display based on the severity level.
   final InfoBarSeverityCheck<IconData>? icon;
 
+  /// The style for the close button.
   final ButtonStyle? closeButtonStyle;
+
+  /// The icon to display for the close button.
   final IconData? closeIcon;
+
+  /// The size of the close icon.
   final double? closeIconSize;
 
+  /// The style for the action button.
   final ButtonStyle? actionStyle;
+
+  /// The padding around the info bar content.
   final EdgeInsetsGeometry? padding;
 
+  /// Creates a theme data for [InfoBar] widgets.
   const InfoBarThemeData({
     this.decoration,
     this.icon,
@@ -546,6 +568,7 @@ class InfoBarThemeData with Diagnosticable {
     this.padding,
   });
 
+  /// Creates a standard theme data for [InfoBar] widgets.
   factory InfoBarThemeData.standard(FluentThemeData theme) {
     return InfoBarThemeData(
       padding: const EdgeInsetsDirectional.only(

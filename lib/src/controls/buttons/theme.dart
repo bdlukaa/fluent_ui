@@ -3,7 +3,12 @@ import 'dart:ui' show lerpDouble;
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter/foundation.dart';
 
+/// Defines the visual properties for a button widget.
+///
+/// Used to style buttons like [Button], [FilledButton], [HyperlinkButton],
+/// and [IconButton].
 class ButtonStyle with Diagnosticable {
+  /// Creates a button style.
   const ButtonStyle({
     this.textStyle,
     this.backgroundColor,
@@ -15,22 +20,31 @@ class ButtonStyle with Diagnosticable {
     this.iconSize,
   });
 
+  /// The text style for the button's child text widgets.
   final WidgetStateProperty<TextStyle?>? textStyle;
 
+  /// The background color of the button.
   final WidgetStateProperty<Color?>? backgroundColor;
 
+  /// The foreground color of the button (text and icon color).
   final WidgetStateProperty<Color?>? foregroundColor;
 
+  /// The shadow color for the button's elevation.
   final WidgetStateProperty<Color?>? shadowColor;
 
+  /// The elevation of the button.
   final WidgetStateProperty<double?>? elevation;
 
+  /// The padding inside the button.
   final WidgetStateProperty<EdgeInsetsGeometry?>? padding;
 
+  /// The shape of the button.
   final WidgetStateProperty<ShapeBorder?>? shape;
 
+  /// The size of icons within the button.
   final WidgetStateProperty<double?>? iconSize;
 
+  /// Merges this [ButtonStyle] with another, with the other taking precedence.
   ButtonStyle? merge(ButtonStyle? other) {
     if (other == null) return this;
     return ButtonStyle(
@@ -45,6 +59,7 @@ class ButtonStyle with Diagnosticable {
     );
   }
 
+  /// Linearly interpolates between two [ButtonStyle] objects.
   static ButtonStyle lerp(ButtonStyle? a, ButtonStyle? b, double t) {
     return ButtonStyle(
       textStyle: lerpWidgetStateProperty<TextStyle?>(
@@ -98,6 +113,7 @@ class ButtonStyle with Diagnosticable {
     );
   }
 
+  /// Creates a copy of this [ButtonStyle] with the given fields replaced.
   ButtonStyle copyWith({
     WidgetStateProperty<TextStyle?>? textStyle,
     WidgetStateProperty<Color?>? backgroundColor,
@@ -178,14 +194,28 @@ class ButtonTheme extends InheritedTheme {
   bool updateShouldNotify(ButtonTheme oldWidget) => data != oldWidget.data;
 }
 
+/// Theme data for button widgets.
+///
+/// This class defines the default styles for different button types in the
+/// Fluent UI design system.
 @immutable
 class ButtonThemeData with Diagnosticable {
+  /// The style for default [Button] widgets.
   final ButtonStyle? defaultButtonStyle;
+
+  /// The style for [FilledButton] widgets.
   final ButtonStyle? filledButtonStyle;
+
+  /// The style for [HyperlinkButton] widgets.
   final ButtonStyle? hyperlinkButtonStyle;
+
+  /// The style for outlined button widgets.
   final ButtonStyle? outlinedButtonStyle;
+
+  /// The style for [IconButton] widgets.
   final ButtonStyle? iconButtonStyle;
 
+  /// Creates button theme data with optional styles for each button type.
   const ButtonThemeData({
     this.defaultButtonStyle,
     this.filledButtonStyle,
@@ -194,6 +224,7 @@ class ButtonThemeData with Diagnosticable {
     this.iconButtonStyle,
   });
 
+  /// Creates button theme data with the same style for all button types.
   const ButtonThemeData.all(ButtonStyle? style)
     : defaultButtonStyle = style,
       filledButtonStyle = style,
@@ -201,6 +232,7 @@ class ButtonThemeData with Diagnosticable {
       outlinedButtonStyle = style,
       iconButtonStyle = style;
 
+  /// Linearly interpolates between two [ButtonThemeData] objects.
   static ButtonThemeData lerp(
     ButtonThemeData? a,
     ButtonThemeData? b,
@@ -209,6 +241,8 @@ class ButtonThemeData with Diagnosticable {
     return const ButtonThemeData();
   }
 
+  /// Merges this [ButtonThemeData] with another, with the other taking
+  /// precedence.
   ButtonThemeData merge(ButtonThemeData? style) {
     if (style == null) return this;
     return ButtonThemeData(
@@ -288,6 +322,7 @@ class ButtonThemeData with Diagnosticable {
     return res.textFillColorPrimary;
   }
 
+  /// Returns the default shape border for buttons based on the current state.
   static ShapeBorder shapeBorder(
     BuildContext context,
     Set<WidgetState> states,
@@ -324,6 +359,8 @@ class ButtonThemeData with Diagnosticable {
     return FilledButton.backgroundColor(theme, states);
   }
 
+  /// Defines the default color used for unchecked inputs, such as checkbox,
+  /// radio button and toggle switch, based on the current state.
   static Color uncheckedInputColor(
     FluentThemeData theme,
     Set<WidgetState> states, {

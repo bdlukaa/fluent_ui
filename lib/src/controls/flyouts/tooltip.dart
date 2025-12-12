@@ -236,6 +236,10 @@ class Tooltip extends StatefulWidget {
   }
 }
 
+/// The state for a [Tooltip] widget.
+///
+/// This class manages the tooltip's visibility, animations, and positioning.
+/// It handles both mouse hover and touch interactions.
 class TooltipState extends State<Tooltip> with SingleTickerProviderStateMixin {
   static const double _defaultVerticalOffset = 24;
   static const bool _defaultPreferBelow = true;
@@ -259,7 +263,8 @@ class TooltipState extends State<Tooltip> with SingleTickerProviderStateMixin {
   Timer? _showTimer;
   late bool _mouseIsConnected;
   bool _pressActivated = false;
-  Offset? mousePosition;
+
+  Offset? _mousePosition;
   late bool _isConcealed;
   late bool _forceRemoval;
 
@@ -426,7 +431,7 @@ class TooltipState extends State<Tooltip> with SingleTickerProviderStateMixin {
   }
 
   void _handleMouseExit({bool immediately = false}) {
-    mousePosition = null;
+    _mousePosition = null;
     // If the tip is currently covered, we can just remove it without waiting.
     _dismissTooltip(immediately: _isConcealed || immediately);
   }
@@ -440,8 +445,10 @@ class TooltipState extends State<Tooltip> with SingleTickerProviderStateMixin {
 
     final box = context.findRenderObject()! as RenderBox;
     Offset target;
-    if (_mouseIsConnected && widget.useMousePosition && mousePosition != null) {
-      target = mousePosition!;
+    if (_mouseIsConnected &&
+        widget.useMousePosition &&
+        _mousePosition != null) {
+      target = _mousePosition!;
     } else {
       target = box.localToGlobal(
         box.size.center(Offset.zero),
@@ -592,7 +599,7 @@ class TooltipState extends State<Tooltip> with SingleTickerProviderStateMixin {
         result = MouseRegion(
           onEnter: (_) => _handleMouseEnter(),
           onHover: (event) {
-            mousePosition = event.position;
+            _mousePosition = event.position;
           },
           onExit: (_) => _handleMouseExit(),
           child: result,
@@ -618,7 +625,9 @@ class TooltipTheme extends InheritedTheme {
 
   /// Creates a theme that merges the nearest [TooltipTheme] with [data].
   static Widget merge({
-    required TooltipThemeData data, required Widget child, Key? key,
+    required TooltipThemeData data,
+    required Widget child,
+    Key? key,
   }) {
     return Builder(
       builder: (context) {
@@ -662,6 +671,10 @@ class TooltipTheme extends InheritedTheme {
   bool updateShouldNotify(TooltipTheme oldWidget) => data != oldWidget.data;
 }
 
+/// Theme data for [Tooltip] widgets.
+///
+/// This class defines the visual appearance of tooltips, including their
+/// size, positioning, colors, and timing behavior.
 class TooltipThemeData with Diagnosticable {
   /// The height of the tooltip's [child].
   ///
@@ -785,6 +798,11 @@ class TooltipThemeData with Diagnosticable {
     );
   }
 
+  /// Linearly interpolates between two [TooltipThemeData] objects.
+  ///
+  /// The [t] argument represents position on the timeline, with 0.0 meaning
+  /// that the interpolation has not started, returning [a], and 1.0 meaning
+  /// that the interpolation has finished, returning [b].
   static TooltipThemeData lerp(
     TooltipThemeData? a,
     TooltipThemeData? b,
@@ -812,6 +830,8 @@ class TooltipThemeData with Diagnosticable {
     );
   }
 
+  /// Merges this [TooltipThemeData] with another, with the other taking
+  /// precedence.
   TooltipThemeData merge(TooltipThemeData? style) {
     if (style == null) return this;
     return TooltipThemeData(
@@ -917,7 +937,11 @@ class _TooltipPositionDelegate extends SingleChildLayoutDelegate {
 class _TooltipOverlay extends StatelessWidget {
   const _TooltipOverlay({
     required this.richMessage,
-    required this.animation, required this.target, required this.verticalOffset, required this.preferBelow, this.padding,
+    required this.animation,
+    required this.target,
+    required this.verticalOffset,
+    required this.preferBelow,
+    this.padding,
     this.margin,
     this.decoration,
     this.textStyle,

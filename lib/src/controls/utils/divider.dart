@@ -108,7 +108,9 @@ class DividerTheme extends InheritedTheme {
 
   /// Creates a theme that merges the nearest [DividerTheme] with [data].
   static Widget merge({
-    required DividerThemeData data, required Widget child, Key? key,
+    required DividerThemeData data,
+    required Widget child,
+    Key? key,
   }) {
     return Builder(
       builder: (context) {
@@ -171,6 +173,7 @@ class DividerThemeData with Diagnosticable {
   /// The horizontal margin of the style.
   final EdgeInsetsGeometry? horizontalMargin;
 
+  /// Creates a divider theme data.
   const DividerThemeData({
     this.thickness,
     this.decoration,
@@ -178,6 +181,7 @@ class DividerThemeData with Diagnosticable {
     this.horizontalMargin,
   });
 
+  /// Creates the standard [DividerThemeData] based on the given [theme].
   factory DividerThemeData.standard(FluentThemeData theme) {
     return DividerThemeData(
       thickness: 1,
@@ -189,6 +193,9 @@ class DividerThemeData with Diagnosticable {
     );
   }
 
+  /// Linearly interpolates between two [DividerThemeData] objects.
+  ///
+  /// {@macro fluent_ui.lerp.t}
   static DividerThemeData lerp(
     DividerThemeData? a,
     DividerThemeData? b,
@@ -210,6 +217,8 @@ class DividerThemeData with Diagnosticable {
     );
   }
 
+  /// Merges this [DividerThemeData] with another, with the other taking
+  /// precedence.
   DividerThemeData merge(DividerThemeData? style) {
     if (style == null) return this;
     return DividerThemeData(

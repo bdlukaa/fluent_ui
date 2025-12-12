@@ -5,6 +5,7 @@ analyzer:
     - lib/l10n/
     - lib/src/controls/utils/windows_icon.dart
     - lib/src/icons.dart
+    - lib/src/styles/color_resources.dart
     - bin/**
     - "**/*.g.dart"
   language:

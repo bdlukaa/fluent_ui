@@ -9,6 +9,8 @@ part 'editable_combo_box.dart';
 
 const Duration _kComboBoxMenuDuration = Duration(milliseconds: 300);
 const double _kMenuItemBottomPadding = 6;
+
+/// The default height of a combo box item.
 const double kComboBoxItemHeight = kPickerHeight + _kMenuItemBottomPadding;
 const EdgeInsets _kMenuItemPadding = EdgeInsets.symmetric(horizontal: 12);
 const EdgeInsetsGeometry _kAlignedButtonPadding = EdgeInsetsDirectional.only(
@@ -19,6 +21,7 @@ const EdgeInsets _kAlignedMenuMargin = EdgeInsets.zero;
 const EdgeInsetsDirectional _kListPadding = EdgeInsetsDirectional.only(
   top: _kMenuItemBottomPadding,
 );
+/// The default corner radius for combo box elements.
 const kComboBoxRadius = Radius.circular(4);
 
 /// A builder to customize combo box buttons.

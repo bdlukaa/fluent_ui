@@ -60,13 +60,20 @@ class MenuBar extends StatefulWidget with Diagnosticable {
   }
 }
 
+/// The state for a [MenuBar] widget.
+///
+/// Provides methods to programmatically control the menu bar, such as
+/// [showItem], [showItemAt], and [closeFlyout].
 class MenuBarState extends State<MenuBar> {
   final _controller = FlyoutController();
 
+  /// The default padding for menu bar items.
   static const barPadding = EdgeInsetsDirectional.symmetric(
     horizontal: 10,
     vertical: 4,
   );
+
+  /// The default margin between menu bar items.
   static const barMargin = EdgeInsetsDirectional.all(4);
 
   final Map<MenuBarItem, GlobalKey> _keys = {};

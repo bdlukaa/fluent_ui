@@ -91,7 +91,7 @@ String get pathSeparator => Platform.isWindows ? '\\' : '/';
 const String fileHeader = """
 // GENERATED FILE, DO NOT EDIT
 
-// ignore_for_file: constant_identifier_names
+// ignore_for_file: constant_identifier_names, public_member_api_docs
 
 import 'package:flutter/widgets.dart' show IconData;
 

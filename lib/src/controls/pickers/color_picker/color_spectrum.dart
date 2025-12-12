@@ -38,7 +38,9 @@ class ColorRingSpectrum extends StatefulWidget {
   /// - [minSaturation]: The minimum allowed saturation value (0-100).
   /// - [maxSaturation]: The maximum allowed saturation value (0-100).
   const ColorRingSpectrum({
-    required this.colorState, required this.onColorChanged, super.key,
+    required this.colorState,
+    required this.onColorChanged,
+    super.key,
     this.minHue = 0,
     this.maxHue = 360,
     this.minSaturation = 0,
@@ -184,7 +186,9 @@ class ColorBoxSpectrum extends StatefulWidget {
   /// - [minSaturation]: The minimum allowed saturation value (0-100).
   /// - [maxSaturation]: The maximum allowed saturation value (0-100).
   const ColorBoxSpectrum({
-    required this.colorState, required this.onColorChanged, super.key,
+    required this.colorState,
+    required this.onColorChanged,
+    super.key,
     this.minHue = 0,
     this.maxHue = 360,
     this.minSaturation = 0,
@@ -274,8 +278,7 @@ class _ColorBoxSpectrumState extends State<ColorBoxSpectrum> {
 
     // Calculate HSV values
     // Hue from left to right (minHue to maxHue)
-    final h =
-        widget.minHue + (x / width) * (widget.maxHue - widget.minHue);
+    final h = widget.minHue + (x / width) * (widget.maxHue - widget.minHue);
     // Saturation from top (maxSaturation) to bottom (minSaturation)
     final s =
         widget.maxSaturation / 100 -
@@ -736,6 +739,7 @@ class CheckerboardPainter extends CustomPainter {
   /// The theme data for styling
   final FluentThemeData theme;
 
+  /// Creates a checkboard painter.
   const CheckerboardPainter({required this.theme});
 
   @override

@@ -6,16 +6,25 @@ import 'package:flutter/services.dart';
 import 'package:intl/intl.dart' hide TextDirection;
 import 'package:math_expressions/math_expressions.dart';
 
+/// The width of the compact overlay shown in [SpinButtonPlacementMode.compact] mode.
 const kNumberBoxOverlayWidth = 60.0;
+
+/// The height of the compact overlay shown in [SpinButtonPlacementMode.compact] mode.
 const kNumberBoxOverlayHeight = 100.0;
 
+/// A function that formats a number to a string for display in a [NumberBox].
 typedef NumberBoxFormatFunction = String? Function(num? number);
+
+/// A function that parses a string to a number for use in a [NumberBox].
 typedef NumberBoxParseFunction = num? Function(String text);
 
+/// An interface for formatting numbers in a [NumberBox].
 abstract interface class NumberBoxFormatter {
+  /// Formats the given [number] to a string for display.
   String format(dynamic number);
 }
 
+/// The placement mode for the spin buttons in a [NumberBox].
 enum SpinButtonPlacementMode {
   /// Two buttons will be added as a suffix of the number box field. A button
   /// for increment the value and a button for decrement the value.
@@ -380,24 +389,33 @@ class NumberBox<T extends num> extends StatefulWidget {
   State<NumberBox<T>> createState() => NumberBoxState<T>();
 }
 
+/// The state for a [NumberBox] widget.
+///
+/// This class manages the internal state of the number box, including focus
+/// handling, overlay management for compact mode, and value updates.
 class NumberBoxState<T extends num> extends State<NumberBox<T>> {
   FocusNode? _internalNode;
 
+  /// The focus node used to manage focus for the number box.
   FocusNode get focusNode => (widget.focusNode ?? _internalNode)!;
 
   OverlayEntry? _entry;
 
   bool _hasPrimaryFocus = false;
 
+  /// The last valid numeric value entered in the number box.
+  ///
+  /// This is used to restore the value when an invalid input is detected.
   late num? previousValidValue = widget.value;
 
   // use dynamic to simulate duck typing
   late final dynamic _formatter;
   late final NumberBoxFormatFunction _format;
 
+  /// The text editing controller used to manage the text input.
   final controller = TextEditingController();
-  final evaluator = RealEvaluator();
-  final parser = ShuntingYardParser();
+  final _evaluator = RealEvaluator();
+  final _parser = ShuntingYardParser();
 
   final LayerLink _layerLink = LayerLink();
   final GlobalKey _textBoxKey = GlobalKey(
@@ -707,6 +725,7 @@ class NumberBoxState<T extends num> extends State<NumberBox<T>> {
     updateValue();
   }
 
+  /// Increments the current value by [NumberBox.smallChange].
   void incrementSmall() {
     final value =
         (widget.parse(controller.text) ?? widget.value ?? 0) +
@@ -715,6 +734,7 @@ class NumberBoxState<T extends num> extends State<NumberBox<T>> {
     updateValue();
   }
 
+  /// Decrements the current value by [NumberBox.smallChange].
   void decrementSmall() {
     final value =
         (widget.parse(controller.text) ?? widget.value ?? 0) -
@@ -723,6 +743,7 @@ class NumberBoxState<T extends num> extends State<NumberBox<T>> {
     updateValue();
   }
 
+  /// Increments the current value by [NumberBox.largeChange].
   void incrementLarge() {
     final value =
         (widget.parse(controller.text) ?? widget.value ?? 0) +
@@ -731,6 +752,7 @@ class NumberBoxState<T extends num> extends State<NumberBox<T>> {
     updateValue();
   }
 
+  /// Decrements the current value by [NumberBox.largeChange].
   void decrementLarge() {
     final value =
         (widget.parse(controller.text) ?? widget.value ?? 0) -
@@ -745,14 +767,18 @@ class NumberBoxState<T extends num> extends State<NumberBox<T>> {
       ..selection = TextSelection.collapsed(offset: controller.text.length);
   }
 
+  /// Updates the number box value based on the current text input.
+  ///
+  /// This method parses the text, validates it against min/max constraints,
+  /// and calls [NumberBox.onChanged] if the value has changed.
   void updateValue() {
     num? value;
     if (controller.text.isNotEmpty) {
       value = widget.parse(controller.text);
       if (value == null && widget.allowExpressions) {
         try {
-          final expression = parser.parse(controller.text);
-          value = evaluator.evaluate(expression);
+          final expression = _parser.parse(controller.text);
+          value = _evaluator.evaluate(expression);
           // If the value is infinite or not a number, we reset the value with
           // the previous valid value. For example, if the user tap 1024^200
           // (the result is too big), the condition value.isInfinite is true.

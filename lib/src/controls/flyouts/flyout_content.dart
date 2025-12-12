@@ -12,7 +12,8 @@ const kFlyoutMinConstraints = BoxConstraints(minWidth: 118);
 class FlyoutContent extends StatelessWidget {
   /// Creates a flyout content
   const FlyoutContent({
-    required this.child, super.key,
+    required this.child,
+    super.key,
     this.color,
     this.shape,
     this.padding = const EdgeInsetsDirectional.all(8),
@@ -70,9 +71,7 @@ class FlyoutContent extends StatelessWidget {
         shape ??
         RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(8),
-          side: BorderSide(
-            color: theme.resources.surfaceStrokeColorFlyout,
-          ),
+          side: BorderSide(color: theme.resources.surfaceStrokeColorFlyout),
         );
 
     final resolvedBorderRadius = () {
@@ -127,7 +126,8 @@ class FlyoutContent extends StatelessWidget {
 class FlyoutListTile extends StatelessWidget {
   /// Creates a flyout list tile.
   const FlyoutListTile({
-    required this.text, super.key,
+    required this.text,
+    super.key,
     this.onPressed,
     this.onLongPress,
     this.tooltip,
@@ -172,12 +172,16 @@ class FlyoutListTile extends StatelessWidget {
   /// {@macro fluent_ui.controls.inputs.HoverButton.semanticLabel}
   final String? semanticLabel;
 
+  /// The margin around the tile.
   final EdgeInsetsGeometry margin;
 
+  /// Whether this tile is currently selected.
   final bool selected;
 
+  /// Whether to show the selection indicator when [selected] is true.
   final bool showSelectedIndicator;
 
+  /// Whether this tile is enabled.
   bool get isEnabled => onPressed != null;
 
   @override

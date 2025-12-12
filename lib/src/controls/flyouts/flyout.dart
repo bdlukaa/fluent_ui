@@ -115,6 +115,7 @@ enum FlyoutPlacementMode {
     }
   }
 
+  /// Returns a new placement mode with the specified vertical alignment.
   FlyoutPlacementMode withVerticalAlignment(
     TextAlignVertical verticalAlignment,
   ) {

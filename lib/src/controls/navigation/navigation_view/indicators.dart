@@ -35,7 +35,11 @@ class NavigationIndicator extends StatefulWidget {
   NavigationIndicatorState createState() => NavigationIndicatorState();
 }
 
+/// The state for a [NavigationIndicator] widget.
+///
+/// Subclasses can override this to provide custom indicator behavior.
 class NavigationIndicatorState<T extends NavigationIndicator> extends State<T> {
+  /// The offsets of all navigation pane items.
   Iterable<Offset>? offsets;
 
   @override
@@ -47,6 +51,7 @@ class NavigationIndicatorState<T extends NavigationIndicator> extends State<T> {
     });
   }
 
+  /// Fetches the current offsets of all pane items.
   void fetch() {
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
       if (!mounted) return;
@@ -60,18 +65,22 @@ class NavigationIndicatorState<T extends NavigationIndicator> extends State<T> {
     });
   }
 
+  /// The current navigation pane from the inherited navigation view.
   NavigationPane get pane {
     return InheritedNavigationView.of(context).pane!;
   }
 
+  /// The currently selected item index.
   int get selectedIndex {
     return pane.selected ?? -1;
   }
 
+  /// Whether the current item is selected.
   bool get isSelected {
     return pane.isSelected(item);
   }
 
+  /// The axis of the navigation indicator based on the display mode.
   Axis get axis {
     if (InheritedNavigationView.maybeOf(context)?.displayMode ==
         PaneDisplayMode.top) {
@@ -80,14 +89,17 @@ class NavigationIndicatorState<T extends NavigationIndicator> extends State<T> {
     return Axis.horizontal;
   }
 
+  /// The index of the current item.
   int get itemIndex {
     return InheritedNavigationView.of(context).currentItemIndex;
   }
 
+  /// The index of the previously selected item.
   int get previousItemIndex {
     return InheritedNavigationView.of(context).previousItemIndex;
   }
 
+  /// The current pane item.
   PaneItem get item {
     return pane.effectiveItems[itemIndex];
   }

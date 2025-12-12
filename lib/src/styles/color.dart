@@ -218,9 +218,21 @@ class Colors {
   ];
 }
 
+/// A [ColorSwatch] with numbered shade variants.
+///
+/// Access shades using the index operator: `Colors.grey[120]`.
+///
+/// See also:
+///
+///  * [AccentColor], for colors with named shade variants
+///  * [Colors.grey], which uses this class
 class ShadedColor extends ColorSwatch<int> {
+  /// Creates a shaded color with the given primary value and swatch.
   const ShadedColor(super.primary, super.swatch);
 
+  /// Returns the shade at the given [key].
+  ///
+  /// Unlike the base class, this returns a non-null [Color].
   @override
   Color operator [](int key) {
     return super[key]!;

@@ -3,7 +3,10 @@ import 'dart:async';
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter/foundation.dart';
 
+/// The default padding for the [MenuFlyout] content.
 const kDefaultMenuPadding = EdgeInsetsDirectional.symmetric(vertical: 2);
+
+/// The default margin around each item in a [MenuFlyout].
 const kDefaultMenuItemMargin = EdgeInsetsDirectional.symmetric(
   horizontal: 4,
   vertical: 2,
@@ -194,10 +197,13 @@ class _MenuScrollBehavior extends FluentScrollBehavior {
 ///    sub-menu in a [MenuFlyout]
 ///  * [MenuFlyoutItemBuilder], which renders the given widget in the items list
 abstract class MenuFlyoutItemBase with Diagnosticable {
+  /// The key for this item, used by the framework for identification.
   final Key? key;
 
+  /// Creates a base menu flyout item.
   const MenuFlyoutItemBase({this.key});
 
+  /// Builds the widget representation of this item.
   Widget build(BuildContext context);
 }
 
@@ -212,6 +218,7 @@ abstract class MenuFlyoutItemBase with Diagnosticable {
 ///  * [MenuFlyoutSubItem], which represents a menu item that displays a
 ///    sub-menu in a [MenuFlyout]
 class MenuFlyoutItemBuilder extends MenuFlyoutItemBase {
+  /// The builder function that creates the widget.
   final WidgetBuilder builder;
 
   /// Creates a menu flyout item builder
@@ -477,6 +484,9 @@ enum SubItemShowAction {
   hover,
 }
 
+/// A builder function that creates a list of menu items.
+///
+/// Used by [MenuFlyoutSubItem] to build its child items lazily.
 typedef MenuItemsBuilder =
     List<MenuFlyoutItemBase> Function(BuildContext context);
 
@@ -528,6 +538,9 @@ class MenuFlyoutSubItem extends MenuFlyoutItem {
   /// Only applied if [showBehavior] is [SubItemShowAction.hover]
   final Duration showHoverDelay;
 
+  /// Whether to disable the acrylic effect for this sub-menu.
+  ///
+  /// This is set internally by [MenuFlyout].
   bool disableAcyrlic = false;
 
   @override

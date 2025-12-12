@@ -14,9 +14,17 @@ part 'style.dart';
 ///
 /// Value eyeballed from Windows 10 v10.0.19041.928
 const double _kDefaultAppBarHeight = 50;
+
+/// The minimum height of a pane item.
 const double kPaneItemMinHeight = 40;
+
+/// The minimum height of a pane item header.
 const double kPaneItemHeaderMinHeight = 4;
 
+/// A builder function for customizing the navigation content.
+///
+/// The [item] is the currently selected pane item, if any.
+/// The [body] is the default body widget built from [PaneItem.body].
 typedef NavigationContentBuilder =
     Widget Function(PaneItem? item, Widget? body);
 

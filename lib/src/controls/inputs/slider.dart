@@ -497,9 +497,12 @@ class SliderThumbShape extends m.SliderComponentShape {
     this.borderColor = Colors.transparent,
   });
 
+  /// The inner factor controlling how much of the thumb is filled.
+  ///
+  /// A value of 1.0 means the thumb is completely filled.
   final double innerFactor;
 
-  /// Whether to draw a ball instead of a line
+  /// Whether to draw a ball instead of a line.
   final bool useBall;
 
   /// The preferred radius of the round thumb shape when the slider is enabled.
@@ -531,6 +534,7 @@ class SliderThumbShape extends m.SliderComponentShape {
   /// example, a value of 12 will create a very large shadow.
   final double pressedElevation;
 
+  /// The color of the thumb border.
   final Color borderColor;
 
   @override
@@ -666,26 +670,43 @@ class SliderTheme extends InheritedTheme {
   bool updateShouldNotify(SliderTheme oldWidget) => data != oldWidget.data;
 }
 
+/// Theme data for [Slider] widgets.
+///
+/// This class defines the visual appearance of sliders, including their
+/// thumb, track, and label styling.
 @immutable
 class SliderThemeData with Diagnosticable {
+  /// The color of the slider thumb.
   final WidgetStateProperty<Color?>? thumbColor;
+
+  /// The radius of the slider thumb.
   final WidgetStateProperty<double?>? thumbRadius;
+
+  /// The height of the slider track.
   final WidgetStateProperty<double?>? trackHeight;
 
-  /// The color of the label background
+  /// The color of the label background.
   final Color? labelBackgroundColor;
 
-  /// The color of the label text
+  /// The color of the label text.
   final Color? labelForegroundColor;
 
+  /// Whether to use a ball-shaped thumb instead of a line.
   final bool? useThumbBall;
+
+  /// The inner factor of the thumb ball, controlling its visual appearance.
   final WidgetStateProperty<double?>? thumbBallInnerFactor;
 
+  /// The color of the active (filled) portion of the track.
   final WidgetStateProperty<Color?>? activeColor;
+
+  /// The color of the inactive (unfilled) portion of the track.
   final WidgetStateProperty<Color?>? inactiveColor;
 
+  /// The margin around the slider.
   final EdgeInsetsGeometry? margin;
 
+  /// Creates slider theme data.
   const SliderThemeData({
     this.margin,
     this.thumbColor,
@@ -699,6 +720,7 @@ class SliderThemeData with Diagnosticable {
     this.thumbBallInnerFactor,
   });
 
+  /// Creates the standard [SliderThemeData] based on the given [theme].
   factory SliderThemeData.standard(FluentThemeData theme) {
     final def = SliderThemeData(
       thumbColor: WidgetStateProperty.resolveWith(
@@ -731,6 +753,9 @@ class SliderThemeData with Diagnosticable {
     return def;
   }
 
+  /// Linearly interpolates between two [SliderThemeData] objects.
+  ///
+  /// {@macro fluent_ui.lerp.t}
   static SliderThemeData lerp(SliderThemeData a, SliderThemeData b, double t) {
     return SliderThemeData(
       margin: EdgeInsetsGeometry.lerp(a.margin, b.margin, t),
@@ -784,6 +809,8 @@ class SliderThemeData with Diagnosticable {
     );
   }
 
+  /// Merges this [SliderThemeData] with another, with the other taking
+  /// precedence.
   SliderThemeData merge(SliderThemeData? style) {
     return SliderThemeData(
       margin: style?.margin ?? margin,

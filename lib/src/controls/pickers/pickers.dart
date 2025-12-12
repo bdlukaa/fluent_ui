@@ -10,12 +10,16 @@ const kPickerContentPadding = EdgeInsetsDirectional.only(
   bottom: 4,
 );
 
+/// The default height of a picker button.
 const kPickerHeight = 32.0;
+
+/// The diameter ratio used for the picker wheel effect.
 const kPickerDiameterRatio = 100.0;
 
 /// The default popup height
 const double kPickerPopupHeight = kOneLineTileHeight * 10;
 
+/// Returns the text style for items in a picker popup based on selection state.
 TextStyle? kPickerPopupTextStyle(BuildContext context, bool isSelected) {
   assert(debugCheckHasFluentTheme(context));
   final theme = FluentTheme.of(context);
@@ -28,6 +32,7 @@ TextStyle? kPickerPopupTextStyle(BuildContext context, bool isSelected) {
   );
 }
 
+/// Builds the decoration for picker buttons based on the current state.
 Decoration kPickerDecorationBuilder(
   BuildContext context,
   Set<WidgetState> states,
@@ -44,7 +49,11 @@ Decoration kPickerDecorationBuilder(
   );
 }
 
+/// A tile that displays the highlight effect in picker popups.
+///
+/// This is used to show which item is currently selected in the picker wheel.
 class PickerHighlightTile extends StatelessWidget {
+  /// Creates a picker highlight tile.
   const PickerHighlightTile({super.key});
 
   @override
@@ -266,6 +275,7 @@ class PickerNavigatorIndicator extends StatelessWidget {
   }
 }
 
+/// Extension methods for [FixedExtentScrollController].
 extension FixedExtentScrollControllerExtension on FixedExtentScrollController {
   /// Navigates a fixed-extent list into a specific direction
   Future<void> navigateSides(
@@ -295,9 +305,16 @@ extension FixedExtentScrollControllerExtension on FixedExtentScrollController {
   }
 }
 
+/// A builder function for picker buttons.
+///
+/// The [open] callback opens the picker popup.
 typedef PickerBuilder =
     Widget Function(BuildContext context, Future<void> Function() open);
 
+/// A widget that provides a flyout-style picker popup.
+///
+/// This is the base widget used by [DatePicker] and [TimePicker] to display
+/// their selection popups.
 class Picker extends StatefulWidget {
   /// Creates a picker flyout
   const Picker({
@@ -307,17 +324,24 @@ class Picker extends StatefulWidget {
     super.key,
   });
 
+  /// The builder for the picker button.
   final PickerBuilder child;
+
+  /// The builder for the picker popup content.
   final WidgetBuilder pickerContent;
+
+  /// The height of the picker popup.
   final double pickerHeight;
 
   @override
   State<Picker> createState() => PickerState();
 }
 
+/// The state for a [Picker] widget.
 class PickerState extends State<Picker> {
   late final GlobalKey _childKey = GlobalKey(debugLabel: '${widget.child} key');
 
+  /// Opens the picker popup.
   Future<void> open() {
     assert(
       _childKey.currentContext != null,
@@ -436,12 +460,20 @@ class PickerState extends State<Picker> {
   }
 }
 
+/// A dialog container for picker content.
+///
+/// Handles keyboard events for selection (Enter/Space) and dismissal (Escape).
 class PickerDialog extends StatelessWidget {
+  /// The content of the dialog.
   final Widget child;
 
+  /// Called when the user confirms the selection.
   final VoidCallback onSelect;
+
+  /// Called when the user dismisses the dialog.
   final VoidCallback onDismiss;
 
+  /// Creates a picker dialog.
   const PickerDialog({
     required this.child,
     required this.onSelect,

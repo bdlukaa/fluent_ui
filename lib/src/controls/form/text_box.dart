@@ -7,6 +7,7 @@ import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
 
 // From https://github.com/microsoft/microsoft-ui-xaml/blob/main/dev/CommonStyles/Common_themeresources.xaml#L18
+/// The default padding used inside a [TextBox].
 const kTextBoxPadding = EdgeInsetsDirectional.fromSTEB(10, 5, 6, 6);
 
 /// Visibility of text field overlays based on the state of the current text entry.

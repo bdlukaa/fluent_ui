@@ -2,6 +2,9 @@ import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/rendering.dart';
 
+/// A builder function that creates a custom knob widget for [ToggleSwitch].
+///
+/// The [states] parameter contains the current interaction states of the switch.
 typedef ToggleSwitchKnobBuilder =
     Widget Function(BuildContext context, Set<WidgetState> states);
 
@@ -77,7 +80,9 @@ typedef ToggleSwitchKnobBuilder =
 class ToggleSwitch extends StatefulWidget {
   /// Creates a toggle switch.
   const ToggleSwitch({
-    required this.checked, required this.onChanged, super.key,
+    required this.checked,
+    required this.onChanged,
+    super.key,
     this.style,
     this.content,
     this.leadingContent = false,
@@ -270,13 +275,25 @@ class _ToggleSwitchState extends State<ToggleSwitch> {
   }
 }
 
+/// The default knob widget used by [ToggleSwitch].
+///
+/// This knob animates its size based on hover and press states.
 class DefaultToggleSwitchKnob extends StatelessWidget {
+  /// Creates a default toggle switch knob.
   const DefaultToggleSwitchKnob({
-    required this.checked, required this.style, required this.states, super.key,
+    required this.checked,
+    required this.style,
+    required this.states,
+    super.key,
   });
 
+  /// Whether the toggle switch is checked.
   final bool checked;
+
+  /// The theme data for styling the knob.
   final ToggleSwitchThemeData? style;
+
+  /// The current interaction states.
   final Set<WidgetState> states;
 
   @override
@@ -305,14 +322,18 @@ class ToggleSwitchTheme extends InheritedTheme {
   /// Creates a theme that controls how descendant [ToggleSwitch]es should
   /// look like.
   const ToggleSwitchTheme({
-    required super.child, required this.data, super.key,
+    required super.child,
+    required this.data,
+    super.key,
   });
 
   final ToggleSwitchThemeData data;
 
   /// Creates a theme that merges the nearest [ToggleSwitchTheme] with [data].
   static Widget merge({
-    required ToggleSwitchThemeData data, required Widget child, Key? key,
+    required ToggleSwitchThemeData data,
+    required Widget child,
+    Key? key,
   }) {
     return Builder(
       builder: (context) {
@@ -400,6 +421,7 @@ class ToggleSwitchThemeData with Diagnosticable {
     this.foregroundColor,
   });
 
+  /// Creates the standard [ToggleSwitchThemeData] based on the given [theme].
   factory ToggleSwitchThemeData.standard(FluentThemeData theme) {
     final defaultKnobDecoration = BoxDecoration(
       borderRadius: BorderRadius.circular(100),
@@ -458,6 +480,9 @@ class ToggleSwitchThemeData with Diagnosticable {
     );
   }
 
+  /// Linearly interpolates between two [ToggleSwitchThemeData] objects.
+  ///
+  /// {@macro fluent_ui.lerp.t}
   static ToggleSwitchThemeData lerp(
     ToggleSwitchThemeData? a,
     ToggleSwitchThemeData? b,
@@ -505,6 +530,8 @@ class ToggleSwitchThemeData with Diagnosticable {
     );
   }
 
+  /// Merges this [ToggleSwitchThemeData] with another, with the other taking
+  /// precedence.
   ToggleSwitchThemeData merge(ToggleSwitchThemeData? style) {
     return ToggleSwitchThemeData(
       margin: style?.margin ?? margin,

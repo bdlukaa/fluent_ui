@@ -1,6 +1,9 @@
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter/foundation.dart';
 
+/// A builder function that creates a [ShapeBorder] for an [Expander].
+///
+/// The [open] parameter indicates whether the expander is currently expanded.
 typedef ExpanderShapeBuilder = ShapeBorder Function(bool open);
 
 /// The expander direction
@@ -93,7 +96,9 @@ enum ExpanderDirection {
 class Expander extends StatefulWidget {
   /// Creates a windows-styled expander.
   const Expander({
-    required this.header, required this.content, super.key,
+    required this.header,
+    required this.content,
+    super.key,
     this.leading,
     this.icon,
     this.trailing,
@@ -236,11 +241,19 @@ class Expander extends StatefulWidget {
   State<Expander> createState() => ExpanderState();
 }
 
+/// The state for an [Expander] widget.
+///
+/// Provides access to the [isExpanded] property to programmatically control
+/// the expander's state.
 class ExpanderState extends State<Expander>
     with SingleTickerProviderStateMixin {
   late FluentThemeData _theme;
 
   late bool _isExpanded;
+
+  /// Whether the expander is currently expanded.
+  ///
+  /// Setting this value will animate the expander to the new state.
   bool get isExpanded => _isExpanded;
   set isExpanded(bool value) {
     if (_isExpanded != value) _handlePressed();

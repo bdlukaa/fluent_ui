@@ -1,5 +1,9 @@
 part of 'view.dart';
 
+/// Base class for items that can be displayed in a [NavigationPane].
+///
+/// Subclasses include [PaneItem], [PaneItemSeparator], [PaneItemHeader],
+/// [PaneItemAction], [PaneItemExpander], and [PaneItemWidgetAdapter].
 class NavigationPaneItem with Diagnosticable {
   /// The key used for the item itself. Useful to find the position and size of
   /// the pane item within the screen
@@ -394,6 +398,7 @@ class PaneItem extends NavigationPaneItem {
     );
   }
 
+  /// Creates a copy of this [PaneItem] with the given fields replaced.
   PaneItem copyWith({
     Widget? title,
     Widget? icon,
@@ -445,6 +450,7 @@ class PaneItemSeparator extends NavigationPaneItem {
   /// The separator thickness. Defaults to 1.0
   final double? thickness;
 
+  /// Builds the separator widget.
   Widget build(BuildContext context, Axis direction) {
     return KeyedSubtree(
       key: key,
@@ -487,6 +493,7 @@ class PaneItemHeader extends NavigationPaneItem {
   /// Usually a [Text] widget.
   final Widget header;
 
+  /// Builds the header widget.
   Widget build(BuildContext context) {
     assert(debugCheckHasFluentTheme(context));
     final theme = NavigationPaneTheme.of(context);
@@ -571,6 +578,7 @@ class PaneItemAction extends PaneItem {
   }
 }
 
+/// A [GlobalKey] for [PaneItemExpander] state.
 typedef PaneItemExpanderKey = GlobalKey<__PaneItemExpanderState>;
 
 /// Hierhical navigation item used on [NavigationView]
@@ -613,11 +621,13 @@ class PaneItemExpander extends PaneItem {
          'There can not be nested PaneItemExpanders',
        );
 
+  /// The child items contained within this expander.
   final List<NavigationPaneItem> items;
 
   /// Whether the item is initially expanded. Defaults to false
   final bool initiallyExpanded;
 
+  /// The default trailing icon for expanders.
   static const kDefaultTrailing = WindowsIcon(
     WindowsIcons.chevron_down,
     size: 8,
@@ -1032,8 +1042,10 @@ class PaneItemWidgetAdapter extends NavigationPaneItem {
   /// The child.
   final Widget child;
 
+  /// Whether to apply default padding around the child.
   final bool applyPadding;
 
+  /// Builds the widget adapter.
   Widget build(BuildContext context) {
     assert(debugCheckHasFluentTheme(context));
     final theme = NavigationPaneTheme.of(context);
@@ -1079,7 +1091,9 @@ extension _ItemsExtension on List<NavigationPaneItem> {
   }
 }
 
+/// Extension methods for extracting properties from widgets.
 extension ItemExtension on Widget {
+  /// Gets a property from this widget based on its type.
   T? getProperty<T>([dynamic def]) {
     if (this is Text) {
       final title = this as Text;

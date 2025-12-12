@@ -156,6 +156,7 @@ Offset horizontalPositionDependentBox({
   return Offset(x, y);
 }
 
+/// Extension methods for [Decoration] objects.
 extension DecorationExtension on Decoration {
   /// Gets the border radius of this decoration.
   BorderRadiusGeometry? getBorderRadius() {
@@ -173,6 +174,7 @@ extension DecorationExtension on Decoration {
   }
 }
 
+/// Extension methods for [String] objects.
 extension StringExtension on String {
   /// Results this string with the first char uppercased
   ///
@@ -191,7 +193,9 @@ extension StringExtension on String {
   }
 }
 
+/// Extension methods for [Offset] objects.
 extension OffsetExtension on Offset {
+  /// Clamps this offset to be within the given [min] and [max] bounds.
   Offset clamp(Offset min, Offset max) {
     return Offset(
       clampDouble(dx, min.dx, max.dx),
@@ -200,6 +204,10 @@ extension OffsetExtension on Offset {
   }
 }
 
+/// Linearly interpolates between two [WidgetStateProperty] objects.
+///
+/// The [lerpFunction] is used to interpolate between the resolved values
+/// for each state.
 WidgetStateProperty<T?>? lerpWidgetStateProperty<T>(
   WidgetStateProperty<T?>? a,
   WidgetStateProperty<T?>? b,

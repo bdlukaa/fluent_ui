@@ -2,18 +2,25 @@ import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
 
+/// A builder function that creates a widget based on the current [WidgetState].
 typedef WidgetStateWidgetBuilder =
     Widget Function(BuildContext, Set<WidgetState> state);
 
+/// An inherited widget that provides access to [HoverButton] interaction states.
 class HoverButtonInherited extends InheritedWidget {
+  /// Creates a hover button inherited widget.
   const HoverButtonInherited({
     required super.child,
     required this.states,
     super.key,
   });
 
+  /// The current interaction states of the button.
   final Set<WidgetState> states;
 
+  /// Returns the closest [HoverButtonInherited] ancestor.
+  ///
+  /// Throws if no ancestor is found.
   static HoverButtonInherited of(BuildContext context) {
     return context.dependOnInheritedWidgetOfExactType<HoverButtonInherited>()!;
   }
@@ -71,17 +78,34 @@ class HoverButton extends StatefulWidget {
   /// {@endtemplate}
   final MouseCursor? cursor;
 
+  /// Called when a long press gesture is detected.
   final GestureLongPressCallback? onLongPress;
+
+  /// Called when a long press gesture starts.
   final GestureLongPressStartCallback? onLongPressStart;
+
+  /// Called when a long press gesture ends.
   final GestureLongPressEndCallback? onLongPressEnd;
 
+  /// Called when the button is pressed.
   final VoidCallback? onPressed;
+
+  /// Called when the button tap is released.
   final GestureTapUpCallback? onTapUp;
+
+  /// Called when the button tap begins.
   final GestureTapDownCallback? onTapDown;
+
+  /// Called when the button tap is cancelled.
   final GestureTapCancelCallback? onTapCancel;
 
+  /// Called when a horizontal drag gesture starts.
   final GestureDragStartCallback? onHorizontalDragStart;
+
+  /// Called during a horizontal drag gesture.
   final GestureDragUpdateCallback? onHorizontalDragUpdate;
+
+  /// Called when a horizontal drag gesture ends.
   final GestureDragEndCallback? onHorizontalDragEnd;
 
   /// The gestures that this widget will attempt to recognize.
@@ -103,9 +127,13 @@ class HoverButton extends StatefulWidget {
   /// [focusEnabled] must not be `false` for this to work
   final VoidCallback? onFocusTap;
 
+  /// Called when the pointer enters the button area.
   final PointerEnterEventListener? onPointerEnter;
+
+  /// Called when the pointer exits the button area.
   final PointerExitEventListener? onPointerExit;
 
+  /// The builder for the button content based on the current states.
   final WidgetStateWidgetBuilder builder;
 
   /// {@macro flutter.widgets.Focus.focusNode}
@@ -174,10 +202,12 @@ class HoverButton extends StatefulWidget {
   @override
   State<HoverButton> createState() => _HoverButtonState();
 
+  /// Returns the closest [HoverButtonInherited] ancestor.
   static HoverButtonInherited of(BuildContext context) {
     return HoverButtonInherited.of(context);
   }
 
+  /// Returns the closest [HoverButtonInherited] ancestor, if any.
   static HoverButtonInherited? maybeOf(BuildContext context) {
     return HoverButtonInherited.maybeOf(context);
   }
@@ -364,6 +394,7 @@ class _HoverButtonState extends State<HoverButton> {
   }
 }
 
+/// Extension methods for [Set<WidgetState>] to easily check interaction states.
 extension WidgetStateExtension on Set<WidgetState> {
   /// Checks whether the widget is focused.
   bool get isFocused => contains(WidgetState.focused);

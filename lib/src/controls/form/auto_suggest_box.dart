@@ -5,18 +5,23 @@ import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 
+/// A function that sorts and filters [AutoSuggestBoxItem]s based on the
+/// current text input.
 typedef AutoSuggestBoxSorter<T> =
     List<AutoSuggestBoxItem<T>> Function(
       String text,
       List<AutoSuggestBoxItem<T>> items,
     );
 
+/// Called when the text in an [AutoSuggestBox] changes.
 typedef OnChangeAutoSuggestBox<T> =
     void Function(String text, TextChangedReason reason);
 
+/// A builder for custom [AutoSuggestBoxItem] widgets in the overlay.
 typedef AutoSuggestBoxItemBuilder<T> =
     Widget Function(BuildContext context, AutoSuggestBoxItem<T> item);
 
+/// The reason for the text change in an [AutoSuggestBox].
 enum TextChangedReason {
   /// Whether the text in an [AutoSuggestBox] was changed by user input
   userInput,
@@ -33,7 +38,6 @@ enum TextChangedReason {
 const kAutoSuggestBoxPopupMaxHeight = 380.0;
 
 /// An item used in [AutoSuggestBox]
-@immutable
 class AutoSuggestBoxItem<T> {
   /// The value attached to this item
   final T? value;
@@ -457,6 +461,9 @@ class AutoSuggestBox<T> extends StatefulWidget {
   }
 }
 
+/// The state for an [AutoSuggestBox] widget.
+///
+/// This state manages the overlay, text controller, and item selection.
 class AutoSuggestBoxState<T> extends State<AutoSuggestBox<T>> {
   late FocusNode _focusNode = widget.focusNode ?? FocusNode();
   OverlayEntry? _entry;
@@ -471,6 +478,7 @@ class AutoSuggestBoxState<T> extends State<AutoSuggestBox<T>> {
   final _dynamicItemsController =
       StreamController<List<AutoSuggestBoxItem<T>>>.broadcast();
 
+  /// The sorter function used to filter items based on the current text.
   AutoSuggestBoxSorter<T> get sorter =>
       widget.sorter ?? widget.defaultItemSorter;
 
@@ -670,6 +678,7 @@ class AutoSuggestBoxState<T> extends State<AutoSuggestBox<T>> {
     }
   }
 
+  /// Dismisses the suggestions overlay.
   void dismissOverlay() {
     _entry?.remove();
     _entry = null;
@@ -677,6 +686,7 @@ class AutoSuggestBoxState<T> extends State<AutoSuggestBox<T>> {
     widget.onOverlayVisibilityChanged?.call(isOverlayVisible);
   }
 
+  /// Shows the suggestions overlay.
   void showOverlay() {
     if (_entry == null && !(_entry?.mounted ?? false)) {
       _insertOverlay();

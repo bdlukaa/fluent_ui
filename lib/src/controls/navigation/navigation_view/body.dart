@@ -180,7 +180,9 @@ class _NavigationBodyState extends State<_NavigationBody> {
 class InheritedNavigationView extends InheritedWidget {
   /// Creates an inherited navigation view.
   const InheritedNavigationView({
-    required super.child, required this.displayMode, super.key,
+    required super.child,
+    required this.displayMode,
+    super.key,
     this.minimalPaneOpen = false,
     this.pane,
     this.previousItemIndex = 0,
@@ -210,17 +212,24 @@ class InheritedNavigationView extends InheritedWidget {
   /// Whether the navigation panes are transitioning or not.
   final bool isTransitioning;
 
+  /// Returns the closest [InheritedNavigationView] ancestor, if any.
   static InheritedNavigationView? maybeOf(BuildContext context) {
     return context
         .dependOnInheritedWidgetOfExactType<InheritedNavigationView>();
   }
 
+  /// Returns the closest [InheritedNavigationView] ancestor.
+  ///
+  /// Throws if no ancestor is found.
   static InheritedNavigationView of(BuildContext context) {
     return maybeOf(context)!;
   }
 
+  /// Creates a widget that merges the current navigation view state with
+  /// the given values.
   static Widget merge({
-    required Widget child, Key? key,
+    required Widget child,
+    Key? key,
     int? currentItemIndex,
     NavigationPane? pane,
     PaneDisplayMode? displayMode,
@@ -260,12 +269,15 @@ class InheritedNavigationView extends InheritedWidget {
 }
 
 /// Makes the [GlobalKey]s for [PaneItem]s accesible on the scope.
+/// An inherited widget that provides access to [GlobalKey]s for [PaneItem]s.
 class PaneItemKeys extends InheritedWidget {
+  /// Creates a pane item keys widget.
   const PaneItemKeys({required super.child, required this.keys, super.key});
 
+  /// The map of item indices to their [GlobalKey]s.
   final Map<int, GlobalKey> keys;
 
-  /// Gets the item global key based on the index
+  /// Gets the item global key based on the index.
   static GlobalKey of(int index, BuildContext context) {
     final reference = context
         .dependOnInheritedWidgetOfExactType<PaneItemKeys>()!;

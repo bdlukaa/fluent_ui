@@ -341,6 +341,7 @@ class ScrollbarThemeData with Diagnosticable {
   /// The padding around the scrollbar thumb when hovering
   final EdgeInsetsGeometry? hoveringPadding;
 
+  /// Creates a scrollbar theme data.
   const ScrollbarThemeData({
     this.thickness,
     this.hoveringThickness,
@@ -362,6 +363,7 @@ class ScrollbarThemeData with Diagnosticable {
     this.contractDelay,
   });
 
+  /// Creates the standard [ScrollbarThemeData] based on the given [theme].
   factory ScrollbarThemeData.standard(FluentThemeData theme) {
     final brightness = theme.brightness;
     return ScrollbarThemeData(
@@ -392,6 +394,9 @@ class ScrollbarThemeData with Diagnosticable {
     );
   }
 
+  /// Linearly interpolates between two [ScrollbarThemeData] objects.
+  ///
+  /// {@macro fluent_ui.lerp.t}
   static ScrollbarThemeData lerp(
     ScrollbarThemeData? a,
     ScrollbarThemeData? b,
@@ -451,6 +456,8 @@ class ScrollbarThemeData with Diagnosticable {
     );
   }
 
+  /// Merges this [ScrollbarThemeData] with another, with the other taking
+  /// precedence.
   ScrollbarThemeData merge(ScrollbarThemeData? style) {
     if (style == null) return this;
     return ScrollbarThemeData(

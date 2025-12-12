@@ -9,7 +9,9 @@ import 'package:flutter/foundation.dart';
 class EntrancePageTransition extends StatelessWidget {
   /// Creates an entrance page transition
   const EntrancePageTransition({
-    required this.child, required this.animation, super.key,
+    required this.child,
+    required this.animation,
+    super.key,
     this.vertical = true,
     this.reverse = false,
     this.startFrom = 0.25,
@@ -79,7 +81,9 @@ class EntrancePageTransition extends StatelessWidget {
 class DrillInPageTransition extends StatelessWidget {
   /// Creates a drill in page transition.
   const DrillInPageTransition({
-    required this.child, required this.animation, super.key,
+    required this.child,
+    required this.animation,
+    super.key,
   });
 
   /// The widget to be animated
@@ -112,7 +116,9 @@ class DrillInPageTransition extends StatelessWidget {
 class HorizontalSlidePageTransition extends StatelessWidget {
   /// Creates a horizontal slide page transition.
   const HorizontalSlidePageTransition({
-    required this.child, required this.animation, super.key,
+    required this.child,
+    required this.animation,
+    super.key,
     this.fromLeft = true,
   });
 
@@ -160,6 +166,7 @@ class HorizontalSlidePageTransition extends StatelessWidget {
 
 /// To avoid playing any animation during navigation, use this animation.
 class SuppressPageTransition extends StatelessWidget {
+  /// Creates a suppress page transition.
   const SuppressPageTransition({required this.child, super.key});
 
   /// The widget to be animation

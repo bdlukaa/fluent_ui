@@ -1,7 +1,7 @@
 // GENERATED FILE, DO NOT EDIT
 // This generates the values from https://github.com/microsoft/microsoft-ui-xaml/blob/main/dev/CommonStyles/Common_themeresources_any.xaml
 
-// ignore_for_file: constant_identifier_names
+// ignore_for_file: constant_identifier_names, public_member_api_docs
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/widgets.dart' show Color, ColorProperty;

@@ -87,6 +87,7 @@ class HyperlinkButton extends BaseButton {
     return ButtonTheme.of(context).hyperlinkButtonStyle;
   }
 
+  /// Returns the background color for a hyperlink button based on its state.
   static WidgetStateColor backgroundColor(FluentThemeData theme) {
     return WidgetStateColor.resolveWith((states) {
       if (states.isDisabled) {

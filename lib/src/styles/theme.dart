@@ -135,7 +135,9 @@ class AnimatedFluentTheme extends ImplicitlyAnimatedWidget {
   /// By default, the theme transition uses a linear curve. The [data] and
   /// [child] arguments must not be null.
   const AnimatedFluentTheme({
-    required this.data, required this.child, super.key,
+    required this.data,
+    required this.child,
+    super.key,
     super.curve,
     super.duration = kThemeAnimationDuration,
     super.onEnd,
@@ -204,11 +206,16 @@ extension BrightnessExtension on Brightness {
   /// ```
   bool get isDark => this == Brightness.dark;
 
-  /// Gets the opposite brightness from this
+  /// Gets the opposite brightness from this.
+  ///
+  /// Returns [Brightness.dark] if this is light, and [Brightness.light] if
+  /// this is dark.
   Brightness get opposite => isLight ? Brightness.dark : Brightness.light;
 }
 
 /// The default animation curve used throughout the Fluent Design System.
+///
+/// This curve provides a smooth ease-in-out motion for animations.
 const standardCurve = Curves.easeInOut;
 
 /// Defines the configuration for a Fluent Design theme.
@@ -740,6 +747,8 @@ class FluentThemeData with Diagnosticable {
     );
   }
 
+  /// Creates a copy of this [FluentThemeData] with the given fields replaced
+  /// with new values.
   FluentThemeData copyWith({
     Brightness? brightness,
     Iterable<ThemeExtension<dynamic>>? extensions,

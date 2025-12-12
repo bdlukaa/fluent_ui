@@ -428,6 +428,7 @@ class NavigationPaneSize with Diagnosticable {
   /// If null, 40.0 is used.
   final double? headerHeight;
 
+  /// Creates a navigation pane size.
   const NavigationPaneSize({
     this.topHeight,
     this.compactWidth,
@@ -527,7 +528,9 @@ class NavigationPaneSize with Diagnosticable {
   }
 }
 
+/// Data passed to custom navigation pane widgets.
 class NavigationPaneWidgetData {
+  /// Creates navigation pane widget data.
   const NavigationPaneWidgetData({
     required this.content,
     required this.appBar,
@@ -537,11 +540,22 @@ class NavigationPaneWidgetData {
     required this.pane,
   });
 
+  /// The main content of the navigation view.
   final Widget content;
+
+  /// The app bar widget.
   final Widget appBar;
+
+  /// The scroll controller for the pane.
   final ScrollController scrollController;
+
+  /// The key for the pane.
   final Key paneKey;
+
+  /// The key for the list of items.
   final GlobalKey listKey;
+
+  /// The navigation pane configuration.
   final NavigationPane pane;
 }
 
@@ -557,6 +571,7 @@ class NavigationPaneWidgetData {
 /// }
 /// ```
 abstract class NavigationPaneWidget {
+  /// Builds the custom navigation pane.
   Widget build(BuildContext context, NavigationPaneWidgetData data);
 }
 

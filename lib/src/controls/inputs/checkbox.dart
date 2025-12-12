@@ -81,7 +81,9 @@ import 'package:flutter/rendering.dart';
 class Checkbox extends StatelessWidget {
   /// Creates a checkbox.
   const Checkbox({
-    required this.checked, required this.onChanged, super.key,
+    required this.checked,
+    required this.onChanged,
+    super.key,
     this.style,
     this.content,
     this.semanticLabel,
@@ -245,7 +247,9 @@ class CheckboxTheme extends InheritedTheme {
 
   /// Creates a theme that merges the nearest [CheckboxTheme] with [data].
   static Widget merge({
-    required CheckboxThemeData data, required Widget child, Key? key,
+    required CheckboxThemeData data,
+    required Widget child,
+    Key? key,
   }) {
     return Builder(
       builder: (context) {
@@ -335,6 +339,7 @@ class CheckboxThemeData with Diagnosticable {
     this.foregroundColor,
   });
 
+  /// Creates the standard [CheckboxThemeData] based on the given [theme].
   factory CheckboxThemeData.standard(FluentThemeData theme) {
     final BorderRadiusGeometry radius = BorderRadius.circular(6);
     return CheckboxThemeData(
