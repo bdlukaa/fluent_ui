@@ -69,7 +69,6 @@ export 'src/controls/inputs/toggle_switch.dart';
 export 'src/controls/layout/dynamic_overflow.dart';
 export 'src/controls/layout/horizontal_scroll_view.dart';
 export 'src/controls/layout/page.dart';
-export 'src/controls/navigation/bottom_navigation.dart';
 export 'src/controls/navigation/breadcrumb_bar.dart';
 export 'src/controls/navigation/navigation_view/view.dart';
 export 'src/controls/navigation/tab_view/tab_view.dart';

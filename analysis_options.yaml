@@ -22,7 +22,7 @@ analyzer:
 
 linter:
   rules:
-    public_member_api_docs: true
+    public_member_api_docs: false
     unintended_html_in_doc_comment: false
 
     # === Error prevention ===
@@ -74,7 +74,6 @@ linter:
     noop_primitive_operations: true
     omit_local_variable_types: true
     one_member_abstracts: false
-    only_throw_errors: true
     prefer_asserts_in_initializer_lists: true
     prefer_asserts_with_message: false
     prefer_const_constructors: true

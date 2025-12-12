@@ -371,9 +371,6 @@ class FluentThemeData with Diagnosticable {
   /// Theme data for [NavigationView] and [NavigationPane] widgets.
   final NavigationPaneThemeData navigationPaneTheme;
 
-  /// Theme data for [BottomNavigation] widgets.
-  final BottomNavigationThemeData bottomNavigationTheme;
-
   /// Theme data for [Checkbox] widgets.
   final CheckboxThemeData checkboxTheme;
 
@@ -443,7 +440,6 @@ class FluentThemeData with Diagnosticable {
     Duration? slowAnimationDuration,
     Curve? animationCurve,
     bool? cursorOpacityAnimates,
-    BottomNavigationThemeData? bottomNavigationTheme,
     ButtonThemeData? buttonTheme,
     CheckboxThemeData? checkboxTheme,
     ToggleSwitchThemeData? toggleSwitchTheme,
@@ -516,7 +512,6 @@ class FluentThemeData with Diagnosticable {
     sliderTheme ??= const SliderThemeData();
     infoBarTheme ??= const InfoBarThemeData();
     scrollbarTheme ??= const ScrollbarThemeData();
-    bottomNavigationTheme ??= const BottomNavigationThemeData();
 
     return FluentThemeData.raw(
       brightness: brightness,
@@ -536,7 +531,6 @@ class FluentThemeData with Diagnosticable {
       acrylicBackgroundColor: acrylicBackgroundColor,
       micaBackgroundColor: micaBackgroundColor,
       shadowColor: shadowColor,
-      bottomNavigationTheme: bottomNavigationTheme,
       buttonTheme: buttonTheme,
       checkboxTheme: checkboxTheme,
       dialogTheme: dialogTheme,
@@ -582,7 +576,6 @@ class FluentThemeData with Diagnosticable {
     required this.buttonTheme,
     required this.checkboxTheme,
     required this.toggleSwitchTheme,
-    required this.bottomNavigationTheme,
     required this.iconTheme,
     required this.dialogTheme,
     required this.tooltipTheme,
@@ -721,11 +714,6 @@ class FluentThemeData with Diagnosticable {
         b.scrollbarTheme,
         t,
       ),
-      bottomNavigationTheme: BottomNavigationThemeData.lerp(
-        a.bottomNavigationTheme,
-        b.bottomNavigationTheme,
-        t,
-      ),
       menuColor: Color.lerp(a.menuColor, b.menuColor, t)!,
       selectionColor: Color.lerp(a.selectionColor, b.selectionColor, t)!,
     );
@@ -777,7 +765,6 @@ class FluentThemeData with Diagnosticable {
     Curve? animationCurve,
     bool? cursorOpacityAnimates,
     ButtonThemeData? buttonTheme,
-    BottomNavigationThemeData? bottomNavigationTheme,
     CheckboxThemeData? checkboxTheme,
     ToggleSwitchThemeData? toggleSwitchTheme,
     IconThemeData? iconTheme,
@@ -826,9 +813,6 @@ class FluentThemeData with Diagnosticable {
       cursorOpacityAnimates:
           cursorOpacityAnimates ?? this.cursorOpacityAnimates,
       buttonTheme: this.buttonTheme.merge(buttonTheme),
-      bottomNavigationTheme: this.bottomNavigationTheme.merge(
-        bottomNavigationTheme,
-      ),
       checkboxTheme: this.checkboxTheme.merge(checkboxTheme),
       dialogTheme: this.dialogTheme.merge(dialogTheme),
       dividerTheme: this.dividerTheme.merge(dividerTheme),
