@@ -85,8 +85,7 @@ enum DatePickerField {
 class DatePicker extends StatefulWidget {
   /// Creates a date picker.
   DatePicker({
-    super.key,
-    required this.selected,
+    required this.selected, super.key,
     this.onChanged,
     this.onCancel,
     this.header,
@@ -313,7 +312,7 @@ class DatePickerState extends State<DatePicker> {
     if (mounted) setState(() => date = newDate);
   }
 
-  void open() async {
+  Future<void> open() async {
     await _pickerKey.currentState?.open();
   }
 
@@ -342,7 +341,7 @@ class DatePickerState extends State<DatePicker> {
       'There can be only one year field',
     );
 
-    Widget picker = Picker(
+    final Widget picker = Picker(
       key: _pickerKey,
       pickerContent: (context) {
         return _DatePickerContentPopUp(

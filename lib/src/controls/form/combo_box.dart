@@ -8,18 +8,18 @@ import 'package:flutter/services.dart';
 part 'editable_combo_box.dart';
 
 const Duration _kComboBoxMenuDuration = Duration(milliseconds: 300);
-const double _kMenuItemBottomPadding = 6.0;
+const double _kMenuItemBottomPadding = 6;
 const double kComboBoxItemHeight = kPickerHeight + _kMenuItemBottomPadding;
-const EdgeInsets _kMenuItemPadding = EdgeInsets.symmetric(horizontal: 12.0);
+const EdgeInsets _kMenuItemPadding = EdgeInsets.symmetric(horizontal: 12);
 const EdgeInsetsGeometry _kAlignedButtonPadding = EdgeInsetsDirectional.only(
-  start: 11.0,
-  end: 15.0,
+  start: 11,
+  end: 15,
 );
 const EdgeInsets _kAlignedMenuMargin = EdgeInsets.zero;
 const EdgeInsetsDirectional _kListPadding = EdgeInsetsDirectional.only(
   top: _kMenuItemBottomPadding,
 );
-const kComboBoxRadius = Radius.circular(4.0);
+const kComboBoxRadius = Radius.circular(4);
 
 /// A builder to customize combo box buttons.
 ///
@@ -28,9 +28,9 @@ typedef ComboBoxBuilder = List<Widget> Function(BuildContext context);
 
 class _ComboBoxMenuPainter extends CustomPainter {
   _ComboBoxMenuPainter({
-    this.selectedIndex,
     required this.resize,
     required this.getSelectedItemOffset,
+    this.selectedIndex,
     Color borderColor = Colors.black,
     Color? backgroundColor,
     int elevation = 0,
@@ -56,7 +56,7 @@ class _ComboBoxMenuPainter extends CustomPainter {
     final selectedItemOffset = getSelectedItemOffset();
     final top = Tween<double>(
       begin: selectedItemOffset.clamp(0.0, size.height - kComboBoxItemHeight),
-      end: 0.0,
+      end: 0,
     );
 
     final bottom = Tween<double>(
@@ -68,7 +68,7 @@ class _ComboBoxMenuPainter extends CustomPainter {
     );
 
     final rect = Rect.fromLTRB(
-      0.0,
+      0,
       top.evaluate(resize),
       size.width,
       bottom.evaluate(resize),
@@ -100,12 +100,12 @@ class _ComboBoxScrollBehavior extends FluentScrollBehavior {
 // The widget that is the button wrapping the menu items.
 class _ComboBoxItemButton<T> extends StatefulWidget {
   const _ComboBoxItemButton({
-    super.key,
-    this.padding,
     required this.route,
     required this.buttonRect,
     required this.constraints,
     required this.itemIndex,
+    super.key,
+    this.padding,
   });
 
   final _ComboBoxRoute<T> route;
@@ -124,10 +124,8 @@ class _ComboBoxItemButtonState<T> extends State<_ComboBoxItemButton<T>> {
     switch (FocusManager.instance.highlightMode) {
       case FocusHighlightMode.touch:
         inTraditionalMode = false;
-        break;
       case FocusHighlightMode.traditional:
         inTraditionalMode = true;
-        break;
     }
 
     final scrollable = widget.route.scrollController!.hasClients;
@@ -149,9 +147,7 @@ class _ComboBoxItemButtonState<T> extends State<_ComboBoxItemButton<T>> {
   ComboBoxItem<T> get comboboxMenuItem => widget.route.items[widget.itemIndex];
 
   void _handleOnTap() {
-    if (comboboxMenuItem.onTap != null) {
-      comboboxMenuItem.onTap!();
-    }
+    comboboxMenuItem.onTap?.call();
 
     Navigator.pop(context, _ComboBoxRouteResult<T>(comboboxMenuItem.value));
   }
@@ -170,8 +166,8 @@ class _ComboBoxItemButtonState<T> extends State<_ComboBoxItemButton<T>> {
         final theme = FluentTheme.of(context);
         return Padding(
           padding: const EdgeInsetsDirectional.only(
-            end: 6.0,
-            start: 6.0,
+            end: 6,
+            start: 6,
             // bottom: 4.0,
           ),
           child: Stack(
@@ -183,7 +179,7 @@ class _ComboBoxItemButtonState<T> extends State<_ComboBoxItemButton<T>> {
                     states.isFocused ? {WidgetState.hovered} : states,
                     transparentWhenNone: true,
                   ),
-                  borderRadius: BorderRadius.circular(4.0),
+                  borderRadius: BorderRadius.circular(4),
                 ),
                 padding: widget.padding,
                 child: widget.route.items[widget.itemIndex],
@@ -195,12 +191,12 @@ class _ComboBoxItemButtonState<T> extends State<_ComboBoxItemButton<T>> {
                   top: states.isPressed ? 10.0 : 8.0,
                   bottom: states.isPressed ? 10.0 : 8.0,
                   child: Container(
-                    width: 3.0,
+                    width: 3,
                     decoration: BoxDecoration(
                       color: theme.accentColor.defaultBrushFor(
                         theme.brightness,
                       ),
-                      borderRadius: BorderRadius.circular(50.0),
+                      borderRadius: BorderRadius.circular(50),
                     ),
                   ),
                 ),
@@ -252,11 +248,11 @@ class _ComboBoxItemButtonState<T> extends State<_ComboBoxItemButton<T>> {
 
 class _ComboBoxMenu<T> extends StatefulWidget {
   const _ComboBoxMenu({
-    super.key,
-    this.padding,
     required this.route,
     required this.buttonRect,
     required this.constraints,
+    super.key,
+    this.padding,
     this.popupColor,
   });
 
@@ -283,13 +279,13 @@ class _ComboBoxMenuState<T> extends State<_ComboBoxMenu<T>> {
     // CurvedAnimation._curveDirection.
     _fadeOpacity = CurvedAnimation(
       parent: widget.route.animation!,
-      curve: const Interval(0.0, 0.25),
-      reverseCurve: const Interval(0.75, 1.0),
+      curve: const Interval(0, 0.25),
+      reverseCurve: const Interval(0.75, 1),
     );
     _resize = CurvedAnimation(
       parent: widget.route.animation!,
       curve: const Interval(0.25, 0.5),
-      reverseCurve: const Threshold(0.0),
+      reverseCurve: const Threshold(0),
     );
   }
 
@@ -339,7 +335,7 @@ class _ComboBoxMenuState<T> extends State<_ComboBoxMenu<T>> {
         );
       },
       child: Acrylic(
-        tintAlpha: 1.0,
+        tintAlpha: 1,
         shape: const RoundedRectangleBorder(
           borderRadius: BorderRadius.all(kComboBoxRadius),
         ),
@@ -362,7 +358,7 @@ class _ComboBoxMenuState<T> extends State<_ComboBoxMenu<T>> {
                     padding: _kListPadding,
                     shrinkWrap: true,
                     itemBuilder: (context, index) {
-                      Widget container = _ComboBoxItemContainer(
+                      final Widget container = _ComboBoxItemContainer(
                         child: _ComboBoxItemButton<T>(
                           route: widget.route,
                           padding: widget.padding,
@@ -398,7 +394,7 @@ class _ComboBoxResizeClipper extends CustomClipper<RRect> {
     final selectedItemOffset = getSelectedItemOffset();
     final top = Tween<double>(
       begin: selectedItemOffset.clamp(0.0, size.height - kComboBoxItemHeight),
-      end: 0.0,
+      end: 0,
     );
 
     final bottom = Tween<double>(
@@ -442,7 +438,7 @@ class _ComboBoxMenuRouteLayout<T> extends SingleChildLayoutDelegate {
     // with which to dismiss the menu.
     //   -- https://material.io/design/components/menus.html#usage
     final double maxHeight = math.max(
-      0.0,
+      0,
       constraints.maxHeight - 2 * kComboBoxItemHeight,
     );
     // The width of a menu should be at most the view width. This ensures that
@@ -479,10 +475,8 @@ class _ComboBoxMenuRouteLayout<T> extends SingleChildLayoutDelegate {
     switch (textDirection!) {
       case TextDirection.rtl:
         left = buttonRect.right.clamp(0.0, size.width) - childSize.width;
-        break;
       case TextDirection.ltr:
         left = buttonRect.left.clamp(0.0, size.width - childSize.width);
-        break;
     }
 
     return Offset(left, menuLimits.top);
@@ -527,10 +521,10 @@ class _ComboBoxRoute<T> extends PopupRoute<_ComboBoxRouteResult<T>> {
     required this.padding,
     required this.buttonRect,
     required this.selectedIndex,
-    this.elevation = 16,
     required this.capturedThemes,
     required this.style,
     required this.acrylicEnabled,
+    this.elevation = 16,
     this.barrierLabel,
     this.popupColor,
   }) : itemHeights = List<double>.filled(items.length, kComboBoxItemHeight);
@@ -561,7 +555,11 @@ class _ComboBoxRoute<T> extends PopupRoute<_ComboBoxRouteResult<T>> {
   final String? barrierLabel;
 
   @override
-  Widget buildPage(context, animation, secondaryAnimation) {
+  Widget buildPage(
+    BuildContext context,
+    Animation<double> animation,
+    Animation<double> secondaryAnimation,
+  ) {
     return LayoutBuilder(
       builder: (context, constraints) {
         final page = _ComboBoxRoutePage<T>(
@@ -593,7 +591,7 @@ class _ComboBoxRoute<T> extends PopupRoute<_ComboBoxRouteResult<T>> {
       assert(items.length == itemHeights.length);
       offset += itemHeights
           .sublist(0, index)
-          .reduce((double total, double height) => total + height);
+          .reduce((total, height) => total + height);
     }
     return offset;
   }
@@ -607,7 +605,7 @@ class _ComboBoxRoute<T> extends PopupRoute<_ComboBoxRouteResult<T>> {
     double availableHeight,
     int index,
   ) {
-    var computedMaxHeight = availableHeight - 2.0 * kComboBoxItemHeight;
+    final computedMaxHeight = availableHeight - 2.0 * kComboBoxItemHeight;
     // if (menuMaxHeight != null) {
     //   computedMaxHeight = math.min(computedMaxHeight, menuMaxHeight!);
     // }
@@ -632,7 +630,7 @@ class _ComboBoxRoute<T> extends PopupRoute<_ComboBoxRouteResult<T>> {
     var preferredMenuHeight = _kListPadding.vertical;
     if (items.isNotEmpty) {
       preferredMenuHeight += itemHeights.reduce(
-        (double total, double height) => total + height,
+        (total, height) => total + height,
       );
     }
     // If there are too many elements in the menu, we need to shrink it down
@@ -674,7 +672,7 @@ class _ComboBoxRoute<T> extends PopupRoute<_ComboBoxRouteResult<T>> {
     if (preferredMenuHeight > computedMaxHeight) {
       // The offset should be zero if the selected item is in view at the beginning
       // of the menu. Otherwise, the scroll offset should center the item if possible.
-      scrollOffset = math.max(0.0, selectedItemOffset - (buttonTop - menuTop));
+      scrollOffset = math.max(0, selectedItemOffset - (buttonTop - menuTop));
       // If the selected item's scroll offset is greater than the maximum scroll offset,
       // set it instead to the maximum allowed scroll offset.
       scrollOffset = math.min(scrollOffset, preferredMenuHeight - menuHeight);
@@ -687,16 +685,16 @@ class _ComboBoxRoute<T> extends PopupRoute<_ComboBoxRouteResult<T>> {
 
 class _ComboBoxRoutePage<T> extends StatelessWidget {
   const _ComboBoxRoutePage({
-    super.key,
     required this.route,
     required this.constraints,
     required this.padding,
     required this.buttonRect,
     required this.selectedIndex,
-    this.elevation = 8,
     required this.capturedThemes,
-    this.style,
     required this.popupColor,
+    super.key,
+    this.elevation = 8,
+    this.style,
   });
 
   final _ComboBoxRoute<T> route;
@@ -765,7 +763,7 @@ class _ComboBoxItemContainer extends StatelessWidget {
   /// Creates an item for a combo box menu.
   ///
   /// The [child] argument is required.
-  const _ComboBoxItemContainer({super.key, required this.child});
+  const _ComboBoxItemContainer({required this.child, super.key});
 
   /// The widget below this widget in the tree.
   ///
@@ -825,11 +823,11 @@ class ComboBoxItem<T> extends _ComboBoxItemContainer {
   ///
   /// The [child] argument is required.
   const ComboBoxItem({
+    required super.child,
     super.key,
     this.onTap,
     this.value,
     this.enabled = true,
-    required super.child,
   });
 
   /// Called when the combo box menu item is tapped.
@@ -937,8 +935,8 @@ class ComboBox<T> extends StatefulWidget {
   /// The [popupColor] argument specifies the background color of the
   /// combo box when it is open. If it is null, the default [Acrylic] color is used.
   const ComboBox({
-    super.key,
     required this.items,
+    super.key,
     this.selectedItemBuilder,
     this.value,
     this.placeholder,
@@ -1174,10 +1172,10 @@ class ComboBoxState<T> extends State<ComboBox<T>> {
     }
     _actionMap = <Type, Action<Intent>>{
       ActivateIntent: CallbackAction<ActivateIntent>(
-        onInvoke: (ActivateIntent intent) => openPopup(),
+        onInvoke: (intent) => openPopup(),
       ),
       ButtonActivateIntent: CallbackAction<ButtonActivateIntent>(
-        onInvoke: (ButtonActivateIntent intent) => openPopup(),
+        onInvoke: (intent) => openPopup(),
       ),
     };
     focusNode!.addListener(_handleFocusChanged);
@@ -1225,9 +1223,7 @@ class ComboBoxState<T> extends State<ComboBox<T>> {
     }
 
     // only update the selected value if it exists
-    if (widget.items!.any(
-      (ComboBoxItem<T> item) => item.value == widget.value,
-    )) {
+    if (widget.items!.any((item) => item.value == widget.value)) {
       for (var itemIndex = 0; itemIndex < widget.items!.length; itemIndex++) {
         if (widget.items![itemIndex].value == widget.value) {
           _selectedIndex = itemIndex;
@@ -1272,21 +1268,17 @@ class ComboBoxState<T> extends State<ComboBox<T>> {
       popupColor: widget.popupColor,
     );
 
-    navigator.push(_comboboxRoute!).then<void>((
-      _ComboBoxRouteResult<T>? newValue,
-    ) {
+    navigator.push(_comboboxRoute!).then<void>((newValue) {
       closePopup();
       if (!mounted || newValue == null) return;
       onChanged(newValue.result);
     });
 
-    if (widget.onTap != null) {
-      widget.onTap!();
-    }
+    widget.onTap?.call();
   }
 
   void onChanged(T? newValue) {
-    if (widget.onChanged != null) widget.onChanged!(newValue);
+    widget.onChanged?.call(newValue);
   }
 
   Color iconColor(BuildContext context) {
@@ -1362,14 +1354,14 @@ class ComboBoxState<T> extends State<ComboBox<T>> {
           sizing: StackFit.passthrough,
           index: _selectedIndex ?? placeholderIndex,
           alignment: AlignmentDirectional.centerStart,
-          children: items.map((Widget item) {
+          children: items.map((item) {
             return Column(mainAxisSize: MainAxisSize.min, children: [item]);
           }).toList(),
         ),
       );
     }
 
-    Widget result = Builder(
+    final Widget result = Builder(
       builder: (context) {
         return DefaultTextStyle.merge(
           style: isEnabled
@@ -1388,7 +1380,7 @@ class ComboBoxState<T> extends State<ComboBox<T>> {
                 else
                   innerItemsWidget,
                 Padding(
-                  padding: const EdgeInsetsDirectional.only(start: 8.0),
+                  padding: const EdgeInsetsDirectional.only(start: 8),
                   child: IconTheme.merge(
                     data: IconThemeData(
                       color: iconColor(context),

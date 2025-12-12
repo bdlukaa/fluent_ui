@@ -54,11 +54,11 @@ class InfoBadge extends StatelessWidget {
 
     return Container(
       constraints: source == null
-          ? const BoxConstraints(maxWidth: 10.0, maxHeight: 10.0)
+          ? const BoxConstraints(maxWidth: 10, maxHeight: 10)
           : const BoxConstraints(
-              minWidth: 16.0,
-              minHeight: 16.0,
-              maxHeight: 16.0,
+              minWidth: 16,
+              minHeight: 16,
+              maxHeight: 16,
             ),
       decoration: BoxDecoration(
         color: color,
@@ -68,9 +68,9 @@ class InfoBadge extends StatelessWidget {
           ? null
           : DefaultTextStyle.merge(
               textAlign: TextAlign.center,
-              style: TextStyle(color: foregroundColor, fontSize: 11.0),
+              style: TextStyle(color: foregroundColor, fontSize: 11),
               child: IconTheme.merge(
-                data: IconThemeData(color: foregroundColor, size: 8.0),
+                data: IconThemeData(color: foregroundColor, size: 8),
                 child: source!,
               ),
             ),

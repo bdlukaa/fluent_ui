@@ -24,17 +24,7 @@ class Flyout extends StatefulWidget {
 
   /// Create a flyout.
   const Flyout({
-    super.key,
-    required this.builder,
-    required this.root,
-    required this.rootFlyout,
-    required this.menuKey,
-    required this.additionalOffset,
-    required this.margin,
-    required this.transitionDuration,
-    required this.reverseTransitionDuration,
-    required this.transitionBuilder,
-    required this.placementMode,
+    required this.builder, required this.root, required this.rootFlyout, required this.menuKey, required this.additionalOffset, required this.margin, required this.transitionDuration, required this.reverseTransitionDuration, required this.transitionBuilder, required this.placementMode, super.key,
   });
 
   /// Gets the current flyout info
@@ -111,7 +101,7 @@ class MenuInfoProvider extends StatefulWidget {
   final MenuBuilder builder;
 
   @protected
-  const MenuInfoProvider({super.key, required this.builder});
+  const MenuInfoProvider({required this.builder, super.key});
 
   /// Gets the current state of the sub menus of the root flyout
   static MenuInfoProviderState of(BuildContext context) {

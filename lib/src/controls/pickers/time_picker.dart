@@ -76,8 +76,8 @@ String _formatMinute(int minute, String locale) {
 class TimePicker extends StatefulWidget {
   /// Creates a time picker.
   const TimePicker({
-    super.key,
     required this.selected,
+    super.key,
     this.onChanged,
     this.onCancel,
     this.hourFormat = HourFormat.h,
@@ -270,7 +270,7 @@ class TimePickerState extends State<TimePicker>
     final localizations = FluentLocalizations.of(context);
     final locale = widget.locale ?? Localizations.maybeLocaleOf(context);
 
-    Widget picker = Picker(
+    final Widget picker = Picker(
       key: _pickerKey,
       pickerHeight: widget.popupHeight,
       pickerContent: (context) {
@@ -333,7 +333,7 @@ class TimePickerState extends State<TimePicker>
                             return localizations.hour;
                           }
                           late int finalHour;
-                          var hour = time.hour;
+                          final hour = time.hour;
                           if (!widget.use24Format && hour > 12) {
                             finalHour = hour - 12;
                           } else {
@@ -447,7 +447,7 @@ class __TimePickerContentPopupState extends State<_TimePickerContentPopup> {
 
   void handleDateChanged(DateTime time) {
     localDate = time;
-    Future.delayed(const Duration(milliseconds: 1), () {
+    Future<void>.delayed(const Duration(milliseconds: 1), () {
       if (mounted) setState(() {});
     });
   }

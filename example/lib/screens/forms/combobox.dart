@@ -14,18 +14,18 @@ class ComboBoxPage extends StatefulWidget {
 class _ComboBoxPageState extends State<ComboBoxPage> with PageMixin {
   String? selectedColor = 'Green';
   String? selectedCat;
-  double fontSize = 20.0;
+  double fontSize = 20;
   bool disabled = false;
   final comboboxKey = GlobalKey<ComboBoxState>(debugLabel: 'Combobox Key');
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(final BuildContext context) {
     return ScaffoldPage.scrollable(
       header: PageHeader(
         title: const Text('ComboBox'),
         commandBar: ToggleSwitch(
           checked: disabled,
-          onChanged: (v) {
+          onChanged: (final v) {
             setState(() => disabled = v);
           },
           content: const Text('Disabled'),
@@ -49,7 +49,8 @@ class _ComboBoxPageState extends State<ComboBoxPage> with PageMixin {
           ),
         ),
         CardHighlight(
-          codeSnippet: '''// Green by default
+          codeSnippet: '''
+// Green by default
 Color selectedColor = 'Green';
 
 ComboBox<String>(
@@ -66,20 +67,19 @@ ComboBox<String>(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               ComboBox<String>(
-                isExpanded: false,
                 popupColor: colors[selectedColor],
                 value: selectedColor,
-                items: colors.entries.map((e) {
+                items: colors.entries.map((final e) {
                   return ComboBoxItem(value: e.key, child: Text(e.key));
                 }).toList(),
                 onChanged: disabled
                     ? null
-                    : (color) {
+                    : (final color) {
                         setState(() => selectedColor = color);
                       },
               ),
               Container(
-                margin: const EdgeInsetsDirectional.only(top: 8.0),
+                margin: const EdgeInsetsDirectional.only(top: 8),
                 height: 30,
                 width: 100,
                 color: colors[selectedColor],
@@ -89,7 +89,8 @@ ComboBox<String>(
         ),
         subtitle(content: const Text('A ComboBox with a long list of items')),
         CardHighlight(
-          codeSnippet: '''List<String> cats= [...];
+          codeSnippet: '''
+List<String> cats= [...];
 
 ComboBox<String>(
   value: selectedCat,
@@ -107,24 +108,23 @@ ComboBox<String>(
   placeholder: const Text('Select a cat breed'),
 ),''',
           child: Wrap(
-            spacing: 10.0,
-            runSpacing: 10.0,
+            spacing: 10,
+            runSpacing: 10,
             children: [
               ComboBox<String>(
-                isExpanded: false,
                 value: selectedCat,
-                items: cats.map<ComboBoxItem<String>>((e) {
+                items: cats.map<ComboBoxItem<String>>((final e) {
                   return ComboBoxItem<String>(value: e, child: Text(e));
                 }).toList(),
                 onChanged: disabled
                     ? null
-                    : (color) {
+                    : (final color) {
                         setState(() => selectedCat = color);
                       },
                 placeholder: const Text('Select a cat breed'),
               ),
               Container(
-                margin: const EdgeInsetsDirectional.only(top: 8.0),
+                margin: const EdgeInsetsDirectional.only(top: 8),
                 height: 30,
                 child: Text(selectedCat ?? ''),
               ),
@@ -137,12 +137,13 @@ ComboBox<String>(
             'By default, a combo box lets the user select from a pre-defined '
             'list of options. However, there are cases where the list contains '
             'only a subset of valid values, and the user should be able to enter '
-            'other values that aren\'t listed. To support this, you can make the'
+            "other values that aren't listed. To support this, you can make the"
             ' combo box editable.',
           ),
         ),
         CardHighlight(
-          codeSnippet: '''static const fontSizes = <double>[
+          codeSnippet: r'''
+static const fontSizes = <double>[
   8,
   9,
   ...,
@@ -154,7 +155,7 @@ EditableComboBox<int>(
   value: fontSize.toInt(),
   items: cats.map<ComboBoxItem<int>>((e) {
     return ComboBoxItem<int>(
-      child: Text('\$e'),
+      child: Text('$e'),
       value: e.toInt(),
     );
   }).toList(),
@@ -205,9 +206,8 @@ EditableComboBox<int>(
               SizedBox(
                 width: 150,
                 child: EditableComboBox<int>(
-                  isExpanded: false,
                   value: fontSize.toInt(),
-                  items: fontSizes.map<ComboBoxItem<int>>((fontSize) {
+                  items: fontSizes.map<ComboBoxItem<int>>((final fontSize) {
                     return ComboBoxItem<int>(
                       value: fontSize.toInt(),
                       child: Text('${fontSize.toInt()}'),
@@ -215,13 +215,13 @@ EditableComboBox<int>(
                   }).toList(),
                   onChanged: disabled
                       ? null
-                      : (size) {
+                      : (final size) {
                           setState(
                             () => fontSize = (size ?? fontSize).toDouble(),
                           );
                         },
                   placeholder: const Text('Font size'),
-                  onFieldSubmitted: (text) {
+                  onFieldSubmitted: (final text) {
                     try {
                       final newSize = double.parse(text);
 
@@ -231,11 +231,11 @@ EditableComboBox<int>(
                         );
                       }
 
-                      setState(() => fontSize = newSize.toDouble());
+                      setState(() => fontSize = newSize);
                     } catch (e) {
                       showDialog(
                         context: context,
-                        builder: (context) {
+                        builder: (final context) {
                           return ContentDialog(
                             content: const Text(
                               'The font size must be a number between 8 and 100.',
@@ -255,8 +255,8 @@ EditableComboBox<int>(
                 ),
               ),
               Container(
-                margin: const EdgeInsetsDirectional.only(top: 8.0),
-                constraints: const BoxConstraints(minHeight: 50.0),
+                margin: const EdgeInsetsDirectional.only(top: 8),
+                constraints: const BoxConstraints(minHeight: 50),
                 child: Text(
                   'You can set the font size for this text',
                   style: TextStyle(fontSize: fontSize),
@@ -267,7 +267,8 @@ EditableComboBox<int>(
         ),
         subtitle(content: const Text('A ComboBox Form Field')),
         CardHighlight(
-          codeSnippet: '''Map<String, Color> colors = { ... };
+          codeSnippet: r'''
+Map<String, Color> colors = { ... };
 Color selectedColor = 'Green';
 
 Form(
@@ -289,7 +290,7 @@ Form(
       final acceptedValues = colors.keys.skip(4);
 
       if (!acceptedValues.contains(text)) {
-        return '\$text is not a valid value today';
+        return '$text is not a valid value today';
       }
 
       return null;
@@ -304,13 +305,13 @@ Form(
                 child: ComboboxFormField<String>(
                   popupColor: colors[selectedColor],
                   value: selectedColor,
-                  items: colors.entries.map((e) {
+                  items: colors.entries.map((final e) {
                     return ComboBoxItem(value: e.key, child: Text(e.key));
                   }).toList(),
                   onChanged: disabled
                       ? null
-                      : (color) => setState(() => selectedColor = color),
-                  validator: (text) {
+                      : (final color) => setState(() => selectedColor = color),
+                  validator: (final text) {
                     if (text == null || text.isEmpty) {
                       return 'Please provide a value';
                     }
@@ -326,7 +327,7 @@ Form(
                 ),
               ),
               Container(
-                margin: const EdgeInsetsDirectional.only(top: 8.0),
+                margin: const EdgeInsetsDirectional.only(top: 8),
                 height: 30,
                 width: 100,
                 color: colors[selectedColor],
@@ -337,7 +338,8 @@ Form(
         subtitle(content: const Text('Open popup programatically')),
         CardHighlight(
           codeSnippet:
-              '''// A GlobalKey<ComboboxState> is used to access the current
+              '''
+// A GlobalKey<ComboboxState> is used to access the current
 // state of the combo box. With it, it's possible to call .openPopup() and .closePopup()
 // which will open and close the popup, respectively
 //
@@ -359,17 +361,16 @@ Button(
             children: [
               ComboBox<String>(
                 key: comboboxKey,
-                isExpanded: false,
                 popupColor: colors[selectedColor],
                 value: selectedColor,
-                items: colors.entries.map((e) {
+                items: colors.entries.map((final e) {
                   return ComboBoxItem(value: e.key, child: Text(e.key));
                 }).toList(),
                 onChanged: disabled
                     ? null
-                    : (color) => setState(() => selectedColor = color),
+                    : (final color) => setState(() => selectedColor = color),
               ),
-              const SizedBox(width: 8.0),
+              const SizedBox(width: 8),
               Button(
                 onPressed: disabled
                     ? null

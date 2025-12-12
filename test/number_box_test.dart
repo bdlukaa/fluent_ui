@@ -8,7 +8,7 @@ import 'app_test.dart';
 
 void main() {
   testWidgets('NumberBox renders with initial value', (
-    WidgetTester tester,
+    tester,
   ) async {
     await tester.pumpWidget(
       wrapApp(child: NumberBox<int>(value: 42, onChanged: (value) {})),
@@ -18,7 +18,7 @@ void main() {
   });
 
   testWidgets('NumberBox updates value when text changes', (
-    WidgetTester tester,
+    tester,
   ) async {
     int? newValue;
     await tester.pumpWidget(
@@ -40,14 +40,13 @@ void main() {
   });
 
   testWidgets('NumberBox shows clear button when focused', (
-    WidgetTester tester,
+    tester,
   ) async {
     await tester.pumpWidget(
       wrapApp(
         child: NumberBox<int>(
           value: 5,
           onChanged: (value) {},
-          clearButton: true,
         ),
       ),
     );
@@ -59,7 +58,7 @@ void main() {
   });
 
   testWidgets('NumberBox clears value when clear button is pressed', (
-    WidgetTester tester,
+    tester,
   ) async {
     int? newValue;
     await tester.pumpWidget(
@@ -69,7 +68,6 @@ void main() {
           onChanged: (value) {
             newValue = value;
           },
-          clearButton: true,
         ),
       ),
     );
@@ -85,7 +83,7 @@ void main() {
 
   testWidgets(
     'NumberBox shows increment and decrement buttons in inline mode',
-    (WidgetTester tester) async {
+    (tester) async {
       await tester.pumpWidget(
         wrapApp(
           child: NumberBox<int>(
@@ -102,7 +100,7 @@ void main() {
   );
 
   testWidgets('NumberBox increments value when increment button is pressed', (
-    WidgetTester tester,
+    tester,
   ) async {
     int? newValue;
     await tester.pumpWidget(
@@ -124,7 +122,7 @@ void main() {
   });
 
   testWidgets('NumberBox decrements value when decrement button is pressed', (
-    WidgetTester tester,
+    tester,
   ) async {
     int? newValue;
     await tester.pumpWidget(
@@ -145,7 +143,7 @@ void main() {
     expect(newValue, equals(-1));
   });
 
-  testWidgets('NumberBox respects min value', (WidgetTester tester) async {
+  testWidgets('NumberBox respects min value', (tester) async {
     int? newValue;
     await tester.pumpWidget(
       wrapApp(
@@ -166,7 +164,7 @@ void main() {
     expect(newValue, equals(0));
   });
 
-  testWidgets('NumberBox respects max value', (WidgetTester tester) async {
+  testWidgets('NumberBox respects max value', (tester) async {
     int? newValue;
     await tester.pumpWidget(
       wrapApp(
@@ -188,7 +186,7 @@ void main() {
   });
 
   testWidgets('NumberBox evaluates expressions when allowExpressions is true', (
-    WidgetTester tester,
+    tester,
   ) async {
     int? newValue;
     await tester.pumpWidget(
@@ -211,7 +209,7 @@ void main() {
   });
 
   testWidgets('NumberBox responds to keyboard arrow keys', (
-    WidgetTester tester,
+    tester,
   ) async {
     int? newValue;
     await tester.pumpWidget(
@@ -239,7 +237,7 @@ void main() {
   });
 
   testWidgets('NumberBox responds to page up/down keys', (
-    WidgetTester tester,
+    tester,
   ) async {
     int? newValue;
     await tester.pumpWidget(
@@ -268,7 +266,7 @@ void main() {
   });
 
   testWidgets('NumberBox responds to mouse wheel scroll', (
-    WidgetTester tester,
+    tester,
   ) async {
     int? newValue;
     await tester.pumpWidget(
@@ -306,7 +304,7 @@ void main() {
   });
 
   testWidgets('NumberBox formats double values with specified precision', (
-    WidgetTester tester,
+    tester,
   ) async {
     await tester.pumpWidget(
       wrapApp(
@@ -324,7 +322,7 @@ void main() {
   });
 
   testWidgets('NumberBox shows placeholder when value is null', (
-    WidgetTester tester,
+    tester,
   ) async {
     await tester.pumpWidget(
       wrapApp(
@@ -340,7 +338,7 @@ void main() {
   });
 
   testWidgets('NumberBox shows leading icon when provided', (
-    WidgetTester tester,
+    tester,
   ) async {
     await tester.pumpWidget(
       wrapApp(
@@ -357,7 +355,7 @@ void main() {
 
   group('NumberBox with custom format and parse functions', () {
     testWidgets('NumberBox displays formatted value with custom format', (
-      WidgetTester tester,
+      tester,
     ) async {
       final currencyFormat = NumberFormat.currency(symbol: r'$');
 
@@ -385,7 +383,7 @@ void main() {
     });
 
     testWidgets('NumberBox increments correctly with custom parse function', (
-      WidgetTester tester,
+      tester,
     ) async {
       double? newValue;
       final currencyFormat = NumberFormat.currency(symbol: r'$');
@@ -393,7 +391,7 @@ void main() {
       await tester.pumpWidget(
         wrapApp(
           child: NumberBox<double>(
-            value: 100.0,
+            value: 100,
             format: (number) =>
                 number == null ? null : currencyFormat.format(number),
             parse: (text) {
@@ -418,7 +416,7 @@ void main() {
     });
 
     testWidgets('NumberBox decrements correctly with custom parse function', (
-      WidgetTester tester,
+      tester,
     ) async {
       double? newValue;
       final currencyFormat = NumberFormat.currency(symbol: r'$');
@@ -426,7 +424,7 @@ void main() {
       await tester.pumpWidget(
         wrapApp(
           child: NumberBox<double>(
-            value: 100.0,
+            value: 100,
             format: (number) =>
                 number == null ? null : currencyFormat.format(number),
             parse: (text) {
@@ -452,14 +450,14 @@ void main() {
 
     testWidgets(
       'NumberBox handles keyboard arrows with custom parse function',
-      (WidgetTester tester) async {
+      (tester) async {
         double? newValue;
         final currencyFormat = NumberFormat.currency(symbol: r'$');
 
         await tester.pumpWidget(
           wrapApp(
             child: NumberBox<double>(
-              value: 50.0,
+              value: 50,
               format: (number) =>
                   number == null ? null : currencyFormat.format(number),
               parse: (text) {
@@ -491,7 +489,7 @@ void main() {
     );
 
     testWidgets('NumberBox handles page up/down with custom parse function', (
-      WidgetTester tester,
+      tester,
     ) async {
       double? newValue;
       final currencyFormat = NumberFormat.currency(symbol: r'$');
@@ -499,7 +497,7 @@ void main() {
       await tester.pumpWidget(
         wrapApp(
           child: NumberBox<double>(
-            value: 100.0,
+            value: 100,
             largeChange: 50,
             format: (number) =>
                 number == null ? null : currencyFormat.format(number),
@@ -531,7 +529,7 @@ void main() {
     });
 
     testWidgets('NumberBox handles mouse scroll with custom parse function', (
-      WidgetTester tester,
+      tester,
     ) async {
       double? newValue;
       final currencyFormat = NumberFormat.currency(symbol: r'$');
@@ -539,7 +537,7 @@ void main() {
       await tester.pumpWidget(
         wrapApp(
           child: NumberBox<double>(
-            value: 200.0,
+            value: 200,
             format: (number) =>
                 number == null ? null : currencyFormat.format(number),
             parse: (text) {
@@ -579,7 +577,7 @@ void main() {
     });
 
     testWidgets('NumberBox respects min/max with custom parse function', (
-      WidgetTester tester,
+      tester,
     ) async {
       double? newValue;
       final currencyFormat = NumberFormat.currency(symbol: r'$');
@@ -587,7 +585,7 @@ void main() {
       await tester.pumpWidget(
         wrapApp(
           child: NumberBox<double>(
-            value: 50.0,
+            value: 50,
             min: 0,
             max: 100,
             format: (number) =>
@@ -624,7 +622,7 @@ void main() {
 
     testWidgets(
       'NumberBox with thousand separators formats and parses correctly',
-      (WidgetTester tester) async {
+      (tester) async {
         int? newValue;
         final numberFormat = NumberFormat('#,###');
 

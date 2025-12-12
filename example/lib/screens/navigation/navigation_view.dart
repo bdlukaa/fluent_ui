@@ -15,7 +15,7 @@ class NavigationViewPage extends StatefulWidget {
 
 class _NavigationViewPageState extends State<NavigationViewPage>
     with PageMixin {
-  static const double itemHeight = 500.0;
+  static const double itemHeight = 500;
 
   int topIndex = 0;
 
@@ -101,17 +101,17 @@ class _NavigationViewPageState extends State<NavigationViewPage>
     ),
     PaneItemWidgetAdapter(
       child: Builder(
-        builder: (context) {
+        builder: (final context) {
           if (NavigationView.of(context).displayMode ==
               PaneDisplayMode.compact) {
             return const FlutterLogo();
           }
           return ConstrainedBox(
-            constraints: const BoxConstraints(maxWidth: 200.0),
+            constraints: const BoxConstraints(maxWidth: 200),
             child: const Row(
               children: [
                 FlutterLogo(),
-                SizedBox(width: 6.0),
+                SizedBox(width: 6),
                 Text('This is a custom widget'),
               ],
             ),
@@ -122,7 +122,7 @@ class _NavigationViewPageState extends State<NavigationViewPage>
   ];
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(final BuildContext context) {
     return ScaffoldPage.scrollable(
       header: const PageHeader(title: Text('NavigationView')),
       children: [
@@ -131,7 +131,7 @@ class _NavigationViewPageState extends State<NavigationViewPage>
           'It adapts to a variety of screen sizes and supports both top and left '
           'navigation styles.',
         ),
-        const SizedBox(height: 10.0),
+        const SizedBox(height: 10),
         ...buildDisplayMode(
           PaneDisplayMode.top,
           'Top display mode',
@@ -159,29 +159,29 @@ class _NavigationViewPageState extends State<NavigationViewPage>
   }
 
   List<Widget> buildDisplayMode(
-    PaneDisplayMode displayMode,
-    String title,
-    String desc,
+    final PaneDisplayMode displayMode,
+    final String title,
+    final String desc,
   ) {
     if (displayMode != this.displayMode) return [];
     return [
       Wrap(
-        runSpacing: 10.0,
-        spacing: 10.0,
+        runSpacing: 10,
+        spacing: 10,
         children: [
           InfoLabel(
             label: 'Display mode',
             child: ComboBox<PaneDisplayMode>(
               value: displayMode,
               items: ([...PaneDisplayMode.values]..remove(PaneDisplayMode.auto))
-                  .map((mode) {
+                  .map((final mode) {
                     return ComboBoxItem(
                       value: mode,
                       child: Text(mode.name.uppercaseFirst()),
                     );
                   })
                   .toList(),
-              onChanged: (mode) =>
+              onChanged: (final mode) =>
                   setState(() => this.displayMode = mode ?? displayMode),
             ),
           ),
@@ -189,10 +189,10 @@ class _NavigationViewPageState extends State<NavigationViewPage>
             label: 'Page Transition',
             child: ComboBox<String>(
               items: pageTransitions
-                  .map((e) => ComboBoxItem(value: e, child: Text(e)))
+                  .map((final e) => ComboBoxItem(value: e, child: Text(e)))
                   .toList(),
               value: pageTransition,
-              onChanged: (transition) =>
+              onChanged: (final transition) =>
                   setState(() => pageTransition = transition ?? pageTransition),
             ),
           ),
@@ -200,10 +200,10 @@ class _NavigationViewPageState extends State<NavigationViewPage>
             label: 'Indicator',
             child: ComboBox<String>(
               items: indicators.keys
-                  .map((e) => ComboBoxItem(value: e, child: Text(e)))
+                  .map((final e) => ComboBoxItem(value: e, child: Text(e)))
                   .toList(),
               value: indicator,
-              onChanged: (i) => setState(() => indicator = i ?? indicator),
+              onChanged: (final i) => setState(() => indicator = i ?? indicator),
             ),
           ),
           InfoLabel(
@@ -212,7 +212,7 @@ class _NavigationViewPageState extends State<NavigationViewPage>
               onPressed: () {
                 Navigator.of(context, rootNavigator: true).push(
                   FluentPageRoute(
-                    builder: (context) {
+                    builder: (final context) {
                       return const NavigationViewShellRoute();
                     },
                   ),
@@ -372,12 +372,12 @@ NavigationView(
           height: itemHeight,
           child: NavigationView(
             appBar: const NavigationAppBar(title: Text('NavigationView')),
-            onDisplayModeChanged: (mode) {
+            onDisplayModeChanged: (final mode) {
               debugPrint('Changed to $mode');
             },
             pane: NavigationPane(
               selected: topIndex,
-              onItemPressed: (index) {
+              onItemPressed: (final index) {
                 // Do anything you want to do, such as:
                 // if (index == topIndex) {
                 //   if (displayMode == PaneDisplayMode.open) {
@@ -387,7 +387,7 @@ NavigationView(
                 //   }
                 // }
               },
-              onChanged: (index) => setState(() => topIndex = index),
+              onChanged: (final index) => setState(() => topIndex = index),
               displayMode: displayMode,
               indicator: indicators[indicator],
               header: const Text('Pane Header'),
@@ -418,7 +418,7 @@ NavigationView(
             ),
             transitionBuilder: pageTransition == 'Default'
                 ? null
-                : (child, animation) {
+                : (final child, final animation) {
                     switch (pageTransition) {
                       case 'Entrance':
                         return EntrancePageTransition(
@@ -452,7 +452,7 @@ class NavigationViewShellRoute extends StatelessWidget {
   const NavigationViewShellRoute({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(final BuildContext context) {
     return NavigationView(
       appBar: NavigationAppBar(
         title: () {
@@ -464,7 +464,7 @@ class NavigationViewShellRoute extends StatelessWidget {
         }(),
         leading: IconButton(
           icon: const WindowsIcon(WindowsIcons.back),
-          onPressed: () => context.pop(),
+          onPressed: context.pop,
         ),
       ),
       content: const ScaffoldPage(
@@ -482,7 +482,7 @@ class _NavigationBodyItem extends StatelessWidget {
   final Widget? content;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(final BuildContext context) {
     return ScaffoldPage.withPadding(
       header: PageHeader(title: Text(header ?? 'This is a header text')),
       content: content ?? const SizedBox.shrink(),

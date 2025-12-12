@@ -79,9 +79,7 @@ class IconButton extends BaseButton {
   ///
   /// The [icon] is typically an [Icon] widget.
   const IconButton({
-    super.key,
-    required Widget icon,
-    required super.onPressed,
+    required Widget icon, required super.onPressed, super.key,
     super.onLongPress,
     super.onTapDown,
     super.onTapUp,
@@ -111,7 +109,7 @@ class IconButton extends BaseButton {
     return ButtonStyle(
       iconSize: WidgetStatePropertyAll(isIconSmall ? 11.0 : null),
       padding: WidgetStatePropertyAll(
-        isSmall ? kDefaultButtonPadding : const EdgeInsetsDirectional.all(8.0),
+        isSmall ? kDefaultButtonPadding : const EdgeInsetsDirectional.all(8),
       ),
       backgroundColor: WidgetStateProperty.resolveWith((states) {
         if (states.isDisabled) {
@@ -129,7 +127,7 @@ class IconButton extends BaseButton {
         return null;
       }),
       shape: WidgetStatePropertyAll(
-        RoundedRectangleBorder(borderRadius: BorderRadius.circular(4.0)),
+        RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)),
       ),
     );
   }
@@ -148,7 +146,7 @@ class IconButton extends BaseButton {
 ///  * [IconButton], which turns small when wrapped in this.
 class SmallIconButton extends InheritedWidget {
   /// Creates a small icon button.
-  const SmallIconButton({super.key, required super.child});
+  const SmallIconButton({required super.child, super.key});
 
   static SmallIconButton? of(BuildContext context) {
     return context.dependOnInheritedWidgetOfExactType<SmallIconButton>();

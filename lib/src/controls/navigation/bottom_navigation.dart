@@ -1,7 +1,7 @@
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter/foundation.dart';
 
-const double _kBottomNavigationHeight = 48.0;
+const double _kBottomNavigationHeight = 48;
 
 /// The navigation item used by [BottomNavigation]
 class BottomNavigationItem {
@@ -49,9 +49,7 @@ class BottomNavigation extends StatelessWidget {
   ///
   /// [index] must be in the range of 0 to [items.length]
   const BottomNavigation({
-    super.key,
-    required this.items,
-    required this.index,
+    required this.items, required this.index, super.key,
     this.onChanged,
     this.style,
   }) : assert(items.length >= 2),
@@ -96,7 +94,7 @@ class BottomNavigation extends StatelessWidget {
     final style = BottomNavigationTheme.of(context).merge(this.style);
     return PhysicalModel(
       color: Colors.black,
-      elevation: 8.0,
+      elevation: 8,
       shadowColor: FluentTheme.of(context).shadowColor,
       child: Container(
         constraints: const BoxConstraints(minHeight: _kBottomNavigationHeight),
@@ -120,10 +118,7 @@ class BottomNavigation extends StatelessWidget {
 
 class _BottomNavigationItem extends StatelessWidget {
   const _BottomNavigationItem({
-    super.key,
-    required this.item,
-    required this.selected,
-    required this.style,
+    required this.item, required this.selected, required this.style, super.key,
     this.onPressed,
   });
 
@@ -149,7 +144,7 @@ class _BottomNavigationItem extends StatelessWidget {
               ),
               if (item.title != null)
                 Padding(
-                  padding: const EdgeInsetsDirectional.only(top: 1.0),
+                  padding: const EdgeInsetsDirectional.only(top: 1),
                   child: DefaultTextStyle.merge(
                     style: FluentTheme.of(context).typography.caption!.copyWith(
                       color: selected
@@ -187,9 +182,7 @@ class BottomNavigationTheme extends InheritedTheme {
   /// Creates a theme that controls how descendant [BottomNavigation]s should
   /// look like.
   const BottomNavigationTheme({
-    super.key,
-    required super.child,
-    required this.data,
+    required super.child, required this.data, super.key,
   });
 
   /// The properties for descendant [BottomNavigation] widgets.
@@ -198,12 +191,10 @@ class BottomNavigationTheme extends InheritedTheme {
   /// Creates a theme that merges the nearest [BottomNavigationTheme] with
   /// [data].
   static Widget merge({
-    Key? key,
-    required BottomNavigationThemeData data,
-    required Widget child,
+    required BottomNavigationThemeData data, required Widget child, Key? key,
   }) {
     return Builder(
-      builder: (BuildContext context) {
+      builder: (context) {
         return BottomNavigationTheme(
           key: key,
           data: BottomNavigationTheme.of(context).merge(data),

@@ -6,7 +6,7 @@ import 'app_test.dart';
 void main() {
   group('InfoBar', () {
     testWidgets('Default constructor creates InfoBar', (
-      WidgetTester tester,
+      tester,
     ) async {
       await tester.pumpWidget(
         wrapApp(child: const InfoBar(title: Text('Test Title'))),
@@ -17,7 +17,7 @@ void main() {
     });
 
     testWidgets('InfoBar.info creates InfoBar with info severity', (
-      WidgetTester tester,
+      tester,
     ) async {
       await tester.pumpWidget(
         wrapApp(child: const InfoBar.info(title: Text('Info Message'))),
@@ -29,7 +29,7 @@ void main() {
     });
 
     testWidgets('InfoBar.warning creates InfoBar with warning severity', (
-      WidgetTester tester,
+      tester,
     ) async {
       await tester.pumpWidget(
         wrapApp(child: const InfoBar.warning(title: Text('Warning Message'))),
@@ -41,7 +41,7 @@ void main() {
     });
 
     testWidgets('InfoBar.success creates InfoBar with success severity', (
-      WidgetTester tester,
+      tester,
     ) async {
       await tester.pumpWidget(
         wrapApp(child: const InfoBar.success(title: Text('Success Message'))),
@@ -53,7 +53,7 @@ void main() {
     });
 
     testWidgets('InfoBar.error creates InfoBar with error severity', (
-      WidgetTester tester,
+      tester,
     ) async {
       await tester.pumpWidget(
         wrapApp(child: const InfoBar.error(title: Text('Error Message'))),
@@ -65,9 +65,9 @@ void main() {
     });
 
     testWidgets('Named constructors accept all optional parameters', (
-      WidgetTester tester,
+      tester,
     ) async {
-      bool onCloseCalled = false;
+      var onCloseCalled = false;
 
       await tester.pumpWidget(
         wrapApp(

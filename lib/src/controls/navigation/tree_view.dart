@@ -32,16 +32,16 @@ typedef TreeViewItemOnExpandToggle =
 typedef TreeViewItemGesturesCallback =
     Map<Type, GestureRecognizerFactory> Function(TreeViewItem item);
 
-const double _whiteSpace = 8.0;
+const double _whiteSpace = 8;
 
 /// Default loading indicator used by [TreeView]
 const Widget kTreeViewLoadingIndicator = Padding(
   // Padding to make it the same width as the expand icon
-  padding: EdgeInsetsDirectional.only(start: 6.0, end: 6.0),
+  padding: EdgeInsetsDirectional.only(start: 6, end: 6),
   child: SizedBox(
-    height: 12.0,
-    width: 12.0,
-    child: ProgressRing(strokeWidth: 3.0),
+    height: 12,
+    width: 12,
+    child: ProgressRing(strokeWidth: 3),
   ),
 );
 
@@ -218,9 +218,8 @@ class TreeViewItem with Diagnosticable {
 
   /// Creates a tree view item.
   TreeViewItem({
-    this.key,
+    required this.content, this.key,
     this.leading,
-    required this.content,
     this.value,
     this.children = const [],
     this.collapsable = true,
@@ -279,7 +278,7 @@ class TreeViewItem with Diagnosticable {
   int get depth {
     if (parent != null) {
       var count = 1;
-      TreeViewItem? currentParent = parent!;
+      var currentParent = parent;
       while (currentParent?.parent != null) {
         count++;
         currentParent = currentParent?.parent;
@@ -308,7 +307,7 @@ class TreeViewItem with Diagnosticable {
   /// Executes [callback] for every parent found in the tree
   void executeForAllParents(ValueChanged<TreeViewItem?> callback) {
     if (parent == null) return;
-    TreeViewItem? currentParent = parent!;
+    var currentParent = parent;
     callback(currentParent);
     while (currentParent?.parent != null) {
       currentParent = currentParent?.parent;
@@ -357,7 +356,7 @@ class TreeViewItem with Diagnosticable {
         hasNull = true;
       } else if (child.selected == false) {
         hasFalse = true;
-      } else if (child.selected == true) {
+      } else if (child.selected ?? false) {
         hasTrue = true;
       }
     }
@@ -368,7 +367,7 @@ class TreeViewItem with Diagnosticable {
         // should not be possible unless children were removed after the
         // selected was updated previously...
         selected = true;
-      } else if (selected == true) {
+      } else if (selected ?? false) {
         // we're now only in a partially selected state
         selected = null;
       }
@@ -595,8 +594,7 @@ class TreeView extends StatefulWidget {
   ///
   /// [items] must not be empty
   const TreeView({
-    super.key,
-    required this.items,
+    required this.items, super.key,
     this.selectionMode = TreeViewSelectionMode.none,
     this.onSelectionChanged,
     this.onItemInvoked,
@@ -826,7 +824,7 @@ class TreeViewState extends State<TreeView> with AutomaticKeepAliveClientMixin {
       child: FocusTraversalGroup(
         policy: WidgetOrderTraversalPolicy(),
         child: ConstrainedBox(
-          constraints: const BoxConstraints(minHeight: 28.0),
+          constraints: const BoxConstraints(minHeight: 28),
           child: ListView.builder(
             // If shrinkWrap is true, then we default to not using the primary
             // scroll controller (should not normally need any controller in
@@ -880,7 +878,6 @@ class TreeViewState extends State<TreeView> with AutomaticKeepAliveClientMixin {
                       if (onSelectionChanged != null) {
                         await onSelectionChanged([item]);
                       }
-                      break;
                     case TreeViewSelectionMode.multiple:
                       setState(() {
                         final newSelectionState =
@@ -896,7 +893,6 @@ class TreeViewState extends State<TreeView> with AutomaticKeepAliveClientMixin {
                         );
                         await onSelectionChanged(selectedItems);
                       }
-                      break;
                     default:
                       break;
                   }
@@ -968,16 +964,7 @@ class TreeViewState extends State<TreeView> with AutomaticKeepAliveClientMixin {
 
 class _TreeViewItem extends StatelessWidget {
   const _TreeViewItem({
-    super.key,
-    required this.item,
-    required this.selectionMode,
-    required this.onSelect,
-    required this.onSecondaryTap,
-    required this.gestures,
-    required this.onExpandToggle,
-    required this.onInvoked,
-    required this.loadingWidgetFallback,
-    required this.narrowSpacing,
+    required this.item, required this.selectionMode, required this.onSelect, required this.onSecondaryTap, required this.gestures, required this.onExpandToggle, required this.onInvoked, required this.loadingWidgetFallback, required this.narrowSpacing, super.key,
   });
 
   final TreeViewItem item;
@@ -1080,8 +1067,8 @@ class _TreeViewItem extends StatelessWidget {
         focusNode: item.focusNode,
         semanticLabel: item.semanticLabel,
         margin: const EdgeInsetsDirectional.symmetric(
-          vertical: 2.0,
-          horizontal: 4.0,
+          vertical: 2,
+          horizontal: 4,
         ),
         builder: (context, states) {
           final itemForegroundColor = WidgetStateExtension.forStates<Color>(
@@ -1130,7 +1117,7 @@ class _TreeViewItem extends StatelessWidget {
                               : states,
                           transparentWhenNone: true,
                         ),
-                    borderRadius: BorderRadius.circular(6.0),
+                    borderRadius: BorderRadius.circular(6),
                   ),
                   child: Row(
                     children: [
@@ -1138,7 +1125,7 @@ class _TreeViewItem extends StatelessWidget {
                       if (selectionMode == TreeViewSelectionMode.multiple)
                         Padding(
                           padding: EdgeInsetsDirectional.only(
-                            start: 8.0,
+                            start: 8,
                             end: narrowSpacing ? 0.0 : _whiteSpace,
                           ),
                           child: ExcludeFocus(
@@ -1164,7 +1151,7 @@ class _TreeViewItem extends StatelessWidget {
                               // The hitbox fills the available height.
                               decoration: BoxDecoration(
                                 color: Colors.transparent,
-                                borderRadius: BorderRadius.circular(5.0),
+                                borderRadius: BorderRadius.circular(5),
                               ),
                               child: Icon(
                                 item.expanded
@@ -1172,7 +1159,7 @@ class _TreeViewItem extends StatelessWidget {
                                     : direction == TextDirection.ltr
                                     ? FluentIcons.chevron_right
                                     : FluentIcons.chevron_left,
-                                size: 8.0,
+                                size: 8,
                                 color: itemForegroundColor,
                               ),
                             ),
@@ -1182,7 +1169,7 @@ class _TreeViewItem extends StatelessWidget {
                         // have the same indentation, regardless whether or not
                         // they are expandable.
                         const Padding(
-                          padding: EdgeInsetsDirectional.only(start: 24.0),
+                          padding: EdgeInsetsDirectional.only(start: 24),
                         ),
 
                       // Leading icon
@@ -1192,10 +1179,10 @@ class _TreeViewItem extends StatelessWidget {
                             start: narrowSpacing ? 0 : _whiteSpace,
                             end: narrowSpacing ? _whiteSpace : 2 * _whiteSpace,
                           ),
-                          width: 20.0,
+                          width: 20,
                           child: IconTheme.merge(
                             data: IconThemeData(
-                              size: 20.0,
+                              size: 20,
                               color: itemForegroundColor,
                             ),
                             child: item.leading!,
@@ -1208,7 +1195,7 @@ class _TreeViewItem extends StatelessWidget {
                       Expanded(
                         child: DefaultTextStyle.merge(
                           style: TextStyle(
-                            fontSize: 12.0,
+                            fontSize: 12,
                             color: itemForegroundColor,
                           ),
                           child: item.content,
@@ -1219,16 +1206,16 @@ class _TreeViewItem extends StatelessWidget {
                 ),
                 if (selected && selectionMode == TreeViewSelectionMode.single)
                   PositionedDirectional(
-                    top: 6.0,
-                    bottom: 6.0,
-                    start: 0.0,
+                    top: 6,
+                    bottom: 6,
+                    start: 0,
                     child: Container(
-                      width: 3.0,
+                      width: 3,
                       decoration: BoxDecoration(
                         color: theme.accentColor.defaultBrushFor(
                           theme.brightness,
                         ),
-                        borderRadius: BorderRadius.circular(4.0),
+                        borderRadius: BorderRadius.circular(4),
                       ),
                     ),
                   ),

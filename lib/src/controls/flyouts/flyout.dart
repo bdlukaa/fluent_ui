@@ -201,7 +201,7 @@ enum FlyoutPlacementMode {
   ///
   /// Basic usage:
   /// ```dart
-  /// controller.showFlyout(
+  /// controller.showFlyout<void>(
   ///   placementMode: FlyoutPlacementMode.bottomLeft.resolve(Directionality.of(context)),
   /// );
   /// ```
@@ -427,12 +427,12 @@ class FlyoutAutoConfiguration {
 
   /// The configuration for flyout auto mode
   FlyoutAutoConfiguration({
+    required this.preferredMode,
     this.autoAvailableSpace,
     bool? horizontal,
-    required this.preferredMode,
   }) : assert(preferredMode != FlyoutPlacementMode.auto),
        assert(
-         horizontal != null && horizontal ? preferredMode.isHorizontal : true,
+         !(horizontal != null && horizontal) || preferredMode.isHorizontal,
          'If the mode horizontal, preferredMode must either be left or right',
        ),
        assert(autoAvailableSpace == null || !autoAvailableSpace.isNegative),
@@ -618,7 +618,7 @@ typedef FlyoutTransitionBuilder =
 ///   child: Button(
 ///     child: Text('Show flyout'),
 ///     onPressed: () {
-///       controller.showFlyout(
+///       controller.showFlyout<void>(
 ///         builder: (context) => FlyoutContent(
 ///           child: Text('Flyout content'),
 ///         ),
@@ -681,7 +681,7 @@ class FlyoutController with ChangeNotifier, WidgetsBindingObserver {
   ///  * [showFlyout], which opens the flyout
   bool get isOpen => _route != null;
 
-  PageRouteBuilder? _route;
+  PageRouteBuilder<void>? _route;
 
   /// Make sure the flyout is open.
   void _ensureOpen() {
@@ -803,9 +803,9 @@ class FlyoutController with ChangeNotifier, WidgetsBindingObserver {
     final Rect targetRect;
 
     final navigatorBox =
-        _currentNavigator!.context.findRenderObject() as RenderBox;
+        _currentNavigator!.context.findRenderObject()! as RenderBox;
 
-    final targetBox = context.findRenderObject() as RenderBox;
+    final targetBox = context.findRenderObject()! as RenderBox;
     targetSize = targetBox.size;
     targetOffset =
         targetBox.localToGlobal(Offset.zero, ancestor: navigatorBox) +
@@ -830,7 +830,7 @@ class FlyoutController with ChangeNotifier, WidgetsBindingObserver {
               return SlideTransition(
                 position: Tween<Offset>(
                   begin: const Offset(0, 0.25),
-                  end: const Offset(0, 0),
+                  end: Offset.zero,
                 ).animate(animation),
                 child: flyout,
               );
@@ -841,7 +841,7 @@ class FlyoutController with ChangeNotifier, WidgetsBindingObserver {
               return ClipRect(
                 child: SlideTransition(
                   position: Tween<Offset>(
-                    begin: const Offset(0.0, -0.15),
+                    begin: const Offset(0, -0.15),
                     end: Offset.zero,
                   ).animate(animation),
                   child: flyout,
@@ -936,7 +936,7 @@ class FlyoutController with ChangeNotifier, WidgetsBindingObserver {
 
   @override
   void didChangeMetrics() {
-    if (isOpen) close();
+    if (isOpen) close<void>();
   }
 
   @override
@@ -1058,7 +1058,7 @@ class _FlyoutPage extends StatelessWidget {
             transitionBuilder: transitionBuilder,
             placementMode: placementMode,
             builder: (context) {
-              Widget flyout = Padding(
+              final Widget flyout = Padding(
                 key: flyoutKey,
                 padding: placementMode._getAdditionalOffsetPosition(
                   position == null ? additionalOffset : 0.0,
@@ -1146,12 +1146,12 @@ class _FlyoutPage extends StatelessWidget {
               if (flyoutKey.currentContext == null) return;
 
               final navigatorBox =
-                  navigator.context.findRenderObject() as RenderBox;
+                  navigator.context.findRenderObject()! as RenderBox;
 
               // the flyout box needs to be fetched at each [onHover] because the
               // flyout size may change (a MenuFlyout, for example)
               final flyoutBox =
-                  flyoutKey.currentContext!.findRenderObject() as RenderBox;
+                  flyoutKey.currentContext!.findRenderObject()! as RenderBox;
               final flyoutRect =
                   flyoutBox.localToGlobal(Offset.zero, ancestor: navigatorBox) &
                   flyoutBox.size;
@@ -1159,7 +1159,7 @@ class _FlyoutPage extends StatelessWidget {
                 if (key.currentContext == null) return Rect.zero;
 
                 final menuBox =
-                    key.currentContext!.findRenderObject() as RenderBox;
+                    key.currentContext!.findRenderObject()! as RenderBox;
                 return menuBox.localToGlobal(
                       Offset.zero,
                       ancestor: navigatorBox,
@@ -1217,9 +1217,9 @@ class FlyoutTarget extends StatefulWidget {
 
   /// Creates a flyout target
   const FlyoutTarget({
-    super.key,
     required this.controller,
     required this.child,
+    super.key,
   });
 
   @override

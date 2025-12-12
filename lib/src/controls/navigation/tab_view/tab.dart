@@ -34,16 +34,7 @@ enum TabWidthBehavior {
 ///   * [TabView], the widget that uses the [Tab] widget.
 class TabData extends InheritedWidget {
   const TabData({
-    super.key,
-    required super.child,
-    required this.selected,
-    required this.onPressed,
-    required this.onClose,
-    required this.reorderIndex,
-    required this.animationDuration,
-    required this.animationCurve,
-    required this.visibilityMode,
-    required this.tabWidthBehavior,
+    required super.child, required this.selected, required this.onPressed, required this.onClose, required this.reorderIndex, required this.animationDuration, required this.animationCurve, required this.visibilityMode, required this.tabWidthBehavior, super.key,
   });
 
   /// Whether the tab is selected or not.
@@ -154,10 +145,8 @@ class Tab extends StatefulWidget {
 
   /// Creates a tab.
   Tab({
-    super.key,
+    required this.text, required this.body, super.key,
     this.icon = const SizedBox.shrink(),
-    required this.text,
-    required this.body,
     this.backgroundColor,
     this.selectedBackgroundColor,
     this.foregroundColor,
@@ -369,10 +358,10 @@ class TabState extends State<Tab>
             key: widget._tabKey,
             height: _kTileHeight,
             constraints: tab.tabWidthBehavior == TabWidthBehavior.sizeToContent
-                ? const BoxConstraints(minHeight: 28.0)
+                ? const BoxConstraints(minHeight: 28)
                 : const BoxConstraints(
                     maxWidth: _kMaxTileWidth,
-                    minHeight: 28.0,
+                    minHeight: 28,
                   ),
             padding: tab.selected
                 ? const EdgeInsetsDirectional.only(
@@ -401,7 +390,7 @@ class TabState extends State<Tab>
               final result = ClipRect(
                 child: DefaultTextStyle.merge(
                   style: (theme.typography.body ?? const TextStyle()).copyWith(
-                    fontSize: 12.0,
+                    fontSize: 12,
                     fontWeight: tab.selected ? FontWeight.w600 : null,
                     color:
                         (tab.selected
@@ -418,7 +407,7 @@ class TabState extends State<Tab>
                                   : widget.foregroundColor)
                               ?.resolve(states) ??
                           foregroundColor,
-                      size: 16.0,
+                      size: 16,
                     ),
                     child: Row(
                       mainAxisSize: MainAxisSize.min,
@@ -426,9 +415,9 @@ class TabState extends State<Tab>
                         if (widget.icon != null)
                           Padding(
                             padding: const EdgeInsetsDirectional.only(
-                              end: 10.0,
+                              end: 10,
                             ),
-                            child: widget.icon!,
+                            child: widget.icon,
                           ),
                         if (tab.tabWidthBehavior != TabWidthBehavior.compact ||
                             (tab.tabWidthBehavior == TabWidthBehavior.compact &&
@@ -439,13 +428,13 @@ class TabState extends State<Tab>
                                 : FlexFit.loose,
                             child: Padding(
                               padding: const EdgeInsetsDirectional.only(
-                                end: 4.0,
+                                end: 4,
                               ),
                               child: DefaultTextStyle.merge(
                                 softWrap: false,
                                 maxLines: 1,
                                 overflow: TextOverflow.clip,
-                                style: const TextStyle(fontSize: 12.0),
+                                style: const TextStyle(fontSize: 12),
                                 child: widget.text,
                               ),
                             ),
@@ -459,7 +448,7 @@ class TabState extends State<Tab>
                                     states.isHovered)))
                           Padding(
                             padding: const EdgeInsetsDirectional.only(
-                              start: 4.0,
+                              start: 4,
                             ),
                             child: FocusTheme(
                               data: const FocusThemeData(
@@ -469,8 +458,8 @@ class TabState extends State<Tab>
                               child: Tooltip(
                                 message: localizations.closeTabLabel,
                                 child: SizedBox(
-                                  height: 24.0,
-                                  width: 32.0,
+                                  height: 24,
+                                  width: 32,
                                   child: IconButton(
                                     icon: widget.closeIcon!,
                                     onPressed: tab.onClose,
@@ -573,7 +562,7 @@ class _TabViewScrollBehavior extends ScrollBehavior {
   const _TabViewScrollBehavior();
 
   @override
-  Widget buildScrollbar(context, child, details) {
+  Widget buildScrollbar(BuildContext context, Widget child, ScrollableDetails details) {
     return child;
   }
 }

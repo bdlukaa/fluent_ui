@@ -303,9 +303,9 @@ class NumberBox<T extends num> extends StatefulWidget {
 
   /// Creates a number box.
   const NumberBox({
-    super.key,
     required this.value,
     required this.onChanged,
+    super.key,
     this.onTextChange,
     this.focusNode,
     this.mode = SpinButtonPlacementMode.compact,
@@ -326,7 +326,7 @@ class NumberBox<T extends num> extends StatefulWidget {
     this.placeholder,
     this.placeholderStyle,
     this.cursorWidth = 2.0,
-    this.cursorRadius = const Radius.circular(2.0),
+    this.cursorRadius = const Radius.circular(2),
     this.cursorHeight,
     this.cursorColor,
     this.showCursor,
@@ -341,7 +341,7 @@ class NumberBox<T extends num> extends StatefulWidget {
     this.enableInteractiveSelection = true,
     this.keyboardAppearance,
     this.scrollController,
-    this.scrollPadding = const EdgeInsetsDirectional.all(20.0),
+    this.scrollPadding = const EdgeInsetsDirectional.all(20),
     this.scrollPhysics,
     this.selectionControls,
     this.selectionHeightStyle = ui.BoxHeightStyle.tight,
@@ -430,17 +430,19 @@ class NumberBoxState<T extends num> extends State<NumberBox<T>> {
       _formatter = NumberFormat(widget.pattern) as dynamic;
     }
     if (widget.formatter != null) {
-      _formatter = widget.formatter!;
+      _formatter = widget.formatter;
     }
     if (widget.format != null) {
       _format = widget.format!;
     } else {
-      _format = (num? value) {
+      _format = (value) {
         if (value == null) return null;
         if (value is int) {
           return value.toString();
         }
-        return _formatter.format(value);
+        // _formatter is dynamic
+        // ignore: avoid_dynamic_calls
+        return _formatter.format(value) as String?;
       };
     }
 
@@ -513,9 +515,9 @@ class NumberBoxState<T extends num> extends State<NumberBox<T>> {
 
         final boxContext = _textBoxKey.currentContext;
         if (boxContext == null) return const SizedBox.shrink();
-        final box = boxContext.findRenderObject() as RenderBox;
+        final box = boxContext.findRenderObject()! as RenderBox;
 
-        Widget child = PositionedDirectional(
+        final Widget child = PositionedDirectional(
           width: kNumberBoxOverlayWidth,
           child: CompositedTransformFollower(
             link: _layerLink,
@@ -574,7 +576,7 @@ class NumberBoxState<T extends num> extends State<NumberBox<T>> {
           icon: const WindowsIcon(WindowsIcons.clear),
           onPressed: _clearValue,
         ),
-        const SizedBox(width: 4.0),
+        const SizedBox(width: 4),
       ],
     ];
 
@@ -591,12 +593,10 @@ class NumberBoxState<T extends num> extends State<NumberBox<T>> {
             icon: const WindowsIcon(WindowsIcons.chevron_down),
             onPressed: widget.onChanged != null ? decrementSmall : null,
           ),
-          const SizedBox(width: 4.0),
+          const SizedBox(width: 4),
         ]);
-        break;
       case SpinButtonPlacementMode.compact:
         textFieldSuffix.add(const SizedBox(width: kNumberBoxOverlayWidth));
-        break;
       case SpinButtonPlacementMode.none:
         break;
     }
@@ -684,7 +684,7 @@ class NumberBoxState<T extends num> extends State<NumberBox<T>> {
           onPointerSignal: (event) {
             if (_hasPrimaryFocus && event is PointerScrollEvent) {
               GestureBinding.instance.pointerSignalResolver.register(event, (
-                PointerSignalEvent event,
+                event,
               ) {
                 if (event is PointerScrollEvent) {
                   if (event.scrollDelta.direction < 0) {
@@ -784,9 +784,7 @@ class NumberBoxState<T extends num> extends State<NumberBox<T>> {
     if (previousValidValue != value) {
       previousValidValue = value;
 
-      if (widget.onChanged != null) {
-        widget.onChanged!(value as T?);
-      }
+      widget.onChanged?.call(value as T?);
     }
   }
 }
@@ -898,7 +896,7 @@ class NumberFormBox<T extends num> extends ControllableFormBox {
     bool? showCursor,
     double cursorWidth = 2.0,
     double? cursorHeight,
-    Radius cursorRadius = const Radius.circular(2.0),
+    Radius cursorRadius = const Radius.circular(2),
     Color? cursorColor,
     Color? highlightColor,
     Color? errorHighlightColor,
@@ -918,7 +916,7 @@ class NumberFormBox<T extends num> extends ControllableFormBox {
     NumberBoxFormatFunction? format,
     NumberBoxParseFunction parse = NumberBox.defaultParse,
   }) : super(
-         builder: (FormFieldState<String> field) {
+         builder: (field) {
            assert(debugCheckHasFluentTheme(field.context));
            final theme = FluentTheme.of(field.context);
            void onChangedHandler(T? value) {

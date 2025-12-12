@@ -225,13 +225,13 @@ class TextBox extends StatefulWidget {
     this.enabled = true,
     this.cursorWidth = 2.0,
     this.cursorHeight,
-    this.cursorRadius = const Radius.circular(2.0),
+    this.cursorRadius = const Radius.circular(2),
     this.cursorOpacityAnimates,
     this.cursorColor,
     this.selectionHeightStyle = ui.BoxHeightStyle.tight,
     this.selectionWidthStyle = ui.BoxWidthStyle.tight,
     this.keyboardAppearance,
-    this.scrollPadding = const EdgeInsetsDirectional.all(20.0),
+    this.scrollPadding = const EdgeInsetsDirectional.all(20),
     this.dragStartBehavior = DragStartBehavior.start,
     bool? enableInteractiveSelection,
     this.selectionControls,
@@ -622,7 +622,7 @@ class TextBox extends StatefulWidget {
       buttonItems: [
         ...editableTextState.contextMenuButtonItems,
         if (undoController != null)
-          UndoContextMenuButtonItem(onPressed: () => undoController.undo()),
+          UndoContextMenuButtonItem(onPressed: undoController.undo),
       ],
       anchors: editableTextState.contextMenuAnchors,
     );
@@ -1110,7 +1110,6 @@ class _TextBoxState extends State<TextBox>
         if (cause == SelectionChangedCause.drag) {
           _editableText.hideToolbar();
         }
-        break;
     }
   }
 
@@ -1160,9 +1159,9 @@ class _TextBoxState extends State<TextBox>
     return ValueListenableBuilder<TextEditingValue>(
       valueListenable: _effectiveController,
       child: editableText,
-      builder: (BuildContext context, TextEditingValue text, Widget? child) {
-        final bool hasText = text.text.isNotEmpty;
-        final String? placeholderText = widget.placeholder;
+      builder: (context, text, child) {
+        final hasText = text.text.isNotEmpty;
+        final placeholderText = widget.placeholder;
         final Widget? placeholder = placeholderText == null
             ? null
             // Make the placeholder invisible when hasText is true.
@@ -1191,7 +1190,7 @@ class _TextBoxState extends State<TextBox>
                 ),
               );
 
-        final Widget? prefixWidget =
+        final prefixWidget =
             _shouldShowAttachment(
               attachment: widget.prefixMode,
               hasText: hasText,
@@ -1199,7 +1198,7 @@ class _TextBoxState extends State<TextBox>
             ? widget.prefix
             : null;
 
-        final Widget? suffixWidget =
+        final suffixWidget =
             _shouldShowAttachment(
               attachment: widget.suffixMode,
               hasText: hasText,
@@ -1278,7 +1277,6 @@ class _TextBoxState extends State<TextBox>
         textSelectionControls ??= FluentTextSelectionHandleControls(
           undoHistoryController: _effectiveUndoController,
         );
-        break;
 
       case TargetPlatform.macOS:
       case TargetPlatform.windows:
@@ -1292,11 +1290,10 @@ class _TextBoxState extends State<TextBox>
             _effectiveFocusNode.requestFocus();
           }
         };
-        break;
     }
 
     final enabled = widget.enabled;
-    const cursorOffset = Offset(0, 0);
+    const cursorOffset = Offset.zero;
     final formatters = <TextInputFormatter>[
       ...?widget.inputFormatters,
       if (widget.maxLength != null)
@@ -1509,7 +1506,6 @@ class _TextBoxState extends State<TextBox>
           ignoring: !enabled,
           child: HoverButton(
             focusEnabled: false,
-            forceEnabled: false,
             hitTestBehavior: HitTestBehavior.translucent,
             builder: (context, states) {
               // Since we manage focus outside of the HoverButton (see focusEnabled: false)
@@ -1528,7 +1524,7 @@ class _TextBoxState extends State<TextBox>
                   resolvedWidgetDecoration?.borderRadius?.resolve(
                     Directionality.of(context),
                   ) ??
-                  BorderRadius.circular(4.0);
+                  BorderRadius.circular(4);
               final decoration =
                   WidgetStateProperty.resolveWith((states) {
                         return BoxDecoration(
@@ -1610,12 +1606,12 @@ class _TextBoxState extends State<TextBox>
                   decoration: decoration,
                   child: Container(
                     foregroundDecoration: foregroundDecoration,
-                    constraints: const BoxConstraints(minHeight: 32.0),
+                    constraints: const BoxConstraints(minHeight: 32),
                     child: _selectionGestureDetectorBuilder
                         .buildGestureDetector(
                           behavior: HitTestBehavior.translucent,
                           child: Align(
-                            alignment: Alignment(-1.0, _textAlignVertical.y),
+                            alignment: Alignment(-1, _textAlignVertical.y),
                             child: SmallIconButton(
                               child: _addTextDependentAttachments(
                                 paddedEditable,

@@ -125,7 +125,7 @@ void main() {
           matching: find.byType(Container),
         ),
       );
-      final decoration = container.decoration as ShapeDecoration;
+      final decoration = container.decoration! as ShapeDecoration;
       expect(decoration.color, Colors.red);
     });
 

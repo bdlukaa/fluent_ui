@@ -7,10 +7,10 @@ import 'package:flutter/foundation.dart';
 
 // The minimum padding from all edges of the selection toolbar to all edges of
 // the screen.
-const double _kToolbarScreenPadding = 8.0;
+const double _kToolbarScreenPadding = 8;
 
 // These values were measured from a screenshot of TextBox on Windows 11.
-const double _kToolbarWidth = 222.0;
+const double _kToolbarWidth = 222;
 
 class FluentTextSelectionToolbar extends StatelessWidget {
   /// {@macro flutter.material.AdaptiveTextSelectionToolbar.buttonItems}
@@ -20,9 +20,9 @@ class FluentTextSelectionToolbar extends StatelessWidget {
   final TextSelectionToolbarAnchors anchors;
 
   const FluentTextSelectionToolbar({
-    super.key,
     required this.buttonItems,
     required this.anchors,
+    super.key,
   });
 
   /// Create an instance of [FluentTextSelectionToolbar] with the default
@@ -35,8 +35,8 @@ class FluentTextSelectionToolbar extends StatelessWidget {
   /// {@macro flutter.material.AdaptiveTextSelectionToolbar.buttonItems}
   /// {@macro flutter.material.AdaptiveTextSelectionToolbar.selectable}
   FluentTextSelectionToolbar.editableText({
-    super.key,
     required EditableTextState editableTextState,
+    super.key,
   }) : buttonItems = editableTextState.contextMenuButtonItems,
        anchors = editableTextState.contextMenuAnchors;
 
@@ -166,7 +166,7 @@ class FluentTextSelectionToolbar extends StatelessWidget {
           width: _kToolbarWidth,
           child: FlyoutContent(
             child: Column(
-              spacing: 4.0,
+              spacing: 4,
               mainAxisSize: MainAxisSize.min,
               children: orderedButtons.map((item) {
                 if (item is UndoContextMenuButtonItem) {
@@ -456,7 +456,7 @@ class _FluentTextSelectionControlsToolbarState
 
     // If there is no option available, build an empty widget.
     if (items.isEmpty) {
-      return const SizedBox(width: 0.0, height: 0.0);
+      return const SizedBox.shrink();
     }
 
     return _FluentTextSelectionToolbar(
@@ -512,7 +512,7 @@ class _FluentTextSelectionToolbar extends StatelessWidget {
       TargetPlatform.linux => Offset(_kToolbarScreenPadding, paddingAbove),
     };
 
-    final radius = BorderRadius.circular(6.0);
+    final radius = BorderRadius.circular(6);
 
     return Padding(
       padding: EdgeInsetsDirectional.fromSTEB(
@@ -530,12 +530,12 @@ class _FluentTextSelectionToolbar extends StatelessWidget {
           shape: RoundedRectangleBorder(borderRadius: radius),
           child: Container(
             color: theme.menuColor.withValues(alpha: kMenuColorOpacity),
-            padding: const EdgeInsetsDirectional.all(5.0),
+            padding: const EdgeInsetsDirectional.all(5),
             child: SizedBox(
               width: _kToolbarWidth,
               child: Column(
                 mainAxisSize: MainAxisSize.min,
-                spacing: 5.0,
+                spacing: 5,
                 children: children,
               ),
             ),
@@ -569,7 +569,7 @@ class _FluentTextSelectionToolbarButton extends StatelessWidget {
       onPressed: onPressed,
       builder: (context, states) {
         final theme = FluentTheme.of(context);
-        final radius = BorderRadius.circular(4.0);
+        final radius = BorderRadius.circular(4);
 
         final body = theme.typography.body ?? const TextStyle();
 
@@ -589,26 +589,26 @@ class _FluentTextSelectionToolbarButton extends StatelessWidget {
                   borderRadius: radius,
                 ),
                 padding: const EdgeInsetsDirectional.only(
-                  top: 4.0,
-                  bottom: 4.0,
-                  start: 10.0,
-                  end: 8.0,
+                  top: 4,
+                  bottom: 4,
+                  start: 10,
+                  end: 8,
                 ),
                 child: Row(
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     Padding(
-                      padding: const EdgeInsetsDirectional.only(end: 10.0),
-                      child: Icon(icon, size: 16.0),
+                      padding: const EdgeInsetsDirectional.only(end: 10),
+                      child: Icon(icon, size: 16),
                     ),
                     Expanded(
                       child: Padding(
-                        padding: const EdgeInsetsDirectional.only(end: 10.0),
+                        padding: const EdgeInsetsDirectional.only(end: 10),
                         child: Text(
                           text,
                           style: body.merge(
                             TextStyle(
-                              fontSize: 14.0,
+                              fontSize: 14,
                               letterSpacing: -0.15,
                               color: theme.inactiveColor,
                             ),
@@ -620,7 +620,7 @@ class _FluentTextSelectionToolbarButton extends StatelessWidget {
                       Text(
                         shortcut!,
                         style: body.merge(
-                          const TextStyle(fontSize: 10.0, height: 0.7),
+                          const TextStyle(fontSize: 10, height: 0.7),
                         ),
                       ),
                   ],
@@ -628,7 +628,7 @@ class _FluentTextSelectionToolbarButton extends StatelessWidget {
               );
 
               if (tooltip != null) {
-                return Tooltip(message: tooltip!, child: widget);
+                return Tooltip(message: tooltip, child: widget);
               }
               return widget;
             },

@@ -7,7 +7,7 @@ const sponsors = [
   Person(
     username: 'h3x4d3c1m4l',
     imageUrl: 'https://avatars.githubusercontent.com/u/2611894?v=4',
-    name: 'Sander in \'t Hout',
+    name: "Sander in 't Hout",
   ),
   Person(
     username: 'whiplashoo',
@@ -25,7 +25,7 @@ const contributors = [
   Person(
     username: 'bdlukaa',
     imageUrl: 'https://avatars.githubusercontent.com/u/45696119?v=4',
-    name: 'Bruno D\'Luka',
+    name: "Bruno D'Luka",
   ),
   Person(
     username: 'WinXaito',
@@ -44,6 +44,7 @@ const contributors = [
   ),
 ];
 
+@immutable
 class Person {
   final String? username;
   final String name;
@@ -55,7 +56,11 @@ class Person {
     required this.imageUrl,
   });
 
-  Person copyWith({String? username, String? name, String? imageUrl}) {
+  Person copyWith({
+    final String? username,
+    final String? name,
+    final String? imageUrl,
+  }) {
     return Person(
       username: username ?? this.username,
       name: name ?? this.name,
@@ -68,7 +73,7 @@ class Person {
       'Person(username: $username, name: $name, imageUrl: $imageUrl)';
 
   @override
-  bool operator ==(Object other) {
+  bool operator ==(final Object other) {
     if (identical(this, other)) return true;
 
     return other is Person &&
@@ -82,10 +87,10 @@ class Person {
 
   Widget build() {
     return Builder(
-      builder: (context) {
+      builder: (final context) {
         return Link(
           uri: Uri.parse('https://www.github.com/$username'),
-          builder: (context, followLink) {
+          builder: (final context, final followLink) {
             return Semantics(
               link: true,
               child: IconButton(

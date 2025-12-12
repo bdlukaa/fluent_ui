@@ -49,15 +49,15 @@ Future<void> displayInfoBar(
           alignment: alignment,
           child: Padding(
             padding: const EdgeInsetsDirectional.symmetric(
-              vertical: 24.0,
-              horizontal: 16.0,
+              vertical: 24,
+              horizontal: 16,
             ),
             child: StatefulBuilder(
               builder: (context, setState) {
                 Future<void> close() async {
                   if (!entry.mounted) return;
                   setState(() => isFading = true);
-                  await Future.delayed(theme.mediumAnimationDuration);
+                  await Future<void>.delayed(theme.mediumAnimationDuration);
                   if (!entry.mounted) return;
                   entry.remove();
                 }
@@ -65,10 +65,10 @@ Future<void> displayInfoBar(
                 if (!alreadyInitialized) {
                   alreadyInitialized = true;
                   () async {
-                    await Future.delayed(theme.mediumAnimationDuration);
+                    await Future<void>.delayed(theme.mediumAnimationDuration);
                     if (!entry.mounted) return;
                     setState(() => isFading = false);
-                    await Future.delayed(duration);
+                    await Future<void>.delayed(duration);
                     await close();
                   }();
                 }
@@ -81,7 +81,7 @@ Future<void> displayInfoBar(
                       ? const SizedBox.shrink()
                       : PhysicalModel(
                           color: Colors.transparent,
-                          elevation: 8.0,
+                          elevation: 8,
                           child: builder(context, close),
                         ),
                 );
@@ -206,8 +206,8 @@ enum InfoBarSeverity {
 class InfoBar extends StatelessWidget {
   /// Creates an info bar.
   const InfoBar({
-    super.key,
     required this.title,
+    super.key,
     this.content,
     this.action,
     this.severity = InfoBarSeverity.info,
@@ -219,8 +219,8 @@ class InfoBar extends StatelessWidget {
 
   /// Creates an info bar with [InfoBarSeverity.info] severity.
   const InfoBar.info({
-    super.key,
     required this.title,
+    super.key,
     this.content,
     this.action,
     this.style,
@@ -231,8 +231,8 @@ class InfoBar extends StatelessWidget {
 
   /// Creates an info bar with [InfoBarSeverity.warning] severity.
   const InfoBar.warning({
-    super.key,
     required this.title,
+    super.key,
     this.content,
     this.action,
     this.style,
@@ -243,8 +243,8 @@ class InfoBar extends StatelessWidget {
 
   /// Creates an info bar with [InfoBarSeverity.success] severity.
   const InfoBar.success({
-    super.key,
     required this.title,
+    super.key,
     this.content,
     this.action,
     this.style,
@@ -255,8 +255,8 @@ class InfoBar extends StatelessWidget {
 
   /// Creates an info bar with [InfoBarSeverity.error] severity.
   const InfoBar.error({
-    super.key,
     required this.title,
+    super.key,
     this.content,
     this.action,
     this.style,
@@ -372,7 +372,7 @@ class InfoBar extends StatelessWidget {
     final icon = isIconVisible ? style.icon?.call(severity) : null;
     final closeIcon = style.closeIcon;
     final title = Padding(
-      padding: const EdgeInsetsDirectional.only(end: 6.0),
+      padding: const EdgeInsetsDirectional.only(end: 6),
       child: DefaultTextStyle.merge(
         style: theme.typography.bodyStrong ?? const TextStyle(),
         child: this.title,
@@ -393,7 +393,7 @@ class InfoBar extends StatelessWidget {
       );
     }();
     return Container(
-      constraints: const BoxConstraints(minHeight: 48.0),
+      constraints: const BoxConstraints(minHeight: 48),
       decoration: style.decoration?.call(severity),
       padding: style.padding ?? const EdgeInsetsDirectional.all(10),
       child: Row(
@@ -404,7 +404,7 @@ class InfoBar extends StatelessWidget {
         children: [
           if (icon != null)
             Padding(
-              padding: const EdgeInsetsDirectional.only(end: 14.0),
+              padding: const EdgeInsetsDirectional.only(end: 14),
               child: Icon(icon, color: style.iconColor?.call(severity)),
             ),
           if (isLong)
@@ -416,12 +416,12 @@ class InfoBar extends StatelessWidget {
                   title,
                   if (content != null)
                     Padding(
-                      padding: const EdgeInsetsDirectional.only(top: 6.0),
+                      padding: const EdgeInsetsDirectional.only(top: 6),
                       child: content,
                     ),
                   if (action != null)
                     Padding(
-                      padding: const EdgeInsetsDirectional.only(top: 12.0),
+                      padding: const EdgeInsetsDirectional.only(top: 12),
                       child: action,
                     ),
                 ],
@@ -437,7 +437,7 @@ class InfoBar extends StatelessWidget {
                   if (content != null) content,
                   if (action != null)
                     Padding(
-                      padding: const EdgeInsetsDirectional.only(start: 16.0),
+                      padding: const EdgeInsetsDirectional.only(start: 16),
                       child: action,
                     ),
                 ],
@@ -445,7 +445,7 @@ class InfoBar extends StatelessWidget {
             ),
           if (closeIcon != null && onClose != null)
             Padding(
-              padding: const EdgeInsetsDirectional.only(start: 10.0),
+              padding: const EdgeInsetsDirectional.only(start: 10),
               child: Tooltip(
                 message: localizations.closeButtonLabel,
                 child: IconButton(
@@ -468,19 +468,19 @@ class InfoBar extends StatelessWidget {
 /// given an explicit non-null value.
 class InfoBarTheme extends InheritedTheme {
   /// Creates a theme that controls how descendant [InfoBar]s should look like.
-  const InfoBarTheme({super.key, required this.data, required super.child});
+  const InfoBarTheme({required this.data, required super.child, super.key});
 
   /// The properties for descendant [InfoBar] widgets.
   final InfoBarThemeData data;
 
   /// Creates a theme that merges the nearest [InfoBarTheme] with [data].
   static Widget merge({
-    Key? key,
     required InfoBarThemeData data,
     required Widget child,
+    Key? key,
   }) {
     return Builder(
-      builder: (BuildContext context) {
+      builder: (context) {
         return InfoBarTheme(
           key: key,
           data: InfoBarTheme.of(context).merge(data),
@@ -549,30 +549,26 @@ class InfoBarThemeData with Diagnosticable {
   factory InfoBarThemeData.standard(FluentThemeData theme) {
     return InfoBarThemeData(
       padding: const EdgeInsetsDirectional.only(
-        top: 14.0,
-        bottom: 14.0,
-        start: 14.0,
-        end: 8.0,
+        top: 14,
+        bottom: 14,
+        start: 14,
+        end: 8,
       ),
       decoration: (severity) {
         late Color color;
         switch (severity) {
           case InfoBarSeverity.info:
             color = theme.resources.systemFillColorAttentionBackground;
-            break;
           case InfoBarSeverity.warning:
             color = theme.resources.systemFillColorCautionBackground;
-            break;
           case InfoBarSeverity.success:
             color = theme.resources.systemFillColorSuccessBackground;
-            break;
           case InfoBarSeverity.error:
             color = theme.resources.systemFillColorCriticalBackground;
-            break;
         }
         return BoxDecoration(
           color: color,
-          borderRadius: BorderRadius.circular(4.0),
+          borderRadius: BorderRadius.circular(4),
           border: Border.all(color: theme.resources.cardStrokeColorDefault),
         );
       },
@@ -604,9 +600,7 @@ class InfoBarThemeData with Diagnosticable {
       actionStyle: const ButtonStyle(
         padding: WidgetStatePropertyAll(EdgeInsetsDirectional.all(6)),
       ),
-      closeButtonStyle: const ButtonStyle(
-        iconSize: WidgetStatePropertyAll(16.0),
-      ),
+      closeButtonStyle: const ButtonStyle(iconSize: WidgetStatePropertyAll(16)),
     );
   }
 
@@ -630,7 +624,7 @@ class InfoBarThemeData with Diagnosticable {
         if (aDecoration == null && bDecoration == null) return null;
         if (aDecoration == null) return bDecoration;
         if (bDecoration == null) return aDecoration;
-        return (severity) {
+        return (InfoBarSeverity severity) {
           return Decoration.lerp(
             aDecoration.call(severity),
             bDecoration.call(severity),
@@ -645,7 +639,7 @@ class InfoBarThemeData with Diagnosticable {
         if (aIconColor == null && bIconColor == null) return null;
         if (aIconColor == null) return bIconColor;
         if (bIconColor == null) return aIconColor;
-        return (severity) {
+        return (InfoBarSeverity severity) {
           return Color.lerp(
             aIconColor.call(severity),
             bIconColor.call(severity),

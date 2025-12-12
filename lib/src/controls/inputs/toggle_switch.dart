@@ -77,9 +77,7 @@ typedef ToggleSwitchKnobBuilder =
 class ToggleSwitch extends StatefulWidget {
   /// Creates a toggle switch.
   const ToggleSwitch({
-    super.key,
-    required this.checked,
-    required this.onChanged,
+    required this.checked, required this.onChanged, super.key,
     this.style,
     this.content,
     this.leadingContent = false,
@@ -257,8 +255,8 @@ class _ToggleSwitchState extends State<ToggleSwitch> {
               child: Row(
                 mainAxisSize: MainAxisSize.min,
                 children: widget.leadingContent
-                    ? [widget.content!, const SizedBox(width: 10.0), child]
-                    : [child, const SizedBox(width: 10.0), widget.content!],
+                    ? [widget.content!, const SizedBox(width: 10), child]
+                    : [child, const SizedBox(width: 10), widget.content!],
               ),
             ),
           );
@@ -274,10 +272,7 @@ class _ToggleSwitchState extends State<ToggleSwitch> {
 
 class DefaultToggleSwitchKnob extends StatelessWidget {
   const DefaultToggleSwitchKnob({
-    super.key,
-    required this.checked,
-    required this.style,
-    required this.states,
+    required this.checked, required this.style, required this.states, super.key,
   });
 
   final bool checked;
@@ -296,7 +291,7 @@ class DefaultToggleSwitchKnob extends StatelessWidget {
               horizontal: 2.0 + checkedFactor,
               vertical: 2.0 + checkedFactor,
             ),
-      height: 18.0,
+      height: 18,
       width:
           12.0 + (states.isHovered ? 2.0 : 0.0) + (states.isPressed ? 5.0 : 0),
       decoration: checked
@@ -310,21 +305,17 @@ class ToggleSwitchTheme extends InheritedTheme {
   /// Creates a theme that controls how descendant [ToggleSwitch]es should
   /// look like.
   const ToggleSwitchTheme({
-    super.key,
-    required super.child,
-    required this.data,
+    required super.child, required this.data, super.key,
   });
 
   final ToggleSwitchThemeData data;
 
   /// Creates a theme that merges the nearest [ToggleSwitchTheme] with [data].
   static Widget merge({
-    Key? key,
-    required ToggleSwitchThemeData data,
-    required Widget child,
+    required ToggleSwitchThemeData data, required Widget child, Key? key,
   }) {
     return Builder(
-      builder: (BuildContext context) {
+      builder: (context) {
         return ToggleSwitchTheme(
           key: key,
           data: ToggleSwitchTheme.of(context).merge(data),

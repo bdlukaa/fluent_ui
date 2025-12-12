@@ -1,6 +1,6 @@
+import 'package:example/widgets/card_highlight.dart';
 import 'package:example/widgets/page.dart';
 import 'package:fluent_ui/fluent_ui.dart';
-import 'package:example/widgets/card_highlight.dart';
 
 class ToggleSwitchPage extends StatefulWidget {
   const ToggleSwitchPage({super.key});
@@ -15,13 +15,13 @@ class _ToggleSwitchPageState extends State<ToggleSwitchPage> with PageMixin {
   bool secondValue = true;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(final BuildContext context) {
     return ScaffoldPage.scrollable(
       header: PageHeader(
         title: const Text('ToggleSwitch'),
         commandBar: ToggleSwitch(
           checked: disabled,
-          onChanged: (v) => setState(() => disabled = v),
+          onChanged: (final v) => setState(() => disabled = v),
           content: const Text('Disabled'),
         ),
       ),
@@ -34,7 +34,8 @@ class _ToggleSwitchPageState extends State<ToggleSwitchPage> with PageMixin {
         ),
         subtitle(content: const Text('A simple ToggleSwitch')),
         CardHighlight(
-          codeSnippet: '''bool checked = false;
+          codeSnippet: '''
+bool checked = false;
 
 ToggleSwitch(
   checked: checked,
@@ -46,7 +47,7 @@ ToggleSwitch(
               checked: firstValue,
               onChanged: disabled
                   ? null
-                  : (v) => setState(() => firstValue = v),
+                  : (final v) => setState(() => firstValue = v),
               content: Text(firstValue ? 'On' : 'Off'),
             ),
           ),
@@ -55,7 +56,8 @@ ToggleSwitch(
           content: const Text('A ToggleSwitch with custom header and content'),
         ),
         CardHighlight(
-          codeSnippet: '''bool checked = false;
+          codeSnippet: '''
+bool checked = false;
 
 ToggleSwitch(
   checked: checked,
@@ -70,16 +72,16 @@ ToggleSwitch(
                   checked: secondValue,
                   onChanged: disabled
                       ? null
-                      : (v) => setState(() => secondValue = v),
+                      : (final v) => setState(() => secondValue = v),
                   content: Text(secondValue ? 'Working' : 'Do work'),
                 ),
               ),
               if (secondValue)
                 const Padding(
-                  padding: EdgeInsetsDirectional.only(start: 24.0),
+                  padding: EdgeInsetsDirectional.only(start: 24),
                   child: SizedBox(
-                    height: 30.0,
-                    width: 30.0,
+                    height: 30,
+                    width: 30,
                     child: ProgressRing(),
                   ),
                 ),

@@ -28,9 +28,7 @@ class NavigationPaneTheme extends InheritedTheme {
   /// Creates a theme that controls how descendant [NavigationPane]s should
   /// look like.
   const NavigationPaneTheme({
-    super.key,
-    required this.data,
-    required super.child,
+    required this.data, required super.child, super.key,
   });
 
   /// The properties for descendant [NavigationPane] widgets.
@@ -38,12 +36,10 @@ class NavigationPaneTheme extends InheritedTheme {
 
   /// Creates a theme that merges the nearest [NavigationPaneTheme] with [data].
   static Widget merge({
-    Key? key,
-    required NavigationPaneThemeData data,
-    required Widget child,
+    required NavigationPaneThemeData data, required Widget child, Key? key,
   }) {
     return Builder(
-      builder: (BuildContext context) {
+      builder: (context) {
         return NavigationPaneTheme(
           key: key,
           data: NavigationPaneTheme.of(context).merge(data),
@@ -196,9 +192,9 @@ class NavigationPaneThemeData with Diagnosticable {
               : resources.textFillColorPrimary,
         );
       }),
-      labelPadding: const EdgeInsetsDirectional.only(end: 10.0),
-      iconPadding: const EdgeInsetsDirectional.symmetric(horizontal: 10.0),
-      headerPadding: const EdgeInsetsDirectional.only(top: 10.0),
+      labelPadding: const EdgeInsetsDirectional.only(end: 10),
+      iconPadding: const EdgeInsetsDirectional.symmetric(horizontal: 10),
+      headerPadding: const EdgeInsetsDirectional.only(top: 10),
       paneNavigationButtonIcon: FluentIcons.global_nav_button,
     );
   }

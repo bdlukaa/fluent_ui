@@ -49,19 +49,19 @@ class RoundedRectangleGradientBorder extends ShapeBorder {
   /// This is a constant for use with [strokeAlign].
   ///
   /// This is the default value for [strokeAlign].
-  static const double strokeAlignInside = -1.0;
+  static const double strokeAlignInside = -1;
 
   /// The border is drawn on the center of the border path, with half of the
   /// [BorderSide.width] on the inside, and the other half on the outside of
   /// the path.
   ///
   /// This is a constant for use with [strokeAlign].
-  static const double strokeAlignCenter = 0.0;
+  static const double strokeAlignCenter = 0;
 
   /// The border is drawn on the outside of the border path.
   ///
   /// This is a constant for use with [strokeAlign].
-  static const double strokeAlignOutside = 1.0;
+  static const double strokeAlignOutside = 1;
 
   /// Creates a rounded rectangle border.
   const RoundedRectangleGradientBorder({
@@ -96,7 +96,7 @@ class RoundedRectangleGradientBorder extends ShapeBorder {
   ShapeBorder scale(double t) {
     return RoundedRectangleGradientBorder(
       gradient: gradient.scale(t),
-      width: math.max(0.0, width * t),
+      width: math.max(0, width * t),
       borderRadius: borderRadius * t,
     );
   }
@@ -149,7 +149,6 @@ class RoundedRectangleGradientBorder extends ShapeBorder {
         final inner = borderRect.deflate(strokeInset);
         final outer = borderRect.inflate(strokeOutset);
         canvas.drawDRRect(outer, inner, paint);
-        break;
     }
   }
 

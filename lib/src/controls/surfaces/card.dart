@@ -45,13 +45,12 @@ import 'package:fluent_ui/fluent_ui.dart';
 class Card extends StatelessWidget {
   /// Creates a fluent-styled card.
   const Card({
-    super.key,
-    required this.child,
-    this.padding = const EdgeInsetsDirectional.all(12.0),
+    required this.child, super.key,
+    this.padding = const EdgeInsetsDirectional.all(12),
     this.margin,
     this.backgroundColor,
     this.borderColor,
-    this.borderRadius = const BorderRadius.all(Radius.circular(4.0)),
+    this.borderRadius = const BorderRadius.all(Radius.circular(4)),
   });
 
   /// The widget below this widget in the tree.

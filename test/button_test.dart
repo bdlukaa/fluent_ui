@@ -2,7 +2,7 @@ import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {
-  testWidgets('Test constraints', (WidgetTester tester) async {
+  testWidgets('Test constraints', (tester) async {
     await tester.pumpWidget(
       Directionality(
         textDirection: TextDirection.ltr,
@@ -23,8 +23,8 @@ void main() {
       ),
     );
 
-    var buttonBox = tester.firstRenderObject<RenderBox>(find.byType(Button));
-    var innerBox = tester.firstRenderObject<RenderBox>(find.byType(SizedBox));
+    final buttonBox = tester.firstRenderObject<RenderBox>(find.byType(Button));
+    final innerBox = tester.firstRenderObject<RenderBox>(find.byType(SizedBox));
 
     expect(
       buttonBox.constraints,

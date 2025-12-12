@@ -38,9 +38,7 @@ class ColorRingSpectrum extends StatefulWidget {
   /// - [minSaturation]: The minimum allowed saturation value (0-100).
   /// - [maxSaturation]: The maximum allowed saturation value (0-100).
   const ColorRingSpectrum({
-    super.key,
-    required this.colorState,
-    required this.onColorChanged,
+    required this.colorState, required this.onColorChanged, super.key,
     this.minHue = 0,
     this.maxHue = 360,
     this.minSaturation = 0,
@@ -112,26 +110,26 @@ class _ColorRingSpectrumState extends State<ColorRingSpectrum> {
   }
 
   void _updateColorFromWheel(Offset position) {
-    final RenderBox renderBox = context.findRenderObject() as RenderBox;
-    final Size size = renderBox.size;
+    final renderBox = context.findRenderObject()! as RenderBox;
+    final size = renderBox.size;
 
-    final Offset center = Offset(size.width / 2, size.height / 2);
-    final double radius = math.min(size.width, size.height) / 2;
+    final center = Offset(size.width / 2, size.height / 2);
+    final radius = math.min(size.width, size.height) / 2;
 
     // Calculate distance from center
-    double x = position.dx - center.dx;
-    double y = position.dy - center.dy;
-    double distance = math.sqrt(x * x + y * y);
+    var x = position.dx - center.dx;
+    var y = position.dy - center.dy;
+    var distance = math.sqrt(x * x + y * y);
 
     // If the point is outside the wheel, bring it back into the circle
     if (distance > radius) {
-      x *= (radius / distance);
-      y *= (radius / distance);
+      x *= radius / distance;
+      y *= radius / distance;
       distance = radius;
     }
 
     // Calculate angle and map it directly to minHue~maxHue range
-    double angle = math.atan2(y, x) * 180 / math.pi;
+    var angle = math.atan2(y, x) * 180 / math.pi;
     angle = (angle + 360) % 360;
 
     // Map the 0-360 angle range to minHue-maxHue range
@@ -186,9 +184,7 @@ class ColorBoxSpectrum extends StatefulWidget {
   /// - [minSaturation]: The minimum allowed saturation value (0-100).
   /// - [maxSaturation]: The maximum allowed saturation value (0-100).
   const ColorBoxSpectrum({
-    super.key,
-    required this.colorState,
-    required this.onColorChanged,
+    required this.colorState, required this.onColorChanged, super.key,
     this.minHue = 0,
     this.maxHue = 360,
     this.minSaturation = 0,
@@ -222,7 +218,7 @@ class _ColorBoxSpectrumState extends State<ColorBoxSpectrum> {
       onPanEnd: _handlePanEnd,
       onTapDown: _handleTapDown,
       onTapUp: _handleTapUp,
-      child: Container(
+      child: DecoratedBox(
         decoration: BoxDecoration(
           border: Border.all(color: theme.resources.dividerStrokeColorDefault),
           borderRadius: BorderRadius.circular(4),
@@ -266,22 +262,22 @@ class _ColorBoxSpectrumState extends State<ColorBoxSpectrum> {
   }
 
   void _updateColorFromBox(Offset position) {
-    final RenderBox renderBox = context.findRenderObject() as RenderBox;
-    final Size size = renderBox.size;
+    final renderBox = context.findRenderObject()! as RenderBox;
+    final size = renderBox.size;
 
-    final double width = size.width;
-    final double height = size.height;
+    final width = size.width;
+    final height = size.height;
 
     // Clamp position within bounds
-    final double x = position.dx.clamp(0, width);
-    final double y = position.dy.clamp(0, height);
+    final x = position.dx.clamp(0, width);
+    final y = position.dy.clamp(0, height);
 
     // Calculate HSV values
     // Hue from left to right (minHue to maxHue)
-    final double h =
+    final h =
         widget.minHue + (x / width) * (widget.maxHue - widget.minHue);
     // Saturation from top (maxSaturation) to bottom (minSaturation)
-    final double s =
+    final s =
         widget.maxSaturation / 100 -
         (y / height) * (widget.maxSaturation - widget.minSaturation) / 100;
 
@@ -356,12 +352,11 @@ class _RingSpectrumPainter extends CustomPainter {
 
       final mappedHue = minHue + (angle / 360) * (maxHue - minHue);
       final shader = RadialGradient(
-        center: Alignment.center,
-        radius: 1.0,
+        radius: 1,
         stops: const [0.0, 0.5],
         colors: [
-          HSVColor.fromAHSV(1.0, mappedHue, minSaturation / 100, 1.0).toColor(),
-          HSVColor.fromAHSV(1.0, mappedHue, maxSaturation / 100, 1.0).toColor(),
+          HSVColor.fromAHSV(1, mappedHue, minSaturation / 100, 1).toColor(),
+          HSVColor.fromAHSV(1, mappedHue, maxSaturation / 100, 1).toColor(),
         ],
       ).createShader(Rect.fromCircle(center: center, radius: radius));
 
@@ -398,7 +393,7 @@ class _RingSpectrumPainter extends CustomPainter {
     // Draw indicator with current color and border
     // Calculate perceived brightness to determine stroke color
     final rgb = ColorState.hsvToRgb(
-      HsvComponents(colorState.hue, colorState.saturation, 1.0),
+      HsvComponents(colorState.hue, colorState.saturation, 1),
     );
     final fillColor = Color.fromARGB(
       255,
@@ -448,7 +443,7 @@ class _RingSpectrumPainter extends CustomPainter {
   void _drawLabel(Canvas canvas, Size size, String text, Offset position) {
     final backgroundColor = theme.resources.controlSolidFillColorDefault;
     final textColor = theme.resources.textFillColorPrimary;
-    final borderRadius = BorderRadius.circular(4.0);
+    final borderRadius = BorderRadius.circular(4);
     const labelPadding = EdgeInsets.symmetric(horizontal: 8, vertical: 4);
 
     final textSpan = TextSpan(
@@ -466,7 +461,7 @@ class _RingSpectrumPainter extends CustomPainter {
     final labelX = (position.dx - labelWidth / 2)
         .clamp(0, size.width - labelWidth)
         .toDouble();
-    double labelY = (position.dy - labelHeight - 30)
+    var labelY = (position.dy - labelHeight - 30)
         .clamp(0, size.height - labelHeight)
         .toDouble();
 
@@ -579,7 +574,7 @@ class _BoxSpectrumPainter extends CustomPainter {
     // Draw hue gradient (left to right)
     final colors = List.generate(360, (index) {
       final hue = minHue + (index / 360) * (maxHue - minHue);
-      return HSVColor.fromAHSV(1.0, hue, 1.0, 1.0).toColor();
+      return HSVColor.fromAHSV(1, hue, 1, 1).toColor();
     });
     final hueGradient = LinearGradient(colors: colors);
 
@@ -613,7 +608,7 @@ class _BoxSpectrumPainter extends CustomPainter {
     // Draw indicator with current color and white border
     // Calculate perceived brightness to determine stroke color
     final rgb = ColorState.hsvToRgb(
-      HsvComponents(colorState.hue, colorState.saturation, 1.0),
+      HsvComponents(colorState.hue, colorState.saturation, 1),
     );
     final fillColor = Color.fromARGB(
       255,
@@ -663,7 +658,7 @@ class _BoxSpectrumPainter extends CustomPainter {
   void _drawLabel(Canvas canvas, Size size, String text, Offset position) {
     final backgroundColor = theme.resources.controlSolidFillColorDefault;
     final textColor = theme.resources.textFillColorPrimary;
-    final borderRadius = BorderRadius.circular(4.0);
+    final borderRadius = BorderRadius.circular(4);
     const labelPadding = EdgeInsets.symmetric(horizontal: 8, vertical: 4);
 
     final textSpan = TextSpan(
@@ -681,7 +676,7 @@ class _BoxSpectrumPainter extends CustomPainter {
     final labelX = (position.dx - labelWidth / 2)
         .clamp(0, size.width - labelWidth)
         .toDouble();
-    double labelY = (position.dy - labelHeight - 30)
+    var labelY = (position.dy - labelHeight - 30)
         .clamp(0, size.height - labelHeight)
         .toDouble();
 
@@ -750,8 +745,8 @@ class CheckerboardPainter extends CustomPainter {
     final width = size.width.toInt();
     final height = size.height.toInt();
 
-    for (int i = 0; i < width; i += squareSize) {
-      for (int j = 0; j < height; j += squareSize) {
+    for (var i = 0; i < width; i += squareSize) {
+      for (var j = 0; j < height; j += squareSize) {
         // Determine if this position should be a dark square
         final isDarkSquare = (i ~/ squareSize + j ~/ squareSize) % 2 != 0;
 

@@ -7,12 +7,13 @@ class NavigationPaneItem with Diagnosticable {
   /// See also:
   ///
   ///   * [PaneItem.build], which assigns this to its children
-  late final GlobalKey itemKey = GlobalKey(
-    debugLabel: 'NavigationPaneItem key; $runtimeType',
-  );
+  late final GlobalKey itemKey = GlobalKey();
 
+  /// The key used for the item itself. Useful to find the position and size of
+  /// the pane.
   final Key? key;
 
+  /// Creates a navigation pane item.
   NavigationPaneItem({this.key});
 }
 
@@ -33,9 +34,9 @@ class NavigationPaneItem with Diagnosticable {
 class PaneItem extends NavigationPaneItem {
   /// Creates a pane item.
   PaneItem({
-    super.key,
     required this.icon,
     required this.body,
+    super.key,
     this.title,
     this.trailing,
     this.infoBadge,
@@ -156,11 +157,11 @@ class PaneItem extends NavigationPaneItem {
       focusNode: focusNode,
       onPressed: onItemTapped,
       cursor: mouseCursor,
-      focusEnabled: isMinimal ? (maybeBody?.minimalPaneOpen ?? false) : true,
+      focusEnabled: !isMinimal || (maybeBody?.minimalPaneOpen ?? false),
       forceEnabled: enabled,
       builder: (context, states) {
-        var textStyle = () {
-          var style = !isTop
+        final textStyle = () {
+          final style = !isTop
               ? (selected
                     ? theme.selectedTextStyle?.resolve(states)
                     : theme.unselectedTextStyle?.resolve(states))
@@ -253,12 +254,12 @@ class PaneItem extends NavigationPaneItem {
                     if (shouldShowTrailing) ...[
                       if (infoBadge != null)
                         Padding(
-                          padding: const EdgeInsetsDirectional.only(end: 8.0),
-                          child: infoBadge!,
+                          padding: const EdgeInsetsDirectional.only(end: 8),
+                          child: infoBadge,
                         ),
                       if (trailing != null)
                         IconTheme.merge(
-                          data: const IconThemeData(size: 16.0),
+                          data: const IconThemeData(size: 16),
                           child: trailing!,
                         ),
                     ],
@@ -266,7 +267,7 @@ class PaneItem extends NavigationPaneItem {
                 ),
               );
             case PaneDisplayMode.top:
-              Widget result = Row(
+              final Widget result = Row(
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   Padding(
@@ -279,7 +280,7 @@ class PaneItem extends NavigationPaneItem {
                   if (showTextOnTop) textResult,
                   if (trailing != null)
                     IconTheme.merge(
-                      data: const IconThemeData(size: 16.0),
+                      data: const IconThemeData(size: 16),
                       child: trailing!,
                     ),
                 ],
@@ -305,7 +306,7 @@ class PaneItem extends NavigationPaneItem {
           label: titleText.isEmpty ? null : titleText,
           selected: selected,
           child: Container(
-            margin: const EdgeInsetsDirectional.symmetric(horizontal: 6.0),
+            margin: const EdgeInsetsDirectional.symmetric(horizontal: 6),
             decoration: BoxDecoration(
               color: () {
                 final tileColor =
@@ -319,14 +320,15 @@ class PaneItem extends NavigationPaneItem {
                 return tileColor.resolve(
                   selected
                       ? {
-                          states.isHovered
-                              ? WidgetState.pressed
-                              : WidgetState.hovered,
+                          if (states.isHovered)
+                            WidgetState.pressed
+                          else
+                            WidgetState.hovered,
                         }
                       : newStates,
                 );
               }(),
-              borderRadius: BorderRadius.circular(4.0),
+              borderRadius: BorderRadius.circular(4),
             ),
             child: FocusBorder(
               focused: states.isFocused,
@@ -362,7 +364,7 @@ class PaneItem extends NavigationPaneItem {
 
     return Padding(
       key: key,
-      padding: const EdgeInsetsDirectional.only(bottom: 4.0),
+      padding: const EdgeInsetsDirectional.only(bottom: 4),
       child: () {
         // If there is an indicator and the item is an effective item
         if (maybeBody?.pane?.indicator != null &&
@@ -453,12 +455,12 @@ class PaneItemSeparator extends NavigationPaneItem {
           thickness: thickness,
           decoration: color != null ? BoxDecoration(color: color) : null,
           verticalMargin: const EdgeInsetsDirectional.symmetric(
-            horizontal: 8.0,
-            vertical: 10.0,
+            horizontal: 8,
+            vertical: 10,
           ),
           horizontalMargin: const EdgeInsetsDirectional.symmetric(
-            horizontal: 8.0,
-            vertical: 10.0,
+            horizontal: 8,
+            vertical: 10,
           ),
         ),
       ),
@@ -477,7 +479,7 @@ class PaneItemSeparator extends NavigationPaneItem {
 ///   * [PaneItemExpander], which creates hierhical navigation
 class PaneItemHeader extends NavigationPaneItem {
   /// Creates a pane header.
-  PaneItemHeader({super.key, required this.header});
+  PaneItemHeader({required this.header, super.key});
 
   /// The header. The default style is [NavigationPaneThemeData.itemHeaderTextStyle],
   /// but can be overriten by [Text.style].
@@ -532,10 +534,10 @@ class PaneItemHeader extends NavigationPaneItem {
 ///   * [PaneItemExpander], which creates hierhical navigation
 class PaneItemAction extends PaneItem {
   PaneItemAction({
-    super.key,
     required super.icon,
-    super.body = const SizedBox.shrink(),
     required VoidCallback super.onTap,
+    super.key,
+    super.body = const SizedBox.shrink(),
     super.title,
     super.infoBadge,
     super.focusNode,
@@ -592,10 +594,10 @@ class PaneItemExpander extends PaneItem {
   final PaneItemExpanderKey expanderKey = PaneItemExpanderKey();
 
   PaneItemExpander({
-    super.key,
     required super.icon,
     required this.items,
     required super.body,
+    super.key,
     super.title,
     super.infoBadge,
     super.trailing = kDefaultTrailing,
@@ -618,7 +620,7 @@ class PaneItemExpander extends PaneItem {
 
   static const kDefaultTrailing = WindowsIcon(
     WindowsIcons.chevron_down,
-    size: 8.0,
+    size: 8,
   );
 
   @override
@@ -658,7 +660,6 @@ class PaneItemExpander extends PaneItem {
 
 class _PaneItemExpander extends StatefulWidget {
   const _PaneItemExpander({
-    super.key,
     required this.item,
     required this.items,
     required this.displayMode,
@@ -667,6 +668,7 @@ class _PaneItemExpander extends StatefulWidget {
     required this.onPressed,
     required this.onItemPressed,
     required this.initiallyExpanded,
+    super.key,
   });
 
   final PaneItem item;
@@ -678,7 +680,7 @@ class _PaneItemExpander extends StatefulWidget {
   final ValueChanged<PaneItem>? onItemPressed;
   final bool initiallyExpanded;
 
-  static const leadingPadding = EdgeInsetsDirectional.only(start: 28.0);
+  static const leadingPadding = EdgeInsetsDirectional.only(start: 28);
 
   @override
   State<_PaneItemExpander> createState() => __PaneItemExpanderState();
@@ -752,7 +754,7 @@ class __PaneItemExpanderState extends State<_PaneItemExpander>
         final displayMode = body.displayMode;
         final navigationTheme = NavigationPaneTheme.of(context);
 
-        flyoutController.showFlyout(
+        flyoutController.showFlyout<void>(
           placementMode: displayMode == PaneDisplayMode.compact
               ? FlyoutPlacementMode.rightTop
               : FlyoutPlacementMode.bottomCenter,
@@ -778,10 +780,10 @@ class __PaneItemExpanderState extends State<_PaneItemExpander>
                     builder: (context) {
                       return Container(
                         padding: const EdgeInsetsDirectional.symmetric(
-                          horizontal: 10.0,
-                          vertical: 8.0,
+                          horizontal: 10,
+                          vertical: 8,
                         ),
-                        margin: const EdgeInsetsDirectional.only(bottom: 4.0),
+                        margin: const EdgeInsetsDirectional.only(bottom: 4),
                         child: DefaultTextStyle.merge(
                           style: navigationTheme.itemHeaderTextStyle,
                           softWrap: false,
@@ -839,7 +841,7 @@ class __PaneItemExpanderState extends State<_PaneItemExpander>
           return widget.items.contains(item);
         })
         .map((item) => body.pane!.effectiveIndexOf(item));
-    if (childrenIndexes.contains(body.pane!.selected!) && !_open) {
+    if (childrenIndexes.contains(body.pane!.selected) && !_open) {
       realIndex = body.pane!.selected!;
     }
 
@@ -850,7 +852,7 @@ class __PaneItemExpanderState extends State<_PaneItemExpander>
           trailing: GestureDetector(
             onTap: toggleOpen,
             child: Padding(
-              padding: const EdgeInsetsDirectional.only(end: 14.0),
+              padding: const EdgeInsetsDirectional.only(end: 14),
               child: AnimatedBuilder(
                 animation: controller,
                 builder: (context, child) => RotationTransition(
@@ -862,7 +864,7 @@ class __PaneItemExpanderState extends State<_PaneItemExpander>
                   ),
                   child: child,
                 ),
-                child: widget.item.trailing!,
+                child: widget.item.trailing,
               ),
             ),
           ),
@@ -986,8 +988,8 @@ class _PaneItemExpanderMenuItem extends MenuFlyoutItemBase {
           trailing: () {
             if (item.infoBadge != null) {
               return Padding(
-                padding: const EdgeInsetsDirectional.only(start: 8.0),
-                child: item.infoBadge!,
+                padding: const EdgeInsetsDirectional.only(start: 8),
+                child: item.infoBadge,
               );
             }
           }(),
@@ -1022,8 +1024,8 @@ base class _PaneItemExpanderItem
 class PaneItemWidgetAdapter extends NavigationPaneItem {
   /// Creates a pane header.
   PaneItemWidgetAdapter({
-    super.key,
     required this.child,
+    super.key,
     this.applyPadding = true,
   });
 
@@ -1066,7 +1068,7 @@ extension _ItemsExtension on List<NavigationPaneItem> {
           final paneContext = paneKey.currentContext;
           if (paneContext == null || !paneContext.mounted) return Offset.zero;
           final paneBox =
-              paneKey.currentContext!.findRenderObject() as RenderBox;
+              paneKey.currentContext!.findRenderObject()! as RenderBox;
           final position = paneBox.globalToLocal(globalPosition);
           return position;
         })

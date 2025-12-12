@@ -1,10 +1,10 @@
 part of 'view.dart';
 
 /// The width of the Compact Navigation Pane
-const double kCompactNavigationPaneWidth = 50.0;
+const double kCompactNavigationPaneWidth = 50;
 
 /// The width of the Open Navigation Pane
-const double kOpenNavigationPaneWidth = 320.0;
+const double kOpenNavigationPaneWidth = 320;
 
 /// You can use the PaneDisplayMode property to configure different
 /// navigation styles, or display modes, for the NavigationView
@@ -70,6 +70,7 @@ enum PaneDisplayMode {
 ///   * [NavigationView], used alongside this to navigate through pages
 ///   * [PaneDisplayMode], that defines how this pane is rendered
 ///   * [NavigationBody], the widget that implement transitions to the pages
+@immutable
 class NavigationPane with Diagnosticable {
   /// Creates a navigation pane.
   ///
@@ -309,8 +310,8 @@ class NavigationPane with Diagnosticable {
     BuildContext context,
     Widget itemTitle,
     NavigationPane pane, {
-    EdgeInsetsGeometry padding = EdgeInsetsDirectional.zero,
     required VoidCallback onPressed,
+    EdgeInsetsGeometry padding = EdgeInsetsDirectional.zero,
   }) {
     if (pane.menuButton != null) return pane.menuButton!;
     return Container(
@@ -384,6 +385,7 @@ class NavigationPane with Diagnosticable {
 ///
 ///  * [NavigationPane], which this configures the size of
 ///  * [NavigationView], used to display [NavigationPane]s
+@immutable
 class NavigationPaneSize with Diagnosticable {
   /// The height of the pane when it's in top mode.
   ///
@@ -706,18 +708,18 @@ class _TopNavigationPaneState extends State<_TopNavigationPane> {
           if (widget.pane.leading != null)
             Padding(
               padding: const EdgeInsetsDirectional.symmetric(
-                horizontal: 8.0,
-                vertical: 6.0,
+                horizontal: 8,
+                vertical: 6,
               ),
-              child: widget.pane.leading!,
+              child: widget.pane.leading,
             ),
           if (widget.pane.header != null)
             Padding(
               padding: const EdgeInsetsDirectional.symmetric(
-                horizontal: 8.0,
-                vertical: 6.0,
+                horizontal: 8,
+                vertical: 6,
               ),
-              child: widget.pane.header!,
+              child: widget.pane.header,
             ),
           Expanded(
             child: DynamicOverflow(
@@ -733,7 +735,7 @@ class _TopNavigationPaneState extends State<_TopNavigationPane> {
                       context,
                       false,
                       () {
-                        overflowController.showFlyout(
+                        overflowController.showFlyout<void>(
                           placementMode: FlyoutPlacementMode.bottomCenter,
                           forceAvailableSpace: true,
                           builder: (context) {
@@ -791,12 +793,9 @@ class _TopNavigationPaneState extends State<_TopNavigationPane> {
           ),
           if (widget.pane.autoSuggestBox != null)
             Container(
-              margin: const EdgeInsetsDirectional.only(start: 30.0),
-              constraints: const BoxConstraints(
-                minWidth: 100.0,
-                maxWidth: 215.0,
-              ),
-              child: widget.pane.autoSuggestBox!,
+              margin: const EdgeInsetsDirectional.only(start: 30),
+              constraints: const BoxConstraints(minWidth: 100, maxWidth: 215),
+              child: widget.pane.autoSuggestBox,
             ),
           ...widget.pane.footerItems.map((item) {
             return _buildItem(item, height);
@@ -883,8 +882,8 @@ class _MenuFlyoutPaneItem extends MenuFlyoutItemBase {
         onPressed?.call();
       },
       builder: (context, states) {
-        var textStyle = () {
-          var style = theme.unselectedTextStyle?.resolve(states);
+        final textStyle = () {
+          final style = theme.unselectedTextStyle?.resolve(states);
           if (style == null) return baseStyle;
           return style.merge(baseStyle);
         }();
@@ -910,9 +909,9 @@ class _MenuFlyoutPaneItem extends MenuFlyoutItemBase {
 
         return Container(
           padding: const EdgeInsetsDirectional.only(
-            end: 4.0,
+            end: 4,
           ).add(padding ?? EdgeInsetsDirectional.zero),
-          height: 36.0,
+          height: 36,
           color: ButtonThemeData.uncheckedInputColor(
             FluentTheme.of(context),
             states,
@@ -929,9 +928,9 @@ class _MenuFlyoutPaneItem extends MenuFlyoutItemBase {
                   ),
                   child: Container(
                     height: 30 * 0.7,
-                    width: 3.0,
+                    width: 3,
                     decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(100.0),
+                      borderRadius: BorderRadius.circular(100),
                       color: selected
                           ? fluentTheme.accentColor.defaultBrushFor(
                               fluentTheme.brightness,
@@ -948,7 +947,7 @@ class _MenuFlyoutPaneItem extends MenuFlyoutItemBase {
                     color:
                         theme.unselectedIconColor?.resolve(states) ??
                         baseStyle.color,
-                    size: 16.0,
+                    size: 16,
                   ),
                   child: Center(child: item.icon),
                 ),
@@ -1056,7 +1055,7 @@ class _MenuFlyoutPaneItemExpanderState
                 ),
                 child: child,
               ),
-              child: const WindowsIcon(WindowsIcons.chevron_down, size: 10.0),
+              child: const WindowsIcon(WindowsIcons.chevron_down, size: 10),
             ),
           ).build(context),
           AnimatedSize(
@@ -1072,7 +1071,7 @@ class _MenuFlyoutPaneItemExpanderState
                         item,
                         widget.onItemPressed,
                         paneItemPadding: const EdgeInsetsDirectional.only(
-                          start: 24.0,
+                          start: 24,
                         ),
                       ).build(context);
                     }).toList(),
@@ -1136,9 +1135,7 @@ class _CompactNavigationPane extends StatelessWidget {
   Widget build(BuildContext context) {
     assert(debugCheckHasFluentTheme(context));
     final theme = NavigationPaneTheme.of(context);
-    const EdgeInsetsGeometry topPadding = EdgeInsetsDirectional.only(
-      bottom: 8.0,
-    );
+    const EdgeInsetsGeometry topPadding = EdgeInsetsDirectional.only(bottom: 8);
     final showReplacement =
         pane.autoSuggestBox != null && pane.autoSuggestBoxReplacement != null;
     return AnimatedContainer(
@@ -1190,18 +1187,14 @@ class _CompactNavigationPane extends StatelessWidget {
                 shrinkWrap: true,
                 key: listKey,
                 primary: true,
-                children: pane.items.map((item) {
-                  return _buildItem(item);
-                }).toList(),
+                children: pane.items.map(_buildItem).toList(),
               ),
             ),
             ListView(
               shrinkWrap: true,
               physics: const NeverScrollableScrollPhysics(),
               primary: false,
-              children: pane.footerItems.map((item) {
-                return _buildItem(item);
-              }).toList(),
+              children: pane.footerItems.map(_buildItem).toList(),
             ),
           ],
         ),
@@ -1295,11 +1288,9 @@ class _OpenNavigationPaneState extends State<_OpenNavigationPane> {
   @override
   Widget build(BuildContext context) {
     assert(debugCheckHasFluentTheme(context));
-    const EdgeInsetsGeometry topPadding = EdgeInsetsDirectional.only(
-      bottom: 6.0,
-    );
+    const EdgeInsetsGeometry topPadding = EdgeInsetsDirectional.only(bottom: 6);
     final menuButton = () {
-      if (widget.pane.menuButton != null) return widget.pane.menuButton!;
+      if (widget.pane.menuButton != null) return widget.pane.menuButton;
       if (widget.onToggle != null) {
         return NavigationPane.buildMenuButton(
           context,
@@ -1312,7 +1303,8 @@ class _OpenNavigationPaneState extends State<_OpenNavigationPane> {
       }
       return null;
     }();
-    var paneWidth = widget.pane.size?.openPaneWidth ?? kOpenNavigationPaneWidth;
+    final paneWidth =
+        widget.pane.size?.openPaneWidth ?? kOpenNavigationPaneWidth;
 
     var paneHeaderHeight = widget.pane.size?.headerHeight;
     if (widget.pane.header == null && menuButton == null) {
@@ -1348,7 +1340,7 @@ class _OpenNavigationPaneState extends State<_OpenNavigationPane> {
                               alignment: AlignmentDirectional.centerStart,
                               child: Padding(
                                 padding: const EdgeInsetsDirectional.only(
-                                  start: 8.0,
+                                  start: 8,
                                 ),
                                 child: DefaultTextStyle.merge(
                                   style: theme.itemHeaderTextStyle,
@@ -1369,10 +1361,10 @@ class _OpenNavigationPaneState extends State<_OpenNavigationPane> {
                 if (width > kOpenNavigationPaneWidth / 1.5)
                   Container(
                     padding: theme.iconPadding ?? EdgeInsetsDirectional.zero,
-                    height: 41.0,
+                    height: 41,
                     alignment: AlignmentDirectional.center,
                     margin: topPadding,
-                    child: widget.pane.autoSuggestBox!,
+                    child: widget.pane.autoSuggestBox,
                   )
                 else
                   Padding(

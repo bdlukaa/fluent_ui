@@ -9,8 +9,8 @@ import 'package:flutter/services.dart';
 /// The dialog is constrained to 368 logical pixels wide and 756 logical pixels
 /// tall by default, following the Windows design guidelines.
 const kDefaultContentDialogConstraints = BoxConstraints(
-  maxWidth: 368.0,
-  maxHeight: 756.0,
+  maxWidth: 368,
+  maxHeight: 756,
 );
 
 /// A modal dialog that displays contextual information and requires user action.
@@ -375,9 +375,7 @@ class ContentDialogTheme extends InheritedTheme {
   /// Creates a theme that controls how descendant [ContentDialog]s should
   /// look like.
   const ContentDialogTheme({
-    super.key,
-    required this.data,
-    required super.child,
+    required this.data, required super.child, super.key,
   });
 
   /// The properties for descendant [ContentDialog] widgets.
@@ -385,12 +383,10 @@ class ContentDialogTheme extends InheritedTheme {
 
   /// Creates a theme that merges the nearest [ContentDialogTheme] with [data].
   static Widget merge({
-    Key? key,
-    required ContentDialogThemeData data,
-    required Widget child,
+    required ContentDialogThemeData data, required Widget child, Key? key,
   }) {
     return Builder(
-      builder: (BuildContext context) {
+      builder: (context) {
         return ContentDialogTheme(
           key: key,
           data: ContentDialogTheme.of(context).merge(data),

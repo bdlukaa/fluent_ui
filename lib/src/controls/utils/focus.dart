@@ -10,8 +10,7 @@ import 'package:flutter/foundation.dart';
 class FocusBorder extends StatelessWidget {
   /// Creates a focus border.
   const FocusBorder({
-    super.key,
-    required this.child,
+    required this.child, super.key,
     this.focused = true,
     this.style,
     this.renderOutside,
@@ -123,18 +122,16 @@ class FocusBorder extends StatelessWidget {
 class FocusTheme extends InheritedTheme {
   /// Creates a theme that controls how descendant [FocusBorder]s should
   /// look like.
-  const FocusTheme({super.key, required this.data, required super.child});
+  const FocusTheme({required this.data, required super.child, super.key});
 
   final FocusThemeData data;
 
   /// Creates a theme that merges the nearest [FocusTheme] with [data].
   static Widget merge({
-    Key? key,
-    required FocusThemeData data,
-    required Widget child,
+    required FocusThemeData data, required Widget child, Key? key,
   }) {
     return Builder(
-      builder: (BuildContext context) {
+      builder: (context) {
         return FocusTheme(
           key: key,
           data: FocusTheme.of(context).merge(data),
@@ -194,14 +191,14 @@ class FocusThemeData with Diagnosticable {
 
   factory FocusThemeData.standard(FluentThemeData theme) {
     return FocusThemeData(
-      borderRadius: BorderRadius.circular(6.0),
+      borderRadius: BorderRadius.circular(6),
       primaryBorder: BorderSide(
         width: 2,
         color: theme.resources.focusStrokeColorOuter,
       ),
       secondaryBorder: BorderSide(color: theme.resources.focusStrokeColorInner),
       glowColor: theme.accentColor.withValues(alpha: 0.15),
-      glowFactor: 0.0,
+      glowFactor: 0,
       renderOutside: true,
     );
   }

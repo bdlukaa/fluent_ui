@@ -7,9 +7,9 @@ typedef WidgetStateWidgetBuilder =
 
 class HoverButtonInherited extends InheritedWidget {
   const HoverButtonInherited({
-    super.key,
     required super.child,
     required this.states,
+    super.key,
   });
 
   final Set<WidgetState> states;
@@ -32,8 +32,8 @@ class HoverButtonInherited extends InheritedWidget {
 class HoverButton extends StatefulWidget {
   /// Creates a hover button.
   const HoverButton({
-    super.key,
     required this.builder,
+    super.key,
     this.cursor,
     this.onPressed,
     this.onLongPress,
@@ -196,10 +196,10 @@ class _HoverButtonState extends State<HoverButton> {
 
     defaultActions = {
       ActivateIntent: CallbackAction<ActivateIntent>(
-        onInvoke: (ActivateIntent intent) => handleActionTap(),
+        onInvoke: (intent) => handleActionTap(),
       ),
       ButtonActivateIntent: CallbackAction<ButtonActivateIntent>(
-        onInvoke: (ButtonActivateIntent intent) => handleActionTap(),
+        onInvoke: (intent) => handleActionTap(),
       ),
     };
 
@@ -215,7 +215,7 @@ class _HoverButtonState extends State<HoverButton> {
     setState(() => _pressing = true);
     widget.onFocusTap?.call();
     widget.onPressed?.call();
-    await Future.delayed(theme.fastAnimationDuration);
+    await Future<void>.delayed(theme.fastAnimationDuration);
     if (mounted) setState(() => _pressing = false);
   }
 
@@ -285,7 +285,7 @@ class _HoverButtonState extends State<HoverButton> {
       onTapUp: (d) async {
         if (!enabled) return;
         widget.onTapUp?.call(d);
-        await Future.delayed(const Duration(milliseconds: 100));
+        await Future<void>.delayed(const Duration(milliseconds: 100));
         if (mounted) setState(() => _pressing = false);
       },
       onTapCancel: () {
@@ -360,8 +360,7 @@ class _HoverButtonState extends State<HoverButton> {
     );
     if (widget.margin != null) w = Padding(padding: widget.margin!, child: w);
 
-    w = HoverButtonInherited(states: states, child: w);
-    return w;
+    return HoverButtonInherited(states: states, child: w);
   }
 }
 

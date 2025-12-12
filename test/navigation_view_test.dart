@@ -3,14 +3,14 @@ import 'package:flutter_test/flutter_test.dart';
 
 void main() {
   testWidgets('NavigationAppBar takes viewPadding into consideration', (
-    WidgetTester tester,
+    tester,
   ) async {
     final navigationViewKey = GlobalKey();
     await tester.pumpWidget(
       FluentApp(
         builder: (context, child) {
           return MediaQuery(
-            data: const MediaQueryData(padding: EdgeInsets.only(top: 27.0)),
+            data: const MediaQueryData(padding: EdgeInsets.only(top: 27)),
             child: child!,
           );
         },

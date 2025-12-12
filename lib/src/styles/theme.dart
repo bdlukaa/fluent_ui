@@ -38,7 +38,7 @@ class FluentTheme extends StatelessWidget {
   /// Applies the given theme [data] to [child].
   ///
   /// The [data] and [child] arguments must not be null.
-  const FluentTheme({super.key, required this.data, required this.child});
+  const FluentTheme({required this.data, required this.child, super.key});
 
   /// Specifies the color and typography values for descendant widgets.
   final FluentThemeData data;
@@ -135,12 +135,10 @@ class AnimatedFluentTheme extends ImplicitlyAnimatedWidget {
   /// By default, the theme transition uses a linear curve. The [data] and
   /// [child] arguments must not be null.
   const AnimatedFluentTheme({
-    super.key,
-    required this.data,
+    required this.data, required this.child, super.key,
     super.curve,
     super.duration = kThemeAnimationDuration,
     super.onEnd,
-    required this.child,
   });
 
   /// Specifies the color and typography values for descendant widgets.
@@ -491,8 +489,8 @@ class FluentThemeData with Diagnosticable {
     toggleButtonTheme ??= const ToggleButtonThemeData();
     toggleSwitchTheme ??= const ToggleSwitchThemeData();
     iconTheme ??= isLight
-        ? const IconThemeData(color: Colors.black, size: 18.0)
-        : const IconThemeData(color: Colors.white, size: 18.0);
+        ? const IconThemeData(color: Colors.black, size: 18)
+        : const IconThemeData(color: Colors.white, size: 18);
     dialogTheme ??= const ContentDialogThemeData();
     tooltipTheme ??= const TooltipThemeData();
     dividerTheme ??= const DividerThemeData();

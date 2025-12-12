@@ -116,7 +116,7 @@ class _NavigationBodyState extends State<_NavigationBody> {
             return widget.transitionBuilder!(child, animation);
           }
 
-          var isTop = view.displayMode == PaneDisplayMode.top;
+          final isTop = view.displayMode == PaneDisplayMode.top;
 
           if (isTop) {
             // Other transtitions other than default is only applied to top nav
@@ -180,9 +180,7 @@ class _NavigationBodyState extends State<_NavigationBody> {
 class InheritedNavigationView extends InheritedWidget {
   /// Creates an inherited navigation view.
   const InheritedNavigationView({
-    super.key,
-    required super.child,
-    required this.displayMode,
+    required super.child, required this.displayMode, super.key,
     this.minimalPaneOpen = false,
     this.pane,
     this.previousItemIndex = 0,
@@ -222,8 +220,7 @@ class InheritedNavigationView extends InheritedWidget {
   }
 
   static Widget merge({
-    Key? key,
-    required Widget child,
+    required Widget child, Key? key,
     int? currentItemIndex,
     NavigationPane? pane,
     PaneDisplayMode? displayMode,
@@ -264,7 +261,7 @@ class InheritedNavigationView extends InheritedWidget {
 
 /// Makes the [GlobalKey]s for [PaneItem]s accesible on the scope.
 class PaneItemKeys extends InheritedWidget {
-  const PaneItemKeys({super.key, required super.child, required this.keys});
+  const PaneItemKeys({required super.child, required this.keys, super.key});
 
   final Map<int, GlobalKey> keys;
 

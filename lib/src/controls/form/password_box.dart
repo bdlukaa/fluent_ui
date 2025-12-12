@@ -193,7 +193,7 @@ class PasswordBox extends StatefulWidget {
     this.leadingIcon,
     this.placeholderStyle,
     this.cursorWidth = 1.5,
-    this.cursorRadius = const Radius.circular(2.0),
+    this.cursorRadius = const Radius.circular(2),
     this.cursorHeight,
     this.cursorColor,
     this.showCursor,
@@ -209,7 +209,7 @@ class PasswordBox extends StatefulWidget {
     this.style,
     this.padding = kTextBoxPadding,
     this.scrollController,
-    this.scrollPadding = const EdgeInsetsDirectional.all(20.0),
+    this.scrollPadding = const EdgeInsetsDirectional.all(20),
     this.scrollPhysics,
   });
 
@@ -449,7 +449,7 @@ class PasswordFormBox extends ControllableFormBox {
     super.controller,
     double cursorWidth = 2.0,
     double? cursorHeight,
-    Radius cursorRadius = const Radius.circular(2.0),
+    Radius cursorRadius = const Radius.circular(2),
     Color? cursorColor,
     VoidCallback? onEditingComplete,
     ValueChanged<String>? onFieldSubmitted,
@@ -459,7 +459,7 @@ class PasswordFormBox extends ControllableFormBox {
     TextStyle? placeholderStyle,
     Widget? leadingIcon,
   }) : super(
-         builder: (FormFieldState<String> field) {
+         builder: (field) {
            assert(debugCheckHasFluentTheme(field.context));
            final theme = FluentTheme.of(field.context);
            void onChangedHandler(String value) {

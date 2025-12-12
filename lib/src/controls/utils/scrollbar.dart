@@ -14,8 +14,8 @@ class Scrollbar extends RawScrollbar {
   /// The [child], [fadeDuration], [pressDuration], and [timeToFade] arguments
   /// must not be null.
   const Scrollbar({
-    super.key,
     required super.child,
+    super.key,
     super.controller,
     super.thumbVisibility = true,
     this.style,
@@ -80,8 +80,7 @@ class _ScrollbarState extends RawScrollbarState<Scrollbar> {
     if (state.isPressed) {
       color = _scrollbarTheme.scrollbarPressingColor;
     }
-    color ??= _scrollbarTheme.scrollbarColor ?? Colors.transparent;
-    return color;
+    return color ?? _scrollbarTheme.scrollbarColor ?? Colors.transparent;
   }
 
   @override
@@ -101,7 +100,7 @@ class _ScrollbarState extends RawScrollbarState<Scrollbar> {
             animation.value,
           ) ??
           Colors.transparent
-      ..trackRadius = const Radius.circular(6.0)
+      ..trackRadius = const Radius.circular(6)
       ..textDirection = Directionality.of(context)
       ..thickness = Tween<double>(
         begin: _scrollbarTheme.thickness ?? 2.0,
@@ -133,7 +132,7 @@ class _ScrollbarState extends RawScrollbarState<Scrollbar> {
   }
 
   Future<void> get contractDelay =>
-      Future.delayed(_scrollbarTheme.contractDelay ?? Duration.zero);
+      Future<void>.delayed(_scrollbarTheme.contractDelay ?? Duration.zero);
 
   @override
   void handleThumbPressStart(Offset localPosition) {
@@ -154,7 +153,7 @@ class _ScrollbarState extends RawScrollbarState<Scrollbar> {
   }
 
   @override
-  void handleHover(PointerHoverEvent event) async {
+  Future<void> handleHover(PointerHoverEvent event) async {
     super.handleHover(event);
     // Check if the position of the pointer falls over the painted scrollbar
     if (isPointerOverScrollbar(event.position, event.kind, forHover: true)) {
@@ -205,19 +204,19 @@ class _ScrollbarState extends RawScrollbarState<Scrollbar> {
 /// given an explicit non-null value.
 class ScrollbarTheme extends InheritedTheme {
   /// Creates a theme that controls how descendant [Scrollbar]s should look like.
-  const ScrollbarTheme({super.key, required this.data, required super.child});
+  const ScrollbarTheme({required this.data, required super.child, super.key});
 
   /// The properties for descendant [Scrollbar] widgets.
   final ScrollbarThemeData data;
 
   /// Creates a theme that merges the nearest [ScrollbarTheme] with [data].
   static Widget merge({
-    Key? key,
     required ScrollbarThemeData data,
     required Widget child,
+    Key? key,
   }) {
     return Builder(
-      builder: (BuildContext context) {
+      builder: (context) {
         return ScrollbarTheme(
           key: key,
           data: ScrollbarTheme.of(context).merge(data),
@@ -369,25 +368,25 @@ class ScrollbarThemeData with Diagnosticable {
       scrollbarColor: brightness.isLight
           ? const Color(0xFF898989)
           : const Color(0xFFa0a0a0),
-      thickness: 2.0,
-      hoveringThickness: 6.0,
+      thickness: 2,
+      hoveringThickness: 6,
       backgroundColor: brightness.isLight
           ? const Color(0xFFf8f8f8)
           : const Color(0xFF292929),
-      radius: const Radius.circular(100.0),
-      hoveringRadius: const Radius.circular(100.0),
-      crossAxisMargin: 0.0,
-      hoveringCrossAxisMargin: 3.0,
-      mainAxisMargin: 0.0,
-      hoveringMainAxisMargin: 0.0,
-      minThumbLength: 48.0,
+      radius: const Radius.circular(100),
+      hoveringRadius: const Radius.circular(100),
+      crossAxisMargin: 0,
+      hoveringCrossAxisMargin: 3,
+      mainAxisMargin: 0,
+      hoveringMainAxisMargin: 0,
+      minThumbLength: 48,
       trackBorderColor: Colors.transparent,
       hoveringTrackBorderColor: Colors.transparent,
       padding: const EdgeInsetsDirectional.symmetric(
-        horizontal: 4.0,
-        vertical: 4.0,
+        horizontal: 4,
+        vertical: 4,
       ),
-      hoveringPadding: const EdgeInsetsDirectional.symmetric(vertical: 4.0),
+      hoveringPadding: const EdgeInsetsDirectional.symmetric(vertical: 4),
       expandContractAnimationDuration: theme.fasterAnimationDuration,
       contractDelay: const Duration(milliseconds: 500),
     );
@@ -552,8 +551,8 @@ class ScrollbarThemeData with Diagnosticable {
           'padding',
           padding,
           defaultValue: const EdgeInsetsDirectional.symmetric(
-            horizontal: 2.0,
-            vertical: 4.0,
+            horizontal: 2,
+            vertical: 4,
           ),
         ),
       )
@@ -561,7 +560,7 @@ class ScrollbarThemeData with Diagnosticable {
         DiagnosticsProperty(
           'hoveringPadding',
           hoveringPadding,
-          defaultValue: const EdgeInsetsDirectional.symmetric(vertical: 4.0),
+          defaultValue: const EdgeInsetsDirectional.symmetric(vertical: 4),
         ),
       );
   }
@@ -576,7 +575,7 @@ extension ScrollViewExtension on SingleChildScrollView {
     ScrollBehavior? behavior,
   }) {
     behavior ??= ScrollConfiguration.of(context);
-    var showScrollbar = scrollDirection != Axis.vertical;
+    final showScrollbar = scrollDirection != Axis.vertical;
     return ScrollConfiguration(
       behavior: behavior.copyWith(scrollbars: showScrollbar),
       child: this,

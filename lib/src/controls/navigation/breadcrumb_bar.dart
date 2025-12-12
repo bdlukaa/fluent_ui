@@ -26,9 +26,9 @@ enum ChevronAlignment {
   }
 }
 
-typedef ChevronIconBuilder<T> =
-    Widget Function(BuildContext context, int index);
+typedef ChevronIconBuilder = Widget Function(BuildContext context, int index);
 
+@immutable
 class BreadcrumbItem<T> {
   /// The label of the item
   ///
@@ -122,7 +122,7 @@ class BreadcrumbBar<T> extends StatefulWidget {
   ///   ...,
   /// )
   ///
-  /// key.currentState.flyoutController.showFlyout(...);
+  /// key.currentState.flyoutController.showFlyout<void>(...);
   /// ```
   final Widget Function(BuildContext context, VoidCallback openFlyout)
   overflowButtonBuilder;
@@ -148,8 +148,8 @@ class BreadcrumbBar<T> extends StatefulWidget {
 
   /// Creates a breadcrumb bar.
   const BreadcrumbBar({
-    super.key,
     required this.items,
+    super.key,
     this.overflowButtonBuilder = _defaultOverflowButtonBuilder,
     this.onItemPressed,
     this.chevronIconBuilder = _defaultChevronBuilder,
@@ -163,9 +163,9 @@ class BreadcrumbBar<T> extends StatefulWidget {
     VoidCallback openFlyout,
   ) {
     return ConstrainedBox(
-      constraints: const BoxConstraints(minHeight: 19.0),
+      constraints: const BoxConstraints(minHeight: 19),
       child: HoverButton(
-        margin: const EdgeInsetsDirectional.symmetric(horizontal: 4.0),
+        margin: const EdgeInsetsDirectional.symmetric(horizontal: 4),
         onPressed: openFlyout,
         builder: (context, states) {
           final foregroundColor = ButtonThemeData.buttonForegroundColor(
@@ -176,7 +176,7 @@ class BreadcrumbBar<T> extends StatefulWidget {
           return WindowsIcon(
             WindowsIcons.more,
             color: foregroundColor,
-            size: 12.0,
+            size: 12,
           );
         },
       ),
@@ -187,7 +187,7 @@ class BreadcrumbBar<T> extends StatefulWidget {
     final theme = FluentTheme.of(context);
     final textDirection = Directionality.of(context);
     return Padding(
-      padding: const EdgeInsetsDirectional.symmetric(horizontal: 6.0),
+      padding: const EdgeInsetsDirectional.symmetric(horizontal: 6),
       child: Icon(
         textDirection == TextDirection.ltr
             ? FluentIcons.chevron_right
@@ -217,7 +217,7 @@ class BreadcrumbBarState<T> extends State<BreadcrumbBar<T>> {
         if (overflowedIndexes.contains(i)) yield widget.items[i];
       }
     }();
-    flyoutController.showFlyout(
+    flyoutController.showFlyout<void>(
       barrierColor: Colors.transparent,
       autoModeConfiguration: FlyoutAutoConfiguration(
         preferredMode: FlyoutPlacementMode.bottomCenter.resolve(
@@ -324,9 +324,9 @@ class BreadcrumbBarState<T> extends State<BreadcrumbBar<T>> {
   }
 }
 
-class _BreadcrumbBar extends MultiChildRenderObjectWidget {
+class _BreadcrumbBar<T> extends MultiChildRenderObjectWidget {
   final Widget overflowButton;
-  final List<BreadcrumbItem> items;
+  final List<BreadcrumbItem<T>> items;
   final ValueChanged<Set<int>> onIndexOverflow;
   final TextDirection textDirection;
 
@@ -354,7 +354,7 @@ class _BreadcrumbBar extends MultiChildRenderObjectWidget {
   @override
   void updateRenderObject(
     BuildContext context,
-    covariant RenderBreadcrumbBar renderObject,
+    covariant RenderBreadcrumbBar<T> renderObject,
   ) {
     renderObject
       ..items = items
@@ -368,12 +368,12 @@ class _BreadcrumbChild extends ContainerBoxParentData<RenderBox>
   bool _overflow = false;
 }
 
-class RenderBreadcrumbBar extends RenderBox
+class RenderBreadcrumbBar<T> extends RenderBox
     with
         ContainerRenderObjectMixin<RenderBox, _BreadcrumbChild>,
         RenderBoxContainerDefaultsMixin<RenderBox, _BreadcrumbChild> {
   RenderBreadcrumbBar({
-    required List<BreadcrumbItem> items,
+    required List<BreadcrumbItem<T>> items,
     required ValueChanged<Set<int>> onIndexOverflow,
     required TextDirection textDirection,
   }) : _items = items,
@@ -389,9 +389,9 @@ class RenderBreadcrumbBar extends RenderBox
     }
   }
 
-  List<BreadcrumbItem> _items;
-  List<BreadcrumbItem> get items => _items;
-  set items(List<BreadcrumbItem> value) {
+  List<BreadcrumbItem<T>> _items;
+  List<BreadcrumbItem<T>> get items => _items;
+  set items(List<BreadcrumbItem<T>> value) {
     if (_items != value) {
       _items = value;
       markNeedsLayout();
@@ -421,7 +421,7 @@ class RenderBreadcrumbBar extends RenderBox
     loopOverChildren((child, childIndex) {
       if (child == overflowButton) return;
 
-      final childParentData = child.parentData as _BreadcrumbChild;
+      final childParentData = child.parentData! as _BreadcrumbChild;
       if (childParentData._overflow) {
         if (textDirection == TextDirection.ltr) {
           indexes.add(childIndex - 1);
@@ -444,7 +444,7 @@ class RenderBreadcrumbBar extends RenderBox
     while (child != null) {
       callback(child, childIndex);
 
-      final childParentData = child.parentData as _BreadcrumbChild;
+      final childParentData = child.parentData! as _BreadcrumbChild;
       if (isReversed) {
         child = childParentData.previousSibling;
         childIndex--;
@@ -466,7 +466,7 @@ class RenderBreadcrumbBar extends RenderBox
 
     var hasOverflowed = false;
     loopOverChildren((child, childIndex) {
-      final childParentData = child.parentData as _BreadcrumbChild;
+      final childParentData = child.parentData! as _BreadcrumbChild;
       if (child != overflowButton) {
         child.layout(childConstraints, parentUsesSize: true);
 
@@ -501,7 +501,7 @@ class RenderBreadcrumbBar extends RenderBox
 
       // Adds the offset to the parentData
       loopOverChildren((child, childIndex) {
-        final childParentData = child.parentData as _BreadcrumbChild;
+        final childParentData = child.parentData! as _BreadcrumbChild;
         final freeSpace = height - child.size.height;
 
         if (!childParentData._overflow || child == overflowButton) {
@@ -511,7 +511,7 @@ class RenderBreadcrumbBar extends RenderBox
       }, false);
     } else {
       loopOverChildren((child, childIndex) {
-        final childParentData = child.parentData as _BreadcrumbChild;
+        final childParentData = child.parentData! as _BreadcrumbChild;
 
         if (child != overflowButton) {
           final freeSpace = height - child.size.height;
@@ -565,7 +565,7 @@ class RenderBreadcrumbBar extends RenderBox
           final isHit = result.addWithPaintOffset(
             offset: childParentData.offset,
             position: position,
-            hitTest: (BoxHitTestResult result, Offset transformed) {
+            hitTest: (result, transformed) {
               assert(transformed == position - childParentData.offset);
               return child.hitTest(result, position: transformed);
             },

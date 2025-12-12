@@ -5,9 +5,9 @@ import 'package:flutter/services.dart';
 
 /// The padding used on the content of [DatePicker] and [TimePicker]
 const kPickerContentPadding = EdgeInsetsDirectional.only(
-  start: 8.0,
-  top: 4.0,
-  bottom: 4.0,
+  start: 8,
+  top: 4,
+  bottom: 4,
 );
 
 const kPickerHeight = 32.0;
@@ -35,7 +35,7 @@ Decoration kPickerDecorationBuilder(
   assert(debugCheckHasFluentTheme(context));
   final theme = FluentTheme.of(context);
   return BoxDecoration(
-    borderRadius: BorderRadius.circular(4.0),
+    borderRadius: BorderRadius.circular(4),
     color: ButtonThemeData.buttonColor(context, states),
     border: Border.all(
       width: 0.15,
@@ -59,13 +59,11 @@ class PickerHighlightTile extends StatelessWidget {
         alignment: AlignmentDirectional.center,
         height: kOneLineTileHeight,
         padding: const EdgeInsetsDirectional.symmetric(
-          vertical: 6.0,
-          horizontal: 2.0,
+          vertical: 6,
+          horizontal: 2,
         ),
         child: ListTile(
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(4.0),
-          ),
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)),
           tileColor: WidgetStateColor.resolveWith((_) => highlightTileColor),
         ),
       ),
@@ -86,9 +84,9 @@ class YesNoPickerControl extends StatelessWidget {
   /// - continue
   /// - cancel
   const YesNoPickerControl({
-    super.key,
     required this.onChanged,
     required this.onCancel,
+    super.key,
   });
 
   final VoidCallback onChanged;
@@ -99,7 +97,7 @@ class YesNoPickerControl extends StatelessWidget {
     assert(debugCheckHasFluentTheme(context));
 
     final buttonStyle = ButtonStyle(
-      elevation: const WidgetStatePropertyAll(0.0),
+      elevation: const WidgetStatePropertyAll(0),
       backgroundColor: WidgetStateProperty.resolveWith(
         (states) => ButtonThemeData.uncheckedInputColor(
           FluentTheme.of(context),
@@ -115,7 +113,7 @@ class YesNoPickerControl extends StatelessWidget {
         children: [
           Expanded(
             child: Container(
-              margin: const EdgeInsetsDirectional.all(4.0),
+              margin: const EdgeInsetsDirectional.all(4),
               height: kOneLineTileHeight / 1.2,
               child: Button(
                 onPressed: onChanged,
@@ -126,7 +124,7 @@ class YesNoPickerControl extends StatelessWidget {
           ),
           Expanded(
             child: Container(
-              margin: const EdgeInsetsDirectional.all(4.0),
+              margin: const EdgeInsetsDirectional.all(4),
               height: kOneLineTileHeight / 1.2,
               child: Button(
                 onPressed: onCancel,
@@ -150,10 +148,10 @@ class YesNoPickerControl extends StatelessWidget {
 class PickerNavigatorIndicator extends StatelessWidget {
   /// Creates a picker navigator indicator
   const PickerNavigatorIndicator({
-    super.key,
     required this.child,
     required this.onBackward,
     required this.onForward,
+    super.key,
   });
 
   /// The content of the widget.
@@ -182,16 +180,12 @@ class PickerNavigatorIndicator extends StatelessWidget {
             switch (intent.direction) {
               case TraversalDirection.up:
                 onBackward();
-                break;
               case TraversalDirection.down:
                 onForward();
-                break;
               case TraversalDirection.left:
                 FocusScope.of(context).previousFocus();
-                break;
               case TraversalDirection.right:
                 FocusScope.of(context).nextFocus();
-                break;
             }
             return null;
           },
@@ -207,13 +201,13 @@ class PickerNavigatorIndicator extends StatelessWidget {
             data: ButtonThemeData.all(
               ButtonStyle(
                 padding: const WidgetStatePropertyAll(
-                  EdgeInsetsDirectional.symmetric(vertical: 10.0),
+                  EdgeInsetsDirectional.symmetric(vertical: 10),
                 ),
                 backgroundColor: WidgetStatePropertyAll(
                   FluentTheme.of(context).menuColor,
                 ),
                 shape: const WidgetStatePropertyAll(RoundedRectangleBorder()),
-                elevation: const WidgetStatePropertyAll(0.0),
+                elevation: const WidgetStatePropertyAll(0),
                 iconSize: WidgetStateProperty.resolveWith((states) {
                   if (states.isPressed) {
                     return 8.0;
@@ -307,10 +301,10 @@ typedef PickerBuilder =
 class Picker extends StatefulWidget {
   /// Creates a picker flyout
   const Picker({
-    super.key,
     required this.child,
     required this.pickerContent,
     required this.pickerHeight,
+    super.key,
   });
 
   final PickerBuilder child;
@@ -332,13 +326,13 @@ class PickerState extends State<Picker> {
 
     final navigator = Navigator.of(context);
 
-    final box = _childKey.currentContext!.findRenderObject() as RenderBox;
+    final box = _childKey.currentContext!.findRenderObject()! as RenderBox;
     final childOffset = box.localToGlobal(
       Offset.zero,
       ancestor: navigator.context.findRenderObject(),
     );
 
-    final rootBox = navigator.context.findRenderObject() as RenderBox;
+    final rootBox = navigator.context.findRenderObject()! as RenderBox;
 
     final isAcrylicDisabled = DisableAcrylic.of(context) != null;
 
@@ -378,7 +372,7 @@ class PickerState extends State<Picker> {
 
           // If the screen is smaller than 260, we ensure the popup will fit in the
           // screen. https://github.com/bdlukaa/fluent_ui/issues/544
-          final minWidth = min(260.0, MediaQuery.sizeOf(context).width);
+          final minWidth = min(260, MediaQuery.sizeOf(context).width);
           final width = max(box.size.width, minWidth);
           final x = () {
             if (box.size.width > minWidth) return childOffset.dx;
@@ -395,7 +389,7 @@ class PickerState extends State<Picker> {
                 left: x,
                 top: y,
                 height: widget.pickerHeight,
-                width: width,
+                width: width.toDouble(),
                 child: FadeTransition(
                   opacity: primary,
                   child: Container(
@@ -404,7 +398,7 @@ class PickerState extends State<Picker> {
                     decoration: ShapeDecoration(
                       color: theme.menuColor,
                       shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(4.0),
+                        borderRadius: BorderRadius.circular(4),
                         side: BorderSide(
                           color: theme.resources.surfaceStrokeColorFlyout,
                           width: 0.6,
@@ -449,10 +443,10 @@ class PickerDialog extends StatelessWidget {
   final VoidCallback onDismiss;
 
   const PickerDialog({
-    super.key,
     required this.child,
     required this.onSelect,
     required this.onDismiss,
+    super.key,
   });
 
   @override
@@ -478,11 +472,11 @@ class PickerDialog extends StatelessWidget {
 
         return KeyEventResult.ignored;
       },
-      child: Container(
+      child: DecoratedBox(
         decoration: ShapeDecoration(
           color: theme.menuColor,
           shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(4.0),
+            borderRadius: BorderRadius.circular(4),
             side: BorderSide(
               color: theme.resources.surfaceStrokeColorFlyout,
               width: 0.6,

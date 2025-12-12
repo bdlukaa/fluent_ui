@@ -81,9 +81,7 @@ import 'package:flutter/rendering.dart';
 class Checkbox extends StatelessWidget {
   /// Creates a checkbox.
   const Checkbox({
-    super.key,
-    required this.checked,
-    required this.onChanged,
+    required this.checked, required this.onChanged, super.key,
     this.style,
     this.content,
     this.semanticLabel,
@@ -201,7 +199,7 @@ class Checkbox extends StatelessWidget {
             mainAxisSize: MainAxisSize.min,
             children: [
               child,
-              const SizedBox(width: 8.0),
+              const SizedBox(width: 8),
               DefaultTextStyle.merge(
                 style: TextStyle(color: style.foregroundColor?.resolve(state)),
                 child: IconTheme.merge(
@@ -241,18 +239,16 @@ class _ThirdStateDash extends StatelessWidget {
 class CheckboxTheme extends InheritedTheme {
   /// Creates a theme that controls how descendant [Checkbox]es should
   /// look like.
-  const CheckboxTheme({super.key, required super.child, required this.data});
+  const CheckboxTheme({required super.child, required this.data, super.key});
 
   final CheckboxThemeData data;
 
   /// Creates a theme that merges the nearest [CheckboxTheme] with [data].
   static Widget merge({
-    Key? key,
-    required CheckboxThemeData data,
-    required Widget child,
+    required CheckboxThemeData data, required Widget child, Key? key,
   }) {
     return Builder(
-      builder: (BuildContext context) {
+      builder: (context) {
         return CheckboxTheme(
           key: key,
           data: CheckboxTheme.of(context).merge(data),
@@ -340,7 +336,7 @@ class CheckboxThemeData with Diagnosticable {
   });
 
   factory CheckboxThemeData.standard(FluentThemeData theme) {
-    final BorderRadiusGeometry radius = BorderRadius.circular(6.0);
+    final BorderRadiusGeometry radius = BorderRadius.circular(6);
     return CheckboxThemeData(
       foregroundColor: WidgetStateProperty.resolveWith((states) {
         return states.isDisabled ? theme.resources.textFillColorDisabled : null;
@@ -578,16 +574,15 @@ class _Icon extends StatelessWidget {
           iconWidget = Transform(
             transform: Matrix4.identity()
               ..scaleByDouble(
-                -1.0, // Flip X axis (horizontal flip)
-                1.0, // Keep Y axis (no vertical flip)
-                1.0, // Keep Z axis (no depth flip)
-                1.0, // No perspective
+                -1, // Flip X axis (horizontal flip)
+                1, // Keep Y axis (no vertical flip)
+                1, // Keep Z axis (no depth flip)
+                1, // No perspective
               ),
             alignment: AlignmentDirectional.center,
             transformHitTests: false,
             child: iconWidget,
           );
-          break;
         case TextDirection.ltr:
           break;
       }

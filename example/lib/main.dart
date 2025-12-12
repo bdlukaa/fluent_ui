@@ -78,10 +78,10 @@ class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(final BuildContext context) {
     return ChangeNotifierProvider.value(
       value: _appTheme,
-      builder: (context, child) {
+      builder: (final context, final child) {
         final appTheme = context.watch<AppTheme>();
         return FluentApp.router(
           title: appTitle,
@@ -104,7 +104,7 @@ class MyApp extends StatelessWidget {
             ),
           ),
           locale: appTheme.locale,
-          builder: (context, child) {
+          builder: (final context, final child) {
             return Directionality(
               textDirection: appTheme.textDirection,
               child: NavigationPaneTheme(
@@ -130,9 +130,7 @@ class MyApp extends StatelessWidget {
 
 class MyHomePage extends StatefulWidget {
   const MyHomePage({
-    super.key,
-    required this.child,
-    required this.shellContext,
+    required this.child, required this.shellContext, super.key,
   });
 
   final Widget child;
@@ -404,15 +402,15 @@ class _MyHomePageState extends State<MyHomePage> with WindowListener {
           body: const SizedBox.shrink(),
         ),
         // TODO: Scrollbar, RatingBar
-      ].map<NavigationPaneItem>((e) {
-        PaneItem buildPaneItem(PaneItem item) {
+      ].map<NavigationPaneItem>((final e) {
+        PaneItem buildPaneItem(final PaneItem item) {
           return PaneItem(
             key: item.key,
             icon: item.icon,
             title: item.title,
             body: item.body,
             onTap: () {
-              final path = (item.key as ValueKey).value;
+              final path = (item.key! as ValueKey).value;
               if (GoRouterState.of(context).uri.toString() != path) {
                 context.go(path);
               }
@@ -427,7 +425,7 @@ class _MyHomePageState extends State<MyHomePage> with WindowListener {
             icon: e.icon,
             title: e.title,
             body: e.body,
-            items: e.items.map((item) {
+            items: e.items.map((final item) {
               if (item is PaneItem) return buildPaneItem(item);
               return item;
             }).toList(),
@@ -471,23 +469,23 @@ class _MyHomePageState extends State<MyHomePage> with WindowListener {
     super.dispose();
   }
 
-  int _calculateSelectedIndex(BuildContext context) {
+  int _calculateSelectedIndex(final BuildContext context) {
     final location = GoRouterState.of(context).uri.toString();
-    int indexOriginal = originalItems
-        .where((item) => item.key != null)
+    final indexOriginal = originalItems
+        .where((final item) => item.key != null)
         .toList()
-        .indexWhere((item) => item.key == Key(location));
+        .indexWhere((final item) => item.key == Key(location));
 
     if (indexOriginal == -1) {
-      int indexFooter = footerItems
-          .where((element) => element.key != null)
+      final indexFooter = footerItems
+          .where((final element) => element.key != null)
           .toList()
-          .indexWhere((element) => element.key == Key(location));
+          .indexWhere((final element) => element.key == Key(location));
       if (indexFooter == -1) {
         return 0;
       }
       return originalItems
-              .where((element) => element.key != null)
+              .where((final element) => element.key != null)
               .toList()
               .length +
           indexFooter;
@@ -497,7 +495,7 @@ class _MyHomePageState extends State<MyHomePage> with WindowListener {
   }
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(final BuildContext context) {
     final localizations = FluentLocalizations.of(context);
 
     final appTheme = context.watch<AppTheme>();
@@ -525,7 +523,7 @@ class _MyHomePageState extends State<MyHomePage> with WindowListener {
           return NavigationPaneTheme(
             data: NavigationPaneTheme.of(context).merge(
               NavigationPaneThemeData(
-                unselectedIconColor: WidgetStateProperty.resolveWith((states) {
+                unselectedIconColor: WidgetStateProperty.resolveWith((final states) {
                   if (states.isDisabled) {
                     return ButtonThemeData.buttonColor(context, states);
                   }
@@ -537,10 +535,10 @@ class _MyHomePageState extends State<MyHomePage> with WindowListener {
               ),
             ),
             child: Builder(
-              builder: (context) =>
+              builder: (final context) =>
                   PaneItem(
                     icon: const Center(
-                      child: WindowsIcon(WindowsIcons.back, size: 12.0),
+                      child: WindowsIcon(WindowsIcons.back, size: 12),
                     ),
                     title: Text(localizations.backButtonTooltip),
                     body: const SizedBox.shrink(),
@@ -574,10 +572,10 @@ class _MyHomePageState extends State<MyHomePage> with WindowListener {
             Align(
               alignment: AlignmentDirectional.centerEnd,
               child: Padding(
-                padding: const EdgeInsetsDirectional.only(end: 8.0),
+                padding: const EdgeInsetsDirectional.only(end: 8),
                 child: ToggleButton(
                   checked: FluentTheme.of(context).brightness.isDark,
-                  onChanged: (v) {
+                  onChanged: (final v) {
                     if (v) {
                       appTheme.mode = ThemeMode.dark;
                     } else {
@@ -592,9 +590,9 @@ class _MyHomePageState extends State<MyHomePage> with WindowListener {
           ],
         ),
       ),
-      paneBodyBuilder: (item, child) {
+      paneBodyBuilder: (final item, final child) {
         final name = item?.key is ValueKey
-            ? (item!.key as ValueKey).value
+            ? (item!.key! as ValueKey).value
             : null;
         return FocusTraversalGroup(
           key: ValueKey('body$name'),
@@ -606,13 +604,13 @@ class _MyHomePageState extends State<MyHomePage> with WindowListener {
         header: SizedBox(
           height: kOneLineTileHeight,
           child: ShaderMask(
-            shaderCallback: (rect) {
+            shaderCallback: (final rect) {
               final color = appTheme.color.defaultBrushFor(theme.brightness);
               return LinearGradient(colors: [color, color]).createShader(rect);
             },
             child: const FlutterLogo(
               style: FlutterLogoStyle.horizontal,
-              size: 80.0,
+              size: 80,
               textColor: Colors.white,
               duration: Duration.zero,
             ),
@@ -629,7 +627,7 @@ class _MyHomePageState extends State<MyHomePage> with WindowListener {
         }(),
         items: originalItems,
         autoSuggestBox: Builder(
-          builder: (context) {
+          builder: (final context) {
             return AutoSuggestBox(
               key: searchKey,
               focusNode: searchFocusNode,
@@ -640,18 +638,18 @@ class _MyHomePageState extends State<MyHomePage> with WindowListener {
                   <PaneItem>[
                     ...originalItems
                         .whereType<PaneItemExpander>()
-                        .expand<PaneItem>((item) {
+                        .expand<PaneItem>((final item) {
                           return [item, ...item.items.whereType<PaneItem>()];
                         }),
                     ...originalItems
                         .where(
-                          (item) =>
+                          (final item) =>
                               item is PaneItem && item is! PaneItemExpander,
                         )
                         .cast<PaneItem>(),
-                  ].map((item) {
+                  ].map((final item) {
                     assert(item.title is Text);
-                    final text = (item.title as Text).data!;
+                    final text = (item.title! as Text).data!;
                     return AutoSuggestBoxItem(
                       label: text,
                       value: text,
@@ -686,8 +684,8 @@ class _MyHomePageState extends State<MyHomePage> with WindowListener {
   }
 
   @override
-  void onWindowClose() async {
-    bool isPreventClose = await windowManager.isPreventClose();
+  Future<void> onWindowClose() async {
+    final isPreventClose = await windowManager.isPreventClose();
     if (isPreventClose && mounted) {
       showDialog(
         context: context,
@@ -721,8 +719,8 @@ class WindowButtons extends StatelessWidget {
   const WindowButtons({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    final FluentThemeData theme = FluentTheme.of(context);
+  Widget build(final BuildContext context) {
+    final theme = FluentTheme.of(context);
 
     return SizedBox(
       width: 138,
@@ -747,17 +745,17 @@ class _LinkPaneItemAction extends PaneItem {
 
   @override
   Widget build(
-    BuildContext context,
-    bool selected,
-    VoidCallback? onPressed, {
-    PaneDisplayMode? displayMode,
-    bool showTextOnTop = true,
-    bool? autofocus,
-    int? itemIndex,
+    final BuildContext context,
+    final bool selected,
+    final VoidCallback? onPressed, {
+    final PaneDisplayMode? displayMode,
+    final bool showTextOnTop = true,
+    final bool? autofocus,
+    final int? itemIndex,
   }) {
     return Link(
       uri: Uri.parse(link),
-      builder: (context, followLink) => Semantics(
+      builder: (final context, final followLink) => Semantics(
         link: true,
         child: super.build(
           context,
@@ -780,7 +778,7 @@ final router = GoRouter(
   routes: [
     ShellRoute(
       navigatorKey: _shellNavigatorKey,
-      builder: (context, state, child) {
+      builder: (final context, final state, final child) {
         return MyHomePage(
           shellContext: _shellNavigatorKey.currentContext,
           child: child,
@@ -788,40 +786,40 @@ final router = GoRouter(
       },
       routes: <GoRoute>[
         /// Home
-        GoRoute(path: '/', builder: (context, state) => const HomePage()),
+        GoRoute(path: '/', builder: (final context, final state) => const HomePage()),
 
         /// Settings
         GoRoute(
           path: '/settings',
-          builder: (context, state) => const Settings(),
+          builder: (final context, final state) => const Settings(),
         ),
 
         /// /// Input
         /// Buttons
         GoRoute(
           path: '/inputs/buttons',
-          builder: (context, state) =>
+          builder: (final context, final state) =>
               DeferredWidget(inputs.loadLibrary, () => inputs.ButtonPage()),
         ),
 
         /// Checkbox
         GoRoute(
           path: '/inputs/checkbox',
-          builder: (context, state) =>
+          builder: (final context, final state) =>
               DeferredWidget(inputs.loadLibrary, () => inputs.CheckBoxPage()),
         ),
 
         /// Slider
         GoRoute(
           path: '/inputs/slider',
-          builder: (context, state) =>
+          builder: (final context, final state) =>
               DeferredWidget(inputs.loadLibrary, () => inputs.SliderPage()),
         ),
 
         /// ToggleSwitch
         GoRoute(
           path: '/inputs/toggle_switch',
-          builder: (context, state) => DeferredWidget(
+          builder: (final context, final state) => DeferredWidget(
             inputs.loadLibrary,
             () => inputs.ToggleSwitchPage(),
           ),
@@ -831,14 +829,14 @@ final router = GoRouter(
         /// TextBox
         GoRoute(
           path: '/forms/text_box',
-          builder: (context, state) =>
+          builder: (final context, final state) =>
               DeferredWidget(forms.loadLibrary, () => forms.TextBoxPage()),
         ),
 
         /// AutoSuggestBox
         GoRoute(
           path: '/forms/auto_suggest_box',
-          builder: (context, state) => DeferredWidget(
+          builder: (final context, final state) => DeferredWidget(
             forms.loadLibrary,
             () => forms.AutoSuggestBoxPage(),
           ),
@@ -847,45 +845,45 @@ final router = GoRouter(
         /// ComboBox
         GoRoute(
           path: '/forms/combobox',
-          builder: (context, state) =>
+          builder: (final context, final state) =>
               DeferredWidget(forms.loadLibrary, () => forms.ComboBoxPage()),
         ),
 
         /// NumberBox
         GoRoute(
           path: '/forms/numberbox',
-          builder: (context, state) =>
+          builder: (final context, final state) =>
               DeferredWidget(forms.loadLibrary, () => forms.NumberBoxPage()),
         ),
 
         GoRoute(
           path: '/forms/passwordbox',
-          builder: (context, state) =>
+          builder: (final context, final state) =>
               DeferredWidget(forms.loadLibrary, () => forms.PasswordBoxPage()),
         ),
 
         /// TimePicker
         GoRoute(
           path: '/forms/time_picker',
-          builder: (context, state) =>
+          builder: (final context, final state) =>
               DeferredWidget(forms.loadLibrary, () => forms.TimePickerPage()),
         ),
 
         /// DatePicker
         GoRoute(
           path: '/forms/date_picker',
-          builder: (context, state) =>
+          builder: (final context, final state) =>
               DeferredWidget(forms.loadLibrary, () => forms.DatePickerPage()),
         ),
 
         GoRoute(
           path: '/forms/calendar_view',
-          builder: (context, state) =>
+          builder: (final context, final state) =>
               DeferredWidget(forms.loadLibrary, () => forms.CalendarViewPage()),
         ),
         GoRoute(
           path: '/forms/calendar_date_picker',
-          builder: (context, state) => DeferredWidget(
+          builder: (final context, final state) => DeferredWidget(
             forms.loadLibrary,
             () => forms.CalendarDatePickerPage(),
           ),
@@ -894,7 +892,7 @@ final router = GoRouter(
         /// ColorPicker
         GoRoute(
           path: '/forms/color_picker',
-          builder: (context, state) =>
+          builder: (final context, final state) =>
               DeferredWidget(forms.loadLibrary, () => forms.ColorPickerPage()),
         ),
 
@@ -902,14 +900,14 @@ final router = GoRouter(
         /// NavigationView
         GoRoute(
           path: '/navigation/navigation_view',
-          builder: (context, state) => DeferredWidget(
+          builder: (final context, final state) => DeferredWidget(
             navigation.loadLibrary,
             () => navigation.NavigationViewPage(),
           ),
         ),
         GoRoute(
           path: '/navigation_view',
-          builder: (context, state) => DeferredWidget(
+          builder: (final context, final state) => DeferredWidget(
             navigation.loadLibrary,
             () => navigation.NavigationViewShellRoute(),
           ),
@@ -918,7 +916,7 @@ final router = GoRouter(
         /// TabView
         GoRoute(
           path: '/navigation/tab_view',
-          builder: (context, state) => DeferredWidget(
+          builder: (final context, final state) => DeferredWidget(
             navigation.loadLibrary,
             () => navigation.TabViewPage(),
           ),
@@ -927,7 +925,7 @@ final router = GoRouter(
         /// TreeView
         GoRoute(
           path: '/navigation/tree_view',
-          builder: (context, state) => DeferredWidget(
+          builder: (final context, final state) => DeferredWidget(
             navigation.loadLibrary,
             () => navigation.TreeViewPage(),
           ),
@@ -936,7 +934,7 @@ final router = GoRouter(
         /// BreadcrumbBar
         GoRoute(
           path: '/navigation/breadcrumb_bar',
-          builder: (context, state) => DeferredWidget(
+          builder: (final context, final state) => DeferredWidget(
             navigation.loadLibrary,
             () => navigation.BreadcrumbBarPage(),
           ),
@@ -946,7 +944,7 @@ final router = GoRouter(
         /// Acrylic
         GoRoute(
           path: '/surfaces/acrylic',
-          builder: (context, state) => DeferredWidget(
+          builder: (final context, final state) => DeferredWidget(
             surfaces.loadLibrary,
             () => surfaces.AcrylicPage(),
           ),
@@ -955,7 +953,7 @@ final router = GoRouter(
         /// CommandBar
         GoRoute(
           path: '/surfaces/command_bar',
-          builder: (context, state) => DeferredWidget(
+          builder: (final context, final state) => DeferredWidget(
             surfaces.loadLibrary,
             () => surfaces.CommandBarsPage(),
           ),
@@ -964,7 +962,7 @@ final router = GoRouter(
         /// Expander
         GoRoute(
           path: '/surfaces/expander',
-          builder: (context, state) => DeferredWidget(
+          builder: (final context, final state) => DeferredWidget(
             surfaces.loadLibrary,
             () => surfaces.ExpanderPage(),
           ),
@@ -973,7 +971,7 @@ final router = GoRouter(
         /// InfoBar
         GoRoute(
           path: '/surfaces/info_bar',
-          builder: (context, state) => DeferredWidget(
+          builder: (final context, final state) => DeferredWidget(
             surfaces.loadLibrary,
             () => surfaces.InfoBarsPage(),
           ),
@@ -982,7 +980,7 @@ final router = GoRouter(
         /// Progress Indicators
         GoRoute(
           path: '/surfaces/progress_indicators',
-          builder: (context, state) => DeferredWidget(
+          builder: (final context, final state) => DeferredWidget(
             surfaces.loadLibrary,
             () => surfaces.ProgressIndicatorsPage(),
           ),
@@ -991,7 +989,7 @@ final router = GoRouter(
         /// Tiles
         GoRoute(
           path: '/surfaces/tiles',
-          builder: (context, state) =>
+          builder: (final context, final state) =>
               DeferredWidget(surfaces.loadLibrary, () => surfaces.TilesPage()),
         ),
 
@@ -999,7 +997,7 @@ final router = GoRouter(
         /// ContentDialog
         GoRoute(
           path: '/popups/content_dialog',
-          builder: (context, state) => DeferredWidget(
+          builder: (final context, final state) => DeferredWidget(
             surfaces.loadLibrary,
             () => popups.ContentDialogPage(),
           ),
@@ -1008,21 +1006,21 @@ final router = GoRouter(
         /// MenuBar
         GoRoute(
           path: '/popups/menu_bar',
-          builder: (context, state) =>
+          builder: (final context, final state) =>
               DeferredWidget(surfaces.loadLibrary, () => popups.MenuBarPage()),
         ),
 
         /// Tooltip
         GoRoute(
           path: '/popups/tooltip',
-          builder: (context, state) =>
+          builder: (final context, final state) =>
               DeferredWidget(surfaces.loadLibrary, () => popups.TooltipPage()),
         ),
 
         /// Flyout
         GoRoute(
           path: '/popups/flyout',
-          builder: (context, state) => DeferredWidget(
+          builder: (final context, final state) => DeferredWidget(
             surfaces.loadLibrary,
             () => popups.Flyout2Screen(),
           ),
@@ -1031,7 +1029,7 @@ final router = GoRouter(
         /// Teaching Tip
         GoRoute(
           path: '/popups/teaching_tip',
-          builder: (context, state) => DeferredWidget(
+          builder: (final context, final state) => DeferredWidget(
             surfaces.loadLibrary,
             () => popups.TeachingTipPage(),
           ),
@@ -1041,14 +1039,14 @@ final router = GoRouter(
         /// Colors
         GoRoute(
           path: '/theming/colors',
-          builder: (context, state) =>
+          builder: (final context, final state) =>
               DeferredWidget(theming.loadLibrary, () => theming.ColorsPage()),
         ),
 
         /// Typography
         GoRoute(
           path: '/theming/typography',
-          builder: (context, state) => DeferredWidget(
+          builder: (final context, final state) => DeferredWidget(
             theming.loadLibrary,
             () => theming.TypographyPage(),
           ),
@@ -1057,7 +1055,7 @@ final router = GoRouter(
         /// Icons
         GoRoute(
           path: '/theming/icons/windows',
-          builder: (context, state) => DeferredWidget(
+          builder: (final context, final state) => DeferredWidget(
             theming.loadLibrary,
             () => theming.IconsPage(set: WindowsIcons.allIcons),
           ),
@@ -1065,7 +1063,7 @@ final router = GoRouter(
 
         GoRoute(
           path: '/theming/icons/fluent',
-          builder: (context, state) => DeferredWidget(
+          builder: (final context, final state) => DeferredWidget(
             theming.loadLibrary,
             () => theming.IconsPage(set: FluentIcons.allIcons),
           ),
@@ -1074,7 +1072,7 @@ final router = GoRouter(
         /// Reveal Focus
         GoRoute(
           path: '/theming/reveal_focus',
-          builder: (context, state) => DeferredWidget(
+          builder: (final context, final state) => DeferredWidget(
             theming.loadLibrary,
             () => theming.RevealFocusPage(),
           ),

@@ -99,10 +99,10 @@ class TextFormBox extends ControllableFormBox {
     super.enabled = true,
     double cursorWidth = 2.0,
     double? cursorHeight,
-    Radius cursorRadius = const Radius.circular(2.0),
+    Radius cursorRadius = const Radius.circular(2),
     Color? cursorColor,
     Brightness? keyboardAppearance,
-    EdgeInsetsGeometry scrollPadding = const EdgeInsetsDirectional.all(20.0),
+    EdgeInsetsGeometry scrollPadding = const EdgeInsetsDirectional.all(20),
     bool? enableInteractiveSelection,
     TextSelectionControls? selectionControls,
     ScrollPhysics? scrollPhysics,
@@ -123,7 +123,6 @@ class TextFormBox extends ControllableFormBox {
     ui.BoxWidthStyle selectionWidthStyle = ui.BoxWidthStyle.tight,
     WidgetStateProperty<BoxDecoration>? decoration,
     bool enableIMEPersonalizedLearning = true,
-    MouseCursor? mouseCursor,
     bool stylusHandwritingEnabled =
         EditableText.defaultStylusHandwritingEnabled,
     Color? highlightColor,
@@ -154,7 +153,7 @@ class TextFormBox extends ControllableFormBox {
          initialValue: controller != null
              ? controller.text
              : (initialValue ?? ''),
-         builder: (FormFieldState<String> field) {
+         builder: (field) {
            assert(debugCheckHasFluentTheme(field.context));
            final theme = FluentTheme.of(field.context);
            final state = field as TextFormBoxState;

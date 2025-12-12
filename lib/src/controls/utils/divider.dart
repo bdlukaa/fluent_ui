@@ -101,19 +101,17 @@ class Divider extends StatelessWidget {
 /// given an explicit non-null value.
 class DividerTheme extends InheritedTheme {
   /// Creates a theme that controls how descendant [Divider]s should look like.
-  const DividerTheme({super.key, required this.data, required super.child});
+  const DividerTheme({required this.data, required super.child, super.key});
 
   /// The properties for descendant [Divider] widgets.
   final DividerThemeData data;
 
   /// Creates a theme that merges the nearest [DividerTheme] with [data].
   static Widget merge({
-    Key? key,
-    required DividerThemeData data,
-    required Widget child,
+    required DividerThemeData data, required Widget child, Key? key,
   }) {
     return Builder(
-      builder: (BuildContext context) {
+      builder: (context) {
         return DividerTheme(
           key: key,
           data: DividerTheme.of(context).merge(data),

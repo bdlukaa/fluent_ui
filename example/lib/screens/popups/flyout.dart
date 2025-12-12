@@ -48,7 +48,7 @@ class _Flyout2ScreenState extends State<Flyout2Screen> with PageMixin {
   }
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(final BuildContext context) {
     return ScaffoldPage.scrollable(
       header: const PageHeader(title: Text('Flyouts')),
       children: [
@@ -57,40 +57,44 @@ class _Flyout2ScreenState extends State<Flyout2Screen> with PageMixin {
           'its content. Flyouts can contain other flyouts or context menus to '
           'create a nested experience.',
         ),
-        const SizedBox(height: 8.0),
+        const SizedBox(height: 8),
         Mica(
           child: Padding(
-            padding: const EdgeInsetsDirectional.all(8.0),
+            padding: const EdgeInsetsDirectional.all(8),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 description(content: const Text('Config')),
-                const SizedBox(height: 8.0),
+                const SizedBox(height: 8),
                 Wrap(
-                  runSpacing: 10.0,
-                  spacing: 10.0,
+                  runSpacing: 10,
+                  spacing: 10,
                   children: [
                     ToggleSwitch(
                       checked: barrierDismissible,
-                      onChanged: (v) => setState(() => barrierDismissible = v),
+                      onChanged: (final v) =>
+                          setState(() => barrierDismissible = v),
                       content: const Text('Barrier dismissible'),
                     ),
                     ToggleSwitch(
                       checked: dismissOnPointerMoveAway,
-                      onChanged: (v) =>
+                      onChanged: (final v) =>
                           setState(() => dismissOnPointerMoveAway = v),
                       content: const Text('Dismiss on pointer move away'),
                     ),
                     ToggleSwitch(
                       checked: dismissWithEsc,
-                      onChanged: (v) => setState(() => dismissWithEsc = v),
+                      onChanged: (final v) =>
+                          setState(() => dismissWithEsc = v),
                       content: const Text('Dismiss with esc'),
                     ),
                     ComboBox<FlyoutPlacementMode>(
                       placeholder: const Text('Placeholder'),
                       items: FlyoutPlacementMode.values
-                          .where((mode) => mode != FlyoutPlacementMode.auto)
-                          .map((mode) {
+                          .where(
+                            (final mode) => mode != FlyoutPlacementMode.auto,
+                          )
+                          .map((final mode) {
                             return ComboBoxItem(
                               value: mode,
                               child: Text(mode.name.uppercaseFirst()),
@@ -98,7 +102,7 @@ class _Flyout2ScreenState extends State<Flyout2Screen> with PageMixin {
                           })
                           .toList(),
                       value: placementMode,
-                      onChanged: (mode) {
+                      onChanged: (final mode) {
                         if (mode != null) setState(() => placementMode = mode);
                       },
                     ),
@@ -116,7 +120,7 @@ class _Flyout2ScreenState extends State<Flyout2Screen> with PageMixin {
   child: Button(
     child: const Text('Clear cart'),
     onPressed: () {
-      controller.showFlyout(
+      controller.showFlyout<void>(
         autoModeConfiguration: FlyoutAutoConfiguration(
           preferredMode: $placementMode,
         ),
@@ -155,7 +159,7 @@ class _Flyout2ScreenState extends State<Flyout2Screen> with PageMixin {
                 child: Button(
                   child: const Text('Clear cart'),
                   onPressed: () async {
-                    controller.showFlyout(
+                    controller.showFlyout<void>(
                       autoModeConfiguration: FlyoutAutoConfiguration(
                         preferredMode: placementMode,
                       ),
@@ -163,7 +167,7 @@ class _Flyout2ScreenState extends State<Flyout2Screen> with PageMixin {
                       dismissOnPointerMoveAway: dismissOnPointerMoveAway,
                       dismissWithEsc: dismissWithEsc,
                       navigatorKey: rootNavigatorKey.currentState,
-                      builder: (context) {
+                      builder: (final context) {
                         return FlyoutContent(
                           child: Column(
                             mainAxisSize: MainAxisSize.min,
@@ -173,7 +177,7 @@ class _Flyout2ScreenState extends State<Flyout2Screen> with PageMixin {
                                 'All items will be removed. Do you want to continue?',
                                 style: TextStyle(fontWeight: FontWeight.bold),
                               ),
-                              const SizedBox(height: 12.0),
+                              const SizedBox(height: 12),
                               Button(
                                 onPressed: Flyout.of(context).close,
                                 child: const Text('Yes, empty my cart'),
@@ -186,7 +190,7 @@ class _Flyout2ScreenState extends State<Flyout2Screen> with PageMixin {
                   },
                 ),
               ),
-              const SizedBox(width: 8.0),
+              const SizedBox(width: 8),
               Text(controller.isOpen ? 'Displaying' : ''),
             ],
           ),
@@ -211,7 +215,7 @@ FlyoutTarget(
   child: Button(
     child: const Text('Options'),
     onPressed: () {
-      menuController.showFlyout(
+      menuController.showFlyout<void>(
         autoModeConfiguration: FlyoutAutoConfiguration(
           preferredMode: $placementMode,
         ),
@@ -290,7 +294,7 @@ FlyoutTarget(
                 child: Button(
                   child: const Text('Options'),
                   onPressed: () {
-                    menuController.showFlyout(
+                    menuController.showFlyout<void>(
                       autoModeConfiguration: FlyoutAutoConfiguration(
                         preferredMode: placementMode,
                       ),
@@ -298,7 +302,7 @@ FlyoutTarget(
                       dismissOnPointerMoveAway: dismissOnPointerMoveAway,
                       dismissWithEsc: dismissWithEsc,
                       navigatorKey: rootNavigatorKey.currentState,
-                      builder: (context) {
+                      builder: (final context) {
                         return MenuFlyout(
                           items: [
                             MenuFlyoutItem(
@@ -339,7 +343,7 @@ FlyoutTarget(
                                 ),
                                 MenuFlyoutSubItem(
                                   text: const Text('Compressed file'),
-                                  items: (context) => [
+                                  items: (final context) => [
                                     MenuFlyoutItem(
                                       text: const Text('Compress and email'),
                                       onPressed: Flyout.of(context).close,
@@ -363,7 +367,7 @@ FlyoutTarget(
                   },
                 ),
               ),
-              const SizedBox(width: 8.0),
+              const SizedBox(width: 8),
               Text(menuController.isOpen ? 'Displaying' : ''),
             ],
           ),
@@ -385,7 +389,7 @@ FlyoutTarget(
   child: Button(
     child: const Text('Show options'),
     onPressed: () {
-      itemsController.showFlyout(
+      itemsController.showFlyout<void>(
         autoModeConfiguration: FlyoutAutoConfiguration(
           preferredMode: $placementMode,
         ),
@@ -455,7 +459,7 @@ FlyoutTarget(
                 child: Button(
                   child: const Text('Show options'),
                   onPressed: () {
-                    itemsController.showFlyout(
+                    itemsController.showFlyout<void>(
                       autoModeConfiguration: FlyoutAutoConfiguration(
                         preferredMode: placementMode,
                       ),
@@ -463,13 +467,13 @@ FlyoutTarget(
                       dismissOnPointerMoveAway: dismissOnPointerMoveAway,
                       dismissWithEsc: dismissWithEsc,
                       navigatorKey: rootNavigatorKey.currentState,
-                      builder: (context) {
+                      builder: (final context) {
                         var repeat = true;
                         var shuffle = false;
 
                         var radioIndex = 1;
                         return StatefulBuilder(
-                          builder: (context, setState) {
+                          builder: (final context, final setState) {
                             return MenuFlyout(
                               items: [
                                 MenuFlyoutItem(
@@ -485,19 +489,19 @@ FlyoutTarget(
                                 ToggleMenuFlyoutItem(
                                   text: const Text('Repeat'),
                                   value: repeat,
-                                  onChanged: (v) {
+                                  onChanged: (final v) {
                                     setState(() => repeat = v);
                                   },
                                 ),
                                 ToggleMenuFlyoutItem(
                                   text: const Text('Shuffle'),
                                   value: shuffle,
-                                  onChanged: (v) {
+                                  onChanged: (final v) {
                                     setState(() => shuffle = v);
                                   },
                                 ),
                                 const MenuFlyoutSeparator(),
-                                ...List.generate(3, (index) {
+                                ...List.generate(3, (final index) {
                                   return RadioMenuFlyoutItem(
                                     text: Text(
                                       [
@@ -508,7 +512,7 @@ FlyoutTarget(
                                     ),
                                     value: index,
                                     groupValue: radioIndex,
-                                    onChanged: (v) {
+                                    onChanged: (final v) {
                                       setState(() => radioIndex = index);
                                     },
                                   );
@@ -522,7 +526,7 @@ FlyoutTarget(
                   },
                 ),
               ),
-              const SizedBox(width: 8.0),
+              const SizedBox(width: 8),
               Text(menuController.isOpen ? 'Displaying' : ''),
             ],
           ),
@@ -537,7 +541,8 @@ FlyoutTarget(
           ),
         ),
         CardHighlight(
-          codeSnippet: '''final contextController = FlyoutController();
+          codeSnippet: '''
+final contextController = FlyoutController();
 final contextAttachKey = GlobalKey();
 
 return GestureDetector(
@@ -552,7 +557,7 @@ return GestureDetector(
       ancestor: Navigator.of(context).context.findRenderObject(),
     );
 
-    contextController.showFlyout(
+    contextController.showFlyout<void>(
       barrierColor: Colors.black.withValues(alpha: 0.1),
       position: position,
       builder: (context) {
@@ -601,29 +606,29 @@ return GestureDetector(
 );
 ''',
           child: GestureDetector(
-            onSecondaryTapUp: (d) {
+            onSecondaryTapUp: (final d) {
               final targetContext = contextAttachKey.currentContext;
               if (targetContext == null) return;
 
-              final box = targetContext.findRenderObject() as RenderBox;
+              final box = targetContext.findRenderObject()! as RenderBox;
               final position = box.localToGlobal(
                 d.localPosition,
                 ancestor: Navigator.of(context).context.findRenderObject(),
               );
 
-              void showFlyout(Offset position) {
-                contextController.showFlyout(
+              void showFlyout(final Offset position) {
+                contextController.showFlyout<void>(
                   barrierColor: Colors.black.withValues(alpha: 0.1),
                   position: position,
                   barrierRecognizer: TapGestureRecognizer()
                     ..onTap = () {
                       Navigator.of(context).pop();
                     }
-                    ..onSecondaryTapUp = (d) {
+                    ..onSecondaryTapUp = (final d) {
                       Navigator.of(context).pop();
 
                       final box =
-                          Navigator.of(context).context.findRenderObject()
+                          Navigator.of(context).context.findRenderObject()!
                               as RenderBox;
                       final position = box.localToGlobal(
                         d.localPosition,
@@ -632,7 +637,7 @@ return GestureDetector(
 
                       showFlyout(position);
                     },
-                  builder: (context) {
+                  builder: (final context) {
                     return FlyoutContent(
                       child: SizedBox(
                         width: 130,
@@ -680,7 +685,7 @@ return GestureDetector(
               key: contextAttachKey,
               controller: contextController,
               child: ShaderMask(
-                shaderCallback: (rect) {
+                shaderCallback: (final rect) {
                   final color = context.read<AppTheme>().color.defaultBrushFor(
                     FluentTheme.of(context).brightness,
                   );
@@ -688,7 +693,7 @@ return GestureDetector(
                     colors: [color, color],
                   ).createShader(rect);
                 },
-                child: const FlutterLogo(size: 400.0),
+                child: const FlutterLogo(size: 400),
               ),
             ),
           ),

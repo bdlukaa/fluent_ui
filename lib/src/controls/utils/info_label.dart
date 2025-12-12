@@ -13,18 +13,16 @@ import 'package:flutter/foundation.dart';
 class InfoLabel extends StatelessWidget {
   /// Creates an info label.
   InfoLabel({
-    super.key,
+    required String label, super.key,
     this.child,
-    required String label,
     TextStyle? labelStyle,
     this.isHeader = true,
   }) : label = TextSpan(text: label, style: labelStyle);
 
   /// Creates an info label.
   const InfoLabel.rich({
-    super.key,
+    required this.label, super.key,
     this.child,
-    required this.label,
     this.isHeader = true,
   });
 
@@ -59,13 +57,13 @@ class InfoLabel extends StatelessWidget {
       children: [
         if (isHeader)
           Padding(
-            padding: const EdgeInsetsDirectional.only(bottom: 4.0),
+            padding: const EdgeInsetsDirectional.only(bottom: 4),
             child: labelWidget,
           ),
         if (child != null) Flexible(child: child!),
         if (!isHeader)
           Padding(
-            padding: const EdgeInsetsDirectional.only(start: 4.0),
+            padding: const EdgeInsetsDirectional.only(start: 4),
             child: labelWidget,
           ),
       ],

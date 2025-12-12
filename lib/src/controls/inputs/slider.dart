@@ -72,9 +72,9 @@ import 'package:flutter/rendering.dart';
 class Slider extends StatefulWidget {
   /// Creates a windows-styled slider.
   const Slider({
-    super.key,
     required this.value,
     required this.onChanged,
+    super.key,
     this.onChangeStart,
     this.onChangeEnd,
     this.min = 0.0,
@@ -307,13 +307,17 @@ class _SliderState extends State<Slider> {
 
   void _showLabelOverlay() {
     final sliderState = materialSliderKey.currentState as dynamic;
+    // ignore: avoid_dynamic_calls
     (sliderState.overlayController as AnimationController).forward();
+    // ignore: avoid_dynamic_calls
     (sliderState.valueIndicatorController as AnimationController).forward();
   }
 
   void _hideLabelOverlay() {
     final sliderState = materialSliderKey.currentState as dynamic;
+    // ignore: avoid_dynamic_calls
     (sliderState.overlayController as AnimationController).reverse();
+    // ignore: avoid_dynamic_calls
     (sliderState.valueIndicatorController as AnimationController).reverse();
   }
 
@@ -335,7 +339,7 @@ class _SliderState extends State<Slider> {
         child: TweenAnimationBuilder<double>(
           duration: theme.fastAnimationDuration,
           tween: Tween<double>(
-            begin: 1.0,
+            begin: 1,
             end:
                 style.thumbBallInnerFactor?.resolve({
                   ...states,
@@ -352,7 +356,7 @@ class _SliderState extends State<Slider> {
                 color: style.labelForegroundColor,
               ),
               thumbShape: SliderThumbShape(
-                pressedElevation: 1.0,
+                pressedElevation: 1,
                 useBall: style.useThumbBall ?? true,
                 innerFactor: innerFactor,
                 borderColor: theme.resources.controlSolidFillColorDefault,
@@ -432,13 +436,13 @@ class _SliderState extends State<Slider> {
 
 /// This is used to remove the padding the Material Slider adds automatically
 class _CustomTrackShape extends m.RoundedRectSliderTrackShape {
-  static const double _trackSidePadding = 10.0;
+  static const double _trackSidePadding = 10;
 
   @override
   Rect getPreferredRect({
     required RenderBox parentBox,
-    Offset offset = Offset.zero,
     required m.SliderThemeData sliderTheme,
+    Offset offset = Offset.zero,
     bool isEnabled = false,
     bool isDiscrete = false,
   }) {
@@ -609,19 +613,19 @@ class SliderThumbShape extends m.SliderComponentShape {
 /// given an explicit non-null value.
 class SliderTheme extends InheritedTheme {
   /// Creates a theme that controls how descendant [Slider]s should look like.
-  const SliderTheme({super.key, required this.data, required super.child});
+  const SliderTheme({required this.data, required super.child, super.key});
 
   /// The properties for descendant [Slider] widgets.
   final SliderThemeData data;
 
   /// Creates a theme that merges the nearest [SliderTheme] with [data].
   static Widget merge({
-    Key? key,
     required SliderThemeData data,
     required Widget child,
+    Key? key,
   }) {
     return Builder(
-      builder: (BuildContext context) {
+      builder: (context) {
         return SliderTheme(
           key: key,
           data: SliderTheme.of(context).merge(data),
@@ -881,11 +885,11 @@ class _RectangularSliderValueIndicatorPathPainter {
     this.ltr = false,
   ]);
 
-  static const double _triangleHeight = 8.0;
-  static const double _labelPadding = 8.0;
-  static const double _preferredHeight = 32.0;
-  static const double _minLabelWidth = 16.0;
-  static const double _bottomTipYOffset = 14.0;
+  static const double _triangleHeight = 8;
+  static const double _labelPadding = 8;
+  static const double _preferredHeight = 32;
+  static const double _minLabelWidth = 16;
+  static const double _bottomTipYOffset = 14;
   static const double _preferredHalfHeight = _preferredHeight / 2;
   static const double _upperRectRadius = 4;
 
@@ -1045,7 +1049,7 @@ class _RectangularSliderValueIndicatorPathPainter {
     );
     final labelOffset = boxCenter - halfLabelPainterOffset;
 
-    final span = labelPainter.text as TextSpan;
+    final span = labelPainter.text! as TextSpan;
     labelPainter
       ..text = TextSpan(
         text: span.text,

@@ -9,9 +9,7 @@ import 'package:flutter/foundation.dart';
 class EntrancePageTransition extends StatelessWidget {
   /// Creates an entrance page transition
   const EntrancePageTransition({
-    super.key,
-    required this.child,
-    required this.animation,
+    required this.child, required this.animation, super.key,
     this.vertical = true,
     this.reverse = false,
     this.startFrom = 0.25,
@@ -81,9 +79,7 @@ class EntrancePageTransition extends StatelessWidget {
 class DrillInPageTransition extends StatelessWidget {
   /// Creates a drill in page transition.
   const DrillInPageTransition({
-    super.key,
-    required this.child,
-    required this.animation,
+    required this.child, required this.animation, super.key,
   });
 
   /// The widget to be animated
@@ -105,7 +101,7 @@ class DrillInPageTransition extends StatelessWidget {
     return FadeTransition(
       opacity: animation,
       child: ScaleTransition(
-        scale: Tween<double>(begin: 0.88, end: 1.0).animate(animation),
+        scale: Tween<double>(begin: 0.88, end: 1).animate(animation),
         child: child,
       ),
     );
@@ -116,9 +112,7 @@ class DrillInPageTransition extends StatelessWidget {
 class HorizontalSlidePageTransition extends StatelessWidget {
   /// Creates a horizontal slide page transition.
   const HorizontalSlidePageTransition({
-    super.key,
-    required this.child,
-    required this.animation,
+    required this.child, required this.animation, super.key,
     this.fromLeft = true,
   });
 
@@ -166,7 +160,7 @@ class HorizontalSlidePageTransition extends StatelessWidget {
 
 /// To avoid playing any animation during navigation, use this animation.
 class SuppressPageTransition extends StatelessWidget {
-  const SuppressPageTransition({super.key, required this.child});
+  const SuppressPageTransition({required this.child, super.key});
 
   /// The widget to be animation
   final Widget child;

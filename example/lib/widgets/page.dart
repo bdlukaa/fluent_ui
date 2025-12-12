@@ -1,11 +1,11 @@
 import 'package:fluent_ui/fluent_ui.dart';
 
 mixin PageMixin {
-  Widget description({required Widget content}) {
+  Widget description({required final Widget content}) {
     return Builder(
-      builder: (context) {
+      builder: (final context) {
         return Padding(
-          padding: const EdgeInsetsDirectional.only(bottom: 4.0),
+          padding: const EdgeInsetsDirectional.only(bottom: 4),
           child: DefaultTextStyle(
             style: FluentTheme.of(context).typography.body!,
             child: content,
@@ -15,11 +15,11 @@ mixin PageMixin {
     );
   }
 
-  Widget subtitle({required Widget content}) {
+  Widget subtitle({required final Widget content}) {
     return Builder(
-      builder: (context) {
+      builder: (final context) {
         return Padding(
-          padding: const EdgeInsetsDirectional.only(top: 14.0, bottom: 2.0),
+          padding: const EdgeInsetsDirectional.only(top: 14, bottom: 2),
           child: DefaultTextStyle(
             style: FluentTheme.of(context).typography.subtitle!,
             child: content,

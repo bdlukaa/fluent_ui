@@ -5,9 +5,9 @@ import 'app_test.dart';
 
 void main() {
   testWidgets('SplitButton displays child and flyout', (
-    WidgetTester tester,
+    tester,
   ) async {
-    bool invoked = false;
+    var invoked = false;
     await tester.pumpWidget(
       wrapApp(
         child: SplitButton(
@@ -34,9 +34,9 @@ void main() {
   });
 
   testWidgets('SplitButton invokes onInvoked when primary button is tapped', (
-    WidgetTester tester,
+    tester,
   ) async {
-    bool invoked = false;
+    var invoked = false;
     await tester.pumpWidget(
       wrapApp(
         child: ScaffoldPage(
@@ -56,7 +56,7 @@ void main() {
     expect(invoked, isTrue);
   });
 
-  testWidgets('SplitButton uses secondaryBuilder', (WidgetTester tester) async {
+  testWidgets('SplitButton uses secondaryBuilder', (tester) async {
     await tester.pumpWidget(
       wrapApp(
         child: ScaffoldPage(
@@ -87,9 +87,9 @@ void main() {
   });
 
   testWidgets('SplitButton disables buttons when enabled is false', (
-    WidgetTester tester,
+    tester,
   ) async {
-    bool invoked = false;
+    var invoked = false;
     await tester.pumpWidget(
       wrapApp(
         child: ScaffoldPage(

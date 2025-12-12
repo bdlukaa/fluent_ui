@@ -9,10 +9,10 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 
 part 'tab.dart';
 
-const double _kMinTileWidth = 80.0;
-const double _kMaxTileWidth = 240.0;
-const double _kTileHeight = 34.0;
-const double _kButtonWidth = 32.0;
+const double _kMinTileWidth = 80;
+const double _kMaxTileWidth = 240;
+const double _kTileHeight = 34;
+const double _kButtonWidth = 32;
 
 /// A tabbed interface for displaying multiple pages of content.
 ///
@@ -67,10 +67,10 @@ class TabView extends StatefulWidget {
   ///
   /// [maxTabWidth] must be non-negative
   const TabView({
-    super.key,
     required this.currentIndex,
-    this.onChanged,
     required this.tabs,
+    super.key,
+    this.onChanged,
     this.onNewPressed,
     this.newTabIcon = const WindowsIcon(WindowsIcons.add),
     this.shortcutsEnabled = true,
@@ -270,7 +270,7 @@ class TabView extends StatefulWidget {
 class _TabViewState extends State<TabView> {
   Timer? closeTimer;
   double? lockedTabWidth;
-  double preferredTabWidth = 0.0;
+  double preferredTabWidth = 0;
 
   late ScrollPosController scrollController;
 
@@ -421,7 +421,7 @@ class _TabViewState extends State<TabView> {
   ) {
     final item = SizedBox(
       width: _kButtonWidth,
-      height: 28.0,
+      height: 28,
       child: IconButton(
         icon: Center(child: icon),
         onPressed: onPressed,
@@ -479,7 +479,7 @@ class _TabViewState extends State<TabView> {
     final headerFooterTextStyle =
         theme.typography.bodyLarge ?? const TextStyle();
 
-    Widget tabBar = Column(
+    final Widget tabBar = Column(
       children: [
         ScrollConfiguration(
           behavior: const _TabViewScrollBehavior(),
@@ -492,7 +492,7 @@ class _TabViewState extends State<TabView> {
               children: [
                 if (widget.header != null)
                   Padding(
-                    padding: const EdgeInsetsDirectional.only(end: 12.0),
+                    padding: const EdgeInsetsDirectional.only(end: 12),
                     child: DefaultTextStyle.merge(
                       style: headerFooterTextStyle,
                       child: widget.header!,
@@ -517,11 +517,11 @@ class _TabViewState extends State<TabView> {
                               .clamp(widget.minTabWidth, widget.maxTabWidth);
 
                       final Widget listView = Listener(
-                        onPointerSignal: (PointerSignalEvent e) {
+                        onPointerSignal: (e) {
                           if (e is PointerScrollEvent &&
                               scrollController.hasClients) {
                             GestureBinding.instance.pointerSignalResolver
-                                .register(e, (PointerSignalEvent event) {
+                                .register(e, (event) {
                                   if (e.scrollDelta.dy > 0) {
                                     scrollController.forward(
                                       align: false,
@@ -566,7 +566,7 @@ class _TabViewState extends State<TabView> {
                       );
 
                       /// Whether the tab bar is scrollable
-                      var scrollable =
+                      final scrollable =
                           preferredTabWidth * widget.tabs.length >
                           width - (widget.showNewButton ? _kButtonWidth : 0);
 
@@ -578,9 +578,9 @@ class _TabViewState extends State<TabView> {
                       Widget backwardButton() {
                         return Padding(
                           padding: const EdgeInsetsDirectional.only(
-                            start: 8.0,
-                            end: 3.0,
-                            bottom: 3.0,
+                            start: 8,
+                            end: 3,
+                            bottom: 3,
                           ),
                           child: _buttonTabBuilder(
                             context,
@@ -605,9 +605,9 @@ class _TabViewState extends State<TabView> {
                       Widget forwardButton() {
                         return Padding(
                           padding: const EdgeInsetsDirectional.only(
-                            start: 3.0,
-                            end: 8.0,
-                            bottom: 3.0,
+                            start: 3,
+                            end: 8,
+                            bottom: 3,
                           ),
                           child: _buttonTabBuilder(
                             context,
@@ -650,16 +650,16 @@ class _TabViewState extends State<TabView> {
                           if (widget.showNewButton)
                             Padding(
                               padding: const EdgeInsetsDirectional.only(
-                                start: 3.0,
-                                bottom: 3.0,
+                                start: 3,
+                                bottom: 3,
                               ),
                               child: _buttonTabBuilder(
                                 context,
                                 IconTheme.merge(
-                                  data: const IconThemeData(size: 12.0),
+                                  data: const IconThemeData(size: 12),
                                   child: widget.newTabIcon,
                                 ),
-                                widget.onNewPressed!,
+                                widget.onNewPressed,
                                 localizations.newTabLabel,
                               ),
                             ),
@@ -679,7 +679,7 @@ class _TabViewState extends State<TabView> {
                 ),
                 if (widget.footer != null)
                   Padding(
-                    padding: const EdgeInsetsDirectional.only(start: 12.0),
+                    padding: const EdgeInsetsDirectional.only(start: 12),
                     child: DefaultTextStyle.merge(
                       style: headerFooterTextStyle,
                       child: widget.footer!,
@@ -743,9 +743,14 @@ class _TabViewState extends State<TabView> {
                   LogicalKeyboardKey.digit8,
                   LogicalKeyboardKey.digit9,
                 ];
-                return SingleActivator(digits[i], control: ctrl, meta: meta);
+                return SingleActivator(
+                  digits[i as int],
+                  control: ctrl,
+                  meta: meta,
+                );
               },
-              value: (index) {
+              value: (i) {
+                final index = i as int;
                 return () {
                   // If it's the last, move to the last tab
                   if (index == 8) {

@@ -30,16 +30,7 @@ import 'package:flutter/foundation.dart';
 ///  * <https://learn.microsoft.com/en-us/windows/apps/design/controls/buttons>
 abstract class BaseButton extends StatefulWidget {
   const BaseButton({
-    super.key,
-    required this.onPressed,
-    required this.onLongPress,
-    required this.onTapDown,
-    required this.onTapUp,
-    required this.style,
-    required this.focusNode,
-    required this.autofocus,
-    required this.child,
-    required this.focusable,
+    required this.onPressed, required this.onLongPress, required this.onTapDown, required this.onTapUp, required this.style, required this.focusNode, required this.autofocus, required this.child, required this.focusable, super.key,
   });
 
   /// Called when the button is tapped or otherwise activated.
@@ -169,32 +160,32 @@ class _BaseButtonState extends State<BaseButton> {
           WidgetStateProperty<T>? Function(ButtonStyle? style) getProperty,
         ) {
           return effectiveValue(
-            (ButtonStyle? style) => getProperty(style)?.resolve(states),
+            (style) => getProperty(style)?.resolve(states),
           );
         }
 
         final resolvedElevation = resolve<double?>(
-          (ButtonStyle? style) => style?.elevation,
+          (style) => style?.elevation,
         );
         final resolvedTextStyle = theme.typography.body?.merge(
-          resolve<TextStyle?>((ButtonStyle? style) => style?.textStyle),
+          resolve<TextStyle?>((style) => style?.textStyle),
         );
         final resolvedBackgroundColor = resolve<Color?>(
-          (ButtonStyle? style) => style?.backgroundColor,
+          (style) => style?.backgroundColor,
         );
         final resolvedForegroundColor = resolve<Color?>(
-          (ButtonStyle? style) => style?.foregroundColor,
+          (style) => style?.foregroundColor,
         );
         final resolvedShadowColor = resolve<Color?>(
-          (ButtonStyle? style) => style?.shadowColor,
+          (style) => style?.shadowColor,
         );
         final resolvedPadding =
             resolve<EdgeInsetsGeometry?>(
-              (ButtonStyle? style) => style?.padding,
+              (style) => style?.padding,
             ) ??
             EdgeInsetsDirectional.zero;
         final resolvedShape =
-            resolve<ShapeBorder?>((ButtonStyle? style) => style?.shape) ??
+            resolve<ShapeBorder?>((style) => style?.shape) ??
             const RoundedRectangleBorder();
 
         final padding = resolvedPadding
@@ -206,7 +197,7 @@ class _BaseButtonState extends State<BaseButton> {
             )
             .clamp(EdgeInsetsDirectional.zero, EdgeInsetsGeometry.infinity);
         final iconSize = resolve<double?>((style) => style?.iconSize);
-        Widget result = PhysicalModel(
+        final Widget result = PhysicalModel(
           color: Colors.transparent,
           shadowColor: resolvedShadowColor ?? Colors.black,
           elevation: resolvedElevation ?? 0.0,

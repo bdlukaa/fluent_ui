@@ -31,8 +31,7 @@ class Mica extends StatelessWidget {
   ///
   /// [elevation] must be non-negative.
   const Mica({
-    super.key,
-    required this.child,
+    required this.child, super.key,
     this.elevation = 0,
     this.backgroundColor,
     this.borderRadius,

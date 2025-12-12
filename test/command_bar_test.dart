@@ -54,7 +54,7 @@ void main() {
   testWidgets(
     'CommandBar renders secondary items and shows flyout on overflow button tap',
     (tester) async {
-      bool pressed = false;
+      var pressed = false;
       await tester.pumpWidget(
         wrapApp(
           child: SizedBox(

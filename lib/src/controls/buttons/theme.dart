@@ -128,19 +128,19 @@ class ButtonStyle with Diagnosticable {
 /// given an explicit non-null value.
 class ButtonTheme extends InheritedTheme {
   /// Creates a theme that controls how descendant [Button]s should look like.
-  const ButtonTheme({super.key, required super.child, required this.data});
+  const ButtonTheme({required super.child, required this.data, super.key});
 
   /// The properties for descendant [Button] widgets.
   final ButtonThemeData data;
 
   /// Creates a theme that merges the nearest [ButtonTheme] with [data].
   static Widget merge({
-    Key? key,
     required ButtonThemeData data,
     required Widget child,
+    Key? key,
   }) {
     return Builder(
-      builder: (BuildContext context) {
+      builder: (context) {
         return ButtonTheme(
           key: key,
           data: ButtonTheme.of(context).merge(data),
@@ -296,14 +296,14 @@ class ButtonThemeData with Diagnosticable {
     if (states.isPressed || states.isDisabled) {
       return RoundedRectangleBorder(
         side: BorderSide(color: theme.resources.controlStrokeColorDefault),
-        borderRadius: BorderRadius.circular(4.0),
+        borderRadius: BorderRadius.circular(4),
       );
     } else {
       return RoundedRectangleGradientBorder(
-        borderRadius: BorderRadius.circular(4.0),
+        borderRadius: BorderRadius.circular(4),
         gradient: LinearGradient(
-          begin: const Alignment(0, 0),
-          end: const Alignment(0.0, 3),
+          begin: Alignment.center,
+          end: const Alignment(0, 3),
           colors: [
             theme.resources.controlStrokeColorSecondary,
             theme.resources.controlStrokeColorDefault,

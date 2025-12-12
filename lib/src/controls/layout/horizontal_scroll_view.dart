@@ -21,8 +21,7 @@ class HorizontalScrollView extends StatefulWidget {
   final Axis scrollDirection;
 
   const HorizontalScrollView({
-    super.key,
-    required this.child,
+    required this.child, super.key,
     this.scrollPhysics,
     this.mouseWheelScrolls = true,
     this.scrollDirection = Axis.horizontal,

@@ -2,7 +2,7 @@ import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {
-  testWidgets('ThemeExtension on FluentTheme', (WidgetTester tester) async {
+  testWidgets('ThemeExtension on FluentTheme', (tester) async {
     await tester.pumpWidget(
       FluentApp(
         theme: FluentThemeData(

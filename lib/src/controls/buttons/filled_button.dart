@@ -57,9 +57,7 @@ class FilledButton extends Button {
   /// The [child] is typically a [Text] widget. The [onPressed] callback is
   /// required—set it to null to disable the button.
   const FilledButton({
-    super.key,
-    required super.child,
-    required super.onPressed,
+    required super.child, required super.onPressed, super.key,
     super.onLongPress,
     super.onTapDown,
     super.onTapUp,
@@ -129,11 +127,11 @@ class FilledButton extends Button {
             side: BorderSide(
               color: theme.resources.controlFillColorTransparent,
             ),
-            borderRadius: BorderRadius.circular(4.0),
+            borderRadius: BorderRadius.circular(4),
           )
         : RoundedRectangleGradientBorder(
             gradient: LinearGradient(
-              begin: const Alignment(0.0, -2),
+              begin: const Alignment(0, -2),
               end: Alignment.bottomCenter,
               colors: [
                 theme.resources.controlStrokeColorOnAccentSecondary,
@@ -142,7 +140,7 @@ class FilledButton extends Button {
               stops: const [0.33, 1.0],
               transform: const GradientRotation(pi),
             ),
-            borderRadius: BorderRadius.circular(4.0),
+            borderRadius: BorderRadius.circular(4),
           );
   }
 }

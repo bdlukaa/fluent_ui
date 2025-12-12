@@ -25,7 +25,7 @@ void main() {
   });
 
   testWidgets('ListTile calls onPressed when tapped', (tester) async {
-    bool pressed = false;
+    var pressed = false;
     await tester.pumpWidget(
       wrapApp(
         child: ListTile(
@@ -50,8 +50,6 @@ void main() {
       wrapApp(
         child: ListTile.selectable(
           title: const Text('Selectable'),
-          selected: false,
-          selectionMode: ListTileSelectionMode.single,
           onSelectionChange: (v) {
             selected = v;
           },

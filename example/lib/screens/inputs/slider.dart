@@ -11,17 +11,17 @@ class SliderPage extends StatefulWidget {
 
 class _SliderPageState extends State<SliderPage> with PageMixin {
   bool disabled = false;
-  double firstValue = 23.0;
-  double verticalValue = 50.0;
+  double firstValue = 23;
+  double verticalValue = 50;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(final BuildContext context) {
     return ScaffoldPage.scrollable(
       header: PageHeader(
         title: const Text('Slider'),
         commandBar: ToggleSwitch(
           checked: disabled,
-          onChanged: (v) => setState(() => disabled = v),
+          onChanged: (final v) => setState(() => disabled = v),
           content: const Text('Disabled'),
         ),
       ),
@@ -37,10 +37,11 @@ class _SliderPageState extends State<SliderPage> with PageMixin {
         ),
         subtitle(content: const Text('A simple Slider')),
         CardHighlight(
-          codeSnippet: '''double value = 0;
+          codeSnippet: r'''
+double value = 0;
 
 Slider(
-  label: '\${value.toInt()}',
+  label: '${value.toInt()}',
   value: value,
   onChanged: disabled ? null : (v) => setState(() => value = v),
 ),
@@ -52,7 +53,7 @@ Slider(
                 value: firstValue,
                 onChanged: disabled
                     ? null
-                    : (v) {
+                    : (final v) {
                         setState(() => firstValue = v);
                       },
               ),
@@ -64,7 +65,8 @@ Slider(
         subtitle(content: const Text('A vertical slider')),
         description(
           content: const Text(
-            '''You can orient your slider horizontally or vertically. Use these guidelines to determine which layout to use.
+            '''
+You can orient your slider horizontally or vertically. Use these guidelines to determine which layout to use.
 
     *   Use a natural orientation. For example, if the slider represents a real-world value that is normally shown vertically (such as temperature), use a vertical orientation.
     *   If the control is used to seek within media, like in a video app, use a horizontal orientation.
@@ -73,11 +75,12 @@ Slider(
           ),
         ),
         CardHighlight(
-          codeSnippet: '''double value = 0;
+          codeSnippet: r'''
+double value = 0;
 
 Slider(
   vertical: true,
-  label: '\${value.toInt()}',
+  label: '${value.toInt()}',
   value: value,
   onChanged: disabled ? null : (v) => setState(() => value = v),
 ),
@@ -90,7 +93,7 @@ Slider(
                 value: verticalValue,
                 onChanged: disabled
                     ? null
-                    : (v) => setState(() => verticalValue = v),
+                    : (final v) => setState(() => verticalValue = v),
               ),
               const Spacer(),
               Text('Output:\n${verticalValue.toInt()}'),

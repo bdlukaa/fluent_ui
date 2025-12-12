@@ -1,16 +1,15 @@
 import 'package:fluent_ui/fluent_ui.dart';
 
 const EdgeInsetsGeometry _kDefaultPadding = EdgeInsetsDirectional.fromSTEB(
-  20.0,
-  6.0,
-  6.0,
-  6.0,
+  20,
+  6,
+  6,
+  6,
 );
 
 class FormRow extends StatelessWidget {
   const FormRow({
-    super.key,
-    required this.child,
+    required this.child, super.key,
     this.padding = _kDefaultPadding,
     this.helper,
     this.error,
@@ -41,11 +40,11 @@ class FormRow extends StatelessWidget {
           if (helper != null)
             Align(
               alignment: AlignmentDirectional.centerStart,
-              child: DefaultTextStyle.merge(style: textStyle!, child: helper!),
+              child: DefaultTextStyle.merge(style: textStyle, child: helper!),
             ),
           if (error != null)
             Container(
-              margin: const EdgeInsetsDirectional.only(top: 2.0),
+              margin: const EdgeInsetsDirectional.only(top: 2),
               alignment: AlignmentDirectional.centerStart,
               child: DefaultTextStyle.merge(
                 style: TextStyle(

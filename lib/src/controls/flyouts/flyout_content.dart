@@ -12,11 +12,10 @@ const kFlyoutMinConstraints = BoxConstraints(minWidth: 118);
 class FlyoutContent extends StatelessWidget {
   /// Creates a flyout content
   const FlyoutContent({
-    super.key,
-    required this.child,
+    required this.child, super.key,
     this.color,
     this.shape,
-    this.padding = const EdgeInsetsDirectional.all(8.0),
+    this.padding = const EdgeInsetsDirectional.all(8),
     this.shadowColor = Colors.black,
     this.elevation = 8.0,
     this.constraints = kFlyoutMinConstraints,
@@ -70,9 +69,8 @@ class FlyoutContent extends StatelessWidget {
     final resolvedShape =
         shape ??
         RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(8.0),
+          borderRadius: BorderRadius.circular(8),
           side: BorderSide(
-            width: 1,
             color: theme.resources.surfaceStrokeColorFlyout,
           ),
         );
@@ -129,17 +127,16 @@ class FlyoutContent extends StatelessWidget {
 class FlyoutListTile extends StatelessWidget {
   /// Creates a flyout list tile.
   const FlyoutListTile({
-    super.key,
+    required this.text, super.key,
     this.onPressed,
     this.onLongPress,
     this.tooltip,
     this.icon,
-    required this.text,
     this.trailing,
     this.focusNode,
     this.autofocus = false,
     this.semanticLabel,
-    this.margin = const EdgeInsetsDirectional.only(bottom: 5.0),
+    this.margin = const EdgeInsetsDirectional.only(bottom: 5),
     this.selected = false,
     this.showSelectedIndicator = true,
   });
@@ -196,7 +193,7 @@ class FlyoutListTile extends StatelessWidget {
       semanticLabel: semanticLabel,
       builder: (context, states) {
         final theme = FluentTheme.of(context);
-        final radius = BorderRadius.circular(4.0);
+        final radius = BorderRadius.circular(4);
 
         if (selected) {
           states = {WidgetState.hovered};
@@ -219,28 +216,28 @@ class FlyoutListTile extends StatelessWidget {
                 borderRadius: radius,
               ),
               padding: const EdgeInsetsDirectional.only(
-                top: 4.0,
-                bottom: 4.0,
-                start: 10.0,
-                end: 8.0,
+                top: 4,
+                bottom: 4,
+                start: 10,
+                end: 8,
               ),
               child: Row(
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   if (icon != null)
                     Padding(
-                      padding: const EdgeInsetsDirectional.only(end: 10.0),
+                      padding: const EdgeInsetsDirectional.only(end: 10),
                       child: IconTheme.merge(
-                        data: IconThemeData(size: 16.0, color: foregroundColor),
+                        data: IconThemeData(size: 16, color: foregroundColor),
                         child: icon!,
                       ),
                     ),
                   Expanded(
                     child: Padding(
-                      padding: const EdgeInsetsDirectional.only(end: 10.0),
+                      padding: const EdgeInsetsDirectional.only(end: 10),
                       child: DefaultTextStyle.merge(
                         style: TextStyle(
-                          fontSize: 14.0,
+                          fontSize: 14,
                           letterSpacing: -0.15,
                           color: foregroundColor,
                         ),
@@ -251,7 +248,7 @@ class FlyoutListTile extends StatelessWidget {
                   if (trailing != null)
                     DefaultTextStyle.merge(
                       style: TextStyle(
-                        fontSize: 12.0,
+                        fontSize: 12,
                         color: theme.resources.controlStrokeColorDefault,
                         height: 0.7,
                       ),
@@ -265,7 +262,7 @@ class FlyoutListTile extends StatelessWidget {
                 top: 0,
                 bottom: 0,
                 child: Container(
-                  margin: const EdgeInsetsDirectional.symmetric(vertical: 6.0),
+                  margin: const EdgeInsetsDirectional.symmetric(vertical: 6),
                   width: 2.5,
                   decoration: BoxDecoration(
                     color: theme.accentColor.defaultBrushFor(theme.brightness),

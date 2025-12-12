@@ -1,6 +1,6 @@
 import 'package:example/widgets/card_highlight.dart';
-import 'package:fluent_ui/fluent_ui.dart';
 import 'package:example/widgets/page.dart';
+import 'package:fluent_ui/fluent_ui.dart';
 
 class TilesPage extends StatefulWidget {
   const TilesPage({super.key});
@@ -25,7 +25,7 @@ class _TilesPageState extends State<TilesPage> with PageMixin {
   final thirdController = ScrollController();
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(final BuildContext context) {
     final theme = FluentTheme.of(context);
     return ScaffoldPage.scrollable(
       header: const PageHeader(title: Text('Tiles')),
@@ -37,7 +37,8 @@ class _TilesPageState extends State<TilesPage> with PageMixin {
         ),
         subtitle(content: const Text('Basic ListView with selectable tiles')),
         CardHighlight(
-          codeSnippet: '''String selectedContact = '';
+          codeSnippet: '''
+String selectedContact = '';
 
 const contacts = ['Kendall', 'Collins', ...];
 
@@ -64,12 +65,12 @@ ListView.builder(
               controller: firstController,
               shrinkWrap: true,
               itemCount: contacts.length,
-              itemBuilder: (context, index) {
+              itemBuilder: (final context, final index) {
                 final contact = contacts[index];
                 return ListTile.selectable(
                   title: Text(contact),
                   selected: firstSelected == contact,
-                  onSelectionChange: (v) {
+                  onSelectionChange: (final v) {
                     setState(() => firstSelected = contact);
                   },
                 );
@@ -81,7 +82,8 @@ ListView.builder(
           content: const Text('ListViewItems with many properties applied'),
         ),
         CardHighlight(
-          codeSnippet: '''List<String> selectedContacts = [];
+          codeSnippet: '''
+List<String> selectedContacts = [];
 
 const contacts = ['Kendall', 'Collins', ...];
 
@@ -120,16 +122,16 @@ ListView.builder(
                   controller: secondController,
                   shrinkWrap: true,
                   itemCount: contacts.length,
-                  itemBuilder: (context, index) {
+                  itemBuilder: (final context, final index) {
                     final contact = contacts[index];
                     return ListTile.selectable(
-                      leading: const CircleAvatar(radius: 15.0),
+                      leading: const CircleAvatar(radius: 15),
                       title: Text(contact),
                       subtitle: const Text('With a custom subtitle'),
                       trailing: Icon(shuffledIcons[index]),
                       selectionMode: ListTileSelectionMode.multiple,
                       selected: selected.contains(contact),
-                      onSelectionChange: (selected) {
+                      onSelectionChange: (final selected) {
                         setState(() {
                           if (selected) {
                             this.selected.add(contact);
@@ -147,7 +149,8 @@ ListView.builder(
         ),
         subtitle(content: const Text('ListViewItems with images')),
         CardHighlight(
-          codeSnippet: '''String selectedContact = '';
+          codeSnippet: '''
+String selectedContact = '';
 
 const contacts = ['Kendall', 'Collins', ...];
 
@@ -189,7 +192,7 @@ ListView.builder(
                   controller: thirdController,
                   shrinkWrap: true,
                   itemCount: contacts.length,
-                  itemBuilder: (context, index) {
+                  itemBuilder: (final context, final index) {
                     final contact = contacts[index];
                     return ListTile.selectable(
                       leading: SizedBox(
@@ -204,9 +207,8 @@ ListView.builder(
                       ),
                       title: Text(contact),
                       subtitle: const Text('With a custom subtitle'),
-                      selectionMode: ListTileSelectionMode.single,
                       selected: thirdSelected == contact,
-                      onSelectionChange: (selected) {
+                      onSelectionChange: (final selected) {
                         setState(() {
                           if (selected) {
                             thirdSelected = contact;
@@ -225,7 +227,8 @@ ListView.builder(
   }
 }
 
-const String _contactsList = '''Kendall
+const String _contactsList = '''
+Kendall
 Collins
 Adatum Corporation
 Henry

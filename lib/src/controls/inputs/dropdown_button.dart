@@ -1,7 +1,7 @@
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter/foundation.dart';
 
-const double _kVerticalOffset = 6.0;
+const double _kVerticalOffset = 6;
 const Widget _kDefaultDropdownButtonTrailing = ChevronDown();
 
 typedef DropDownButtonBuilder =
@@ -47,9 +47,9 @@ typedef DropDownButtonBuilder =
 class DropDownButton extends StatefulWidget {
   /// Creates a dropdown button.
   const DropDownButton({
+    required this.items,
     super.key,
     this.buttonBuilder,
-    required this.items,
     this.leading,
     this.title,
     this.trailing = _kDefaultDropdownButtonTrailing,
@@ -176,7 +176,7 @@ class DropDownButton extends StatefulWidget {
         if (animation.isCompleted || animation.isDismissed) return child!;
 
         if (animation.status == AnimationStatus.reverse) {
-          return FadeTransition(opacity: animation, child: child!);
+          return FadeTransition(opacity: animation, child: child);
         }
 
         switch (placement) {
@@ -189,7 +189,7 @@ class DropDownButton extends StatefulWidget {
                 position:
                     Tween<Offset>(
                       begin: const Offset(0, -1),
-                      end: const Offset(0, 0),
+                      end: Offset.zero,
                     ).animate(
                       CurvedAnimation(
                         parent: animation,
@@ -208,7 +208,7 @@ class DropDownButton extends StatefulWidget {
                 position:
                     Tween<Offset>(
                       begin: const Offset(0, 1),
-                      end: const Offset(0, 0),
+                      end: Offset.zero,
                     ).animate(
                       CurvedAnimation(
                         parent: animation,
@@ -264,7 +264,7 @@ class DropDownButtonState extends State<DropDownButton> {
   // See: https://github.com/flutter/flutter/issues/16957#issuecomment-558878770
   List<Widget> _space(
     Iterable<Widget> children, {
-    Widget spacer = const SizedBox(width: 8.0),
+    Widget spacer = const SizedBox(width: 8),
   }) {
     return children
         .expand((child) sync* {
@@ -302,7 +302,7 @@ class DropDownButtonState extends State<DropDownButton> {
                 final state = HoverButton.of(context).states;
 
                 return IconTheme.merge(
-                  data: const IconThemeData(size: 20.0),
+                  data: const IconThemeData(size: 20),
                   child: Row(
                     mainAxisSize: MainAxisSize.min,
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -326,7 +326,7 @@ class DropDownButtonState extends State<DropDownButton> {
                             offset: state.isPressed
                                 ? const Offset(0, 0.1)
                                 : Offset.zero,
-                            child: widget.trailing!,
+                            child: widget.trailing,
                           ),
                         ),
                     ]),
@@ -358,14 +358,14 @@ class DropDownButtonState extends State<DropDownButton> {
   /// See also:
   ///
   ///  * [FlyoutController.showFlyout], which is used to show the dropdown flyout
-  void open({
+  Future<void> open({
     bool barrierDismissible = true,
     bool dismissWithEsc = true,
     bool dismissOnPointerMoveAway = false,
   }) async {
     if (_flyoutController.isOpen) return;
     widget.onOpen?.call();
-    await _flyoutController.showFlyout(
+    await _flyoutController.showFlyout<void>(
       barrierColor: Colors.transparent,
       autoModeConfiguration: FlyoutAutoConfiguration(
         preferredMode: widget.placement,
@@ -419,9 +419,7 @@ class DropDownButtonState extends State<DropDownButton> {
   MenuFlyoutItem _createMenuItem(MenuFlyoutItem item, BuildContext context) {
     return MenuFlyoutItem(
       onPressed: item.onPressed,
-      closeAfterClick: !item.closeAfterClick || !widget.closeAfterClick
-          ? false
-          : true,
+      closeAfterClick: !!item.closeAfterClick || !widget.closeAfterClick,
       key: item.key,
       leading: item.leading,
       text: item.text,

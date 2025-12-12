@@ -43,9 +43,7 @@ class HyperlinkButton extends BaseButton {
   ///
   /// The [child] is typically a [Text] widget styled as a link.
   const HyperlinkButton({
-    super.key,
-    required super.child,
-    required super.onPressed,
+    required super.child, required super.onPressed, super.key,
     super.onLongPress,
     super.onTapDown,
     super.onTapUp,
@@ -63,7 +61,7 @@ class HyperlinkButton extends BaseButton {
     return ButtonStyle(
       backgroundColor: backgroundColor(theme),
       shape: WidgetStatePropertyAll(
-        RoundedRectangleBorder(borderRadius: BorderRadius.circular(4.0)),
+        RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)),
       ),
       padding: const WidgetStatePropertyAll(kDefaultButtonPadding),
       foregroundColor: WidgetStateProperty.resolveWith((states) {

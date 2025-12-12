@@ -24,7 +24,7 @@ class _ChangelogState extends State<Changelog> {
     fetchChangelog();
   }
 
-  void fetchChangelog() async {
+  Future<void> fetchChangelog() async {
     final response = await http.get(
       Uri.parse(
         'https://raw.githubusercontent.com/bdlukaa/fluent_ui/master/CHANGELOG.md',
@@ -42,7 +42,7 @@ class _ChangelogState extends State<Changelog> {
   }
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(final BuildContext context) {
     final theme = FluentTheme.of(context);
     return DeferredWidget(
       flutter_markdown.loadLibrary,
@@ -57,7 +57,7 @@ class _ChangelogState extends State<Changelog> {
             child: flutter_markdown.Markdown(
               shrinkWrap: true,
               data: changelog!
-                  .map<String>((line) {
+                  .map<String>((final line) {
                     if (line.startsWith('## [')) {
                       final version = line
                           .split(']')
@@ -66,7 +66,7 @@ class _ChangelogState extends State<Changelog> {
                       // if (line.split('-').length == 2) {
                       //   print('GO- ${line.split('-')[0]} - ${line.split('-')[1]}');
                       // }
-                      String date = line
+                      var date = line
                           .split('-')
                           .last
                           .replaceAll('[', '')
@@ -89,7 +89,7 @@ class _ChangelogState extends State<Changelog> {
                     return line;
                   })
                   .join('\n'),
-              onTapLink: (text, href, title) {
+              onTapLink: (final text, final href, final title) {
                 launchUrl(Uri.parse(href!));
               },
               styleSheet:
@@ -103,7 +103,7 @@ class _ChangelogState extends State<Changelog> {
                       ),
                     ),
                   ),
-              padding: const EdgeInsets.all(20.0),
+              padding: const EdgeInsets.all(20),
             ),
           );
         }(),

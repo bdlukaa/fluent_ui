@@ -13,9 +13,9 @@ part 'style.dart';
 /// The default size used by the app top bar.
 ///
 /// Value eyeballed from Windows 10 v10.0.19041.928
-const double _kDefaultAppBarHeight = 50.0;
-const double kPaneItemMinHeight = 40.0;
-const double kPaneItemHeaderMinHeight = 4.0;
+const double _kDefaultAppBarHeight = 50;
+const double kPaneItemMinHeight = 40;
+const double kPaneItemHeaderMinHeight = 4;
 
 typedef NavigationContentBuilder =
     Widget Function(PaneItem? item, Widget? body);
@@ -501,7 +501,7 @@ class NavigationViewState extends State<NavigationView> {
         }
         assert(displayMode != PaneDisplayMode.auto);
 
-        var appBar = () {
+        final appBar = () {
           if (widget.appBar != null) {
             return _NavigationAppBar(
               appBar: widget.appBar!,
@@ -561,7 +561,7 @@ class NavigationViewState extends State<NavigationView> {
                   borderRadius: displayMode == PaneDisplayMode.top
                       ? BorderRadius.zero
                       : const BorderRadiusDirectional.only(
-                          topStart: Radius.circular(8.0),
+                          topStart: Radius.circular(8),
                         ).resolve(direction),
                 );
             final Widget content = ClipRect(
@@ -602,7 +602,6 @@ class NavigationViewState extends State<NavigationView> {
                     Expanded(child: content),
                   ],
                 );
-                break;
               case PaneDisplayMode.compact:
 
                 // Ensure the overlay state is correct
@@ -613,7 +612,7 @@ class NavigationViewState extends State<NavigationView> {
                         as bool? ??
                     _compactOverlayOpen;
 
-                var openSize =
+                final openSize =
                     pane.size?.openPaneWidth ?? kOpenNavigationPaneWidth;
 
                 final noOverlayRequired = consts.maxWidth / 2.5 > openSize;
@@ -636,7 +635,7 @@ class NavigationViewState extends State<NavigationView> {
                                     child: Container(
                                       margin:
                                           const EdgeInsetsDirectional.symmetric(
-                                            vertical: 1.0,
+                                            vertical: 1,
                                           ),
                                       child: _OpenNavigationPane(
                                         theme: theme,
@@ -707,17 +706,17 @@ class NavigationViewState extends State<NavigationView> {
                               child: Mica(
                                 key: _overlayKey,
                                 backgroundColor: theme.overlayBackgroundColor,
-                                elevation: 10.0,
+                                elevation: 10,
                                 child: Container(
                                   decoration: BoxDecoration(
                                     border: Border.all(
                                       color: const Color(0xFF6c6c6c),
                                       width: 0.15,
                                     ),
-                                    borderRadius: BorderRadius.circular(8.0),
+                                    borderRadius: BorderRadius.circular(8),
                                   ),
                                   margin: const EdgeInsetsDirectional.symmetric(
-                                    vertical: 1.0,
+                                    vertical: 1,
                                   ),
                                   padding: appBarPadding,
                                   child: _OpenNavigationPane(
@@ -757,7 +756,6 @@ class NavigationViewState extends State<NavigationView> {
                     ],
                   );
                 }
-                break;
               case PaneDisplayMode.open:
                 paneResult = Column(
                   children: [
@@ -787,9 +785,8 @@ class NavigationViewState extends State<NavigationView> {
                     ),
                   ],
                 );
-                break;
               case PaneDisplayMode.minimal:
-                var openSize =
+                final openSize =
                     pane.size?.openPaneWidth ?? kOpenNavigationPaneWidth;
 
                 paneResult = Stack(
@@ -805,9 +802,9 @@ class NavigationViewState extends State<NavigationView> {
                     ),
                     PositionedDirectional(
                       top: widget.appBar?.finalHeight(context) ?? 0.0,
-                      start: 0.0,
-                      end: 0.0,
-                      bottom: 0.0,
+                      start: 0,
+                      end: 0,
+                      bottom: 0,
                       child: content,
                     ),
                     if (minimalPaneOpen)
@@ -842,10 +839,10 @@ class NavigationViewState extends State<NavigationView> {
                                 color: const Color(0xFF6c6c6c),
                                 width: 0.15,
                               ),
-                              borderRadius: BorderRadius.circular(8.0),
+                              borderRadius: BorderRadius.circular(8),
                             ),
                             margin: const EdgeInsetsDirectional.symmetric(
-                              vertical: 1.0,
+                              vertical: 1,
                             ),
                             padding: appBarPadding,
                             child: _OpenNavigationPane(
@@ -862,7 +859,6 @@ class NavigationViewState extends State<NavigationView> {
                     appBar,
                   ],
                 );
-                break;
               default:
                 paneResult = content;
             }
@@ -1031,7 +1027,7 @@ class NavigationAppBar with Diagnosticable {
             child: Builder(
               builder: (context) =>
                   PaneItem(
-                    icon: const WindowsIcon(WindowsIcons.back, size: 14.0),
+                    icon: const WindowsIcon(WindowsIcons.back, size: 14),
                     title: Text(localizations.backButtonTooltip),
                     body: const SizedBox.shrink(),
                   ).build(
@@ -1045,13 +1041,12 @@ class NavigationAppBar with Diagnosticable {
         } else {
           return const SizedBox.shrink();
         }
-        widget = ConstrainedBox(
+        return ConstrainedBox(
           constraints: const BoxConstraints(
             minWidth: kCompactNavigationPaneWidth,
           ),
           child: widget,
         );
-        return widget;
       },
     );
   }
@@ -1093,7 +1088,7 @@ class _NavigationAppBar extends StatelessWidget {
           duration: theme.animationDuration ?? Duration.zero,
           curve: theme.animationCurve ?? Curves.linear,
           padding: (theme.iconPadding ?? EdgeInsetsDirectional.zero).add(
-            const EdgeInsetsDirectional.only(start: 6.0),
+            const EdgeInsetsDirectional.only(start: 6),
           ),
           child: DefaultTextStyle.merge(
             style: FluentTheme.of(context).typography.caption,
@@ -1122,7 +1117,6 @@ class _NavigationAppBar extends StatelessWidget {
               PositionedDirectional(end: 0, child: appBar.actions!),
           ],
         );
-        break;
       case PaneDisplayMode.minimal:
       case PaneDisplayMode.open:
       case PaneDisplayMode.compact:
@@ -1142,17 +1136,16 @@ class _NavigationAppBar extends StatelessWidget {
             if (appBar.actions != null)
               PositionedDirectional(
                 start: 0,
-                end: 0.0,
-                top: 0.0,
-                bottom: 0.0,
+                end: 0,
+                top: 0,
+                bottom: 0,
                 child: Align(
                   alignment: AlignmentDirectional.topEnd,
-                  child: appBar.actions!,
+                  child: appBar.actions,
                 ),
               ),
           ],
         );
-        break;
       default:
         return const SizedBox.shrink();
     }
@@ -1176,7 +1169,11 @@ class NavigationViewScrollBehavior extends FluentScrollBehavior {
   const NavigationViewScrollBehavior();
 
   @override
-  Widget buildScrollbar(context, child, details) {
+  Widget buildScrollbar(
+    BuildContext context,
+    Widget child,
+    ScrollableDetails details,
+  ) {
     return Scrollbar(
       controller: details.controller,
       thumbVisibility: false,

@@ -45,8 +45,7 @@ class RatingBar extends StatefulWidget {
   ///
   /// [starSpacing] and [amount] must be greater than 0
   const RatingBar({
-    super.key,
-    required this.rating,
+    required this.rating, super.key,
     this.onChanged,
     this.amount = 5,
     this.animationDuration = Duration.zero,
@@ -204,28 +203,20 @@ class _RatingBarState extends State<RatingBar> {
         switch (directionality) {
           case TextDirection.rtl:
             decrease();
-            break;
           case TextDirection.ltr:
             increase();
-            break;
         }
-        break;
       case _SliderAdjustmentType.left:
         switch (directionality) {
           case TextDirection.rtl:
             increase();
-            break;
           case TextDirection.ltr:
             decrease();
-            break;
         }
-        break;
       case _SliderAdjustmentType.up:
         increase();
-        break;
       case _SliderAdjustmentType.down:
         decrease();
-        break;
     }
   }
 
@@ -279,7 +270,7 @@ class _RatingBarState extends State<RatingBar> {
                       } else if (r < 0) {
                         r = 0;
                       }
-                      Widget icon = RatingIcon(
+                      final Widget icon = RatingIcon(
                         rating: r,
                         icon: widget.icon ?? kRatingBarIcon,
                         ratedColor: widget.ratedIconColor,

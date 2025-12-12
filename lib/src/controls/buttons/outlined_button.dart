@@ -46,9 +46,7 @@ import 'package:fluent_ui/fluent_ui.dart';
 class OutlinedButton extends BaseButton {
   /// Creates an outlined button.
   const OutlinedButton({
-    super.key,
-    required super.child,
-    required super.onPressed,
+    required super.child, required super.onPressed, super.key,
     super.onLongPress,
     super.onTapDown,
     super.onTapUp,
@@ -67,7 +65,7 @@ class OutlinedButton extends BaseButton {
       padding: const WidgetStatePropertyAll(kDefaultButtonPadding),
       shape: WidgetStatePropertyAll(
         RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(2.0),
+          borderRadius: BorderRadius.circular(2),
           side: BorderSide(color: theme.inactiveColor),
         ),
       ),
@@ -87,7 +85,7 @@ class OutlinedButton extends BaseButton {
       }),
       textStyle: const WidgetStatePropertyAll(
         TextStyle(
-          fontSize: 13.0,
+          fontSize: 13,
           fontWeight: FontWeight.w600,
           letterSpacing: 0.5,
         ),

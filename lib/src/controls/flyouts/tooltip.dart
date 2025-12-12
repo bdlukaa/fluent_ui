@@ -237,7 +237,7 @@ class Tooltip extends StatefulWidget {
 }
 
 class TooltipState extends State<Tooltip> with SingleTickerProviderStateMixin {
-  static const double _defaultVerticalOffset = 24.0;
+  static const double _defaultVerticalOffset = 24;
   static const bool _defaultPreferBelow = true;
   static const EdgeInsetsGeometry _defaultMargin = EdgeInsetsDirectional.zero;
   static const Duration _fadeInDuration = Duration(milliseconds: 150);
@@ -330,7 +330,7 @@ class TooltipState extends State<Tooltip> with SingleTickerProviderStateMixin {
     }
   }
 
-  void _dismissTooltip({bool immediately = false}) async {
+  Future<void> _dismissTooltip({bool immediately = false}) async {
     _showTimer?.cancel();
     _showTimer = null;
     if (immediately) {
@@ -388,7 +388,7 @@ class TooltipState extends State<Tooltip> with SingleTickerProviderStateMixin {
       Overlay.of(context, debugRequiredFor: widget).insert(_entry!);
     }
     SemanticsService.tooltip(_tooltipMessage);
-    _controller.forward(from: 0.0);
+    _controller.forward(from: 0);
   }
 
   /// Shows the tooltip if it is not already visible.
@@ -611,19 +611,17 @@ class TooltipState extends State<Tooltip> with SingleTickerProviderStateMixin {
 /// given an explicit non-null value.
 class TooltipTheme extends InheritedTheme {
   /// Creates a theme that controls how descendant [Tooltip]s should look like.
-  const TooltipTheme({super.key, required this.data, required super.child});
+  const TooltipTheme({required this.data, required super.child, super.key});
 
   /// The properties for descendant [Tooltip] widgets.
   final TooltipThemeData data;
 
   /// Creates a theme that merges the nearest [TooltipTheme] with [data].
   static Widget merge({
-    Key? key,
-    required TooltipThemeData data,
-    required Widget child,
+    required TooltipThemeData data, required Widget child, Key? key,
   }) {
     return Builder(
-      builder: (BuildContext context) {
+      builder: (context) {
         return TooltipTheme(
           key: key,
           data: TooltipTheme.of(context).merge(data),
@@ -744,8 +742,8 @@ class TooltipThemeData with Diagnosticable {
 
   factory TooltipThemeData.standard(FluentThemeData theme) {
     return TooltipThemeData(
-      height: 32.0,
-      verticalOffset: 24.0,
+      height: 32,
+      verticalOffset: 24,
       preferBelow: false,
       margin: EdgeInsetsDirectional.zero,
       padding: () {
@@ -755,19 +753,19 @@ class TooltipThemeData with Diagnosticable {
           case TargetPlatform.windows:
             return const EdgeInsetsDirectional.fromSTEB(8, 5, 8, 7);
           default:
-            return const EdgeInsetsDirectional.symmetric(horizontal: 16.0);
+            return const EdgeInsetsDirectional.symmetric(horizontal: 16);
         }
       }(),
       showDuration: const Duration(milliseconds: 1500),
       waitDuration: const Duration(seconds: 1),
       textStyle: theme.typography.caption,
       decoration: () {
-        final radius = BorderRadius.circular(4.0);
+        final radius = BorderRadius.circular(4);
         final shadow = [
           BoxShadow(
             color: Colors.black.withValues(alpha: 0.2),
             offset: const Offset(1, 1),
-            blurRadius: 10.0,
+            blurRadius: 10,
           ),
         ];
         if (theme.brightness == Brightness.light) {
@@ -919,14 +917,10 @@ class _TooltipPositionDelegate extends SingleChildLayoutDelegate {
 class _TooltipOverlay extends StatelessWidget {
   const _TooltipOverlay({
     required this.richMessage,
-    this.padding,
+    required this.animation, required this.target, required this.verticalOffset, required this.preferBelow, this.padding,
     this.margin,
     this.decoration,
     this.textStyle,
-    required this.animation,
-    required this.target,
-    required this.verticalOffset,
-    required this.preferBelow,
     this.displayHorizontally = false,
     this.maxWidth,
   });
@@ -948,19 +942,19 @@ class _TooltipOverlay extends StatelessWidget {
     assert(debugCheckHasFluentTheme(context));
     final theme = FluentTheme.of(context);
 
-    Widget result = IgnorePointer(
+    final Widget result = IgnorePointer(
       child: FadeTransition(
         opacity: animation,
         child: DefaultTextStyle.merge(
-          style: theme.typography.body!,
+          style: theme.typography.body,
           child: Container(
             decoration: decoration,
             padding: padding,
             margin: margin,
             constraints: BoxConstraints(maxWidth: maxWidth ?? double.infinity),
             child: Center(
-              widthFactor: 1.0,
-              heightFactor: 1.0,
+              widthFactor: 1,
+              heightFactor: 1,
               child: Text.rich(richMessage, style: textStyle),
             ),
           ),

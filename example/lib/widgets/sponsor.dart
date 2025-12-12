@@ -5,14 +5,14 @@ class SponsorDialog extends StatelessWidget {
   const SponsorDialog({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(final BuildContext context) {
     assert(debugCheckHasFluentTheme(context));
     return ContentDialog(
       constraints: const BoxConstraints(maxWidth: 600),
       title: Row(
         children: [
-          const WindowsIcon(FluentIcons.diamond_user, size: 24.0),
-          const SizedBox(width: 8.0),
+          const WindowsIcon(FluentIcons.diamond_user, size: 24),
+          const SizedBox(width: 8),
           const Expanded(child: Text('Benefits')),
           SmallIconButton(
             child: Tooltip(
@@ -40,7 +40,7 @@ class SponsorDialog extends StatelessWidget {
               ],
             ),
           ),
-          SizedBox(width: 10.0),
+          SizedBox(width: 10),
           Expanded(
             child: _Tier(
               name: 'Royal Executor',
@@ -60,7 +60,7 @@ class SponsorDialog extends StatelessWidget {
       actions: [
         Link(
           uri: Uri.parse('https://www.patreon.com/bdlukaa'),
-          builder: (context, open) => FilledButton(
+          builder: (final context, final open) => FilledButton(
             onPressed: open,
             child: Semantics(link: true, child: const Text('Become a Sponsor')),
           ),
@@ -83,12 +83,11 @@ class _Tier extends StatelessWidget {
   final List<String> benefits;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(final BuildContext context) {
     final theme = FluentTheme.of(context);
     return Column(
       mainAxisSize: MainAxisSize.min,
       crossAxisAlignment: CrossAxisAlignment.start,
-      mainAxisAlignment: MainAxisAlignment.start,
       children: [
         Text(
           name,
@@ -97,14 +96,14 @@ class _Tier extends StatelessWidget {
           ),
         ),
         Text(price, style: theme.typography.caption),
-        const SizedBox(height: 20.0),
-        ...benefits.map((benefit) {
+        const SizedBox(height: 20),
+        ...benefits.map((final benefit) {
           return Row(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               const Padding(
-                padding: EdgeInsetsDirectional.only(end: 6.0, top: 9.0),
-                child: WindowsIcon(WindowsIcons.circle_fill, size: 4.0),
+                padding: EdgeInsetsDirectional.only(end: 6, top: 9),
+                child: WindowsIcon(WindowsIcons.circle_fill, size: 4),
               ),
               Expanded(child: Text(benefit)),
             ],

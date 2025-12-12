@@ -33,8 +33,8 @@ class _UIEquivalentsState extends State<UIEquivalents> {
   }
 
   @override
-  Widget build(BuildContext context) {
-    List<List<Widget>> children = [
+  Widget build(final BuildContext context) {
+    final children = <List<Widget>>[
       [
         const Text('Button'),
         Button(child: const Text('Content'), onPressed: () {}),
@@ -77,17 +77,17 @@ class _UIEquivalentsState extends State<UIEquivalents> {
         const Text('Checkbox'),
         Checkbox(
           checked: comboboxChecked,
-          onChanged: (v) =>
+          onChanged: (final v) =>
               setState(() => comboboxChecked = v ?? comboboxChecked),
         ),
         m.Checkbox(
           value: comboboxChecked,
-          onChanged: (v) =>
+          onChanged: (final v) =>
               setState(() => comboboxChecked = v ?? comboboxChecked),
         ),
         c.CupertinoCheckbox(
           value: comboboxChecked,
-          onChanged: (v) =>
+          onChanged: (final v) =>
               setState(() => comboboxChecked = v ?? comboboxChecked),
         ),
       ],
@@ -95,15 +95,15 @@ class _UIEquivalentsState extends State<UIEquivalents> {
         const Text('RadioButton'),
         RadioButton(
           checked: radioChecked,
-          onChanged: (v) => setState(() => radioChecked = v),
+          onChanged: (final v) => setState(() => radioChecked = v),
         ),
         RadioGroup<bool>(
-          onChanged: (v) => setState(() => radioChecked = !radioChecked),
+          onChanged: (final v) => setState(() => radioChecked = !radioChecked),
           groupValue: true,
           child: m.Radio<bool>(value: radioChecked),
         ),
         RadioGroup<bool>(
-          onChanged: (v) => setState(() => radioChecked = !radioChecked),
+          onChanged: (final v) => setState(() => radioChecked = !radioChecked),
           groupValue: true,
           child: c.CupertinoRadio<bool>(value: radioChecked),
         ),
@@ -112,33 +112,32 @@ class _UIEquivalentsState extends State<UIEquivalents> {
         const Text('ToggleSwitch'),
         ToggleSwitch(
           checked: switchChecked,
-          onChanged: (v) => setState(() => switchChecked = v),
+          onChanged: (final v) => setState(() => switchChecked = v),
         ),
         m.Switch(
           value: switchChecked,
-          onChanged: (v) => setState(() => switchChecked = v),
+          onChanged: (final v) => setState(() => switchChecked = v),
         ),
         c.CupertinoSwitch(
           value: switchChecked,
-          onChanged: (v) => setState(() => switchChecked = v),
+          onChanged: (final v) => setState(() => switchChecked = v),
         ),
       ],
       [
         const Text('Slider'),
         Slider(
           value: sliderValue,
-          max: 100,
-          onChanged: (v) => setState(() => sliderValue = v),
+          onChanged: (final v) => setState(() => sliderValue = v),
         ),
         m.Slider(
           value: sliderValue,
           max: 100,
-          onChanged: (v) => setState(() => sliderValue = v),
+          onChanged: (final v) => setState(() => sliderValue = v),
         ),
         c.CupertinoSlider(
           value: sliderValue,
           max: 100,
-          onChanged: (v) => setState(() => sliderValue = v),
+          onChanged: (final v) => setState(() => sliderValue = v),
         ),
       ],
       [
@@ -157,23 +156,23 @@ class _UIEquivalentsState extends State<UIEquivalents> {
         const Text('ComboBox'),
         ComboBox<String>(
           items: comboboxItems
-              .map((e) => ComboBoxItem(value: e, child: Text(e)))
+              .map((final e) => ComboBoxItem(value: e, child: Text(e)))
               .toList(),
           value: comboboxItem,
-          onChanged: (value) => setState(() => comboboxItem = value),
+          onChanged: (final value) => setState(() => comboboxItem = value),
         ),
         m.DropdownButton<String>(
           items: comboboxItems
-              .map((e) => m.DropdownMenuItem(value: e, child: Text(e)))
+              .map((final e) => m.DropdownMenuItem(value: e, child: Text(e)))
               .toList(),
           value: comboboxItem,
-          onChanged: (value) => setState(() => comboboxItem = value),
+          onChanged: (final value) => setState(() => comboboxItem = value),
         ),
         c.CupertinoPicker(
-          itemExtent: 32.0,
-          onSelectedItemChanged: (value) =>
+          itemExtent: 32,
+          onSelectedItemChanged: (final value) =>
               setState(() => comboboxItem = comboboxItems[value]),
-          children: comboboxItems.map((e) => c.Text(e)).toList(),
+          children: comboboxItems.map(c.Text.new).toList(),
         ),
       ],
       [
@@ -181,7 +180,7 @@ class _UIEquivalentsState extends State<UIEquivalents> {
         DropDownButton(
           items: comboboxItems
               .map(
-                (e) => MenuFlyoutItem(
+                (final e) => MenuFlyoutItem(
                   text: Text(e),
                   onPressed: () => setState(() => dropdownItem = e),
                 ),
@@ -191,12 +190,12 @@ class _UIEquivalentsState extends State<UIEquivalents> {
         ),
         m.PopupMenuButton<String>(
           key: popupKey,
-          itemBuilder: (context) {
+          itemBuilder: (final context) {
             return comboboxItems
-                .map((e) => m.PopupMenuItem(value: e, child: Text(e)))
+                .map((final e) => m.PopupMenuItem(value: e, child: Text(e)))
                 .toList();
           },
-          onSelected: (e) => setState(() => dropdownItem = e),
+          onSelected: (final e) => setState(() => dropdownItem = e),
           initialValue: dropdownItem,
           position: m.PopupMenuPosition.under,
           child: m.TextButton(
@@ -211,10 +210,10 @@ class _UIEquivalentsState extends State<UIEquivalents> {
           onPressed: () {
             c.showCupertinoModalPopup(
               context: context,
-              builder: (context) => c.CupertinoActionSheet(
+              builder: (final context) => c.CupertinoActionSheet(
                 actions: comboboxItems
                     .map(
-                      (e) => c.CupertinoActionSheetAction(
+                      (final e) => c.CupertinoActionSheetAction(
                         child: c.Text(e),
                         onPressed: () => setState(() => dropdownItem = e),
                       ),
@@ -236,7 +235,7 @@ class _UIEquivalentsState extends State<UIEquivalents> {
       ],
       [
         const Text('TimePicker'),
-        TimePicker(selected: time, onChanged: (value) => setState(() => time)),
+        TimePicker(selected: time, onChanged: (final value) => setState(() => time)),
         m.TextButton(
           child: const Text('Show Picker'),
           onPressed: () async {
@@ -260,14 +259,13 @@ class _UIEquivalentsState extends State<UIEquivalents> {
           child: const Text('Show Picker'),
           onPressed: () async {
             c.showCupertinoModalPopup(
-              barrierDismissible: true,
               context: context,
-              builder: (context) {
+              builder: (final context) {
                 return Align(
                   alignment: Alignment.bottomCenter,
                   child: Container(
                     height: 216,
-                    padding: const EdgeInsetsDirectional.only(top: 6.0),
+                    padding: const EdgeInsetsDirectional.only(top: 6),
                     margin: EdgeInsetsDirectional.only(
                       bottom: MediaQuery.of(context).viewInsets.bottom,
                     ),
@@ -280,7 +278,7 @@ class _UIEquivalentsState extends State<UIEquivalents> {
                         initialDateTime: time,
                         mode: c.CupertinoDatePickerMode.time,
                         use24hFormat: true,
-                        onDateTimeChanged: (DateTime newDate) {
+                        onDateTimeChanged: (final newDate) {
                           setState(() => time = newDate);
                         },
                       ),
@@ -294,7 +292,7 @@ class _UIEquivalentsState extends State<UIEquivalents> {
       ],
       [
         const Text('DatePicker'),
-        DatePicker(selected: time, onChanged: (value) => setState(() => time)),
+        DatePicker(selected: time, onChanged: (final value) => setState(() => time)),
         m.TextButton(
           child: const Text('Show Picker'),
           onPressed: () async {
@@ -313,14 +311,13 @@ class _UIEquivalentsState extends State<UIEquivalents> {
           child: const Text('Show Picker'),
           onPressed: () async {
             c.showCupertinoModalPopup(
-              barrierDismissible: true,
               context: context,
-              builder: (context) {
+              builder: (final context) {
                 return Align(
                   alignment: Alignment.bottomCenter,
                   child: Container(
                     height: 216,
-                    padding: const EdgeInsetsDirectional.only(top: 6.0),
+                    padding: const EdgeInsetsDirectional.only(top: 6),
                     margin: EdgeInsetsDirectional.only(
                       bottom: MediaQuery.of(context).viewInsets.bottom,
                     ),
@@ -334,7 +331,7 @@ class _UIEquivalentsState extends State<UIEquivalents> {
                         mode: c.CupertinoDatePickerMode.date,
                         use24hFormat: true,
                         showDayOfWeek: true,
-                        onDateTimeChanged: (DateTime newDate) {
+                        onDateTimeChanged: (final newDate) {
                           setState(() => time = newDate);
                         },
                       ),
@@ -377,16 +374,16 @@ class _UIEquivalentsState extends State<UIEquivalents> {
       ],
     ];
 
-    Widget buildColumn(int index) {
+    Widget buildColumn(final int index) {
       return FocusTraversalGroup(
         child: Column(
           children: children
               .map(
-                (children) => Container(
-                  constraints: const BoxConstraints(minHeight: 50.0),
+                (final children) => Container(
+                  constraints: const BoxConstraints(minHeight: 50),
                   alignment: AlignmentDirectional.center,
                   child: children.firstWhere(
-                    (e) => children.indexOf(e) == index,
+                    (final e) => children.indexOf(e) == index,
                     orElse: () => const SizedBox(),
                   ),
                 ),

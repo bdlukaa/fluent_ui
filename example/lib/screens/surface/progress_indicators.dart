@@ -16,7 +16,7 @@ class _ProgressIndicatorsPageState extends State<ProgressIndicatorsPage>
     with PageMixin {
   double determinateValue = Random().nextDouble() * 100;
   @override
-  Widget build(BuildContext context) {
+  Widget build(final BuildContext context) {
     return ScaffoldPage.scrollable(
       header: const PageHeader(title: Text('Progress controls')),
       children: [
@@ -36,14 +36,15 @@ class _ProgressIndicatorsPageState extends State<ProgressIndicatorsPage>
           ),
         ),
         const CardHighlight(
-          codeSnippet: '''// indeterminate progress bar
+          codeSnippet: '''
+// indeterminate progress bar
 ProgressBar(),
 
 // indeterminate progress ring
 ProgressRing(),''',
           child: RepaintBoundary(
             child: Row(
-              children: [ProgressBar(), SizedBox(width: 20.0), ProgressRing()],
+              children: [ProgressBar(), SizedBox(width: 20), ProgressRing()],
             ),
           ),
         ),
@@ -52,7 +53,7 @@ ProgressRing(),''',
           content: const Text(
             'The determinate state shows the percentage completed of a task. '
             'This should be used during an operation whose duration is known, but '
-            'its progress should not block the user\'s interaction with the app.',
+            "its progress should not block the user's interaction with the app.",
           ),
         ),
         CardHighlight(
@@ -65,14 +66,14 @@ ProgressRing(value: ${determinateValue.toInt()}),''',
           child: Row(
             children: [
               ProgressBar(value: determinateValue),
-              const SizedBox(width: 20.0),
+              const SizedBox(width: 20),
               ProgressRing(value: determinateValue),
               const Spacer(),
               InfoLabel(
                 label: 'Progress: ${determinateValue.toInt()}',
                 child: Slider(
                   value: determinateValue,
-                  onChanged: (v) => setState(() => determinateValue = v),
+                  onChanged: (final v) => setState(() => determinateValue = v),
                 ),
               ),
             ],

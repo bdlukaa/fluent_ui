@@ -15,7 +15,7 @@ class _MenuBarPageState extends State<MenuBarPage> with PageMixin {
   final _programaticallyKey = GlobalKey<MenuBarState>();
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(final BuildContext context) {
     return ScaffoldPage.scrollable(
       header: const PageHeader(title: Text('MenuBar')),
       children: [
@@ -24,7 +24,8 @@ class _MenuBarPageState extends State<MenuBarPage> with PageMixin {
         ),
         subtitle(content: const Text('A simple MenuBar')),
         CardHighlight(
-          codeSnippet: '''var _orientation = 'landscape';
+          codeSnippet: '''
+var _orientation = 'landscape';
 var _iconSize = 'medium_icons';''
 
 MenuBar(
@@ -89,7 +90,8 @@ MenuBar(
           ),
         ),
         CardHighlight(
-          codeSnippet: '''var _orientation = 'landscape';
+          codeSnippet: '''
+var _orientation = 'landscape';
 var _iconSize = 'medium_icons';''
 
 MenuBar(
@@ -173,7 +175,7 @@ MenuBar(
                 items: [
                   MenuFlyoutSubItem(
                     text: const Text('New'),
-                    items: (context) {
+                    items: (final context) {
                       return [
                         MenuFlyoutItem(
                           text: const Text('Plain Text Documents'),
@@ -214,32 +216,32 @@ MenuBar(
                     text: const Text('Landscape'),
                     value: 'landscape',
                     groupValue: _orientation,
-                    onChanged: (v) => setState(() => _orientation = v),
+                    onChanged: (final v) => setState(() => _orientation = v),
                   ),
                   RadioMenuFlyoutItem<String>(
                     text: const Text('Portrait'),
                     value: 'portrait',
                     groupValue: _orientation,
-                    onChanged: (v) => setState(() => _orientation = v),
+                    onChanged: (final v) => setState(() => _orientation = v),
                   ),
                   const MenuFlyoutSeparator(),
                   RadioMenuFlyoutItem<String>(
                     text: const Text('Small icons'),
                     value: 'small_icons',
                     groupValue: _iconSize,
-                    onChanged: (v) => setState(() => _iconSize = v),
+                    onChanged: (final v) => setState(() => _iconSize = v),
                   ),
                   RadioMenuFlyoutItem<String>(
                     text: const Text('Medium icons'),
                     value: 'medium_icons',
                     groupValue: _iconSize,
-                    onChanged: (v) => setState(() => _iconSize = v),
+                    onChanged: (final v) => setState(() => _iconSize = v),
                   ),
                   RadioMenuFlyoutItem<String>(
                     text: const Text('Large icons'),
                     value: 'large_icons',
                     groupValue: _iconSize,
-                    onChanged: (v) => setState(() => _iconSize = v),
+                    onChanged: (final v) => setState(() => _iconSize = v),
                   ),
                 ],
               ),

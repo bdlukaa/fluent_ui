@@ -4,18 +4,18 @@ import 'package:flutter/rendering.dart';
 const kOneLineTileHeight = 40.0;
 
 const kDefaultListTilePadding = EdgeInsetsDirectional.only(
-  end: 12.0,
-  top: 6.0,
-  bottom: 6.0,
+  end: 12,
+  top: 6,
+  bottom: 6,
 );
 
 const kDefaultListTileShape = RoundedRectangleBorder(
-  borderRadius: BorderRadius.all(Radius.circular(4.0)),
+  borderRadius: BorderRadius.all(Radius.circular(4)),
 );
 
 const kDefaultListTileMargin = EdgeInsetsDirectional.symmetric(
-  horizontal: 4.0,
-  vertical: 2.0,
+  horizontal: 4,
+  vertical: 2,
 );
 
 enum ListTileSelectionMode { none, single, multiple }
@@ -47,7 +47,7 @@ class ListTile extends StatelessWidget {
     this.contentPadding = kDefaultListTilePadding,
     this.margin = kDefaultListTileMargin,
   }) : assert(
-         subtitle != null ? title != null : true,
+         !(subtitle != null) || title != null,
          'To have a subtitle, there must be a title',
        ),
        selected = false,
@@ -75,7 +75,7 @@ class ListTile extends StatelessWidget {
     this.contentPadding = kDefaultListTilePadding,
     this.margin = kDefaultListTileMargin,
   }) : assert(
-         subtitle != null ? title != null : true,
+         !(subtitle != null) || title != null,
          'To have a subtitle, there must be a title',
        );
 
@@ -237,10 +237,8 @@ class ListTile extends StatelessWidget {
     switch (selectionMode) {
       case ListTileSelectionMode.multiple:
         onSelectionChange!(!selected);
-        break;
       case ListTileSelectionMode.single:
         if (!selected) onSelectionChange!(true);
-        break;
       default:
         break;
     }
@@ -273,7 +271,7 @@ class ListTile extends StatelessWidget {
           );
         }();
 
-        const placeholder = SizedBox(width: 12.0);
+        const placeholder = SizedBox(width: 12);
 
         final tile = Row(
           crossAxisAlignment: contentAlignment,
@@ -318,7 +316,7 @@ class ListTile extends StatelessWidget {
               decoration: ShapeDecoration(shape: shape, color: tileColor),
               constraints: const BoxConstraints(
                 minHeight: kOneLineTileHeight,
-                minWidth: 88.0,
+                minWidth: 88,
               ),
               margin: margin,
               child: LayoutBuilder(
@@ -331,8 +329,8 @@ class ListTile extends StatelessWidget {
                       else if (selectionMode == ListTileSelectionMode.multiple)
                         Padding(
                           padding: const EdgeInsetsDirectional.only(
-                            start: 6.0,
-                            end: 12.0,
+                            start: 6,
+                            end: 12,
                           ),
                           child: IgnorePointer(
                             child: ExcludeFocus(
@@ -352,7 +350,7 @@ class ListTile extends StatelessWidget {
                             duration: theme.mediumAnimationDuration,
                             curve: theme.animationCurve,
                             tween: Tween<double>(
-                              begin: 0.0,
+                              begin: 0,
                               end: selected
                                   ? states.isPressed
                                         ? tileHeight * 0.3
@@ -366,9 +364,9 @@ class ListTile extends StatelessWidget {
                                 ),
                                 child: Container(
                                   height: height * 0.7,
-                                  width: 3.0,
+                                  width: 3,
                                   decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(100.0),
+                                    borderRadius: BorderRadius.circular(100),
                                     color: selected
                                         ? theme.accentColor.defaultBrushFor(
                                             theme.brightness,
@@ -376,7 +374,7 @@ class ListTile extends StatelessWidget {
                                         : Colors.transparent,
                                   ),
                                   margin: const EdgeInsetsDirectional.only(
-                                    end: 8.0,
+                                    end: 8,
                                   ),
                                 ),
                               ),

@@ -2,7 +2,7 @@ import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter/foundation.dart';
 
 /// The default vertical padding of the scaffold page.
-const double kPageDefaultVerticalPadding = 24.0;
+const double kPageDefaultVerticalPadding = 24;
 
 /// A page layout that follows Windows Fluent Design guidelines.
 ///
@@ -47,12 +47,11 @@ class ScaffoldPage extends StatefulWidget {
   ///
   /// The default horizontal and vertical padding is added automatically
   ScaffoldPage.scrollable({
-    super.key,
+    required List<Widget> children, super.key,
     this.header,
     this.bottomBar,
     this.padding,
     ScrollController? scrollController,
-    required List<Widget> children,
     this.resizeToAvoidBottomInset = true,
   }) : content = Builder(
          builder: (context) {
@@ -72,11 +71,10 @@ class ScaffoldPage extends StatefulWidget {
 
   /// Creates a page with padding applied to [content]
   ScaffoldPage.withPadding({
-    super.key,
+    required Widget content, super.key,
     this.header,
     this.bottomBar,
     this.padding,
-    required Widget content,
     this.resizeToAvoidBottomInset = true,
   }) : content = Builder(
          builder: (context) {
@@ -268,7 +266,7 @@ class PageHeader extends StatelessWidget {
 
     return Padding(
       padding: EdgeInsetsDirectional.only(
-        bottom: 18.0,
+        bottom: 18,
         start: leading != null ? 0 : horizontalPadding,
       ),
       child: Row(
@@ -276,7 +274,7 @@ class PageHeader extends StatelessWidget {
           if (leading != null) leading!,
           Expanded(
             child: DefaultTextStyle.merge(
-              style: theme.typography.title!,
+              style: theme.typography.title,
               child: title ?? const SizedBox(),
             ),
           ),
@@ -284,10 +282,10 @@ class PageHeader extends StatelessWidget {
           if (commandBar != null) ...[
             Flexible(
               child: ConstrainedBox(
-                constraints: const BoxConstraints(minWidth: 160.0),
+                constraints: const BoxConstraints(minWidth: 160),
                 child: Align(
                   alignment: AlignmentDirectional.centerEnd,
-                  child: commandBar!,
+                  child: commandBar,
                 ),
               ),
             ),

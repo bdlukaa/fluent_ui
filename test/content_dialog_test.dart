@@ -40,7 +40,7 @@ void main() {
   });
 
   testWidgets('ContentDialog actions work and dialog closes', (tester) async {
-    bool pressed = false;
+    var pressed = false;
     await tester.pumpWidget(
       wrapApp(
         child: Builder(

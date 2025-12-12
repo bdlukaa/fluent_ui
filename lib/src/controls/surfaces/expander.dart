@@ -93,10 +93,8 @@ enum ExpanderDirection {
 class Expander extends StatefulWidget {
   /// Creates a windows-styled expander.
   const Expander({
-    super.key,
+    required this.header, required this.content, super.key,
     this.leading,
-    required this.header,
-    required this.content,
     this.icon,
     this.trailing,
     this.animationCurve,
@@ -108,7 +106,7 @@ class Expander extends StatefulWidget {
     this.headerBackgroundColor,
     this.headerShape,
     this.contentBackgroundColor,
-    this.contentPadding = const EdgeInsetsDirectional.all(16.0),
+    this.contentPadding = const EdgeInsetsDirectional.all(16),
     this.contentShape,
   });
 
@@ -229,7 +227,7 @@ class Expander extends StatefulWidget {
         DiagnosticsProperty<EdgeInsetsGeometry>(
           'contentPadding',
           contentPadding,
-          defaultValue: const EdgeInsetsDirectional.all(16.0),
+          defaultValue: const EdgeInsetsDirectional.all(16),
         ),
       );
   }
@@ -271,14 +269,14 @@ class ExpanderState extends State<Expander>
   void _handlePressed() {
     if (_isExpanded) {
       _controller.animateTo(
-        0.0,
+        0,
         duration: widget.animationDuration ?? _theme.mediumAnimationDuration,
         curve: widget.animationCurve ?? _theme.animationCurve,
       );
       _isExpanded = false;
     } else {
       _controller.animateTo(
-        1.0,
+        1,
         duration: widget.animationDuration ?? _theme.mediumAnimationDuration,
       );
       _isExpanded = true;
@@ -307,7 +305,7 @@ class ExpanderState extends State<Expander>
         hitTestBehavior: HitTestBehavior.deferToChild,
         builder: (context, states) {
           return Container(
-            constraints: const BoxConstraints(minHeight: 42.0),
+            constraints: const BoxConstraints(minHeight: 42),
             decoration: ShapeDecoration(
               color:
                   widget.headerBackgroundColor?.resolve(states) ??
@@ -319,40 +317,40 @@ class ExpanderState extends State<Expander>
                       color: theme.resources.cardStrokeColorDefault,
                     ),
                     borderRadius: BorderRadius.vertical(
-                      top: const Radius.circular(6.0),
+                      top: const Radius.circular(6),
                       bottom: Radius.circular(_isExpanded ? 0.0 : 6.0),
                     ),
                   ),
             ),
-            padding: const EdgeInsetsDirectional.only(start: 16.0),
+            padding: const EdgeInsetsDirectional.only(start: 16),
             alignment: AlignmentDirectional.centerStart,
             child: Row(
               mainAxisSize: MainAxisSize.min,
               children: [
                 if (widget.leading != null)
                   Padding(
-                    padding: const EdgeInsetsDirectional.only(end: 10.0),
-                    child: widget.leading!,
+                    padding: const EdgeInsetsDirectional.only(end: 10),
+                    child: widget.leading,
                   ),
                 Expanded(child: widget.header),
                 if (widget.trailing != null)
                   Padding(
-                    padding: const EdgeInsetsDirectional.only(start: 20.0),
-                    child: widget.trailing!,
+                    padding: const EdgeInsetsDirectional.only(start: 20),
+                    child: widget.trailing,
                   ),
                 Padding(
                   padding: EdgeInsetsDirectional.only(
                     start: widget.trailing != null ? 8.0 : 20.0,
-                    end: 8.0,
-                    top: 8.0,
-                    bottom: 8.0,
+                    end: 8,
+                    top: 8,
+                    bottom: 8,
                   ),
                   child: FocusBorder(
                     focused: states.isFocused,
                     child: Container(
                       padding: const EdgeInsetsDirectional.symmetric(
-                        horizontal: 10.0,
-                        vertical: 10.0,
+                        horizontal: 10,
+                        vertical: 10,
                       ),
                       decoration: BoxDecoration(
                         color: ButtonThemeData.uncheckedInputColor(
@@ -360,7 +358,7 @@ class ExpanderState extends State<Expander>
                           states,
                           transparentWhenNone: true,
                         ),
-                        borderRadius: BorderRadius.circular(6.0),
+                        borderRadius: BorderRadius.circular(6),
                       ),
                       child:
                           widget.icon ??
@@ -370,7 +368,7 @@ class ExpanderState extends State<Expander>
                                 parent: _controller,
                                 curve: Interval(
                                   0.5,
-                                  1.0,
+                                  1,
                                   curve:
                                       widget.animationCurve ??
                                       _theme.animationCurve,
@@ -387,7 +385,7 @@ class ExpanderState extends State<Expander>
                                 _isDown
                                     ? FluentIcons.chevron_down
                                     : FluentIcons.chevron_up,
-                                size: 8.0,
+                                size: 8,
                               ),
                             ),
                           ),
@@ -402,7 +400,7 @@ class ExpanderState extends State<Expander>
       SizeTransition(
         sizeFactor: CurvedAnimation(
           curve: Interval(
-            0.0,
+            0,
             0.5,
             curve: widget.animationCurve ?? _theme.animationCurve,
           ),
@@ -419,7 +417,7 @@ class ExpanderState extends State<Expander>
                     color: theme.resources.cardStrokeColorDefault,
                   ),
                   borderRadius: const BorderRadius.vertical(
-                    bottom: Radius.circular(6.0),
+                    bottom: Radius.circular(6),
                   ),
                 ),
             color:

@@ -7,7 +7,7 @@ Widget wrapApp({required Widget child}) {
 }
 
 void main() {
-  testWidgets('Can nest apps', (WidgetTester tester) async {
+  testWidgets('Can nest apps', (tester) async {
     await tester.pumpWidget(
       const FluentApp(home: FluentApp(home: Text('Home sweet home'))),
     );
@@ -16,14 +16,14 @@ void main() {
   });
 
   testWidgets('Can get text scale from media query', (
-    WidgetTester tester,
+    tester,
   ) async {
     double? textScaleFactor;
     await tester.pumpWidget(
       FluentApp(
         home: Builder(
-          builder: (BuildContext context) {
-            textScaleFactor = MediaQuery.textScalerOf(context).scale(1.0);
+          builder: (context) {
+            textScaleFactor = MediaQuery.textScalerOf(context).scale(1);
             return Container();
           },
         ),
@@ -34,12 +34,12 @@ void main() {
   });
 
   testWidgets('Has default material and fluent localizations', (
-    WidgetTester tester,
+    tester,
   ) async {
     await tester.pumpWidget(
       FluentApp(
         home: Builder(
-          builder: (BuildContext context) {
+          builder: (context) {
             return Column(
               children: <Widget>[
                 Text(MaterialLocalizations.of(context).selectAllButtonLabel),
@@ -56,7 +56,7 @@ void main() {
   });
 
   testWidgets('A parent material Theme is not overriden by FluentApp', (
-    WidgetTester tester,
+    tester,
   ) async {
     await tester.pumpWidget(
       m.Theme(
@@ -64,7 +64,7 @@ void main() {
         child: FluentApp(
           theme: FluentThemeData.dark(),
           home: Builder(
-            builder: (BuildContext context) {
+            builder: (context) {
               return Column(
                 children: <Widget>[
                   Text('${m.Theme.of(context).brightness}'),
@@ -83,7 +83,7 @@ void main() {
 
   testWidgets(
     'Do not display warning if country code is provided for supportedLocales',
-    (WidgetTester tester) async {
+    (tester) async {
       await tester.pumpWidget(
         const FluentApp(supportedLocales: [Locale('en', 'US')]),
       );

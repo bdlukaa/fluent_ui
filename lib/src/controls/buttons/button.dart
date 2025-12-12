@@ -4,10 +4,10 @@ import 'package:fluent_ui/fluent_ui.dart';
 ///
 /// This matches the padding used by WinUI button controls.
 const kDefaultButtonPadding = EdgeInsetsDirectional.only(
-  start: 11.0,
-  top: 5.0,
-  end: 11.0,
-  bottom: 6.0,
+  start: 11,
+  top: 5,
+  end: 11,
+  bottom: 6,
 );
 
 /// A standard button control that triggers an immediate action when clicked.
@@ -81,9 +81,7 @@ class Button extends BaseButton {
   /// The [child] and [onPressed] arguments are required. Set [onPressed] to
   /// null to disable the button.
   const Button({
-    super.key,
-    required super.child,
-    required super.onPressed,
+    required super.child, required super.onPressed, super.key,
     super.onLongPress,
     super.onTapDown,
     super.onTapUp,

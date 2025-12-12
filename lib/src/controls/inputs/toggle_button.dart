@@ -10,9 +10,7 @@ import 'package:flutter/foundation.dart';
 class ToggleButton extends StatelessWidget {
   /// Creates a toggle button.
   const ToggleButton({
-    super.key,
-    required this.checked,
-    required this.onChanged,
+    required this.checked, required this.onChanged, super.key,
     this.child,
     this.style,
     this.semanticLabel,
@@ -79,9 +77,7 @@ class ToggleButtonTheme extends InheritedTheme {
   /// Creates a theme that controls how descendant [ToggleButton]s should
   /// look like.
   const ToggleButtonTheme({
-    super.key,
-    required this.data,
-    required super.child,
+    required this.data, required super.child, super.key,
   });
 
   /// The properties for descendant [ToggleButton] widgets.
@@ -89,12 +85,10 @@ class ToggleButtonTheme extends InheritedTheme {
 
   /// Creates a theme that merges the nearest [ToggleButtonTheme] with [data].
   static Widget merge({
-    Key? key,
-    required ToggleButtonThemeData data,
-    required Widget child,
+    required ToggleButtonThemeData data, required Widget child, Key? key,
   }) {
     return Builder(
-      builder: (BuildContext context) {
+      builder: (context) {
         return ToggleButtonTheme(
           key: key,
           data: ToggleButtonTheme.of(context).merge(data),

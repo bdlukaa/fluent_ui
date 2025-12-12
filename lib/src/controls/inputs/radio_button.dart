@@ -60,9 +60,7 @@ import 'package:flutter/rendering.dart';
 class RadioButton extends StatelessWidget {
   /// Creates a radio button.
   const RadioButton({
-    super.key,
-    required this.checked,
-    required this.onChanged,
+    required this.checked, required this.onChanged, super.key,
     this.style,
     this.content,
     this.semanticLabel,
@@ -161,7 +159,7 @@ class RadioButton extends StatelessWidget {
             mainAxisSize: MainAxisSize.min,
             children: [
               child,
-              const SizedBox(width: 6.0),
+              const SizedBox(width: 6),
               Flexible(
                 child: DefaultTextStyle.merge(
                   style: TextStyle(
@@ -195,19 +193,17 @@ class RadioButton extends StatelessWidget {
 class RadioButtonTheme extends InheritedTheme {
   /// Creates a theme that controls how descendant [RadioButton]s should
   /// look like.
-  const RadioButtonTheme({super.key, required this.data, required super.child});
+  const RadioButtonTheme({required this.data, required super.child, super.key});
 
   /// The properties for descendant [RadioButton] widgets.
   final RadioButtonThemeData data;
 
   /// Creates a theme that merges the nearest [RadioButtonTheme] with [data].
   static Widget merge({
-    Key? key,
-    required RadioButtonThemeData data,
-    required Widget child,
+    required RadioButtonThemeData data, required Widget child, Key? key,
   }) {
     return Builder(
-      builder: (BuildContext context) {
+      builder: (context) {
         return RadioButtonTheme(
           key: key,
           data: RadioButtonTheme.of(context).merge(data),

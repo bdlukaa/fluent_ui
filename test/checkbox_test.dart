@@ -4,16 +4,16 @@ import 'package:flutter_test/flutter_test.dart';
 import 'app_test.dart';
 
 void main() {
-  testWidgets('Checkbox change state accordingly', (WidgetTester tester) async {
+  testWidgets('Checkbox change state accordingly', (tester) async {
     bool? checkBoxValue = false;
 
     await tester.pumpWidget(
       StatefulBuilder(
-        builder: (BuildContext context, StateSetter setState) {
+        builder: (context, setState) {
           return wrapApp(
             child: Checkbox(
               checked: checkBoxValue,
-              onChanged: (bool? value) {
+              onChanged: (value) {
                 setState(() {
                   checkBoxValue = value;
                 });

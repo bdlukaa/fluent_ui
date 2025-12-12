@@ -2,9 +2,9 @@ import 'package:fluent_ui/fluent_ui.dart';
 
 /// https://github.com/microsoft/microsoft-ui-xaml/blob/main/src/controls/dev/TeachingTip/TeachingTip_themeresources.xaml
 const kTeachingTipConstraints = BoxConstraints(
-  minHeight: 40.0,
-  maxHeight: 520.0,
-  maxWidth: 336.0,
+  minHeight: 40,
+  maxHeight: 520,
+  maxWidth: 336,
 );
 
 typedef TooltipCloseCallback = void Function(BuildContext context);
@@ -128,10 +128,10 @@ Future<T?> showTeachingTip<T extends Object?>({
 class TeachingTip extends StatelessWidget {
   /// Creates a teaching tip.
   const TeachingTip({
-    super.key,
-    this.leading,
     required this.title,
     required this.subtitle,
+    super.key,
+    this.leading,
     this.buttons,
     this.mediaContent,
     this.onClose = defaultCloseCallback,
@@ -199,33 +199,25 @@ class TeachingTip extends StatelessWidget {
     late Alignment alignment;
     switch (placementMode) {
       case FlyoutPlacementMode.bottomCenter:
-        alignment = const Alignment(0.0, 0.75);
-        break;
+        alignment = const Alignment(0, 0.75);
       case FlyoutPlacementMode.bottomLeft:
         alignment = const Alignment(-0.65, 0.75);
-        break;
       case FlyoutPlacementMode.bottomRight:
         alignment = const Alignment(0.75, 0.75);
-        break;
       case FlyoutPlacementMode.topCenter:
-        alignment = const Alignment(0.0, -0.75);
-        break;
+        alignment = const Alignment(0, -0.75);
       case FlyoutPlacementMode.topLeft:
         alignment = const Alignment(-0.65, -0.75);
-        break;
       case FlyoutPlacementMode.topRight:
         alignment = const Alignment(0.75, -0.75);
-        break;
       case FlyoutPlacementMode.leftTop:
       case FlyoutPlacementMode.leftCenter:
       case FlyoutPlacementMode.leftBottom:
-        alignment = const Alignment(0.75, 0.0);
-        break;
+        alignment = const Alignment(0.75, 0);
       case FlyoutPlacementMode.rightTop:
       case FlyoutPlacementMode.rightCenter:
       case FlyoutPlacementMode.rightBottom:
-        alignment = const Alignment(-0.75, 0.0);
-        break;
+        alignment = const Alignment(-0.75, 0);
       default:
         return flyout;
     }
@@ -252,12 +244,11 @@ class TeachingTip extends StatelessWidget {
       child: ConstrainedBox(
         constraints: kTeachingTipConstraints,
         child: Acrylic(
-          elevation: 1.0,
+          elevation: 1,
           shadowColor: Colors.black,
           shape: TeachingTipBorder(
             placement: flyout.placementMode,
             borderColor: theme.resources.surfaceStrokeColorDefault,
-            arrowCrossAxisWidth: horizontalPadding,
             arrowMainAxisWidth: verticalPadding,
           ),
           child: Container(
@@ -309,9 +300,9 @@ class TeachingTip extends StatelessWidget {
                         Padding(
                           padding: const EdgeInsetsDirectional.only(
                             top: verticalPadding,
-                            end: 8.0,
+                            end: 8,
                           ),
-                          child: leading!,
+                          child: leading,
                         ),
                       Flexible(
                         child: Column(
@@ -335,7 +326,7 @@ class TeachingTip extends StatelessWidget {
                           child: Padding(
                             padding: const EdgeInsetsDirectional.only(
                               top: verticalPadding / 2,
-                              start: 4.0,
+                              start: 4,
                               end: verticalPadding / 2,
                             ),
                             child: Builder(
@@ -345,7 +336,7 @@ class TeachingTip extends StatelessWidget {
                                   child: IconButton(
                                     icon: const Icon(
                                       FluentIcons.chrome_close,
-                                      size: 12.0,
+                                      size: 12,
                                     ),
                                     onPressed: () => onClose!(context),
                                   ),
@@ -363,11 +354,11 @@ class TeachingTip extends StatelessWidget {
                   Padding(
                     padding: const EdgeInsetsDirectional.only(
                       start: horizontalPadding,
-                      top: 6.0,
+                      top: 6,
                       end: horizontalPadding,
                     ),
                     child: Row(
-                      spacing: 6.0,
+                      spacing: 6,
                       children: buttons!.map<Widget>((button) {
                         return Expanded(child: button);
                       }).toList(),
@@ -478,7 +469,6 @@ class TeachingTipBorder extends ShapeBorder {
           rect.top,
         );
         path.close();
-        break;
       case FlyoutPlacementMode.topCenter:
         path.moveTo(rect.left + borderRadius, rect.top);
         path.lineTo(rect.right - borderRadius, rect.top);
@@ -527,7 +517,6 @@ class TeachingTipBorder extends ShapeBorder {
           rect.top,
         );
         path.close();
-        break;
       case FlyoutPlacementMode.topRight:
         path.moveTo(rect.left + borderRadius, rect.top);
         path.lineTo(rect.right - borderRadius, rect.top);
@@ -579,7 +568,6 @@ class TeachingTipBorder extends ShapeBorder {
           rect.top,
         );
 
-        break;
       case FlyoutPlacementMode.bottomLeft:
         path.moveTo(rect.left + borderRadius, rect.top + arrowCrossAxisWidth);
         path.lineTo(rect.left + borderMargin, rect.top + arrowCrossAxisWidth);
@@ -620,7 +608,6 @@ class TeachingTipBorder extends ShapeBorder {
           rect.top + arrowCrossAxisWidth,
         );
         path.close();
-        break;
       case FlyoutPlacementMode.bottomCenter:
         path.moveTo(rect.left + borderRadius, rect.top + arrowCrossAxisWidth);
         path.lineTo(
@@ -663,7 +650,6 @@ class TeachingTipBorder extends ShapeBorder {
           rect.top + arrowCrossAxisWidth,
         );
         path.close();
-        break;
       case FlyoutPlacementMode.bottomRight:
         path.moveTo(rect.left + borderRadius, rect.top + arrowCrossAxisWidth);
         path.lineTo(
@@ -704,7 +690,6 @@ class TeachingTipBorder extends ShapeBorder {
           rect.top + arrowCrossAxisWidth,
         );
         path.close();
-        break;
       case FlyoutPlacementMode.leftTop:
         path.moveTo(rect.right - arrowCrossAxisWidth, rect.top + borderRadius);
         path.lineTo(rect.right - arrowCrossAxisWidth, rect.top + borderMargin);
@@ -748,7 +733,6 @@ class TeachingTipBorder extends ShapeBorder {
           rect.top + borderRadius,
         );
         path.close();
-        break;
       case FlyoutPlacementMode.leftCenter:
         path.moveTo(rect.right - arrowMainAxisWidth, rect.top + borderRadius);
         // create arrow
@@ -798,7 +782,6 @@ class TeachingTipBorder extends ShapeBorder {
         );
         path.close();
 
-        break;
       case FlyoutPlacementMode.leftBottom:
         path.moveTo(rect.right - arrowCrossAxisWidth, rect.top + borderRadius);
         path.lineTo(
@@ -845,7 +828,6 @@ class TeachingTipBorder extends ShapeBorder {
           rect.top + borderRadius,
         );
         path.close();
-        break;
       case FlyoutPlacementMode.rightTop:
         path.moveTo(rect.left + arrowCrossAxisWidth, rect.top + borderRadius);
         path.lineTo(rect.left + arrowCrossAxisWidth, rect.top + borderMargin);
@@ -889,7 +871,6 @@ class TeachingTipBorder extends ShapeBorder {
           rect.top + borderRadius,
         );
         path.close();
-        break;
       case FlyoutPlacementMode.rightCenter:
         path.moveTo(rect.left + arrowMainAxisWidth, rect.top + borderRadius);
         // create arrow
@@ -935,7 +916,6 @@ class TeachingTipBorder extends ShapeBorder {
           rect.top + borderRadius,
         );
         path.close();
-        break;
       case FlyoutPlacementMode.rightBottom:
         path.moveTo(rect.left + arrowCrossAxisWidth, rect.top + borderRadius);
         path.lineTo(
@@ -978,12 +958,10 @@ class TeachingTipBorder extends ShapeBorder {
           rect.top + borderRadius,
         );
         path.close();
-        break;
       case FlyoutPlacementMode.full:
         path.addRRect(
           RRect.fromRectAndRadius(rect, Radius.circular(borderRadius)),
         );
-        break;
       case FlyoutPlacementMode.auto:
         throw UnsupportedError('Auto placement is not supported');
     }

@@ -14,13 +14,13 @@ class _PasswordBoxPageState extends State<PasswordBoxPage> with PageMixin {
   PasswordRevealMode revealMode = PasswordRevealMode.peek;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(final BuildContext context) {
     return ScaffoldPage.scrollable(
       header: PageHeader(
         title: const Text('PasswordBox'),
         commandBar: ToggleSwitch(
           checked: disabled,
-          onChanged: (v) {
+          onChanged: (final v) {
             setState(() => disabled = v);
           },
           content: const Text('Disabled'),
@@ -45,7 +45,8 @@ class _PasswordBoxPageState extends State<PasswordBoxPage> with PageMixin {
           content: const Text('A simple PasswordBox in peekAlways mode'),
         ),
         CardHighlight(
-          codeSnippet: '''PasswordBox(
+          codeSnippet: '''
+PasswordBox(
   revealMode: PasswordRevealMode.peekAlways,
 )''',
           child: Row(
@@ -65,7 +66,8 @@ class _PasswordBoxPageState extends State<PasswordBoxPage> with PageMixin {
           ),
         ),
         CardHighlight(
-          codeSnippet: '''PasswordBox(
+          codeSnippet: '''
+PasswordBox(
   revealMode: PasswordRevealMode.visible,
 );
 
@@ -81,7 +83,7 @@ PasswordBox(
                   placeholder: 'Visible Password',
                 ),
               ),
-              const SizedBox(width: 10.0),
+              const SizedBox(width: 10),
               Expanded(
                 child: PasswordBox(
                   enabled: !disabled,
@@ -94,7 +96,8 @@ PasswordBox(
         ),
         subtitle(content: const Text('Update programmatically the visibility')),
         CardHighlight(
-          codeSnippet: '''PasswordBox(
+          codeSnippet: '''
+PasswordBox(
   revealMode: revealMode,
 )''',
           child: Row(
@@ -106,13 +109,13 @@ PasswordBox(
               SizedBox(
                 // width: 50,
                 child: ComboBox<PasswordRevealMode>(
-                  onChanged: (e) {
+                  onChanged: (final e) {
                     setState(() {
                       revealMode = e ?? PasswordRevealMode.peek;
                     });
                   },
                   value: revealMode,
-                  items: PasswordRevealMode.values.map((e) {
+                  items: PasswordRevealMode.values.map((final e) {
                     return ComboBoxItem(value: e, child: Text(e.name));
                   }).toList(),
                 ),
@@ -122,7 +125,8 @@ PasswordBox(
         ),
         subtitle(content: const Text('PasswordFormBox')),
         CardHighlight(
-          codeSnippet: '''PasswordBox(
+          codeSnippet: '''
+PasswordBox(
   autovalidateMode: AutovalidateMode.always,
   validator: (text) {
     if (text == null) return null;
@@ -134,7 +138,7 @@ PasswordBox(
           child: PasswordFormBox(
             enabled: !disabled,
             autovalidateMode: AutovalidateMode.always,
-            validator: (text) {
+            validator: (final text) {
               if (text == null) return null;
               if (text.length < 8) return 'At least 8 characters';
 

@@ -5,11 +5,11 @@ import 'package:google_fonts/google_fonts.dart';
 
 class CardHighlight extends StatefulWidget {
   const CardHighlight({
+    required this.child,
+    required this.codeSnippet,
     super.key,
     this.backgroundColor,
     this.header,
-    required this.child,
-    required this.codeSnippet,
     this.initiallyOpen = false,
   });
 
@@ -26,31 +26,31 @@ class CardHighlight extends StatefulWidget {
 
 class _CardHighlightState extends State<CardHighlight>
     with AutomaticKeepAliveClientMixin<CardHighlight> {
-  late var isOpen = widget.initiallyOpen;
-  var isCopying = false;
+  late bool isOpen = widget.initiallyOpen;
+  bool isCopying = false;
 
   final GlobalKey expanderKey = GlobalKey<ExpanderState>(
     debugLabel: 'Card Expander Key',
   );
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(final BuildContext context) {
     super.build(context);
     final theme = FluentTheme.of(context);
 
-    return Container(
+    return DecoratedBox(
       decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(8.0),
+        borderRadius: BorderRadius.circular(8),
         border: Border.all(color: theme.resources.controlStrokeColorSecondary),
       ),
       child: ClipRRect(
-        borderRadius: BorderRadius.circular(8.0),
+        borderRadius: BorderRadius.circular(8),
         child: Column(
           children: [
             Mica(
               backgroundColor: widget.backgroundColor,
               child: Padding(
-                padding: const EdgeInsetsDirectional.all(12.0),
+                padding: const EdgeInsetsDirectional.all(12),
                 child: Align(
                   alignment: AlignmentDirectional.topStart,
                   child: SizedBox(width: double.infinity, child: widget.child),
@@ -60,11 +60,11 @@ class _CardHighlightState extends State<CardHighlight>
             Expander(
               initiallyExpanded: widget.initiallyOpen,
               key: expanderKey,
-              onStateChanged: (state) {
+              onStateChanged: (final state) {
                 // this is done because [onStateChanges] is called while the [Expander]
                 // is updating. By using this, we schedule the rebuilt of this widget
                 // to the next frame
-                WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+                WidgetsBinding.instance.addPostFrameCallback((final timeStamp) {
                   if (mounted) setState(() => isOpen = state);
                 });
               },
@@ -93,7 +93,7 @@ class _CardHighlightState extends State<CardHighlight>
                             : const Row(
                                 children: [
                                   WindowsIcon(WindowsIcons.copy),
-                                  SizedBox(width: 6.0),
+                                  SizedBox(width: 6),
                                   Text('Copy'),
                                 ],
                               ),
@@ -102,7 +102,7 @@ class _CardHighlightState extends State<CardHighlight>
                             ClipboardData(text: widget.codeSnippet),
                           );
                           setState(() => isCopying = true);
-                          Future.delayed(
+                          Future<void>.delayed(
                             const Duration(milliseconds: 1500),
                             () {
                               isCopying = false;
@@ -114,14 +114,12 @@ class _CardHighlightState extends State<CardHighlight>
                     )
                   : null,
               header: widget.header ?? const Text('Source code'),
-              headerShape: (open) {
-                return const RoundedRectangleBorder(
-                  borderRadius: BorderRadius.vertical(top: Radius.zero),
-                );
+              headerShape: (final open) {
+                return const RoundedRectangleBorder();
               },
               content: ClipRRect(
                 borderRadius: const BorderRadius.vertical(
-                  bottom: Radius.circular(6.0),
+                  bottom: Radius.circular(6),
                 ),
                 child: SyntaxView(
                   code: widget.codeSnippet.trim(),
@@ -139,7 +137,7 @@ class _CardHighlightState extends State<CardHighlight>
   bool get wantKeepAlive => true;
 }
 
-SyntaxTheme getSyntaxTheme(FluentThemeData theme) {
+SyntaxTheme getSyntaxTheme(final FluentThemeData theme) {
   final syntaxTheme = theme.brightness.isDark
       ? SyntaxTheme.vscodeDark()
       : SyntaxTheme.vscodeLight();

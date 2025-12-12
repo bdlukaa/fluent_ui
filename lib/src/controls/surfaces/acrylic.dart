@@ -7,7 +7,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart' as m;
 
 /// The default blur amount applied to [Acrylic] widgets.
-const double kBlurAmount = 30.0;
+const double kBlurAmount = 30;
 
 /// The default tint alpha for [Acrylic] widgets.
 const double kDefaultAcrylicAlpha = 0.8;
@@ -225,6 +225,7 @@ class _AcrylicState extends State<Acrylic> {
 
 class AnimatedAcrylic extends ImplicitlyAnimatedWidget {
   const AnimatedAcrylic({
+    required super.duration,
     super.key,
     this.tint,
     this.child,
@@ -235,7 +236,6 @@ class AnimatedAcrylic extends ImplicitlyAnimatedWidget {
     this.shadowColor,
     this.elevation = 0.0,
     super.curve,
-    required super.duration,
   });
 
   /// The tint to apply to the acrylic layers.
@@ -452,7 +452,7 @@ class _AcrylicGuts extends StatelessWidget {
       child: CustomPaint(
         isComplex: true,
         painter: _AcrylicPainter(
-          tintColor: disabled ? tint.withValues(alpha: 1.0) : tint,
+          tintColor: disabled ? tint.withValues(alpha: 1) : tint,
           luminosityColor: AcrylicHelper.getLuminosityColor(
             tint,
             disabled ? 1.0 : properties.luminosityAlpha,
@@ -545,12 +545,12 @@ class AcrylicHelper {
       const minHsvV = 0.125;
       const maxHsvV = 0.965;
 
-      var hsvTintColor = HSVColor.fromColor(tintColor);
+      final hsvTintColor = HSVColor.fromColor(tintColor);
 
-      var clampedHsvV = hsvTintColor.value.clamp(minHsvV, maxHsvV);
+      final clampedHsvV = hsvTintColor.value.clamp(minHsvV, maxHsvV);
 
-      var hsvLuminosityColor = hsvTintColor.withValue(clampedHsvV);
-      var rgbLuminosityColor = hsvLuminosityColor.toColor();
+      final hsvLuminosityColor = hsvTintColor.withValue(clampedHsvV);
+      final rgbLuminosityColor = hsvLuminosityColor.toColor();
 
       // Now figure out luminosity opacity
       // Map original *tint* opacity to this range
@@ -559,12 +559,12 @@ class AcrylicHelper {
 
       const luminosityOpacityRangeMax =
           maxLuminosityOpacity - minLuminosityOpacity;
-      var mappedTintOpacity =
+      final mappedTintOpacity =
           ((tintColor.a / 255.0) * luminosityOpacityRangeMax) +
           minLuminosityOpacity;
 
       return rgbLuminosityColor.withValues(
-        alpha: math.min(mappedTintOpacity, 1.0),
+        alpha: math.min(mappedTintOpacity, 1),
       );
     }
   }
@@ -577,7 +577,7 @@ class AcrylicHelper {
     const midPointMaxOpacity = 0.90; // 50% luminosity
     const blackMaxOpacity = 0.85; // 0% luminosity
 
-    var hsv = HSVColor.fromColor(color);
+    final hsv = HSVColor.fromColor(color);
 
     var opacityModifier = midPointMaxOpacity;
 
@@ -596,8 +596,8 @@ class AcrylicHelper {
       var maxOpacitySuppression = midPointMaxOpacity - lowestMaxOpacity;
 
       // Determine normalized deviation from the midpoint
-      var deviation = hsv.value - midPoint;
-      var normalizedDeviation = deviation / maxDeviation;
+      final deviation = hsv.value - midPoint;
+      final normalizedDeviation = deviation / maxDeviation;
 
       // If we have saturation, reduce opacity suppression to allow that color to come through more
       if (hsv.saturation > 0) {
@@ -605,7 +605,7 @@ class AcrylicHelper {
         maxOpacitySuppression *= math.max(1 - (hsv.saturation * 2), 0.0);
       }
 
-      var opacitySuppression = maxOpacitySuppression * normalizedDeviation;
+      final opacitySuppression = maxOpacitySuppression * normalizedDeviation;
 
       opacityModifier = midPointMaxOpacity - opacitySuppression;
     }
@@ -630,7 +630,7 @@ class _NoiseTextureCacher {
     );
 
     provider
-        .resolve(const ImageConfiguration())
+        .resolve(ImageConfiguration.empty)
         .addListener(
           ImageStreamListener((image, synchronousCall) {
             texture = image.image;
@@ -640,7 +640,7 @@ class _NoiseTextureCacher {
 }
 
 class DisableAcrylic extends InheritedWidget {
-  const DisableAcrylic({super.key, required super.child});
+  const DisableAcrylic({required super.child, super.key});
 
   static DisableAcrylic? of(BuildContext context) {
     return context.dependOnInheritedWidgetOfExactType<DisableAcrylic>();

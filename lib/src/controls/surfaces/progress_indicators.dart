@@ -3,8 +3,8 @@ import 'dart:math' as math;
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter/foundation.dart';
 
-const double _kMinProgressRingIndicatorSize = 36.0;
-const double _kMinProgressBarWidth = 130.0;
+const double _kMinProgressRingIndicatorSize = 36;
+const double _kMinProgressBarWidth = 130;
 
 /// A linear progress indicator that shows operation progress.
 ///
@@ -128,8 +128,11 @@ class _ProgressBarState extends State<ProgressBar>
     super.dispose();
   }
 
-  double p1 = 0, p2 = 0;
-  double idleFrames = 15, cycle = 1, idle = 1;
+  double p1 = 0;
+  double p2 = 0;
+  double idleFrames = 15;
+  double cycle = 1;
+  double idle = 1;
   double lastValue = 0;
 
   @override
@@ -181,11 +184,18 @@ class _ProgressBarState extends State<ProgressBar>
 }
 
 class _ProgressBarPainter extends CustomPainter {
-  static const _step1 = 2.7, _step2 = 4.5, _velocityScale = 0.8;
+  static const _step1 = 2.7;
+  static const _step2 = 4.5;
+  static const _velocityScale = 0.8;
   static const _short = 0.4; // percentage of short line (0..1)
   static const _long = 80 / 130; // percentage of long line (0..1)
 
-  double p1, p2, idleFrames, cycle, idle, deltaValue;
+  double p1;
+  double p2;
+  double idleFrames;
+  double cycle;
+  double idle;
+  double deltaValue;
 
   final ValueChanged<List<double>> onUpdate;
 
@@ -483,7 +493,8 @@ class _RingPainter extends CustomPainter {
   final Color backgroundColor;
   final double strokeWidth;
   final double? value;
-  final double startAngle, sweepAngle;
+  final double startAngle;
+  final double sweepAngle;
   final bool backwards;
 
   const _RingPainter({

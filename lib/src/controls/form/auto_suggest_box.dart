@@ -33,6 +33,7 @@ enum TextChangedReason {
 const kAutoSuggestBoxPopupMaxHeight = 380.0;
 
 /// An item used in [AutoSuggestBox]
+@immutable
 class AutoSuggestBoxItem<T> {
   /// The value attached to this item
   final T? value;
@@ -149,8 +150,8 @@ class AutoSuggestBoxItem<T> {
 class AutoSuggestBox<T> extends StatefulWidget {
   /// Creates a windows-styled auto suggest box.
   const AutoSuggestBox({
-    super.key,
     required this.items,
+    super.key,
     this.controller,
     this.onChanged,
     this.onSelected,
@@ -170,11 +171,11 @@ class AutoSuggestBox<T> extends StatefulWidget {
     this.unfocusedColor,
     this.cursorColor,
     this.cursorHeight,
-    this.cursorRadius = const Radius.circular(2.0),
+    this.cursorRadius = const Radius.circular(2),
     this.cursorWidth = 1.5,
     this.showCursor,
     this.keyboardAppearance,
-    this.scrollPadding = const EdgeInsetsDirectional.all(20.0),
+    this.scrollPadding = const EdgeInsetsDirectional.all(20),
     this.selectionHeightStyle = ui.BoxHeightStyle.tight,
     this.selectionWidthStyle = ui.BoxWidthStyle.tight,
     this.textInputAction,
@@ -189,8 +190,8 @@ class AutoSuggestBox<T> extends StatefulWidget {
 
   /// Creates a windows-styled auto suggest form box.
   const AutoSuggestBox.form({
-    super.key,
     required this.items,
+    super.key,
     this.controller,
     this.onChanged,
     this.onSelected,
@@ -210,11 +211,11 @@ class AutoSuggestBox<T> extends StatefulWidget {
     this.unfocusedColor,
     this.cursorColor,
     this.cursorHeight,
-    this.cursorRadius = const Radius.circular(2.0),
+    this.cursorRadius = const Radius.circular(2),
     this.cursorWidth = 1.5,
     this.showCursor,
     this.keyboardAppearance,
-    this.scrollPadding = const EdgeInsetsDirectional.all(20.0),
+    this.scrollPadding = const EdgeInsetsDirectional.all(20),
     this.selectionHeightStyle = ui.BoxHeightStyle.tight,
     this.selectionWidthStyle = ui.BoxWidthStyle.tight,
     this.validator,
@@ -235,7 +236,7 @@ class AutoSuggestBox<T> extends StatefulWidget {
   final TextEditingController? controller;
 
   /// Called when the text is updated
-  final OnChangeAutoSuggestBox? onChanged;
+  final OnChangeAutoSuggestBox<T>? onChanged;
 
   /// Called when the user selected a value.
   final ValueChanged<AutoSuggestBoxItem<T>>? onSelected;
@@ -246,7 +247,7 @@ class AutoSuggestBox<T> extends StatefulWidget {
   /// A callback function that builds the items in the overlay.
   ///
   /// Use [noResultsFoundBuilder] to build the overlay when no item is provided
-  final AutoSuggestBoxItemBuilder? itemBuilder;
+  final AutoSuggestBoxItemBuilder<T>? itemBuilder;
 
   /// Widget to be displayed when none of the items fit the [sorter]
   final WidgetBuilder? noResultsFoundBuilder;
@@ -444,10 +445,10 @@ class AutoSuggestBox<T> extends StatefulWidget {
   ///
   /// This sorter will filter the items based on their label.
   List<AutoSuggestBoxItem<T>> defaultItemSorter(
-    String text,
+    String content,
     List<AutoSuggestBoxItem<T>> items,
   ) {
-    text = text.trim();
+    final text = content.trim();
     if (text.isEmpty) return items;
 
     return items.where((element) {
@@ -504,7 +505,7 @@ class AutoSuggestBoxState<T> extends State<AutoSuggestBox<T>> {
         return;
       }
 
-      final box = _textBoxKey.currentContext!.findRenderObject() as RenderBox;
+      final box = _textBoxKey.currentContext!.findRenderObject()! as RenderBox;
       if (_boxSize != box.size) {
         dismissOverlay();
         _boxSize = box.size;
@@ -592,7 +593,7 @@ class AutoSuggestBoxState<T> extends State<AutoSuggestBox<T>> {
 
         final boxContext = _textBoxKey.currentContext;
         if (boxContext == null) return const SizedBox.shrink();
-        final box = boxContext.findRenderObject() as RenderBox;
+        final box = boxContext.findRenderObject()! as RenderBox;
 
         // ancestor is not necessary here because we are not dealing with routes, but overlays
         final globalOffset = box.localToGlobal(
@@ -628,7 +629,7 @@ class AutoSuggestBoxState<T> extends State<AutoSuggestBox<T>> {
                   focusStream: _focusStreamController.stream,
                   itemsStream: _dynamicItemsController.stream,
                   sorter: sorter,
-                  onSelected: (AutoSuggestBoxItem<T> item) {
+                  onSelected: (item) {
                     item.onSelected?.call();
                     widget.onSelected?.call(item);
                     _controller
@@ -727,9 +728,9 @@ class AutoSuggestBoxState<T> extends State<AutoSuggestBox<T>> {
       children: [
         if (widget.clearButtonEnabled && _controller.text.isNotEmpty)
           Padding(
-            padding: const EdgeInsetsDirectional.only(start: 2.0),
+            padding: const EdgeInsetsDirectional.only(start: 2),
             child: IconButton(
-              icon: const WindowsIcon(WindowsIcons.chrome_close, size: 9.0),
+              icon: const WindowsIcon(WindowsIcons.chrome_close, size: 9),
               onPressed: () {
                 _controller.clear();
                 widget.onChanged?.call(
@@ -880,7 +881,6 @@ class AutoSuggestBoxState<T> extends State<AutoSuggestBox<T>> {
 
 class _AutoSuggestBoxOverlay<T> extends StatefulWidget {
   const _AutoSuggestBoxOverlay({
-    super.key,
     required this.items,
     required this.itemBuilder,
     required this.controller,
@@ -891,6 +891,7 @@ class _AutoSuggestBoxOverlay<T> extends StatefulWidget {
     required this.sorter,
     required this.maxHeight,
     required this.noResultsFoundBuilder,
+    super.key,
   });
 
   final List<AutoSuggestBoxItem<T>> items;
@@ -910,8 +911,8 @@ class _AutoSuggestBoxOverlay<T> extends StatefulWidget {
 }
 
 class _AutoSuggestBoxOverlayState<T> extends State<_AutoSuggestBoxOverlay<T>> {
-  late final StreamSubscription focusSubscription;
-  late final StreamSubscription itemsSubscription;
+  late final StreamSubscription<void> focusSubscription;
+  late final StreamSubscription<void> itemsSubscription;
   final ScrollController scrollController = ScrollController();
 
   /// Tile height + padding
@@ -964,21 +965,21 @@ class _AutoSuggestBoxOverlayState<T> extends State<_AutoSuggestBoxOverlay<T>> {
           constraints: BoxConstraints(maxHeight: widget.maxHeight),
           decoration: ShapeDecoration(
             shape: const RoundedRectangleBorder(
-              borderRadius: BorderRadius.vertical(bottom: Radius.circular(4.0)),
+              borderRadius: BorderRadius.vertical(bottom: Radius.circular(4)),
             ),
             color: theme.resources.cardBackgroundFillColorDefault,
             shadows: [
               BoxShadow(
                 color: Colors.black.withValues(alpha: 0.05),
                 offset: const Offset(-1, 1),
-                blurRadius: 2.0,
-                spreadRadius: 3.0,
+                blurRadius: 2,
+                spreadRadius: 3,
               ),
               BoxShadow(
                 color: Colors.black.withValues(alpha: 0.05),
                 offset: const Offset(1, 1),
-                blurRadius: 2.0,
-                spreadRadius: 3.0,
+                blurRadius: 2,
+                spreadRadius: 3,
               ),
             ],
           ),
@@ -992,7 +993,7 @@ class _AutoSuggestBoxOverlayState<T> extends State<_AutoSuggestBoxOverlay<T>> {
                   result =
                       widget.noResultsFoundBuilder?.call(context) ??
                       Padding(
-                        padding: const EdgeInsetsDirectional.only(bottom: 4.0),
+                        padding: const EdgeInsetsDirectional.only(bottom: 4),
                         child: _AutoSuggestBoxOverlayTile(
                           text: Text(localizations.noResultsFoundLabel),
                         ),
@@ -1003,7 +1004,7 @@ class _AutoSuggestBoxOverlayState<T> extends State<_AutoSuggestBoxOverlay<T>> {
                     controller: scrollController,
                     key: ValueKey<int>(sortedItems.length),
                     shrinkWrap: true,
-                    padding: const EdgeInsetsDirectional.only(bottom: 4.0),
+                    padding: const EdgeInsetsDirectional.only(bottom: 4),
                     itemCount: sortedItems.length,
                     itemBuilder: (context, index) {
                       final item = sortedItems[index];
@@ -1081,7 +1082,7 @@ class __AutoSuggestBoxOverlayTileState extends State<_AutoSuggestBoxOverlayTile>
       title: EntrancePageTransition(
         animation: Tween<double>(
           begin: 0.75,
-          end: 1.0,
+          end: 1,
         ).animate(CurvedAnimation(parent: controller, curve: Curves.easeOut)),
         child: DefaultTextStyle.merge(
           style: theme.typography.body,

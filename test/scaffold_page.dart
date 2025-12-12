@@ -6,8 +6,8 @@ import 'app_test.dart';
 void main() {
   testWidgets(
     'viewInsets is considered when rendering the page when resizeToAvoidBottomInset is true',
-    (WidgetTester tester) async {
-      const viewInsets = EdgeInsets.only(top: 27.0);
+    (tester) async {
+      const viewInsets = EdgeInsets.only(top: 27);
       await tester.pumpWidget(
         wrapApp(
           child: SizedBox(
@@ -15,7 +15,7 @@ void main() {
             child: MediaQuery(
               data: const MediaQueryData(viewInsets: viewInsets),
               child: ScaffoldPage(
-                content: Container(color: Colors.black, height: 300.0),
+                content: Container(color: Colors.black, height: 300),
               ),
             ),
           ),

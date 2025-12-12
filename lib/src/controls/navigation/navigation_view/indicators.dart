@@ -212,12 +212,12 @@ class _StickyNavigationIndicatorState
     upController = AnimationController(
       vsync: this,
       duration: widget.duration,
-      value: 1.0,
+      value: 1,
     );
     downController = AnimationController(
       vsync: this,
       duration: widget.duration,
-      value: 1.0,
+      value: 1,
     );
   }
 
@@ -280,51 +280,51 @@ class _StickyNavigationIndicatorState
     if (isShowing) {
       if (isBelow) {
         if (isSelected) {
-          downAnimation = Tween<double>(begin: 0, end: 1.0).animate(
+          downAnimation = Tween<double>(begin: 0, end: 1).animate(
             CurvedAnimation(
               curve: Interval(
                 0.5,
-                1.0,
+                1,
                 curve: widget.curve ?? theme.animationCurve,
               ),
               parent: downController,
             ),
           );
           upAnimation = null;
-          downController.forward(from: 0.0);
+          downController.forward(from: 0);
         } else {
-          upAnimation = Tween<double>(begin: 0, end: 1.0).animate(
+          upAnimation = Tween<double>(begin: 0, end: 1).animate(
             CurvedAnimation(
               curve: widget.curve ?? theme.animationCurve,
               parent: upController,
             ),
           );
           downAnimation = null;
-          upController.reverse(from: 1.0);
+          upController.reverse(from: 1);
         }
       } else if (isAbove) {
         if (isSelected) {
-          upAnimation = Tween<double>(begin: 0, end: 1.0).animate(
+          upAnimation = Tween<double>(begin: 0, end: 1).animate(
             CurvedAnimation(
               curve: Interval(
                 0.5,
-                1.0,
+                1,
                 curve: widget.curve ?? theme.animationCurve,
               ),
               parent: upController,
             ),
           );
           downAnimation = null;
-          upController.forward(from: 0.0);
+          upController.forward(from: 0);
         } else {
-          downAnimation = Tween<double>(begin: 0, end: 1.0).animate(
+          downAnimation = Tween<double>(begin: 0, end: 1).animate(
             CurvedAnimation(
               curve: widget.curve ?? theme.animationCurve,
               parent: downController,
             ),
           );
           upAnimation = null;
-          downController.reverse(from: 1.0);
+          downController.reverse(from: 1);
         }
       }
     }

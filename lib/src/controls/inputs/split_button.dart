@@ -44,7 +44,7 @@ enum _SplitButtonType { normal, toggle }
 ///
 /// ```dart
 /// final key = GlobalKey<SplitButtonState>();
-/// key.currentState?.showFlyout();
+/// key.currentState?.showFlyout<void>();
 /// ```
 ///
 /// See also:
@@ -104,10 +104,10 @@ class SplitButton extends StatefulWidget {
 
   /// Creates a split button
   const SplitButton({
-    super.key,
     required this.child,
-    this.secondaryBuilder,
     required this.flyout,
+    super.key,
+    this.secondaryBuilder,
     this.onInvoked,
     this.enabled = true,
   }) : _type = _SplitButtonType.normal,
@@ -115,11 +115,11 @@ class SplitButton extends StatefulWidget {
 
   /// Creates a split toggle button
   const SplitButton.toggle({
-    super.key,
     required this.child,
     required this.checked,
-    this.secondaryBuilder,
     required this.flyout,
+    super.key,
+    this.secondaryBuilder,
     this.onInvoked,
     this.enabled = true,
   }) : _type = _SplitButtonType.toggle;
@@ -140,9 +140,9 @@ class SplitButtonState extends State<SplitButton> {
   }
 
   /// Shows the flyout attached to the dropdown button
-  void showFlyout() async {
+  Future<void> showFlyout() async {
     setState(() {});
-    await flyoutController.showFlyout(
+    await flyoutController.showFlyout<void>(
       barrierColor: Colors.transparent,
       autoModeConfiguration: FlyoutAutoConfiguration(
         preferredMode: FlyoutPlacementMode.bottomCenter,
@@ -162,7 +162,7 @@ class SplitButtonState extends State<SplitButton> {
   Widget build(BuildContext context) {
     assert(debugCheckHasFluentTheme(context));
     final theme = FluentTheme.of(context);
-    final radius = BorderRadius.circular(4.0);
+    final radius = BorderRadius.circular(4);
 
     return FocusBorder(
       focused: _showFocusHighlight,
@@ -246,7 +246,7 @@ class SplitButtonState extends State<SplitButton> {
                                   transparentWhenNone: true,
                                 ),
                           padding: const EdgeInsetsDirectional.symmetric(
-                            horizontal: 12.0,
+                            horizontal: 12,
                           ),
                           alignment: Alignment.center,
                           child: AnimatedOpacity(

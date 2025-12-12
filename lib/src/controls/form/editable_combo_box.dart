@@ -12,7 +12,7 @@ typedef SubmitEditableCombobox = String Function(String text);
 class EditableComboBox<T> extends ComboBox<T> {
   /// Creates an editable combo box.
   const EditableComboBox({
-    super.key,
+    required this.onFieldSubmitted, super.key,
     super.autofocus,
     super.popupColor,
     super.disabledPlaceholder,
@@ -31,7 +31,6 @@ class EditableComboBox<T> extends ComboBox<T> {
     super.selectedItemBuilder,
     super.style,
     super.value,
-    required this.onFieldSubmitted,
     this.textController,
     this.onTextChanged,
     this.inputFormatters,
@@ -223,13 +222,11 @@ class ComboboxFormField<T> extends FormField<T> {
   /// The `items`, `elevation`, `iconSize`, `isExpanded` and `autofocus`
   /// parameters must not be null.
   ComboboxFormField({
-    super.key,
-    required List<ComboBoxItem<T>>? items,
+    required List<ComboBoxItem<T>>? items, required this.onChanged, super.key,
     ComboBoxBuilder? selectedItemBuilder,
     T? value,
     Widget? placeholder,
     Widget? disabledPlaceholder,
-    required this.onChanged,
     VoidCallback? onTap,
     int elevation = 8,
     TextStyle? style,
@@ -245,15 +242,11 @@ class ComboboxFormField<T> extends FormField<T> {
     super.onSaved,
     super.validator,
     super.autovalidateMode = AutovalidateMode.disabled,
-    double? menuMaxHeight,
-    bool? enableFeedback,
-    AlignmentGeometry alignment = AlignmentDirectional.centerStart,
-    BorderRadius? borderRadius,
     // When adding new arguments, consider adding similar arguments to
     // ComboBox.
   }) : super(
          initialValue: value,
-         builder: (FormFieldState<T> field) {
+         builder: (field) {
            final state = field as _ComboboxFormFieldState<T>;
 
            // An unfocusable Focus widget so that this widget can detect if its
@@ -262,7 +255,7 @@ class ComboboxFormField<T> extends FormField<T> {
              canRequestFocus: false,
              skipTraversal: true,
              child: Builder(
-               builder: (BuildContext context) {
+               builder: (context) {
                  return FormRow(
                    padding: EdgeInsetsDirectional.zero,
                    error: field.errorText != null
@@ -346,13 +339,11 @@ class EditableComboboxFormField<T> extends FormField<T> {
   /// The `items`, `elevation`, `iconSize`, `isExpanded` and `autofocus`
   /// parameters must not be null.
   EditableComboboxFormField({
-    super.key,
-    required List<ComboBoxItem<T>>? items,
+    required List<ComboBoxItem<T>>? items, required this.onChanged, required SubmitEditableCombobox onFieldSubmitted, super.key,
     ComboBoxBuilder? selectedItemBuilder,
     super.initialValue,
     Widget? placeholder,
     Widget? disabledPlaceholder,
-    required this.onChanged,
     VoidCallback? onTap,
     int elevation = 8,
     TextStyle? style,
@@ -368,16 +359,11 @@ class EditableComboboxFormField<T> extends FormField<T> {
     super.onSaved,
     super.validator,
     super.autovalidateMode = AutovalidateMode.disabled,
-    double? menuMaxHeight,
-    bool? enableFeedback,
-    AlignmentGeometry alignment = AlignmentDirectional.centerStart,
-    BorderRadius? borderRadius,
-    required SubmitEditableCombobox onFieldSubmitted,
     List<TextInputFormatter>? inputFormatters,
     // When adding new arguments, consider adding similar arguments to
     // EditableComboBox.
   }) : super(
-         builder: (FormFieldState<T> field) {
+         builder: (field) {
            final state = field as _EditableComboboxFormFieldState<T>;
 
            // An unfocusable Focus widget so that this widget can detect if its
@@ -386,7 +372,7 @@ class EditableComboboxFormField<T> extends FormField<T> {
              canRequestFocus: false,
              skipTraversal: true,
              child: Builder(
-               builder: (BuildContext context) {
+               builder: (context) {
                  return FormRow(
                    padding: EdgeInsetsDirectional.zero,
                    error: field.errorText != null

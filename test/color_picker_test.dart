@@ -6,17 +6,17 @@ import 'app_test.dart';
 
 void main() {
   testWidgets('ColorPicker - verifies initial state and preview visibility', (
-    WidgetTester tester,
+    tester,
   ) async {
-    Color currentColor = Colors.blue.normal;
+    var currentColor = Colors.blue.normal;
 
     await tester.pumpWidget(
       StatefulBuilder(
-        builder: (BuildContext context, StateSetter setState) {
+        builder: (context, setState) {
           return wrapApp(
             child: ColorPicker(
               color: currentColor,
-              onChanged: (Color color) {
+              onChanged: (color) {
                 setState(() {
                   currentColor = color;
                 });
@@ -57,17 +57,17 @@ void main() {
   });
 
   testWidgets('ColorPicker - switches between ring and box spectrum shapes', (
-    WidgetTester tester,
+    tester,
   ) async {
     Color currentColor = Colors.blue;
 
     await tester.pumpWidget(
       StatefulBuilder(
-        builder: (BuildContext context, StateSetter setState) {
+        builder: (context, setState) {
           return wrapApp(
             child: ColorPicker(
               color: currentColor,
-              onChanged: (Color color) {
+              onChanged: (color) {
                 setState(() {
                   currentColor = color;
                 });
@@ -106,16 +106,16 @@ void main() {
 
   testWidgets(
     'ColorPicker - changes color through hex input with alpha support',
-    (WidgetTester tester) async {
+    (tester) async {
       Color currentColor = Colors.blue;
 
       await tester.pumpWidget(
         StatefulBuilder(
-          builder: (BuildContext context, StateSetter setState) {
+          builder: (context, setState) {
             return wrapApp(
               child: ColorPicker(
                 color: currentColor,
-                onChanged: (Color color) {
+                onChanged: (color) {
                   setState(() {
                     currentColor = color;
                   });
@@ -125,7 +125,6 @@ void main() {
                 isAlphaTextInputVisible: false,
                 isMoreButtonVisible: false,
                 isColorChannelTextInputVisible: false,
-                isHexInputVisible: true,
               ),
             );
           },
