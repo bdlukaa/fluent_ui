@@ -17,7 +17,7 @@ import 'package:recase/recase.dart';
 ///   i recommend `https://convertio.co/woff-ttf/` because i already used it and
 ///   it works fine
 /// - Rename the ttf file to `FluentIcons.ttf` and place it on `fonts/`
-/// - Run the generator with `dart bin/icon_generator.dart.dart` while being
+/// - Run the generator with `dart bin/icon_generator.dart` while being
 ///   on the `lib/` directory as PWD
 /// - Enjoy
 void main(List<String> args) async {
