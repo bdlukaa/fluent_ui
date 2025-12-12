@@ -46,7 +46,9 @@ import 'package:fluent_ui/fluent_ui.dart';
 class OutlinedButton extends BaseButton {
   /// Creates an outlined button.
   const OutlinedButton({
-    required super.child, required super.onPressed, super.key,
+    required super.child,
+    required super.onPressed,
+    super.key,
     super.onLongPress,
     super.onTapDown,
     super.onTapUp,

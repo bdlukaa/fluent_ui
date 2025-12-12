@@ -89,7 +89,9 @@ class MyApp extends StatelessWidget {
                     child: ComboBox<String>(
                       value: comboboxValue,
                       items: ['Item 1', 'Item 2']
-                          .map((final e) => ComboBoxItem(value: e, child: Text(e)))
+                          .map(
+                            (final e) => ComboBoxItem(value: e, child: Text(e)),
+                          )
                           .toList(),
                       isExpanded: true,
                       onChanged: (final v) => setState(() => comboboxValue = v),
@@ -275,7 +277,9 @@ class MyApp extends StatelessWidget {
 
 class SponsorButton extends StatelessWidget {
   const SponsorButton({
-    required this.imageUrl, required this.username, super.key,
+    required this.imageUrl,
+    required this.username,
+    super.key,
   });
 
   final String imageUrl;

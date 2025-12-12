@@ -81,7 +81,9 @@ class Button extends BaseButton {
   /// The [child] and [onPressed] arguments are required. Set [onPressed] to
   /// null to disable the button.
   const Button({
-    required super.child, required super.onPressed, super.key,
+    required super.child,
+    required super.onPressed,
+    super.key,
     super.onLongPress,
     super.onTapDown,
     super.onTapUp,

@@ -95,7 +95,8 @@ class _CalendarViewPageState extends State<CalendarViewPage> with PageMixin {
                           child: Text(e.name.uppercaseFirst()),
                         );
                       }).toList(),
-                      onChanged: (final m) => setState(() => selectionMode = m!),
+                      onChanged: (final m) =>
+                          setState(() => selectionMode = m!),
                     ),
                     const Text('Language'),
                     ComboBox<Locale>(

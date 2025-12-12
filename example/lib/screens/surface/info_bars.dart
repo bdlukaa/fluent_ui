@@ -35,8 +35,7 @@ class _InfoBarsPageState extends State<InfoBarsPage> with PageMixin {
         subtitle(content: const Text('A InfoBar as a popup')),
         CardHighlight(
           backgroundColor: FluentTheme.of(context).micaBackgroundColor,
-          codeSnippet:
-              '''
+          codeSnippet: '''
 await displayInfoBar(context, builder: (context, close) {
   return InfoBar(
     title: const Text('You can not do that :/'),
@@ -130,7 +129,8 @@ await displayInfoBar(context, builder: (context, close) {
                         )
                         .toList(),
                     value: severity,
-                    onChanged: (final v) => setState(() => severity = v ?? severity),
+                    onChanged: (final v) =>
+                        setState(() => severity = v ?? severity),
                     popupColor: () {
                       switch (severity) {
                         case InfoBarSeverity.info:

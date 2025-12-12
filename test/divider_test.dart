@@ -22,9 +22,7 @@ void main() {
     expect(box.size.width, 1.0);
   });
 
-  testWidgets('Divider thickness applied correctly', (
-    tester,
-  ) async {
+  testWidgets('Divider thickness applied correctly', (tester) async {
     await tester.pumpWidget(
       wrapApp(
         child: const Center(

@@ -568,7 +568,11 @@ class FluentScrollBehavior extends ScrollBehavior {
   const FluentScrollBehavior();
 
   @override
-  Widget buildScrollbar(BuildContext context, Widget child, ScrollableDetails details) {
+  Widget buildScrollbar(
+    BuildContext context,
+    Widget child,
+    ScrollableDetails details,
+  ) {
     // When modifying this function, consider modifying the implementation in
     // the base class as well.
     switch (axisDirectionToAxis(details.direction)) {

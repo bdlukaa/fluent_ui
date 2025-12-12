@@ -16,16 +16,11 @@ void main() {
     expect(container.margin, isNull);
 
     final decoration = container.decoration! as BoxDecoration;
-    expect(
-      decoration.borderRadius,
-      const BorderRadius.all(Radius.circular(4)),
-    );
+    expect(decoration.borderRadius, const BorderRadius.all(Radius.circular(4)));
     expect(decoration.border, isNotNull);
   });
 
-  testWidgets('Card applies custom padding and margin', (
-    tester,
-  ) async {
+  testWidgets('Card applies custom padding and margin', (tester) async {
     const customPadding = EdgeInsetsDirectional.symmetric(vertical: 8);
     const customMargin = EdgeInsetsDirectional.all(16);
 
@@ -44,9 +39,7 @@ void main() {
     expect(container.margin, customMargin);
   });
 
-  testWidgets('Card applies custom background color', (
-    tester,
-  ) async {
+  testWidgets('Card applies custom background color', (tester) async {
     final testColor = Colors.blue;
 
     await tester.pumpWidget(
@@ -92,9 +85,7 @@ void main() {
     expect(decoration.border?.top.color, testColor);
   });
 
-  testWidgets('Card uses theme border color when not provided', (
-    tester,
-  ) async {
+  testWidgets('Card uses theme border color when not provided', (tester) async {
     final theme = FluentThemeData();
 
     await tester.pumpWidget(

@@ -55,11 +55,7 @@ class InfoBadge extends StatelessWidget {
     return Container(
       constraints: source == null
           ? const BoxConstraints(maxWidth: 10, maxHeight: 10)
-          : const BoxConstraints(
-              minWidth: 16,
-              minHeight: 16,
-              maxHeight: 16,
-            ),
+          : const BoxConstraints(minWidth: 16, minHeight: 16, maxHeight: 16),
       decoration: BoxDecoration(
         color: color,
         borderRadius: BorderRadius.circular(100),

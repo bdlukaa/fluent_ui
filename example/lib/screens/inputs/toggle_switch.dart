@@ -79,11 +79,7 @@ ToggleSwitch(
               if (secondValue)
                 const Padding(
                   padding: EdgeInsetsDirectional.only(start: 24),
-                  child: SizedBox(
-                    height: 30,
-                    width: 30,
-                    child: ProgressRing(),
-                  ),
+                  child: SizedBox(height: 30, width: 30, child: ProgressRing()),
                 ),
             ],
           ),

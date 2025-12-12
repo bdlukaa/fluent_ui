@@ -4,9 +4,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'app_test.dart';
 
 void main() {
-  testWidgets('ToggleButton change state accordingly', (
-    tester,
-  ) async {
+  testWidgets('ToggleButton change state accordingly', (tester) async {
     var toggleButtonValue = false;
 
     await tester.pumpWidget(

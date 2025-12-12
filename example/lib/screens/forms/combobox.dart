@@ -337,8 +337,7 @@ Form(
         ),
         subtitle(content: const Text('Open popup programatically')),
         CardHighlight(
-          codeSnippet:
-              '''
+          codeSnippet: '''
 // A GlobalKey<ComboboxState> is used to access the current
 // state of the combo box. With it, it's possible to call .openPopup() and .closePopup()
 // which will open and close the popup, respectively

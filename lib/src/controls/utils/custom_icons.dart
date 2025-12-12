@@ -63,7 +63,8 @@ class ChevronDown extends StatelessWidget {
 class RatingIcon extends StatelessWidget {
   /// Creates a rating-icon.
   const RatingIcon({
-    required this.rating, super.key,
+    required this.rating,
+    super.key,
     this.ratedColor,
     this.unratedColor,
     this.icon = kRatingBarIcon,

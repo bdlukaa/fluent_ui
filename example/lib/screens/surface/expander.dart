@@ -79,9 +79,7 @@ Expander(
                   children: crosts
                       .map(
                         (final e) => Padding(
-                          padding: const EdgeInsetsDirectional.only(
-                            bottom: 8,
-                          ),
+                          padding: const EdgeInsetsDirectional.only(bottom: 8),
                           child: RadioButton(
                             checked: crost == e,
                             onChanged: (final selected) {
@@ -99,9 +97,7 @@ Expander(
                   children: sizes
                       .map(
                         (final e) => Padding(
-                          padding: const EdgeInsetsDirectional.only(
-                            bottom: 8,
-                          ),
+                          padding: const EdgeInsetsDirectional.only(bottom: 8),
                           child: RadioButton(
                             checked: size == e,
                             onChanged: (final selected) {

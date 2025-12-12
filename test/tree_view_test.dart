@@ -30,9 +30,7 @@ void main() {
     },
   );
 
-  testWidgets('TreeViewItem deep copy rebuilds parent linkage', (
-    tester,
-  ) async {
+  testWidgets('TreeViewItem deep copy rebuilds parent linkage', (tester) async {
     final items = [
       TreeViewItem(
         content: const Text('Parent item'),

@@ -203,7 +203,8 @@ class _NavigationViewPageState extends State<NavigationViewPage>
                   .map((final e) => ComboBoxItem(value: e, child: Text(e)))
                   .toList(),
               value: indicator,
-              onChanged: (final i) => setState(() => indicator = i ?? indicator),
+              onChanged: (final i) =>
+                  setState(() => indicator = i ?? indicator),
             ),
           ),
           InfoLabel(

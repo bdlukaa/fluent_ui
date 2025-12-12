@@ -122,18 +122,21 @@ class _ColorPickerPageState extends State<ColorPickerPage> with PageMixin {
               children: [
                 Checkbox(
                   checked: _isColorPreviewVisible,
-                  onChanged: (final v) => setState(() => _isColorPreviewVisible = v!),
+                  onChanged: (final v) =>
+                      setState(() => _isColorPreviewVisible = v!),
                   content: const Text('Color Preview'),
                 ),
                 Checkbox(
                   checked: _isColorSliderVisible,
-                  onChanged: (final v) => setState(() => _isColorSliderVisible = v!),
+                  onChanged: (final v) =>
+                      setState(() => _isColorSliderVisible = v!),
                   content: const Text('Color Slider'),
                 ),
                 if (_orientation == Axis.vertical) ...[
                   Checkbox(
                     checked: _isMoreButtonVisible,
-                    onChanged: (final v) => setState(() => _isMoreButtonVisible = v!),
+                    onChanged: (final v) =>
+                        setState(() => _isMoreButtonVisible = v!),
                     content: const Text('More Button'),
                   ),
                 ],
@@ -145,7 +148,8 @@ class _ColorPickerPageState extends State<ColorPickerPage> with PageMixin {
                 ),
                 Checkbox(
                   checked: _isHexInputVisible,
-                  onChanged: (final v) => setState(() => _isHexInputVisible = v!),
+                  onChanged: (final v) =>
+                      setState(() => _isHexInputVisible = v!),
                   content: const Text('Hex Input'),
                 ),
               ],
@@ -212,7 +216,8 @@ ColorPicker(
             children: [
               ColorPicker(
                 color: _selectedColor,
-                onChanged: (final color) => setState(() => _selectedColor = color),
+                onChanged: (final color) =>
+                    setState(() => _selectedColor = color),
                 colorSpectrumShape: _spectrumShape,
                 orientation: _orientation,
                 isMoreButtonVisible: _isMoreButtonVisible,

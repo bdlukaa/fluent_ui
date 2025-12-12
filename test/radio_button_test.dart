@@ -28,9 +28,7 @@ void main() {
       radioButtonValue,
     );
   });
-  testWidgets('RadioButton change state accordingly', (
-    tester,
-  ) async {
+  testWidgets('RadioButton change state accordingly', (tester) async {
     var radioButtonValue = false;
 
     await tester.pumpWidget(
@@ -94,16 +92,17 @@ void main() {
     expect(radioButtonValue, true);
   });
 
-  testWidgets('Disabled RadioButton cannot be selected', (
-    tester,
-  ) async {
+  testWidgets('Disabled RadioButton cannot be selected', (tester) async {
     const radioButtonValue = false;
 
     await tester.pumpWidget(
       StatefulBuilder(
         builder: (context, setState) {
           return wrapApp(
-            child: const RadioButton(onChanged: null, checked: radioButtonValue),
+            child: const RadioButton(
+              onChanged: null,
+              checked: radioButtonValue,
+            ),
           );
         },
       ),

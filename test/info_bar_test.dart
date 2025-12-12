@@ -5,9 +5,7 @@ import 'app_test.dart';
 
 void main() {
   group('InfoBar', () {
-    testWidgets('Default constructor creates InfoBar', (
-      tester,
-    ) async {
+    testWidgets('Default constructor creates InfoBar', (tester) async {
       await tester.pumpWidget(
         wrapApp(child: const InfoBar(title: Text('Test Title'))),
       );

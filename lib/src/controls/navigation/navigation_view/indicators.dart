@@ -247,6 +247,18 @@ class _StickyNavigationIndicatorState
   }
 
   @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    final theme = FluentTheme.of(context);
+    if (widget.duration == null) {
+      upController.duration = downController.duration =
+          theme.fasterAnimationDuration;
+    }
+
+    animate();
+  }
+
+  @override
   void didUpdateWidget(StickyNavigationIndicator oldWidget) {
     super.didUpdateWidget(oldWidget);
     if (widget.duration != oldWidget.duration) {
@@ -263,12 +275,6 @@ class _StickyNavigationIndicatorState
 
   bool get isAbove => previousItemIndex < selectedIndex;
   bool get isBelow => previousItemIndex > selectedIndex;
-
-  @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-    animate();
-  }
 
   Future<void> animate() async {
     if (!mounted) {

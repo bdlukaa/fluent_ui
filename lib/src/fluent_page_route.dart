@@ -63,7 +63,8 @@ class FluentPageRoute<T> extends PageRoute<T> {
 
   /// Creates a modal route that replaces the entire screen.
   FluentPageRoute({
-    required WidgetBuilder builder, bool maintainState = true,
+    required WidgetBuilder builder,
+    bool maintainState = true,
     String? barrierLabel,
     super.settings,
     super.fullscreenDialog,

@@ -7,9 +7,7 @@ import 'package:intl/intl.dart';
 import 'app_test.dart';
 
 void main() {
-  testWidgets('NumberBox renders with initial value', (
-    tester,
-  ) async {
+  testWidgets('NumberBox renders with initial value', (tester) async {
     await tester.pumpWidget(
       wrapApp(child: NumberBox<int>(value: 42, onChanged: (value) {})),
     );
@@ -17,9 +15,7 @@ void main() {
     expect(find.text('42'), findsOneWidget);
   });
 
-  testWidgets('NumberBox updates value when text changes', (
-    tester,
-  ) async {
+  testWidgets('NumberBox updates value when text changes', (tester) async {
     int? newValue;
     await tester.pumpWidget(
       wrapApp(
@@ -39,16 +35,9 @@ void main() {
     expect(newValue, equals(20));
   });
 
-  testWidgets('NumberBox shows clear button when focused', (
-    tester,
-  ) async {
+  testWidgets('NumberBox shows clear button when focused', (tester) async {
     await tester.pumpWidget(
-      wrapApp(
-        child: NumberBox<int>(
-          value: 5,
-          onChanged: (value) {},
-        ),
-      ),
+      wrapApp(child: NumberBox<int>(value: 5, onChanged: (value) {})),
     );
 
     await tester.tap(find.byType(TextBox));
@@ -208,9 +197,7 @@ void main() {
     expect(newValue, equals(5));
   });
 
-  testWidgets('NumberBox responds to keyboard arrow keys', (
-    tester,
-  ) async {
+  testWidgets('NumberBox responds to keyboard arrow keys', (tester) async {
     int? newValue;
     await tester.pumpWidget(
       wrapApp(
@@ -236,9 +223,7 @@ void main() {
     expect(newValue, equals(0));
   });
 
-  testWidgets('NumberBox responds to page up/down keys', (
-    tester,
-  ) async {
+  testWidgets('NumberBox responds to page up/down keys', (tester) async {
     int? newValue;
     await tester.pumpWidget(
       wrapApp(
@@ -265,9 +250,7 @@ void main() {
     expect(newValue, equals(0));
   });
 
-  testWidgets('NumberBox responds to mouse wheel scroll', (
-    tester,
-  ) async {
+  testWidgets('NumberBox responds to mouse wheel scroll', (tester) async {
     int? newValue;
     await tester.pumpWidget(
       wrapApp(
@@ -321,9 +304,7 @@ void main() {
     expect(find.text('3.14'), findsOneWidget);
   });
 
-  testWidgets('NumberBox shows placeholder when value is null', (
-    tester,
-  ) async {
+  testWidgets('NumberBox shows placeholder when value is null', (tester) async {
     await tester.pumpWidget(
       wrapApp(
         child: NumberBox<int>(
@@ -337,9 +318,7 @@ void main() {
     expect(find.text('Enter a number'), findsOneWidget);
   });
 
-  testWidgets('NumberBox shows leading icon when provided', (
-    tester,
-  ) async {
+  testWidgets('NumberBox shows leading icon when provided', (tester) async {
     await tester.pumpWidget(
       wrapApp(
         child: NumberBox<int>(

@@ -4,9 +4,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'app_test.dart';
 
 void main() {
-  testWidgets('SplitButton displays child and flyout', (
-    tester,
-  ) async {
+  testWidgets('SplitButton displays child and flyout', (tester) async {
     var invoked = false;
     await tester.pumpWidget(
       wrapApp(

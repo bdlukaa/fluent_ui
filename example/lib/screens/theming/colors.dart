@@ -161,7 +161,10 @@ class ColorsPage extends StatelessWidget {
 
 class ColorBlock extends StatelessWidget {
   const ColorBlock({
-    required this.name, required this.color, required this.clipboard, super.key,
+    required this.name,
+    required this.color,
+    required this.clipboard,
+    super.key,
     this.variant,
   });
 

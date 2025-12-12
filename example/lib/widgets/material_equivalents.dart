@@ -235,7 +235,10 @@ class _UIEquivalentsState extends State<UIEquivalents> {
       ],
       [
         const Text('TimePicker'),
-        TimePicker(selected: time, onChanged: (final value) => setState(() => time)),
+        TimePicker(
+          selected: time,
+          onChanged: (final value) => setState(() => time),
+        ),
         m.TextButton(
           child: const Text('Show Picker'),
           onPressed: () async {
@@ -292,7 +295,10 @@ class _UIEquivalentsState extends State<UIEquivalents> {
       ],
       [
         const Text('DatePicker'),
-        DatePicker(selected: time, onChanged: (final value) => setState(() => time)),
+        DatePicker(
+          selected: time,
+          onChanged: (final value) => setState(() => time),
+        ),
         m.TextButton(
           child: const Text('Show Picker'),
           onPressed: () async {

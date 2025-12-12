@@ -112,7 +112,8 @@ class _CommandBarsPageState extends State<CommandBarsPage> with PageMixin {
   double? compactBreakpointWidth;
   bool _vertical = false;
   bool _compact = false;
-  CommandBarOverflowBehavior overflowBehavior = CommandBarOverflowBehavior.dynamicOverflow;
+  CommandBarOverflowBehavior overflowBehavior =
+      CommandBarOverflowBehavior.dynamicOverflow;
 
   @override
   Widget build(final BuildContext context) {
@@ -149,14 +150,17 @@ class _CommandBarsPageState extends State<CommandBarsPage> with PageMixin {
                 label: 'Overflow behavior',
                 child: ComboBox<CommandBarOverflowBehavior>(
                   value: overflowBehavior,
-                  items: CommandBarOverflowBehavior.values.map((final behavior) {
+                  items: CommandBarOverflowBehavior.values.map((
+                    final behavior,
+                  ) {
                     return ComboBoxItem<CommandBarOverflowBehavior>(
                       value: behavior,
                       child: Text(
                         behavior.name
                             .replaceAllMapped(
                               RegExp('([a-z])([A-Z])'),
-                              (final match) => '${match.group(1)} ${match.group(2)}',
+                              (final match) =>
+                                  '${match.group(1)} ${match.group(2)}',
                             )
                             .uppercaseFirst(),
                       ),

@@ -375,7 +375,9 @@ class ContentDialogTheme extends InheritedTheme {
   /// Creates a theme that controls how descendant [ContentDialog]s should
   /// look like.
   const ContentDialogTheme({
-    required this.data, required super.child, super.key,
+    required this.data,
+    required super.child,
+    super.key,
   });
 
   /// The properties for descendant [ContentDialog] widgets.
@@ -383,7 +385,9 @@ class ContentDialogTheme extends InheritedTheme {
 
   /// Creates a theme that merges the nearest [ContentDialogTheme] with [data].
   static Widget merge({
-    required ContentDialogThemeData data, required Widget child, Key? key,
+    required ContentDialogThemeData data,
+    required Widget child,
+    Key? key,
   }) {
     return Builder(
       builder: (context) {

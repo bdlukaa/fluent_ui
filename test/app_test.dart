@@ -15,9 +15,7 @@ void main() {
     expect(find.text('Home sweet home'), findsOneWidget);
   });
 
-  testWidgets('Can get text scale from media query', (
-    tester,
-  ) async {
+  testWidgets('Can get text scale from media query', (tester) async {
     double? textScaleFactor;
     await tester.pumpWidget(
       FluentApp(
@@ -33,9 +31,7 @@ void main() {
     expect(textScaleFactor, equals(1.0));
   });
 
-  testWidgets('Has default material and fluent localizations', (
-    tester,
-  ) async {
+  testWidgets('Has default material and fluent localizations', (tester) async {
     await tester.pumpWidget(
       FluentApp(
         home: Builder(

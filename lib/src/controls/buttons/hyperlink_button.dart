@@ -43,7 +43,9 @@ class HyperlinkButton extends BaseButton {
   ///
   /// The [child] is typically a [Text] widget styled as a link.
   const HyperlinkButton({
-    required super.child, required super.onPressed, super.key,
+    required super.child,
+    required super.onPressed,
+    super.key,
     super.onLongPress,
     super.onTapDown,
     super.onTapUp,

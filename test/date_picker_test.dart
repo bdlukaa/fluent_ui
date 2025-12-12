@@ -19,9 +19,7 @@ void main() {
     expect(find.text('2022'), findsOneWidget);
   });
 
-  testWidgets('DatePicker opens popup and changes date', (
-    tester,
-  ) async {
+  testWidgets('DatePicker opens popup and changes date', (tester) async {
     DateTime? picked;
     final selectedDate = DateTime(2022, 5, 15);
 
@@ -54,13 +52,9 @@ void main() {
     expect(picked?.year, 2022);
   });
 
-  testWidgets('DatePicker is disabled when onChanged is null', (
-    tester,
-  ) async {
+  testWidgets('DatePicker is disabled when onChanged is null', (tester) async {
     await tester.pumpWidget(
-      wrapApp(
-        child: DatePicker(selected: DateTime(2022)),
-      ),
+      wrapApp(child: DatePicker(selected: DateTime(2022))),
     );
 
     await tester.tap(find.byType(DatePicker));
@@ -69,9 +63,7 @@ void main() {
     expect(find.byIcon(FluentIcons.check_mark), findsNothing);
   });
 
-  testWidgets('DatePicker respects showDay/showMonth/showYear', (
-    tester,
-  ) async {
+  testWidgets('DatePicker respects showDay/showMonth/showYear', (tester) async {
     await tester.pumpWidget(
       wrapApp(
         child: DatePicker(
@@ -103,9 +95,7 @@ void main() {
     expect(find.byType(InfoLabel), findsOneWidget);
   });
 
-  testWidgets('DatePicker onCancel is called when dismissed', (
-    tester,
-  ) async {
+  testWidgets('DatePicker onCancel is called when dismissed', (tester) async {
     var cancelled = false;
     await tester.pumpWidget(
       wrapApp(
@@ -128,9 +118,7 @@ void main() {
     expect(cancelled, isTrue);
   });
 
-  testWidgets('DatePicker respects startDate and endDate', (
-    tester,
-  ) async {
+  testWidgets('DatePicker respects startDate and endDate', (tester) async {
     final start = DateTime(2020);
     final end = DateTime(2020, 12, 31);
     await tester.pumpWidget(

@@ -47,7 +47,8 @@ class ScaffoldPage extends StatefulWidget {
   ///
   /// The default horizontal and vertical padding is added automatically
   ScaffoldPage.scrollable({
-    required List<Widget> children, super.key,
+    required List<Widget> children,
+    super.key,
     this.header,
     this.bottomBar,
     this.padding,
@@ -71,7 +72,8 @@ class ScaffoldPage extends StatefulWidget {
 
   /// Creates a page with padding applied to [content]
   ScaffoldPage.withPadding({
-    required Widget content, super.key,
+    required Widget content,
+    super.key,
     this.header,
     this.bottomBar,
     this.padding,

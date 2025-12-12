@@ -6,7 +6,10 @@ import 'package:example/screens/theming/typography.dart';
 import 'package:example/widgets/card_highlight.dart';
 import 'package:fluent_ui/fluent_ui.dart';
 
-Future<void> showCopiedSnackbar(final BuildContext context, final String copiedText) {
+Future<void> showCopiedSnackbar(
+  final BuildContext context,
+  final String copiedText,
+) {
   return displayInfoBar(
     context,
     builder: (final context, final close) => InfoBar(
@@ -78,7 +81,9 @@ class _IconsPageState extends State<IconsPage> {
       'FluentIcons' => 'FluentIcons',
       _ => 'Icons',
     };
-    final iconName = widget.set.entries.firstWhere((final e) => e.value == icon).key;
+    final iconName = widget.set.entries
+        .firstWhere((final e) => e.value == icon)
+        .key;
 
     return ScaffoldPage(
       header: PageHeader(
@@ -151,7 +156,8 @@ class _IconsPageState extends State<IconsPage> {
                               label: 'Icon Color',
                               child: ComboBox<Color>(
                                 placeholder: const Text('Icon Color'),
-                                onChanged: (final c) => setState(() => color = c),
+                                onChanged: (final c) =>
+                                    setState(() => color = c),
                                 value: color,
                                 isExpanded: true,
                                 items: [
