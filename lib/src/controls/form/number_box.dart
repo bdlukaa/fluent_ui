@@ -565,7 +565,6 @@ class NumberBoxState<T extends num> extends State<NumberBox<T>> {
 
     if (_textBoxKey.currentContext != null) {
       Overlay.of(context).insert(_entry!);
-      if (mounted) setState(() {});
     }
   }
 
@@ -827,6 +826,7 @@ class _NumberBoxCompactOverlay extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     assert(debugCheckHasFluentTheme(context));
+    final theme = FluentTheme.of(context);
 
     return Padding(
       padding: const EdgeInsetsDirectional.only(start: 10),
@@ -840,10 +840,10 @@ class _NumberBoxCompactOverlay extends StatelessWidget {
             height: kNumberBoxOverlayHeight,
             width: kNumberBoxOverlayWidth,
             decoration: BoxDecoration(
-              color: FluentTheme.of(context).menuColor,
+              color: theme.menuColor,
               border: Border.all(
                 width: 0.25,
-                color: FluentTheme.of(context).inactiveBackgroundColor,
+                color: theme.inactiveBackgroundColor,
               ),
             ),
             child: Column(

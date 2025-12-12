@@ -1246,7 +1246,7 @@ class ComboBoxState<T> extends State<ComboBox<T>> {
     }
   }
 
-  TextStyle? get _textStyle =>
+  TextStyle? _textStyle(BuildContext context) =>
       widget.style ?? FluentTheme.of(context).typography.body;
 
   /// Opens the combo box popup.
@@ -1279,7 +1279,7 @@ class ComboBoxState<T> extends State<ComboBox<T>> {
         from: context,
         to: navigator.context,
       ),
-      style: _textStyle!,
+      style: _textStyle(context)!,
       barrierLabel: FluentLocalizations.of(context).modalBarrierDismissLabel,
       popupColor: widget.popupColor,
     );
@@ -1327,6 +1327,7 @@ class ComboBoxState<T> extends State<ComboBox<T>> {
     assert(debugCheckHasDirectionality(context));
 
     final theme = FluentTheme.of(context);
+    final textStyle = _textStyle(context)!;
 
     // The width of the button and the menu are defined by the widest
     // item and the width of the placeholder.
@@ -1350,7 +1351,7 @@ class ComboBoxState<T> extends State<ComboBox<T>> {
       placeholderIndex = items.length;
       items.add(
         DefaultTextStyle.merge(
-          style: _textStyle!.copyWith(
+          style: textStyle.copyWith(
             color: theme.resources.textFillColorDisabled,
           ),
           child: IgnorePointer(child: displayedHint),
@@ -1382,8 +1383,8 @@ class ComboBoxState<T> extends State<ComboBox<T>> {
       builder: (context) {
         return DefaultTextStyle.merge(
           style: isEnabled
-              ? _textStyle!
-              : _textStyle!.copyWith(
+              ? textStyle
+              : textStyle.copyWith(
                   color: theme.resources.textFillColorDisabled,
                 ),
           child: Container(

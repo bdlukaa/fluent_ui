@@ -58,9 +58,8 @@ class NavigationIndicatorState<T extends NavigationIndicator> extends State<T> {
       );
       if (offsets != localOffsets) {
         offsets = localOffsets;
+        if (mounted) setState(() {});
       }
-
-      if (mounted) setState(() {});
     });
   }
 

@@ -1,5 +1,6 @@
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter/foundation.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:flutter/services.dart';
 
 /// Represents a top-level menu in a [MenuBar] control.
@@ -168,10 +169,11 @@ class MenuBarState extends State<MenuBar> {
       //
       // Even though the duration is zero, it is necessary to wait for the
       // transition to finish before showing the next flyout. Otherwise, the
-      // flyout will fail to show due to [_locked]. This has a similar effect
-      // to moving this task to the next frame or using a [Future.microtask].
-      await Future<void>.delayed(Duration.zero);
-      setState(() {});
+      // flyout will fail to show due to [_locked]. Use SchedulerBinding for
+      // frame-aligned updates instead of arbitrary delay.
+      SchedulerBinding.instance.addPostFrameCallback((_) {
+        if (mounted) setState(() {});
+      });
     }
   }
 

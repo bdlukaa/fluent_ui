@@ -182,6 +182,7 @@ class DropDownButton extends StatefulWidget {
           return FadeTransition(opacity: animation, child: child);
         }
 
+        final animationCurve = FluentTheme.of(context).animationCurve;
         switch (placement) {
           case FlyoutPlacementMode.bottomCenter:
           case FlyoutPlacementMode.bottomLeft:
@@ -194,10 +195,7 @@ class DropDownButton extends StatefulWidget {
                       begin: const Offset(0, -1),
                       end: Offset.zero,
                     ).animate(
-                      CurvedAnimation(
-                        parent: animation,
-                        curve: FluentTheme.of(context).animationCurve,
-                      ),
+                      CurvedAnimation(parent: animation, curve: animationCurve),
                     ),
                 child: child,
               ),
@@ -213,10 +211,7 @@ class DropDownButton extends StatefulWidget {
                       begin: const Offset(0, 1),
                       end: Offset.zero,
                     ).animate(
-                      CurvedAnimation(
-                        parent: animation,
-                        curve: FluentTheme.of(context).animationCurve,
-                      ),
+                      CurvedAnimation(parent: animation, curve: animationCurve),
                     ),
                 child: child,
               ),
