@@ -165,7 +165,7 @@ class TreeViewItem with Diagnosticable {
   /// See also:
   ///
   ///   * [ButtonThemeData.uncheckedInputColor], which is used by default
-  final WidgetStateProperty<Color>? backgroundColor;
+  final WidgetStateColor? backgroundColor;
 
   /// Whether this item is visible or not. Used to not lose the item state while
   /// it's not on the screen

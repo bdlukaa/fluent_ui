@@ -198,19 +198,19 @@ class Tab extends StatefulWidget {
   final Widget body;
 
   /// The background color of the tab.
-  final WidgetStateProperty<Color>? backgroundColor;
+  final WidgetStateColor? backgroundColor;
 
   /// The background color of the tab if it is selected.
-  final WidgetStateProperty<Color>? selectedBackgroundColor;
+  final WidgetStateColor? selectedBackgroundColor;
 
   /// The foreground color of the tab.
-  final WidgetStateProperty<Color>? foregroundColor;
+  final WidgetStateColor? foregroundColor;
 
   /// The background color of the tab if it is selected.
-  final WidgetStateProperty<Color>? selectedForegroundColor;
+  final WidgetStateColor? selectedForegroundColor;
 
   /// The outline color of the tab.
-  final WidgetStateProperty<Color>? outlineColor;
+  final WidgetStateColor? outlineColor;
 
   /// Whether the tab is disabled or not.
   ///
@@ -244,25 +244,25 @@ class Tab extends StatefulWidget {
       )
       ..add(ObjectFlagProperty('onClosed', onClosed, ifNull: 'not closeable'))
       ..add(
-        DiagnosticsProperty<WidgetStateProperty<Color>>(
+        DiagnosticsProperty<WidgetStateColor>(
           'backgroundColor',
           backgroundColor,
         ),
       )
       ..add(
-        DiagnosticsProperty<WidgetStateProperty<Color>>(
+        DiagnosticsProperty<WidgetStateColor>(
           'selectedBackgroundColor',
           selectedBackgroundColor,
         ),
       )
       ..add(
-        DiagnosticsProperty<WidgetStateProperty<Color>>(
+        DiagnosticsProperty<WidgetStateColor>(
           'foregroundColor',
           foregroundColor,
         ),
       )
       ..add(
-        DiagnosticsProperty<WidgetStateProperty<Color>>(
+        DiagnosticsProperty<WidgetStateColor>(
           'selectedForegroundColor',
           selectedForegroundColor,
         ),

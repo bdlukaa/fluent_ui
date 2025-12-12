@@ -47,49 +47,49 @@ class ButtonStyle with Diagnosticable {
 
   static ButtonStyle lerp(ButtonStyle? a, ButtonStyle? b, double t) {
     return ButtonStyle(
-      textStyle: WidgetStateProperty.lerp<TextStyle?>(
+      textStyle: lerpWidgetStateProperty<TextStyle?>(
         a?.textStyle,
         b?.textStyle,
         t,
         TextStyle.lerp,
       ),
-      backgroundColor: WidgetStateProperty.lerp<Color?>(
+      backgroundColor: lerpWidgetStateProperty<Color?>(
         a?.backgroundColor,
         b?.backgroundColor,
         t,
         Color.lerp,
       ),
-      foregroundColor: WidgetStateProperty.lerp<Color?>(
+      foregroundColor: lerpWidgetStateProperty<Color?>(
         a?.foregroundColor,
         b?.foregroundColor,
         t,
         Color.lerp,
       ),
-      shadowColor: WidgetStateProperty.lerp<Color?>(
+      shadowColor: lerpWidgetStateProperty<Color?>(
         a?.shadowColor,
         b?.shadowColor,
         t,
         Color.lerp,
       ),
-      elevation: WidgetStateProperty.lerp<double?>(
+      elevation: lerpWidgetStateProperty<double?>(
         a?.elevation,
         b?.elevation,
         t,
         lerpDouble,
       ),
-      padding: WidgetStateProperty.lerp<EdgeInsetsGeometry?>(
+      padding: lerpWidgetStateProperty<EdgeInsetsGeometry?>(
         a?.padding,
         b?.padding,
         t,
         EdgeInsetsGeometry.lerp,
       ),
-      shape: WidgetStateProperty.lerp<ShapeBorder?>(
+      shape: lerpWidgetStateProperty<ShapeBorder?>(
         a?.shape,
         b?.shape,
         t,
         ShapeBorder.lerp,
       ),
-      iconSize: WidgetStateProperty.lerp<double?>(
+      iconSize: lerpWidgetStateProperty<double?>(
         a?.iconSize,
         b?.iconSize,
         t,

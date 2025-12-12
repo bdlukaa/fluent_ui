@@ -120,7 +120,7 @@ class Expander extends StatefulWidget {
   final bool enabled;
 
   /// The background color of the header.
-  final WidgetStateProperty<Color>? headerBackgroundColor;
+  final WidgetStateColor? headerBackgroundColor;
 
   /// The shape of the header.
   ///

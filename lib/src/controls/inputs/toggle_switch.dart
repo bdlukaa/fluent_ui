@@ -433,31 +433,31 @@ class ToggleSwitchThemeData with Diagnosticable {
         b?.animationDuration ?? Duration.zero,
         t,
       ),
-      checkedKnobDecoration: WidgetStateProperty.lerp<Decoration?>(
+      checkedKnobDecoration: lerpWidgetStateProperty<Decoration?>(
         a?.checkedKnobDecoration,
         b?.checkedKnobDecoration,
         t,
         Decoration.lerp,
       ),
-      uncheckedKnobDecoration: WidgetStateProperty.lerp<Decoration?>(
+      uncheckedKnobDecoration: lerpWidgetStateProperty<Decoration?>(
         a?.uncheckedKnobDecoration,
         b?.uncheckedKnobDecoration,
         t,
         Decoration.lerp,
       ),
-      checkedDecoration: WidgetStateProperty.lerp<Decoration?>(
+      checkedDecoration: lerpWidgetStateProperty<Decoration?>(
         a?.checkedDecoration,
         b?.checkedDecoration,
         t,
         Decoration.lerp,
       ),
-      uncheckedDecoration: WidgetStateProperty.lerp<Decoration?>(
+      uncheckedDecoration: lerpWidgetStateProperty<Decoration?>(
         a?.uncheckedDecoration,
         b?.uncheckedDecoration,
         t,
         Decoration.lerp,
       ),
-      foregroundColor: WidgetStateProperty.lerp<Color?>(
+      foregroundColor: lerpWidgetStateProperty<Color?>(
         a?.foregroundColor,
         b?.foregroundColor,
         t,

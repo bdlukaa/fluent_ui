@@ -342,43 +342,43 @@ class CheckboxThemeData with Diagnosticable {
       margin: EdgeInsetsGeometry.lerp(a?.margin, b?.margin, t),
       padding: EdgeInsetsGeometry.lerp(a?.padding, b?.padding, t),
       icon: t < 0.5 ? a?.icon : b?.icon,
-      checkedIconColor: WidgetStateProperty.lerp<Color?>(
+      checkedIconColor: lerpWidgetStateProperty<Color?>(
         a?.checkedIconColor,
         b?.checkedIconColor,
         t,
         Color.lerp,
       ),
-      uncheckedIconColor: WidgetStateProperty.lerp<Color?>(
+      uncheckedIconColor: lerpWidgetStateProperty<Color?>(
         a?.uncheckedIconColor,
         b?.uncheckedIconColor,
         t,
         Color.lerp,
       ),
-      thirdstateIconColor: WidgetStateProperty.lerp<Color?>(
+      thirdstateIconColor: lerpWidgetStateProperty<Color?>(
         a?.thirdstateIconColor,
         b?.thirdstateIconColor,
         t,
         Color.lerp,
       ),
-      checkedDecoration: WidgetStateProperty.lerp<Decoration?>(
+      checkedDecoration: lerpWidgetStateProperty<Decoration?>(
         a?.checkedDecoration,
         b?.checkedDecoration,
         t,
         Decoration.lerp,
       ),
-      uncheckedDecoration: WidgetStateProperty.lerp<Decoration?>(
+      uncheckedDecoration: lerpWidgetStateProperty<Decoration?>(
         a?.uncheckedDecoration,
         b?.uncheckedDecoration,
         t,
         Decoration.lerp,
       ),
-      thirdstateDecoration: WidgetStateProperty.lerp<Decoration?>(
+      thirdstateDecoration: lerpWidgetStateProperty<Decoration?>(
         a?.thirdstateDecoration,
         b?.thirdstateDecoration,
         t,
         Decoration.lerp,
       ),
-      foregroundColor: WidgetStateProperty.lerp<Color?>(
+      foregroundColor: lerpWidgetStateProperty<Color?>(
         a?.foregroundColor,
         b?.foregroundColor,
         t,

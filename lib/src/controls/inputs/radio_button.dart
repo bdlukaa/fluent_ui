@@ -283,19 +283,19 @@ class RadioButtonThemeData with Diagnosticable {
     double t,
   ) {
     return RadioButtonThemeData(
-      checkedDecoration: WidgetStateProperty.lerp<BoxDecoration?>(
+      checkedDecoration: lerpWidgetStateProperty<BoxDecoration?>(
         a?.checkedDecoration,
         b?.checkedDecoration,
         t,
         BoxDecoration.lerp,
       ),
-      uncheckedDecoration: WidgetStateProperty.lerp<BoxDecoration?>(
+      uncheckedDecoration: lerpWidgetStateProperty<BoxDecoration?>(
         a?.uncheckedDecoration,
         b?.uncheckedDecoration,
         t,
         BoxDecoration.lerp,
       ),
-      foregroundColor: WidgetStateProperty.lerp<Color?>(
+      foregroundColor: lerpWidgetStateProperty<Color?>(
         a?.foregroundColor,
         b?.foregroundColor,
         t,

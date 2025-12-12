@@ -682,31 +682,31 @@ class SliderThemeData with Diagnosticable {
   static SliderThemeData lerp(SliderThemeData a, SliderThemeData b, double t) {
     return SliderThemeData(
       margin: EdgeInsetsGeometry.lerp(a.margin, b.margin, t),
-      thumbColor: WidgetStateProperty.lerp<Color?>(
+      thumbColor: lerpWidgetStateProperty<Color?>(
         a.thumbColor,
         b.thumbColor,
         t,
         Color.lerp,
       ),
-      thumbRadius: WidgetStateProperty.lerp<double?>(
+      thumbRadius: lerpWidgetStateProperty<double?>(
         a.thumbRadius,
         b.thumbRadius,
         t,
         lerpDouble,
       ),
-      trackHeight: WidgetStateProperty.lerp<double?>(
+      trackHeight: lerpWidgetStateProperty<double?>(
         a.trackHeight,
         b.trackHeight,
         t,
         lerpDouble,
       ),
-      activeColor: WidgetStateProperty.lerp<Color?>(
+      activeColor: lerpWidgetStateProperty<Color?>(
         a.activeColor,
         b.activeColor,
         t,
         Color.lerp,
       ),
-      inactiveColor: WidgetStateProperty.lerp<Color?>(
+      inactiveColor: lerpWidgetStateProperty<Color?>(
         a.inactiveColor,
         b.inactiveColor,
         t,
@@ -723,7 +723,7 @@ class SliderThemeData with Diagnosticable {
         t,
       ),
       useThumbBall: t < 0.5 ? a.useThumbBall : b.useThumbBall,
-      thumbBallInnerFactor: WidgetStateProperty.lerp<double?>(
+      thumbBallInnerFactor: lerpWidgetStateProperty<double?>(
         a.thumbBallInnerFactor,
         b.thumbBallInnerFactor,
         t,

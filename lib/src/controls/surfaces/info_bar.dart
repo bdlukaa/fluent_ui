@@ -507,22 +507,41 @@ class InfoBarThemeData with Diagnosticable {
         t,
       ),
       icon: t < 0.5 ? a?.icon : b?.icon,
-      decoration: (severity) {
-        return Decoration.lerp(
-          a?.decoration?.call(severity),
-          b?.decoration?.call(severity),
-          t,
-        );
-      },
+      decoration: () {
+        final aDecoration = a?.decoration;
+        final bDecoration = b?.decoration;
+        if (aDecoration == null && bDecoration == null) return null;
+        if (aDecoration == null) return bDecoration;
+        if (bDecoration == null) return aDecoration;
+        return (severity) {
+          return Decoration.lerp(
+            aDecoration.call(severity),
+            bDecoration.call(severity),
+            t,
+          );
+        };
+      }(),
       actionStyle: ButtonStyle.lerp(a?.actionStyle, b?.actionStyle, t),
-      iconColor: (severity) {
-        return Color.lerp(
-          a?.iconColor?.call(severity),
-          b?.iconColor?.call(severity),
-          t,
-        );
-      },
-      padding: EdgeInsetsGeometry.lerp(a?.padding, b?.padding, t),
+      iconColor: () {
+        final aIconColor = a?.iconColor;
+        final bIconColor = b?.iconColor;
+        if (aIconColor == null && bIconColor == null) return null;
+        if (aIconColor == null) return bIconColor;
+        if (bIconColor == null) return aIconColor;
+        return (severity) {
+          return Color.lerp(
+            aIconColor.call(severity),
+            bIconColor.call(severity),
+            t,
+          );
+        };
+      }(),
+      padding: () {
+        if (a?.padding == null && b?.padding == null) return null;
+        if (a?.padding == null) return b?.padding;
+        if (b?.padding == null) return a?.padding;
+        return EdgeInsetsGeometry.lerp(a?.padding, b?.padding, t);
+      }(),
     );
   }
 

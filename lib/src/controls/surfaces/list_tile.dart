@@ -82,7 +82,7 @@ class ListTile extends StatelessWidget {
   /// The background color of the button.
   ///
   /// If null, [ButtonThemeData.uncheckedInputColor] is used by default
-  final WidgetStateProperty<Color>? tileColor;
+  final WidgetStateColor? tileColor;
 
   /// The tile shape.
   ///

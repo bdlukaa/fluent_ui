@@ -199,3 +199,24 @@ extension OffsetExtension on Offset {
     );
   }
 }
+
+WidgetStateProperty<T?>? lerpWidgetStateProperty<T>(
+  WidgetStateProperty<T?>? a,
+  WidgetStateProperty<T?>? b,
+  double t,
+  T? Function(T?, T?, double) lerpFunction,
+) {
+  if (identical(a, b)) {
+    return a;
+  }
+  if (a == null && b == null) {
+    return null;
+  }
+  if (a == null) {
+    return b;
+  }
+  if (b == null) {
+    return a;
+  }
+  return WidgetStateProperty.lerp<T?>(a, b, t, lerpFunction);
+}

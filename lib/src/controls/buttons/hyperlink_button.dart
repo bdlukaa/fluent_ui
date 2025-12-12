@@ -59,8 +59,8 @@ class HyperlinkButton extends BaseButton {
     return ButtonTheme.of(context).hyperlinkButtonStyle;
   }
 
-  static WidgetStateProperty<Color> backgroundColor(FluentThemeData theme) {
-    return WidgetStateProperty.resolveWith((states) {
+  static WidgetStateColor backgroundColor(FluentThemeData theme) {
+    return WidgetStateColor.resolveWith((states) {
       if (states.isDisabled) {
         return theme.resources.subtleFillColorDisabled;
       } else if (states.isPressed) {

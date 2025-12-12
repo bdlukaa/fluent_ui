@@ -220,7 +220,7 @@ class NavigationPaneThemeData with Diagnosticable {
         b?.headerPadding,
         t,
       ),
-      tileColor: WidgetStateProperty.lerp<Color?>(
+      tileColor: lerpWidgetStateProperty<Color?>(
         a?.tileColor,
         b?.tileColor,
         t,
@@ -237,25 +237,25 @@ class NavigationPaneThemeData with Diagnosticable {
         b?.itemHeaderTextStyle,
         t,
       ),
-      selectedTextStyle: WidgetStateProperty.lerp<TextStyle?>(
+      selectedTextStyle: lerpWidgetStateProperty<TextStyle?>(
         a?.selectedTextStyle,
         b?.selectedTextStyle,
         t,
         TextStyle.lerp,
       ),
-      unselectedTextStyle: WidgetStateProperty.lerp<TextStyle?>(
+      unselectedTextStyle: lerpWidgetStateProperty<TextStyle?>(
         a?.unselectedTextStyle,
         b?.unselectedTextStyle,
         t,
         TextStyle.lerp,
       ),
-      selectedTopTextStyle: WidgetStateProperty.lerp<TextStyle?>(
+      selectedTopTextStyle: lerpWidgetStateProperty<TextStyle?>(
         a?.selectedTextStyle,
         b?.selectedTextStyle,
         t,
         TextStyle.lerp,
       ),
-      unselectedTopTextStyle: WidgetStateProperty.lerp<TextStyle?>(
+      unselectedTopTextStyle: lerpWidgetStateProperty<TextStyle?>(
         a?.unselectedTextStyle,
         b?.unselectedTextStyle,
         t,
@@ -268,13 +268,13 @@ class NavigationPaneThemeData with Diagnosticable {
         b?.animationDuration ?? Duration.zero,
         t,
       ),
-      selectedIconColor: WidgetStateProperty.lerp<Color?>(
+      selectedIconColor: lerpWidgetStateProperty<Color?>(
         a?.selectedIconColor,
         b?.selectedIconColor,
         t,
         Color.lerp,
       ),
-      unselectedIconColor: WidgetStateProperty.lerp<Color?>(
+      unselectedIconColor: lerpWidgetStateProperty<Color?>(
         a?.unselectedIconColor,
         b?.unselectedIconColor,
         t,
