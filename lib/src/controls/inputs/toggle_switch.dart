@@ -259,7 +259,7 @@ class DefaultToggleSwitchKnob extends StatelessWidget {
 }
 
 class ToggleSwitchTheme extends InheritedTheme {
-  /// Creates a button theme that controls how descendant [ToggleSwitch]es should
+  /// Creates a theme that controls how descendant [ToggleSwitch]es should
   /// look like.
   const ToggleSwitchTheme({
     super.key,
@@ -269,8 +269,7 @@ class ToggleSwitchTheme extends InheritedTheme {
 
   final ToggleSwitchThemeData data;
 
-  /// Creates a button theme that controls how descendant [ToggleSwitch]es should
-  /// look like, and merges in the current button theme, if any.
+  /// Creates a theme that merges the nearest [ToggleSwitchTheme] with [data].
   static Widget merge({
     Key? key,
     required ToggleSwitchThemeData data,
@@ -280,17 +279,20 @@ class ToggleSwitchTheme extends InheritedTheme {
       builder: (BuildContext context) {
         return ToggleSwitchTheme(
           key: key,
-          data: _getInheritedToggleSwitchThemeData(context).merge(data),
+          data: ToggleSwitchTheme.of(context).merge(data),
           child: child,
         );
       },
     );
   }
 
-  /// The data from the closest instance of this class that encloses the given
+  /// Returns the closest [ToggleSwitchThemeData] which encloses the given
   /// context.
   ///
-  /// Defaults to [FluentThemeData.toggleSwitchTheme]
+  /// Resolution order:
+  /// 1. Defaults from [ToggleSwitchThemeData.standard]
+  /// 2. Global theme from [FluentThemeData.toggleSwitchTheme]
+  /// 3. Local [ToggleSwitchTheme] ancestor
   ///
   /// Typical usage is as follows:
   ///
@@ -299,17 +301,12 @@ class ToggleSwitchTheme extends InheritedTheme {
   /// ```
   static ToggleSwitchThemeData of(BuildContext context) {
     assert(debugCheckHasFluentTheme(context));
-    return ToggleSwitchThemeData.standard(
-      FluentTheme.of(context),
-    ).merge(_getInheritedToggleSwitchThemeData(context));
-  }
-
-  static ToggleSwitchThemeData _getInheritedToggleSwitchThemeData(
-    BuildContext context,
-  ) {
-    final checkboxTheme = context
+    final theme = FluentTheme.of(context);
+    final inheritedTheme = context
         .dependOnInheritedWidgetOfExactType<ToggleSwitchTheme>();
-    return checkboxTheme?.data ?? FluentTheme.of(context).toggleSwitchTheme;
+    return ToggleSwitchThemeData.standard(
+      theme,
+    ).merge(theme.toggleSwitchTheme).merge(inheritedTheme?.data);
   }
 
   @override
@@ -318,9 +315,8 @@ class ToggleSwitchTheme extends InheritedTheme {
   }
 
   @override
-  bool updateShouldNotify(ToggleSwitchTheme oldWidget) {
-    return oldWidget.data != data;
-  }
+  bool updateShouldNotify(ToggleSwitchTheme oldWidget) =>
+      data != oldWidget.data;
 }
 
 @immutable

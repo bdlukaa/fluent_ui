@@ -1,7 +1,6 @@
 import 'dart:ui' show lerpDouble;
 
 import 'package:fluent_ui/fluent_ui.dart';
-
 import 'package:flutter/foundation.dart';
 import 'package:flutter/gestures.dart';
 
@@ -205,15 +204,13 @@ class _ScrollbarState extends RawScrollbarState<Scrollbar> {
 /// Values specified here are used for [Scrollbar] properties that are not
 /// given an explicit non-null value.
 class ScrollbarTheme extends InheritedTheme {
-  /// Creates a scrollbar theme that controls the configurations for
-  /// [Scrollbar].
+  /// Creates a theme that controls how descendant [Scrollbar]s should look like.
   const ScrollbarTheme({super.key, required this.data, required super.child});
 
   /// The properties for descendant [Scrollbar] widgets.
   final ScrollbarThemeData data;
 
-  /// Creates a button theme that controls how descendant [Scrollbar]s should
-  /// look like, and merges in the current toggle button theme, if any.
+  /// Creates a theme that merges the nearest [ScrollbarTheme] with [data].
   static Widget merge({
     Key? key,
     required ScrollbarThemeData data,
@@ -223,21 +220,19 @@ class ScrollbarTheme extends InheritedTheme {
       builder: (BuildContext context) {
         return ScrollbarTheme(
           key: key,
-          data: _getInheritedThemeData(context).merge(data),
+          data: ScrollbarTheme.of(context).merge(data),
           child: child,
         );
       },
     );
   }
 
-  static ScrollbarThemeData _getInheritedThemeData(BuildContext context) {
-    final theme = context.dependOnInheritedWidgetOfExactType<ScrollbarTheme>();
-    return theme?.data ?? FluentTheme.of(context).scrollbarTheme;
-  }
-
-  /// Returns the [data] from the closest [ScrollbarTheme] ancestor. If there is
-  /// no ancestor, it returns [FluentThemeData.scrollbarTheme]. Applications can assume
-  /// that the returned value will not be null.
+  /// Returns the closest [ScrollbarThemeData] which encloses the given context.
+  ///
+  /// Resolution order:
+  /// 1. Defaults from [ScrollbarThemeData.standard]
+  /// 2. Global theme from [FluentThemeData.scrollbarTheme]
+  /// 3. Local [ScrollbarTheme] ancestor
   ///
   /// Typical usage is as follows:
   ///
@@ -245,9 +240,13 @@ class ScrollbarTheme extends InheritedTheme {
   /// ScrollbarThemeData theme = ScrollbarTheme.of(context);
   /// ```
   static ScrollbarThemeData of(BuildContext context) {
+    assert(debugCheckHasFluentTheme(context));
+    final theme = FluentTheme.of(context);
+    final inheritedTheme = context
+        .dependOnInheritedWidgetOfExactType<ScrollbarTheme>();
     return ScrollbarThemeData.standard(
-      FluentTheme.of(context),
-    ).merge(_getInheritedThemeData(context));
+      theme,
+    ).merge(theme.scrollbarTheme).merge(inheritedTheme?.data);
   }
 
   @override

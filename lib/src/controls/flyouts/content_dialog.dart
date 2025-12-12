@@ -1,6 +1,7 @@
 import 'dart:ui' show lerpDouble;
 
 import 'package:fluent_ui/fluent_ui.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 
 /// The default constraints for [ContentDialog]
@@ -79,9 +80,7 @@ class ContentDialog extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     assert(debugCheckHasFluentTheme(context));
-    final style = ContentDialogThemeData.standard(
-      FluentTheme.of(context),
-    ).merge(FluentTheme.of(context).dialogTheme.merge(this.style));
+    final style = ContentDialogTheme.of(context).merge(this.style);
 
     return Align(
       alignment: AlignmentDirectional.center,
@@ -356,8 +355,75 @@ class _DismissAction extends DismissAction {
   }
 }
 
+/// An inherited widget that defines the configuration for
+/// [ContentDialog]s in this widget's subtree.
+///
+/// Values specified here are used for [ContentDialog] properties that are not
+/// given an explicit non-null value.
+class ContentDialogTheme extends InheritedTheme {
+  /// Creates a theme that controls how descendant [ContentDialog]s should
+  /// look like.
+  const ContentDialogTheme({
+    super.key,
+    required this.data,
+    required super.child,
+  });
+
+  /// The properties for descendant [ContentDialog] widgets.
+  final ContentDialogThemeData data;
+
+  /// Creates a theme that merges the nearest [ContentDialogTheme] with [data].
+  static Widget merge({
+    Key? key,
+    required ContentDialogThemeData data,
+    required Widget child,
+  }) {
+    return Builder(
+      builder: (BuildContext context) {
+        return ContentDialogTheme(
+          key: key,
+          data: ContentDialogTheme.of(context).merge(data),
+          child: child,
+        );
+      },
+    );
+  }
+
+  /// Returns the closest [ContentDialogThemeData] which encloses the given
+  /// context.
+  ///
+  /// Resolution order:
+  /// 1. Defaults from [ContentDialogThemeData.standard]
+  /// 2. Global theme from [FluentThemeData.dialogTheme]
+  /// 3. Local [ContentDialogTheme] ancestor
+  ///
+  /// Typical usage is as follows:
+  ///
+  /// ```dart
+  /// ContentDialogThemeData theme = ContentDialogTheme.of(context);
+  /// ```
+  static ContentDialogThemeData of(BuildContext context) {
+    assert(debugCheckHasFluentTheme(context));
+    final theme = FluentTheme.of(context);
+    final inheritedTheme = context
+        .dependOnInheritedWidgetOfExactType<ContentDialogTheme>();
+    return ContentDialogThemeData.standard(
+      theme,
+    ).merge(theme.dialogTheme).merge(inheritedTheme?.data);
+  }
+
+  @override
+  Widget wrap(BuildContext context, Widget child) {
+    return ContentDialogTheme(data: data, child: child);
+  }
+
+  @override
+  bool updateShouldNotify(ContentDialogTheme oldWidget) =>
+      data != oldWidget.data;
+}
+
 @immutable
-class ContentDialogThemeData {
+class ContentDialogThemeData with Diagnosticable {
   final EdgeInsetsGeometry? padding;
   final EdgeInsetsGeometry? titlePadding;
   final EdgeInsetsGeometry? bodyPadding;
@@ -460,5 +526,36 @@ class ContentDialogThemeData {
       titleStyle: style.titleStyle ?? titleStyle,
       bodyStyle: style.bodyStyle ?? bodyStyle,
     );
+  }
+
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties
+      ..add(DiagnosticsProperty<Decoration>('decoration', decoration))
+      ..add(ColorProperty('barrierColor', barrierColor))
+      ..add(DiagnosticsProperty<EdgeInsetsGeometry>('padding', padding))
+      ..add(DiagnosticsProperty<EdgeInsetsGeometry>('bodyPadding', bodyPadding))
+      ..add(
+        DiagnosticsProperty<EdgeInsetsGeometry>('titlePadding', titlePadding),
+      )
+      ..add(DoubleProperty('actionsSpacing', actionsSpacing))
+      ..add(
+        DiagnosticsProperty<ButtonThemeData>(
+          'actionThemeData',
+          actionThemeData,
+        ),
+      )
+      ..add(
+        DiagnosticsProperty<Decoration>('actionsDecoration', actionsDecoration),
+      )
+      ..add(
+        DiagnosticsProperty<EdgeInsetsGeometry>(
+          'actionsPadding',
+          actionsPadding,
+        ),
+      )
+      ..add(DiagnosticsProperty<TextStyle>('titleStyle', titleStyle))
+      ..add(DiagnosticsProperty<TextStyle>('bodyStyle', bodyStyle));
   }
 }

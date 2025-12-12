@@ -115,21 +115,64 @@ class FocusBorder extends StatelessWidget {
   }
 }
 
-class FocusTheme extends InheritedWidget {
+/// An inherited widget that defines the configuration for
+/// [FocusBorder]s in this widget's subtree.
+///
+/// Values specified here are used for [FocusBorder] properties that are not
+/// given an explicit non-null value.
+class FocusTheme extends InheritedTheme {
+  /// Creates a theme that controls how descendant [FocusBorder]s should
+  /// look like.
   const FocusTheme({super.key, required this.data, required super.child});
 
   final FocusThemeData data;
 
+  /// Creates a theme that merges the nearest [FocusTheme] with [data].
+  static Widget merge({
+    Key? key,
+    required FocusThemeData data,
+    required Widget child,
+  }) {
+    return Builder(
+      builder: (BuildContext context) {
+        return FocusTheme(
+          key: key,
+          data: FocusTheme.of(context).merge(data),
+          child: child,
+        );
+      },
+    );
+  }
+
+  /// Returns the closest [FocusThemeData] which encloses the given context.
+  ///
+  /// Resolution order:
+  /// 1. Defaults from [FocusThemeData.standard]
+  /// 2. Global theme from [FluentThemeData.focusTheme]
+  /// 3. Local [FocusTheme] ancestor
+  ///
+  /// Typical usage is as follows:
+  ///
+  /// ```dart
+  /// FocusThemeData theme = FocusTheme.of(context);
+  /// ```
   static FocusThemeData of(BuildContext context) {
     assert(debugCheckHasFluentTheme(context));
-    final theme = context.dependOnInheritedWidgetOfExactType<FocusTheme>();
-    return FocusThemeData.fromTheme(
-      FluentTheme.of(context),
-    ).merge(FluentTheme.of(context).focusTheme.merge(theme?.data));
+    final theme = FluentTheme.of(context);
+    final inheritedTheme = context
+        .dependOnInheritedWidgetOfExactType<FocusTheme>();
+    return FocusThemeData.standard(
+      theme,
+    ).merge(theme.focusTheme).merge(inheritedTheme?.data);
   }
 
   @override
-  bool updateShouldNotify(FocusTheme oldWidget) => oldWidget.data != data;
+  Widget wrap(BuildContext context, Widget child) {
+    return FocusTheme(data: data, child: child);
+  }
+
+  @override
+  bool updateShouldNotify(FocusTheme oldWidget) => data != oldWidget.data;
 }
 
 class FocusThemeData with Diagnosticable {
@@ -149,11 +192,7 @@ class FocusThemeData with Diagnosticable {
     this.renderOutside,
   }) : assert(glowFactor == null || glowFactor >= 0);
 
-  static FocusThemeData of(BuildContext context) {
-    return FluentTheme.of(context).focusTheme;
-  }
-
-  factory FocusThemeData.fromTheme(FluentThemeData theme) {
+  factory FocusThemeData.standard(FluentThemeData theme) {
     return FocusThemeData(
       borderRadius: BorderRadius.circular(6.0),
       primaryBorder: BorderSide(

@@ -302,15 +302,13 @@ class InfoBar extends StatelessWidget {
 /// Values specified here are used for [InfoBar] properties that are not
 /// given an explicit non-null value.
 class InfoBarTheme extends InheritedTheme {
-  /// Creates a info bar theme that controls the configurations for
-  /// [InfoBar].
+  /// Creates a theme that controls how descendant [InfoBar]s should look like.
   const InfoBarTheme({super.key, required this.data, required super.child});
 
   /// The properties for descendant [InfoBar] widgets.
   final InfoBarThemeData data;
 
-  /// Creates a button theme that controls how descendant [InfoBar]s should
-  /// look like, and merges in the current toggle button theme, if any.
+  /// Creates a theme that merges the nearest [InfoBarTheme] with [data].
   static Widget merge({
     Key? key,
     required InfoBarThemeData data,
@@ -320,21 +318,19 @@ class InfoBarTheme extends InheritedTheme {
       builder: (BuildContext context) {
         return InfoBarTheme(
           key: key,
-          data: _getInheritedThemeData(context).merge(data),
+          data: InfoBarTheme.of(context).merge(data),
           child: child,
         );
       },
     );
   }
 
-  static InfoBarThemeData _getInheritedThemeData(BuildContext context) {
-    final theme = context.dependOnInheritedWidgetOfExactType<InfoBarTheme>();
-    return theme?.data ?? FluentTheme.of(context).infoBarTheme;
-  }
-
-  /// Returns the [data] from the closest [InfoBarTheme] ancestor. If there is
-  /// no ancestor, it returns [FluentThemeData.infoBarTheme]. Applications can assume
-  /// that the returned value will not be null.
+  /// Returns the closest [InfoBarThemeData] which encloses the given context.
+  ///
+  /// Resolution order:
+  /// 1. Defaults from [InfoBarThemeData.standard]
+  /// 2. Global theme from [FluentThemeData.infoBarTheme]
+  /// 3. Local [InfoBarTheme] ancestor
   ///
   /// Typical usage is as follows:
   ///
@@ -342,10 +338,13 @@ class InfoBarTheme extends InheritedTheme {
   /// InfoBarThemeData theme = InfoBarTheme.of(context);
   /// ```
   static InfoBarThemeData of(BuildContext context) {
-    final theme = context.dependOnInheritedWidgetOfExactType<InfoBarTheme>();
+    assert(debugCheckHasFluentTheme(context));
+    final theme = FluentTheme.of(context);
+    final inheritedTheme = context
+        .dependOnInheritedWidgetOfExactType<InfoBarTheme>();
     return InfoBarThemeData.standard(
-      FluentTheme.of(context),
-    ).merge(theme?.data ?? FluentTheme.of(context).infoBarTheme);
+      theme,
+    ).merge(theme.infoBarTheme).merge(inheritedTheme?.data);
   }
 
   @override

@@ -52,7 +52,7 @@ void main() {
     await tester.pumpWidget(
       wrapApp(
         child: TabView(
-          addIconData: FluentIcons.add,
+          newTabIcon: const Icon(FluentIcons.add),
           currentIndex: 0,
           tabs: tabs,
           onNewPressed: () {

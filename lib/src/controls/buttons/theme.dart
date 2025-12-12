@@ -127,15 +127,13 @@ class ButtonStyle with Diagnosticable {
 /// Values specified here are used for [Button] properties that are not
 /// given an explicit non-null value.
 class ButtonTheme extends InheritedTheme {
-  /// Creates a button theme that controls the configurations for
-  /// [Button].
+  /// Creates a theme that controls how descendant [Button]s should look like.
   const ButtonTheme({super.key, required super.child, required this.data});
 
   /// The properties for descendant [Button] widgets.
   final ButtonThemeData data;
 
-  /// Creates a button theme that controls how descendant [Button]s should
-  /// look like, and merges in the current button theme, if any.
+  /// Creates a theme that merges the nearest [ButtonTheme] with [data].
   static Widget merge({
     Key? key,
     required ButtonThemeData data,
@@ -145,17 +143,18 @@ class ButtonTheme extends InheritedTheme {
       builder: (BuildContext context) {
         return ButtonTheme(
           key: key,
-          data: _getInheritedButtonThemeData(context)?.merge(data) ?? data,
+          data: ButtonTheme.of(context).merge(data),
           child: child,
         );
       },
     );
   }
 
-  /// The data from the closest instance of this class that encloses the given
-  /// context.
+  /// Returns the closest [ButtonThemeData] which encloses the given context.
   ///
-  /// Defaults to [FluentThemeData.buttonTheme]
+  /// Resolution order:
+  /// 1. Global theme from [FluentThemeData.buttonTheme]
+  /// 2. Local [ButtonTheme] ancestor
   ///
   /// Typical usage is as follows:
   ///
@@ -164,15 +163,10 @@ class ButtonTheme extends InheritedTheme {
   /// ```
   static ButtonThemeData of(BuildContext context) {
     assert(debugCheckHasFluentTheme(context));
-    return FluentTheme.of(
-      context,
-    ).buttonTheme.merge(_getInheritedButtonThemeData(context));
-  }
-
-  static ButtonThemeData? _getInheritedButtonThemeData(BuildContext context) {
-    final buttonTheme = context
+    final theme = FluentTheme.of(context);
+    final inheritedTheme = context
         .dependOnInheritedWidgetOfExactType<ButtonTheme>();
-    return buttonTheme?.data;
+    return theme.buttonTheme.merge(inheritedTheme?.data);
   }
 
   @override
@@ -181,9 +175,7 @@ class ButtonTheme extends InheritedTheme {
   }
 
   @override
-  bool updateShouldNotify(ButtonTheme oldWidget) {
-    return oldWidget.data != data;
-  }
+  bool updateShouldNotify(ButtonTheme oldWidget) => data != oldWidget.data;
 }
 
 @immutable

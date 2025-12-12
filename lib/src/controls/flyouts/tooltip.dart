@@ -572,15 +572,13 @@ class _TooltipState extends State<Tooltip> with SingleTickerProviderStateMixin {
 /// Values specified here are used for [Tooltip] properties that are not
 /// given an explicit non-null value.
 class TooltipTheme extends InheritedTheme {
-  /// Creates a tooltip theme that controls the configurations for
-  /// [Tooltip].
+  /// Creates a theme that controls how descendant [Tooltip]s should look like.
   const TooltipTheme({super.key, required this.data, required super.child});
 
   /// The properties for descendant [Tooltip] widgets.
   final TooltipThemeData data;
 
-  /// Creates a button theme that controls how descendant [InfoBar]s should
-  /// look like, and merges in the current toggle button theme, if any.
+  /// Creates a theme that merges the nearest [TooltipTheme] with [data].
   static Widget merge({
     Key? key,
     required TooltipThemeData data,
@@ -590,21 +588,19 @@ class TooltipTheme extends InheritedTheme {
       builder: (BuildContext context) {
         return TooltipTheme(
           key: key,
-          data: _getInheritedThemeData(context).merge(data),
+          data: TooltipTheme.of(context).merge(data),
           child: child,
         );
       },
     );
   }
 
-  static TooltipThemeData _getInheritedThemeData(BuildContext context) {
-    final theme = context.dependOnInheritedWidgetOfExactType<TooltipTheme>();
-    return theme?.data ?? FluentTheme.of(context).tooltipTheme;
-  }
-
-  /// Returns the [data] from the closest [TooltipTheme] ancestor. If there is
-  /// no ancestor, it returns [FluentThemeData.tooltipTheme]. Applications can assume
-  /// that the returned value will not be null.
+  /// Returns the closest [TooltipThemeData] which encloses the given context.
+  ///
+  /// Resolution order:
+  /// 1. Defaults from [TooltipThemeData.standard]
+  /// 2. Global theme from [FluentThemeData.tooltipTheme]
+  /// 3. Local [TooltipTheme] ancestor
   ///
   /// Typical usage is as follows:
   ///
@@ -612,9 +608,13 @@ class TooltipTheme extends InheritedTheme {
   /// TooltipThemeData theme = TooltipTheme.of(context);
   /// ```
   static TooltipThemeData of(BuildContext context) {
+    assert(debugCheckHasFluentTheme(context));
+    final theme = FluentTheme.of(context);
+    final inheritedTheme = context
+        .dependOnInheritedWidgetOfExactType<TooltipTheme>();
     return TooltipThemeData.standard(
-      FluentTheme.of(context),
-    ).merge(_getInheritedThemeData(context));
+      theme,
+    ).merge(theme.tooltipTheme).merge(inheritedTheme?.data);
   }
 
   @override

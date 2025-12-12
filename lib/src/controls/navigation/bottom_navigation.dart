@@ -184,8 +184,8 @@ class _BottomNavigationItem extends StatelessWidget {
 /// Values specified here are used for [BottomNavigation] properties that are not
 /// given an explicit non-null value.
 class BottomNavigationTheme extends InheritedTheme {
-  /// Creates a button theme that controls the configurations for
-  /// [BottomNavigation].
+  /// Creates a theme that controls how descendant [BottomNavigation]s should
+  /// look like.
   const BottomNavigationTheme({
     super.key,
     required super.child,
@@ -195,8 +195,8 @@ class BottomNavigationTheme extends InheritedTheme {
   /// The properties for descendant [BottomNavigation] widgets.
   final BottomNavigationThemeData data;
 
-  /// Creates a button theme that controls how descendant [BottomNavigation]s should
-  /// look like, and merges in the current button theme, if any.
+  /// Creates a theme that merges the nearest [BottomNavigationTheme] with
+  /// [data].
   static Widget merge({
     Key? key,
     required BottomNavigationThemeData data,
@@ -206,17 +206,20 @@ class BottomNavigationTheme extends InheritedTheme {
       builder: (BuildContext context) {
         return BottomNavigationTheme(
           key: key,
-          data: _getInheritedBottomNavigationThemeData(context).merge(data),
+          data: BottomNavigationTheme.of(context).merge(data),
           child: child,
         );
       },
     );
   }
 
-  /// The data from the closest instance of this class that encloses the given
+  /// Returns the closest [BottomNavigationThemeData] which encloses the given
   /// context.
   ///
-  /// Defaults to [FluentThemeData.bottomNavigationTheme]
+  /// Resolution order:
+  /// 1. Defaults from [BottomNavigationThemeData.standard]
+  /// 2. Global theme from [FluentThemeData.bottomNavigationTheme]
+  /// 3. Local [BottomNavigationTheme] ancestor
   ///
   /// Typical usage is as follows:
   ///
@@ -225,17 +228,12 @@ class BottomNavigationTheme extends InheritedTheme {
   /// ```
   static BottomNavigationThemeData of(BuildContext context) {
     assert(debugCheckHasFluentTheme(context));
-    return BottomNavigationThemeData.standard(
-      FluentTheme.of(context),
-    ).merge(_getInheritedBottomNavigationThemeData(context));
-  }
-
-  static BottomNavigationThemeData _getInheritedBottomNavigationThemeData(
-    BuildContext context,
-  ) {
-    final theme = context
+    final theme = FluentTheme.of(context);
+    final inheritedTheme = context
         .dependOnInheritedWidgetOfExactType<BottomNavigationTheme>();
-    return theme?.data ?? FluentTheme.of(context).bottomNavigationTheme;
+    return BottomNavigationThemeData.standard(
+      theme,
+    ).merge(theme.bottomNavigationTheme).merge(inheritedTheme?.data);
   }
 
   @override
@@ -244,9 +242,8 @@ class BottomNavigationTheme extends InheritedTheme {
   }
 
   @override
-  bool updateShouldNotify(BottomNavigationTheme oldWidget) {
-    return oldWidget.data != data;
-  }
+  bool updateShouldNotify(BottomNavigationTheme oldWidget) =>
+      data != oldWidget.data;
 }
 
 /// See also:

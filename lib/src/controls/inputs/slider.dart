@@ -560,15 +560,13 @@ class SliderThumbShape extends m.SliderComponentShape {
 /// Values specified here are used for [Slider] properties that are not
 /// given an explicit non-null value.
 class SliderTheme extends InheritedTheme {
-  /// Creates a slider theme that controls the configurations for
-  /// [Slider].
+  /// Creates a theme that controls how descendant [Slider]s should look like.
   const SliderTheme({super.key, required this.data, required super.child});
 
   /// The properties for descendant [Slider] widgets.
   final SliderThemeData data;
 
-  /// Creates a button theme that controls how descendant [Slider]s should
-  /// look like, and merges in the current slider theme, if any.
+  /// Creates a theme that merges the nearest [SliderTheme] with [data].
   static Widget merge({
     Key? key,
     required SliderThemeData data,
@@ -578,21 +576,19 @@ class SliderTheme extends InheritedTheme {
       builder: (BuildContext context) {
         return SliderTheme(
           key: key,
-          data: _getInheritedThemeData(context).merge(data),
+          data: SliderTheme.of(context).merge(data),
           child: child,
         );
       },
     );
   }
 
-  static SliderThemeData _getInheritedThemeData(BuildContext context) {
-    final theme = context.dependOnInheritedWidgetOfExactType<SliderTheme>();
-    return theme?.data ?? FluentTheme.of(context).sliderTheme;
-  }
-
-  /// Returns the [data] from the closest [SliderTheme] ancestor. If there is
-  /// no ancestor, it returns [FluentThemeData.sliderTheme]. Applications can assume
-  /// that the returned value will not be null.
+  /// Returns the closest [SliderThemeData] which encloses the given context.
+  ///
+  /// Resolution order:
+  /// 1. Defaults from [SliderThemeData.standard]
+  /// 2. Global theme from [FluentThemeData.sliderTheme]
+  /// 3. Local [SliderTheme] ancestor
   ///
   /// Typical usage is as follows:
   ///
@@ -600,9 +596,13 @@ class SliderTheme extends InheritedTheme {
   /// SliderThemeData theme = SliderTheme.of(context);
   /// ```
   static SliderThemeData of(BuildContext context) {
+    assert(debugCheckHasFluentTheme(context));
+    final theme = FluentTheme.of(context);
+    final inheritedTheme = context
+        .dependOnInheritedWidgetOfExactType<SliderTheme>();
     return SliderThemeData.standard(
-      FluentTheme.of(context),
-    ).merge(_getInheritedThemeData(context));
+      theme,
+    ).merge(theme.sliderTheme).merge(inheritedTheme?.data);
   }
 
   @override

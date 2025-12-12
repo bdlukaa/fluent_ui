@@ -76,8 +76,8 @@ class ToggleButton extends StatelessWidget {
 /// Values specified here are used for [ToggleButton] properties that are not
 /// given an explicit non-null value.
 class ToggleButtonTheme extends InheritedTheme {
-  /// Creates a toggle button theme that controls the configurations for
-  /// [ToggleButton].
+  /// Creates a theme that controls how descendant [ToggleButton]s should
+  /// look like.
   const ToggleButtonTheme({
     super.key,
     required this.data,
@@ -87,8 +87,7 @@ class ToggleButtonTheme extends InheritedTheme {
   /// The properties for descendant [ToggleButton] widgets.
   final ToggleButtonThemeData data;
 
-  /// Creates a button theme that controls how descendant [ToggleButton]s should
-  /// look like, and merges in the current toggle button theme, if any.
+  /// Creates a theme that merges the nearest [ToggleButtonTheme] with [data].
   static Widget merge({
     Key? key,
     required ToggleButtonThemeData data,
@@ -98,22 +97,20 @@ class ToggleButtonTheme extends InheritedTheme {
       builder: (BuildContext context) {
         return ToggleButtonTheme(
           key: key,
-          data: _getInheritedThemeData(context).merge(data),
+          data: ToggleButtonTheme.of(context).merge(data),
           child: child,
         );
       },
     );
   }
 
-  static ToggleButtonThemeData _getInheritedThemeData(BuildContext context) {
-    final theme = context
-        .dependOnInheritedWidgetOfExactType<ToggleButtonTheme>();
-    return theme?.data ?? FluentTheme.of(context).toggleButtonTheme;
-  }
-
-  /// Returns the [data] from the closest [ToggleButtonTheme] ancestor. If there is
-  /// no ancestor, it returns [FluentThemeData.toggleButtonTheme]. Applications can assume
-  /// that the returned value will not be null.
+  /// Returns the closest [ToggleButtonThemeData] which encloses the given
+  /// context.
+  ///
+  /// Resolution order:
+  /// 1. Defaults from [ToggleButtonThemeData.standard]
+  /// 2. Global theme from [FluentThemeData.toggleButtonTheme]
+  /// 3. Local [ToggleButtonTheme] ancestor
   ///
   /// Typical usage is as follows:
   ///
@@ -121,9 +118,13 @@ class ToggleButtonTheme extends InheritedTheme {
   /// ToggleButtonThemeData theme = ToggleButtonTheme.of(context);
   /// ```
   static ToggleButtonThemeData of(BuildContext context) {
+    assert(debugCheckHasFluentTheme(context));
+    final theme = FluentTheme.of(context);
+    final inheritedTheme = context
+        .dependOnInheritedWidgetOfExactType<ToggleButtonTheme>();
     return ToggleButtonThemeData.standard(
-      FluentTheme.of(context),
-    ).merge(_getInheritedThemeData(context));
+      theme,
+    ).merge(theme.toggleButtonTheme).merge(inheritedTheme?.data);
   }
 
   @override

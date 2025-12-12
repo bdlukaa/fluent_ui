@@ -25,8 +25,8 @@ WidgetStateProperty<Color?> kDefaultPaneItemColor(
 /// Values specified here are used for [NavigationPane] properties that are not
 /// given an explicit non-null value.
 class NavigationPaneTheme extends InheritedTheme {
-  /// Creates a navigation pane theme that controls the configurations for
-  /// [NavigationPane].
+  /// Creates a theme that controls how descendant [NavigationPane]s should
+  /// look like.
   const NavigationPaneTheme({
     super.key,
     required this.data,
@@ -36,8 +36,7 @@ class NavigationPaneTheme extends InheritedTheme {
   /// The properties for descendant [NavigationPane] widgets.
   final NavigationPaneThemeData data;
 
-  /// Creates a button theme that controls how descendant [NavigationPane]s
-  /// should look like, and merges in the current slider theme, if any.
+  /// Creates a theme that merges the nearest [NavigationPaneTheme] with [data].
   static Widget merge({
     Key? key,
     required NavigationPaneThemeData data,
@@ -47,22 +46,19 @@ class NavigationPaneTheme extends InheritedTheme {
       builder: (BuildContext context) {
         return NavigationPaneTheme(
           key: key,
-          data: _getInheritedThemeData(context).merge(data),
+          data: NavigationPaneTheme.of(context).merge(data),
           child: child,
         );
       },
     );
   }
 
-  static NavigationPaneThemeData _getInheritedThemeData(BuildContext context) {
-    final theme = context
-        .dependOnInheritedWidgetOfExactType<NavigationPaneTheme>();
-    return theme?.data ?? FluentTheme.of(context).navigationPaneTheme;
-  }
-
-  /// Returns the [data] from the closest [NavigationPaneTheme] ancestor. If there is
-  /// no ancestor, it returns [FluentThemeData.navigationPaneTheme]. Applications can assume
-  /// that the returned value will not be null.
+  /// Returns the closest [NavigationPaneThemeData] which encloses the given
+  /// context.
+  ///
+  /// Resolution order:
+  /// 1. Global theme from [FluentThemeData.navigationPaneTheme]
+  /// 2. Local [NavigationPaneTheme] ancestor
   ///
   /// Typical usage is as follows:
   ///
@@ -70,9 +66,11 @@ class NavigationPaneTheme extends InheritedTheme {
   /// NavigationPaneThemeData theme = NavigationPaneTheme.of(context);
   /// ```
   static NavigationPaneThemeData of(BuildContext context) {
-    return FluentTheme.of(
-      context,
-    ).navigationPaneTheme.merge(_getInheritedThemeData(context));
+    assert(debugCheckHasFluentTheme(context));
+    final theme = FluentTheme.of(context);
+    final inheritedTheme = context
+        .dependOnInheritedWidgetOfExactType<NavigationPaneTheme>();
+    return theme.navigationPaneTheme.merge(inheritedTheme?.data);
   }
 
   @override

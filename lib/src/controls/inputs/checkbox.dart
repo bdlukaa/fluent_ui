@@ -179,14 +179,13 @@ class _ThirdStateDash extends StatelessWidget {
 }
 
 class CheckboxTheme extends InheritedTheme {
-  /// Creates a button theme that controls how descendant [Checkbox]es should
+  /// Creates a theme that controls how descendant [Checkbox]es should
   /// look like.
   const CheckboxTheme({super.key, required super.child, required this.data});
 
   final CheckboxThemeData data;
 
-  /// Creates a button theme that controls how descendant [Checkbox]es should
-  /// look like, and merges in the current button theme, if any.
+  /// Creates a theme that merges the nearest [CheckboxTheme] with [data].
   static Widget merge({
     Key? key,
     required CheckboxThemeData data,
@@ -196,17 +195,19 @@ class CheckboxTheme extends InheritedTheme {
       builder: (BuildContext context) {
         return CheckboxTheme(
           key: key,
-          data: _getInheritedCheckboxThemeData(context).merge(data),
+          data: CheckboxTheme.of(context).merge(data),
           child: child,
         );
       },
     );
   }
 
-  /// The data from the closest instance of this class that encloses the given
-  /// context.
+  /// Returns the closest [CheckboxThemeData] which encloses the given context.
   ///
-  /// Defaults to [FluentThemeData.checkboxTheme]
+  /// Resolution order:
+  /// 1. Defaults from [CheckboxThemeData.standard]
+  /// 2. Global theme from [FluentThemeData.checkboxTheme]
+  /// 3. Local [CheckboxTheme] ancestor
   ///
   /// Typical usage is as follows:
   ///
@@ -215,17 +216,12 @@ class CheckboxTheme extends InheritedTheme {
   /// ```
   static CheckboxThemeData of(BuildContext context) {
     assert(debugCheckHasFluentTheme(context));
-    return CheckboxThemeData.standard(
-      FluentTheme.of(context),
-    ).merge(_getInheritedCheckboxThemeData(context));
-  }
-
-  static CheckboxThemeData _getInheritedCheckboxThemeData(
-    BuildContext context,
-  ) {
-    final checkboxTheme = context
+    final theme = FluentTheme.of(context);
+    final inheritedTheme = context
         .dependOnInheritedWidgetOfExactType<CheckboxTheme>();
-    return checkboxTheme?.data ?? FluentTheme.of(context).checkboxTheme;
+    return CheckboxThemeData.standard(
+      theme,
+    ).merge(theme.checkboxTheme).merge(inheritedTheme?.data);
   }
 
   @override
@@ -234,9 +230,7 @@ class CheckboxTheme extends InheritedTheme {
   }
 
   @override
-  bool updateShouldNotify(CheckboxTheme oldWidget) {
-    return oldWidget.data != data;
-  }
+  bool updateShouldNotify(CheckboxTheme oldWidget) => data != oldWidget.data;
 }
 
 @immutable

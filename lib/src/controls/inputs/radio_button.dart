@@ -1,5 +1,4 @@
 import 'package:fluent_ui/fluent_ui.dart';
-
 import 'package:flutter/foundation.dart';
 import 'package:flutter/rendering.dart';
 
@@ -161,15 +160,14 @@ class RadioButton extends StatelessWidget {
 /// Values specified here are used for [RadioButton] properties that are not
 /// given an explicit non-null value.
 class RadioButtonTheme extends InheritedTheme {
-  /// Creates a radio button theme that controls the configurations for
-  /// [RadioButton].
+  /// Creates a theme that controls how descendant [RadioButton]s should
+  /// look like.
   const RadioButtonTheme({super.key, required this.data, required super.child});
 
   /// The properties for descendant [RadioButton] widgets.
   final RadioButtonThemeData data;
 
-  /// Creates a button theme that controls how descendant [RadioButton]s should
-  /// look like, and merges in the current radio button theme, if any.
+  /// Creates a theme that merges the nearest [RadioButtonTheme] with [data].
   static Widget merge({
     Key? key,
     required RadioButtonThemeData data,
@@ -179,22 +177,20 @@ class RadioButtonTheme extends InheritedTheme {
       builder: (BuildContext context) {
         return RadioButtonTheme(
           key: key,
-          data: _getInheritedThemeData(context).merge(data),
+          data: RadioButtonTheme.of(context).merge(data),
           child: child,
         );
       },
     );
   }
 
-  static RadioButtonThemeData _getInheritedThemeData(BuildContext context) {
-    final theme = context
-        .dependOnInheritedWidgetOfExactType<RadioButtonTheme>();
-    return theme?.data ?? FluentTheme.of(context).radioButtonTheme;
-  }
-
-  /// Returns the [data] from the closest [RadioButtonTheme] ancestor. If there is
-  /// no ancestor, it returns [FluentThemeData.radioButtonTheme]. Applications can assume
-  /// that the returned value will not be null.
+  /// Returns the closest [RadioButtonThemeData] which encloses the given
+  /// context.
+  ///
+  /// Resolution order:
+  /// 1. Defaults from [RadioButtonThemeData.standard]
+  /// 2. Global theme from [FluentThemeData.radioButtonTheme]
+  /// 3. Local [RadioButtonTheme] ancestor
   ///
   /// Typical usage is as follows:
   ///
@@ -202,9 +198,13 @@ class RadioButtonTheme extends InheritedTheme {
   /// RadioButtonThemeData theme = RadioButtonTheme.of(context);
   /// ```
   static RadioButtonThemeData of(BuildContext context) {
+    assert(debugCheckHasFluentTheme(context));
+    final theme = FluentTheme.of(context);
+    final inheritedTheme = context
+        .dependOnInheritedWidgetOfExactType<RadioButtonTheme>();
     return RadioButtonThemeData.standard(
-      FluentTheme.of(context),
-    ).merge(_getInheritedThemeData(context));
+      theme,
+    ).merge(theme.radioButtonTheme).merge(inheritedTheme?.data);
   }
 
   @override

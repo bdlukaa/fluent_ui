@@ -62,15 +62,13 @@ class Divider extends StatelessWidget {
 /// Values specified here are used for [Divider] properties that are not
 /// given an explicit non-null value.
 class DividerTheme extends InheritedTheme {
-  /// Creates a divider theme that controls the configurations for
-  /// [Divider].
+  /// Creates a theme that controls how descendant [Divider]s should look like.
   const DividerTheme({super.key, required this.data, required super.child});
 
   /// The properties for descendant [Divider] widgets.
   final DividerThemeData data;
 
-  /// Creates a button theme that controls how descendant [Divider]s should
-  /// look like, and merges in the current toggle button theme, if any.
+  /// Creates a theme that merges the nearest [DividerTheme] with [data].
   static Widget merge({
     Key? key,
     required DividerThemeData data,
@@ -80,21 +78,19 @@ class DividerTheme extends InheritedTheme {
       builder: (BuildContext context) {
         return DividerTheme(
           key: key,
-          data: _getInheritedThemeData(context).merge(data),
+          data: DividerTheme.of(context).merge(data),
           child: child,
         );
       },
     );
   }
 
-  static DividerThemeData _getInheritedThemeData(BuildContext context) {
-    final theme = context.dependOnInheritedWidgetOfExactType<DividerTheme>();
-    return theme?.data ?? FluentTheme.of(context).dividerTheme;
-  }
-
-  /// Returns the [data] from the closest [DividerTheme] ancestor. If there is
-  /// no ancestor, it returns [FluentThemeData.dividerTheme]. Applications can assume
-  /// that the returned value will not be null.
+  /// Returns the closest [DividerThemeData] which encloses the given context.
+  ///
+  /// Resolution order:
+  /// 1. Defaults from [DividerThemeData.standard]
+  /// 2. Global theme from [FluentThemeData.dividerTheme]
+  /// 3. Local [DividerTheme] ancestor
   ///
   /// Typical usage is as follows:
   ///
@@ -102,9 +98,13 @@ class DividerTheme extends InheritedTheme {
   /// DividerThemeData theme = DividerTheme.of(context);
   /// ```
   static DividerThemeData of(BuildContext context) {
+    assert(debugCheckHasFluentTheme(context));
+    final theme = FluentTheme.of(context);
+    final inheritedTheme = context
+        .dependOnInheritedWidgetOfExactType<DividerTheme>();
     return DividerThemeData.standard(
-      FluentTheme.of(context),
-    ).merge(_getInheritedThemeData(context));
+      theme,
+    ).merge(theme.dividerTheme).merge(inheritedTheme?.data);
   }
 
   @override
