@@ -231,7 +231,7 @@ class _StickyNavigationIndicatorState
     _growController = AnimationController(
       vsync: this,
       duration: widget.duration ?? const Duration(milliseconds: 150),
-      value: 1.0, // Start fully grown for initially selected item
+      value: 1, // Start fully grown for initially selected item
     );
   }
 
@@ -280,12 +280,12 @@ class _StickyNavigationIndicatorState
     if (isSelected) {
       // This is the newly selected item - grow the indicator
       // The indicator grows from the side facing the old item
-      _growController.forward(from: 0.0);
+      _growController.forward(from: 0);
     } else if (itemIndex == currentPreviousIndex &&
         currentPreviousIndex != currentSelectedIndex) {
       // This was the previously selected item - shrink the indicator
       // The indicator shrinks towards the side facing the new item
-      _shrinkController.forward(from: 0.0);
+      _shrinkController.forward(from: 0);
     }
 
     _cachedPreviousIndex = currentPreviousIndex;
@@ -333,14 +333,14 @@ class _StickyNavigationIndicatorState
           // During shrink: one side's padding increases to full height
           // During grow: one side's padding decreases from full to normal
 
-          double topPadding = widget.leftPadding;
-          double bottomPadding = widget.leftPadding;
+          var topPadding = widget.leftPadding;
+          var bottomPadding = widget.leftPadding;
 
           if (isSelected) {
             // Growing animation: reduce padding on the side facing the old item
             final growProgress = CurvedAnimation(
               parent: _growController,
-              curve: Interval(0.5, 1.0, curve: _cachedCurve),
+              curve: Interval(0.5, 1, curve: _cachedCurve),
             ).value;
 
             if (_goingDown) {

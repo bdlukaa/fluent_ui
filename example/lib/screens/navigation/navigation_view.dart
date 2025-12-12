@@ -71,19 +71,10 @@ class _NavigationViewPageState extends State<NavigationViewPage>
       icon: const WindowsIcon(WindowsIcons.switch_user),
       title: const Text('Account'),
       initiallyExpanded: true,
-      body: const _NavigationBodyItem(
-        header: 'PaneItemExpander',
-        content: Text(
-          'Some apps may have a more complex hierarchical structure '
-          'that requires more than just a flat list of navigation '
-          'items. You may want to use top-level navigation items to '
-          'display categories of pages, with children items displaying '
-          'specific pages. It is also useful if you have hub-style '
-          'pages that only link to other pages. For these kinds of '
-          'cases, you should create a hierarchical NavigationView.',
-        ),
-      ),
-      onTap: () => debugPrint('Tapped account'),
+      // body is null - clicking only expands/collapses, doesn't navigate
+      // See: https://github.com/bdlukaa/fluent_ui/issues/1189
+      body: null,
+      onTap: () => debugPrint('Tapped account (expander without body)'),
       items: [
         PaneItem(
           icon: const WindowsIcon(WindowsIcons.mail),
@@ -272,18 +263,9 @@ List<NavigationPaneItem> items = [
   PaneItemExpander(
     icon: const WindowsIcon(WindowsIcons.account_management),
     title: const Text('Account'),
-    body: const _NavigationBodyItem(
-      header: 'PaneItemExpander',
-      content: Text(
-        'Some apps may have a more complex hierarchical structure '
-        'that requires more than just a flat list of navigation '
-        'items. You may want to use top-level navigation items to '
-        'display categories of pages, with children items displaying '
-        'specific pages. It is also useful if you have hub-style '
-        'pages that only link to other pages. For these kinds of '
-        'cases, you should create a hierarchical NavigationView.',
-      ),
-    ),
+    // body is null - clicking only expands/collapses, doesn't navigate
+    // See: https://github.com/bdlukaa/fluent_ui/issues/1189
+    body: null,
     items: [
       PaneItemHeader(header: const Text('Apps')),
       PaneItem(

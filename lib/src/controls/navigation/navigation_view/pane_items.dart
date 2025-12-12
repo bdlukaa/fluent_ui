@@ -39,7 +39,7 @@ class PaneItem extends NavigationPaneItem {
   /// Creates a pane item.
   PaneItem({
     required this.icon,
-    required this.body,
+    this.body,
     super.key,
     this.title,
     this.trailing,
@@ -82,8 +82,11 @@ class PaneItem extends NavigationPaneItem {
   /// Usually an [Icon] widget
   final Widget? trailing;
 
-  /// The body of the view attached to this tab
-  final Widget body;
+  /// The body of the view attached to this tab.
+  ///
+  /// If null, the item will not be navigable and will only serve as a container
+  /// (useful for [PaneItemExpander] that should only expand/collapse).
+  final Widget? body;
 
   /// {@macro flutter.widgets.Focus.focusNode}
   final FocusNode? focusNode;
@@ -260,7 +263,7 @@ class PaneItem extends NavigationPaneItem {
                       // below its intrinsic size during transitions, preventing overflow
                       Expanded(
                         child: ConstrainedBox(
-                          constraints: const BoxConstraints(minWidth: 0),
+                          constraints: const BoxConstraints(),
                           child: textResult,
                         ),
                       ),
@@ -615,10 +618,14 @@ class PaneItemExpander extends PaneItem {
   final PaneItemExpanderKey expanderKey = PaneItemExpanderKey();
 
   /// Creates a pane item expander.
+  ///
+  /// If [body] is null, clicking the expander will only toggle expand/collapse
+  /// without navigating to a page. This is useful when the expander serves only
+  /// as a container for child items.
   PaneItemExpander({
     required super.icon,
     required this.items,
-    required super.body,
+    super.body,
     super.key,
     super.title,
     super.infoBadge,
@@ -903,7 +910,12 @@ class __PaneItemExpanderState extends State<_PaneItemExpander>
           // and the expander is collapsed (to show where the selection is)
           isExpanderSelected || showIndicatorOnExpander,
           () {
-            widget.onPressed?.call();
+            // Only navigate if the expander has a body. If body is null,
+            // clicking just toggles expand/collapse without navigation.
+            // See: https://github.com/bdlukaa/fluent_ui/issues/1189
+            if (widget.item.body != null) {
+              widget.onPressed?.call();
+            }
             toggleOpen();
           },
           displayMode: widget.displayMode,

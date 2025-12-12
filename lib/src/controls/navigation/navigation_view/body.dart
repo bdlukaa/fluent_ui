@@ -145,7 +145,11 @@ class _NavigationBodyState extends State<_NavigationBody> {
             return paneBodyBuilder.call(
               view.pane?.selected != null ? view.pane!.selectedItem : null,
               view.pane?.selected != null
-                  ? FocusTraversalGroup(child: view.pane!.selectedItem.body)
+                  ? FocusTraversalGroup(
+                      // body is guaranteed to be non-null since effectiveItems
+                      // filters out items with null body
+                      child: view.pane!.selectedItem.body!,
+                    )
                   : null,
             );
           } else {
@@ -171,7 +175,9 @@ class _NavigationBodyState extends State<_NavigationBody> {
                       excluding: !isSelected,
                       child: FocusTraversalGroup(
                         policy: WidgetOrderTraversalPolicy(),
-                        child: item.body,
+                        // body is guaranteed to be non-null since effectiveItems
+                        // filters out items with null body
+                        child: item.body!,
                       ),
                     ),
                   );

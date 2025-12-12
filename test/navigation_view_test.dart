@@ -29,7 +29,7 @@ void main() {
     });
 
     testWidgets('NavigationView renders with basic pane items', (tester) async {
-      int selectedIndex = 0;
+      var selectedIndex = 0;
 
       await tester.pumpWidget(
         FluentApp(
@@ -70,7 +70,7 @@ void main() {
     });
 
     testWidgets('NavigationView handles PaneItemExpander', (tester) async {
-      int selectedIndex = 0;
+      var selectedIndex = 0;
 
       await tester.pumpWidget(
         FluentApp(
@@ -114,7 +114,7 @@ void main() {
     });
 
     testWidgets('NavigationAppBar layoutBuilder works', (tester) async {
-      bool layoutBuilderCalled = false;
+      var layoutBuilderCalled = false;
 
       await tester.pumpWidget(
         FluentApp(
@@ -153,7 +153,6 @@ void main() {
               pane: NavigationPane(
                 selected: 0,
                 displayMode: PaneDisplayMode.open,
-                indicator: const StickyNavigationIndicator(),
                 items: [
                   PaneItem(
                     icon: const Icon(FluentIcons.home),
@@ -257,7 +256,6 @@ void main() {
               pane: NavigationPane(
                 selected: 0,
                 displayMode: PaneDisplayMode.open,
-                indicator: const StickyNavigationIndicator(),
                 items: [
                   PaneItem(
                     icon: const Icon(FluentIcons.home),
@@ -609,9 +607,7 @@ void main() {
   group('Edge cases', () {
     testWidgets('Empty pane items list renders', (tester) async {
       await tester.pumpWidget(
-        FluentApp(
-          home: NavigationView(pane: NavigationPane(items: [])),
-        ),
+        FluentApp(home: NavigationView(pane: NavigationPane())),
       );
 
       await tester.pumpAndSettle();
@@ -620,10 +616,8 @@ void main() {
 
     testWidgets('NavigationView with only content renders', (tester) async {
       await tester.pumpWidget(
-        FluentApp(
-          home: NavigationView(
-            content: const Center(child: Text('Content Only')),
-          ),
+        const FluentApp(
+          home: NavigationView(content: Center(child: Text('Content Only'))),
         ),
       );
 
@@ -702,7 +696,6 @@ void main() {
             height: 800,
             child: NavigationView(
               pane: NavigationPane(
-                selected: null, // No selection
                 displayMode: PaneDisplayMode.open,
                 items: [
                   PaneItem(
@@ -722,7 +715,7 @@ void main() {
     });
 
     testWidgets('NavigationView handles selection change', (tester) async {
-      int selectedIndex = 0;
+      var selectedIndex = 0;
 
       await tester.pumpWidget(
         FluentApp(
@@ -868,7 +861,9 @@ void main() {
                     items: [
                       PaneItem(
                         icon: const Icon(FluentIcons.document),
-                        title: const Text('Long Child Item Title That Could Overflow'),
+                        title: const Text(
+                          'Long Child Item Title That Could Overflow',
+                        ),
                         body: const SizedBox(),
                         trailing: const Icon(FluentIcons.info),
                       ),
@@ -886,6 +881,103 @@ void main() {
       // Should render without overflow errors
       // Child items have 28px leading padding for indentation
       expect(find.byType(NavigationView), findsOneWidget);
+    });
+  });
+
+  // Test for GitHub Issue #1189 - PaneItemExpander without body
+  // https://github.com/bdlukaa/fluent_ui/issues/1189
+  group('Issue #1189 - PaneItemExpander without body', () {
+    testWidgets('PaneItemExpander can be created without body', (tester) async {
+      // Test that PaneItemExpander can be created with null body
+      // and clicking it only toggles expand/collapse without navigation
+      await tester.pumpWidget(
+        FluentApp(
+          home: SizedBox(
+            width: 1200,
+            height: 800,
+            child: NavigationView(
+              pane: NavigationPane(
+                selected: 0,
+                displayMode: PaneDisplayMode.open,
+                items: [
+                  PaneItemExpander(
+                    icon: const Icon(FluentIcons.folder),
+                    title: const Text('Folder'),
+                    // body is null - should only expand/collapse, not navigate
+                    body: null,
+                    items: [
+                      PaneItem(
+                        icon: const Icon(FluentIcons.document),
+                        title: const Text('Document'),
+                        body: const Center(child: Text('Document Page')),
+                      ),
+                    ],
+                  ),
+                  PaneItem(
+                    icon: const Icon(FluentIcons.home),
+                    title: const Text('Home'),
+                    body: const Center(child: Text('Home Page')),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ),
+      );
+
+      await tester.pumpAndSettle();
+
+      // Should render without errors
+      expect(find.byType(NavigationView), findsOneWidget);
+
+      // The expander without body should not be in effectiveItems
+      // so it won't be navigable, but clicking it should still toggle
+      expect(find.byIcon(FluentIcons.folder), findsOneWidget);
+    });
+
+    testWidgets('PaneItemExpander with body is navigable', (tester) async {
+      // Test that PaneItemExpander with body still works as before
+      var selectedIndex = 0;
+
+      await tester.pumpWidget(
+        FluentApp(
+          home: StatefulBuilder(
+            builder: (context, setState) {
+              return SizedBox(
+                width: 1200,
+                height: 800,
+                child: NavigationView(
+                  pane: NavigationPane(
+                    selected: selectedIndex,
+                    onChanged: (index) => setState(() => selectedIndex = index),
+                    displayMode: PaneDisplayMode.open,
+                    items: [
+                      PaneItemExpander(
+                        icon: const Icon(FluentIcons.folder),
+                        title: const Text('Folder'),
+                        body: const Center(child: Text('Folder Page')),
+                        items: [
+                          PaneItem(
+                            icon: const Icon(FluentIcons.document),
+                            title: const Text('Document'),
+                            body: const Center(child: Text('Document Page')),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
+              );
+            },
+          ),
+        ),
+      );
+
+      await tester.pumpAndSettle();
+
+      // Should render without errors
+      expect(find.byType(NavigationView), findsOneWidget);
+      expect(find.text('Folder Page'), findsOneWidget);
     });
   });
 }

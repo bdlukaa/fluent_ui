@@ -287,9 +287,14 @@ class NavigationPane with Diagnosticable {
   }
 
   /// All the [PaneItem]s inside [allItems]
+  ///
+  /// Items with null [body] are excluded as they are not navigable
+  /// (e.g., [PaneItemExpander] without a body that only expands/collapses).
   List<PaneItem> get effectiveItems {
-    return (allItems..removeWhere((i) => i is! PaneItem || i is PaneItemAction))
-        .cast<PaneItem>();
+    return allItems
+        .where((i) => i is PaneItem && i is! PaneItemAction && i.body != null)
+        .cast<PaneItem>()
+        .toList();
   }
 
   /// Check if the provided [item] is selected on not.
