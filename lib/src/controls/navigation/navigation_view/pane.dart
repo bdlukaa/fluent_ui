@@ -932,7 +932,7 @@ class _MenuFlyoutPaneItem extends MenuFlyoutItemBase {
           ).add(padding ?? EdgeInsetsDirectional.zero),
           height: 36,
           color: ButtonThemeData.uncheckedInputColor(
-            FluentTheme.of(context),
+            fluentTheme,
             states,
             transparentWhenNone: true,
             transparentWhenDisabled: true,

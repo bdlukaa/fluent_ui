@@ -568,13 +568,10 @@ class AutoSuggestBoxState<T> extends State<AutoSuggestBox<T>> {
     } else if (_controller.text.isNotEmpty) {
       showOverlay();
     }
-    setState(() {});
   }
 
   void _handleTextChanged() {
     if (!mounted) return;
-    if (_controller.text.length < 2) setState(() {});
-
     _updateLocalItems();
 
     // Update the overlay when the text box size has changed
@@ -674,7 +671,6 @@ class AutoSuggestBoxState<T> extends State<AutoSuggestBox<T>> {
 
     if (_textBoxKey.currentContext != null) {
       overlayState.insert(_entry!);
-      if (mounted) setState(() {});
     }
   }
 
@@ -945,7 +941,7 @@ class _AutoSuggestBoxOverlayState<T> extends State<_AutoSuggestBoxOverlay<T>> {
         duration: theme.fastAnimationDuration,
         curve: Curves.easeInOut,
       );
-      setState(() {});
+      if (mounted) setState(() {});
     });
     itemsSubscription = widget.itemsStream.listen((items) {
       this.items = items;

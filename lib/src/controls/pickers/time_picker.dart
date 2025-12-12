@@ -3,6 +3,7 @@ import 'package:fluent_ui/src/controls/pickers/pickers.dart';
 import 'package:fluent_ui/src/intl_script_locale_apply_mixin.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/rendering.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:intl/intl.dart';
 
 String _formatHour(int hour, String locale) {
@@ -449,9 +450,11 @@ class __TimePickerContentPopupState extends State<_TimePickerContentPopup> {
 
   void handleDateChanged(DateTime time) {
     localDate = time;
-    Future<void>.delayed(const Duration(milliseconds: 1), () {
-      if (mounted) setState(() {});
-    });
+    if (mounted) {
+      SchedulerBinding.instance.addPostFrameCallback((_) {
+        if (mounted) setState(() {});
+      });
+    }
   }
 
   int getClosestMinute(List<int> possibleMinutes, int goal) {

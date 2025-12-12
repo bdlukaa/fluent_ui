@@ -276,10 +276,11 @@ class CommandBarState extends State<CommandBar> {
         );
       },
     );
-    // Update the widget to update the tooltip of the default overflow item
+    // Update immediately to show tooltip change
     if (mounted) setState(() {});
 
     await future;
+    // Update after flyout closes to restore visual state
     if (mounted) setState(() {});
   }
 

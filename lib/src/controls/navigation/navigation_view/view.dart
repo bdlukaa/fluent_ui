@@ -389,17 +389,13 @@ class NavigationViewState extends State<NavigationView> {
 
   void _generateKeys() {
     if (widget.pane == null) return;
-    _itemKeys
-      ..clear()
-      ..addAll(
-        Map.fromIterables(
-          List.generate(widget.pane!.effectiveItems.length, (i) => i),
-          List.generate(
-            widget.pane!.effectiveItems.length,
-            (i) => GlobalKey(debugLabel: 'NavigationView item key#$i'),
-          ),
-        ),
-      );
+    final itemCount = widget.pane!.effectiveItems.length;
+    if (_itemKeys.length == itemCount) return;
+
+    _itemKeys.clear();
+    for (var i = 0; i < itemCount; i++) {
+      _itemKeys[i] = GlobalKey(debugLabel: 'NavigationView item key#$i');
+    }
   }
 
   @override
@@ -445,7 +441,9 @@ class NavigationViewState extends State<NavigationView> {
     );
 
     final theme = NavigationPaneTheme.of(context);
+    final fluentTheme = FluentTheme.of(context);
     final localizations = FluentLocalizations.of(context);
+    final mediaQuerySize = MediaQuery.sizeOf(context);
     final EdgeInsetsGeometry appBarPadding = EdgeInsetsDirectional.only(
       top: widget.appBar?.finalHeight(context) ?? 0.0,
     );
@@ -486,7 +484,7 @@ class NavigationViewState extends State<NavigationView> {
           /// (641px to 1007px).
           /// - Only a menu button (minimal) on small window widths (640px or less).
           var width = consts.biggest.width;
-          if (width.isInfinite) width = MediaQuery.sizeOf(context).width;
+          if (width.isInfinite) width = mediaQuerySize.width;
 
           PaneDisplayMode autoDisplayMode;
           if (width <= 640) {
@@ -801,7 +799,7 @@ class NavigationViewState extends State<NavigationView> {
                       end: 0,
                       height: widget.appBar?.finalHeight(context) ?? 0.0,
                       child: ColoredBox(
-                        color: FluentTheme.of(context).scaffoldBackgroundColor,
+                        color: fluentTheme.scaffoldBackgroundColor,
                       ),
                     ),
                     PositionedDirectional(
@@ -829,7 +827,7 @@ class NavigationViewState extends State<NavigationView> {
                       curve: theme.animationCurve ?? Curves.linear,
                       start: minimalPaneOpen ? 0.0 : -openSize,
                       width: openSize,
-                      height: MediaQuery.sizeOf(context).height,
+                      height: mediaQuerySize.height,
                       onEnd: () {
                         _isTransitioning = false;
                         if (mounted) setState(() {});
@@ -1014,6 +1012,7 @@ class NavigationAppBar with Diagnosticable {
           assert(debugCheckHasFluentLocalizations(context));
           assert(debugCheckHasFluentTheme(context));
           final localizations = FluentLocalizations.of(context);
+          final localFluentTheme = FluentTheme.of(context);
           final onPressed = canPop ? () => Navigator.maybePop(context) : null;
           widget = NavigationPaneTheme(
             data: NavigationPaneTheme.of(context).merge(
@@ -1023,7 +1022,7 @@ class NavigationAppBar with Diagnosticable {
                     return ButtonThemeData.buttonColor(context, states);
                   }
                   return ButtonThemeData.uncheckedInputColor(
-                    FluentTheme.of(context),
+                    localFluentTheme,
                     states,
                   ).basedOnLuminance();
                 }),
@@ -1088,6 +1087,7 @@ class _NavigationAppBar extends StatelessWidget {
       if (appBar.title != null) {
         assert(debugCheckHasFluentTheme(context));
         final theme = NavigationPaneTheme.of(context);
+        final fluentTheme = FluentTheme.of(context);
 
         return AnimatedPadding(
           duration: theme.animationDuration ?? Duration.zero,
@@ -1096,7 +1096,7 @@ class _NavigationAppBar extends StatelessWidget {
             const EdgeInsetsDirectional.only(start: 6),
           ),
           child: DefaultTextStyle.merge(
-            style: FluentTheme.of(context).typography.caption,
+            style: fluentTheme.typography.caption,
             maxLines: 1,
             softWrap: false,
             child: appBar.title!,
@@ -1154,13 +1154,13 @@ class _NavigationAppBar extends StatelessWidget {
       default:
         return const SizedBox.shrink();
     }
-    final topPadding = MediaQuery.paddingOf(context).top;
+    final mediaQueryPadding = MediaQuery.paddingOf(context);
 
     return Container(
       color: appBar.backgroundColor,
       decoration: appBar.decoration,
       height: appBar.finalHeight(context),
-      padding: EdgeInsetsDirectional.only(top: topPadding),
+      padding: EdgeInsetsDirectional.only(top: mediaQueryPadding.top),
       child: result,
     );
   }

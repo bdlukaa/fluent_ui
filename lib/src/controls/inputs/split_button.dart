@@ -151,7 +151,6 @@ class SplitButtonState extends State<SplitButton> {
 
   /// Shows the flyout attached to the dropdown button
   Future<void> showFlyout() async {
-    setState(() {});
     await flyoutController.showFlyout<void>(
       barrierColor: Colors.transparent,
       autoModeConfiguration: FlyoutAutoConfiguration(
@@ -161,7 +160,6 @@ class SplitButtonState extends State<SplitButton> {
         return widget.flyout;
       },
     );
-    if (mounted) setState(() {});
   }
 
   void _updateFocusHighlight(bool focused) {

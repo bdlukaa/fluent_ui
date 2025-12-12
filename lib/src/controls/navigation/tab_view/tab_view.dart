@@ -283,13 +283,7 @@ class _TabViewState extends State<TabView> {
           itemCount: widget.tabs.length,
           animationDuration: const Duration(milliseconds: 100),
         );
-    scrollController
-      ..itemCount = widget.tabs.length
-      ..addListener(_handleScrollUpdate);
-  }
-
-  void _handleScrollUpdate() {
-    if (mounted) setState(() {});
+    scrollController.itemCount = widget.tabs.length;
   }
 
   @override
