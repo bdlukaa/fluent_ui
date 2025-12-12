@@ -64,16 +64,6 @@ enum FlyoutPlacementMode {
   /// Fills the entire screen. The child is allowed to position itself.
   full;
 
-  @Deprecated(
-    'Use FlyoutPlacementMode.leftCenter instead. This was deprecated in v4.11.0.',
-  )
-  static FlyoutPlacementMode get left => FlyoutPlacementMode.leftCenter;
-
-  @Deprecated(
-    'Use FlyoutPlacementMode.rightCenter instead. This was deprecated in v4.11.0.',
-  )
-  static FlyoutPlacementMode get right => FlyoutPlacementMode.rightCenter;
-
   /// Whether the placement is horizontal
   bool get isHorizontal {
     switch (this) {

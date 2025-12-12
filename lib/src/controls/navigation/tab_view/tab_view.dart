@@ -39,9 +39,7 @@ class TabView extends StatefulWidget {
     this.onChanged,
     required this.tabs,
     this.onNewPressed,
-    this.addIconData,
     this.newTabIcon = const WindowsIcon(WindowsIcons.add),
-    this.addIconBuilder,
     this.shortcutsEnabled = true,
     this.onReorder,
     this.showScrollButtons = true,
@@ -72,26 +70,10 @@ class TabView extends StatefulWidget {
   /// If null, the new button won't be displayed
   final VoidCallback? onNewPressed;
 
-  /// The icon of the new button
-  @Deprecated(
-    'Use newTabIcon instead. This was deprecated on 4.9.0 and will be removed in the next releases.',
-  )
-  final IconData? addIconData;
-
   /// The icon of the "Add new tab" button.
   ///
   /// Defaults to an [Icon] with [FluentIcons.add].
   final Widget newTabIcon;
-
-  /// The builder for the add icon.
-  ///
-  /// This does not build the add button, only its icon.
-  ///
-  /// When null, the add icon is rendered.
-  @Deprecated(
-    'Use newTabIcon instead. This was deprecated on 4.9.0 and will be removed in the next releases.',
-  )
-  final Widget Function(Widget addIcon)? addIconBuilder;
 
   /// Whether the following shortcuts are enabled:
   ///
@@ -195,8 +177,6 @@ class TabView extends StatefulWidget {
           ifFalse: 'no new button',
         ),
       )
-      // ignore: deprecated_member_use_from_same_package
-      ..add(IconDataProperty('addIconData', addIconData))
       ..add(
         DiagnosticsProperty<Widget>(
           'newTabIcon',
@@ -635,24 +615,10 @@ class _TabViewState extends State<TabView> {
                               ),
                               child: _buttonTabBuilder(
                                 context,
-                                () {
-                                  Widget icon;
-                                  // ignore: deprecated_member_use_from_same_package
-                                  if (widget.addIconData != null) {
-                                    // ignore: deprecated_member_use_from_same_package
-                                    icon = Icon(widget.addIconData, size: 12.0);
-                                  } else {
-                                    icon = widget.newTabIcon;
-                                  }
-                                  icon = IconTheme.merge(
-                                    data: const IconThemeData(size: 12.0),
-                                    child: icon,
-                                  );
-
-                                  // ignore: deprecated_member_use_from_same_package
-                                  return widget.addIconBuilder?.call(icon) ??
-                                      icon;
-                                }(),
+                                IconTheme.merge(
+                                  data: const IconThemeData(size: 12.0),
+                                  child: widget.newTabIcon,
+                                ),
                                 widget.onNewPressed!,
                                 localizations.newTabLabel,
                               ),

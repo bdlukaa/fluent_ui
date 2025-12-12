@@ -362,14 +362,6 @@ class _HoverButtonState extends State<HoverButton> {
   }
 }
 
-@Deprecated('Use WidgetState instead. Will be removed in the next version')
-typedef ButtonStates = WidgetState;
-
-@Deprecated(
-  'Use WidgetStateProperty instead. Will be removed in the next version',
-)
-typedef ButtonState<T> = WidgetStateProperty<T>;
-
 extension WidgetStateExtension on Set<WidgetState> {
   /// Checks whether the widget is focused.
   bool get isFocused => contains(WidgetState.focused);
@@ -379,13 +371,9 @@ extension WidgetStateExtension on Set<WidgetState> {
 
   /// Checks whether the widget is pressed.
   bool get isPressed => contains(WidgetState.pressed);
-  @Deprecated('Use isPressed instead. Will be removed in the next version')
-  bool get isPressing => isPressed;
 
   /// Checks whether the widget is hovered.
   bool get isHovered => contains(WidgetState.hovered);
-  @Deprecated('Use isHovered instead. Will be removed in the next version')
-  bool get isHovering => isHovered;
 
   /// Checks whether the widget is in its default state.
   bool get isNone => isEmpty;
