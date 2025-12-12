@@ -245,29 +245,39 @@ class PaneItem extends NavigationPaneItem {
                 constraints: const BoxConstraints(
                   minHeight: kPaneItemMinHeight,
                 ),
-                child: Row(
-                  children: [
-                    Padding(
-                      padding: theme.iconPadding ?? EdgeInsetsDirectional.zero,
-                      child: IconTheme.merge(
-                        data: iconThemeData,
-                        child: Center(child: icon),
+                child: ClipRect(
+                  child: Row(
+                    children: [
+                      Padding(
+                        padding:
+                            theme.iconPadding ?? EdgeInsetsDirectional.zero,
+                        child: IconTheme.merge(
+                          data: iconThemeData,
+                          child: Center(child: icon),
+                        ),
                       ),
-                    ),
-                    Expanded(child: textResult),
-                    if (shouldShowTrailing) ...[
-                      if (infoBadge != null)
-                        Padding(
-                          padding: const EdgeInsetsDirectional.only(end: 8),
-                          child: infoBadge,
+                      // Use Expanded with minWidth: 0 to ensure text can shrink
+                      // below its intrinsic size during transitions, preventing overflow
+                      Expanded(
+                        child: ConstrainedBox(
+                          constraints: const BoxConstraints(minWidth: 0),
+                          child: textResult,
                         ),
-                      if (trailing != null)
-                        IconTheme.merge(
-                          data: const IconThemeData(size: 16),
-                          child: trailing!,
-                        ),
+                      ),
+                      if (shouldShowTrailing) ...[
+                        if (infoBadge != null)
+                          Padding(
+                            padding: const EdgeInsetsDirectional.only(end: 8),
+                            child: infoBadge,
+                          ),
+                        if (trailing != null)
+                          IconTheme.merge(
+                            data: const IconThemeData(size: 16),
+                            child: trailing!,
+                          ),
+                      ],
                     ],
-                  ],
+                  ),
                 ),
               );
             case PaneDisplayMode.top:
@@ -918,50 +928,61 @@ class __PaneItemExpanderState extends State<_PaneItemExpander>
               curve: Curves.easeIn,
               child: !_open
                   ? const SizedBox(width: double.infinity)
-                  : Column(
-                      mainAxisSize: MainAxisSize.min,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: widget.items.map((childItem) {
-                        if (childItem is PaneItem) {
-                          final modifiedItem = childItem.copyWith(
-                            icon: Padding(
+                  : ClipRect(
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: widget.items.map((childItem) {
+                          if (childItem is PaneItem) {
+                            final modifiedItem = childItem.copyWith(
+                              icon: Padding(
+                                padding: _PaneItemExpander.leadingPadding,
+                                child: childItem.icon,
+                              ),
+                            );
+                            // ClipRect ensures child items with additional leading padding
+                            // don't overflow during transitions. See: #906
+                            return ClipRect(
+                              child: modifiedItem.build(
+                                context,
+                                body.pane!.isSelected(childItem),
+                                () => widget.onItemPressed?.call(childItem),
+                                displayMode: widget.displayMode,
+                                showTextOnTop: widget.showTextOnTop,
+                                itemIndex: body.pane!.effectiveIndexOf(
+                                  childItem,
+                                ),
+                              ),
+                            );
+                          } else if (childItem is PaneItemHeader) {
+                            return Padding(
                               padding: _PaneItemExpander.leadingPadding,
-                              child: childItem.icon,
-                            ),
-                          );
-                          return modifiedItem.build(
-                            context,
-                            body.pane!.isSelected(childItem),
-                            () => widget.onItemPressed?.call(childItem),
-                            displayMode: widget.displayMode,
-                            showTextOnTop: widget.showTextOnTop,
-                            itemIndex: body.pane!.effectiveIndexOf(childItem),
-                          );
-                        } else if (childItem is PaneItemHeader) {
-                          return Padding(
-                            padding: _PaneItemExpander.leadingPadding,
-                            child: childItem.build(context),
-                          );
-                        } else if (childItem is PaneItemSeparator) {
-                          return childItem.build(
-                            context,
-                            widget.displayMode == PaneDisplayMode.top
-                                ? Axis.vertical
-                                : Axis.horizontal,
-                          );
-                        } else {
-                          throw UnsupportedError(
-                            '${childItem.runtimeType} is not a supported item type',
-                          );
-                        }
-                      }).toList(),
+                              child: childItem.build(context),
+                            );
+                          } else if (childItem is PaneItemSeparator) {
+                            return childItem.build(
+                              context,
+                              widget.displayMode == PaneDisplayMode.top
+                                  ? Axis.vertical
+                                  : Axis.horizontal,
+                            );
+                          } else {
+                            throw UnsupportedError(
+                              '${childItem.runtimeType} is not a supported item type',
+                            );
+                          }
+                        }).toList(),
+                      ),
                     ),
             ),
           ],
         );
       case PaneDisplayMode.top:
       case PaneDisplayMode.compact:
-        return FlyoutTarget(controller: flyoutController, child: expanderWidget);
+        return FlyoutTarget(
+          controller: flyoutController,
+          child: expanderWidget,
+        );
       case PaneDisplayMode.auto:
         return expanderWidget;
     }

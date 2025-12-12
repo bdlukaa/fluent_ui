@@ -768,4 +768,124 @@ void main() {
       }
     });
   });
+
+  // Test for GitHub Issue #906 - PaneItem overflow during transition
+  // https://github.com/bdlukaa/fluent_ui/issues/906
+  group('Issue #906 - PaneItem overflow during transition', () {
+    testWidgets('PaneItem does not overflow with tight constraints', (
+      tester,
+    ) async {
+      // Test that PaneItem handles tight width constraints gracefully
+      // during transitions from compact to open mode
+      // This ensures the fix for issue #906 prevents RenderFlex overflow
+      await tester.pumpWidget(
+        FluentApp(
+          home: SizedBox(
+            width: 160, // Tight width that would cause overflow without fix
+            height: 800,
+            child: NavigationView(
+              pane: NavigationPane(
+                selected: 0,
+                displayMode: PaneDisplayMode.open,
+                items: [
+                  PaneItem(
+                    icon: const Icon(FluentIcons.home),
+                    title: const Text(
+                      'Very Long Navigation Item Title That Could Overflow',
+                    ),
+                    body: const SizedBox(),
+                    trailing: const Icon(FluentIcons.info),
+                    infoBadge: const InfoBadge(source: Text('99')),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ),
+      );
+
+      await tester.pumpAndSettle();
+
+      // Should render without overflow errors
+      // The key test is that no RenderFlex overflow exception is thrown
+      expect(find.byType(NavigationView), findsOneWidget);
+
+      // Verify NavigationView renders successfully
+      // (Text might be faded/clipped but widget should not overflow)
+      expect(find.byIcon(FluentIcons.home), findsOneWidget);
+    });
+
+    testWidgets('PaneItem handles transition width gracefully', (tester) async {
+      // Test with a width that's in the transition range
+      // (between compact and open, which can cause overflow)
+      await tester.pumpWidget(
+        FluentApp(
+          home: SizedBox(
+            width: 151.6, // Width that caused overflow in the reported issue
+            height: 800,
+            child: NavigationView(
+              pane: NavigationPane(
+                selected: 0,
+                displayMode: PaneDisplayMode.open,
+                items: [
+                  PaneItem(
+                    icon: const Icon(FluentIcons.settings),
+                    title: const Text('Settings'),
+                    body: const SizedBox(),
+                    trailing: const Icon(FluentIcons.info),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ),
+      );
+
+      await tester.pumpAndSettle();
+
+      // Should render without overflow errors even with tight constraints
+      expect(find.byType(NavigationView), findsOneWidget);
+    });
+
+    testWidgets('PaneItemExpander child items do not overflow', (tester) async {
+      // Test that PaneItemExpander child items with additional leading padding
+      // don't overflow during transitions
+      await tester.pumpWidget(
+        FluentApp(
+          home: SizedBox(
+            width: 160, // Tight width
+            height: 800,
+            child: NavigationView(
+              pane: NavigationPane(
+                selected: 0,
+                displayMode: PaneDisplayMode.open,
+                items: [
+                  PaneItemExpander(
+                    icon: const Icon(FluentIcons.folder),
+                    title: const Text('Folder with Long Title'),
+                    body: const SizedBox(),
+                    initiallyExpanded: true,
+                    items: [
+                      PaneItem(
+                        icon: const Icon(FluentIcons.document),
+                        title: const Text('Long Child Item Title That Could Overflow'),
+                        body: const SizedBox(),
+                        trailing: const Icon(FluentIcons.info),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ),
+      );
+
+      await tester.pumpAndSettle();
+
+      // Should render without overflow errors
+      // Child items have 28px leading padding for indentation
+      expect(find.byType(NavigationView), findsOneWidget);
+    });
+  });
 }
