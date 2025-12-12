@@ -95,6 +95,12 @@ class _NavigationBodyState extends State<_NavigationBody> {
   }
 
   @override
+  void dispose() {
+    _pageController?.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     assert(debugCheckHasFluentTheme(context));
     final view = InheritedNavigationView.of(context);
@@ -143,22 +149,30 @@ class _NavigationBodyState extends State<_NavigationBody> {
                   : null,
             );
           } else {
+            // Use PageView for efficient page management
+            // Pages can use AutomaticKeepAliveClientMixin to preserve state
             return KeyedSubtree(
               key: widget.itemKey,
               child: PageView.builder(
                 key: _pageKey,
                 physics: const NeverScrollableScrollPhysics(),
                 controller: pageController,
+                // Allow pages to stay alive when using AutomaticKeepAliveClientMixin
+                allowImplicitScrolling: true,
                 itemCount: view.pane!.effectiveItems.length,
                 itemBuilder: (context, index) {
                   final isSelected = view.pane!.selected == index;
                   final item = view.pane!.effectiveItems[index];
 
-                  return ExcludeFocus(
-                    excluding: !isSelected,
-                    child: FocusTraversalGroup(
-                      policy: WidgetOrderTraversalPolicy(),
-                      child: item.body,
+                  // Wrap in a _KeepAlivePage to help preserve state
+                  return _KeepAlivePage(
+                    key: ValueKey('nav_page_$index'),
+                    child: ExcludeFocus(
+                      excluding: !isSelected,
+                      child: FocusTraversalGroup(
+                        policy: WidgetOrderTraversalPolicy(),
+                        child: item.body,
+                      ),
                     ),
                   );
                 },
@@ -171,8 +185,38 @@ class _NavigationBodyState extends State<_NavigationBody> {
   }
 }
 
+/// A wrapper widget that enables keep-alive functionality for navigation pages.
+///
+/// This widget uses [AutomaticKeepAliveClientMixin] to help preserve the state
+/// of navigation pages when switching between them. For full state preservation,
+/// the page widget itself should also implement [AutomaticKeepAliveClientMixin].
+class _KeepAlivePage extends StatefulWidget {
+  const _KeepAlivePage({required this.child, super.key});
+
+  final Widget child;
+
+  @override
+  State<_KeepAlivePage> createState() => _KeepAlivePageState();
+}
+
+class _KeepAlivePageState extends State<_KeepAlivePage>
+    with AutomaticKeepAliveClientMixin {
+  @override
+  bool get wantKeepAlive => true;
+
+  @override
+  Widget build(BuildContext context) {
+    super.build(context);
+    return widget.child;
+  }
+}
+
 /// A widget that tells what's the the current state of a parent
 /// [NavigationView], if any.
+///
+/// This provides context information about the navigation state to descendant
+/// widgets, including the current display mode, selected item, and navigation
+/// history for smooth indicator animations.
 ///
 /// See also:
 ///
@@ -201,15 +245,19 @@ class InheritedNavigationView extends InheritedWidget {
 
   /// The previous index selected index.
   ///
-  /// Usually used by a [NavigationIndicator]s to display the animation from the
-  /// old item to the new one.
+  /// Used by [NavigationIndicator]s to animate from the old item to the new one.
+  /// This enables the "sticky" indicator effect where the indicator stretches
+  /// from the previous position to the new position.
   final int previousItemIndex;
 
   /// Used by [NavigationIndicator] to know what's the current index of the
-  /// item
+  /// item being rendered.
   final int currentItemIndex;
 
   /// Whether the navigation panes are transitioning or not.
+  ///
+  /// When true, interactive features on pane items (like info badges) are hidden
+  /// to provide a cleaner transition animation.
   final bool isTransitioning;
 
   /// Returns the closest [InheritedNavigationView] ancestor, if any.
@@ -227,6 +275,9 @@ class InheritedNavigationView extends InheritedWidget {
 
   /// Creates a widget that merges the current navigation view state with
   /// the given values.
+  ///
+  /// This is used internally by [PaneItem] to provide indicator-specific
+  /// context without creating a full new inherited widget.
   static Widget merge({
     required Widget child,
     Key? key,
@@ -265,27 +316,5 @@ class InheritedNavigationView extends InheritedWidget {
         oldWidget.previousItemIndex != previousItemIndex ||
         oldWidget.currentItemIndex != currentItemIndex ||
         oldWidget.isTransitioning != isTransitioning;
-  }
-}
-
-/// Makes the [GlobalKey]s for [PaneItem]s accesible on the scope.
-/// An inherited widget that provides access to [GlobalKey]s for [PaneItem]s.
-class PaneItemKeys extends InheritedWidget {
-  /// Creates a pane item keys widget.
-  const PaneItemKeys({required super.child, required this.keys, super.key});
-
-  /// The map of item indices to their [GlobalKey]s.
-  final Map<int, GlobalKey> keys;
-
-  /// Gets the item global key based on the index.
-  static GlobalKey of(int index, BuildContext context) {
-    final reference = context
-        .dependOnInheritedWidgetOfExactType<PaneItemKeys>()!;
-    return reference.keys[index]!;
-  }
-
-  @override
-  bool updateShouldNotify(PaneItemKeys oldWidget) {
-    return keys != oldWidget.keys;
   }
 }

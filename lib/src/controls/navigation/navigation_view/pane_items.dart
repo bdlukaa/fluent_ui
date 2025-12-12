@@ -370,23 +370,21 @@ class PaneItem extends NavigationPaneItem {
       key: key,
       padding: const EdgeInsetsDirectional.only(bottom: 4),
       child: () {
-        // If there is an indicator and the item is an effective item
+        // If there is an indicator and the item is an effective item,
+        // render the indicator locally within the item
         if (maybeBody?.pane?.indicator != null &&
             index != null &&
             !index.isNegative) {
-          final key = PaneItemKeys.of(index, context);
-
           return Stack(
             children: [
               button,
+              // Indicator is positioned locally within this PaneItem
+              // No global coordinate tracking needed
               Positioned.fill(
                 child: InheritedNavigationView.merge(
                   currentItemIndex: index,
                   currentItemSelected: selected,
-                  child: KeyedSubtree(
-                    key: key,
-                    child: maybeBody!.pane!.indicator!,
-                  ),
+                  child: maybeBody!.pane!.indicator!,
                 ),
               ),
             ],
@@ -713,21 +711,24 @@ class __PaneItemExpanderState extends State<_PaneItemExpander>
     duration: const Duration(milliseconds: 100),
   );
 
+  // Use a stable identifier based on the item's hashCode instead of index
+  // This prevents issues when items are dynamically added/removed
+  String get _storageKey => 'paneItemExpanderOpen_${widget.item.hashCode}';
+
   @override
   void initState() {
     super.initState();
     flyoutController.addListener(_controllerListener);
+    _open = widget.initiallyExpanded;
   }
 
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
     _open =
-        PageStorage.of(
-              context,
-            ).readState(context, identifier: 'paneItemExpanderOpen$index')
+        PageStorage.of(context).readState(context, identifier: _storageKey)
             as bool? ??
-        widget.initiallyExpanded;
+        _open;
 
     if (_open) {
       controller.value = 1;
@@ -753,17 +754,28 @@ class __PaneItemExpanderState extends State<_PaneItemExpander>
 
   int get index {
     final body = InheritedNavigationView.of(context);
-
     return body.pane?.effectiveIndexOf(widget.item) ?? 0;
+  }
+
+  /// Checks if any child of this expander is currently selected
+  bool get hasSelectedChild {
+    final body = InheritedNavigationView.maybeOf(context);
+    if (body?.pane == null) return false;
+
+    return widget.items.any((item) {
+      if (item is PaneItem) {
+        return body!.pane!.isSelected(item);
+      }
+      return false;
+    });
   }
 
   void toggleOpen({bool doFlyout = true}) {
     if (!mounted) return;
     setState(() => _open = !_open);
 
-    PageStorage.of(
-      context,
-    ).writeState(context, _open, identifier: 'paneItemExpanderOpen$index');
+    PageStorage.of(context).writeState(context, _open, identifier: _storageKey);
+
     if (_open) {
       if (useFlyout && doFlyout && flyoutController.isAttached) {
         final body = InheritedNavigationView.of(context);
@@ -836,34 +848,24 @@ class __PaneItemExpanderState extends State<_PaneItemExpander>
     final theme = FluentTheme.of(context);
     final body = InheritedNavigationView.of(context);
 
-    assert(
-      body.pane!.selected != null,
-      'The selected of NavigationPane can not be null!Try offer a value in NavigationPane!',
-    );
-
+    // Restore open state from storage
     _open =
-        PageStorage.of(
-              context,
-            ).readState(context, identifier: 'paneItemExpanderOpen$index')
+        PageStorage.of(context).readState(context, identifier: _storageKey)
             as bool? ??
         _open;
 
-    // Indexes
-    // Ensure, if the child item is not visible, this is shown as the selected
-    // item
-    var realIndex = body.pane!.effectiveIndexOf(widget.item);
-    final childrenIndexes = body.pane!.effectiveItems
-        .where((item) {
-          return widget.items.contains(item);
-        })
-        .map((item) => body.pane!.effectiveIndexOf(item));
-    if (childrenIndexes.contains(body.pane!.selected) && !_open) {
-      realIndex = body.pane!.selected!;
-    }
+    // Get the actual index for the expander itself
+    final expanderIndex = body.pane!.effectiveIndexOf(widget.item);
 
-    // the item is this item with changes on the trailing widget: the padding
-    // and rotation animation
-    final item = widget.item
+    // Determine if the expander or any of its children is selected
+    final isExpanderSelected = widget.selected;
+    final childSelected = hasSelectedChild;
+
+    // Show indicator on expander when a child is selected but expander is collapsed
+    final showIndicatorOnExpander = childSelected && !_open;
+
+    // The item with the trailing widget for expand/collapse
+    final expanderWidget = widget.item
         .copyWith(
           trailing: GestureDetector(
             onTap: toggleOpen,
@@ -887,18 +889,22 @@ class __PaneItemExpanderState extends State<_PaneItemExpander>
         )
         .build(
           context,
-          widget.selected,
+          // Show as selected if expander is selected OR if a child is selected
+          // and the expander is collapsed (to show where the selection is)
+          isExpanderSelected || showIndicatorOnExpander,
           () {
             widget.onPressed?.call();
             toggleOpen();
           },
           displayMode: widget.displayMode,
           showTextOnTop: widget.showTextOnTop,
-          itemIndex: realIndex,
+          itemIndex: expanderIndex,
         );
+
     if (widget.items.isEmpty) {
-      return item;
+      return expanderWidget;
     }
+
     final displayMode = body.displayMode;
     switch (displayMode) {
       case PaneDisplayMode.open:
@@ -906,7 +912,7 @@ class __PaneItemExpanderState extends State<_PaneItemExpander>
         return Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            item,
+            expanderWidget,
             AnimatedSize(
               duration: theme.fastAnimationDuration,
               curve: Curves.easeIn,
@@ -915,29 +921,29 @@ class __PaneItemExpanderState extends State<_PaneItemExpander>
                   : Column(
                       mainAxisSize: MainAxisSize.min,
                       crossAxisAlignment: CrossAxisAlignment.start,
-                      children: widget.items.map((item) {
-                        if (item is PaneItem) {
-                          final i = item.copyWith(
+                      children: widget.items.map((childItem) {
+                        if (childItem is PaneItem) {
+                          final modifiedItem = childItem.copyWith(
                             icon: Padding(
                               padding: _PaneItemExpander.leadingPadding,
-                              child: item.icon,
+                              child: childItem.icon,
                             ),
                           );
-                          return i.build(
+                          return modifiedItem.build(
                             context,
-                            body.pane!.isSelected(item),
-                            () => widget.onItemPressed?.call(item),
+                            body.pane!.isSelected(childItem),
+                            () => widget.onItemPressed?.call(childItem),
                             displayMode: widget.displayMode,
                             showTextOnTop: widget.showTextOnTop,
-                            itemIndex: body.pane!.effectiveIndexOf(item),
+                            itemIndex: body.pane!.effectiveIndexOf(childItem),
                           );
-                        } else if (item is PaneItemHeader) {
+                        } else if (childItem is PaneItemHeader) {
                           return Padding(
                             padding: _PaneItemExpander.leadingPadding,
-                            child: item.build(context),
+                            child: childItem.build(context),
                           );
-                        } else if (item is PaneItemSeparator) {
-                          return item.build(
+                        } else if (childItem is PaneItemSeparator) {
+                          return childItem.build(
                             context,
                             widget.displayMode == PaneDisplayMode.top
                                 ? Axis.vertical
@@ -945,7 +951,7 @@ class __PaneItemExpanderState extends State<_PaneItemExpander>
                           );
                         } else {
                           throw UnsupportedError(
-                            '${item.runtimeType} is not a supported item type',
+                            '${childItem.runtimeType} is not a supported item type',
                           );
                         }
                       }).toList(),
@@ -955,9 +961,9 @@ class __PaneItemExpanderState extends State<_PaneItemExpander>
         );
       case PaneDisplayMode.top:
       case PaneDisplayMode.compact:
-        return FlyoutTarget(controller: flyoutController, child: item);
+        return FlyoutTarget(controller: flyoutController, child: expanderWidget);
       case PaneDisplayMode.auto:
-        return item;
+        return expanderWidget;
     }
   }
 }
@@ -1071,31 +1077,10 @@ class PaneItemWidgetAdapter extends NavigationPaneItem {
   }
 }
 
-extension _ItemsExtension on List<NavigationPaneItem> {
-  /// Get the all the item offets in this list
-  Iterable<Offset> _getPaneItemsOffsets(
-    GlobalKey<State<StatefulWidget>> paneKey,
-  ) {
-    return map((e) {
-          // Gets the item global position
-          final itemContext = e.itemKey.currentContext;
-          if (itemContext == null || !itemContext.mounted) return Offset.zero;
-          final box = itemContext.findRenderObject()! as RenderBox;
-          final globalPosition = box.localToGlobal(Offset.zero);
-          // And then convert it to the local position
-          final paneContext = paneKey.currentContext;
-          if (paneContext == null || !paneContext.mounted) return Offset.zero;
-          final paneBox =
-              paneKey.currentContext!.findRenderObject()! as RenderBox;
-          final position = paneBox.globalToLocal(globalPosition);
-          return position;
-        })
-        // Calling .toList here ensures that all the pane items positions are
-        // calculated. Without it, a lazy Iterable would be returned resulting
-        // in RenderObject bugs due to the widget not being in the tree
-        .toList();
-  }
-}
+// Note: The global coordinate tracking extension (_ItemsExtension._getPaneItemsOffsets)
+// has been removed. The navigation indicator is now rendered locally inside each
+// PaneItem, eliminating the need for global coordinate storage and improving
+// performance significantly.
 
 /// Extension methods for extracting properties from widgets.
 extension ItemExtension on Widget {

@@ -267,7 +267,9 @@ class NavigationViewState extends State<NavigationView> {
   final _contentKey = GlobalKey();
   final _overlayKey = GlobalKey();
 
-  final Map<int, GlobalKey> _itemKeys = {};
+  // Note: Global item keys for indicator positioning have been removed.
+  // The navigation indicator is now rendered locally inside each PaneItem,
+  // eliminating the need for global coordinate tracking.
 
   bool _minimalPaneOpen = false;
 
@@ -335,8 +337,6 @@ class NavigationViewState extends State<NavigationView> {
         widget.pane?.scrollController ??
         ScrollController(debugLabel: '${widget.runtimeType} scroll controller');
 
-    _generateKeys();
-
     _compactOverlayOpen =
         PageStorage.of(
               context,
@@ -373,29 +373,6 @@ class NavigationViewState extends State<NavigationView> {
       }
     }
 
-    if (oldWidget.pane?.effectiveItems.length !=
-        widget.pane?.effectiveItems.length) {
-      if (widget.pane?.effectiveItems.length != null) {
-        _generateKeys();
-      }
-    }
-
-    if (_itemKeys.length != widget.pane?.effectiveItems.length) {
-      if (widget.pane?.effectiveItems.length != null) {
-        _generateKeys();
-      }
-    }
-  }
-
-  void _generateKeys() {
-    if (widget.pane == null) return;
-    final itemCount = widget.pane!.effectiveItems.length;
-    if (_itemKeys.length == itemCount) return;
-
-    _itemKeys.clear();
-    for (var i = 0; i < itemCount; i++) {
-      _itemKeys[i] = GlobalKey(debugLabel: 'NavigationView item key#$i');
-    }
   }
 
   @override
@@ -886,7 +863,7 @@ class NavigationViewState extends State<NavigationView> {
             pane: widget.pane,
             previousItemIndex: _previousItemIndex,
             isTransitioning: _isTransitioning,
-            child: PaneItemKeys(keys: _itemKeys, child: paneResult),
+            child: paneResult,
           ),
         );
       },
@@ -915,8 +892,63 @@ class NavigationViewState extends State<NavigationView> {
   }
 }
 
+/// Data passed to [NavigationAppBarLayoutBuilder] for custom layouts.
+class NavigationAppBarData {
+  /// Creates navigation app bar data.
+  const NavigationAppBarData({
+    required this.leading,
+    required this.title,
+    required this.actions,
+    required this.displayMode,
+    required this.additionalLeading,
+  });
+
+  /// The leading widget (typically a back button).
+  final Widget leading;
+
+  /// The title widget.
+  final Widget title;
+
+  /// The actions widget.
+  final Widget? actions;
+
+  /// The current display mode of the navigation pane.
+  final PaneDisplayMode displayMode;
+
+  /// Additional leading widget (e.g., hamburger menu in minimal mode).
+  final Widget? additionalLeading;
+}
+
+/// A builder function for creating custom app bar layouts.
+///
+/// Use this when you need complete control over the app bar layout.
+///
+/// Example:
+/// ```dart
+/// NavigationAppBar(
+///   title: Text('My App'),
+///   layoutBuilder: (context, data) {
+///     return Row(
+///       children: [
+///         data.leading,
+///         Expanded(child: data.title),
+///         if (data.actions != null) data.actions!,
+///       ],
+///     );
+///   },
+/// )
+/// ```
+typedef NavigationAppBarLayoutBuilder = Widget Function(
+  BuildContext context,
+  NavigationAppBarData data,
+);
+
 /// The bar displayed at the top of the app. It can adapt itself to
 /// all the display modes.
+///
+/// The app bar can be customized using the standard properties ([leading],
+/// [title], [actions]), or fully customized using [layoutBuilder] for
+/// complete control over the layout.
 ///
 /// See also:
 ///
@@ -963,6 +995,47 @@ class NavigationAppBar with Diagnosticable {
   /// If this is provided, [backgroundColor] must be null.
   final Decoration? decoration;
 
+  /// A builder for creating custom app bar layouts.
+  ///
+  /// When provided, this builder is used instead of the default layout.
+  /// This gives complete control over how the app bar content is arranged.
+  ///
+  /// The builder receives [NavigationAppBarData] containing all the default
+  /// widgets that would normally be displayed, allowing you to rearrange
+  /// or replace them as needed.
+  ///
+  /// Example:
+  /// ```dart
+  /// NavigationAppBar(
+  ///   title: Text('My App'),
+  ///   actions: IconButton(...),
+  ///   layoutBuilder: (context, data) {
+  ///     // Custom centered title layout
+  ///     return Stack(
+  ///       children: [
+  ///         Align(
+  ///           alignment: Alignment.centerLeft,
+  ///           child: Row(
+  ///             mainAxisSize: MainAxisSize.min,
+  ///             children: [
+  ///               data.leading,
+  ///               if (data.additionalLeading != null) data.additionalLeading!,
+  ///             ],
+  ///           ),
+  ///         ),
+  ///         Center(child: data.title),
+  ///         if (data.actions != null)
+  ///           Align(
+  ///             alignment: Alignment.centerRight,
+  ///             child: data.actions,
+  ///           ),
+  ///       ],
+  ///     );
+  ///   },
+  /// )
+  /// ```
+  final NavigationAppBarLayoutBuilder? layoutBuilder;
+
   /// Creates a windows-styled app bar.
   const NavigationAppBar({
     this.key,
@@ -973,6 +1046,7 @@ class NavigationAppBar with Diagnosticable {
     this.height = _kDefaultAppBarHeight,
     this.backgroundColor,
     this.decoration,
+    this.layoutBuilder,
   }) : assert(
          (backgroundColor == null && decoration == null) ||
              (backgroundColor != null && decoration == null) ||
@@ -1106,54 +1180,72 @@ class _NavigationAppBar extends StatelessWidget {
         return const SizedBox.shrink();
       }
     }();
+
     late Widget result;
-    switch (displayMode) {
-      case PaneDisplayMode.top:
-        result = Stack(
-          children: [
-            Row(
-              children: [
-                leading,
-                if (additionalLeading != null) additionalLeading!,
-                Expanded(child: title),
-              ],
-            ),
-            if (appBar.actions != null)
-              PositionedDirectional(end: 0, child: appBar.actions!),
-          ],
-        );
-      case PaneDisplayMode.minimal:
-      case PaneDisplayMode.open:
-      case PaneDisplayMode.compact:
-        result = Stack(
-          children: [
-            Align(
-              alignment: AlignmentDirectional.centerStart,
-              child: Row(
-                mainAxisSize: MainAxisSize.min,
+
+    // Check if a custom layout builder is provided
+    if (appBar.layoutBuilder != null) {
+      result = appBar.layoutBuilder!(
+        context,
+        NavigationAppBarData(
+          leading: leading,
+          title: title,
+          actions: appBar.actions,
+          displayMode: displayMode,
+          additionalLeading: additionalLeading,
+        ),
+      );
+    } else {
+      // Use default layout based on display mode
+      switch (displayMode) {
+        case PaneDisplayMode.top:
+          result = Stack(
+            children: [
+              Row(
                 children: [
                   leading,
                   if (additionalLeading != null) additionalLeading!,
-                  Flexible(child: title),
+                  Expanded(child: title),
                 ],
               ),
-            ),
-            if (appBar.actions != null)
-              PositionedDirectional(
-                start: 0,
-                end: 0,
-                top: 0,
-                bottom: 0,
-                child: Align(
-                  alignment: AlignmentDirectional.topEnd,
-                  child: appBar.actions,
+              if (appBar.actions != null)
+                PositionedDirectional(end: 0, child: appBar.actions!),
+            ],
+          );
+        case PaneDisplayMode.minimal:
+        case PaneDisplayMode.open:
+        case PaneDisplayMode.compact:
+          result = Stack(
+            children: [
+              Align(
+                alignment: AlignmentDirectional.centerStart,
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    leading,
+                    if (additionalLeading != null) additionalLeading!,
+                    Flexible(child: title),
+                  ],
                 ),
               ),
-          ],
-        );
-      default:
-        return const SizedBox.shrink();
+              if (appBar.actions != null)
+                PositionedDirectional(
+                  start: 0,
+                  end: 0,
+                  top: 0,
+                  bottom: 0,
+                  child: Align(
+                    alignment: AlignmentDirectional.topEnd,
+                    child: appBar.actions,
+                  ),
+                ),
+            ],
+          );
+        default:
+          return const SizedBox.shrink();
+      }
     }
+
     final mediaQueryPadding = MediaQuery.paddingOf(context);
 
     return Container(
