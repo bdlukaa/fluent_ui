@@ -17,6 +17,7 @@
 - feat: Apply text height on `Typography`
 - refactor: Encourage usage of `EdgeInsetsDirectional` instead of `EdgeInsets`
 - refactor: Remove `BottomNavigationBar` and all its related widgets
+- **MINOR BREAKING** refactor: Remove `Brightness.isLight`, `Brightness.isDark` and `Brightness.opposite` extension methods. Use `switch` statements instead.
 
 ## 4.13.0
 

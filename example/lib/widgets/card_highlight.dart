@@ -138,9 +138,10 @@ class _CardHighlightState extends State<CardHighlight>
 }
 
 SyntaxTheme getSyntaxTheme(final FluentThemeData theme) {
-  final syntaxTheme = theme.brightness.isDark
-      ? SyntaxTheme.vscodeDark()
-      : SyntaxTheme.vscodeLight();
+  final syntaxTheme = switch (theme.brightness) {
+    Brightness.light => SyntaxTheme.vscodeLight(),
+    Brightness.dark => SyntaxTheme.vscodeDark(),
+  };
 
   syntaxTheme.baseStyle = GoogleFonts.firaCode(
     textStyle: syntaxTheme.baseStyle,

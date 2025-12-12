@@ -580,7 +580,7 @@ class _MyHomePageState extends State<MyHomePage> with WindowListener {
               child: Padding(
                 padding: const EdgeInsetsDirectional.only(end: 8),
                 child: ToggleButton(
-                  checked: FluentTheme.of(context).brightness.isDark,
+                  checked: theme.brightness == Brightness.dark,
                   onChanged: (final v) {
                     if (v) {
                       appTheme.mode = ThemeMode.dark;

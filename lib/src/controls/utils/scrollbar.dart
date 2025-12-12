@@ -368,14 +368,16 @@ class ScrollbarThemeData with Diagnosticable {
   factory ScrollbarThemeData.standard(FluentThemeData theme) {
     final brightness = theme.brightness;
     return ScrollbarThemeData(
-      scrollbarColor: brightness.isLight
-          ? const Color(0xFF898989)
-          : const Color(0xFFa0a0a0),
+      scrollbarColor: switch (brightness) {
+        Brightness.light => const Color(0xFF898989),
+        Brightness.dark => const Color(0xFFa0a0a0),
+      },
       thickness: 2,
       hoveringThickness: 6,
-      backgroundColor: brightness.isLight
-          ? const Color(0xFFf8f8f8)
-          : const Color(0xFF292929),
+      backgroundColor: switch (brightness) {
+        Brightness.light => const Color(0xFFf8f8f8),
+        Brightness.dark => const Color(0xFF292929),
+      },
       radius: const Radius.circular(100),
       hoveringRadius: const Radius.circular(100),
       crossAxisMargin: 0,

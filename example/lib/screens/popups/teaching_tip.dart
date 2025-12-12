@@ -95,7 +95,7 @@ showTeachingTip(
         Button(
           child: const Text('Toggle theme now'),
           onPressed: () {
-            if (theme.brightness.isDark) {
+            if (theme.brightness == Brightness.dark) {
               appTheme.mode = ThemeMode.light;
             } else {
               appTheme.mode = ThemeMode.dark;
@@ -131,7 +131,7 @@ showTeachingTip(
                           Button(
                             child: const Text('Toggle theme now'),
                             onPressed: () {
-                              if (theme.brightness.isDark) {
+                              if (theme.brightness == Brightness.dark) {
                                 appTheme.mode = ThemeMode.light;
                               } else {
                                 appTheme.mode = ThemeMode.dark;

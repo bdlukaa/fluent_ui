@@ -42,12 +42,13 @@ class AppTheme extends ChangeNotifier {
   }
 
   void setEffect(final WindowEffect effect, final BuildContext context) {
+    final theme = FluentTheme.of(context);
     Window.setEffect(
       effect: effect,
       color: [WindowEffect.solid, WindowEffect.acrylic].contains(effect)
-          ? FluentTheme.of(context).micaBackgroundColor.withValues(alpha: 0.05)
+          ? theme.micaBackgroundColor.withValues(alpha: 0.05)
           : Colors.transparent,
-      dark: FluentTheme.of(context).brightness.isDark,
+      dark: theme.brightness == Brightness.dark,
     );
   }
 

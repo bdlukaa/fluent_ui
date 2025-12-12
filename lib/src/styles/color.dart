@@ -345,11 +345,10 @@ class AccentColor extends ColorSwatch<String> {
   /// See also:
   ///  * <https://github.com/microsoft/microsoft-ui-xaml/blob/main/dev/CommonStyles/Common_themeresources_any.xaml#L163-L166>
   Color defaultBrushFor(Brightness brightness) {
-    if (brightness.isDark) {
-      return lighter;
-    } else {
-      return dark;
-    }
+    return switch (brightness) {
+      Brightness.light => dark,
+      Brightness.dark => lighter,
+    };
   }
 
   /// Get the secondary brush for this accent color based on the brightness.

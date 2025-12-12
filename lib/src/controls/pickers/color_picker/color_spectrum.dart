@@ -755,9 +755,10 @@ class CheckerboardPainter extends CustomPainter {
         final isDarkSquare = (i ~/ squareSize + j ~/ squareSize) % 2 != 0;
 
         paint.color = isDarkSquare
-            ? theme.brightness.isDark
-                  ? const Color(0x20D8D8D8)
-                  : const Color(0x20393939)
+            ? switch (theme.brightness) {
+                Brightness.light => const Color(0x20D8D8D8),
+                Brightness.dark => const Color(0x20393939),
+              }
             : Colors.transparent;
 
         canvas.drawRect(

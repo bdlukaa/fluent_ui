@@ -191,31 +191,6 @@ class _AnimatedFluentThemeState
   }
 }
 
-// TODO(bdlukaa): Remove this
-/// An extension on [Brightness] that adds methods to check if the brightness
-/// is light or dark.
-extension BrightnessExtension on Brightness {
-  /// Whether this is light
-  ///
-  /// ```dart
-  /// final isLight = FluentTheme.of(context).brightness.isLight;
-  /// ```
-  bool get isLight => this == Brightness.light;
-
-  /// Whether this is light
-  ///
-  /// ```dart
-  /// final isDark = FluentTheme.of(context).brightness.isDark;
-  /// ```
-  bool get isDark => this == Brightness.dark;
-
-  /// Gets the opposite brightness from this.
-  ///
-  /// Returns [Brightness.dark] if this is light, and [Brightness.light] if
-  /// this is dark.
-  Brightness get opposite => isLight ? Brightness.dark : Brightness.light;
-}
-
 /// The default animation curve used throughout the Fluent Design System.
 ///
 /// This curve provides a smooth ease-in-out motion for animations.
