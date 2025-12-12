@@ -54,12 +54,55 @@ class _TextBoxSelectionGestureDetectorBuilder
   }
 }
 
-/// A Windows-style text field.
+/// A Windows-style text field for user text input.
 ///
-/// A text field lets the user enter text, either with a hardware keyboard or with
-/// an onscreen keyboard.
+/// A text field lets the user enter text, either with a hardware keyboard or
+/// with an onscreen keyboard. This widget corresponds to the WinUI `TextBox`
+/// control.
 ///
-/// This widget corresponds to `TextBox` on Windows.
+/// ![TextBox Preview](https://learn.microsoft.com/en-us/windows/apps/design/controls/images/text-box.png)
+///
+/// {@tool snippet}
+/// This example shows a basic text box:
+///
+/// ```dart
+/// TextBox(
+///   placeholder: 'Enter your name',
+///   onChanged: (value) => print('Name: $value'),
+/// )
+/// ```
+/// {@end-tool}
+///
+/// {@tool snippet}
+/// This example shows a text box with a controller:
+///
+/// ```dart
+/// final controller = TextEditingController();
+///
+/// TextBox(
+///   controller: controller,
+///   placeholder: 'Email address',
+///   suffix: IconButton(
+///     icon: Icon(FluentIcons.clear),
+///     onPressed: () => controller.clear(),
+///   ),
+/// )
+/// ```
+/// {@end-tool}
+///
+/// {@tool snippet}
+/// This example shows a multiline text box:
+///
+/// ```dart
+/// TextBox(
+///   placeholder: 'Enter your message',
+///   maxLines: 5,
+///   minLines: 3,
+/// )
+/// ```
+/// {@end-tool}
+///
+/// ## Text field behavior
 ///
 /// The text field calls the [onChanged] callback whenever the user changes the
 /// text in the field. If the user indicates that they are done typing in the
@@ -70,6 +113,8 @@ class _TextBoxSelectionGestureDetectorBuilder
 ///
 /// The [controller] can also control the selection and composing region (and to
 /// observe changes to the text, selection, and composing region).
+///
+/// ## Decoration
 ///
 /// The text field has an overridable [decoration] that, by default, draws a
 /// rounded rectangle border around the text field. If you set the [decoration]
@@ -86,8 +131,10 @@ class _TextBoxSelectionGestureDetectorBuilder
 ///
 /// See also:
 ///
-///  * [EditableText], which is the raw text editing control at the heart of a
-///    text field.
+///  * [PasswordBox], for entering passwords with obscured text
+///  * [TextFormBox], for use in forms with validation
+///  * [AutoSuggestBox], for text input with suggestions
+///  * [EditableText], which is the raw text editing control
 ///  * <https://learn.microsoft.com/en-us/windows/apps/design/controls/text-box>
 class TextBox extends StatefulWidget {
   /// Creates a Windows-style text field.

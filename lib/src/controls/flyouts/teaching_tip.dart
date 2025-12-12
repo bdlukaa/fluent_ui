@@ -90,14 +90,35 @@ Future<T?> showTeachingTip<T extends Object?>({
   );
 }
 
-/// A teaching tip is a semi-persistent and content-rich flyout that provides
-/// contextual information. It is often used for informing, reminding, and
-/// teaching users about important and new features that may enhance their
-/// experience.
+/// A semi-persistent flyout for teaching users about features.
 ///
-/// A teaching tip may be light-dismiss or require explicit action to close. A
-/// teaching tip can target a specific UI element with its tail and also be used
-/// without a tail or target.
+/// Teaching tips provide contextual information and guidance about new or
+/// important features. They're ideal for onboarding, feature discovery,
+/// and providing helpful tips without interrupting the user's workflow.
+///
+/// ![TeachingTip example](https://learn.microsoft.com/en-us/windows/apps/develop/ui/controls/images/teaching-tip-non-targeted.png)
+///
+/// {@tool snippet}
+/// This example shows a teaching tip with a title and subtitle:
+///
+/// ```dart
+/// TeachingTip(
+///   title: Text('New feature'),
+///   subtitle: Text('Try out our new editing tools to enhance your photos.'),
+///   action: Button(
+///     child: Text('Got it'),
+///     onPressed: () => Navigator.pop(context),
+///   ),
+/// )
+/// ```
+/// {@end-tool}
+///
+/// ## Targeted vs non-targeted
+///
+/// * **Targeted** - Points to a specific UI element with a tail/arrow
+/// * **Non-targeted** - Appears without pointing to any element
+///
+/// A teaching tip may be light-dismiss or require explicit action to close.
 ///
 /// See also:
 ///

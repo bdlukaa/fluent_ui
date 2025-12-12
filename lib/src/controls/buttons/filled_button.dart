@@ -2,17 +2,60 @@ import 'dart:math';
 
 import 'package:fluent_ui/fluent_ui.dart';
 
-/// A colored button.
+/// An accent-colored button used for primary or most important actions.
 ///
-/// {@macro fluent_ui.buttons.base}
+/// The [FilledButton] has a filled background using the app's accent color,
+/// making it stand out as the primary action in a dialog or page. Use this
+/// button for the most important action you want users to take.
+///
+/// ![FilledButton Example](https://learn.microsoft.com/en-us/windows/apps/design/controls/images/button.png)
+///
+/// {@tool snippet}
+/// This example shows a filled button used as a primary action:
+///
+/// ```dart
+/// FilledButton(
+///   child: Text('Save'),
+///   onPressed: () => saveDocument(),
+/// )
+/// ```
+/// {@end-tool}
+///
+/// {@tool snippet}
+/// This example shows a dialog with a filled button as the primary action:
+///
+/// ```dart
+/// ContentDialog(
+///   title: Text('Save changes?'),
+///   content: Text('Do you want to save your changes before closing?'),
+///   actions: [
+///     Button(
+///       child: Text('Cancel'),
+///       onPressed: () => Navigator.pop(context),
+///     ),
+///     FilledButton(
+///       child: Text('Save'),
+///       onPressed: () {
+///         saveChanges();
+///         Navigator.pop(context);
+///       },
+///     ),
+///   ],
+/// )
+/// ```
+/// {@end-tool}
 ///
 /// See also:
 ///
-///   * [Button], the default button
-///   * [OutlinedButton], an outlined button
-///   * [HyperlinkButton], a borderless button with mainly text-based content
+///  * [Button], for secondary or less prominent actions
+///  * [OutlinedButton], an outlined button
+///  * [HyperlinkButton], a borderless button with mainly text-based content
+///  * <https://learn.microsoft.com/en-us/windows/apps/design/controls/buttons>
 class FilledButton extends Button {
-  /// Creates a filled button
+  /// Creates a filled button.
+  ///
+  /// The [child] is typically a [Text] widget. The [onPressed] callback is
+  /// required—set it to null to disable the button.
   const FilledButton({
     super.key,
     required super.child,

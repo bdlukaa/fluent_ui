@@ -2,17 +2,32 @@ import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter/foundation.dart';
 
 /// {@template fluent_ui.buttons.base}
-/// Buttons give people a way to trigger an action. They’re typically found in
-/// forms, dialog panels, and dialogs.
+/// A button gives the user a way to trigger an immediate action. Some buttons
+/// are specialized for particular tasks, such as navigation, repeated actions,
+/// or presenting menus.
 /// {@endtemplate}
+///
+/// {@tool snippet}
+/// This example shows how to use a basic button:
+///
+/// ```dart
+/// Button(
+///   child: Text('Click me'),
+///   onPressed: () {
+///     print('Button pressed!');
+///   },
+/// )
+/// ```
+/// {@end-tool}
 ///
 /// See also:
 ///
-///   * <https://developer.microsoft.com/en-us/fluentui#/controls/android/button>
-///   * <https://developer.microsoft.com/en-us/fluentui#/controls/web/button>
-///   * [HyperlinkButton], a borderless button with mainly text-based content
-///   * [OutlinedButton], an outlined button
-///   * [FilledButton], a colored button
+///  * [HyperlinkButton], a borderless button with mainly text-based content
+///  * [OutlinedButton], an outlined button
+///  * [FilledButton], a colored button for primary actions
+///  * [IconButton], a button that displays only an icon
+///  * [ToggleButton], a button that can be toggled on and off
+///  * <https://learn.microsoft.com/en-us/windows/apps/design/controls/buttons>
 abstract class BaseButton extends StatefulWidget {
   const BaseButton({
     super.key,

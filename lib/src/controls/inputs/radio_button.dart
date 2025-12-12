@@ -3,27 +3,60 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/rendering.dart';
 
 /// Radio buttons, also called option buttons, let users select one option from
-/// a collection of two or more mutually exclusive, but related, options. Radio
-/// buttons are always used in groups, and each option is represented by one
-/// radio button in the group.
+/// a collection of two or more mutually exclusive, but related, options.
 ///
-/// In the default state, no radio button in a RadioButtons group is selected.
-/// That is, all radio buttons are cleared. However, once a user has selected a
-/// radio button, the user can't deselect the button to restore the group to its
-/// initial cleared state.
+/// Radio buttons are always used in groups, and each option is represented by
+/// one radio button in the group. In the default state, no radio button in a
+/// group is selected. However, once a user has selected a radio button, the user
+/// can't deselect it to restore the group to its initial cleared state—they can
+/// only select a different option.
 ///
-/// The singular behavior of a RadioButtons group distinguishes it from check
-/// boxes, which support multi-selection and deselection, or clearing.
+/// The singular behavior of a radio button group distinguishes it from checkboxes,
+/// which support multi-selection and deselection.
 ///
-/// ![RadioButton](https://docs.microsoft.com/en-us/windows/uwp/design/controls-and-patterns/images/controls/radio-button.png)
+/// ![RadioButton](https://learn.microsoft.com/en-us/windows/apps/design/controls/images/controls/radio-button.png)
+///
+/// {@tool snippet}
+/// This example shows a group of radio buttons:
+///
+/// ```dart
+/// int selectedOption = 0;
+///
+/// Column(
+///   children: [
+///     RadioButton(
+///       checked: selectedOption == 0,
+///       content: Text('Option 1'),
+///       onChanged: (checked) {
+///         if (checked) setState(() => selectedOption = 0);
+///       },
+///     ),
+///     RadioButton(
+///       checked: selectedOption == 1,
+///       content: Text('Option 2'),
+///       onChanged: (checked) {
+///         if (checked) setState(() => selectedOption = 1);
+///       },
+///     ),
+///     RadioButton(
+///       checked: selectedOption == 2,
+///       content: Text('Option 3'),
+///       onChanged: (checked) {
+///         if (checked) setState(() => selectedOption = 2);
+///       },
+///     ),
+///   ],
+/// )
+/// ```
+/// {@end-tool}
+///
 ///
 /// See also:
 ///
-///   * [Slider], which let the user lie within a range of values,
-///     (for example, 10, 20, 30, ... 100).
-///   * [Checkbox], which let the user select multiple options.
-///   * [ComboBox], which let the user select multiple options from a popup
-///   * <https://docs.microsoft.com/en-us/windows/apps/design/controls/radio-button>
+///  * [Slider], which lets the user select from a range of values
+///  * [Checkbox], which lets the user select multiple options
+///  * [ComboBox], which lets the user select from a dropdown list
+///  * <https://learn.microsoft.com/en-us/windows/apps/design/controls/radio-button>
 class RadioButton extends StatelessWidget {
   /// Creates a radio button.
   const RadioButton({

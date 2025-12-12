@@ -20,19 +20,89 @@ const double kPaneItemHeaderMinHeight = 4.0;
 typedef NavigationContentBuilder =
     Widget Function(PaneItem? item, Widget? body);
 
-/// The NavigationView control provides top-level navigation for your app. It
-/// adapts to a variety of screen sizes and supports both top and left
-/// navigation styles.
+/// A navigation control that provides top-level navigation for your app.
 ///
-/// ![NavigationView Preview](https://docs.microsoft.com/en-us/windows/uwp/design/controls-and-patterns/images/nav-view-header.png)
+/// The [NavigationView] adapts to a variety of screen sizes and supports
+/// multiple display modes: left, top, compact, and minimal. It automatically
+/// switches between these modes based on the available width when using
+/// [PaneDisplayMode.auto].
+///
+/// ![NavigationView Preview](https://learn.microsoft.com/en-us/windows/apps/design/controls/images/nav-view-header.png)
+///
+/// {@tool snippet}
+/// This example shows a basic navigation view with left navigation:
+///
+/// ```dart
+/// int selectedIndex = 0;
+///
+/// NavigationView(
+///   appBar: NavigationAppBar(
+///     title: Text('My App'),
+///   ),
+///   pane: NavigationPane(
+///     selected: selectedIndex,
+///     onChanged: (index) => setState(() => selectedIndex = index),
+///     items: [
+///       PaneItem(
+///         icon: Icon(FluentIcons.home),
+///         title: Text('Home'),
+///         body: HomePage(),
+///       ),
+///       PaneItem(
+///         icon: Icon(FluentIcons.settings),
+///         title: Text('Settings'),
+///         body: SettingsPage(),
+///       ),
+///     ],
+///   ),
+/// )
+/// ```
+/// {@end-tool}
+///
+/// ## Display modes
+///
+/// The navigation pane can be displayed in different modes using [NavigationPane.displayMode]:
+///
+/// * [PaneDisplayMode.auto] - Automatically adapts based on window width
+/// * [PaneDisplayMode.open] - Expanded pane with icons and labels
+/// * [PaneDisplayMode.compact] - Collapsed pane showing only icons
+/// * [PaneDisplayMode.minimal] - Hidden pane with hamburger menu
+/// * [PaneDisplayMode.top] - Horizontal navigation at the top
+///
+/// ## Adaptive behavior
+///
+/// When using [PaneDisplayMode.auto]:
+/// * Width >= 1008px: Open mode (expanded pane)
+/// * Width 641-1007px: Compact mode (icons only)
+/// * Width <= 640px: Minimal mode (hamburger menu)
+///
+/// ## Router integration
+///
+/// For apps using `go_router` or similar routers, use [paneBodyBuilder] to
+/// integrate with your routing system:
+///
+/// {@tool snippet}
+/// ```dart
+/// NavigationView(
+///   pane: NavigationPane(
+///     selected: _calculateSelectedIndex(context),
+///     items: _buildPaneItems(),
+///   ),
+///   paneBodyBuilder: (item, body) {
+///     // Return your router's body widget
+///     return body ?? const SizedBox.shrink();
+///   },
+/// )
+/// ```
+/// {@end-tool}
 ///
 /// See also:
 ///
-///   * [NavigationPane], the pane used by [NavigationView], that can be
-///     displayed either at the left and top
-///   * [TabView], a widget similar to [NavigationView], useful to display
-///     several pages of content while giving a user the capability to
-///     rearrange, open, or close new tabs.
+///  * [NavigationPane], the pane configuration for the navigation view
+///  * [NavigationAppBar], the app bar displayed at the top
+///  * [PaneItem], an item in the navigation pane
+///  * [TabView], for tab-based navigation
+///  * <https://learn.microsoft.com/en-us/windows/apps/design/controls/navigationview>
 class NavigationView extends StatefulWidget {
   /// Creates a navigation view.
   const NavigationView({

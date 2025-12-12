@@ -54,17 +54,41 @@ class BreadcrumbItem<T> {
   int get hashCode => label.hashCode ^ value.hashCode;
 }
 
-/// A BreadcrumbBar provides the direct path of pages or folders to the current
-/// location. It is often used for situations where the user's navigation trail
-/// (in a file system or menu system) needs to be persistently visible and the
-/// user may need to go back to a previous location.
+/// A navigation trail showing the path to the current location.
+///
+/// [BreadcrumbBar] displays a horizontal list of items representing the
+/// user's navigation path, such as folders in a file system. Users can click
+/// any item to navigate back to that location.
 ///
 /// ![BreadcrumbBar showcase](https://learn.microsoft.com/en-us/windows/apps/design/controls/images/breadcrumbbar-default.gif)
 ///
+/// {@tool snippet}
+/// This example shows a basic breadcrumb bar:
+///
+/// ```dart
+/// BreadcrumbBar<String>(
+///   items: [
+///     BreadcrumbItem(label: Text('Home'), value: '/'),
+///     BreadcrumbItem(label: Text('Documents'), value: '/documents'),
+///     BreadcrumbItem(label: Text('Reports'), value: '/documents/reports'),
+///   ],
+///   onItemPressed: (item) {
+///     // Navigate to item.value
+///   },
+/// )
+/// ```
+/// {@end-tool}
+///
+/// ## Overflow behavior
+///
+/// When items don't fit the available width, an overflow button appears
+/// that shows the hidden items in a flyout menu.
+///
 /// See also:
 ///
+///  * [BreadcrumbItem], the data model for breadcrumb items
+///  * [NavigationView], for app-level navigation
 ///  * <https://learn.microsoft.com/en-us/windows/apps/design/controls/breadcrumbbar>
-///  * [BreadcrumbItem], which is used to represent an item in the bar.
 class BreadcrumbBar<T> extends StatefulWidget {
   /// The items rendered in the bar.
   ///

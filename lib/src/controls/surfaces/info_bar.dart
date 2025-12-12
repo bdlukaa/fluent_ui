@@ -96,32 +96,113 @@ Future<void> displayInfoBar(
   Overlay.of(context).insert(entry);
 }
 
-// This file implements info bar into this library.
-// It follows this https://docs.microsoft.com/en-us/windows/uwp/design/controls-and-patterns/infobar
-
-/// The severities that can be applied to an [InfoBar]
+/// The severity levels that can be applied to an [InfoBar].
+///
+/// Each severity level has a distinct visual appearance with an appropriate
+/// icon and background color to convey the importance of the message.
 enum InfoBarSeverity {
-  /// ![Info InfoBar](https://docs.microsoft.com/en-us/windows/uwp/design/controls-and-patterns/images/infobar-default-hyperlink.png)
+  /// Informational message with a neutral appearance.
+  ///
+  /// Use for general information that doesn't require immediate attention.
+  ///
+  /// ![Info InfoBar](https://learn.microsoft.com/en-us/windows/apps/design/controls/images/infobar-default-hyperlink.png)
   info,
 
-  /// ![Warning InfoBar](https://docs.microsoft.com/en-us/windows/uwp/design/controls-and-patterns/images/infobar-warning-title-message.png)
+  /// Warning message with a yellow/orange appearance.
+  ///
+  /// Use to alert users about potential issues or important notices that
+  /// may require attention but aren't critical.
+  ///
+  /// ![Warning InfoBar](https://learn.microsoft.com/en-us/windows/apps/design/controls/images/infobar-warning-title-message.png)
   warning,
 
-  /// ![Error InfoBar](https://docs.microsoft.com/en-us/windows/uwp/design/controls-and-patterns/images/infobar-error-no-close.png)
+  /// Error message with a red appearance.
+  ///
+  /// Use to notify users about errors or problems that need to be addressed.
+  ///
+  /// ![Error InfoBar](https://learn.microsoft.com/en-us/windows/apps/design/controls/images/infobar-error-no-close.png)
   error,
 
-  /// ![Success InfoBar](https://docs.microsoft.com/en-us/windows/uwp/design/controls-and-patterns/images/infobar-success-content-wrapping.png)
+  /// Success message with a green appearance.
+  ///
+  /// Use to confirm that an operation completed successfully.
+  ///
+  /// ![Success InfoBar](https://learn.microsoft.com/en-us/windows/apps/design/controls/images/infobar-success-content-wrapping.png)
   success,
 }
 
-/// The InfoBar control is for displaying app-wide status messages to
-/// users that are highly visible yet non-intrusive. There are built-in
-/// Severity levels to easily indicate the type of message shown as well
-/// as the option to include your own call to action or hyperlink button.
-/// Since the InfoBar is inline with other UI content the option is there
-/// for the control to always be visible or dismissed by the user.
+/// A control for displaying app-wide status messages that are highly visible
+/// yet non-intrusive.
 ///
-/// ![InfoBar Preview](https://docs.microsoft.com/en-us/windows/uwp/design/controls-and-patterns/images/infobar-success-content-wrapping.png)
+/// The [InfoBar] control is used to display important status messages inline
+/// with other UI content. It supports different [severity] levels to indicate
+/// the type of message (informational, warning, error, or success).
+///
+/// ![InfoBar Preview](https://learn.microsoft.com/en-us/windows/apps/design/controls/images/infobar-success-content-wrapping.png)
+///
+/// {@tool snippet}
+/// This example shows a basic info bar with a title:
+///
+/// ```dart
+/// InfoBar(
+///   title: Text('Update available'),
+///   content: Text('A new version of the app is available.'),
+///   severity: InfoBarSeverity.info,
+/// )
+/// ```
+/// {@end-tool}
+///
+/// {@tool snippet}
+/// This example shows an info bar with an action button:
+///
+/// ```dart
+/// InfoBar(
+///   title: Text('Connection lost'),
+///   content: Text('Please check your internet connection.'),
+///   severity: InfoBarSeverity.error,
+///   action: HyperlinkButton(
+///     child: Text('Retry'),
+///     onPressed: () => retryConnection(),
+///   ),
+///   onClose: () => dismissInfoBar(),
+/// )
+/// ```
+/// {@end-tool}
+///
+/// ## Displaying as a popup
+///
+/// Use [displayInfoBar] to show an info bar as a temporary popup that
+/// automatically dismisses after a duration:
+///
+/// {@tool snippet}
+/// ```dart
+/// displayInfoBar(
+///   context,
+///   builder: (context, close) {
+///     return InfoBar(
+///       title: Text('File saved'),
+///       severity: InfoBarSeverity.success,
+///       action: IconButton(
+///         icon: Icon(FluentIcons.chrome_close),
+///         onPressed: close,
+///       ),
+///     );
+///   },
+/// );
+/// ```
+/// {@end-tool}
+///
+/// ## Long content
+///
+/// For info bars with longer content, set [isLong] to true to display the
+/// content vertically instead of horizontally.
+///
+/// See also:
+///
+///  * [displayInfoBar], a function to show an info bar as a popup
+///  * [ContentDialog], for modal dialogs that require user interaction
+///  * [Flyout], for lightweight contextual information
+///  * <https://learn.microsoft.com/en-us/windows/apps/design/controls/infobar>
 class InfoBar extends StatelessWidget {
   /// Creates an info bar.
   const InfoBar({
@@ -184,32 +265,68 @@ class InfoBar extends StatelessWidget {
     this.isIconVisible = true,
   }) : severity = InfoBarSeverity.error;
 
-  /// The severity of this InfoBar.
+  /// The severity of this info bar.
   ///
-  /// Defaults to [InfoBarSeverity.info]
+  /// The severity determines the visual appearance of the info bar, including
+  /// its icon, background color, and overall styling.
+  ///
+  /// Defaults to [InfoBarSeverity.info].
   final InfoBarSeverity severity;
 
-  /// The style applied to this info bar. If non-null, it's
-  /// mescled with [FluentThemeData.infoBarTheme]
+  /// The style applied to this info bar.
+  ///
+  /// If non-null, this is merged with [FluentThemeData.infoBarTheme].
+  ///
+  /// Use this to customize the appearance of individual info bars beyond
+  /// the default theme.
   final InfoBarThemeData? style;
 
+  /// The primary text displayed in the info bar.
+  ///
+  /// Typically a short, descriptive message. This is displayed in bold
+  /// to distinguish it from the [content].
+  ///
+  /// Usually a [Text] widget.
   final Widget title;
+
+  /// Additional information displayed below or beside the [title].
+  ///
+  /// Use this for longer explanatory text. For info bars with substantial
+  /// content, consider setting [isLong] to true.
+  ///
+  /// Usually a [Text] widget.
   final Widget? content;
+
+  /// An optional action widget displayed in the info bar.
+  ///
+  /// Typically a [Button], [HyperlinkButton], or [IconButton] that allows
+  /// the user to take action based on the info bar's message.
   final Widget? action;
 
   /// Called when the close button is pressed.
   ///
-  /// If null, this InfoBar will not be closable
+  /// If null, the info bar will not display a close button and cannot be
+  /// dismissed by the user.
+  ///
+  /// When provided, a close button appears at the end of the info bar.
   final VoidCallback? onClose;
 
-  /// If `true`, the info bar will be treated as long.
+  /// Whether the info bar should display content vertically.
   ///
-  /// ![Long InfoBar](https://docs.microsoft.com/en-us/windows/uwp/design/controls-and-patterns/images/infobar-success-content-wrapping.png)
+  /// When `true`, the [title], [content], and [action] are arranged in a
+  /// vertical column, which is better for longer content.
+  ///
+  /// When `false` (the default), content is arranged horizontally.
+  ///
+  /// ![Long InfoBar](https://learn.microsoft.com/en-us/windows/apps/design/controls/images/infobar-success-content-wrapping.png)
   final bool isLong;
 
-  /// Whether the leading icon is visible
+  /// Whether the severity icon is visible.
   ///
-  /// Defaults to true
+  /// The icon is determined by the [severity] and appears at the start
+  /// of the info bar.
+  ///
+  /// Defaults to `true`.
   final bool isIconVisible;
 
   @override

@@ -85,20 +85,49 @@ enum CommandBarOverflowBehavior {
 typedef CommandBarActionItemBuilder =
     CommandBarItem Function(VoidCallback onPressed);
 
-/// Command bars provide quick access to common tasks. This could be
-/// application-level or page-level commands.
+/// A toolbar for displaying frequently-used commands.
 ///
-/// A command bar is composed of a series of [CommandBarItem]s, which each could
-/// be a [CommandBarButton] or a custom [CommandBarItem].
+/// [CommandBar] provides quick access to app-level or page-level actions.
+/// It contains a series of [CommandBarItem]s such as buttons, toggles,
+/// and separators.
 ///
-/// If there is not enough horizontal space to display all items, the overflow
-/// behavior is determined by [overflowBehavior].
+/// ![CommandBar example](https://learn.microsoft.com/en-us/windows/apps/design/controls/images/controls-appbar-icons.png)
 ///
-/// ![CommandBar example](https://docs.microsoft.com/en-us/windows/apps/design/controls/images/controls-appbar-icons.png)
+/// {@tool snippet}
+/// This example shows a basic command bar:
+///
+/// ```dart
+/// CommandBar(
+///   primaryItems: [
+///     CommandBarButton(
+///       icon: Icon(FluentIcons.add),
+///       label: Text('New'),
+///       onPressed: () {},
+///     ),
+///     CommandBarButton(
+///       icon: Icon(FluentIcons.delete),
+///       label: Text('Delete'),
+///       onPressed: () {},
+///     ),
+///   ],
+/// )
+/// ```
+/// {@end-tool}
+///
+/// ## Overflow behavior
+///
+/// When items don't fit, the [overflowBehavior] determines what happens:
+///
+/// * [CommandBarOverflowBehavior.scrolling] - Items scroll horizontally
+/// * [CommandBarOverflowBehavior.dynamicOverflow] - Overflow items move to a menu
+/// * [CommandBarOverflowBehavior.wrap] - Items wrap to additional lines
+/// * [CommandBarOverflowBehavior.clip] - Items are clipped
 ///
 /// See also:
 ///
-///   * <https://docs.microsoft.com/en-us/windows/apps/design/controls/command-bar>
+///  * [CommandBarCard], a card container for command bars
+///  * [CommandBarButton], a button for use in command bars
+///  * <https://learn.microsoft.com/en-us/windows/apps/design/controls/command-bar>
 class CommandBar extends StatefulWidget {
   /// The [CommandBarItem]s that should appear on the primary area.
   final List<CommandBarItem> primaryItems;

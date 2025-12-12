@@ -30,35 +30,46 @@ enum SpinButtonPlacementMode {
   none,
 }
 
-/// A Windows design input form for numbers.
+/// A text field optimized for numeric input.
 ///
-/// A NumberBox lets the user enter a number. If the user input a wrong value
-/// (a NaN value), the previous valid value is used.
+/// NumberBox lets users enter and edit numeric values with optional
+/// increment/decrement controls, validation, and formatting.
+///
+/// ![NumberBox preview](https://learn.microsoft.com/en-us/windows/apps/design/controls/images/numberbox-basic.png)
+///
+/// {@tool snippet}
+/// This example shows a basic number box:
+///
+/// ```dart
+/// NumberBox<int>(
+///   value: quantity,
+///   onChanged: (value) => setState(() => quantity = value),
+///   min: 0,
+///   max: 100,
+/// )
+/// ```
+/// {@end-tool}
+///
+/// ## Input methods
 ///
 /// The value can be changed in several ways:
-///   - by input a new value in the text field
-///   - with increment/decrement buttons (only with modes
-///     [SpinButtonPlacementMode.inline] or [SpinButtonPlacementMode.compact]).
-///   - by use the wheel scroll on the number box when he have the focus
-///   - with the shortcut [LogicalKeyboardKey.pageUp] and
-///     [LogicalKeyboardKey.pageDown].
 ///
-/// Modes:
-///  [SpinButtonPlacementMode.inline] : Show two icons as a suffix of the text
-///  field. With for increment the value and one for decrement the value.
-///  [SpinButtonPlacementMode.compact] : Without the focus, it's appears like
-///  a normal text field. But when the widget has the focus, an overlay is
-///  visible with a button for increment the value and another for decrement
-///  the value.
-///  [SpinButtonPlacementMode.none] : Don't show any additional button on the
-///  text field.
+/// * Typing directly in the text field
+/// * Using increment/decrement buttons (inline or compact mode)
+/// * Scrolling the mouse wheel when focused
+/// * Keyboard shortcuts: Page Up/Down for large changes
 ///
-/// If the parameter [clearButton] is enabled, an additional icon is shown
-/// for clear the value when the widget has the focus.
+/// ## Spin button modes
+///
+/// * [SpinButtonPlacementMode.inline] - Shows +/- buttons as a suffix
+/// * [SpinButtonPlacementMode.compact] - Shows +/- buttons in an overlay on focus
+/// * [SpinButtonPlacementMode.none] - No buttons, text input only
 ///
 /// See also:
 ///
-///  * https://learn.microsoft.com/en-us/windows/apps/design/controls/number-box
+///  * [TextBox], for general text input
+///  * [Slider], for selecting from a continuous range
+///  * <https://learn.microsoft.com/en-us/windows/apps/design/controls/number-box>
 class NumberBox<T extends num> extends StatefulWidget {
   /// The value of the number box. When this value is null, the number box field
   /// is empty.

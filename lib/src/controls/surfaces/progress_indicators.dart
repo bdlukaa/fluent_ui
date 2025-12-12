@@ -6,20 +6,44 @@ import 'package:flutter/foundation.dart';
 const double _kMinProgressRingIndicatorSize = 36.0;
 const double _kMinProgressBarWidth = 130.0;
 
-/// A progress control provides feedback to the user that a long-running
-/// operation is underway. It can mean that the user cannot interact with the
-/// app when the progress indicator is visible, and can also indicate how long
-/// the wait time might be.
+/// A linear progress indicator that shows operation progress.
 ///
-/// It can be determinate or indeterminate:
+/// Progress bars provide visual feedback about ongoing operations, helping
+/// users understand that the app is working and approximately how long they
+/// might need to wait.
 ///
-/// ![Determinate Progress Bar](https://docs.microsoft.com/en-us/windows/uwp/design/controls-and-patterns/images/progressbar-determinate.png)
-/// ![Indeterminate Progress Bar](https://docs.microsoft.com/en-us/windows/uwp/design/controls-and-patterns/images/progressbar-indeterminate.gif)
+/// The progress bar can operate in two modes:
+///
+/// * **Determinate** - Shows specific progress from 0-100%. Use when you can
+///   measure or estimate the operation's progress.
+///
+/// ![Determinate Progress Bar](https://learn.microsoft.com/en-us/windows/apps/design/controls/images/progressbar-determinate.png)
+///
+/// * **Indeterminate** - Shows an animation without specific progress. Use when
+///   the operation duration is unknown.
+///
+/// ![Indeterminate Progress Bar](https://learn.microsoft.com/en-us/windows/apps/design/controls/images/progressbar-indeterminate.gif)
+///
+/// {@tool snippet}
+/// This example shows a determinate progress bar:
+///
+/// ```dart
+/// ProgressBar(value: 75)
+/// ```
+/// {@end-tool}
+///
+/// {@tool snippet}
+/// This example shows an indeterminate progress bar:
+///
+/// ```dart
+/// ProgressBar()
+/// ```
+/// {@end-tool}
 ///
 /// See also:
 ///
-///   * <https://learn.microsoft.com/en-us/windows/apps/design/controls/progress-controls#progressbar>
-///   * [ProgressRing], a progress widget that shows progress in a ring.
+///  * [ProgressRing], a circular progress indicator
+///  * <https://learn.microsoft.com/en-us/windows/apps/design/controls/progress-controls>
 class ProgressBar extends StatefulWidget {
   /// Creates a new progress bar.
   ///
@@ -271,19 +295,44 @@ class _ProgressBarPainter extends CustomPainter {
   bool shouldRebuildSemantics(_ProgressBarPainter oldDelegate) => false;
 }
 
-/// A progress control provides feedback to the user that a long-running
-/// operation is underway. It can mean that the user cannot interact with the
-/// app when the progress indicator is visible, and can also indicate how long
-/// the wait time might be.
+/// A circular progress indicator that shows operation progress.
 ///
-/// It can be determinate or indeterminate.
+/// Progress rings provide visual feedback about ongoing operations in a
+/// compact, circular format. They're especially useful when horizontal space
+/// is limited or when you need a loading indicator.
+///
+/// The progress ring can operate in two modes:
+///
+/// * **Determinate** - Shows specific progress from 0-100%. Use when you can
+///   measure the operation's progress.
+///
 /// ![Determinate Progress Ring](https://learn.microsoft.com/en-us/windows/apps/design/controls/images/progress-ring.jpg)
+///
+/// * **Indeterminate** - Shows a spinning animation. Use when the operation
+///   duration is unknown.
+///
 /// ![Indeterminate Progress Ring](https://learn.microsoft.com/en-us/windows/apps/design/controls/images/progressring-indeterminate.gif)
+///
+/// {@tool snippet}
+/// This example shows an indeterminate progress ring:
+///
+/// ```dart
+/// ProgressRing()
+/// ```
+/// {@end-tool}
+///
+/// {@tool snippet}
+/// This example shows a determinate progress ring:
+///
+/// ```dart
+/// ProgressRing(value: 65)
+/// ```
+/// {@end-tool}
 ///
 /// See also:
 ///
-///   * <https://learn.microsoft.com/en-us/windows/apps/design/controls/progress-controls#progressring>
-///   * [ProgressBar], a progress widget that shows progress in a horizontal bar.
+///  * [ProgressBar], a linear progress indicator
+///  * <https://learn.microsoft.com/en-us/windows/apps/design/controls/progress-controls>
 class ProgressRing extends StatefulWidget {
   /// Creates progress ring.
   ///

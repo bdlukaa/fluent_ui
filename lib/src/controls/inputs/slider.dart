@@ -7,20 +7,68 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart' as m;
 import 'package:flutter/rendering.dart';
 
-/// A slider is a control that lets the user select from a range of values by
-/// moving a thumb control along a track.
+/// A slider lets the user select from a range of values by moving a thumb
+/// control along a track.
 ///
-/// A slider is a good choice when you know that users think of the value as a
-/// relative quantity, not a numeric value. For example, users think about
-/// setting their audio volume to low or medium — not about setting the value to
-/// 2 or 5.
+/// Use a slider when you want users to set a value from a continuous range,
+/// like volume, brightness, or zoom level. Sliders are ideal when users think
+/// of the value as a relative quantity (low, medium, high) rather than a
+/// specific number.
 ///
-/// ![Slider Preview](https://docs.microsoft.com/en-us/windows/apps/design/controls/images/controls/slider.png)
+/// ![Slider Preview](https://learn.microsoft.com/en-us/windows/apps/design/controls/images/controls/slider.png)
+///
+/// {@tool snippet}
+/// This example shows a basic horizontal slider:
+///
+/// ```dart
+/// double volume = 50;
+///
+/// Slider(
+///   value: volume,
+///   min: 0,
+///   max: 100,
+///   onChanged: (value) => setState(() => volume = value),
+///   label: '${volume.round()}%',
+/// )
+/// ```
+/// {@end-tool}
+///
+/// {@tool snippet}
+/// This example shows a slider with discrete divisions:
+///
+/// ```dart
+/// double rating = 3;
+///
+/// Slider(
+///   value: rating,
+///   min: 1,
+///   max: 5,
+///   divisions: 4,
+///   label: rating.round().toString(),
+///   onChanged: (value) => setState(() => rating = value),
+/// )
+/// ```
+/// {@end-tool}
+///
+/// {@tool snippet}
+/// This example shows a vertical slider:
+///
+/// ```dart
+/// Slider(
+///   value: temperature,
+///   min: 0,
+///   max: 100,
+///   vertical: true,
+///   onChanged: (value) => setState(() => temperature = value),
+/// )
+/// ```
+/// {@end-tool}
 ///
 /// See also:
 ///
-///   * [RatingBar], that allows users to view and set ratings
-///   * <https://docs.microsoft.com/en-us/windows/apps/design/controls/slider>
+///  * [RatingBar], that allows users to view and set ratings
+///  * [NumberBox], for precise numeric input
+///  * <https://learn.microsoft.com/en-us/windows/apps/design/controls/slider>
 class Slider extends StatefulWidget {
   /// Creates a windows-styled slider.
   const Slider({

@@ -1,20 +1,26 @@
 import 'package:fluent_ui/fluent_ui.dart';
-
 import 'package:flutter/foundation.dart';
 
-/// The typography applied to a [FluentThemeData]. It implements Windows' [Type Ramp](https://docs.microsoft.com/en-us/windows/uwp/design/style/typography#type-ramp)
+/// Defines the text styles used throughout a Fluent UI application.
 ///
-/// | Do                                                  | Don't                                                                             |
-/// | :-------------------------------------------------- | :-------------------------------------------------------------------------------- |
-/// | Pick one font for your UI.                          | Don't mix multiple fonts.                                                         |
-/// | Use [body] for most text                            | Use "Caption" for primary action or any long strings.                             |
-/// | Use "Base" for titles when space is constrained.    | Use "Header" or "Subheader" if text needs to wrap.                                |
-/// | Keep to 50–60 letters per line for ease of reading. | Less than 20 characters or more than 60 characters per line is difficult to read. |
-/// | Clip text, and wrap if multiple lines are enabled.  | Use ellipses to avoid visual clutter.                                             |
+/// [Typography] implements the Windows [Type Ramp](https://learn.microsoft.com/en-us/windows/apps/design/style/typography#type-ramp),
+/// providing a consistent text hierarchy for your UI.
 ///
-/// ![Hierarchy](https://docs.microsoft.com/en-us/windows/apps/design/style/images/type/text-block-type-ramp.svg)
+/// {@tool snippet}
+/// Access typography styles from the theme:
 ///
-/// For more info, read [Typography](https://docs.microsoft.com/en-us/windows/uwp/design/style/typography)
+/// ```dart
+/// Text(
+///   'Title',
+///   style: FluentTheme.of(context).typography.title,
+/// )
+/// ```
+/// {@end-tool}
+///
+/// See also:
+///
+///  * [FluentThemeData.typography], where this is configured
+///  * <https://learn.microsoft.com/en-us/windows/apps/design/style/typography>
 class Typography with Diagnosticable {
   /// The header style. Use this as the top of the hierarchy
   ///

@@ -844,13 +844,55 @@ class ComboBoxItem<T> extends _ComboBoxItemContainer {
   final bool enabled;
 }
 
-/// A Windows design button for selecting from a list of items.
+/// A combo box (also known as a drop-down list) lets the user select from a
+/// list of items.
 ///
-/// A combo box button lets the user select from a number of items. The button
-/// shows the currently selected item as well as an arrow that opens a menu for
-/// selecting another item.
+/// The combo box displays the currently selected item and shows an arrow that,
+/// when clicked, opens a dropdown menu for selecting another item. This is useful
+/// when you have a large set of options or when screen space is limited.
 ///
-/// ![ComboBox Popup preview](https://docs.microsoft.com/en-us/windows/apps/design/controls/images/combo-box-list-item-state.png)
+/// ![ComboBox Popup preview](https://learn.microsoft.com/en-us/windows/apps/design/controls/images/combo-box-list-item-state.png)
+///
+/// {@tool snippet}
+/// This example shows a basic combo box with a list of colors:
+///
+/// ```dart
+/// String? selectedColor;
+///
+/// ComboBox<String>(
+///   value: selectedColor,
+///   items: ['Red', 'Green', 'Blue'].map((color) {
+///     return ComboBoxItem<String>(
+///       value: color,
+///       child: Text(color),
+///     );
+///   }).toList(),
+///   onChanged: (value) => setState(() => selectedColor = value),
+///   placeholder: Text('Select a color'),
+/// )
+/// ```
+/// {@end-tool}
+///
+/// {@tool snippet}
+/// This example shows a combo box with an enum:
+///
+/// ```dart
+/// enum Priority { low, medium, high }
+///
+/// Priority? selectedPriority;
+///
+/// ComboBox<Priority>(
+///   value: selectedPriority,
+///   items: Priority.values.map((priority) {
+///     return ComboBoxItem<Priority>(
+///       value: priority,
+///       child: Text(priority.name),
+///     );
+///   }).toList(),
+///   onChanged: (value) => setState(() => selectedPriority = value),
+/// )
+/// ```
+/// {@end-tool}
 ///
 /// The type `T` is the type of the [value] that each combo box item represents.
 /// All the entries in a given menu must represent values with consistent types.
@@ -862,18 +904,15 @@ class ComboBoxItem<T> extends _ComboBoxItemContainer {
 /// combo box with the new value.
 ///
 /// If the [onChanged] callback is null or the list of [items] is null
-/// then the combo box button will be disabled, i.e. its arrow will be
-/// displayed in grey and it will not respond to input. A disabled button
-/// will display the [disabledPlaceholder] widget if it is non-null. However, if
-/// [disabledPlaceholder] is null and [placeholder] is non-null, the [placeholder]
-/// widget will instead be displayed.
-///
-/// Requires one of its ancestors to be a [Material] widget.
+/// then the combo box button will be disabled—its arrow will be displayed in
+/// grey and it will not respond to input.
 ///
 /// See also:
 ///
-///  * [ComboBoxItem], the class used to represent the [items].
-///  * <https://docs.microsoft.com/en-us/windows/apps/design/controls/combo-box>
+///  * [ComboBoxItem], the class used to represent the [items]
+///  * [EditableComboBox], a combo box that allows text input
+///  * [AutoSuggestBox], a text box with suggestion dropdown
+///  * <https://learn.microsoft.com/en-us/windows/apps/design/controls/combo-box>
 class ComboBox<T> extends StatefulWidget {
   /// Creates a combo box button.
   ///

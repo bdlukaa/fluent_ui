@@ -7,42 +7,43 @@ const Widget _kDefaultDropdownButtonTrailing = ChevronDown();
 typedef DropDownButtonBuilder =
     Widget Function(BuildContext context, VoidCallback? onOpen);
 
-/// A dropdown button is a button that shows a chevron as a visual indicator that
-/// it has an attached flyout that contains more options. It has the same
-/// behavior as a standard Button control with a flyout; only the appearance is
-/// different.
+/// A button that displays a dropdown menu when pressed.
 ///
-/// ![DropDownButton Showcase](https://docs.microsoft.com/en-us/windows/apps/design/controls/images/drop-down-button-align.png)
+/// [DropDownButton] shows a chevron indicator signaling that pressing it
+/// opens a flyout menu with additional options. It's useful for grouping
+/// related actions or presenting a list of choices.
 ///
-/// ## Usage
+/// ![DropDownButton Showcase](https://learn.microsoft.com/en-us/windows/apps/design/controls/images/drop-down-button-align.png)
+///
+/// {@tool snippet}
+/// This example shows a dropdown button with menu items:
 ///
 /// ```dart
 /// DropDownButton(
-///   title: const Text('Select an option'),
+///   title: Text('Options'),
 ///   items: [
 ///     MenuFlyoutItem(
-///       text: const Text('Option 1'),
-///       onPressed: () { /* Handle option 1 */ },
+///       text: Text('Copy'),
+///       leading: Icon(FluentIcons.copy),
+///       onPressed: () => copy(),
 ///     ),
-///     MenuFlyoutSubItem(
-///       text: const Text('Submenu'),
-///       items: (context) => [
-///         MenuFlyoutItem(
-///           text: const Text('Suboption 1'),
-///           onPressed: () { /* Handle suboption 1 */ },
-///         ),
-///       ],
+///     MenuFlyoutItem(
+///       text: Text('Paste'),
+///       leading: Icon(FluentIcons.paste),
+///       onPressed: () => paste(),
 ///     ),
 ///   ],
 /// )
 /// ```
+/// {@end-tool}
 ///
 /// See also:
 ///
-///   * [Flyout], a light dismiss container that can show arbitrary UI as its
-///     content. Used to back this button
-///   * [ComboBox], a list of items that a user can select from
-///   * <https://docs.microsoft.com/en-us/windows/apps/design/controls/buttons#create-a-drop-down-button>
+///  * [ComboBox], a text field with a dropdown menu
+///  * [SplitButton], a button with a dropdown menu
+///  * [MenuFlyout], a menu that can be used to display a list of options
+///  * [Flyout], the underlying light-dismiss container
+///  * <https://learn.microsoft.com/en-us/windows/apps/design/controls/buttons#create-a-drop-down-button>
 class DropDownButton extends StatefulWidget {
   /// Creates a dropdown button.
   const DropDownButton({

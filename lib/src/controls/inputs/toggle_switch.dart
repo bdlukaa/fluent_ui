@@ -5,27 +5,75 @@ import 'package:flutter/rendering.dart';
 typedef ToggleSwitchKnobBuilder =
     Widget Function(BuildContext context, Set<WidgetState> states);
 
-/// The toggle switch represents a physical switch that allows users to turn
-/// things on or off, like a light switch. Use toggle switch controls to present
-/// users with two mutually exclusive options (such as on/off), where choosing
-/// an option provides immediate results.
+/// A toggle switch represents a physical switch that allows users to turn
+/// things on or off, like a light switch.
 ///
-/// Use a toggle switch for binary operations that take effect right after the
-/// user flips the toggle switch
-///
-/// ![ToggleSwitch Preview](https://docs.microsoft.com/en-us/windows/uwp/design/controls-and-patterns/images/toggleswitches01.png)
-///
+/// Use toggle switch controls to present users with two mutually exclusive
+/// options (such as on/off), where choosing an option provides immediate results.
 /// Think of the toggle switch as a physical power switch for a device: you flip
 /// it on or off when you want to enable or disable the action performed by the device.
 ///
+/// ![ToggleSwitch Preview](https://learn.microsoft.com/en-us/windows/apps/design/controls/images/toggleswitches01.png)
+///
+/// {@tool snippet}
+/// This example shows a basic toggle switch:
+///
+/// ```dart
+/// bool isEnabled = false;
+///
+/// ToggleSwitch(
+///   checked: isEnabled,
+///   onChanged: (value) => setState(() => isEnabled = value),
+/// )
+/// ```
+/// {@end-tool}
+///
+/// {@tool snippet}
+/// This example shows a toggle switch with a label:
+///
+/// ```dart
+/// ToggleSwitch(
+///   checked: isDarkMode,
+///   content: Text('Dark mode'),
+///   onChanged: (value) => setState(() => isDarkMode = value),
+/// )
+/// ```
+/// {@end-tool}
+///
+/// {@tool snippet}
+/// This example shows a toggle switch with the label before the switch:
+///
+/// ```dart
+/// ToggleSwitch(
+///   checked: isWifiEnabled,
+///   content: Text('Wi-Fi'),
+///   leadingContent: true,
+///   onChanged: (value) => setState(() => isWifiEnabled = value),
+/// )
+/// ```
+/// {@end-tool}
+///
+/// ## Toggle switch vs checkbox
+///
+/// Both toggle switches and checkboxes let users select between two states.
+/// Use the following guidelines to choose between them:
+///
+/// Use a **toggle switch** when:
+/// * The setting is a binary on/off choice
+/// * The change takes effect immediately
+/// * The metaphor of a physical switch makes sense
+///
+/// Use a **checkbox** when:
+/// * Users are making a selection from a list
+/// * The change requires a separate "Submit" or "Apply" action
+/// * You need to support a third "indeterminate" state
+///
 /// See also:
 ///
-///  * [Checkbox], which let the user select multiple items from a collection of
-///    two or more items
-///  * [ToggleButton], which let the user toggle a option on or off
-///  * [RadioButton], which let the user select one item from a collection of two
-///    or more options
-///  * <https://docs.microsoft.com/en-us/windows/apps/design/controls/toggles>
+///  * [Checkbox], which lets the user select multiple items from a collection
+///  * [ToggleButton], which lets the user toggle a button on or off
+///  * [RadioButton], which lets the user select one item from multiple options
+///  * <https://learn.microsoft.com/en-us/windows/apps/design/controls/toggles>
 class ToggleSwitch extends StatefulWidget {
   /// Creates a toggle switch.
   const ToggleSwitch({

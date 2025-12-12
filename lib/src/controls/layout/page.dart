@@ -1,16 +1,37 @@
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter/foundation.dart';
 
-/// The default vertical padding of the scaffold page
-///
-/// Eyeballed from Windows 10
+/// The default vertical padding of the scaffold page.
 const double kPageDefaultVerticalPadding = 24.0;
 
-/// Creates a page that follows Windows-ui design guidelines.
+/// A page layout that follows Windows Fluent Design guidelines.
+///
+/// [ScaffoldPage] provides a consistent page structure with an optional
+/// header, content area, and bottom bar. It handles padding and layout
+/// automatically while being customizable.
+///
+/// ![ScaffoldPage content area](https://learn.microsoft.com/en-us/windows/apps/design/controls/images/nav-content.png)
+///
+/// {@tool snippet}
+/// This example shows a basic scaffold page:
+///
+/// ```dart
+/// ScaffoldPage(
+///   header: PageHeader(title: Text('Settings')),
+///   content: Center(child: Text('Page content')),
+/// )
+/// ```
+/// {@end-tool}
+///
+/// ## Page variants
+///
+/// * [ScaffoldPage.scrollable] - Content is placed in a scrollable [ListView]
+/// * [ScaffoldPage.withPadding] - Content has horizontal and vertical padding
 ///
 /// See also:
 ///
-///   * [PageHeader], usually used on the [header] property
+///  * [PageHeader], typically used for the [header] property
+///  * [NavigationView], for app-level navigation structure
 class ScaffoldPage extends StatefulWidget {
   /// Creates a new scaffold page.
   const ScaffoldPage({

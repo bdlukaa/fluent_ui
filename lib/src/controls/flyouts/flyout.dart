@@ -602,7 +602,40 @@ typedef FlyoutTransitionBuilder =
       Widget child,
     );
 
-/// Controls the state of a flyout
+/// Controls the display and dismissal of flyouts.
+///
+/// A [FlyoutController] manages the lifecycle of flyout popups. Attach it to
+/// a [FlyoutTarget] and use [showFlyout] to display content.
+///
+/// {@tool snippet}
+/// This example shows how to use a flyout controller:
+///
+/// ```dart
+/// final controller = FlyoutController();
+///
+/// FlyoutTarget(
+///   controller: controller,
+///   child: Button(
+///     child: Text('Show flyout'),
+///     onPressed: () {
+///       controller.showFlyout(
+///         builder: (context) => FlyoutContent(
+///           child: Text('Flyout content'),
+///         ),
+///       );
+///     },
+///   ),
+/// )
+/// ```
+/// {@end-tool}
+///
+/// Remember to [dispose] the controller when it's no longer needed.
+///
+/// See also:
+///
+///  * [FlyoutTarget], the widget that flyouts attach to
+///  * [Flyout], for displaying contextual UI
+///  * <https://learn.microsoft.com/en-us/windows/apps/design/controls/dialogs-and-flyouts/flyouts>
 class FlyoutController with ChangeNotifier, WidgetsBindingObserver {
   FlyoutController() {
     WidgetsBinding.instance.addObserver(this);

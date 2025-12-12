@@ -2,22 +2,82 @@ import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/rendering.dart';
 
-/// A check box is used to select or deselect action items. It can be used for a
-/// single item or for a list of multiple items that a user can choose from. The
-/// control has three selection states: unselected, selected, and indeterminate.
-/// Use the indeterminate state when a collection of sub-choices have both
-/// unselected and selected states.
+/// A check box is used to select or deselect action items.
+///
+/// It can be used for a single item or for a list of multiple items that a user
+/// can choose from. The control has three selection states: unselected (`false`),
+/// selected (`true`), and indeterminate (`null`). Use the indeterminate state
+/// when a collection of sub-choices have both unselected and selected states.
 ///
 /// ![Checkbox Preview](https://learn.microsoft.com/en-us/windows/apps/design/controls/images/templates-checkbox-states-default.png)
 ///
+/// {@tool snippet}
+/// This example shows a basic checkbox:
+///
+/// ```dart
+/// bool isChecked = false;
+///
+/// Checkbox(
+///   checked: isChecked,
+///   onChanged: (value) => setState(() => isChecked = value ?? false),
+/// )
+/// ```
+/// {@end-tool}
+///
+/// {@tool snippet}
+/// This example shows a checkbox with a label:
+///
+/// ```dart
+/// Checkbox(
+///   checked: isAccepted,
+///   content: Text('I accept the terms and conditions'),
+///   onChanged: (value) => setState(() => isAccepted = value ?? false),
+/// )
+/// ```
+/// {@end-tool}
+///
+/// {@tool snippet}
+/// This example shows a three-state checkbox used to represent a group:
+///
+/// ```dart
+/// // null = indeterminate (some children checked)
+/// // true = all children checked
+/// // false = no children checked
+/// bool? parentChecked;
+///
+/// Checkbox(
+///   checked: parentChecked,
+///   content: Text('Select all'),
+///   onChanged: (value) {
+///     setState(() {
+///       // When clicked, toggle between checked and unchecked
+///       parentChecked = value == true ? true : false;
+///     });
+///   },
+/// )
+/// ```
+/// {@end-tool}
+///
+/// ## Checkbox vs other controls
+///
+/// Use a checkbox when:
+/// * Users can select zero, one, or multiple items from a list
+/// * Items in the list are independent (selecting one doesn't affect others)
+/// * You want to show the current selection state at a glance
+///
+/// Consider using:
+/// * [RadioButton] when users must select exactly one option
+/// * [ToggleSwitch] for binary on/off settings that take effect immediately
+/// * [ToggleButton] for a button that maintains a toggled state
+///
 /// See also:
 ///
-///   * <https://learn.microsoft.com/en-us/windows/apps/design/controls/checkbox>
-///   * [ToggleSwitch], which represents a physical switch that allows users to
-/// turn things on or off
-///   * [RadioButton], let users select one option from a collection of two or
-/// more mutually exclusive, visible options
-///   * [ToggleButton], a button that can be on or off.
+///  * [ToggleSwitch], which represents a physical switch that allows users to
+///    turn things on or off immediately
+///  * [RadioButton], lets users select one option from a collection of two or
+///    more mutually exclusive, visible options
+///  * [ToggleButton], a button that can be toggled on or off
+///  * <https://learn.microsoft.com/en-us/windows/apps/design/controls/checkbox>
 class Checkbox extends StatelessWidget {
   /// Creates a checkbox.
   const Checkbox({

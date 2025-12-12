@@ -85,17 +85,67 @@ class AutoSuggestBoxItem<T> {
   }
 }
 
-/// An AutoSuggestBox provides a list of suggestions for a user to select from
-/// as they type.
+/// An auto-suggest box provides a list of suggestions for a user to select
+/// from as they type.
 ///
-/// ![AutoSuggestBox Preview](https://docs.microsoft.com/en-us/windows/apps/design/controls/images/controls-autosuggest-expanded-01.png)
+/// The [AutoSuggestBox] combines a text input with a dropdown list of suggestions
+/// that filter as the user types. This is ideal for search scenarios or when
+/// users need to select from a large list of options.
+///
+/// ![AutoSuggestBox Preview](https://learn.microsoft.com/en-us/windows/apps/design/controls/images/controls-autosuggest-expanded-01.png)
+///
+/// {@tool snippet}
+/// This example shows a basic auto-suggest box:
+///
+/// ```dart
+/// AutoSuggestBox<String>(
+///   items: [
+///     AutoSuggestBoxItem(value: 'apple', label: 'Apple'),
+///     AutoSuggestBoxItem(value: 'banana', label: 'Banana'),
+///     AutoSuggestBoxItem(value: 'cherry', label: 'Cherry'),
+///   ],
+///   onSelected: (item) {
+///     print('Selected: ${item.value}');
+///   },
+///   placeholder: 'Search fruits...',
+/// )
+/// ```
+/// {@end-tool}
+///
+/// {@tool snippet}
+/// This example shows an auto-suggest box with custom item rendering:
+///
+/// ```dart
+/// AutoSuggestBox<Contact>(
+///   items: contacts.map((c) => AutoSuggestBoxItem(
+///     value: c,
+///     label: c.name,
+///     child: Row(
+///       children: [
+///         CircleAvatar(backgroundImage: NetworkImage(c.avatar)),
+///         SizedBox(width: 8),
+///         Text(c.name),
+///       ],
+///     ),
+///   )).toList(),
+///   onSelected: (item) => selectContact(item.value),
+/// )
+/// ```
+/// {@end-tool}
+///
+/// ## Keyboard navigation
+///
+/// When [enableKeyboardControls] is true (the default), users can navigate
+/// suggestions using:
+/// * Arrow Up/Down - Navigate through suggestions
+/// * Enter - Select the focused suggestion
+/// * Escape - Close the suggestions overlay
 ///
 /// See also:
 ///
 ///  * [TextBox], which is used by this widget to enter user text input
-///  * [TextFormBox], which is used by this widget by Form
-///  * [Overlay], which is used to show the suggestion popup
-///  * <https://docs.microsoft.com/en-us/windows/apps/design/controls/auto-suggest-box>
+///  * [ComboBox], for selecting from a predefined list without typing
+///  * <https://learn.microsoft.com/en-us/windows/apps/design/controls/auto-suggest-box>
 class AutoSuggestBox<T> extends StatefulWidget {
   /// Creates a windows-styled auto suggest box.
   const AutoSuggestBox({
@@ -326,10 +376,10 @@ class AutoSuggestBox<T> extends StatefulWidget {
 
   /// Whether the items can be selected using the keyboard
   ///
-  /// Arrow Up - focus the item above
-  /// Arrow Down - focus the item below
-  /// Enter - select the current focused item
-  /// Escape - close the suggestions overlay
+  /// * Arrow Up - focus the item above
+  /// * Arrow Down - focus the item below
+  /// * Enter - select the current focused item
+  /// * Escape - close the suggestions overlay
   ///
   /// Defaults to `true`
   final bool enableKeyboardControls;

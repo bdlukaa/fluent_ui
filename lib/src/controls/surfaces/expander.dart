@@ -13,22 +13,83 @@ enum ExpanderDirection {
 }
 
 /// The [Expander] control lets you show or hide less important content that's
-/// related to a piece of primary content that's always visible. Items contained
-/// in the Header are always visible. The user can expand and collapse the
-/// Content area, where secondary content is displayed, by interacting with the
-/// header. When the content area is expanded, it pushes other UI elements out
-/// of the way; it does not overlay other UI. The Expander can expand upwards or
-/// downwards.
+/// related to a piece of primary content that's always visible.
 ///
-/// Both the Header and Content areas can contain any content, from simple text
+/// Items contained in the [header] are always visible. The user can expand and
+/// collapse the [content] area, where secondary content is displayed, by
+/// interacting with the header. When the content area is expanded, it pushes
+/// other UI elements out of the way; it does not overlay other UI. The Expander
+/// can expand upwards or downwards using the [direction] property.
+///
+/// Both the header and content areas can contain any content, from simple text
 /// to complex UI layouts. For example, you can use the control to show
 /// additional options for an item.
 ///
-/// ![Expander Preview](https://docs.microsoft.com/en-us/windows/apps/design/controls/images/expander-default.gif)
+/// ![Expander Preview](https://learn.microsoft.com/en-us/windows/apps/design/controls/images/expander-default.gif)
+///
+/// {@tool snippet}
+/// This example shows a basic expander with text content:
+///
+/// ```dart
+/// Expander(
+///   header: Text('Click to expand'),
+///   content: Text('This is the expanded content.'),
+/// )
+/// ```
+/// {@end-tool}
+///
+/// {@tool snippet}
+/// This example shows an expander with a leading icon and trailing toggle:
+///
+/// ```dart
+/// Expander(
+///   leading: Icon(FluentIcons.settings),
+///   header: Text('Settings'),
+///   trailing: ToggleSwitch(
+///     checked: isEnabled,
+///     onChanged: (value) => setState(() => isEnabled = value),
+///   ),
+///   content: Column(
+///     children: [
+///       // Settings content...
+///     ],
+///   ),
+/// )
+/// ```
+/// {@end-tool}
+///
+/// {@tool snippet}
+/// This example shows nested expanders:
+///
+/// ```dart
+/// Expander(
+///   header: Text('Parent'),
+///   content: Expander(
+///     header: Text('Nested expander'),
+///     content: Text('Nested content'),
+///   ),
+/// )
+/// ```
+/// {@end-tool}
+///
+/// ## State management
+///
+/// The expander maintains its own expanded/collapsed state. Use [initiallyExpanded]
+/// to set the initial state, and [onStateChanged] to be notified when the state
+/// changes. The expander also supports [PageStorage] to persist its state across
+/// rebuilds.
+///
+/// ## Accessibility
+///
+/// The expander is accessible by default. The header acts as a button that
+/// toggles the content visibility. Screen readers will announce the expanded
+/// or collapsed state.
 ///
 /// See also:
 ///
-///   * <https://docs.microsoft.com/en-us/windows/apps/design/controls/expander>
+///  * [TreeView], for displaying hierarchical data
+///  * [InfoBar], for displaying status messages that can be dismissed
+///  * <https://learn.microsoft.com/en-us/windows/apps/design/controls/expander>
 class Expander extends StatefulWidget {
   /// Creates a windows-styled expander.
   const Expander({
@@ -65,13 +126,16 @@ class Expander extends StatefulWidget {
   /// Usually a [Text] widget.
   final Widget header;
 
-  /// The expander content
+  /// The content displayed when the expander is expanded.
   ///
   /// You can use complex, interactive UI as the content of the
   /// Expander, including nested Expander controls in the content
   /// of a parent Expander as shown here.
   ///
-  /// ![Expander Nested Content](https://docs.microsoft.com/en-us/windows/apps/design/controls/images/expander-nested.png)
+  /// ![Expander Nested Content](https://learn.microsoft.com/en-us/windows/apps/design/controls/images/expander-nested.png)
+  ///
+  /// The content is hidden when the expander is collapsed and becomes
+  /// visible when expanded. The transition is animated.
   final Widget content;
 
   /// The expander icon.

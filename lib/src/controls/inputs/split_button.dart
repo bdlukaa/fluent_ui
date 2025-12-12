@@ -9,29 +9,49 @@ typedef SplitButtonSecondaryBuilder =
 
 enum _SplitButtonType { normal, toggle }
 
-/// Represents a button with two parts that can be invoked separately. One part
-/// behaves like a standard button and the other part invokes a flyout.
+/// A button with two parts: a primary action and a flyout trigger.
+///
+/// [SplitButton] combines a standard button with a dropdown. Clicking the
+/// primary area invokes the default action, while clicking the secondary
+/// area (chevron) opens a flyout with additional options.
 ///
 /// ![SplitButton showcase](https://learn.microsoft.com/en-us/windows/apps/design/controls/images/split-button-rtb.png)
 ///
-/// To show the flyout programmatically, use a [GlobalKey<SplitButtonState>] to
-/// invoke [SplitButtonState.showFlyout]:
+/// {@tool snippet}
+/// This example shows a split button with color options:
 ///
 /// ```dart
-/// final splitButtonKey = GlobalKey<SplitButtonState>();
-///
 /// SplitButton(
-///   key: splitButtonKey,
-///   ...,
-/// ),
+///   child: Container(
+///     color: selectedColor,
+///     width: 24,
+///     height: 24,
+///   ),
+///   onInvoked: () => applyColor(selectedColor),
+///   flyout: MenuFlyout(
+///     items: colors.map((color) => MenuFlyoutItem(
+///       text: Text(color.name),
+///       onPressed: () => setState(() => selectedColor = color),
+///     )).toList(),
+///   ),
+/// )
+/// ```
+/// {@end-tool}
 ///
-/// splitButtonKey.currentState?.showFlyout();
+/// ## Programmatic flyout control
+///
+/// Use a [GlobalKey] to show the flyout programmatically:
+///
+/// ```dart
+/// final key = GlobalKey<SplitButtonState>();
+/// key.currentState?.showFlyout();
 /// ```
 ///
 /// See also:
 ///
-///   * <https://learn.microsoft.com/en-us/windows/apps/design/controls/buttons#create-a-split-button>
-///   * [DropDownButton], a button that displays a dropdown menu
+///  * [DropDownButton], a button that only shows a dropdown
+///  * [Button], a simple action button
+///  * <https://learn.microsoft.com/en-us/windows/apps/design/controls/buttons#create-a-split-button>
 class SplitButton extends StatefulWidget {
   /// The type of the button
   final _SplitButtonType _type;

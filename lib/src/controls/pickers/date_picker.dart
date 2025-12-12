@@ -38,17 +38,50 @@ enum DatePickerField {
   year,
 }
 
-/// The date picker gives you a standardized way to let users pick a localized
-/// date value using touch, mouse, or keyboard input.
+/// A picker control that lets users select a date.
 ///
-/// ![DatePicker Preview](https://docs.microsoft.com/en-us/windows/apps/design/controls/images/controls-datepicker-expand.gif)
+/// The date picker provides a standardized way for users to pick a localized
+/// date value using touch, mouse, or keyboard input. It displays separate
+/// fields for month, day, and year that expand into scrollable lists.
+///
+/// ![DatePicker Preview](https://learn.microsoft.com/en-us/windows/apps/design/controls/images/controls-datepicker-expand.gif)
+///
+/// {@tool snippet}
+/// This example shows a basic date picker:
+///
+/// ```dart
+/// DatePicker(
+///   selected: selectedDate,
+///   onChanged: (date) => setState(() => selectedDate = date),
+///   header: 'Select a date',
+/// )
+/// ```
+/// {@end-tool}
+///
+/// {@tool snippet}
+/// This example shows a date picker with restricted range:
+///
+/// ```dart
+/// DatePicker(
+///   selected: selectedDate,
+///   onChanged: (date) => setState(() => selectedDate = date),
+///   startDate: DateTime(2020, 1, 1),
+///   endDate: DateTime(2025, 12, 31),
+/// )
+/// ```
+/// {@end-tool}
+///
+/// ## Field configuration
+///
+/// Use [showMonth], [showDay], and [showYear] to show or hide specific fields.
+/// Use [fieldOrder] to customize the order of fields based on locale.
 ///
 /// See also:
 ///
-///  * [TimePicker], which gives you a standardized way to let users pick a time
-///    value
-///  * [CalendarView], which lets a user view and interact with a calendar
-///  * <https://docs.microsoft.com/en-us/windows/apps/design/controls/date-picker>
+///  * [TimePicker], for selecting time values
+///  * [CalendarDatePicker], for selecting dates from a calendar view
+///  * [CalendarView], for displaying and interacting with a calendar
+///  * <https://learn.microsoft.com/en-us/windows/apps/design/controls/date-picker>
 class DatePicker extends StatefulWidget {
   /// Creates a date picker.
   DatePicker({

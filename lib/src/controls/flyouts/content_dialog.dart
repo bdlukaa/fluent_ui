@@ -4,18 +4,25 @@ import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 
-/// The default constraints for [ContentDialog]
+/// The default constraints for [ContentDialog].
+///
+/// The dialog is constrained to 368 logical pixels wide and 756 logical pixels
+/// tall by default, following the Windows design guidelines.
 const kDefaultContentDialogConstraints = BoxConstraints(
   maxWidth: 368.0,
   maxHeight: 756.0,
 );
 
-/// Dialog controls are modal UI overlays that provide contextual
-/// app information. They block interactions with the app window
-/// until being explicitly dismissed. They often request some kind
-/// of action from the user.
+/// A modal dialog that displays contextual information and requires user action.
 ///
-/// To display a dialog, use the function `showDialog`:
+/// Content dialogs block interactions with the app window until explicitly
+/// dismissed. They are typically used to request user confirmation, display
+/// important information, or gather input before proceeding.
+///
+/// ![ContentDialog example](https://learn.microsoft.com/en-us/windows/apps/design/controls/images/dialogs/dialog_rs2_delete_file.png)
+///
+/// {@tool snippet}
+/// This example shows a confirmation dialog:
 ///
 /// ```dart
 /// showDialog(
@@ -24,32 +31,34 @@ const kDefaultContentDialogConstraints = BoxConstraints(
 ///     return ContentDialog(
 ///       title: Text('Delete file permanently?'),
 ///       content: Text(
-///         'If you delete this file, you won\'t be able to recover it. Do you want to delete it?',
+///         'If you delete this file, you won\'t be able to recover it. '
+///         'Do you want to delete it?',
 ///       ),
 ///       actions: [
 ///         Button(
 ///           child: Text('Delete'),
-///           autofocus: true,
 ///           onPressed: () {
 ///             // Delete file here
+///             Navigator.pop(context, 'delete');
 ///           },
 ///         ),
-///         Button(
+///         FilledButton(
 ///           child: Text('Cancel'),
 ///           onPressed: () => Navigator.pop(context),
 ///         ),
 ///       ],
 ///     );
-///   }
-/// )
+///   },
+/// );
 /// ```
-///
-/// ![ContentDialog example](https://docs.microsoft.com/en-us/windows/uwp/design/controls-and-patterns/images/dialogs/dialog_rs2_delete_file.png)
+/// {@end-tool}
 ///
 /// See also:
 ///
-///   * <showDialog>, used to display dialogs on top of the app content
-///   * <https://docs.microsoft.com/en-us/windows/apps/design/controls/dialogs-and-flyouts/dialogs>
+///  * [showDialog], used to display dialogs on top of the app content
+///  * [Flyout], for non-modal contextual UI
+///  * [TeachingTip], for educational or guidance content
+///  * <https://learn.microsoft.com/en-us/windows/apps/design/controls/dialogs-and-flyouts/dialogs>
 class ContentDialog extends StatelessWidget {
   /// Creates a content dialog.
   const ContentDialog({

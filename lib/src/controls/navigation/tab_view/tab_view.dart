@@ -14,19 +14,52 @@ const double _kMaxTileWidth = 240.0;
 const double _kTileHeight = 34.0;
 const double _kButtonWidth = 32.0;
 
-/// The TabView control is a way to display a set of tabs and their respective
-/// content. TabViews are useful for displaying several pages (or documents) of
-/// content while giving a user the capability to rearrange, open, or close new
-/// tabs.
+/// A tabbed interface for displaying multiple pages of content.
 ///
-/// ![TabView Preview](https://docs.microsoft.com/en-us/windows/apps/design/controls/images/tabview/tab-introduction.png)
+/// [TabView] provides a familiar tab-based navigation pattern, similar to
+/// browser tabs. Users can switch between tabs, and optionally rearrange,
+/// open, or close tabs.
 ///
-/// There must be enough space to render the tabview.
+/// ![TabView Preview](https://learn.microsoft.com/en-us/windows/apps/design/controls/images/tabview/tab-introduction.png)
+///
+/// {@tool snippet}
+/// This example shows a basic tab view:
+///
+/// ```dart
+/// TabView(
+///   currentIndex: selectedIndex,
+///   onChanged: (index) => setState(() => selectedIndex = index),
+///   tabs: [
+///     Tab(
+///       text: Text('Document 1'),
+///       body: Center(child: Text('Content 1')),
+///     ),
+///     Tab(
+///       text: Text('Document 2'),
+///       body: Center(child: Text('Content 2')),
+///     ),
+///   ],
+///   onNewPressed: () {
+///     // Add a new tab
+///   },
+/// )
+/// ```
+/// {@end-tool}
+///
+/// ## Keyboard shortcuts
+///
+/// When [shortcutsEnabled] is true, the following shortcuts are available:
+///
+/// * `Ctrl + T` - Create a new tab (if [onNewPressed] is provided)
+/// * `Ctrl + W` or `Ctrl + F4` - Close the current tab
+/// * `Ctrl + 1-8` - Navigate to tabs 1-8
+/// * `Ctrl + 9` - Navigate to the last tab
 ///
 /// See also:
 ///
-///   * [NavigationView], control provides top-level navigation for your app.
-///   * <https://docs.microsoft.com/en-us/windows/apps/design/controls/tab-view>
+///  * [NavigationView], for top-level app navigation
+///  * [Tab], the individual tab widget
+///  * <https://learn.microsoft.com/en-us/windows/apps/design/controls/tab-view>
 class TabView extends StatefulWidget {
   /// Creates a tab view.
   ///

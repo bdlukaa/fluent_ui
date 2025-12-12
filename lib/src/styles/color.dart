@@ -1,15 +1,46 @@
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter/foundation.dart';
 
-/// A set of predefined colors used by Windows UI widgets.
+/// The Fluent Design color palette.
+///
+/// [Colors] provides a set of predefined colors matching the Windows system
+/// palette. These colors are designed to work well together and with Windows
+/// UI elements.
 ///
 /// ![Colors used in fluent_ui widgets](https://learn.microsoft.com/en-us/windows/apps/design/style/images/color/windows-controls.svg)
 ///
+/// {@tool snippet}
+/// Using standard colors:
+///
+/// ```dart
+/// Container(
+///   color: Colors.blue,
+///   child: Text('Blue background'),
+/// )
+/// ```
+/// {@end-tool}
+///
+/// {@tool snippet}
+/// Using accent color shades:
+///
+/// ```dart
+/// // Access specific shades of accent colors
+/// final lightBlue = Colors.blue.light;
+/// final darkBlue = Colors.blue.dark;
+/// ```
+/// {@end-tool}
+///
+/// ## Shaded colors
+///
+/// Some colors like [grey] have numbered shades (e.g., `Colors.grey[120]`).
+/// Accent colors like [blue], [red], [green] have named shades (e.g.,
+/// `Colors.blue.light`, `Colors.blue.darker`).
+///
 /// See also:
 ///
-///   * <https://learn.microsoft.com/en-us/windows/apps/design/style/color>
-///   * [Colors], which defines all the colors provided by this library.
-///   * [AccentColor], which defines a color that can have multiple shades.
+///  * [AccentColor], for colors with light/dark shade variants
+///  * [ShadedColor], for colors with numbered shade variants
+///  * <https://learn.microsoft.com/en-us/windows/apps/design/style/color>
 class Colors {
   /// The transparent color. This should not be used in animations
   /// because it'll cause a weird effect.

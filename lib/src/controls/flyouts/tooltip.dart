@@ -7,17 +7,65 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/rendering.dart';
 
 /// A tooltip is a popup that contains additional information about another
-/// control or object. Tooltips display automatically when the user moves focus
-/// to, presses and holds, or hovers the pointer over the associated control.
-/// The tooltip disappears when the user moves focus from, stops pressing on, or
-/// stops hovering the pointer over the associated control (unless the pointer
-/// is moving towards the tooltip).
+/// control or object.
 ///
-/// ![Tooltip Preview](https://docs.microsoft.com/en-us/windows/uwp/design/controls-and-patterns/images/controls/tool-tip.png)
+/// Tooltips display automatically when the user moves focus to, presses and holds,
+/// or hovers the pointer over the associated control. The tooltip disappears when
+/// the user moves focus from, stops pressing on, or stops hovering the pointer
+/// over the associated control.
+///
+/// ![Tooltip Preview](https://learn.microsoft.com/en-us/windows/apps/design/controls/images/controls/tool-tip.png)
+///
+/// {@tool snippet}
+/// This example shows a basic tooltip with a text message:
+///
+/// ```dart
+/// Tooltip(
+///   message: 'This is a tooltip',
+///   child: IconButton(
+///     icon: Icon(FluentIcons.info),
+///     onPressed: () {},
+///   ),
+/// )
+/// ```
+/// {@end-tool}
+///
+/// {@tool snippet}
+/// This example shows a tooltip with rich text content:
+///
+/// ```dart
+/// Tooltip(
+///   richMessage: TextSpan(
+///     children: [
+///       TextSpan(text: 'Bold text', style: TextStyle(fontWeight: FontWeight.bold)),
+///       TextSpan(text: ' and normal text'),
+///     ],
+///   ),
+///   child: Button(
+///     child: Text('Hover me'),
+///     onPressed: () {},
+///   ),
+/// )
+/// ```
+/// {@end-tool}
+///
+/// ## Tooltip behavior
+///
+/// * On desktop: Tooltips appear after hovering for a short duration
+/// * On touch devices: Tooltips appear on long press
+/// * Tooltips automatically dismiss when the user interacts elsewhere
+///
+/// ## Accessibility
+///
+/// Tooltips are automatically announced by screen readers. The [message] or
+/// [richMessage] content is used as the accessible description for the [child]
+/// widget, unless [excludeFromSemantics] is set to true.
 ///
 /// See also:
 ///
-///   * [Flyout], which creates a popup with interactive content
+///  * [Flyout], which creates a popup with interactive content
+///  * [TeachingTip], for onboarding experiences and feature discovery
+///  * <https://learn.microsoft.com/en-us/windows/apps/design/controls/tooltips>
 class Tooltip extends StatefulWidget {
   /// Creates a tooltip.
   ///

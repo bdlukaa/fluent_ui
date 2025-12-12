@@ -5,17 +5,39 @@ import 'package:flutter/services.dart';
 
 const IconData kRatingBarIcon = FluentIcons.favorite_star_fill;
 
-/// The rating bar allows users to view and set ratings that
-/// reflect degrees of satisfaction with content and services.
-/// Users can interact with the rating control with touch, pen,
-/// mouse, gamepad or keyboard. The follow guidance shows how to
-/// use the rating control's features to provide flexibility and
-/// customization.
+/// A control for viewing and setting star ratings.
 ///
-/// ![RatingBar Preview](https://docs.microsoft.com/en-us/windows/uwp/design/controls-and-patterns/images/rating_rs2_doc_ratings_intro.png)
+/// The [RatingBar] allows users to rate content with a configurable number
+/// of stars. Users can interact with touch, mouse, keyboard, or gamepad.
+///
+/// ![RatingBar Preview](https://learn.microsoft.com/en-us/windows/apps/design/controls/images/rating_rs2_doc_ratings_intro.png)
+///
+/// {@tool snippet}
+/// This example shows a basic rating bar:
+///
+/// ```dart
+/// RatingBar(
+///   rating: currentRating,
+///   onChanged: (rating) => setState(() => currentRating = rating),
+/// )
+/// ```
+/// {@end-tool}
+///
+/// {@tool snippet}
+/// This example shows a read-only rating display:
+///
+/// ```dart
+/// RatingBar(
+///   rating: 4.5,
+///   onChanged: null, // Read-only
+/// )
+/// ```
+/// {@end-tool}
 ///
 /// See also:
-///   - [Slider]
+///
+///  * [Slider], for selecting numeric values from a range
+///  * <https://learn.microsoft.com/en-us/windows/apps/design/controls/rating>
 class RatingBar extends StatefulWidget {
   /// Creates a new rating bar.
   ///

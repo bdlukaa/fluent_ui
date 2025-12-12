@@ -3,6 +3,43 @@ import 'dart:ui' show lerpDouble;
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter/foundation.dart';
 
+/// A thin line used to separate content into groups.
+///
+/// Dividers help organize content and establish visual hierarchy by creating
+/// clear boundaries between sections or items.
+///
+/// {@tool snippet}
+/// This example shows a horizontal divider between text:
+///
+/// ```dart
+/// Column(
+///   children: [
+///     Text('Section 1'),
+///     Divider(),
+///     Text('Section 2'),
+///   ],
+/// )
+/// ```
+/// {@end-tool}
+///
+/// {@tool snippet}
+/// This example shows a vertical divider in a row:
+///
+/// ```dart
+/// Row(
+///   children: [
+///     Text('Left'),
+///     Divider(direction: Axis.vertical, size: 20),
+///     Text('Right'),
+///   ],
+/// )
+/// ```
+/// {@end-tool}
+///
+/// See also:
+///
+///  * [DividerTheme], for customizing divider appearance
+///  * <https://learn.microsoft.com/en-us/windows/apps/design/controls/separator>
 class Divider extends StatelessWidget {
   /// Creates a divider.
   const Divider({
@@ -12,9 +49,10 @@ class Divider extends StatelessWidget {
     this.size,
   });
 
-  /// The current direction of the slider.
+  /// The direction of the divider.
   ///
-  /// Uses [Axis.horizontal] by default
+  /// Use [Axis.horizontal] for a line that spans horizontally (default).
+  /// Use [Axis.vertical] for a line that spans vertically.
   final Axis direction;
 
   /// The `style` of the divider. It's mescled with [FluentThemeData.dividerTheme]

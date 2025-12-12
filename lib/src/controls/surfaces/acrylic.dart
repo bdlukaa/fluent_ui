@@ -6,19 +6,63 @@ import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart' as m;
 
+/// The default blur amount applied to [Acrylic] widgets.
 const double kBlurAmount = 30.0;
 
+/// The default tint alpha for [Acrylic] widgets.
 const double kDefaultAcrylicAlpha = 0.8;
 
 /// The default opacity of the [FluentThemeData.menuColor]
 const double kMenuColorOpacity = 0.65;
 
-/// Acrylic is a type of Brush that creates a translucent texture.
-/// You can apply acrylic to app surfaces to add depth and help
-/// establish a visual hierarchy.
+/// A translucent material that applies a blur effect to content behind it.
 ///
-/// ![Acrylic Example](https://docs.microsoft.com/en-us/windows/uwp/design/style/images/acrylic_lighttheme_base.png)
+/// Acrylic is a Fluent Design material that creates depth and visual hierarchy
+/// by allowing background content to show through with a blur and tint effect.
+/// It's commonly used for navigation panes, command bars, and other surfaces
+/// that overlay content.
+///
+/// ![Acrylic Example](https://learn.microsoft.com/en-us/windows/apps/design/style/images/acrylic_lighttheme_base.png)
+///
+/// {@tool snippet}
+/// This example shows a basic acrylic surface:
+///
+/// ```dart
+/// Acrylic(
+///   tint: Colors.blue,
+///   tintAlpha: 0.8,
+///   child: Padding(
+///     padding: EdgeInsets.all(16),
+///     child: Text('Acrylic content'),
+///   ),
+/// )
+/// ```
+/// {@end-tool}
+///
+/// ## Acrylic recipe
+///
+/// The acrylic effect is created by layering several elements:
+///
+/// 1. **Blur** - Applies a Gaussian blur to background content
+/// 2. **Tint** - A semi-transparent color overlay
+/// 3. **Luminosity** - Adjusts the luminosity of the tinted background
+/// 4. **Noise texture** - Adds subtle visual texture
+///
+/// ## Performance considerations
+///
+/// Acrylic uses [BackdropFilter] which can be expensive. Consider:
+///
+/// * Using [Mica] instead for large surfaces
+/// * Reducing [blurAmount] on lower-end devices
+/// * Avoiding nested acrylic surfaces
+///
+/// See also:
+///
+///  * [Mica], a lighter-weight material effect
+///  * [Card], a surface that doesn't blur background content
+///  * <https://learn.microsoft.com/en-us/windows/apps/design/style/acrylic>
 class Acrylic extends StatefulWidget {
+  /// Creates an acrylic surface.
   const Acrylic({
     super.key,
     this.tint,

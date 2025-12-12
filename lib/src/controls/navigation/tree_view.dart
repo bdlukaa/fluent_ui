@@ -79,13 +79,35 @@ enum TreeViewItemInvokeReason {
   pressed,
 }
 
-/// The item used by [TreeView] to render tiles
+/// An item displayed in a [TreeView] hierarchy.
+///
+/// Each [TreeViewItem] represents a node in the tree and can contain:
+///
+/// * [leading] - An optional widget displayed before the content (usually an icon)
+/// * [content] - The main content of the item (usually text)
+/// * [children] - Nested child items for hierarchical structure
+///
+/// {@tool snippet}
+/// This example shows how to create tree view items:
+///
+/// ```dart
+/// TreeViewItem(
+///   content: Text('Documents'),
+///   leading: Icon(FluentIcons.folder),
+///   children: [
+///     TreeViewItem(
+///       content: Text('Report.docx'),
+///       leading: Icon(FluentIcons.document),
+///     ),
+///   ],
+/// )
+/// ```
+/// {@end-tool}
 ///
 /// See also:
 ///
-///  * <https://docs.microsoft.com/en-us/windows/apps/design/controls/tree-view>
-///  * [TreeView], which render [TreeViewItem]s as tiles
-///  * [Checkbox], used on multiple selection mode
+///  * [TreeView], which renders a collection of [TreeViewItem]s
+///  * <https://learn.microsoft.com/en-us/windows/apps/design/controls/tree-view>
 class TreeViewItem with Diagnosticable {
   final Key? key;
 
@@ -528,28 +550,46 @@ extension TreeViewItemCollection on List<TreeViewItem> {
   }
 }
 
-/// The `TreeView` control enables a hierarchical list with expanding and
-/// collapsing nodes that contain nested items. It can be used to illustrate a
-/// folder structure or nested relationships in your UI.
+/// A hierarchical list with expanding and collapsing nodes.
 ///
-/// The tree view uses a combination of indentation and icons to represent the
-/// nested relationship between parent nodes and child nodes. Collapsed items
-/// use a chevron pointing to the right, and expanded nodes use a chevron
-/// pointing down.
+/// [TreeView] displays nested items in a tree structure, using indentation
+/// and icons to show parent-child relationships. It's ideal for displaying
+/// folder structures, organizational hierarchies, or any nested data.
 ///
-/// ![TreeView Simple](https://docs.microsoft.com/en-us/windows/apps/design/controls/images/treeview-simple.png)
+/// ![TreeView Simple](https://learn.microsoft.com/en-us/windows/apps/design/controls/images/treeview-simple.png)
 ///
-/// You can include an icon in the [TreeViewItem] template to represent items.
-/// For example, if you show a file system hierarchy, you could use folder
-/// icons for the parent items and file icons for the leaf items.
+/// {@tool snippet}
+/// This example shows a basic tree view:
 ///
-/// ![TreeView with Icons](https://docs.microsoft.com/en-us/windows/apps/design/controls/images/treeview-icons.png)
+/// ```dart
+/// TreeView(
+///   items: [
+///     TreeViewItem(
+///       content: Text('Folder 1'),
+///       children: [
+///         TreeViewItem(content: Text('File 1')),
+///         TreeViewItem(content: Text('File 2')),
+///       ],
+///     ),
+///     TreeViewItem(content: Text('Folder 2')),
+///   ],
+/// )
+/// ```
+/// {@end-tool}
+///
+/// ## Selection modes
+///
+/// * [TreeViewSelectionMode.none] - Selection is disabled
+/// * [TreeViewSelectionMode.single] - Only one item can be selected
+/// * [TreeViewSelectionMode.multiple] - Multiple items can be selected with checkboxes
+///
+/// ![TreeView with selection](https://learn.microsoft.com/en-us/windows/apps/design/controls/images/treeview-selection.png)
 ///
 /// See also:
 ///
-///  * <https://docs.microsoft.com/en-us/windows/apps/design/controls/tree-view>
-///  * [TreeViewItem], used to render the tiles
-///  * [Checkbox], used on multiple selection mode
+///  * [TreeViewItem], the data model for tree nodes
+///  * [ListView], for non-hierarchical lists
+///  * <https://learn.microsoft.com/en-us/windows/apps/design/controls/tree-view>
 class TreeView extends StatefulWidget {
   /// Creates a tree view.
   ///

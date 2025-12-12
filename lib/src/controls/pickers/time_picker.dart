@@ -28,17 +28,51 @@ String _formatMinute(int minute, String locale) {
   );
 }
 
-/// The time picker gives you a standardized way to let users pick a time value
-/// using touch, mouse, or keyboard input.
+/// A picker control that lets users select a time.
 ///
-/// ![TimePicker Preview](https://docs.microsoft.com/en-us/windows/apps/design/controls/images/controls-timepicker-expand.gif)
+/// The time picker provides a standardized way for users to pick a time value
+/// using touch, mouse, or keyboard input. It displays separate fields for
+/// hour, minute, and optionally AM/PM that expand into scrollable lists.
+///
+/// ![TimePicker Preview](https://learn.microsoft.com/en-us/windows/apps/design/controls/images/controls-timepicker-expand.gif)
+///
+/// {@tool snippet}
+/// This example shows a basic time picker:
+///
+/// ```dart
+/// TimePicker(
+///   selected: selectedTime,
+///   onChanged: (time) => setState(() => selectedTime = time),
+///   header: 'Select a time',
+/// )
+/// ```
+/// {@end-tool}
+///
+/// {@tool snippet}
+/// This example shows a 24-hour format time picker with 15-minute increments:
+///
+/// ```dart
+/// TimePicker(
+///   selected: selectedTime,
+///   onChanged: (time) => setState(() => selectedTime = time),
+///   hourFormat: HourFormat.HH,
+///   minuteIncrement: 15,
+/// )
+/// ```
+/// {@end-tool}
+///
+/// ## Hour formats
+///
+/// Use [hourFormat] to specify the clock system:
+///
+/// * [HourFormat.h] - 12-hour format with AM/PM
+/// * [HourFormat.HH] - 24-hour format
 ///
 /// See also:
 ///
-///  * [DatePicker], which gives you a standardized way to let users pick a
-///    localized date value
-///  * [CalendarView], which lets a user view and interact with a calendar
-///  * <https://docs.microsoft.com/en-us/windows/apps/design/controls/time-picker>
+///  * [DatePicker], for selecting date values
+///  * [CalendarView], for selecting dates from a calendar
+///  * <https://learn.microsoft.com/en-us/windows/apps/design/controls/time-picker>
 class TimePicker extends StatefulWidget {
   /// Creates a time picker.
   const TimePicker({

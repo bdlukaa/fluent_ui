@@ -61,17 +61,37 @@ enum _ColorPickerSizes {
       spectrum.size + _ColorPickerSpacing.small.size + preview.size;
 }
 
-/// A color picker is used to browse through and select colors.
-/// By default, it lets a user navigate through colors on a color
-/// spectrum, or specify a color in either Red-Green-Blue (RGB),
-/// Hue-Saturation-Value (HSV), or Hexadecimal text boxes.
+/// A control for selecting colors from a spectrum or via input.
+///
+/// [ColorPicker] lets users browse and select colors visually using a
+/// color spectrum, or enter precise values using RGB, HSV, or hex input.
 ///
 /// ![ColorPicker Preview](https://learn.microsoft.com/en-us/windows/apps/design/controls/images/color-picker-default.png)
 ///
+/// {@tool snippet}
+/// This example shows a basic color picker:
+///
+/// ```dart
+/// ColorPicker(
+///   color: selectedColor,
+///   onChanged: (color) => setState(() => selectedColor = color),
+/// )
+/// ```
+/// {@end-tool}
+///
+/// ## Customization
+///
+/// The picker supports multiple configurations:
+///
+/// * [ColorSpectrumShape.ring] or [ColorSpectrumShape.box] spectrum shapes
+/// * Show/hide color preview, sliders, and text inputs
+/// * Vertical or horizontal orientation
+/// * Alpha channel support via [isAlphaEnabled]
+///
 /// See also:
 ///
-///    * [ColorSpectrumShape], which defines the shape of the color spectrum.
-///    * <https://learn.microsoft.com/en-us/windows/apps/design/controls/color-picker>
+///  * [ColorSpectrumShape], for spectrum shape options
+///  * <https://learn.microsoft.com/en-us/windows/apps/design/controls/color-picker>
 class ColorPicker extends StatefulWidget {
   /// The current color value
   final Color color;
