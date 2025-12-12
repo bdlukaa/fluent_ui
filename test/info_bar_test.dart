@@ -9,9 +9,7 @@ void main() {
       WidgetTester tester,
     ) async {
       await tester.pumpWidget(
-        wrapApp(
-          child: const InfoBar(title: Text('Test Title')),
-        ),
+        wrapApp(child: const InfoBar(title: Text('Test Title'))),
       );
 
       expect(find.text('Test Title'), findsOneWidget);
@@ -22,9 +20,7 @@ void main() {
       WidgetTester tester,
     ) async {
       await tester.pumpWidget(
-        wrapApp(
-          child: const InfoBar.info(title: Text('Info Message')),
-        ),
+        wrapApp(child: const InfoBar.info(title: Text('Info Message'))),
       );
 
       expect(find.text('Info Message'), findsOneWidget);
@@ -36,9 +32,7 @@ void main() {
       WidgetTester tester,
     ) async {
       await tester.pumpWidget(
-        wrapApp(
-          child: const InfoBar.warning(title: Text('Warning Message')),
-        ),
+        wrapApp(child: const InfoBar.warning(title: Text('Warning Message'))),
       );
 
       expect(find.text('Warning Message'), findsOneWidget);
@@ -50,9 +44,7 @@ void main() {
       WidgetTester tester,
     ) async {
       await tester.pumpWidget(
-        wrapApp(
-          child: const InfoBar.success(title: Text('Success Message')),
-        ),
+        wrapApp(child: const InfoBar.success(title: Text('Success Message'))),
       );
 
       expect(find.text('Success Message'), findsOneWidget);
@@ -64,9 +56,7 @@ void main() {
       WidgetTester tester,
     ) async {
       await tester.pumpWidget(
-        wrapApp(
-          child: const InfoBar.error(title: Text('Error Message')),
-        ),
+        wrapApp(child: const InfoBar.error(title: Text('Error Message'))),
       );
 
       expect(find.text('Error Message'), findsOneWidget);

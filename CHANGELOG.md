@@ -14,6 +14,7 @@
 - feat: Add `NumberBox.parser`, which allows to use a custom parse function for the number box. ([#1166](https://github.com/bdlukaa/fluent_ui/issues/1166))
 - fix: Correctly lerp between theme properties ([#953](https://github.com/bdlukaa/fluent_ui/issues/953))
 - fix: Correctly apply theme durations to animations ([#1231](https://github.com/bdlukaa/fluent_ui/issues/1231))
+- feat: Apply text height on `Typography`
 
 ## 4.13.0
 

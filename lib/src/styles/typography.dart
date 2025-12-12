@@ -3,8 +3,22 @@ import 'package:flutter/foundation.dart';
 
 /// Defines the text styles used throughout a Fluent UI application.
 ///
-/// [Typography] implements the Windows [Type Ramp](https://learn.microsoft.com/en-us/windows/apps/design/style/typography#type-ramp),
-/// providing a consistent text hierarchy for your UI.
+/// [Typography] implements the Windows 11 Type Ramp, providing a consistent
+/// text hierarchy for your UI. The type ramp establishes crucial relationships
+/// between text styles on a page, helping users read content easily.
+///
+/// ## Type ramp
+///
+/// | Style       | Size | Line height | Weight   |
+/// |:------------|-----:|------------:|:---------|
+/// | [display]   | 68px | 92px        | Semibold |
+/// | [titleLarge]| 40px | 52px        | Semibold |
+/// | [title]     | 28px | 36px        | Semibold |
+/// | [subtitle]  | 20px | 28px        | Semibold |
+/// | [bodyLarge] | 18px | 24px        | Regular  |
+/// | [bodyStrong]| 14px | 20px        | Semibold |
+/// | [body]      | 14px | 20px        | Regular  |
+/// | [caption]   | 12px | 16px        | Regular  |
 ///
 /// {@tool snippet}
 /// Access typography styles from the theme:
@@ -20,32 +34,47 @@ import 'package:flutter/foundation.dart';
 /// See also:
 ///
 ///  * [FluentThemeData.typography], where this is configured
-///  * <https://learn.microsoft.com/en-us/windows/apps/design/style/typography>
+///  * <https://learn.microsoft.com/en-us/windows/apps/design/signature-experiences/typography>
 class Typography with Diagnosticable {
-  /// The header style. Use this as the top of the hierarchy
+  /// The largest text style, used for hero moments and display text.
   ///
-  /// Don't use [titleLarge] if the text needs to wrap.
+  /// 68px semibold with 92px line height.
   final TextStyle? display;
 
+  /// A large title style for prominent headings.
+  ///
+  /// 40px semibold with 52px line height. Avoid using if text needs to wrap.
   final TextStyle? titleLarge;
 
-  /// The title style.
+  /// The standard title style for page and section headers.
+  ///
+  /// 28px semibold with 36px line height.
   final TextStyle? title;
 
-  /// The subtitle style.
+  /// A secondary heading style below [title].
+  ///
+  /// 20px semibold with 28px line height.
   final TextStyle? subtitle;
 
+  /// A larger body text style for emphasized content.
+  ///
+  /// 18px regular with 24px line height.
   final TextStyle? bodyLarge;
 
-  /// The base style. Use [base] for titles when space is constrained.
+  /// An emphasized body text style for important content.
+  ///
+  /// 14px semibold with 20px line height. Use for labels or emphasized text.
   final TextStyle? bodyStrong;
 
-  /// The body style. Use [body] for most of the text.
+  /// The default body text style for most content.
+  ///
+  /// 14px regular with 20px line height. Use this for the majority of text.
   final TextStyle? body;
 
-  /// The caption style.
+  /// The smallest text style for supplementary information.
   ///
-  /// Don't use [caption] for primary action or any long strings.
+  /// 12px regular with 16px line height. Avoid using for primary actions
+  /// or long strings as it may be difficult to read.
   final TextStyle? caption;
 
   /// Creates a new [Typography]. To create the default typography, use [Typography.defaultTypography]
@@ -60,10 +89,16 @@ class Typography with Diagnosticable {
     this.caption,
   });
 
-  /// The default typography according to a brightness or color.
+  /// Creates a typography with the Windows 11 type ramp values.
   ///
-  /// If [color] is null, [Colors.black] is used if [brightness] is light,
-  /// otherwise [Colors.white] is used. If it's not null, [color] will be used.
+  /// The text color is determined by [brightness] or [color]:
+  ///
+  /// * If [color] is provided, it's used directly
+  /// * If [brightness] is light, a near-black color is used
+  /// * If [brightness] is dark, white is used
+  ///
+  /// The sizes and line heights follow the Windows 11 type ramp as defined in
+  /// the [Microsoft Design documentation](https://learn.microsoft.com/en-us/windows/apps/design/signature-experiences/typography#type-ramp).
   factory Typography.fromBrightness({Brightness? brightness, Color? color}) {
     assert(
       brightness != null || color != null,
@@ -74,41 +109,61 @@ class Typography with Diagnosticable {
         ? const Color(0xE4000000)
         : Colors.white;
     return Typography.raw(
+      // Display: 68/92 epx, Semibold
       display: TextStyle(
         fontSize: 68,
+        height: 92 / 68,
         color: color,
         fontWeight: FontWeight.w600,
       ),
+      // Title Large: 40/52 epx, Semibold
       titleLarge: TextStyle(
         fontSize: 40,
+        height: 52 / 40,
         color: color,
         fontWeight: FontWeight.w600,
       ),
-      title: TextStyle(fontSize: 28, color: color, fontWeight: FontWeight.w600),
+      // Title: 28/36 epx, Semibold
+      title: TextStyle(
+        fontSize: 28,
+        height: 36 / 28,
+        color: color,
+        fontWeight: FontWeight.w600,
+      ),
+      // Subtitle: 20/28 epx, Semibold
       subtitle: TextStyle(
         fontSize: 20,
+        height: 28 / 20,
         color: color,
         fontWeight: FontWeight.w600,
       ),
+      // Body Large: 18/24 epx, Regular
       bodyLarge: TextStyle(
         fontSize: 18,
+        height: 24 / 18,
         color: color,
         fontWeight: FontWeight.normal,
       ),
+      // Body Strong: 14/20 epx, Semibold
       bodyStrong: TextStyle(
         fontSize: 14,
+        height: 20 / 14,
         color: color,
         fontWeight: FontWeight.w600,
       ),
+      // Body: 14/20 epx, Regular
       body: TextStyle(
         fontSize: 14,
+        height: 20 / 14,
         color: color,
         fontWeight: FontWeight.normal,
       ),
+      // Caption: 12/16 epx, Regular
       caption: TextStyle(
         fontSize: 12,
+        height: 16 / 12,
         color: color,
-        fontWeight: FontWeight.normal,
+        fontWeight: FontWeight.w300,
       ),
     );
   }
