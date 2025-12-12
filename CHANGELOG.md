@@ -15,6 +15,7 @@
 - fix: Correctly lerp between theme properties ([#953](https://github.com/bdlukaa/fluent_ui/issues/953))
 - fix: Correctly apply theme durations to animations ([#1231](https://github.com/bdlukaa/fluent_ui/issues/1231))
 - feat: Apply text height on `Typography`
+- refactor: Encourage usage of `EdgeInsetsDirectional` instead of `EdgeInsets`
 
 ## 4.13.0
 

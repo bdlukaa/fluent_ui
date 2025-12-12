@@ -239,7 +239,7 @@ class Tooltip extends StatefulWidget {
 class TooltipState extends State<Tooltip> with SingleTickerProviderStateMixin {
   static const double _defaultVerticalOffset = 24.0;
   static const bool _defaultPreferBelow = true;
-  static const EdgeInsetsGeometry _defaultMargin = EdgeInsets.zero;
+  static const EdgeInsetsGeometry _defaultMargin = EdgeInsetsDirectional.zero;
   static const Duration _fadeInDuration = Duration(milliseconds: 150);
   static const Duration _fadeOutDuration = Duration(milliseconds: 75);
   static const Duration _defaultShowDuration = Duration(milliseconds: 1500);
@@ -468,7 +468,7 @@ class TooltipState extends State<Tooltip> with SingleTickerProviderStateMixin {
       textDirection: Directionality.of(context),
       child: _TooltipOverlay(
         richMessage: widget.richMessage ?? TextSpan(text: widget.message),
-        padding: tooltipTheme.padding ?? EdgeInsets.zero,
+        padding: tooltipTheme.padding ?? EdgeInsetsDirectional.zero,
         margin: tooltipTheme.margin ?? _defaultMargin,
         decoration: tooltipTheme.decoration ?? defaultDecoration,
         textStyle: tooltipTheme.textStyle ?? defaultTextStyle,
@@ -747,7 +747,7 @@ class TooltipThemeData with Diagnosticable {
       height: 32.0,
       verticalOffset: 24.0,
       preferBelow: false,
-      margin: EdgeInsets.zero,
+      margin: EdgeInsetsDirectional.zero,
       padding: () {
         switch (defaultTargetPlatform) {
           case TargetPlatform.macOS:
@@ -755,7 +755,7 @@ class TooltipThemeData with Diagnosticable {
           case TargetPlatform.windows:
             return const EdgeInsetsDirectional.fromSTEB(8, 5, 8, 7);
           default:
-            return const EdgeInsets.symmetric(horizontal: 16.0);
+            return const EdgeInsetsDirectional.symmetric(horizontal: 16.0);
         }
       }(),
       showDuration: const Duration(milliseconds: 1500),

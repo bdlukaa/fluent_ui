@@ -183,8 +183,8 @@ class DividerThemeData with Diagnosticable {
   factory DividerThemeData.standard(FluentThemeData theme) {
     return DividerThemeData(
       thickness: 1,
-      horizontalMargin: const EdgeInsets.symmetric(horizontal: 10),
-      verticalMargin: const EdgeInsets.symmetric(vertical: 10),
+      horizontalMargin: const EdgeInsetsDirectional.symmetric(horizontal: 10),
+      verticalMargin: const EdgeInsetsDirectional.symmetric(vertical: 10),
       decoration: BoxDecoration(
         color: theme.resources.dividerStrokeColorDefault,
       ),

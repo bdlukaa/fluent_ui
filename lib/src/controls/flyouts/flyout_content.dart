@@ -16,7 +16,7 @@ class FlyoutContent extends StatelessWidget {
     required this.child,
     this.color,
     this.shape,
-    this.padding = const EdgeInsets.all(8.0),
+    this.padding = const EdgeInsetsDirectional.all(8.0),
     this.shadowColor = Colors.black,
     this.elevation = 8.0,
     this.constraints = kFlyoutMinConstraints,
@@ -265,7 +265,7 @@ class FlyoutListTile extends StatelessWidget {
                 top: 0,
                 bottom: 0,
                 child: Container(
-                  margin: const EdgeInsets.symmetric(vertical: 6.0),
+                  margin: const EdgeInsetsDirectional.symmetric(vertical: 6.0),
                   width: 2.5,
                   decoration: BoxDecoration(
                     color: theme.accentColor.defaultBrushFor(theme.brightness),

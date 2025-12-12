@@ -31,7 +31,7 @@ import 'package:fluent_ui/fluent_ui.dart';
 ///   backgroundColor: Colors.blue.lightest,
 ///   borderColor: Colors.blue,
 ///   borderRadius: BorderRadius.circular(8.0),
-///   padding: EdgeInsets.all(16.0),
+///   padding: EdgeInsetsDirectional.all(16.0),
 ///   child: Text('Custom styled card'),
 /// )
 /// ```
@@ -47,7 +47,7 @@ class Card extends StatelessWidget {
   const Card({
     super.key,
     required this.child,
-    this.padding = const EdgeInsets.all(12.0),
+    this.padding = const EdgeInsetsDirectional.all(12.0),
     this.margin,
     this.backgroundColor,
     this.borderColor,
@@ -61,7 +61,7 @@ class Card extends StatelessWidget {
 
   /// The amount of space by which to inset the [child].
   ///
-  /// Defaults to `EdgeInsets.all(12.0)`.
+  /// Defaults to `EdgeInsetsDirectional.all(12.0)`.
   ///
   /// The padding is applied inside the card's border.
   final EdgeInsetsGeometry padding;

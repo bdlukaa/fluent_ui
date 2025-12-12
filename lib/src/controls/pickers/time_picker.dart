@@ -305,8 +305,8 @@ class TimePickerState extends State<TimePicker>
           const divider = Divider(
             direction: Axis.vertical,
             style: DividerThemeData(
-              verticalMargin: EdgeInsets.zero,
-              horizontalMargin: EdgeInsets.zero,
+              verticalMargin: EdgeInsetsDirectional.zero,
+              horizontalMargin: EdgeInsetsDirectional.zero,
             ),
           );
           return FocusBorder(
@@ -481,8 +481,8 @@ class __TimePickerContentPopupState extends State<_TimePickerContentPopup> {
     const divider = Divider(
       direction: Axis.vertical,
       style: DividerThemeData(
-        verticalMargin: EdgeInsets.zero,
-        horizontalMargin: EdgeInsets.zero,
+        verticalMargin: EdgeInsetsDirectional.zero,
+        horizontalMargin: EdgeInsetsDirectional.zero,
       ),
     );
     final duration = theme.fasterAnimationDuration;
@@ -757,8 +757,8 @@ class __TimePickerContentPopupState extends State<_TimePickerContentPopup> {
           ),
           const Divider(
             style: DividerThemeData(
-              verticalMargin: EdgeInsets.zero,
-              horizontalMargin: EdgeInsets.zero,
+              verticalMargin: EdgeInsetsDirectional.zero,
+              horizontalMargin: EdgeInsetsDirectional.zero,
             ),
           ),
           YesNoPickerControl(onChanged: onSelect, onCancel: onDismiss),

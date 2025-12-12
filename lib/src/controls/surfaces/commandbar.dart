@@ -13,8 +13,11 @@ class CommandBarCard extends StatelessWidget {
   const CommandBarCard({
     super.key,
     required this.child,
-    this.margin = EdgeInsets.zero,
-    this.padding = const EdgeInsets.symmetric(horizontal: 6.0, vertical: 4.0),
+    this.margin = EdgeInsetsDirectional.zero,
+    this.padding = const EdgeInsetsDirectional.symmetric(
+      horizontal: 6.0,
+      vertical: 4.0,
+    ),
     this.borderRadius = const BorderRadius.all(Radius.circular(4.0)),
     this.borderColor,
     this.backgroundColor,
@@ -424,7 +427,7 @@ class CommandBarState extends State<CommandBar> {
       w = listBuilder.call(children: [Expanded(child: w)]);
     }
     w = Container(
-      padding: const EdgeInsets.all(4.0),
+      padding: const EdgeInsetsDirectional.all(4.0),
       decoration: ShapeDecoration(
         color: secondaryFlyoutController.isOpen
             ? theme.menuColor.withValues(alpha: kMenuColorOpacity)
@@ -572,7 +575,10 @@ class CommandBarItemInPrimary extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: const EdgeInsets.symmetric(vertical: 6.0, horizontal: 3.0),
+      margin: const EdgeInsetsDirectional.symmetric(
+        vertical: 6.0,
+        horizontal: 3.0,
+      ),
       child: child,
     );
   }
@@ -730,8 +736,8 @@ class CommandBarSeparator extends CommandBarItem {
               direction: direction,
               style: DividerThemeData(
                 thickness: thickness,
-                horizontalMargin: EdgeInsets.zero,
-                verticalMargin: EdgeInsets.zero,
+                horizontalMargin: EdgeInsetsDirectional.zero,
+                verticalMargin: EdgeInsetsDirectional.zero,
                 decoration: color != null ? BoxDecoration(color: color) : null,
               ),
             ),

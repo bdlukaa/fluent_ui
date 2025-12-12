@@ -102,7 +102,7 @@ class TextFormBox extends ControllableFormBox {
     Radius cursorRadius = const Radius.circular(2.0),
     Color? cursorColor,
     Brightness? keyboardAppearance,
-    EdgeInsets scrollPadding = const EdgeInsets.all(20.0),
+    EdgeInsetsGeometry scrollPadding = const EdgeInsetsDirectional.all(20.0),
     bool? enableInteractiveSelection,
     TextSelectionControls? selectionControls,
     ScrollPhysics? scrollPhysics,
@@ -169,7 +169,7 @@ class TextFormBox extends ControllableFormBox {
            return UnmanagedRestorationScope(
              bucket: field.bucket,
              child: FormRow(
-               padding: EdgeInsets.zero,
+               padding: EdgeInsetsDirectional.zero,
                error: (field.errorText == null) ? null : Text(field.errorText!),
                child: TextBox(
                  controller: state._effectiveController,

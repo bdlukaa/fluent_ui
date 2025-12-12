@@ -231,7 +231,7 @@ class TextBox extends StatefulWidget {
     this.selectionHeightStyle = ui.BoxHeightStyle.tight,
     this.selectionWidthStyle = ui.BoxWidthStyle.tight,
     this.keyboardAppearance,
-    this.scrollPadding = const EdgeInsets.all(20.0),
+    this.scrollPadding = const EdgeInsetsDirectional.all(20.0),
     this.dragStartBehavior = DragStartBehavior.start,
     bool? enableInteractiveSelection,
     this.selectionControls,
@@ -560,7 +560,7 @@ class TextBox extends StatefulWidget {
   final Brightness? keyboardAppearance;
 
   /// {@macro flutter.widgets.editableText.scrollPadding}
-  final EdgeInsets scrollPadding;
+  final EdgeInsetsGeometry scrollPadding;
 
   /// {@macro flutter.widgets.editableText.enableInteractiveSelection}
   final bool enableInteractiveSelection;
@@ -1403,7 +1403,9 @@ class _TextBoxState extends State<TextBox>
             backgroundCursorColor: disabledColor,
             selectionHeightStyle: widget.selectionHeightStyle,
             selectionWidthStyle: widget.selectionWidthStyle,
-            scrollPadding: widget.scrollPadding,
+            scrollPadding: widget.scrollPadding.resolve(
+              Directionality.of(context),
+            ),
             keyboardAppearance: keyboardAppearance,
             dragStartBehavior: widget.dragStartBehavior,
             scrollController: widget.scrollController,

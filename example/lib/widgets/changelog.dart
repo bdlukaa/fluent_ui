@@ -47,7 +47,9 @@ class _ChangelogState extends State<Changelog> {
     return DeferredWidget(
       flutter_markdown.loadLibrary,
       () => ContentDialog(
-        style: const ContentDialogThemeData(padding: EdgeInsets.zero),
+        style: const ContentDialogThemeData(
+          padding: EdgeInsetsDirectional.zero,
+        ),
         constraints: const BoxConstraints(maxWidth: 600),
         content: () {
           if (changelog == null) return const ProgressRing();
@@ -141,7 +143,7 @@ class _ChangelogState extends State<Changelog> {
 //         //     : atomOneDarkTheme,
 
 //         // Specify padding
-//         padding: const EdgeInsets.all(8),
+//         padding: const EdgeInsetsDirectional.all(8),
 
 //         // Specify text style
 //         // textStyle: GoogleFonts.robotoMono(),

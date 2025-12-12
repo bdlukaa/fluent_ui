@@ -50,7 +50,7 @@ class _CardHighlightState extends State<CardHighlight>
             Mica(
               backgroundColor: widget.backgroundColor,
               child: Padding(
-                padding: const EdgeInsets.all(12.0),
+                padding: const EdgeInsetsDirectional.all(12.0),
                 child: Align(
                   alignment: AlignmentDirectional.topStart,
                   child: SizedBox(width: double.infinity, child: widget.child),

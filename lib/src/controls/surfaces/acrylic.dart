@@ -32,7 +32,7 @@ const double kMenuColorOpacity = 0.65;
 ///   tint: Colors.blue,
 ///   tintAlpha: 0.8,
 ///   child: Padding(
-///     padding: EdgeInsets.all(16),
+///     padding: EdgeInsetsDirectional.all(16),
 ///     child: Text('Acrylic content'),
 ///   ),
 /// )

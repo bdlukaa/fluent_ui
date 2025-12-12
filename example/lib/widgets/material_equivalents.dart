@@ -267,8 +267,8 @@ class _UIEquivalentsState extends State<UIEquivalents> {
                   alignment: Alignment.bottomCenter,
                   child: Container(
                     height: 216,
-                    padding: const EdgeInsets.only(top: 6.0),
-                    margin: EdgeInsets.only(
+                    padding: const EdgeInsetsDirectional.only(top: 6.0),
+                    margin: EdgeInsetsDirectional.only(
                       bottom: MediaQuery.of(context).viewInsets.bottom,
                     ),
                     color: c.CupertinoColors.systemBackground.resolveFrom(
@@ -320,8 +320,8 @@ class _UIEquivalentsState extends State<UIEquivalents> {
                   alignment: Alignment.bottomCenter,
                   child: Container(
                     height: 216,
-                    padding: const EdgeInsets.only(top: 6.0),
-                    margin: EdgeInsets.only(
+                    padding: const EdgeInsetsDirectional.only(top: 6.0),
+                    margin: EdgeInsetsDirectional.only(
                       bottom: MediaQuery.of(context).viewInsets.bottom,
                     ),
                     color: c.CupertinoColors.systemBackground.resolveFrom(

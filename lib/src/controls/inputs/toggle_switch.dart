@@ -291,8 +291,8 @@ class DefaultToggleSwitchKnob extends StatelessWidget {
       duration: style?.animationDuration ?? Duration.zero,
       curve: style?.animationCurve ?? Curves.linear,
       margin: states.isHovered
-          ? const EdgeInsets.all(1.0 + checkedFactor)
-          : const EdgeInsets.symmetric(
+          ? const EdgeInsetsDirectional.all(1.0 + checkedFactor)
+          : const EdgeInsetsDirectional.symmetric(
               horizontal: 2.0 + checkedFactor,
               vertical: 2.0 + checkedFactor,
             ),

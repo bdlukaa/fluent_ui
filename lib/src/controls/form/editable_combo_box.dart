@@ -264,7 +264,7 @@ class ComboboxFormField<T> extends FormField<T> {
              child: Builder(
                builder: (BuildContext context) {
                  return FormRow(
-                   padding: EdgeInsets.zero,
+                   padding: EdgeInsetsDirectional.zero,
                    error: field.errorText != null
                        ? Text(field.errorText!)
                        : null,
@@ -388,7 +388,7 @@ class EditableComboboxFormField<T> extends FormField<T> {
              child: Builder(
                builder: (BuildContext context) {
                  return FormRow(
-                   padding: EdgeInsets.zero,
+                   padding: EdgeInsetsDirectional.zero,
                    error: field.errorText != null
                        ? Text(field.errorText!)
                        : null,

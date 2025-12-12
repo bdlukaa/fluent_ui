@@ -380,8 +380,8 @@ class DatePickerState extends State<DatePicker> {
           const divider = Divider(
             direction: Axis.vertical,
             style: DividerThemeData(
-              verticalMargin: EdgeInsets.zero,
-              horizontalMargin: EdgeInsets.zero,
+              verticalMargin: EdgeInsetsDirectional.zero,
+              horizontalMargin: EdgeInsetsDirectional.zero,
             ),
           );
 
@@ -579,8 +579,8 @@ class __DatePickerContentPopUpState extends State<_DatePickerContentPopUp> {
     const divider = Divider(
       direction: Axis.vertical,
       style: DividerThemeData(
-        verticalMargin: EdgeInsets.zero,
-        horizontalMargin: EdgeInsets.zero,
+        verticalMargin: EdgeInsetsDirectional.zero,
+        horizontalMargin: EdgeInsetsDirectional.zero,
       ),
     );
 
@@ -691,7 +691,7 @@ class __DatePickerContentPopUpState extends State<_DatePickerContentPopUp> {
                   final selected = day == localDate.day;
 
                   return ListTile(
-                    contentPadding: EdgeInsets.zero,
+                    contentPadding: EdgeInsetsDirectional.zero,
                     key: ValueKey(day),
                     onPressed: selected
                         ? null
@@ -778,7 +778,7 @@ class __DatePickerContentPopUpState extends State<_DatePickerContentPopUp> {
                 final realYear = widget.startDate.year + index;
                 final selected = realYear == localDate.year;
                 return ListTile(
-                  contentPadding: EdgeInsets.zero,
+                  contentPadding: EdgeInsetsDirectional.zero,
                   onPressed: selected
                       ? null
                       : () {
@@ -837,8 +837,8 @@ class __DatePickerContentPopUpState extends State<_DatePickerContentPopUp> {
           ),
           const Divider(
             style: DividerThemeData(
-              verticalMargin: EdgeInsets.zero,
-              horizontalMargin: EdgeInsets.zero,
+              verticalMargin: EdgeInsetsDirectional.zero,
+              horizontalMargin: EdgeInsetsDirectional.zero,
             ),
           ),
           YesNoPickerControl(onChanged: onSelect, onCancel: onDismiss),

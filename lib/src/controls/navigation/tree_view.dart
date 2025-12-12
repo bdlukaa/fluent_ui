@@ -1079,7 +1079,10 @@ class _TreeViewItem extends StatelessWidget {
         autofocus: item.autofocus,
         focusNode: item.focusNode,
         semanticLabel: item.semanticLabel,
-        margin: const EdgeInsets.symmetric(vertical: 2.0, horizontal: 4.0),
+        margin: const EdgeInsetsDirectional.symmetric(
+          vertical: 2.0,
+          horizontal: 4.0,
+        ),
         builder: (context, states) {
           final itemForegroundColor = WidgetStateExtension.forStates<Color>(
             states,

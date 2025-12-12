@@ -49,7 +49,7 @@ class _InfoBarsPageState extends State<InfoBarsPage> with PageMixin {
   );
 });''',
           child: Padding(
-            padding: const EdgeInsets.all(8.0),
+            padding: const EdgeInsetsDirectional.all(8.0),
             child: Button(
               onPressed: () async {
                 await displayInfoBar(
@@ -91,7 +91,7 @@ class _InfoBarsPageState extends State<InfoBarsPage> with PageMixin {
   isLong: true,
 )''',
           child: Padding(
-            padding: const EdgeInsets.all(8.0),
+            padding: const EdgeInsetsDirectional.all(8.0),
             child: Column(
               mainAxisSize: MainAxisSize.min,
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -175,7 +175,7 @@ class _InfoBarsPageState extends State<InfoBarsPage> with PageMixin {
   )''' : null}
 )''',
           child: Padding(
-            padding: const EdgeInsets.all(8.0),
+            padding: const EdgeInsetsDirectional.all(8.0),
             child: Column(
               mainAxisSize: MainAxisSize.min,
               crossAxisAlignment: CrossAxisAlignment.start,

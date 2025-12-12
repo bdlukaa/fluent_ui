@@ -361,7 +361,7 @@ class ListTile extends StatelessWidget {
                             ),
                             builder: (context, height, child) => Center(
                               child: Padding(
-                                padding: EdgeInsets.symmetric(
+                                padding: EdgeInsetsDirectional.symmetric(
                                   vertical: contentPadding.vertical,
                                 ),
                                 child: Container(

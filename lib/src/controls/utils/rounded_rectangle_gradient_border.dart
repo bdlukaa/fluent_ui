@@ -102,7 +102,8 @@ class RoundedRectangleGradientBorder extends ShapeBorder {
   }
 
   @override
-  EdgeInsetsGeometry get dimensions => EdgeInsets.all(math.max(strokeInset, 0));
+  EdgeInsetsGeometry get dimensions =>
+      EdgeInsetsDirectional.all(math.max(strokeInset, 0));
 
   @override
   Path getInnerPath(Rect rect, {TextDirection? textDirection}) {

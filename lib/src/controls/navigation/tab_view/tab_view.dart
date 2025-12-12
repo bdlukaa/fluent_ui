@@ -442,7 +442,7 @@ class _TabViewState extends State<TabView> {
               states,
             );
           }),
-          padding: const WidgetStatePropertyAll(EdgeInsets.zero),
+          padding: const WidgetStatePropertyAll(EdgeInsetsDirectional.zero),
         ),
       ),
     );
@@ -456,7 +456,7 @@ class _TabViewState extends State<TabView> {
       child: Divider(
         direction: Axis.vertical,
         style: DividerThemeData(
-          verticalMargin: const EdgeInsets.symmetric(vertical: 8),
+          verticalMargin: const EdgeInsetsDirectional.symmetric(vertical: 8),
           decoration:
               ![widget.currentIndex - 1, widget.currentIndex].contains(index)
               ? null

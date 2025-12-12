@@ -223,8 +223,8 @@ class SplitButtonState extends State<SplitButton> {
                 const Divider(
                   direction: Axis.vertical,
                   style: DividerThemeData(
-                    horizontalMargin: EdgeInsets.zero,
-                    verticalMargin: EdgeInsets.zero,
+                    horizontalMargin: EdgeInsetsDirectional.zero,
+                    verticalMargin: EdgeInsetsDirectional.zero,
                   ),
                 ),
                 if (widget.secondaryBuilder == null)

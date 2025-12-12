@@ -108,7 +108,7 @@ class Expander extends StatefulWidget {
     this.headerBackgroundColor,
     this.headerShape,
     this.contentBackgroundColor,
-    this.contentPadding = const EdgeInsets.all(16.0),
+    this.contentPadding = const EdgeInsetsDirectional.all(16.0),
     this.contentShape,
   });
 
@@ -229,7 +229,7 @@ class Expander extends StatefulWidget {
         DiagnosticsProperty<EdgeInsetsGeometry>(
           'contentPadding',
           contentPadding,
-          defaultValue: const EdgeInsets.all(16.0),
+          defaultValue: const EdgeInsetsDirectional.all(16.0),
         ),
       );
   }
@@ -350,7 +350,7 @@ class ExpanderState extends State<Expander>
                   child: FocusBorder(
                     focused: states.isFocused,
                     child: Container(
-                      padding: const EdgeInsets.symmetric(
+                      padding: const EdgeInsetsDirectional.symmetric(
                         horizontal: 10.0,
                         vertical: 10.0,
                       ),

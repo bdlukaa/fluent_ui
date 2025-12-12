@@ -328,7 +328,7 @@ class _SliderState extends State<Slider> {
     final disabledState = {WidgetState.disabled};
     Widget child = HoverButton(
       onPressed: widget.onChanged == null ? null : () {},
-      margin: style.margin ?? EdgeInsets.zero,
+      margin: style.margin ?? EdgeInsetsDirectional.zero,
       cursor: widget.mouseCursor,
       builder: (context, states) => m.Material(
         type: m.MaterialType.transparency,
@@ -710,7 +710,7 @@ class SliderThemeData with Diagnosticable {
           return theme.resources.controlStrongFillColorDefault;
         }
       }),
-      margin: EdgeInsets.zero,
+      margin: EdgeInsetsDirectional.zero,
       useThumbBall: true,
       thumbBallInnerFactor: WidgetStateProperty.resolveWith((states) {
         return states.isPressed

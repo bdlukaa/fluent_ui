@@ -252,7 +252,7 @@ class _IconsPageState extends State<IconsPage> {
                               ),
                               borderRadius: BorderRadius.circular(20.0),
                             ),
-                            padding: const EdgeInsets.all(6.0),
+                            padding: const EdgeInsetsDirectional.all(6.0),
                             child: Column(
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [

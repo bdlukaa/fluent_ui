@@ -44,7 +44,7 @@ class _ButtonPageState extends State<ButtonPage> with PageMixin {
           return IconButton(
             autofocus: splitButtonColor == color,
             style: ButtonStyle(
-              padding: WidgetStatePropertyAll(EdgeInsets.all(4.0)),
+              padding: WidgetStatePropertyAll(EdgeInsetsDirectional.all(4.0)),
             ),
             onPressed: () {
               setState(() => splitButtonColor = color);
@@ -360,7 +360,7 @@ SplitButton(
           autofocus: splitButtonColor == color,
           style: ButtonStyle(
             padding: WidgetStatePropertyAll(
-              EdgeInsets.all(4.0),
+              EdgeInsetsDirectional.all(4.0),
             ),
           ),
           onPressed: () {
@@ -387,7 +387,7 @@ splitButtonKey.currentState?.showFlyout();
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Padding(
-                    padding: const EdgeInsets.only(bottom: 4.0),
+                    padding: const EdgeInsetsDirectional.only(bottom: 4.0),
                     child: Text(
                       'SplitButton with custom content',
                       style: theme.typography.caption,
@@ -412,7 +412,10 @@ splitButtonKey.currentState?.showFlyout();
                     ),
                   ),
                   Padding(
-                    padding: const EdgeInsets.only(bottom: 4.0, top: 8.0),
+                    padding: const EdgeInsetsDirectional.only(
+                      bottom: 4.0,
+                      top: 8.0,
+                    ),
                     child: Text(
                       'A toggleable SplitButton with text content',
                       style: theme.typography.caption,
@@ -427,7 +430,7 @@ splitButtonKey.currentState?.showFlyout();
                     },
                     flyout: splitButtonFlyout,
                     child: Padding(
-                      padding: const EdgeInsets.all(8.0),
+                      padding: const EdgeInsetsDirectional.all(8.0),
                       child: Text('Choose color'),
                     ),
                   ),

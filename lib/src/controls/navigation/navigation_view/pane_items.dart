@@ -173,7 +173,7 @@ class PaneItem extends NavigationPaneItem {
 
         final textResult = titleText.isNotEmpty
             ? Padding(
-                padding: theme.labelPadding ?? EdgeInsets.zero,
+                padding: theme.labelPadding ?? EdgeInsetsDirectional.zero,
                 child: RichText(
                   text: title!.getProperty<InlineSpan>(textStyle)!,
                   maxLines: 1,
@@ -205,7 +205,7 @@ class PaneItem extends NavigationPaneItem {
                 ),
                 alignment: AlignmentDirectional.center,
                 child: Padding(
-                  padding: theme.iconPadding ?? EdgeInsets.zero,
+                  padding: theme.iconPadding ?? EdgeInsetsDirectional.zero,
                   child: IconTheme.merge(
                     data: iconThemeData,
                     child: Align(
@@ -243,7 +243,7 @@ class PaneItem extends NavigationPaneItem {
                 child: Row(
                   children: [
                     Padding(
-                      padding: theme.iconPadding ?? EdgeInsets.zero,
+                      padding: theme.iconPadding ?? EdgeInsetsDirectional.zero,
                       child: IconTheme.merge(
                         data: iconThemeData,
                         child: Center(child: icon),
@@ -270,7 +270,7 @@ class PaneItem extends NavigationPaneItem {
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   Padding(
-                    padding: theme.iconPadding ?? EdgeInsets.zero,
+                    padding: theme.iconPadding ?? EdgeInsetsDirectional.zero,
                     child: IconTheme.merge(
                       data: iconThemeData,
                       child: Center(child: icon),
@@ -305,7 +305,7 @@ class PaneItem extends NavigationPaneItem {
           label: titleText.isEmpty ? null : titleText,
           selected: selected,
           child: Container(
-            margin: const EdgeInsets.symmetric(horizontal: 6.0),
+            margin: const EdgeInsetsDirectional.symmetric(horizontal: 6.0),
             decoration: BoxDecoration(
               color: () {
                 final tileColor =
@@ -452,11 +452,11 @@ class PaneItemSeparator extends NavigationPaneItem {
         style: DividerThemeData(
           thickness: thickness,
           decoration: color != null ? BoxDecoration(color: color) : null,
-          verticalMargin: const EdgeInsets.symmetric(
+          verticalMargin: const EdgeInsetsDirectional.symmetric(
             horizontal: 8.0,
             vertical: 10.0,
           ),
-          horizontalMargin: const EdgeInsets.symmetric(
+          horizontalMargin: const EdgeInsetsDirectional.symmetric(
             horizontal: 8.0,
             vertical: 10.0,
           ),
@@ -495,10 +495,10 @@ class PaneItemHeader extends NavigationPaneItem {
       child: Container(
         // key: itemKey,
         constraints: const BoxConstraints(minHeight: kPaneItemHeaderMinHeight),
-        padding: (theme.iconPadding ?? EdgeInsets.zero).add(
+        padding: (theme.iconPadding ?? EdgeInsetsDirectional.zero).add(
           view.displayMode == PaneDisplayMode.top
-              ? EdgeInsets.zero
-              : theme.headerPadding ?? EdgeInsets.zero,
+              ? EdgeInsetsDirectional.zero
+              : theme.headerPadding ?? EdgeInsetsDirectional.zero,
         ),
         child: DefaultTextStyle.merge(
           style: theme.itemHeaderTextStyle,
@@ -777,7 +777,7 @@ class __PaneItemExpanderState extends State<_PaneItemExpander>
                   return MenuFlyoutItemBuilder(
                     builder: (context) {
                       return Container(
-                        padding: const EdgeInsets.symmetric(
+                        padding: const EdgeInsetsDirectional.symmetric(
                           horizontal: 10.0,
                           vertical: 8.0,
                         ),
@@ -1040,12 +1040,12 @@ class PaneItemWidgetAdapter extends NavigationPaneItem {
     return Padding(
       key: key,
       padding: applyPadding
-          ? (theme.iconPadding ?? EdgeInsets.zero).add(
+          ? (theme.iconPadding ?? EdgeInsetsDirectional.zero).add(
               view.displayMode == PaneDisplayMode.top
-                  ? EdgeInsets.zero
-                  : theme.headerPadding ?? EdgeInsets.zero,
+                  ? EdgeInsetsDirectional.zero
+                  : theme.headerPadding ?? EdgeInsetsDirectional.zero,
             )
-          : EdgeInsets.zero,
+          : EdgeInsetsDirectional.zero,
       child: child,
     );
   }

@@ -197,7 +197,7 @@ class NavigationPaneThemeData with Diagnosticable {
         );
       }),
       labelPadding: const EdgeInsetsDirectional.only(end: 10.0),
-      iconPadding: const EdgeInsets.symmetric(horizontal: 10.0),
+      iconPadding: const EdgeInsetsDirectional.symmetric(horizontal: 10.0),
       headerPadding: const EdgeInsetsDirectional.only(top: 10.0),
       paneNavigationButtonIcon: FluentIcons.global_nav_button,
     );

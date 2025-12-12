@@ -272,7 +272,7 @@ class NumberBox<T extends num> extends StatefulWidget {
   final Brightness? keyboardAppearance;
 
   /// {@macro flutter.widgets.editableText.scrollPadding}
-  final EdgeInsets scrollPadding;
+  final EdgeInsetsGeometry scrollPadding;
 
   /// {@macro flutter.widgets.editableText.enableInteractiveSelection}
   final bool enableInteractiveSelection;
@@ -341,7 +341,7 @@ class NumberBox<T extends num> extends StatefulWidget {
     this.enableInteractiveSelection = true,
     this.keyboardAppearance,
     this.scrollController,
-    this.scrollPadding = const EdgeInsets.all(20.0),
+    this.scrollPadding = const EdgeInsetsDirectional.all(20.0),
     this.scrollPhysics,
     this.selectionControls,
     this.selectionHeightStyle = ui.BoxHeightStyle.tight,
@@ -929,7 +929,7 @@ class NumberFormBox<T extends num> extends ControllableFormBox {
            return UnmanagedRestorationScope(
              bucket: field.bucket,
              child: FormRow(
-               padding: EdgeInsets.zero,
+               padding: EdgeInsetsDirectional.zero,
                error: (field.errorText == null) ? null : Text(field.errorText!),
                child: NumberBox<T>(
                  focusNode: focusNode,

@@ -268,13 +268,13 @@ class _SettingsState extends State<Settings> with PageMixin {
 
   Widget _buildColorBlock(AppTheme appTheme, AccentColor color) {
     return Padding(
-      padding: const EdgeInsets.all(2.0),
+      padding: const EdgeInsetsDirectional.all(2.0),
       child: Button(
         onPressed: () {
           appTheme.color = color;
         },
         style: ButtonStyle(
-          padding: const WidgetStatePropertyAll(EdgeInsets.zero),
+          padding: const WidgetStatePropertyAll(EdgeInsetsDirectional.zero),
           backgroundColor: WidgetStateProperty.resolveWith((states) {
             if (states.isPressed) {
               return color.light;

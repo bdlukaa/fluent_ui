@@ -1027,7 +1027,7 @@ class ComboBox<T> extends StatefulWidget {
   /// @override
   /// Widget build(BuildContext context) {
   ///   return Padding(
-  ///     padding: const EdgeInsets.symmetric(horizontal: 12.0),
+  ///     padding: const EdgeInsetsDirectional.symmetric(horizontal: 12.0),
   ///     child: ComboBox<String>(
   ///       value: selectedItem,
   ///       onChanged: (String? string) => setState(() => selectedItem = string!),
@@ -1413,7 +1413,7 @@ class ComboBoxState<T> extends State<ComboBox<T>> {
           autofocus: widget.autofocus,
           focusNode: focusNode,
           style: const ButtonStyle(
-            padding: WidgetStatePropertyAll(EdgeInsets.zero),
+            padding: WidgetStatePropertyAll(EdgeInsetsDirectional.zero),
           ),
           child: result,
         ),

@@ -147,7 +147,7 @@ class _EndNavigationIndicatorState
           reverseDuration: Duration.zero,
           child: Container(
             key: ValueKey<int>(itemIndex),
-            margin: EdgeInsets.symmetric(
+            margin: EdgeInsetsDirectional.symmetric(
               vertical: isTop ? 0.0 : 10.0,
               horizontal: isTop ? 10.0 : 0.0,
             ),

@@ -111,7 +111,7 @@ class IconButton extends BaseButton {
     return ButtonStyle(
       iconSize: WidgetStatePropertyAll(isIconSmall ? 11.0 : null),
       padding: WidgetStatePropertyAll(
-        isSmall ? kDefaultButtonPadding : const EdgeInsets.all(8.0),
+        isSmall ? kDefaultButtonPadding : const EdgeInsetsDirectional.all(8.0),
       ),
       backgroundColor: WidgetStateProperty.resolveWith((states) {
         if (states.isDisabled) {

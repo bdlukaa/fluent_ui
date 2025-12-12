@@ -91,7 +91,9 @@ class _TypographyPageState extends State<TypographyPage> {
               mainAxisSize: MainAxisSize.min,
               children: [
                 const Divider(
-                  style: DividerThemeData(horizontalMargin: EdgeInsets.zero),
+                  style: DividerThemeData(
+                    horizontalMargin: EdgeInsetsDirectional.zero,
+                  ),
                 ),
                 const SizedBox(height: 4.0),
                 const Text(

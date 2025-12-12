@@ -102,14 +102,15 @@ class ContentDialog extends StatelessWidget {
           children: [
             Flexible(
               child: Padding(
-                padding: style.padding ?? EdgeInsets.zero,
+                padding: style.padding ?? EdgeInsetsDirectional.zero,
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     if (title != null)
                       Padding(
-                        padding: style.titlePadding ?? EdgeInsets.zero,
+                        padding:
+                            style.titlePadding ?? EdgeInsetsDirectional.zero,
                         child: DefaultTextStyle.merge(
                           style: style.titleStyle,
                           child: title!,
@@ -118,7 +119,8 @@ class ContentDialog extends StatelessWidget {
                     if (content != null)
                       Flexible(
                         child: Padding(
-                          padding: style.bodyPadding ?? EdgeInsets.zero,
+                          padding:
+                              style.bodyPadding ?? EdgeInsetsDirectional.zero,
                           child: DefaultTextStyle.merge(
                             style: style.bodyStyle,
                             child: content!,
@@ -469,7 +471,7 @@ class ContentDialogThemeData with Diagnosticable {
         borderRadius: BorderRadius.circular(12),
         boxShadow: kElevationToShadow[6],
       ),
-      padding: const EdgeInsets.all(20),
+      padding: const EdgeInsetsDirectional.all(20),
       titlePadding: const EdgeInsetsDirectional.only(bottom: 12),
       actionsSpacing: 10,
       actionsDecoration: BoxDecoration(
@@ -477,7 +479,7 @@ class ContentDialogThemeData with Diagnosticable {
         borderRadius: const BorderRadius.vertical(bottom: Radius.circular(12)),
         // boxShadow: kElevationToShadow[1],
       ),
-      actionsPadding: const EdgeInsets.all(20),
+      actionsPadding: const EdgeInsetsDirectional.all(20),
       barrierColor: Colors.grey[200].withValues(alpha: 0.8),
       titleStyle: theme.typography.title,
       bodyStyle: theme.typography.body,

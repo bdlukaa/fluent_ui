@@ -170,7 +170,7 @@ class PasswordBox extends StatefulWidget {
   final EdgeInsetsGeometry padding;
 
   /// {@macro flutter.widgets.editableText.scrollPadding}
-  final EdgeInsets scrollPadding;
+  final EdgeInsetsGeometry scrollPadding;
 
   /// {@macro flutter.widgets.editableText.scrollController}
   final ScrollController? scrollController;
@@ -209,7 +209,7 @@ class PasswordBox extends StatefulWidget {
     this.style,
     this.padding = kTextBoxPadding,
     this.scrollController,
-    this.scrollPadding = const EdgeInsets.all(20.0),
+    this.scrollPadding = const EdgeInsetsDirectional.all(20.0),
     this.scrollPhysics,
   });
 
@@ -469,7 +469,7 @@ class PasswordFormBox extends ControllableFormBox {
            return UnmanagedRestorationScope(
              bucket: field.bucket,
              child: FormRow(
-               padding: EdgeInsets.zero,
+               padding: EdgeInsetsDirectional.zero,
                error: (field.errorText == null) ? null : Text(field.errorText!),
                child: PasswordBox(
                  revealMode: revealMode,

@@ -61,7 +61,7 @@ class _AcrylicPageState extends State<AcrylicPage> with PageMixin {
                 _AcrylicChildren(),
                 Positioned.fill(
                   child: Padding(
-                    padding: EdgeInsets.all(12.0),
+                    padding: EdgeInsetsDirectional.all(12.0),
                     child: Acrylic(),
                   ),
                 ),
@@ -82,7 +82,7 @@ class _AcrylicPageState extends State<AcrylicPage> with PageMixin {
                       const _AcrylicChildren(),
                       Positioned.fill(
                         child: Padding(
-                          padding: const EdgeInsets.all(12.0),
+                          padding: const EdgeInsetsDirectional.all(12.0),
                           child: Acrylic(
                             tintAlpha: tintOpacity,
                             luminosityAlpha: luminosityOpacity,

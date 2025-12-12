@@ -192,19 +192,19 @@ class _BaseButtonState extends State<BaseButton> {
             resolve<EdgeInsetsGeometry?>(
               (ButtonStyle? style) => style?.padding,
             ) ??
-            EdgeInsets.zero;
+            EdgeInsetsDirectional.zero;
         final resolvedShape =
             resolve<ShapeBorder?>((ButtonStyle? style) => style?.shape) ??
             const RoundedRectangleBorder();
 
         final padding = resolvedPadding
             .add(
-              EdgeInsets.symmetric(
+              EdgeInsetsDirectional.symmetric(
                 horizontal: theme.visualDensity.horizontal,
                 vertical: theme.visualDensity.vertical,
               ),
             )
-            .clamp(EdgeInsets.zero, EdgeInsetsGeometry.infinity);
+            .clamp(EdgeInsetsDirectional.zero, EdgeInsetsGeometry.infinity);
         final iconSize = resolve<double?>((style) => style?.iconSize);
         Widget result = PhysicalModel(
           color: Colors.transparent,

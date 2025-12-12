@@ -48,7 +48,7 @@ Future<void> displayInfoBar(
         child: Align(
           alignment: alignment,
           child: Padding(
-            padding: const EdgeInsets.symmetric(
+            padding: const EdgeInsetsDirectional.symmetric(
               vertical: 24.0,
               horizontal: 16.0,
             ),
@@ -395,7 +395,7 @@ class InfoBar extends StatelessWidget {
     return Container(
       constraints: const BoxConstraints(minHeight: 48.0),
       decoration: style.decoration?.call(severity),
-      padding: style.padding ?? const EdgeInsets.all(10),
+      padding: style.padding ?? const EdgeInsetsDirectional.all(10),
       child: Row(
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: isLong
@@ -602,7 +602,7 @@ class InfoBarThemeData with Diagnosticable {
         }
       },
       actionStyle: const ButtonStyle(
-        padding: WidgetStatePropertyAll(EdgeInsets.all(6)),
+        padding: WidgetStatePropertyAll(EdgeInsetsDirectional.all(6)),
       ),
       closeButtonStyle: const ButtonStyle(
         iconSize: WidgetStatePropertyAll(16.0),

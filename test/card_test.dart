@@ -12,7 +12,7 @@ void main() {
     expect(find.text(testText), findsOneWidget);
 
     final container = tester.widget<Container>(find.byType(Container));
-    expect(container.padding, const EdgeInsets.all(12.0));
+    expect(container.padding, const EdgeInsetsDirectional.all(12.0));
     expect(container.margin, isNull);
 
     final decoration = container.decoration as BoxDecoration;
@@ -26,8 +26,8 @@ void main() {
   testWidgets('Card applies custom padding and margin', (
     WidgetTester tester,
   ) async {
-    const customPadding = EdgeInsets.symmetric(vertical: 8.0);
-    const customMargin = EdgeInsets.all(16.0);
+    const customPadding = EdgeInsetsDirectional.symmetric(vertical: 8.0);
+    const customMargin = EdgeInsetsDirectional.all(16.0);
 
     await tester.pumpWidget(
       wrapApp(

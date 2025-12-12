@@ -152,7 +152,7 @@ class FluentTextSelectionToolbar extends StatelessWidget {
         .toList();
 
     return Padding(
-      padding: EdgeInsets.fromLTRB(
+      padding: EdgeInsetsDirectional.fromSTEB(
         _kToolbarScreenPadding,
         paddingAbove,
         _kToolbarScreenPadding,
@@ -515,7 +515,7 @@ class _FluentTextSelectionToolbar extends StatelessWidget {
     final radius = BorderRadius.circular(6.0);
 
     return Padding(
-      padding: EdgeInsets.fromLTRB(
+      padding: EdgeInsetsDirectional.fromSTEB(
         _kToolbarScreenPadding,
         paddingAbove,
         _kToolbarScreenPadding,

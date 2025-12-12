@@ -21,8 +21,8 @@ class ColorsPage extends StatelessWidget {
   Widget build(BuildContext context) {
     const Divider divider = Divider(
       style: DividerThemeData(
-        verticalMargin: EdgeInsets.all(10),
-        horizontalMargin: EdgeInsets.all(10),
+        verticalMargin: EdgeInsetsDirectional.all(10),
+        horizontalMargin: EdgeInsetsDirectional.all(10),
       ),
     );
     return ScaffoldPage.scrollable(
@@ -193,7 +193,7 @@ class ColorBlock extends StatelessWidget {
             child: Container(
               height: 85,
               width: 85,
-              padding: const EdgeInsets.all(6.0),
+              padding: const EdgeInsetsDirectional.all(6.0),
               color: color,
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.end,

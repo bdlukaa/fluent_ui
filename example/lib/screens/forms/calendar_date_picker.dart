@@ -69,7 +69,7 @@ class _CalendarDatePickerPageState extends State<CalendarDatePickerPage>
                 ),
               ),
               Container(
-                padding: const EdgeInsets.all(12),
+                padding: const EdgeInsetsDirectional.all(12),
                 color: FluentTheme.of(context).cardColor,
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,

@@ -317,7 +317,7 @@ class MenuFlyoutItem extends MenuFlyoutItemBase {
   @override
   Widget build(BuildContext context) {
     return FlyoutListTile(
-      margin: EdgeInsets.zero,
+      margin: EdgeInsetsDirectional.zero,
       selected: selected,
       showSelectedIndicator: false,
       icon:
@@ -364,7 +364,7 @@ class MenuFlyoutSeparator extends MenuFlyoutItemBase {
     return const Padding(
       padding: EdgeInsetsDirectional.only(bottom: 5.0),
       child: Divider(
-        style: DividerThemeData(horizontalMargin: EdgeInsets.zero),
+        style: DividerThemeData(horizontalMargin: EdgeInsetsDirectional.zero),
       ),
     );
   }

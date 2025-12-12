@@ -383,8 +383,11 @@ class ScrollbarThemeData with Diagnosticable {
       minThumbLength: 48.0,
       trackBorderColor: Colors.transparent,
       hoveringTrackBorderColor: Colors.transparent,
-      padding: const EdgeInsets.symmetric(horizontal: 4.0, vertical: 4.0),
-      hoveringPadding: const EdgeInsets.symmetric(vertical: 4.0),
+      padding: const EdgeInsetsDirectional.symmetric(
+        horizontal: 4.0,
+        vertical: 4.0,
+      ),
+      hoveringPadding: const EdgeInsetsDirectional.symmetric(vertical: 4.0),
       expandContractAnimationDuration: theme.fasterAnimationDuration,
       contractDelay: const Duration(milliseconds: 500),
     );
@@ -548,7 +551,7 @@ class ScrollbarThemeData with Diagnosticable {
         DiagnosticsProperty(
           'padding',
           padding,
-          defaultValue: const EdgeInsets.symmetric(
+          defaultValue: const EdgeInsetsDirectional.symmetric(
             horizontal: 2.0,
             vertical: 4.0,
           ),
@@ -558,7 +561,7 @@ class ScrollbarThemeData with Diagnosticable {
         DiagnosticsProperty(
           'hoveringPadding',
           hoveringPadding,
-          defaultValue: const EdgeInsets.symmetric(vertical: 4.0),
+          defaultValue: const EdgeInsetsDirectional.symmetric(vertical: 4.0),
         ),
       );
   }

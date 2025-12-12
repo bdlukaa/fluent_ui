@@ -664,14 +664,14 @@ class CalendarViewState extends State<CalendarView> {
     ).dateSymbols.STANDALONESHORTWEEKDAYS;
 
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 8.0),
+      padding: const EdgeInsetsDirectional.symmetric(horizontal: 8.0),
       child: Row(
         children: [
           for (int i = 0; i < 7; i++)
             Expanded(
               child: Center(
                 child: Padding(
-                  padding: const EdgeInsets.all(1),
+                  padding: const EdgeInsetsDirectional.all(1),
                   child: Text(
                     symbols[(firstDayOfWeek + i) % 7],
                     style: FluentTheme.of(context).typography.body?.copyWith(
@@ -830,13 +830,13 @@ class CalendarViewState extends State<CalendarView> {
       children: [
         _buildHeader(),
         const Divider(
-          style: DividerThemeData(horizontalMargin: EdgeInsets.zero),
+          style: DividerThemeData(horizontalMargin: EdgeInsetsDirectional.zero),
         ),
         const SizedBox(height: 4),
         _buildWeekDays(context),
         const SizedBox(height: 4),
         Container(
-          padding: const EdgeInsets.symmetric(horizontal: 8.0),
+          padding: const EdgeInsetsDirectional.symmetric(horizontal: 8.0),
           height: widget.weeksPerView * _rowHeight,
           child: Builder(
             builder: (context) {
@@ -929,7 +929,7 @@ class CalendarViewState extends State<CalendarView> {
       children: [
         _buildHeader(),
         const Divider(
-          style: DividerThemeData(horizontalMargin: EdgeInsets.zero),
+          style: DividerThemeData(horizontalMargin: EdgeInsetsDirectional.zero),
         ),
         const SizedBox(height: 4),
         SizedBox(
@@ -1034,7 +1034,7 @@ class CalendarViewState extends State<CalendarView> {
       children: [
         _buildHeader(),
         const Divider(
-          style: DividerThemeData(horizontalMargin: EdgeInsets.zero),
+          style: DividerThemeData(horizontalMargin: EdgeInsetsDirectional.zero),
         ),
         const SizedBox(height: 4),
         SizedBox(
@@ -1378,7 +1378,10 @@ class _CalendarItem extends StatelessWidget {
                   top: 0,
                   child: Text(groupLabel!, style: const TextStyle(fontSize: 8)),
                 ),
-              Padding(padding: const EdgeInsets.all(4.0), child: Text(content)),
+              Padding(
+                padding: const EdgeInsetsDirectional.all(4.0),
+                child: Text(content),
+              ),
             ],
           ),
         ),
@@ -1459,7 +1462,7 @@ class _CalendarDayItem extends StatelessWidget {
               side: BorderSide(width: borderWidth, color: borderColor),
             ),
       ),
-      padding: EdgeInsets.all(borderWidth),
+      padding: EdgeInsetsDirectional.all(borderWidth),
       child: Stack(
         fit: StackFit.expand,
         children: [

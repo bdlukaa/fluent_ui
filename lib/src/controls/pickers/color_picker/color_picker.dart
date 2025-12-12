@@ -434,7 +434,7 @@ class _ColorPickerState extends State<ColorPicker> {
       child: Button(
         style: ButtonStyle(
           padding: const WidgetStatePropertyAll(
-            EdgeInsets.only(left: 8, right: 4, top: 8, bottom: 8),
+            EdgeInsetsDirectional.only(start: 8, end: 4, top: 8, bottom: 8),
           ),
           shape: const WidgetStatePropertyAll(
             RoundedRectangleBorder(side: BorderSide.none),

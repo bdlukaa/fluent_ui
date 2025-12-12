@@ -60,7 +60,7 @@ class _Flyout2ScreenState extends State<Flyout2Screen> with PageMixin {
         const SizedBox(height: 8.0),
         Mica(
           child: Padding(
-            padding: const EdgeInsets.all(8.0),
+            padding: const EdgeInsetsDirectional.all(8.0),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [

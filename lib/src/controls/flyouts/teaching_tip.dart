@@ -424,7 +424,8 @@ class TeachingTipBorder extends ShapeBorder {
   });
 
   @override
-  EdgeInsetsGeometry get dimensions => EdgeInsets.all(arrowMainAxisWidth);
+  EdgeInsetsGeometry get dimensions =>
+      EdgeInsetsDirectional.all(arrowMainAxisWidth);
 
   @override
   Path getOuterPath(Rect rect, {TextDirection? textDirection}) {

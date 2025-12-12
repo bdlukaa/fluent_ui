@@ -634,9 +634,10 @@ class NavigationViewState extends State<NavigationView> {
                                     key: _overlayKey,
                                     backgroundColor: theme.backgroundColor,
                                     child: Container(
-                                      margin: const EdgeInsets.symmetric(
-                                        vertical: 1.0,
-                                      ),
+                                      margin:
+                                          const EdgeInsetsDirectional.symmetric(
+                                            vertical: 1.0,
+                                          ),
                                       child: _OpenNavigationPane(
                                         theme: theme,
                                         pane: pane,
@@ -715,7 +716,7 @@ class NavigationViewState extends State<NavigationView> {
                                     ),
                                     borderRadius: BorderRadius.circular(8.0),
                                   ),
-                                  margin: const EdgeInsets.symmetric(
+                                  margin: const EdgeInsetsDirectional.symmetric(
                                     vertical: 1.0,
                                   ),
                                   padding: appBarPadding,
@@ -843,7 +844,9 @@ class NavigationViewState extends State<NavigationView> {
                               ),
                               borderRadius: BorderRadius.circular(8.0),
                             ),
-                            margin: const EdgeInsets.symmetric(vertical: 1.0),
+                            margin: const EdgeInsetsDirectional.symmetric(
+                              vertical: 1.0,
+                            ),
                             padding: appBarPadding,
                             child: _OpenNavigationPane(
                               theme: theme,
@@ -1089,7 +1092,7 @@ class _NavigationAppBar extends StatelessWidget {
         return AnimatedPadding(
           duration: theme.animationDuration ?? Duration.zero,
           curve: theme.animationCurve ?? Curves.linear,
-          padding: (theme.iconPadding ?? EdgeInsets.zero).add(
+          padding: (theme.iconPadding ?? EdgeInsetsDirectional.zero).add(
             const EdgeInsetsDirectional.only(start: 6.0),
           ),
           child: DefaultTextStyle.merge(

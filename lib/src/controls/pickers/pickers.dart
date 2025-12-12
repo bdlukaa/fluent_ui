@@ -115,7 +115,7 @@ class YesNoPickerControl extends StatelessWidget {
         children: [
           Expanded(
             child: Container(
-              margin: const EdgeInsets.all(4.0),
+              margin: const EdgeInsetsDirectional.all(4.0),
               height: kOneLineTileHeight / 1.2,
               child: Button(
                 onPressed: onChanged,
@@ -126,7 +126,7 @@ class YesNoPickerControl extends StatelessWidget {
           ),
           Expanded(
             child: Container(
-              margin: const EdgeInsets.all(4.0),
+              margin: const EdgeInsetsDirectional.all(4.0),
               height: kOneLineTileHeight / 1.2,
               child: Button(
                 onPressed: onCancel,
@@ -207,7 +207,7 @@ class PickerNavigatorIndicator extends StatelessWidget {
             data: ButtonThemeData.all(
               ButtonStyle(
                 padding: const WidgetStatePropertyAll(
-                  EdgeInsets.symmetric(vertical: 10.0),
+                  EdgeInsetsDirectional.symmetric(vertical: 10.0),
                 ),
                 backgroundColor: WidgetStatePropertyAll(
                   FluentTheme.of(context).menuColor,
