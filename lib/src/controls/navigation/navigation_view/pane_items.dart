@@ -286,23 +286,28 @@ class PaneItem extends NavigationPaneItem {
                 ),
               );
             case PaneDisplayMode.top:
-              final Widget result = Row(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Padding(
-                    padding: theme.iconPadding ?? EdgeInsetsDirectional.zero,
-                    child: IconTheme.merge(
-                      data: iconThemeData,
-                      child: Center(child: icon),
+              final Widget result = ConstrainedBox(
+                constraints: const BoxConstraints(
+                  minWidth: kPaneItemTopMinWidth,
+                ),
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Padding(
+                      padding: theme.iconPadding ?? EdgeInsetsDirectional.zero,
+                      child: IconTheme.merge(
+                        data: iconThemeData,
+                        child: Center(child: icon),
+                      ),
                     ),
-                  ),
-                  if (showTextOnTop) textResult,
-                  if (trailing != null)
-                    IconTheme.merge(
-                      data: const IconThemeData(size: 16),
-                      child: trailing!,
-                    ),
-                ],
+                    if (showTextOnTop) textResult,
+                    if (trailing != null)
+                      IconTheme.merge(
+                        data: const IconThemeData(size: 16),
+                        child: trailing!,
+                      ),
+                  ],
+                ),
               );
               if (infoBadge != null) {
                 return Stack(

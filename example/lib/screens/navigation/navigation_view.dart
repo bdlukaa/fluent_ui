@@ -73,6 +73,7 @@ class _NavigationViewPageState extends State<NavigationViewPage>
       initiallyExpanded: true,
       // body is null - clicking only expands/collapses, doesn't navigate
       // See: https://github.com/bdlukaa/fluent_ui/issues/1189
+      // ignore: avoid_redundant_argument_values
       body: null,
       onTap: () => debugPrint('Tapped account (expander without body)'),
       items: [

@@ -308,6 +308,9 @@ class _StickyNavigationIndicatorState
     if (itemIndex == previousItemIndex && _shrinkController.isAnimating) {
       return true;
     }
+    // TODO(bdlukaa): If current item is a expander and it has a selected child
+    // that is hidden by a menu, render the indicator.
+
     return false;
   }
 
@@ -320,6 +323,7 @@ class _StickyNavigationIndicatorState
     assert(debugCheckHasFluentTheme(context));
     final theme = NavigationPaneTheme.of(context);
     final isHorizontal = axis == Axis.horizontal;
+    final isVertical = axis == Axis.vertical;
 
     final decoration = BoxDecoration(
       color: widget.color ?? theme.highlightColor,
@@ -327,76 +331,90 @@ class _StickyNavigationIndicatorState
     );
 
     return IgnorePointer(
-      child: AnimatedBuilder(
-        animation: Listenable.merge([_shrinkController, _growController]),
-        builder: (context, child) {
-          var topPadding = widget.leftPadding;
-          var bottomPadding = widget.leftPadding;
-
-          if (isSelected) {
-            final growAnimation = CurvedAnimation(
-              parent: _growController,
-              curve: Interval(0.5, 1, curve: _cachedCurve),
-            );
-            final growProgress = growAnimation.value;
-
-            if (growProgress == 0) {
-              return const SizedBox.shrink();
-            }
-
-            if (_goingDown) {
-              bottomPadding = widget.leftPadding * growProgress;
-            } else {
-              topPadding = widget.leftPadding * growProgress;
-            }
-          } else if (itemIndex == previousItemIndex) {
-            final shrinkAnimation = CurvedAnimation(
-              parent: _shrinkController,
-              curve: Interval(0, 0.5, curve: _cachedCurve),
-            );
-            final shrinkProgress = shrinkAnimation.value;
-
-            if (shrinkProgress == 1) {
-              return const SizedBox.shrink();
-            }
-
-            if (_goingDown) {
-              topPadding = widget.leftPadding * (1.0 - shrinkProgress);
-            } else {
-              bottomPadding = widget.leftPadding * (1.0 - shrinkProgress);
-            }
-          }
-
-          return Padding(
-            padding: isHorizontal
-                ? EdgeInsetsDirectional.only(
-                    top: topPadding,
-                    bottom: bottomPadding,
-                    start: 6,
-                    end: 6,
-                  )
-                : EdgeInsetsDirectional.only(
-                    start: topPadding,
-                    end: bottomPadding,
-                  ),
-            child: child,
-          );
+      child: Align(
+        alignment: switch (axis) {
+          Axis.horizontal => AlignmentDirectional.centerStart,
+          Axis.vertical => AlignmentDirectional.bottomCenter,
         },
-        child: isHorizontal
-            ? Align(
-                alignment: AlignmentDirectional.centerStart,
-                child: Container(
-                  width: widget.indicatorSize,
-                  decoration: decoration,
-                ),
-              )
-            : Align(
-                alignment: AlignmentDirectional.bottomCenter,
-                child: Container(
-                  height: widget.indicatorSize,
-                  decoration: decoration,
-                ),
-              ),
+        child: SizedBox(
+          width: isVertical ? kPaneItemTopMinWidth : null,
+          height: isHorizontal ? kPaneItemMinHeight : null,
+          child: AnimatedBuilder(
+            animation: Listenable.merge([_shrinkController, _growController]),
+            builder: (context, child) {
+              var topPadding = widget.leftPadding;
+              var bottomPadding = widget.leftPadding;
+
+              if (isSelected) {
+                final growAnimation = CurvedAnimation(
+                  parent: _growController,
+                  curve: Interval(0.5, 1, curve: _cachedCurve),
+                );
+                final growProgress = growAnimation.value;
+
+                if (growProgress == 0) {
+                  return const SizedBox.shrink();
+                }
+
+                if (_goingDown) {
+                  bottomPadding = widget.leftPadding * growProgress;
+                } else {
+                  topPadding = widget.leftPadding * growProgress;
+                }
+              } else if (itemIndex == previousItemIndex) {
+                final shrinkAnimation = CurvedAnimation(
+                  parent: _shrinkController,
+                  curve: Interval(0, 0.5, curve: _cachedCurve),
+                );
+                final shrinkProgress = shrinkAnimation.value;
+
+                if (shrinkProgress == 1) {
+                  return const SizedBox.shrink();
+                }
+
+                if (_goingDown) {
+                  topPadding = widget.leftPadding * (1.0 - shrinkProgress);
+                } else {
+                  bottomPadding = widget.leftPadding * (1.0 - shrinkProgress);
+                }
+              }
+
+              return Padding(
+                padding: isHorizontal
+                    ? EdgeInsetsDirectional.only(
+                        top: topPadding,
+                        bottom: bottomPadding,
+
+                        // TODO(bdlukaa): Adjust padding based on item's depth
+                        // If the item is a sub-item, add more paddiing to the
+                        // start.
+                        start: 6,
+                        end: 6,
+                      )
+                    : EdgeInsetsDirectional.only(
+                        start: topPadding,
+                        end: bottomPadding,
+                      ),
+                child: child,
+              );
+            },
+            child: isHorizontal
+                ? Align(
+                    alignment: AlignmentDirectional.centerStart,
+                    child: Container(
+                      width: widget.indicatorSize,
+                      decoration: decoration,
+                    ),
+                  )
+                : Align(
+                    alignment: AlignmentDirectional.bottomCenter,
+                    child: Container(
+                      height: widget.indicatorSize,
+                      decoration: decoration,
+                    ),
+                  ),
+          ),
+        ),
       ),
     );
   }

@@ -18,6 +18,9 @@ const double _kDefaultAppBarHeight = 50;
 /// The minimum height of a pane item.
 const double kPaneItemMinHeight = 40;
 
+/// The minimum width of a pane item in top display mode.
+const double kPaneItemTopMinWidth = 40;
+
 /// The minimum height of a pane item header.
 const double kPaneItemHeaderMinHeight = 4;
 
