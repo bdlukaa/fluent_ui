@@ -270,10 +270,6 @@ class NavigationViewState extends State<NavigationView> {
   final _contentKey = GlobalKey();
   final _overlayKey = GlobalKey();
 
-  // Note: Global item keys for indicator positioning have been removed.
-  // The navigation indicator is now rendered locally inside each PaneItem,
-  // eliminating the need for global coordinate tracking.
-
   bool _minimalPaneOpen = false;
 
   /// Whether the minimal pane is open.
@@ -282,8 +278,6 @@ class NavigationViewState extends State<NavigationView> {
   bool get minimalPaneOpen => _minimalPaneOpen;
   set minimalPaneOpen(bool open) {
     if (displayMode == PaneDisplayMode.minimal) {
-      // Avoid double rebuilds by checking if value is already set
-      // See: https://github.com/bdlukaa/fluent_ui/issues/1101
       if (_minimalPaneOpen != open) {
         setState(() => _minimalPaneOpen = open);
         widget.onDisplayModeChanged?.call(
@@ -381,7 +375,6 @@ class NavigationViewState extends State<NavigationView> {
         );
       }
     }
-
   }
 
   @override
@@ -415,6 +408,19 @@ class NavigationViewState extends State<NavigationView> {
     if (mounted && notify) setState(() {});
   }
 
+  /// Builds the navigation view with adaptive layout based on display mode.
+  ///
+  /// This method handles:
+  /// - Automatic display mode switching when using [PaneDisplayMode.auto]
+  /// - Different layouts for each display mode (top, open, compact, minimal)
+  /// - Overlay management for compact and minimal modes
+  /// - Content clipping and shaping
+  /// - Animation coordination between pane transitions
+  ///
+  /// The layout adapts based on available width:
+  /// - Width >= 1008px: Open mode (expanded pane)
+  /// - Width 641-1007px: Compact mode (icons only)
+  /// - Width <= 640px: Minimal mode (hamburger menu)
   @override
   Widget build(BuildContext context) {
     assert(debugCheckHasFluentTheme(context));
@@ -457,18 +463,6 @@ class NavigationViewState extends State<NavigationView> {
         var displayMode = widget.pane?.displayMode ?? PaneDisplayMode.auto;
 
         if (displayMode == PaneDisplayMode.auto) {
-          /// For more info on the adaptive behavior, see
-          /// https://docs.microsoft.com/en-us/windows/apps/design/controls/navigationview#adaptive-behavior
-          ///
-          ///  DD/MM/YYYY
-          /// (06/04/2022)
-          ///
-          /// When PaneDisplayMode is set to its default value of Auto, the
-          /// adaptive behavior is to show:
-          /// - An expanded left pane on large window widths (1008px or greater).
-          /// - A left, icon-only, nav pane (compact) on medium window widths
-          /// (641px to 1007px).
-          /// - Only a menu button (minimal) on small window widths (640px or less).
           var width = consts.biggest.width;
           if (width.isInfinite) width = mediaQuerySize.width;
 
@@ -552,10 +546,6 @@ class NavigationViewState extends State<NavigationView> {
                           topStart: Radius.circular(8),
                         ).resolve(direction),
                 );
-            // Wrap the body in RepaintBoundary to isolate repaints from
-            // nested children. This prevents the entire pane from repainting
-            // when a deeply nested child (e.g., CircularProgressIndicator)
-            // animates. See: https://github.com/bdlukaa/fluent_ui/issues/1180
             final isolatedBody = RepaintBoundary(child: body);
 
             final Widget content = ClipRect(
@@ -679,8 +669,6 @@ class NavigationViewState extends State<NavigationView> {
                         ),
                         child: content,
                       ),
-                      // If the overlay is open, add a gesture detector above the
-                      // content to close if the user click outside the overlay
                       if (_compactOverlayOpen && !openedWithoutOverlay)
                         Positioned.fill(
                           child: GestureDetector(
@@ -845,10 +833,11 @@ class NavigationViewState extends State<NavigationView> {
                               paneKey: _panelKey,
                               listKey: _listKey,
                               onItemSelected: () {
-                                // Defer closing the minimal pane to avoid double rebuilds
-                                // when the page changes. See: https://github.com/bdlukaa/fluent_ui/issues/1101
-                                WidgetsBinding.instance.addPostFrameCallback((_) {
-                                  if (mounted && displayMode == PaneDisplayMode.minimal) {
+                                WidgetsBinding.instance.addPostFrameCallback((
+                                  _,
+                                ) {
+                                  if (mounted &&
+                                      displayMode == PaneDisplayMode.minimal) {
                                     minimalPaneOpen = false;
                                   }
                                 });
@@ -961,10 +950,8 @@ class NavigationAppBarData {
 ///   },
 /// )
 /// ```
-typedef NavigationAppBarLayoutBuilder = Widget Function(
-  BuildContext context,
-  NavigationAppBarData data,
-);
+typedef NavigationAppBarLayoutBuilder =
+    Widget Function(BuildContext context, NavigationAppBarData data);
 
 /// The bar displayed at the top of the app. It can adapt itself to
 /// all the display modes.

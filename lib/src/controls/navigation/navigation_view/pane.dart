@@ -252,18 +252,16 @@ class NavigationPane with Diagnosticable {
   }
 
   /// A list of all of the items displayed on this pane.
+  ///
+  /// This includes both [items] and [footerItems], with expander children
+  /// inserted at their appropriate positions in the hierarchy.
   List<NavigationPaneItem> get allItems {
-    // Use spread to ensure proper type inference when items/footerItems
-    // might be List<PaneItem> instead of List<NavigationPaneItem>
     final all = <NavigationPaneItem>[...items, ...footerItems];
 
     {
       final expandItems = LinkedList<_PaneItemExpanderItem>();
       for (final parent in all) {
-        // We get all the [PaneItemExpander]s inside [all] items
         if (parent is PaneItemExpander) {
-          // Them, we add them and their parent and siblings info to the
-          // [expandItems]
           expandItems.addAll(
             parent.items.map(
               (expandItem) =>
@@ -273,7 +271,6 @@ class NavigationPane with Diagnosticable {
         }
       }
 
-      // Now, we add them, in their respective position
       for (final entry in expandItems) {
         final parentIndex = all.indexOf(entry.parent);
         all.insert(
@@ -712,9 +709,6 @@ class _TopNavigationPaneState extends State<_TopNavigationPane> {
         _localItemHold
           ..remove(selectedItem)
           ..insert(item, selectedItem);
-        // debugPrint(
-        //   's$selectedItem to$item - i$_localItemHold - h$hiddenPaneItems',
-        // );
       }
     }
 
@@ -1218,7 +1212,6 @@ class _CompactNavigationPane extends StatelessWidget {
                 itemBuilder: (context, index) => _buildItem(pane.items[index]),
               ),
             ),
-            // Footer items are typically small, so ListView is fine here
             ListView(
               shrinkWrap: true,
               physics: const NeverScrollableScrollPhysics(),
@@ -1413,8 +1406,6 @@ class _OpenNavigationPaneState extends State<_OpenNavigationPane> {
                         ),
                   ),
               Expanded(
-                // Use ListView.builder for lazy item building to handle
-                // large lists efficiently. See: https://github.com/bdlukaa/fluent_ui/issues/742
                 child: ListView.builder(
                   key: widget.listKey,
                   primary: true,
@@ -1429,7 +1420,6 @@ class _OpenNavigationPaneState extends State<_OpenNavigationPane> {
                   },
                 ),
               ),
-              // Footer items are typically small, so ListView is fine here
               ListView(
                 primary: false,
                 shrinkWrap: true,

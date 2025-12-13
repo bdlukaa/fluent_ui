@@ -131,8 +131,6 @@ class _EndNavigationIndicatorState
             : AlignmentDirectional.centerStart,
         child: AnimatedContainer(
           duration: const Duration(milliseconds: 150),
-          // Match WinUI3 NavigationView indicator padding and sizing
-          // See: https://github.com/bdlukaa/fluent_ui/issues/1181
           margin: EdgeInsetsDirectional.symmetric(
             vertical: isTop ? 0.0 : 10.0,
             horizontal: isTop ? 12.0 : 0.0,
@@ -217,18 +215,20 @@ class StickyNavigationIndicator extends NavigationIndicator {
 class _StickyNavigationIndicatorState
     extends NavigationIndicatorState<StickyNavigationIndicator>
     with TickerProviderStateMixin {
-  // Controller for the "shrink out" animation on the old item
+  /// Controller for animating the indicator shrinking out from the old item.
   late AnimationController _shrinkController;
-  // Controller for the "grow in" animation on the new item
+
+  /// Controller for animating the indicator growing into the new item.
   late AnimationController _growController;
 
   Curve _cachedCurve = Curves.easeInOut;
   int _cachedPreviousIndex = -1;
   int _cachedSelectedIndex = -1;
 
-  // Track which direction the transition is going
-  // true = new item is below old item (going down)
-  // false = new item is above old item (going up)
+  /// Whether the transition is moving downward in the list.
+  ///
+  /// - `true`: New item is below the old item (moving down)
+  /// - `false`: New item is above the old item (moving up)
   bool _goingDown = true;
 
   @override
@@ -272,6 +272,13 @@ class _StickyNavigationIndicatorState
     }
   }
 
+  /// Updates the animation state when selection changes.
+  ///
+  /// This method:
+  /// - Determines the direction of the transition (up or down)
+  /// - Starts the grow animation for the newly selected item
+  /// - Starts the shrink animation for the previously selected item
+  /// - Caches the current state to avoid redundant updates
   void _updateAnimation() {
     if (!mounted) return;
 
@@ -384,12 +391,7 @@ class _StickyNavigationIndicatorState
                     ? EdgeInsetsDirectional.only(
                         top: topPadding,
                         bottom: bottomPadding,
-
-                        // Adjust padding based on item's depth
-                        // For nested items (depth > 0), add more padding to the start
-                        // to align with the indented icon. Each level adds 28px (leadingPadding)
-                        start:
-                            6 +
+                        start: 6 +
                             (InheritedNavigationView.of(context).itemDepth *
                                 28.0),
                         end: 6,

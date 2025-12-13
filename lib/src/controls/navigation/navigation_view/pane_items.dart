@@ -98,11 +98,13 @@ class PaneItem extends NavigationPaneItem {
   final MouseCursor? mouseCursor;
 
   /// The color of the tile when unselected.
-  /// If null, [NavigationPaneThemeData.tileColor] is used
+  ///
+  /// If null, [NavigationPaneThemeData.tileColor] is used.
   final WidgetStateProperty<Color?>? tileColor;
 
-  /// The color of the tile when unselected.
-  /// If null, [NavigationPaneThemeData.tileColor]/hovering is used
+  /// The color of the tile when selected.
+  ///
+  /// If null, [NavigationPaneThemeData.tileColor] with hover state is used.
   final WidgetStateProperty<Color?>? selectedTileColor;
 
   /// Called when the item is tapped, regardless of selected or not
@@ -120,8 +122,23 @@ class PaneItem extends NavigationPaneItem {
   ///  * [HoverButton.forceEnabled]
   final bool enabled;
 
-  /// Used to construct the pane items all around [NavigationView]. You can
-  /// customize how the pane items should look like by overriding this method
+  /// Builds the pane item widget for display in the navigation pane.
+  ///
+  /// This method handles all display modes ([PaneDisplayMode.compact],
+  /// [PaneDisplayMode.open], [PaneDisplayMode.minimal], and [PaneDisplayMode.top])
+  /// and adapts the layout accordingly:
+  ///
+  /// - **Compact mode**: Shows only the icon with tooltip on hover
+  /// - **Open/Minimal mode**: Shows icon and title in a row with optional trailing
+  /// - **Top mode**: Shows icon and title horizontally with different styling
+  ///
+  /// The method also handles:
+  /// - Selection state and visual feedback
+  /// - Info badge positioning
+  /// - Navigation indicator integration
+  /// - Focus management and accessibility
+  ///
+  /// You can customize the appearance by overriding this method.
   Widget build(
     BuildContext context,
     bool selected,
@@ -221,8 +238,6 @@ class PaneItem extends NavigationPaneItem {
                       alignment: AlignmentDirectional.centerStart,
                       child: () {
                         if (infoBadge != null) {
-                          // InfoBadge should be centered vertically on the icon, not top-aligned
-                          // See: https://github.com/bdlukaa/fluent_ui/issues/1181
                           return Stack(
                             alignment: AlignmentDirectional.center,
                             clipBehavior: Clip.none,
@@ -230,7 +245,6 @@ class PaneItem extends NavigationPaneItem {
                               icon,
                               PositionedDirectional(
                                 end: -8,
-                                // Center vertically by not specifying top/bottom
                                 child: infoBadge!,
                               ),
                             ],
@@ -263,8 +277,6 @@ class PaneItem extends NavigationPaneItem {
                           child: Center(child: icon),
                         ),
                       ),
-                      // Use Expanded with minWidth: 0 to ensure text can shrink
-                      // below its intrinsic size during transitions, preventing overflow
                       Expanded(
                         child: ConstrainedBox(
                           constraints: const BoxConstraints(),
@@ -317,10 +329,7 @@ class PaneItem extends NavigationPaneItem {
                   clipBehavior: Clip.none,
                   children: [
                     result,
-                    if (infoBadge != null)
-                      // Center InfoBadge vertically on the icon for top display mode
-                      // See: https://github.com/bdlukaa/fluent_ui/issues/1181
-                      PositionedDirectional(end: -3, child: infoBadge!),
+                    PositionedDirectional(end: -3, child: infoBadge!),
                   ],
                 );
               }
@@ -395,16 +404,12 @@ class PaneItem extends NavigationPaneItem {
       key: key,
       padding: const EdgeInsetsDirectional.only(bottom: 4),
       child: () {
-        // If there is an indicator and the item is an effective item,
-        // render the indicator locally within the item
         if (maybeBody?.pane?.indicator != null &&
             index != null &&
             !index.isNegative) {
           return Stack(
             children: [
               button,
-              // Indicator is positioned locally within this PaneItem
-              // No global coordinate tracking needed
               Positioned.fill(
                 child: InheritedNavigationView.merge(
                   currentItemIndex: index,
@@ -526,7 +531,6 @@ class PaneItemHeader extends NavigationPaneItem {
     return KeyedSubtree(
       key: key,
       child: Container(
-        // key: itemKey,
         constraints: const BoxConstraints(minHeight: kPaneItemHeaderMinHeight),
         padding: (theme.iconPadding ?? EdgeInsetsDirectional.zero)
             .add(
@@ -738,9 +742,21 @@ class _PaneItemExpander extends StatefulWidget {
   State<_PaneItemExpander> createState() => __PaneItemExpanderState();
 }
 
+/// State for managing expandable navigation items.
+///
+/// This state handles:
+/// - Expand/collapse animations
+/// - State persistence using [PageStorage]
+/// - Flyout menu display for compact/minimal modes
+/// - Nested expander support with depth tracking
 class __PaneItemExpanderState extends State<_PaneItemExpander>
     with SingleTickerProviderStateMixin {
   final flyoutController = FlyoutController();
+
+  /// Whether to use a flyout menu instead of inline expansion.
+  ///
+  /// Flyouts are used in compact and minimal modes where there isn't
+  /// enough space to show expanded children inline.
   bool get useFlyout => widget.displayMode != PaneDisplayMode.open;
 
   late bool _open;
@@ -749,8 +765,10 @@ class __PaneItemExpanderState extends State<_PaneItemExpander>
     duration: const Duration(milliseconds: 100),
   );
 
-  // Use a stable identifier based on the item's hashCode instead of index
-  // This prevents issues when items are dynamically added/removed
+  /// Storage key for persisting expander state.
+  ///
+  /// Uses the item's hashCode instead of index to prevent issues when items
+  /// are dynamically added or removed.
   String get _storageKey => 'paneItemExpanderOpen_${widget.item.hashCode}';
 
   bool _stateRestored = false;
@@ -765,8 +783,6 @@ class __PaneItemExpanderState extends State<_PaneItemExpander>
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    // Only restore state once to prevent state loss when items are added/removed
-    // See: Bug where expander closes when items are added/removed via setState()
     if (!_stateRestored) {
       final storedState =
           PageStorage.of(context).readState(context, identifier: _storageKey)
@@ -894,18 +910,9 @@ class __PaneItemExpanderState extends State<_PaneItemExpander>
     final theme = FluentTheme.of(context);
     final body = InheritedNavigationView.of(context);
 
-    // Don't read from PageStorage in build() - this causes state loss when
-    // items are added/removed. State is restored once in didChangeDependencies()
-    // and persisted in toggleOpen()
-
-    // Get the actual index for the expander itself
     final expanderIndex = body.pane!.effectiveIndexOf(widget.item);
-
-    // Determine if the expander or any of its children is selected
     final isExpanderSelected = widget.selected;
     final childSelected = hasSelectedChild;
-
-    // Show indicator on expander when a child is selected but expander is collapsed
     final showIndicatorOnExpander = childSelected && !_open;
 
     // The item with the trailing widget for expand/collapse
@@ -933,13 +940,8 @@ class __PaneItemExpanderState extends State<_PaneItemExpander>
         )
         .build(
           context,
-          // Show as selected if expander is selected OR if a child is selected
-          // and the expander is collapsed (to show where the selection is)
           isExpanderSelected || showIndicatorOnExpander,
           () {
-            // Only navigate if the expander has a body. If body is null,
-            // clicking just toggles expand/collapse without navigation.
-            // See: https://github.com/bdlukaa/fluent_ui/issues/1189
             if (widget.item.body != null) {
               widget.onPressed?.call();
             }
@@ -975,7 +977,6 @@ class __PaneItemExpanderState extends State<_PaneItemExpander>
                         children: widget.items.map((childItem) {
                           final childDepth = widget.depth + 1;
                           if (childItem is PaneItemExpander) {
-                            // Support nested expanders - recursively build with incremented depth
                             return childItem.build(
                               context,
                               body.pane!.isSelected(childItem),
@@ -991,8 +992,6 @@ class __PaneItemExpanderState extends State<_PaneItemExpander>
                               depth: childDepth,
                             );
                           } else if (childItem is PaneItem) {
-                            // ClipRect ensures child items with additional leading padding
-                            // don't overflow during transitions. See: #906
                             return ClipRect(
                               child: childItem.build(
                                 context,
@@ -1148,10 +1147,7 @@ class PaneItemWidgetAdapter extends NavigationPaneItem {
   }
 }
 
-// Note: The global coordinate tracking extension (_ItemsExtension._getPaneItemsOffsets)
-// has been removed. The navigation indicator is now rendered locally inside each
-// PaneItem, eliminating the need for global coordinate storage and improving
-// performance significantly.
+/// Extension methods for extracting properties from widgets.
 
 /// Extension methods for extracting properties from widgets.
 extension ItemExtension on Widget {

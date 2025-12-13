@@ -125,11 +125,6 @@ class _NavigationBodyState extends State<_NavigationBody> {
           final isTop = view.displayMode == PaneDisplayMode.top;
 
           if (isTop) {
-            // Other transtitions other than default is only applied to top nav
-            // when clicking overflow on topnav, transition is from bottom
-            // otherwise if prevItem is on right side of nextActualItem, transition is from left
-            //           if prevItem is on left side of nextActualItem, transition is from right
-            // click on Settings item is considered Default
             return HorizontalSlidePageTransition(
               animation: animation,
               fromLeft: view.previousItemIndex > (view.pane?.selected ?? 0),
@@ -145,38 +140,28 @@ class _NavigationBodyState extends State<_NavigationBody> {
             return paneBodyBuilder.call(
               view.pane?.selected != null ? view.pane!.selectedItem : null,
               view.pane?.selected != null
-                  ? FocusTraversalGroup(
-                      // body is guaranteed to be non-null since effectiveItems
-                      // filters out items with null body
-                      child: view.pane!.selectedItem.body!,
-                    )
+                  ? FocusTraversalGroup(child: view.pane!.selectedItem.body!)
                   : null,
             );
           } else {
-            // Use PageView for efficient page management
-            // Pages can use AutomaticKeepAliveClientMixin to preserve state
             return KeyedSubtree(
               key: widget.itemKey,
               child: PageView.builder(
                 key: _pageKey,
                 physics: const NeverScrollableScrollPhysics(),
                 controller: pageController,
-                // Allow pages to stay alive when using AutomaticKeepAliveClientMixin
                 allowImplicitScrolling: true,
                 itemCount: view.pane!.effectiveItems.length,
                 itemBuilder: (context, index) {
                   final isSelected = view.pane!.selected == index;
                   final item = view.pane!.effectiveItems[index];
 
-                  // Wrap in a _KeepAlivePage to help preserve state
                   return _KeepAlivePage(
                     key: ValueKey('nav_page_$index'),
                     child: ExcludeFocus(
                       excluding: !isSelected,
                       child: FocusTraversalGroup(
                         policy: WidgetOrderTraversalPolicy(),
-                        // body is guaranteed to be non-null since effectiveItems
-                        // filters out items with null body
                         child: item.body!,
                       ),
                     ),
@@ -220,8 +205,6 @@ class _KeepAlivePageState extends State<_KeepAlivePage>
   @override
   Widget build(BuildContext context) {
     super.build(context);
-    // RepaintBoundary isolates this page's repaints from affecting
-    // the parent navigation body or other pages
     return RepaintBoundary(child: widget.child);
   }
 }
