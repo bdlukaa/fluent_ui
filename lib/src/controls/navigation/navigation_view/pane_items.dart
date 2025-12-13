@@ -130,6 +130,7 @@ class PaneItem extends NavigationPaneItem {
     bool showTextOnTop = true,
     int? itemIndex,
     bool? autofocus,
+    int depth = 0,
   }) {
     final maybeBody = InheritedNavigationView.maybeOf(context);
     final mode =
@@ -253,6 +254,7 @@ class PaneItem extends NavigationPaneItem {
                 child: ClipRect(
                   child: Row(
                     children: [
+                      SizedBox(width: depth * 28),
                       Padding(
                         padding:
                             theme.iconPadding ?? EdgeInsetsDirectional.zero,
@@ -407,6 +409,7 @@ class PaneItem extends NavigationPaneItem {
                 child: InheritedNavigationView.merge(
                   currentItemIndex: index,
                   currentItemSelected: selected,
+                  itemDepth: depth,
                   child: maybeBody!.pane!.indicator!,
                 ),
               ),
@@ -472,7 +475,7 @@ class PaneItemSeparator extends NavigationPaneItem {
   final double? thickness;
 
   /// Builds the separator widget.
-  Widget build(BuildContext context, Axis direction) {
+  Widget build(BuildContext context, Axis direction, {int depth = 0}) {
     return KeyedSubtree(
       key: key,
       child: Divider(
@@ -515,7 +518,7 @@ class PaneItemHeader extends NavigationPaneItem {
   final Widget header;
 
   /// Builds the header widget.
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, {int depth = 0}) {
     assert(debugCheckHasFluentTheme(context));
     final theme = NavigationPaneTheme.of(context);
     final view = InheritedNavigationView.of(context);
@@ -525,11 +528,13 @@ class PaneItemHeader extends NavigationPaneItem {
       child: Container(
         // key: itemKey,
         constraints: const BoxConstraints(minHeight: kPaneItemHeaderMinHeight),
-        padding: (theme.iconPadding ?? EdgeInsetsDirectional.zero).add(
-          view.displayMode == PaneDisplayMode.top
-              ? EdgeInsetsDirectional.zero
-              : theme.headerPadding ?? EdgeInsetsDirectional.zero,
-        ),
+        padding: (theme.iconPadding ?? EdgeInsetsDirectional.zero)
+            .add(
+              view.displayMode == PaneDisplayMode.top
+                  ? EdgeInsetsDirectional.zero
+                  : theme.headerPadding ?? EdgeInsetsDirectional.zero,
+            )
+            .add(EdgeInsetsDirectional.only(start: depth * 28)),
         child: DefaultTextStyle.merge(
           style: theme.itemHeaderTextStyle,
           softWrap: false,
@@ -587,6 +592,7 @@ class PaneItemAction extends PaneItem {
     bool showTextOnTop = true,
     bool? autofocus,
     int? itemIndex,
+    int depth = 0,
   }) {
     return super.build(
       context,
@@ -596,6 +602,7 @@ class PaneItemAction extends PaneItem {
       showTextOnTop: showTextOnTop,
       autofocus: autofocus,
       itemIndex: itemIndex,
+      depth: depth,
     );
   }
 }
@@ -632,6 +639,9 @@ class PaneItemExpander extends PaneItem {
   /// If [body] is null, clicking the expander will only toggle expand/collapse
   /// without navigating to a page. This is useful when the expander serves only
   /// as a container for child items.
+  ///
+  /// Supports nested hierarchies with any number of nesting levels, though
+  /// keeping the navigation hierarchy shallow is recommended for better UX.
   PaneItemExpander({
     required super.icon,
     required this.items,
@@ -647,10 +657,7 @@ class PaneItemExpander extends PaneItem {
     super.selectedTileColor,
     super.onTap,
     this.initiallyExpanded = false,
-  }) : assert(
-         items.any((item) => item is PaneItemExpander) == false,
-         'There can not be nested PaneItemExpanders',
-       );
+  });
 
   /// The child items contained within this expander.
   final List<NavigationPaneItem> items;
@@ -674,6 +681,7 @@ class PaneItemExpander extends PaneItem {
     ValueChanged<PaneItem>? onItemPressed,
     bool? autofocus,
     int? itemIndex,
+    int depth = 0,
   }) {
     final maybeBody = InheritedNavigationView.maybeOf(context);
     final mode =
@@ -694,6 +702,7 @@ class PaneItemExpander extends PaneItem {
         onPressed: onPressed,
         onItemPressed: onItemPressed,
         initiallyExpanded: initiallyExpanded,
+        depth: depth,
       ),
     );
   }
@@ -709,6 +718,7 @@ class _PaneItemExpander extends StatefulWidget {
     required this.onPressed,
     required this.onItemPressed,
     required this.initiallyExpanded,
+    this.depth = 0,
     super.key,
   });
 
@@ -721,7 +731,8 @@ class _PaneItemExpander extends StatefulWidget {
   final ValueChanged<PaneItem>? onItemPressed;
   final bool initiallyExpanded;
 
-  static const leadingPadding = EdgeInsetsDirectional.only(start: 28);
+  /// The depth level of this expander in the hierarchy (0 = root level)
+  final int depth;
 
   @override
   State<_PaneItemExpander> createState() => __PaneItemExpanderState();
@@ -742,6 +753,8 @@ class __PaneItemExpanderState extends State<_PaneItemExpander>
   // This prevents issues when items are dynamically added/removed
   String get _storageKey => 'paneItemExpanderOpen_${widget.item.hashCode}';
 
+  bool _stateRestored = false;
+
   @override
   void initState() {
     super.initState();
@@ -752,13 +765,19 @@ class __PaneItemExpanderState extends State<_PaneItemExpander>
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    _open =
-        PageStorage.of(context).readState(context, identifier: _storageKey)
-            as bool? ??
-        _open;
-
-    if (_open) {
-      controller.value = 1;
+    // Only restore state once to prevent state loss when items are added/removed
+    // See: Bug where expander closes when items are added/removed via setState()
+    if (!_stateRestored) {
+      final storedState =
+          PageStorage.of(context).readState(context, identifier: _storageKey)
+              as bool?;
+      if (storedState != null) {
+        _open = storedState;
+        if (_open) {
+          controller.value = 1;
+        }
+      }
+      _stateRestored = true;
     }
 
     final theme = FluentTheme.of(context);
@@ -875,11 +894,9 @@ class __PaneItemExpanderState extends State<_PaneItemExpander>
     final theme = FluentTheme.of(context);
     final body = InheritedNavigationView.of(context);
 
-    // Restore open state from storage
-    _open =
-        PageStorage.of(context).readState(context, identifier: _storageKey)
-            as bool? ??
-        _open;
+    // Don't read from PageStorage in build() - this causes state loss when
+    // items are added/removed. State is restored once in didChangeDependencies()
+    // and persisted in toggleOpen()
 
     // Get the actual index for the expander itself
     final expanderIndex = body.pane!.effectiveIndexOf(widget.item);
@@ -931,6 +948,7 @@ class __PaneItemExpanderState extends State<_PaneItemExpander>
           displayMode: widget.displayMode,
           showTextOnTop: widget.showTextOnTop,
           itemIndex: expanderIndex,
+          depth: widget.depth,
         );
 
     if (widget.items.isEmpty) {
@@ -955,17 +973,28 @@ class __PaneItemExpanderState extends State<_PaneItemExpander>
                         mainAxisSize: MainAxisSize.min,
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: widget.items.map((childItem) {
-                          if (childItem is PaneItem) {
-                            final modifiedItem = childItem.copyWith(
-                              icon: Padding(
-                                padding: _PaneItemExpander.leadingPadding,
-                                child: childItem.icon,
-                              ),
+                          final childDepth = widget.depth + 1;
+                          if (childItem is PaneItemExpander) {
+                            // Support nested expanders - recursively build with incremented depth
+                            return childItem.build(
+                              context,
+                              body.pane!.isSelected(childItem),
+                              () {
+                                if (childItem.body != null) {
+                                  widget.onItemPressed?.call(childItem);
+                                }
+                              },
+                              displayMode: widget.displayMode,
+                              showTextOnTop: widget.showTextOnTop,
+                              onItemPressed: widget.onItemPressed,
+                              itemIndex: body.pane!.effectiveIndexOf(childItem),
+                              depth: childDepth,
                             );
+                          } else if (childItem is PaneItem) {
                             // ClipRect ensures child items with additional leading padding
                             // don't overflow during transitions. See: #906
                             return ClipRect(
-                              child: modifiedItem.build(
+                              child: childItem.build(
                                 context,
                                 body.pane!.isSelected(childItem),
                                 () => widget.onItemPressed?.call(childItem),
@@ -974,19 +1003,18 @@ class __PaneItemExpanderState extends State<_PaneItemExpander>
                                 itemIndex: body.pane!.effectiveIndexOf(
                                   childItem,
                                 ),
+                                depth: childDepth,
                               ),
                             );
                           } else if (childItem is PaneItemHeader) {
-                            return Padding(
-                              padding: _PaneItemExpander.leadingPadding,
-                              child: childItem.build(context),
-                            );
+                            return childItem.build(context, depth: childDepth);
                           } else if (childItem is PaneItemSeparator) {
                             return childItem.build(
                               context,
                               widget.displayMode == PaneDisplayMode.top
                                   ? Axis.vertical
                                   : Axis.horizontal,
+                              depth: childDepth,
                             );
                           } else {
                             throw UnsupportedError(

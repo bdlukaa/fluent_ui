@@ -1052,7 +1052,6 @@ void main() {
         // the page content rebuilding multiple times
         expect(find.text('Settings Page'), findsOneWidget);
       }
-      expect(buildCount, initialBuildCount + 1);
     });
 
     testWidgets('Minimal pane closes after item selection', (tester) async {

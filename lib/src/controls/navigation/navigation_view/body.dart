@@ -247,6 +247,7 @@ class InheritedNavigationView extends InheritedWidget {
     this.previousItemIndex = 0,
     this.currentItemIndex = -1,
     this.isTransitioning = false,
+    this.itemDepth = 0,
   });
 
   /// The current pane display mode according to the current state.
@@ -274,6 +275,11 @@ class InheritedNavigationView extends InheritedWidget {
   /// When true, interactive features on pane items (like info badges) are hidden
   /// to provide a cleaner transition animation.
   final bool isTransitioning;
+
+  /// The depth level of the current item in the navigation hierarchy (0 = root level).
+  ///
+  /// Used by [NavigationIndicator]s to adjust padding based on nesting level.
+  final int itemDepth;
 
   /// Returns the closest [InheritedNavigationView] ancestor, if any.
   static InheritedNavigationView? maybeOf(BuildContext context) {
@@ -303,6 +309,7 @@ class InheritedNavigationView extends InheritedWidget {
     int? previousItemIndex,
     bool? currentItemSelected,
     bool? isTransitioning,
+    int? itemDepth,
   }) {
     return Builder(
       builder: (context) {
@@ -317,6 +324,7 @@ class InheritedNavigationView extends InheritedWidget {
           previousItemIndex:
               previousItemIndex ?? current?.previousItemIndex ?? 0,
           isTransitioning: isTransitioning ?? current?.isTransitioning ?? false,
+          itemDepth: itemDepth ?? current?.itemDepth ?? 0,
           child: child,
         );
       },
@@ -330,6 +338,7 @@ class InheritedNavigationView extends InheritedWidget {
         oldWidget.pane != pane ||
         oldWidget.previousItemIndex != previousItemIndex ||
         oldWidget.currentItemIndex != currentItemIndex ||
-        oldWidget.isTransitioning != isTransitioning;
+        oldWidget.isTransitioning != isTransitioning ||
+        oldWidget.itemDepth != itemDepth;
   }
 }

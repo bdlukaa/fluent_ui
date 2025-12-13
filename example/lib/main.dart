@@ -758,6 +758,7 @@ class _LinkPaneItemAction extends PaneItem {
     final bool showTextOnTop = true,
     final bool? autofocus,
     final int? itemIndex,
+    final int depth = 0,
   }) {
     return Link(
       uri: Uri.parse(link),

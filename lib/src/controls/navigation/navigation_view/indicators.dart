@@ -385,10 +385,13 @@ class _StickyNavigationIndicatorState
                         top: topPadding,
                         bottom: bottomPadding,
 
-                        // TODO(bdlukaa): Adjust padding based on item's depth
-                        // If the item is a sub-item, add more paddiing to the
-                        // start.
-                        start: 6,
+                        // Adjust padding based on item's depth
+                        // For nested items (depth > 0), add more padding to the start
+                        // to align with the indented icon. Each level adds 28px (leadingPadding)
+                        start:
+                            6 +
+                            (InheritedNavigationView.of(context).itemDepth *
+                                28.0),
                         end: 6,
                       )
                     : EdgeInsetsDirectional.only(
