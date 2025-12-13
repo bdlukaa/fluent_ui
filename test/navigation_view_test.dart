@@ -903,8 +903,6 @@ void main() {
                   PaneItemExpander(
                     icon: const Icon(FluentIcons.folder),
                     title: const Text('Folder'),
-                    // body is null - should only expand/collapse, not navigate
-                    body: null,
                     items: [
                       PaneItem(
                         icon: const Icon(FluentIcons.document),
@@ -1054,6 +1052,7 @@ void main() {
         // the page content rebuilding multiple times
         expect(find.text('Settings Page'), findsOneWidget);
       }
+      expect(buildCount, initialBuildCount + 1);
     });
 
     testWidgets('Minimal pane closes after item selection', (tester) async {
@@ -1131,7 +1130,7 @@ void main() {
                   icon: const Icon(FluentIcons.home),
                   title: const Text('Home'),
                   body: const Center(child: Text('Home Page')),
-                  infoBadge: InfoBadge(source: Text('5')),
+                  infoBadge: const InfoBadge(source: Text('5')),
                 ),
               ],
             ),
@@ -1158,7 +1157,6 @@ void main() {
             home: NavigationView(
               pane: NavigationPane(
                 selected: 0,
-                indicator: const StickyNavigationIndicator(),
                 items: [
                   PaneItem(
                     icon: const Icon(FluentIcons.home),

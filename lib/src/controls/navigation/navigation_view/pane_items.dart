@@ -327,6 +327,7 @@ class PaneItem extends NavigationPaneItem {
           label: titleText.isEmpty ? null : titleText,
           selected: selected,
           child: Container(
+            // TODO(bdlukaa): Put this into the theme
             margin: const EdgeInsetsDirectional.symmetric(horizontal: 6),
             decoration: BoxDecoration(
               color: () {

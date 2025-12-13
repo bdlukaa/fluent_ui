@@ -241,7 +241,7 @@ class _StickyNavigationIndicatorState
     _growController = AnimationController(
       vsync: this,
       duration: widget.duration ?? const Duration(milliseconds: 150),
-      value: 1, // Start fully grown for initially selected item
+      value: 1,
     );
   }
 
@@ -251,7 +251,7 @@ class _StickyNavigationIndicatorState
     final theme = FluentTheme.of(context);
     _cachedCurve = widget.curve ?? theme.animationCurve;
 
-    final duration = widget.duration ?? theme.fasterAnimationDuration;
+    final duration = widget.duration ?? theme.fastAnimationDuration;
     _shrinkController.duration = duration;
     _growController.duration = duration;
 
@@ -263,7 +263,7 @@ class _StickyNavigationIndicatorState
     super.didUpdateWidget(oldWidget);
     if (widget.duration != oldWidget.duration) {
       final duration =
-          widget.duration ?? FluentTheme.of(context).fasterAnimationDuration;
+          widget.duration ?? FluentTheme.of(context).fastAnimationDuration;
       _shrinkController.duration = duration;
       _growController.duration = duration;
     }
@@ -278,23 +278,17 @@ class _StickyNavigationIndicatorState
     final currentPreviousIndex = previousItemIndex;
     final currentSelectedIndex = selectedIndex;
 
-    // Check if selection actually changed
     if (_cachedPreviousIndex == currentPreviousIndex &&
         _cachedSelectedIndex == currentSelectedIndex) {
       return;
     }
 
-    // Determine direction: going down means new item is below (has higher index)
-    _goingDown = currentPreviousIndex < currentSelectedIndex;
+    _goingDown = currentPreviousIndex > currentSelectedIndex;
 
     if (isSelected) {
-      // This is the newly selected item - grow the indicator
-      // The indicator grows from the side facing the old item
       _growController.forward(from: 0);
     } else if (itemIndex == currentPreviousIndex &&
         currentPreviousIndex != currentSelectedIndex) {
-      // This was the previously selected item - shrink the indicator
-      // The indicator shrinks towards the side facing the new item
       _shrinkController.forward(from: 0);
     }
 
@@ -310,9 +304,7 @@ class _StickyNavigationIndicatorState
   }
 
   bool get _shouldRender {
-    // Show for selected item (always)
     if (isSelected) return true;
-    // Show for previous item while shrinking animation is running
     if (itemIndex == previousItemIndex && _shrinkController.isAnimating) {
       return true;
     }
@@ -338,42 +330,40 @@ class _StickyNavigationIndicatorState
       child: AnimatedBuilder(
         animation: Listenable.merge([_shrinkController, _growController]),
         builder: (context, child) {
-          // Calculate padding values based on animation state
-          // At rest: both paddings are at their normal value (widget.leftPadding)
-          // During shrink: one side's padding increases to full height
-          // During grow: one side's padding decreases from full to normal
-
           var topPadding = widget.leftPadding;
           var bottomPadding = widget.leftPadding;
 
           if (isSelected) {
-            // Growing animation: reduce padding on the side facing the old item
-            final growProgress = CurvedAnimation(
+            final growAnimation = CurvedAnimation(
               parent: _growController,
               curve: Interval(0.5, 1, curve: _cachedCurve),
-            ).value;
+            );
+            final growProgress = growAnimation.value;
+
+            if (growProgress == 0) {
+              return const SizedBox.shrink();
+            }
 
             if (_goingDown) {
-              // New item is below old item, so grow from top (reduce top padding)
-              // Start with max padding, animate to normal padding
-              topPadding = widget.leftPadding * (2.0 - growProgress);
+              bottomPadding = widget.leftPadding * growProgress;
             } else {
-              // New item is above old item, so grow from bottom (reduce bottom padding)
-              bottomPadding = widget.leftPadding * (2.0 - growProgress);
+              topPadding = widget.leftPadding * growProgress;
             }
           } else if (itemIndex == previousItemIndex) {
-            // Shrinking animation: increase padding on the side facing the new item
-            final shrinkProgress = CurvedAnimation(
+            final shrinkAnimation = CurvedAnimation(
               parent: _shrinkController,
-              curve: _cachedCurve,
-            ).value;
+              curve: Interval(0, 0.5, curve: _cachedCurve),
+            );
+            final shrinkProgress = shrinkAnimation.value;
+
+            if (shrinkProgress == 1) {
+              return const SizedBox.shrink();
+            }
 
             if (_goingDown) {
-              // New item is below, so shrink towards bottom (increase top padding)
-              topPadding = widget.leftPadding * (1.0 + shrinkProgress);
+              topPadding = widget.leftPadding * (1.0 - shrinkProgress);
             } else {
-              // New item is above, so shrink towards top (increase bottom padding)
-              bottomPadding = widget.leftPadding * (1.0 + shrinkProgress);
+              bottomPadding = widget.leftPadding * (1.0 - shrinkProgress);
             }
           }
 
@@ -382,6 +372,8 @@ class _StickyNavigationIndicatorState
                 ? EdgeInsetsDirectional.only(
                     top: topPadding,
                     bottom: bottomPadding,
+                    start: 6,
+                    end: 6,
                   )
                 : EdgeInsetsDirectional.only(
                     start: topPadding,
