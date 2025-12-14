@@ -73,33 +73,6 @@ class _NavigationBody extends StatefulWidget {
 }
 
 class _NavigationBodyState extends State<_NavigationBody> {
-  final _pageKey = GlobalKey<State<PageView>>();
-  PageController? _pageController;
-
-  PageController get pageController => _pageController!;
-
-  @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-    final view = InheritedNavigationView.of(context);
-    final selected = view.pane?.selected ?? 0;
-
-    _pageController ??= PageController(initialPage: selected);
-
-    if (pageController.hasClients) {
-      if (view.previousItemIndex != selected ||
-          pageController.page != selected) {
-        pageController.jumpToPage(selected);
-      }
-    }
-  }
-
-  @override
-  void dispose() {
-    _pageController?.dispose();
-    super.dispose();
-  }
-
   @override
   Widget build(BuildContext context) {
     assert(debugCheckHasFluentTheme(context));
@@ -144,29 +117,13 @@ class _NavigationBodyState extends State<_NavigationBody> {
                   : null,
             );
           } else {
-            return KeyedSubtree(
-              key: widget.itemKey,
-              child: PageView.builder(
-                key: _pageKey,
-                physics: const NeverScrollableScrollPhysics(),
-                controller: pageController,
-                allowImplicitScrolling: true,
-                itemCount: view.pane!.effectiveItems.length,
-                itemBuilder: (context, index) {
-                  final isSelected = view.pane!.selected == index;
-                  final item = view.pane!.effectiveItems[index];
-
-                  return _KeepAlivePage(
-                    key: ValueKey('nav_page_$index'),
-                    child: ExcludeFocus(
-                      excluding: !isSelected,
-                      child: FocusTraversalGroup(
-                        policy: WidgetOrderTraversalPolicy(),
-                        child: item.body!,
-                      ),
-                    ),
-                  );
-                },
+            return _KeepAlivePage(
+              key: ValueKey('nav_page_${view.pane?.selected}'),
+              child: ExcludeFocus(
+                child: FocusTraversalGroup(
+                  policy: WidgetOrderTraversalPolicy(),
+                  child: view.pane!.selectedItem.body!,
+                ),
               ),
             );
           }
