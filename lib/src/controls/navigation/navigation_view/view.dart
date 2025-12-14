@@ -927,12 +927,9 @@ class _NavigationViewPaneScrollConfiguration extends StatelessWidget {
     required this.controller,
     required this.hasAppBar,
     required this.child,
-    this.scrollBehavior,
-    super.key,
   });
 
   final ScrollController controller;
-  final ScrollBehavior? scrollBehavior;
   final bool hasAppBar;
   final Widget child;
 
@@ -941,7 +938,7 @@ class _NavigationViewPaneScrollConfiguration extends StatelessWidget {
     return PrimaryScrollController(
       controller: controller,
       child: ScrollConfiguration(
-        behavior: scrollBehavior ?? const NavigationViewScrollBehavior(),
+        behavior: const NavigationViewScrollBehavior(),
         child: MediaQuery.removePadding(
           context: context,
           removeTop: hasAppBar,

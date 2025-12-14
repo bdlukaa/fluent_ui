@@ -135,7 +135,7 @@ class _EndNavigationIndicatorState
             vertical: isTop ? 0.0 : 10.0,
             horizontal: isTop ? 12.0 : 0.0,
           ),
-          width: isTop ? 20.0 : 3.0,
+          width: isTop ? 20.0 : 6.0,
           height: isTop ? 3.0 : double.infinity,
           decoration: BoxDecoration(
             color: isSelected

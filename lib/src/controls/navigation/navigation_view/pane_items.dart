@@ -11,6 +11,7 @@ class NavigationPaneItem with Diagnosticable {
   /// See also:
   ///
   ///   * [PaneItem.build], which assigns this to its children
+  // TODO(bdlukaa): Find a way to remove this
   late final GlobalKey itemKey = GlobalKey();
 
   /// The key used for the item itself. Useful to find the position and size of
@@ -38,7 +39,7 @@ class NavigationPaneItem with Diagnosticable {
 class PaneItem extends NavigationPaneItem {
   /// Creates a pane item.
   PaneItem({
-    required this.icon,
+    this.icon,
     this.body,
     super.key,
     this.title,
@@ -71,7 +72,7 @@ class PaneItem extends NavigationPaneItem {
   /// The icon used by this item.
   ///
   /// Usually an [Icon] widget
-  final Widget icon;
+  final Widget? icon;
 
   /// The info badge used by this item
   final Widget? infoBadge;
@@ -242,11 +243,8 @@ class PaneItem extends NavigationPaneItem {
                             alignment: AlignmentDirectional.center,
                             clipBehavior: Clip.none,
                             children: [
-                              icon,
-                              PositionedDirectional(
-                                end: -8,
-                                child: infoBadge!,
-                              ),
+                              ?icon,
+                              PositionedDirectional(end: -8, child: infoBadge!),
                             ],
                           );
                         }
@@ -611,9 +609,6 @@ class PaneItemAction extends PaneItem {
   }
 }
 
-/// A [GlobalKey] for [PaneItemExpander] state.
-typedef PaneItemExpanderKey = GlobalKey<__PaneItemExpanderState>;
-
 /// Hierhical navigation item used on [NavigationView]
 ///
 /// Some apps may have a more complex hierarchical structure that requires more
@@ -632,12 +627,6 @@ typedef PaneItemExpanderKey = GlobalKey<__PaneItemExpanderState>;
 ///  * [PaneItemSeparator], used to group navigation items
 ///  * [PaneItemHeader], used to label groups of items.
 class PaneItemExpander extends PaneItem {
-  /// The key used for the expander.
-  ///
-  /// This key is used to find the position and size of the expander within the
-  /// screen.
-  final PaneItemExpanderKey expanderKey = PaneItemExpanderKey();
-
   /// Creates a pane item expander.
   ///
   /// If [body] is null, clicking the expander will only toggle expand/collapse
@@ -694,20 +683,17 @@ class PaneItemExpander extends PaneItem {
         maybeBody?.pane?.displayMode ??
         PaneDisplayMode.minimal;
 
-    return KeyedSubtree(
+    return _PaneItemExpander(
       key: key,
-      child: _PaneItemExpander(
-        key: expanderKey,
-        item: this,
-        items: items,
-        displayMode: mode,
-        showTextOnTop: showTextOnTop,
-        selected: selected,
-        onPressed: onPressed,
-        onItemPressed: onItemPressed,
-        initiallyExpanded: initiallyExpanded,
-        depth: depth,
-      ),
+      item: this,
+      items: items,
+      displayMode: mode,
+      showTextOnTop: showTextOnTop,
+      selected: selected,
+      onPressed: onPressed,
+      onItemPressed: onItemPressed,
+      initiallyExpanded: initiallyExpanded,
+      depth: depth,
     );
   }
 }
@@ -750,7 +736,7 @@ class _PaneItemExpander extends StatefulWidget {
 /// - Flyout menu display for compact/minimal modes
 /// - Nested expander support with depth tracking
 class __PaneItemExpanderState extends State<_PaneItemExpander>
-    with SingleTickerProviderStateMixin {
+    with SingleTickerProviderStateMixin, AutomaticKeepAliveClientMixin {
   final flyoutController = FlyoutController();
 
   /// Whether to use a flyout menu instead of inline expansion.
@@ -765,14 +751,6 @@ class __PaneItemExpanderState extends State<_PaneItemExpander>
     duration: const Duration(milliseconds: 100),
   );
 
-  /// Storage key for persisting expander state.
-  ///
-  /// Uses the item's hashCode instead of index to prevent issues when items
-  /// are dynamically added or removed.
-  String get _storageKey => 'paneItemExpanderOpen_${widget.item.hashCode}';
-
-  bool _stateRestored = false;
-
   @override
   void initState() {
     super.initState();
@@ -783,19 +761,6 @@ class __PaneItemExpanderState extends State<_PaneItemExpander>
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    if (!_stateRestored) {
-      final storedState =
-          PageStorage.of(context).readState(context, identifier: _storageKey)
-              as bool?;
-      if (storedState != null) {
-        _open = storedState;
-        if (_open) {
-          controller.value = 1;
-        }
-      }
-      _stateRestored = true;
-    }
-
     final theme = FluentTheme.of(context);
     controller.duration = theme.fastAnimationDuration;
   }
@@ -835,8 +800,6 @@ class __PaneItemExpanderState extends State<_PaneItemExpander>
   void toggleOpen({bool doFlyout = true}) {
     if (!mounted) return;
     setState(() => _open = !_open);
-
-    PageStorage.of(context).writeState(context, _open, identifier: _storageKey);
 
     if (_open) {
       if (useFlyout && doFlyout && flyoutController.isAttached) {
@@ -906,6 +869,7 @@ class __PaneItemExpanderState extends State<_PaneItemExpander>
 
   @override
   Widget build(BuildContext context) {
+    super.build(context);
     assert(debugCheckHasFluentTheme(context));
     final theme = FluentTheme.of(context);
     final body = InheritedNavigationView.of(context);
@@ -1036,6 +1000,9 @@ class __PaneItemExpanderState extends State<_PaneItemExpander>
         return expanderWidget;
     }
   }
+
+  @override
+  bool get wantKeepAlive => true;
 }
 
 class _PaneItemExpanderMenuItem extends MenuFlyoutItemBase {
@@ -1072,7 +1039,9 @@ class _PaneItemExpanderMenuItem extends MenuFlyoutItemBase {
         return MenuFlyoutItem(
           selected: isSelected,
           onPressed: onPressed,
-          leading: IconTheme.merge(data: iconTheme, child: item.icon),
+          leading: item.icon != null
+              ? IconTheme.merge(data: iconTheme, child: item.icon!)
+              : null,
           text: DefaultTextStyle(
             style: textStyle,
             child: item.title ?? const SizedBox.shrink(),
