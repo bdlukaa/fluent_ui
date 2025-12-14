@@ -142,9 +142,9 @@ class NavigationPane with Diagnosticable {
   /// The items used by this panel. These items are displayed before
   /// [autoSuggestBox] and [footerItems].
   ///
-  /// Only [PaneItem], [PaneItemSeparator] and [PaneItemHeader] are
-  /// accepted types. If other type is detected, an [UnsupportedError]
-  /// is thrown.
+  /// Only [PaneItem], [PaneItemSeparator], [PaneItemHeader] and
+  /// [PaneItemExpander] are accepted types. If other type is detected, an
+  /// [UnsupportedError] is thrown.
   final List<NavigationPaneItem> items;
 
   /// The footer items used by this panel. These items are displayed at

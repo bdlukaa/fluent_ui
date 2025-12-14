@@ -170,13 +170,6 @@ class _EndNavigationIndicatorState
 /// pulled from one item to another.
 class StickyNavigationIndicator extends NavigationIndicator {
   /// Creates a sticky navigation indicator.
-  ///
-  /// Defaults are set according to WinUI3 NavigationView specifications:
-  /// - Indicator width: 3.0px
-  /// - Vertical padding: 10.0px on each side (for 40px item height)
-  /// - Horizontal padding: 12.0px on each side (for top display mode)
-  ///
-  /// See: https://github.com/bdlukaa/fluent_ui/issues/1181
   const StickyNavigationIndicator({
     super.curve,
     super.color,
@@ -315,8 +308,8 @@ class _StickyNavigationIndicatorState
     if (itemIndex == previousItemIndex && _shrinkController.isAnimating) {
       return true;
     }
-    // TODO(bdlukaa): If current item is a expander and it has a selected child
-    // that is hidden by a menu, render the indicator.
+    // TODO(bdlukaa): If current item is child of a expander and it is closed
+    // render the indicator
 
     return false;
   }
@@ -391,7 +384,8 @@ class _StickyNavigationIndicatorState
                     ? EdgeInsetsDirectional.only(
                         top: topPadding,
                         bottom: bottomPadding,
-                        start: 6 +
+                        start:
+                            6 +
                             (InheritedNavigationView.of(context).itemDepth *
                                 28.0),
                         end: 6,

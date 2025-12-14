@@ -93,6 +93,7 @@ class _NavigationViewPageState extends State<NavigationViewPage>
         PaneItemExpander(
           icon: const WindowsIcon(WindowsIcons.payment_card),
           title: const Text('Cards'),
+          body: const _NavigationBodyItem(),
           onTap: () => debugPrint('Tapped cards'),
           items: [
             PaneItem(
