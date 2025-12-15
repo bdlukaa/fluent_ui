@@ -42,7 +42,7 @@ void main() {
                   pane: NavigationPane(
                     selected: selectedIndex,
                     onChanged: (index) => setState(() => selectedIndex = index),
-                    displayMode: PaneDisplayMode.open,
+                    displayMode: PaneDisplayMode.expanded,
                     items: [
                       PaneItem(
                         icon: const Icon(FluentIcons.home),
@@ -83,7 +83,7 @@ void main() {
                   pane: NavigationPane(
                     selected: selectedIndex,
                     onChanged: (index) => setState(() => selectedIndex = index),
-                    displayMode: PaneDisplayMode.open,
+                    displayMode: PaneDisplayMode.expanded,
                     items: [
                       PaneItemExpander(
                         icon: const Icon(FluentIcons.folder),
@@ -152,7 +152,7 @@ void main() {
             child: NavigationView(
               pane: NavigationPane(
                 selected: 0,
-                displayMode: PaneDisplayMode.open,
+                displayMode: PaneDisplayMode.expanded,
                 items: [
                   PaneItem(
                     icon: const Icon(FluentIcons.home),
@@ -186,7 +186,7 @@ void main() {
             child: NavigationView(
               pane: NavigationPane(
                 selected: 0,
-                displayMode: PaneDisplayMode.open,
+                displayMode: PaneDisplayMode.expanded,
                 indicator: const EndNavigationIndicator(),
                 items: [
                   PaneItem(
@@ -208,7 +208,7 @@ void main() {
 
     testWidgets('NavigationView display modes work', (tester) async {
       for (final mode in [
-        PaneDisplayMode.open,
+        PaneDisplayMode.expanded,
         PaneDisplayMode.compact,
         PaneDisplayMode.minimal,
         PaneDisplayMode.top,
@@ -255,7 +255,7 @@ void main() {
             child: NavigationView(
               pane: NavigationPane(
                 selected: 0,
-                displayMode: PaneDisplayMode.open,
+                displayMode: PaneDisplayMode.expanded,
                 items: [
                   PaneItem(
                     icon: const Icon(FluentIcons.home),
@@ -297,7 +297,7 @@ void main() {
             child: NavigationView(
               pane: NavigationPane(
                 selected: 0,
-                displayMode: PaneDisplayMode.open,
+                displayMode: PaneDisplayMode.expanded,
                 items: [
                   PaneItemExpander(
                     icon: const Icon(FluentIcons.folder),
@@ -355,7 +355,7 @@ void main() {
               ),
               pane: NavigationPane(
                 selected: 0,
-                displayMode: PaneDisplayMode.open,
+                displayMode: PaneDisplayMode.expanded,
                 items: [
                   PaneItem(
                     icon: const Icon(FluentIcons.home),
@@ -373,7 +373,7 @@ void main() {
 
       // Verify layoutBuilder was called with correct data
       expect(receivedData, isNotNull);
-      expect(receivedData!.displayMode, PaneDisplayMode.open);
+      expect(receivedData!.displayMode, PaneDisplayMode.expanded);
     });
   });
 
@@ -391,7 +391,7 @@ void main() {
             child: NavigationView(
               pane: NavigationPane(
                 selected: 0,
-                displayMode: PaneDisplayMode.open,
+                displayMode: PaneDisplayMode.expanded,
                 items: [
                   PaneItem(
                     icon: const Icon(FluentIcons.home),
@@ -427,7 +427,7 @@ void main() {
             child: NavigationView(
               pane: NavigationPane(
                 selected: 0,
-                displayMode: PaneDisplayMode.open,
+                displayMode: PaneDisplayMode.expanded,
                 items: [
                   PaneItem(
                     icon: const Icon(FluentIcons.home),
@@ -478,7 +478,7 @@ void main() {
             child: NavigationView(
               pane: NavigationPane(
                 selected: 0,
-                displayMode: PaneDisplayMode.open,
+                displayMode: PaneDisplayMode.expanded,
                 items: items,
               ),
             ),
@@ -544,7 +544,7 @@ void main() {
             child: NavigationView(
               pane: NavigationPane(
                 selected: 0,
-                displayMode: PaneDisplayMode.open,
+                displayMode: PaneDisplayMode.expanded,
                 items: items,
               ),
             ),
@@ -584,7 +584,7 @@ void main() {
             child: NavigationView(
               pane: NavigationPane(
                 selected: 0,
-                displayMode: PaneDisplayMode.open,
+                displayMode: PaneDisplayMode.expanded,
                 items: items,
               ),
             ),
@@ -635,7 +635,7 @@ void main() {
             child: NavigationView(
               pane: NavigationPane(
                 selected: 0,
-                displayMode: PaneDisplayMode.open,
+                displayMode: PaneDisplayMode.expanded,
                 items: [
                   PaneItem(
                     icon: const Icon(FluentIcons.home),
@@ -668,7 +668,7 @@ void main() {
             child: NavigationView(
               pane: NavigationPane(
                 selected: 0,
-                displayMode: PaneDisplayMode.open,
+                displayMode: PaneDisplayMode.expanded,
                 items: [
                   PaneItemHeader(header: const Text('Section Header')),
                   PaneItem(
@@ -696,7 +696,7 @@ void main() {
             height: 800,
             child: NavigationView(
               pane: NavigationPane(
-                displayMode: PaneDisplayMode.open,
+                displayMode: PaneDisplayMode.expanded,
                 items: [
                   PaneItem(
                     icon: const Icon(FluentIcons.home),
@@ -728,7 +728,7 @@ void main() {
                   pane: NavigationPane(
                     selected: selectedIndex,
                     onChanged: (index) => setState(() => selectedIndex = index),
-                    displayMode: PaneDisplayMode.open,
+                    displayMode: PaneDisplayMode.expanded,
                     items: [
                       PaneItem(
                         icon: const Icon(FluentIcons.home),
@@ -779,7 +779,7 @@ void main() {
             child: NavigationView(
               pane: NavigationPane(
                 selected: 0,
-                displayMode: PaneDisplayMode.open,
+                displayMode: PaneDisplayMode.expanded,
                 items: [
                   PaneItem(
                     icon: const Icon(FluentIcons.home),
@@ -819,7 +819,7 @@ void main() {
             child: NavigationView(
               pane: NavigationPane(
                 selected: 0,
-                displayMode: PaneDisplayMode.open,
+                displayMode: PaneDisplayMode.expanded,
                 items: [
                   PaneItem(
                     icon: const Icon(FluentIcons.settings),
@@ -851,7 +851,7 @@ void main() {
             child: NavigationView(
               pane: NavigationPane(
                 selected: 0,
-                displayMode: PaneDisplayMode.open,
+                displayMode: PaneDisplayMode.expanded,
                 items: [
                   PaneItemExpander(
                     icon: const Icon(FluentIcons.folder),
@@ -898,7 +898,7 @@ void main() {
             child: NavigationView(
               pane: NavigationPane(
                 selected: 0,
-                displayMode: PaneDisplayMode.open,
+                displayMode: PaneDisplayMode.expanded,
                 items: [
                   PaneItemExpander(
                     icon: const Icon(FluentIcons.folder),
@@ -948,7 +948,7 @@ void main() {
                   pane: NavigationPane(
                     selected: selectedIndex,
                     onChanged: (index) => setState(() => selectedIndex = index),
-                    displayMode: PaneDisplayMode.open,
+                    displayMode: PaneDisplayMode.expanded,
                     items: [
                       PaneItemExpander(
                         icon: const Icon(FluentIcons.folder),

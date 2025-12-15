@@ -32,8 +32,8 @@ enum PaneDisplayMode {
   ///   * You want navigation categories to be very prominent, with less
   ///     space for other app content.
   ///
-  /// ![Open Display Mode](https://docs.microsoft.com/en-us/windows/uwp/design/controls-and-patterns/images/displaymode-left.png)
-  open,
+  /// ![Expanded Display Mode](https://docs.microsoft.com/en-us/windows/uwp/design/controls-and-patterns/images/displaymode-left.png)
+  expanded,
 
   /// The pane shows only icons until opened and is positioned to the left
   /// of the content.
@@ -50,7 +50,7 @@ enum PaneDisplayMode {
   /// Let the [NavigationPane] decide what display mode should be used based on
   /// the width. This is used by default on [NavigationPane]. In Auto mode, the
   /// [NavigationPane] adapts between [minimal] when the window is narrow, to
-  /// [compact], and then [open] as the window gets wider.
+  /// [compact], and then [expanded] as the window gets wider.
   ///
   /// - An expanded left pane on large window widths (1008px or greater).
   /// - A left, icon-only, nav pane (LeftCompact) on medium window widths
@@ -134,7 +134,7 @@ class NavigationPane with Diagnosticable {
   /// The header of the pane.
   ///
   /// If null, the space it should have taken will be removed from
-  /// the pane ([PaneDisplayMode.minimal] and [PaneDisplayMode.open] only).
+  /// the pane ([PaneDisplayMode.minimal] and [PaneDisplayMode.expanded] only).
   ///
   /// Usually a [Text] or an [Image].
   ///
@@ -193,14 +193,14 @@ class NavigationPane with Diagnosticable {
   final ValueChanged<int>? onItemPressed;
 
   /// The scroll controller used by the pane when [displayMode] is
-  /// [PaneDisplayMode.compact] and [PaneDisplayMode.open].
+  /// [PaneDisplayMode.compact] and [PaneDisplayMode.expanded].
   ///
   /// If null, a local scroll controller is created to control the scrolling and
   /// keep the state of the scroll when the display mode is toggled.
   final ScrollController? scrollController;
 
   /// The scroll behavior used by the pane when [displayMode] is
-  /// [PaneDisplayMode.compact] and [PaneDisplayMode.open].
+  /// [PaneDisplayMode.compact] and [PaneDisplayMode.expanded].
   ///
   /// If null, [NavigationViewScrollBehavior] is used.
   final ScrollBehavior? scrollBehavior;
@@ -606,16 +606,17 @@ class _SelectedItemKeyWrapper extends StatelessWidget {
   const _SelectedItemKeyWrapper({
     required this.child,
     required this.isSelected,
-    required this.selectedItemKey,
   });
 
   final Widget child;
   final bool isSelected;
-  final GlobalKey selectedItemKey;
 
   @override
   Widget build(BuildContext context) {
-    return KeyedSubtree(key: isSelected ? selectedItemKey : null, child: child);
+    return KeyedSubtree(
+      key: isSelected ? NavigationView.of(context)._selectedItemKey : null,
+      child: child,
+    );
   }
 }
 
@@ -623,18 +624,9 @@ class _SelectedItemKeyWrapper extends StatelessWidget {
 ///
 /// ![Top Pane Anatomy](https://docs.microsoft.com/en-us/windows/uwp/design/controls-and-patterns/images/navview-pane-anatomy-horizontal.png)
 class _TopNavigationPane extends StatefulWidget {
-  _TopNavigationPane({
-    required this.pane,
-    required this.listKey,
-    required this.secondaryListKey,
-    required this.selectedItemKey,
-    this.appBar,
-  }) : super(key: pane.key);
+  _TopNavigationPane({required this.pane, this.appBar}) : super(key: pane.key);
 
   final NavigationPane pane;
-  final GlobalKey? listKey;
-  final GlobalKey? secondaryListKey;
-  final GlobalKey? selectedItemKey;
   final NavigationAppBar? appBar;
 
   @override
@@ -670,7 +662,7 @@ class _TopNavigationPaneState extends State<_TopNavigationPane> {
         if (item is PaneItemHeader) {
           final theme = NavigationPaneTheme.of(context);
           final style =
-              item.header.getProperty<TextStyle>() ??
+              item.header._getProperty<TextStyle>() ??
               theme.itemHeaderTextStyle ??
               DefaultTextStyle.of(context).style;
 
@@ -687,7 +679,6 @@ class _TopNavigationPaneState extends State<_TopNavigationPane> {
           final selected = widget.pane.isSelected(item);
           return _SelectedItemKeyWrapper(
             isSelected: selected,
-            selectedItemKey: widget.selectedItemKey ?? GlobalKey(),
             child: item.build(
               context: context,
               selected: selected,
@@ -702,7 +693,6 @@ class _TopNavigationPaneState extends State<_TopNavigationPane> {
           final selected = widget.pane.isSelected(item);
           return _SelectedItemKeyWrapper(
             isSelected: selected,
-            selectedItemKey: widget.selectedItemKey ?? GlobalKey(),
             child: item.build(
               context: context,
               selected: selected,
@@ -947,8 +937,9 @@ class _MenuFlyoutPaneItem extends MenuFlyoutItemBase {
     final view = NavigationViewContext.of(context);
 
     final selected = view.pane?.isSelected(item) ?? false;
-    final titleText = item.title?.getProperty<String>() ?? '';
-    final baseStyle = item.title?.getProperty<TextStyle>() ?? const TextStyle();
+    final titleText = item.title?._getProperty<String>() ?? '';
+    final baseStyle =
+        item.title?._getProperty<TextStyle>() ?? const TextStyle();
 
     return HoverButton(
       onPressed: () {
@@ -966,16 +957,16 @@ class _MenuFlyoutPaneItem extends MenuFlyoutItemBase {
             ? Padding(
                 padding: theme.labelPadding ?? EdgeInsetsDirectional.zero,
                 child: RichText(
-                  text: item.title!.getProperty<InlineSpan>(textStyle)!,
+                  text: item.title!._getProperty<InlineSpan>(textStyle)!,
                   maxLines: 1,
                   overflow: TextOverflow.fade,
                   softWrap: false,
                   textAlign:
-                      item.title?.getProperty<TextAlign>() ?? TextAlign.start,
+                      item.title?._getProperty<TextAlign>() ?? TextAlign.start,
                   textHeightBehavior: item.title
-                      ?.getProperty<TextHeightBehavior>(),
+                      ?._getProperty<TextHeightBehavior>(),
                   textWidthBasis:
-                      item.title?.getProperty<TextWidthBasis>() ??
+                      item.title?._getProperty<TextWidthBasis>() ??
                       TextWidthBasis.parent,
                 ),
               )
@@ -1160,28 +1151,17 @@ class _MenuFlyoutPaneItemExpanderState
 class _CompactNavigationPane extends StatelessWidget {
   _CompactNavigationPane({
     required this.pane,
-    required this.paneKey,
-    required this.listKey,
-    required this.secondaryListKey,
-    required this.selectedItemKey,
     required this.onToggle,
     required this.onOpenSearch,
     required this.onAnimationEnd,
   }) : super(key: pane.key);
 
   final NavigationPane pane;
-  final Key paneKey;
-  final GlobalKey listKey;
-  final GlobalKey secondaryListKey;
-  final GlobalKey selectedItemKey;
   final VoidCallback? onToggle;
   final VoidCallback? onOpenSearch;
   final VoidCallback onAnimationEnd;
 
-  static Widget _buildItem(
-    NavigationPaneItem item,
-    GlobalKey? selectedItemKey,
-  ) {
+  static Widget _buildItem(NavigationPaneItem item) {
     return Builder(
       builder: (context) {
         assert(debugCheckHasFluentTheme(context));
@@ -1195,7 +1175,6 @@ class _CompactNavigationPane extends StatelessWidget {
           final selected = pane.isSelected(item);
           return _SelectedItemKeyWrapper(
             isSelected: selected,
-            selectedItemKey: selectedItemKey ?? GlobalKey(),
             child: item.build(
               context: context,
               selected: selected,
@@ -1211,7 +1190,6 @@ class _CompactNavigationPane extends StatelessWidget {
           final selected = pane.isSelected(item);
           return _SelectedItemKeyWrapper(
             isSelected: selected,
-            selectedItemKey: selectedItemKey ?? GlobalKey(),
             child: item.build(
               context: context,
               selected: selected,
@@ -1236,12 +1214,13 @@ class _CompactNavigationPane extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     assert(debugCheckHasFluentTheme(context));
+    final view = NavigationView.of(context);
     final theme = NavigationPaneTheme.of(context);
     const EdgeInsetsGeometry topPadding = EdgeInsetsDirectional.only(bottom: 8);
     final showReplacement =
         pane.autoSuggestBox != null && pane.autoSuggestBoxReplacement != null;
     return AnimatedContainer(
-      key: paneKey,
+      key: view._panelKey,
       duration: theme.animationDuration ?? Duration.zero,
       curve: theme.animationCurve ?? Curves.linear,
       width: pane.size?.compactWidth ?? kCompactNavigationPaneWidth,
@@ -1294,21 +1273,18 @@ class _CompactNavigationPane extends StatelessWidget {
               // Use ListView.builder for lazy item building to handle
               // large lists efficiently. See: https://github.com/bdlukaa/fluent_ui/issues/742
               child: ListView.builder(
-                key: listKey,
+                key: view._listKey,
                 primary: true,
                 itemCount: pane.items.length,
-                itemBuilder: (context, index) =>
-                    _buildItem(pane.items[index], selectedItemKey),
+                itemBuilder: (context, index) => _buildItem(pane.items[index]),
               ),
             ),
             ListView(
-              key: secondaryListKey,
+              key: view._secondaryListKey,
               shrinkWrap: true,
               physics: const NeverScrollableScrollPhysics(),
               primary: false,
-              children: pane.footerItems
-                  .map((item) => _buildItem(item, selectedItemKey))
-                  .toList(),
+              children: pane.footerItems.map(_buildItem).toList(),
             ),
           ],
         ),
@@ -1321,10 +1297,6 @@ class _OpenNavigationPane extends StatefulWidget {
   _OpenNavigationPane({
     required this.pane,
     required this.theme,
-    required this.paneKey,
-    required this.listKey,
-    required this.secondaryListKey,
-    required this.selectedItemKey,
     this.onToggle,
     this.onItemSelected,
     this.initiallyOpen = false,
@@ -1332,10 +1304,6 @@ class _OpenNavigationPane extends StatefulWidget {
   }) : super(key: pane.key);
 
   final NavigationPane pane;
-  final Key? paneKey;
-  final GlobalKey? listKey;
-  final GlobalKey? secondaryListKey;
-  final GlobalKey? selectedItemKey;
   final VoidCallback? onToggle;
   final VoidCallback? onItemSelected;
   final NavigationPaneThemeData theme;
@@ -1344,16 +1312,14 @@ class _OpenNavigationPane extends StatefulWidget {
 
   static Widget buildItem(
     NavigationPane pane,
-    NavigationPaneItem item,
-
-    GlobalKey? selectedItemKey, [
+    NavigationPaneItem item, [
     VoidCallback? onChanged,
     double? width,
   ]) {
     return Builder(
       builder: (context) {
         if (width != null && width < kOpenNavigationPaneWidth / 1.5) {
-          return _CompactNavigationPane._buildItem(item, selectedItemKey);
+          return _CompactNavigationPane._buildItem(item);
         }
         if (item is PaneItemHeader) {
           return item.build(context);
@@ -1363,7 +1329,6 @@ class _OpenNavigationPane extends StatefulWidget {
           final selected = pane.isSelected(item);
           return _SelectedItemKeyWrapper(
             isSelected: selected,
-            selectedItemKey: selectedItemKey ?? GlobalKey(),
             child: item.build(
               context: context,
               selected: selected,
@@ -1375,7 +1340,7 @@ class _OpenNavigationPane extends StatefulWidget {
                 pane.changeTo(item);
                 onChanged?.call();
               },
-              displayMode: PaneDisplayMode.open,
+              displayMode: PaneDisplayMode.expanded,
               itemIndex: pane.effectiveIndexOf(item),
             ),
           );
@@ -1383,7 +1348,6 @@ class _OpenNavigationPane extends StatefulWidget {
           final selected = pane.isSelected(item);
           return _SelectedItemKeyWrapper(
             isSelected: selected,
-            selectedItemKey: selectedItemKey ?? GlobalKey(),
             child: item.build(
               context: context,
               selected: selected,
@@ -1391,7 +1355,7 @@ class _OpenNavigationPane extends StatefulWidget {
                 pane.changeTo(item);
                 onChanged?.call();
               },
-              displayMode: PaneDisplayMode.open,
+              displayMode: PaneDisplayMode.expanded,
               itemIndex: pane.effectiveIndexOf(item),
             ),
           );
@@ -1424,6 +1388,7 @@ class _OpenNavigationPaneState extends State<_OpenNavigationPane> {
   @override
   Widget build(BuildContext context) {
     assert(debugCheckHasFluentTheme(context));
+    final view = NavigationView.of(context);
     const EdgeInsetsGeometry topPadding = EdgeInsetsDirectional.only(bottom: 6);
     final menuButton = () {
       if (widget.pane.menuButton != null) return widget.pane.menuButton;
@@ -1450,7 +1415,7 @@ class _OpenNavigationPaneState extends State<_OpenNavigationPane> {
     return AnimatedContainer(
       duration: theme.animationDuration ?? Duration.zero,
       curve: theme.animationCurve ?? Curves.linear,
-      key: widget.paneKey,
+      key: view._panelKey,
       width: paneWidth,
       onEnd: widget.onAnimationEnd,
       child: LayoutBuilder(
@@ -1458,7 +1423,6 @@ class _OpenNavigationPaneState extends State<_OpenNavigationPane> {
           final width = constraints.maxWidth;
           return Column(
             crossAxisAlignment: CrossAxisAlignment.start,
-            key: widget.pane.paneKey,
             children: [
               if (paneHeaderHeight == null || paneHeaderHeight >= 0)
                 Container(
@@ -1522,14 +1486,13 @@ class _OpenNavigationPaneState extends State<_OpenNavigationPane> {
                   ),
               Expanded(
                 child: ListView.builder(
-                  key: widget.listKey,
+                  key: view._listKey,
                   primary: true,
                   itemCount: widget.pane.items.length,
                   itemBuilder: (context, index) {
                     return _OpenNavigationPane.buildItem(
                       widget.pane,
                       widget.pane.items[index],
-                      widget.selectedItemKey,
                       widget.onItemSelected,
                       width,
                     );
@@ -1537,7 +1500,7 @@ class _OpenNavigationPaneState extends State<_OpenNavigationPane> {
                 ),
               ),
               ListView.builder(
-                key: widget.secondaryListKey,
+                key: view._secondaryListKey,
                 primary: false,
                 shrinkWrap: true,
                 physics: const NeverScrollableScrollPhysics(),
@@ -1546,7 +1509,6 @@ class _OpenNavigationPaneState extends State<_OpenNavigationPane> {
                   return _OpenNavigationPane.buildItem(
                     widget.pane,
                     widget.pane.footerItems[index],
-                    widget.selectedItemKey,
                     widget.onItemSelected,
                     width,
                   );

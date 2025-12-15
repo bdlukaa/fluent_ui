@@ -19,7 +19,7 @@ class _NavigationViewPageState extends State<NavigationViewPage>
 
   int topIndex = 0;
 
-  PaneDisplayMode displayMode = PaneDisplayMode.open;
+  PaneDisplayMode displayMode = PaneDisplayMode.expanded;
   String pageTransition = 'Default';
   static const List<String> pageTransitions = [
     'Default',
@@ -34,106 +34,7 @@ class _NavigationViewPageState extends State<NavigationViewPage>
     'End': const EndNavigationIndicator(),
   };
 
-  List<NavigationPaneItem> items = [
-    PaneItem(
-      icon: const WindowsIcon(WindowsIcons.home),
-      title: const Text('Home'),
-      body: const _NavigationBodyItem(),
-      onTap: () => debugPrint('Tapped home'),
-    ),
-    PaneItemSeparator(),
-    PaneItem(
-      icon: const WindowsIcon(WindowsIcons.trackers),
-      title: const Text('Track orders'),
-      infoBadge: const InfoBadge(source: Text('8')),
-      body: const _NavigationBodyItem(
-        header: 'Badging',
-        content: Text(
-          'Badging is a non-intrusive and intuitive way to display '
-          'notifications or bring focus to an area within an app - '
-          'whether that be for notifications, indicating new content, '
-          'or showing an alert. An InfoBadge is a small piece of UI '
-          'that can be added into an app and customized to display a '
-          'number, icon, or a simple dot.',
-        ),
-      ),
-      onTap: () => debugPrint('Tapped track orders'),
-    ),
-    PaneItem(
-      icon: const WindowsIcon(WindowsIcons.disable_updates),
-      title: const Text('Disabled Item'),
-      body: const _NavigationBodyItem(),
-      enabled: false,
-      onTap: () => debugPrint('Tapped disabled'),
-    ),
-    PaneItemHeader(header: const Text('Apps')),
-    PaneItemExpander(
-      icon: const WindowsIcon(WindowsIcons.switch_user),
-      title: const Text('Account'),
-      initiallyExpanded: true,
-      // body is null - clicking only expands/collapses, doesn't navigate
-      // See: https://github.com/bdlukaa/fluent_ui/issues/1189
-      // ignore: avoid_redundant_argument_values
-      body: null,
-      onTap: () => debugPrint('Tapped account (expander without body)'),
-      items: [
-        PaneItem(
-          icon: const WindowsIcon(WindowsIcons.mail),
-          title: const Text('Mail'),
-          body: const _NavigationBodyItem(),
-          onTap: () => debugPrint('Tapped mail'),
-        ),
-        PaneItem(
-          icon: const WindowsIcon(WindowsIcons.calendar),
-          title: const Text('Calendar'),
-          body: const _NavigationBodyItem(),
-          onTap: () => debugPrint('Tapped calendar'),
-        ),
-        PaneItemHeader(header: const Text('Subscriptions')),
-        PaneItemExpander(
-          icon: const WindowsIcon(WindowsIcons.payment_card),
-          title: const Text('Cards'),
-          body: const _NavigationBodyItem(),
-          onTap: () => debugPrint('Tapped cards'),
-          items: [
-            PaneItem(
-              icon: const WindowsIcon(WindowsIcons.payment_card),
-              title: const Text('Credit Card'),
-              body: const _NavigationBodyItem(),
-              onTap: () => debugPrint('Tapped credit card'),
-            ),
-            PaneItem(
-              icon: const WindowsIcon(WindowsIcons.payment_card),
-              title: const Text('Debit Card'),
-              body: const _NavigationBodyItem(),
-              onTap: () => debugPrint('Tapped debit card'),
-            ),
-          ],
-        ),
-      ],
-    ),
-    PaneItemWidgetAdapter(
-      child: Builder(
-        builder: (final context) {
-          if (NavigationView.dataOf(context).displayMode ==
-              PaneDisplayMode.compact) {
-            return const FlutterLogo();
-          }
-          return ConstrainedBox(
-            constraints: const BoxConstraints(maxWidth: 200),
-            child: const Row(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                FlutterLogo(),
-                SizedBox(width: 6),
-                Flexible(child: Text('This is a custom widget')),
-              ],
-            ),
-          );
-        },
-      ),
-    ),
-  ];
+  List<NavigationPaneItem> items = [];
 
   @override
   Widget build(final BuildContext context) {
@@ -152,15 +53,15 @@ class _NavigationViewPageState extends State<NavigationViewPage>
           'The pane is positioned above the content.',
         ),
         ...buildDisplayMode(
-          PaneDisplayMode.open,
+          PaneDisplayMode.expanded,
           'Open display mode',
           'The pane is expanded and positioned to the left of the content.',
         ),
         ...buildDisplayMode(
           PaneDisplayMode.compact,
           'Compact display mode',
-          'The pane shows only icons until opened and is positioned to the left '
-              'of the content. When opened, the pane overlays the content.',
+          'The pane shows only icons until expanded and is positioned to the left '
+              'of the content. When expanded, the pane overlays the content.',
         ),
         ...buildDisplayMode(
           PaneDisplayMode.minimal,
@@ -336,10 +237,10 @@ NavigationView(
     onItemPressed: (index) {
       // Do anything you want to do, such as:
       if (index == topIndex) {
-        if (displayMode == PaneDisplayMode.open) {
+        if (displayMode == PaneDisplayMode.expanded) {
           setState(() => this.displayMode = PaneDisplayMode.compact);
         } else if (displayMode == PaneDisplayMode.compact) {
-          setState(() => this.displayMode = PaneDisplayMode.open);
+          setState(() => this.displayMode = PaneDisplayMode.expanded);
         }
       }
     },
@@ -386,10 +287,10 @@ NavigationView(
               onItemPressed: (final index) {
                 // Do anything you want to do, such as:
                 // if (index == topIndex) {
-                //   if (displayMode == PaneDisplayMode.open) {
+                //   if (displayMode == PaneDisplayMode.expanded) {
                 //     setState(() => this.displayMode = PaneDisplayMode.compact);
                 //   } else if (displayMode == PaneDisplayMode.compact) {
-                //     setState(() => this.displayMode = PaneDisplayMode.open);
+                //     setState(() => this.displayMode = PaneDisplayMode.expanded);
                 //   }
                 // }
               },
@@ -397,7 +298,108 @@ NavigationView(
               displayMode: displayMode,
               indicator: indicators[indicator],
               header: const Text('Pane Header'),
-              items: items,
+              items: [
+                PaneItem(
+                  icon: const WindowsIcon(WindowsIcons.home),
+                  title: const Text('Home'),
+                  body: const _NavigationBodyItem(),
+                  onTap: () => debugPrint('Tapped home'),
+                ),
+                PaneItemSeparator(),
+                PaneItem(
+                  icon: const WindowsIcon(WindowsIcons.mail),
+                  title: const Text('Track orders'),
+                  infoBadge: const InfoBadge(source: Text('8')),
+                  body: const _NavigationBodyItem(
+                    header: 'Badging',
+                    content: Text(
+                      'Badging is a non-intrusive and intuitive way to display '
+                      'notifications or bring focus to an area within an app - '
+                      'whether that be for notifications, indicating new content, '
+                      'or showing an alert. An InfoBadge is a small piece of UI '
+                      'that can be added into an app and customized to display a '
+                      'number, icon, or a simple dot.',
+                    ),
+                  ),
+                  onTap: () => debugPrint('Tapped track orders'),
+                ),
+                PaneItem(
+                  icon: const WindowsIcon(WindowsIcons.disable_updates),
+                  title: const Text('Disabled Item'),
+                  body: const _NavigationBodyItem(),
+                  enabled: false,
+                  onTap: () => debugPrint('Tapped disabled'),
+                ),
+                PaneItemHeader(header: const Text('Apps')),
+                PaneItemExpander(
+                  icon: const WindowsIcon(WindowsIcons.switch_user),
+                  title: const Text('Account'),
+                  initiallyExpanded: true,
+                  // body is null - clicking only expands/collapses, doesn't navigate
+                  // See: https://github.com/bdlukaa/fluent_ui/issues/1189
+                  // ignore: avoid_redundant_argument_values
+                  body: null,
+                  onTap: () =>
+                      debugPrint('Tapped account (expander without body)'),
+                  items: [
+                    PaneItem(
+                      icon: const WindowsIcon(WindowsIcons.mail),
+                      title: const Text('Mail'),
+                      body: const _NavigationBodyItem(),
+                      onTap: () => debugPrint('Tapped mail'),
+                    ),
+                    PaneItem(
+                      icon: const WindowsIcon(WindowsIcons.calendar),
+                      title: const Text('Calendar'),
+                      body: const _NavigationBodyItem(),
+                      onTap: () => debugPrint('Tapped calendar'),
+                    ),
+                    PaneItemHeader(header: const Text('Subscriptions')),
+                    PaneItemExpander(
+                      icon: const WindowsIcon(WindowsIcons.payment_card),
+                      title: const Text('Cards'),
+                      body: const _NavigationBodyItem(),
+                      onTap: () => debugPrint('Tapped cards'),
+                      items: [
+                        PaneItem(
+                          icon: const WindowsIcon(WindowsIcons.payment_card),
+                          title: const Text('Credit Card'),
+                          body: const _NavigationBodyItem(),
+                          onTap: () => debugPrint('Tapped credit card'),
+                        ),
+                        PaneItem(
+                          icon: const WindowsIcon(WindowsIcons.payment_card),
+                          title: const Text('Debit Card'),
+                          body: const _NavigationBodyItem(),
+                          onTap: () => debugPrint('Tapped debit card'),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+                PaneItemWidgetAdapter(
+                  child: Builder(
+                    builder: (final context) {
+                      if (NavigationView.dataOf(context).displayMode ==
+                          PaneDisplayMode.compact) {
+                        return const FlutterLogo();
+                      }
+                      return ConstrainedBox(
+                        constraints: const BoxConstraints(maxWidth: 200),
+                        child: const Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            FlutterLogo(),
+                            SizedBox(width: 6),
+                            Flexible(child: Text('This is a custom widget')),
+                          ],
+                        ),
+                      );
+                    },
+                  ),
+                ),
+                ...items,
+              ],
               footerItems: [
                 PaneItemSeparator(),
                 PaneItem(

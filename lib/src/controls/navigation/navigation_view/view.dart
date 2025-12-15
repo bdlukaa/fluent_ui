@@ -73,7 +73,7 @@ typedef NavigationContentBuilder =
 /// The navigation pane can be displayed in different modes using [NavigationPane.displayMode]:
 ///
 /// * [PaneDisplayMode.auto] - Automatically adapts based on window width
-/// * [PaneDisplayMode.open] - Expanded pane with icons and labels
+/// * [PaneDisplayMode.expanded] - Expanded pane with icons and labels
 /// * [PaneDisplayMode.compact] - Collapsed pane showing only icons
 /// * [PaneDisplayMode.minimal] - Hidden pane with hamburger menu
 /// * [PaneDisplayMode.top] - Horizontal navigation at the top
@@ -204,11 +204,11 @@ class NavigationView extends StatefulWidget {
   ///
   /// If the display mode is set to compact, this listens to changes on the
   /// toggle button and resizes. If the pane is closed, [PaneDisplayMode.compact]
-  /// is returned. If the pane is open, [PaneDisplayMode.open] is returned.
+  /// is returned. If the pane is open, [PaneDisplayMode.expanded] is returned.
   ///
   /// If the display mode is set to minimal, this is called when the pane is opened
   /// or closed. If the pane is closed, [PaneDisplayMode.minimal] is returned.
-  /// If the pane is open, [PaneDisplayMode.open] is returned.
+  /// If the pane is open, [PaneDisplayMode.expanded] is returned.
   final ValueChanged<PaneDisplayMode>? onDisplayModeChanged;
 
   /// Gets the current navigation view state.
@@ -289,7 +289,7 @@ class NavigationViewState extends State<NavigationView> {
       if (_minimalPaneOpen != open) {
         setState(() => _minimalPaneOpen = open);
         widget.onDisplayModeChanged?.call(
-          open ? PaneDisplayMode.open : PaneDisplayMode.minimal,
+          open ? PaneDisplayMode.expanded : PaneDisplayMode.minimal,
         );
       }
     } else {
@@ -306,7 +306,7 @@ class NavigationViewState extends State<NavigationView> {
   /// Always false if the current display mode is not open nor compact
   bool get compactOverlayOpen {
     if ([
-      PaneDisplayMode.open,
+      PaneDisplayMode.expanded,
       PaneDisplayMode.compact,
     ].contains(_displayMode)) {
       return _compactOverlayOpen;
@@ -318,7 +318,7 @@ class NavigationViewState extends State<NavigationView> {
   set compactOverlayOpen(bool value) {
     if (value == _compactOverlayOpen) return;
     if ([
-      PaneDisplayMode.open,
+      PaneDisplayMode.expanded,
       PaneDisplayMode.compact,
     ].contains(_displayMode)) {
       setState(() {
@@ -361,22 +361,9 @@ class NavigationViewState extends State<NavigationView> {
     if (oldWidget.pane?.selected != widget.pane?.selected) {
       _previousItemIndex = oldWidget.pane?.selected ?? -1;
 
-      final item = _selectedItemKey.currentContext;
-      if (item != null) {
-        final atEnd =
-            (widget.pane!.effectiveItems.length / 2) < widget.pane!.selected!;
-
-        WidgetsBinding.instance.addPostFrameCallback((_) {
-          if (item.mounted) {
-            Scrollable.ensureVisible(
-              item,
-              alignmentPolicy: atEnd
-                  ? ScrollPositionAlignmentPolicy.keepVisibleAtEnd
-                  : ScrollPositionAlignmentPolicy.keepVisibleAtStart,
-            );
-          }
-        });
-      }
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        ensureSelectedItemVisible();
+      });
     }
   }
 
@@ -389,11 +376,27 @@ class NavigationViewState extends State<NavigationView> {
     super.dispose();
   }
 
+  /// Ensures the selected item is visible in the pane.
+  void ensureSelectedItemVisible() {
+    final item = _selectedItemKey.currentContext;
+    if (item != null) {
+      final atEnd =
+          (widget.pane!.effectiveItems.length / 2) < widget.pane!.selected!;
+
+      Scrollable.ensureVisible(
+        item,
+        alignmentPolicy: atEnd
+            ? ScrollPositionAlignmentPolicy.keepVisibleAtEnd
+            : ScrollPositionAlignmentPolicy.keepVisibleAtStart,
+      );
+    }
+  }
+
   /// Toggles the current compact mode
   void toggleCompactOpenMode() {
     compactOverlayOpen = !compactOverlayOpen;
     widget.onDisplayModeChanged?.call(
-      compactOverlayOpen ? PaneDisplayMode.open : PaneDisplayMode.compact,
+      compactOverlayOpen ? PaneDisplayMode.expanded : PaneDisplayMode.compact,
     );
   }
 
@@ -438,7 +441,7 @@ class NavigationViewState extends State<NavigationView> {
       if (width <= 640) {
         autoDisplayMode = PaneDisplayMode.minimal;
       } else if (width >= 1008) {
-        autoDisplayMode = PaneDisplayMode.open;
+        autoDisplayMode = PaneDisplayMode.expanded;
       } else {
         autoDisplayMode = PaneDisplayMode.compact;
       }
@@ -585,7 +588,7 @@ class NavigationViewState extends State<NavigationView> {
                       ),
                     ),
             );
-            if (_displayMode != PaneDisplayMode.open) {
+            if (_displayMode != PaneDisplayMode.expanded) {
               PageStorage.of(
                 context,
               ).writeState(context, false, identifier: 'openModeOpen');
@@ -601,9 +604,6 @@ class NavigationViewState extends State<NavigationView> {
                       hasAppBar: widget.appBar != null,
                       child: _TopNavigationPane(
                         pane: pane,
-                        listKey: _listKey,
-                        secondaryListKey: _secondaryListKey,
-                        selectedItemKey: _selectedItemKey,
                         appBar: widget.appBar,
                       ),
                     ),
@@ -618,7 +618,7 @@ class NavigationViewState extends State<NavigationView> {
                   content: content,
                   constraints: consts,
                 );
-              case PaneDisplayMode.open:
+              case PaneDisplayMode.expanded:
                 paneResult = Column(
                   children: [
                     appBar,
@@ -631,9 +631,6 @@ class NavigationViewState extends State<NavigationView> {
                             child: _OpenNavigationPane(
                               theme: theme,
                               pane: pane,
-                              paneKey: _panelKey,
-                              listKey: _listKey,
-                              secondaryListKey: _secondaryListKey,
                               initiallyOpen:
                                   PageStorage.of(context).readState(
                                         context,
@@ -642,7 +639,6 @@ class NavigationViewState extends State<NavigationView> {
                                       as bool? ??
                                   mounted,
                               onAnimationEnd: _animationEndCallback,
-                              selectedItemKey: _selectedItemKey,
                             ),
                           ),
                           Expanded(child: content),
@@ -716,9 +712,6 @@ class NavigationViewState extends State<NavigationView> {
                             child: _OpenNavigationPane(
                               theme: theme,
                               pane: pane,
-                              paneKey: _panelKey,
-                              listKey: _listKey,
-                              secondaryListKey: _secondaryListKey,
                               onItemSelected: () {
                                 WidgetsBinding.instance.addPostFrameCallback((
                                   _,
@@ -729,7 +722,6 @@ class NavigationViewState extends State<NavigationView> {
                                   }
                                 });
                               },
-                              selectedItemKey: _selectedItemKey,
                             ),
                           ),
                         ),
@@ -757,7 +749,7 @@ class NavigationViewState extends State<NavigationView> {
           backgroundColor: theme.backgroundColor,
           child: NavigationViewContext(
             displayMode: _compactOverlayOpen
-                ? PaneDisplayMode.open
+                ? PaneDisplayMode.expanded
                 : _displayMode,
             isMinimalPaneOpen: isMinimalPaneOpen,
             isCompactOverlayOpen: _compactOverlayOpen,
@@ -824,15 +816,11 @@ class NavigationViewState extends State<NavigationView> {
                           child: _OpenNavigationPane(
                             theme: theme,
                             pane: pane,
-                            paneKey: _panelKey,
-                            listKey: _listKey,
-                            secondaryListKey: _secondaryListKey,
                             onToggle: pane.toggleable
                                 ? toggleCompactOpenMode
                                 : null,
                             initiallyOpen: true,
                             onAnimationEnd: _animationEndCallback,
-                            selectedItemKey: _selectedItemKey,
                           ),
                         ),
                       );
@@ -841,10 +829,6 @@ class NavigationViewState extends State<NavigationView> {
                         key: _overlayKey,
                         child: _CompactNavigationPane(
                           pane: pane,
-                          paneKey: _panelKey,
-                          listKey: _listKey,
-                          secondaryListKey: _secondaryListKey,
-                          selectedItemKey: _selectedItemKey,
                           onToggle: pane.toggleable
                               ? toggleCompactOpenMode
                               : null,
@@ -908,13 +892,9 @@ class NavigationViewState extends State<NavigationView> {
                       child: _OpenNavigationPane(
                         theme: theme,
                         pane: pane,
-                        paneKey: _panelKey,
-                        listKey: _listKey,
-                        secondaryListKey: _secondaryListKey,
                         onToggle: toggleCompactOpenMode,
                         onItemSelected: toggleCompactOpenMode,
                         onAnimationEnd: _animationEndCallback,
-                        selectedItemKey: _selectedItemKey,
                       ),
                     ),
                   ),
@@ -927,13 +907,9 @@ class NavigationViewState extends State<NavigationView> {
                     padding: EdgeInsetsDirectional.only(top: appBarPadding.top),
                     child: _CompactNavigationPane(
                       pane: pane,
-                      paneKey: _panelKey,
-                      listKey: _listKey,
-                      secondaryListKey: _secondaryListKey,
                       onToggle: toggleCompactOpenMode,
                       onOpenSearch: widget.onOpenSearch,
                       onAnimationEnd: _animationEndCallback,
-                      selectedItemKey: _selectedItemKey,
                     ),
                   ),
                 );
@@ -1293,7 +1269,7 @@ class _NavigationAppBar extends StatelessWidget {
             ],
           );
         case PaneDisplayMode.minimal:
-        case PaneDisplayMode.open:
+        case PaneDisplayMode.expanded:
         case PaneDisplayMode.compact:
           result = Stack(
             children: [
