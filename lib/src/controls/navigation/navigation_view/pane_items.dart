@@ -795,6 +795,10 @@ class __PaneItemExpanderState extends State<_PaneItemExpander>
     if (!mounted) return;
     setState(() => _open = !_open);
 
+    if (hasSelectedChild) {
+      NavigationView.of(context)._updatePreviousItemIndex(-1);
+    }
+
     if (_open) {
       if (useFlyout && doFlyout && flyoutController.isAttached) {
         final body = NavigationViewContext.of(context);
@@ -922,10 +926,7 @@ class __PaneItemExpanderState extends State<_PaneItemExpander>
         return Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            KeyedSubtree(
-              key: ValueKey<String>('$index$_open'),
-              child: expanderWidget,
-            ),
+            expanderWidget,
             AnimatedSize(
               duration: theme.fastAnimationDuration,
               curve: Curves.easeIn,

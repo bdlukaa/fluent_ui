@@ -335,7 +335,17 @@ class NavigationViewState extends State<NavigationView> {
     _compactOverlayOpen = false;
   }
 
-  int _previousItemIndex = 0;
+  int _previousItemIndex = -1;
+
+  /// Updates the previous item index.
+  ///
+  /// Use -1 to clear the previous item index.
+  void _updatePreviousItemIndex(int index) {
+    if (index != _previousItemIndex) {
+      _previousItemIndex = index;
+      if (mounted) setState(() {});
+    }
+  }
 
   @override
   void initState() {
@@ -359,7 +369,7 @@ class NavigationViewState extends State<NavigationView> {
     }
 
     if (oldWidget.pane?.selected != widget.pane?.selected) {
-      _previousItemIndex = oldWidget.pane?.selected ?? -1;
+      _updatePreviousItemIndex(oldWidget.pane?.selected ?? -1);
 
       WidgetsBinding.instance.addPostFrameCallback((_) {
         ensureSelectedItemVisible();

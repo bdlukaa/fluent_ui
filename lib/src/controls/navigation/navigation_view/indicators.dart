@@ -12,7 +12,8 @@ class _ForceShowIndicator extends InheritedWidget {
   }
 
   @override
-  bool updateShouldNotify(_ForceShowIndicator oldWidget) => false;
+  bool updateShouldNotify(_ForceShowIndicator oldWidget) =>
+      forceShow != oldWidget.forceShow;
 }
 
 /// A indicator used by [NavigationPane] to render the selected
@@ -224,6 +225,9 @@ class _StickyNavigationIndicatorState
   /// Controller for animating the indicator growing into the new item.
   late AnimationController _growController;
 
+  /// Controller for animating the indicator expanding into the new item.
+  late AnimationController _expandController;
+
   Curve _cachedCurve = Curves.easeInOut;
   int _cachedPreviousIndex = -1;
   int _cachedSelectedIndex = -1;
@@ -246,18 +250,27 @@ class _StickyNavigationIndicatorState
       duration: widget.duration ?? const Duration(milliseconds: 150),
       value: 1,
     );
+    _expandController = AnimationController(
+      vsync: this,
+      duration: widget.duration ?? const Duration(milliseconds: 150),
+      value: 0,
+    );
   }
+
+  bool _isForceShow = false;
+  bool _isAnimatingForceShow = false;
 
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
+
     final theme = FluentTheme.of(context);
     _cachedCurve = widget.curve ?? theme.animationCurve;
 
-    final duration = widget.duration ?? theme.fastAnimationDuration;
+    final duration = widget.duration ?? theme.slowAnimationDuration;
     _shrinkController.duration = duration;
     _growController.duration = duration;
-
+    _expandController.duration = duration;
     _updateAnimation();
   }
 
@@ -269,6 +282,7 @@ class _StickyNavigationIndicatorState
           widget.duration ?? FluentTheme.of(context).fastAnimationDuration;
       _shrinkController.duration = duration;
       _growController.duration = duration;
+      _expandController.duration = duration;
     }
     if (widget.curve != oldWidget.curve) {
       _cachedCurve = widget.curve ?? FluentTheme.of(context).animationCurve;
@@ -306,26 +320,50 @@ class _StickyNavigationIndicatorState
     _cachedSelectedIndex = currentSelectedIndex;
   }
 
+  /// Ensures the force show animation is running.
+  ///
+  /// This method needs to be called at build time.
+  void _ensureForceShowAnimation() {
+    final isForceShow = _ForceShowIndicator.forceShowOf(context);
+    if (isForceShow != _isForceShow) {
+      if (isForceShow) {
+        _isAnimatingForceShow = true;
+        _expandController.forward(from: 0).then((_) {
+          _isAnimatingForceShow = false;
+          if (mounted) setState(() {});
+        });
+      } else {
+        _isAnimatingForceShow = true;
+        _expandController.reverse(from: 1).then((_) {
+          _isAnimatingForceShow = false;
+          if (mounted) setState(() {});
+        });
+      }
+    }
+    _isForceShow = isForceShow;
+  }
+
   @override
   void dispose() {
     _shrinkController.dispose();
     _growController.dispose();
+    _expandController.dispose();
     super.dispose();
   }
 
   bool get _shouldRender {
-    if (isSelected) return true;
+    if (isSelected || _isForceShow || _isAnimatingForceShow) return true;
+    if (selectedIndex.isNegative || previousItemIndex.isNegative) return false;
     if (itemIndex == previousItemIndex && _shrinkController.isAnimating) {
       return true;
     }
-    if (selectedIndex.isNegative) return false;
     return false;
   }
 
   @override
   Widget build(BuildContext context) {
-    final forceShow = _ForceShowIndicator.forceShowOf(context);
-    if (!forceShow && !_shouldRender) {
+    _ensureForceShowAnimation();
+    if (!_shouldRender) {
       return const IgnorePointer(child: SizedBox.shrink());
     }
 
@@ -349,81 +387,98 @@ class _StickyNavigationIndicatorState
         child: SizedBox(
           width: isVertical ? kPaneItemTopMinWidth : null,
           height: isHorizontal ? kPaneItemMinHeight : null,
-          child: AnimatedBuilder(
-            animation: Listenable.merge([_shrinkController, _growController]),
-            builder: (context, child) {
-              var topPadding = widget.leftPadding;
-              var bottomPadding = widget.leftPadding;
+          child: LayoutBuilder(
+            builder: (context, constraints) {
+              return AnimatedBuilder(
+                animation: Listenable.merge([
+                  _shrinkController,
+                  _growController,
+                  _expandController,
+                ]),
+                builder: (context, child) {
+                  var topPadding = widget.leftPadding;
+                  var bottomPadding = widget.leftPadding;
 
-              if (!forceShow) {
-                if (isSelected) {
-                  final growAnimation = CurvedAnimation(
-                    parent: _growController,
-                    curve: Interval(0.5, 1, curve: _cachedCurve),
-                  );
-                  final growProgress = growAnimation.value;
+                  if (!_isForceShow && !_isAnimatingForceShow) {
+                    if (isSelected) {
+                      final growAnimation = CurvedAnimation(
+                        parent: _growController,
+                        curve: Interval(0.5, 1, curve: _cachedCurve),
+                      );
+                      final growProgress = growAnimation.value;
 
-                  if (growProgress == 0) {
-                    return const SizedBox.shrink();
-                  }
+                      if (growProgress == 0) {
+                        return const SizedBox.shrink();
+                      }
 
-                  if (_goingDown) {
-                    bottomPadding = widget.leftPadding * growProgress;
+                      if (_goingDown) {
+                        bottomPadding = widget.leftPadding * growProgress;
+                      } else {
+                        topPadding = widget.leftPadding * growProgress;
+                      }
+                    } else if (itemIndex == previousItemIndex) {
+                      final shrinkAnimation = CurvedAnimation(
+                        parent: _shrinkController,
+                        curve: Interval(0, 0.5, curve: _cachedCurve),
+                      );
+                      final shrinkProgress = shrinkAnimation.value;
+
+                      if (shrinkProgress == 1) {
+                        return const SizedBox.shrink();
+                      }
+
+                      if (_goingDown) {
+                        topPadding =
+                            widget.leftPadding * (1.0 - shrinkProgress);
+                      } else {
+                        bottomPadding =
+                            widget.leftPadding * (1.0 - shrinkProgress);
+                      }
+                    }
                   } else {
-                    topPadding = widget.leftPadding * growProgress;
+                    final expandAnimation = CurvedAnimation(
+                      parent: _expandController,
+                      curve: _cachedCurve,
+                    );
+                    final expandProgress = expandAnimation.value;
+                    final tileHeight = constraints.maxHeight;
+                    final distanceToBottom = tileHeight - widget.leftPadding;
+                    topPadding = (distanceToBottom * (1.0 - expandProgress))
+                        .clamp(widget.leftPadding, distanceToBottom);
                   }
-                } else if (itemIndex == previousItemIndex) {
-                  final shrinkAnimation = CurvedAnimation(
-                    parent: _shrinkController,
-                    curve: Interval(0, 0.5, curve: _cachedCurve),
+
+                  return Padding(
+                    padding: isHorizontal
+                        ? EdgeInsetsDirectional.only(
+                            top: topPadding,
+                            bottom: bottomPadding,
+                            start: 6 + (itemContext.depth * 28.0),
+                            end: 6,
+                          )
+                        : EdgeInsetsDirectional.only(
+                            start: topPadding,
+                            end: bottomPadding,
+                          ),
+                    child: child,
                   );
-                  final shrinkProgress = shrinkAnimation.value;
-
-                  if (shrinkProgress == 1) {
-                    return const SizedBox.shrink();
-                  }
-
-                  if (_goingDown) {
-                    topPadding = widget.leftPadding * (1.0 - shrinkProgress);
-                  } else {
-                    bottomPadding = widget.leftPadding * (1.0 - shrinkProgress);
-                  }
-                }
-              } else {
-                // TODO(bdlukaa): When showing forced, add a showing animation
-                // when this icon is shown.
-              }
-
-              return Padding(
-                padding: isHorizontal
-                    ? EdgeInsetsDirectional.only(
-                        top: topPadding,
-                        bottom: bottomPadding,
-                        start: 6 + (itemContext.depth * 28.0),
-                        end: 6,
+                },
+                child: isHorizontal
+                    ? Align(
+                        alignment: AlignmentDirectional.centerStart,
+                        child: Container(
+                          width: widget.indicatorSize,
+                          decoration: decoration,
+                        ),
                       )
-                    : EdgeInsetsDirectional.only(
-                        start: topPadding,
-                        end: bottomPadding,
+                    : Align(
+                        alignment: AlignmentDirectional.bottomCenter,
+                        child: Container(
+                          height: widget.indicatorSize,
+                          decoration: decoration,
+                        ),
                       ),
-                child: child,
               );
             },
-            child: isHorizontal
-                ? Align(
-                    alignment: AlignmentDirectional.centerStart,
-                    child: Container(
-                      width: widget.indicatorSize,
-                      decoration: decoration,
-                    ),
-                  )
-                : Align(
-                    alignment: AlignmentDirectional.bottomCenter,
-                    child: Container(
-                      height: widget.indicatorSize,
-                      decoration: decoration,
-                    ),
-                  ),
           ),
         ),
       ),

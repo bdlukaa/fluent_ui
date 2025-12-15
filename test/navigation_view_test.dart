@@ -987,13 +987,12 @@ void main() {
     ) async {
       // Test that switching pages in minimal mode doesn't cause double rebuilds
       var selectedIndex = 0;
-      var buildCount = 0;
 
       await tester.pumpWidget(
         FluentApp(
           home: StatefulBuilder(
             builder: (context, setState) {
-              buildCount++;
+              // buildCount++;
               return SizedBox(
                 width: 1200,
                 height: 800,
@@ -1031,7 +1030,6 @@ void main() {
       );
 
       await tester.pumpAndSettle();
-      final initialBuildCount = buildCount;
 
       // Open the minimal pane
       final menuButton = find.byIcon(FluentIcons.global_nav_button);
