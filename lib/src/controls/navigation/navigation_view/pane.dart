@@ -97,7 +97,10 @@ class NavigationPane with Diagnosticable {
   }) : assert(
          selected == null || !selected.isNegative,
          'The selected index must not be negative',
-       );
+       ) {
+    _buildHierarchy(items);
+    _buildHierarchy(footerItems);
+  }
 
   /// {@macro flutter.widgets.Widget.key}
   final Key? key;
@@ -256,29 +259,21 @@ class NavigationPane with Diagnosticable {
   /// This includes both [items] and [footerItems], with expander children
   /// inserted at their appropriate positions in the hierarchy.
   List<NavigationPaneItem> get allItems {
-    final all = <NavigationPaneItem>[...items, ...footerItems];
+    final all = <NavigationPaneItem>[];
 
-    {
-      final expandItems = LinkedList<_PaneItemExpanderItem>();
-      for (final parent in all) {
-        if (parent is PaneItemExpander) {
-          expandItems.addAll(
-            parent.items.map(
-              (expandItem) =>
-                  _PaneItemExpanderItem(parent, expandItem, parent.items),
-            ),
-          );
-        }
-      }
-
-      for (final entry in expandItems) {
-        final parentIndex = all.indexOf(entry.parent);
-        all.insert(
-          parentIndex + 1 + entry.siblings.indexOf(entry.expanderItem),
-          entry.expanderItem,
-        );
+    void traverse(
+      Iterable<NavigationPaneItem> items, [
+      NavigationPaneItem? parent,
+    ]) {
+      for (final item in items) {
+        item.parent = parent;
+        all.add(item);
+        if (item is PaneItemExpander) traverse(item.items, item);
       }
     }
+
+    traverse(items);
+    traverse(footerItems);
 
     return all;
   }
@@ -309,6 +304,23 @@ class NavigationPane with Diagnosticable {
   int effectiveIndexOf(NavigationPaneItem item) {
     if (item is! PaneItem) return -1;
     return effectiveItems.indexOf(item);
+  }
+
+  /// Builds the hierarchy of the items.
+  List<NavigationPaneItem> _buildHierarchy(
+    Iterable<NavigationPaneItem> source, [
+    NavigationPaneItem? parent,
+  ]) {
+    final result = <NavigationPaneItem>[];
+
+    for (final item in source) {
+      item.parent = parent;
+      result.add(item);
+      if (item is PaneItemExpander) {
+        result.addAll(_buildHierarchy(item.items, item));
+      }
+    }
+    return result;
   }
 
   /// Builds the hamburger menu button for the navigation pane.
@@ -1195,7 +1207,7 @@ class _CompactNavigationPane extends StatelessWidget {
                       title: Text(
                         FluentLocalizations.of(context).clickToSearch,
                       ),
-                      icon: pane.autoSuggestBoxReplacement!,
+                      icon: pane.autoSuggestBoxReplacement,
                       body: const SizedBox.shrink(),
                     ).build(context, false, () {
                       onToggle?.call();
@@ -1396,7 +1408,7 @@ class _OpenNavigationPaneState extends State<_OpenNavigationPane> {
                           title: Text(
                             FluentLocalizations.of(context).clickToSearch,
                           ),
-                          icon: widget.pane.autoSuggestBoxReplacement!,
+                          icon: widget.pane.autoSuggestBoxReplacement,
                           body: const SizedBox.shrink(),
                         ).build(
                           context,

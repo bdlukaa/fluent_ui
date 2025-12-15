@@ -18,6 +18,15 @@ class NavigationPaneItem with Diagnosticable {
   /// the pane.
   final Key? key;
 
+  /// The parent item of this item.
+  ///
+  /// If null, this is a root item.
+  ///
+  /// See also:
+  ///
+  ///   * [PaneItemExpander], which creates hierhical navigation
+  NavigationPaneItem? parent;
+
   /// Creates a navigation pane item.
   NavigationPaneItem({this.key});
 }
@@ -398,13 +407,16 @@ class PaneItem extends NavigationPaneItem {
       }
     }();
 
+    final shouldShowIndicator =
+        maybeBody?.pane?.indicator != null &&
+        index != null &&
+        !index.isNegative;
+
     return Padding(
       key: key,
       padding: const EdgeInsetsDirectional.only(bottom: 4),
       child: () {
-        if (maybeBody?.pane?.indicator != null &&
-            index != null &&
-            !index.isNegative) {
+        if (shouldShowIndicator) {
           return Stack(
             children: [
               button,
@@ -527,8 +539,9 @@ class PaneItemHeader extends NavigationPaneItem {
     final view = InheritedNavigationView.of(context);
 
     return KeyedSubtree(
-      key: key,
+      key: itemKey,
       child: Container(
+        key: key,
         constraints: const BoxConstraints(minHeight: kPaneItemHeaderMinHeight),
         padding: (theme.iconPadding ?? EdgeInsetsDirectional.zero)
             .add(
@@ -683,17 +696,22 @@ class PaneItemExpander extends PaneItem {
         maybeBody?.pane?.displayMode ??
         PaneDisplayMode.minimal;
 
-    return _PaneItemExpander(
-      key: key,
-      item: this,
-      items: items,
-      displayMode: mode,
-      showTextOnTop: showTextOnTop,
-      selected: selected,
-      onPressed: onPressed,
-      onItemPressed: onItemPressed,
-      initiallyExpanded: initiallyExpanded,
-      depth: depth,
+    return RepaintBoundary(
+      child: KeyedSubtree(
+        key: key,
+        child: _PaneItemExpander(
+          key: itemKey,
+          item: this,
+          items: items,
+          displayMode: mode,
+          showTextOnTop: showTextOnTop,
+          selected: selected,
+          onPressed: onPressed,
+          onItemPressed: onItemPressed,
+          initiallyExpanded: initiallyExpanded,
+          depth: depth,
+        ),
+      ),
     );
   }
 }
@@ -746,6 +764,9 @@ class __PaneItemExpanderState extends State<_PaneItemExpander>
   bool get useFlyout => widget.displayMode != PaneDisplayMode.open;
 
   late bool _open;
+
+  /// Whether the expander is currently expanded.
+  bool get isExpanded => _open;
   late final AnimationController controller = AnimationController(
     vsync: this,
     duration: const Duration(milliseconds: 100),
@@ -876,10 +897,7 @@ class __PaneItemExpanderState extends State<_PaneItemExpander>
 
     final expanderIndex = body.pane!.effectiveIndexOf(widget.item);
     final isExpanderSelected = widget.selected;
-    final childSelected = hasSelectedChild;
-    final showIndicatorOnExpander = childSelected && !_open;
 
-    // The item with the trailing widget for expand/collapse
     final expanderWidget = widget.item
         .copyWith(
           trailing: GestureDetector(
@@ -904,7 +922,7 @@ class __PaneItemExpanderState extends State<_PaneItemExpander>
         )
         .build(
           context,
-          isExpanderSelected || showIndicatorOnExpander,
+          isExpanderSelected,
           () {
             if (widget.item.body != null) {
               widget.onPressed?.call();
@@ -928,7 +946,10 @@ class __PaneItemExpanderState extends State<_PaneItemExpander>
         return Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            expanderWidget,
+            KeyedSubtree(
+              key: ValueKey<String>('$index$_open'),
+              child: expanderWidget,
+            ),
             AnimatedSize(
               duration: theme.fastAnimationDuration,
               curve: Curves.easeIn,
@@ -1057,20 +1078,6 @@ class _PaneItemExpanderMenuItem extends MenuFlyoutItemBase {
         ).build(context);
       },
     );
-  }
-}
-
-base class _PaneItemExpanderItem
-    extends LinkedListEntry<_PaneItemExpanderItem> {
-  final PaneItem parent;
-  final NavigationPaneItem expanderItem;
-  final List<NavigationPaneItem> siblings;
-
-  _PaneItemExpanderItem(this.parent, this.expanderItem, this.siblings);
-
-  @override
-  String toString() {
-    return '$parent : $expanderItem : $siblings';
   }
 }
 

@@ -1,6 +1,6 @@
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter/material.dart' as m;
-import 'package:flutter_markdown/flutter_markdown.dart'
+import 'package:flutter_markdown_plus/flutter_markdown_plus.dart'
     deferred as flutter_markdown;
 import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
