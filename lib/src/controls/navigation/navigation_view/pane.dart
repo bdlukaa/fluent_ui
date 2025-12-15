@@ -1159,23 +1159,23 @@ class _MenuFlyoutPaneItemExpanderState
 class _CompactNavigationPane extends StatelessWidget {
   _CompactNavigationPane({
     required this.pane,
-    this.paneKey,
-    this.listKey,
-    this.secondaryListKey,
-    this.selectedItemKey,
-    this.onToggle,
-    this.onOpenSearch,
-    this.onAnimationEnd,
+    required this.paneKey,
+    required this.listKey,
+    required this.secondaryListKey,
+    required this.selectedItemKey,
+    required this.onToggle,
+    required this.onOpenSearch,
+    required this.onAnimationEnd,
   }) : super(key: pane.key);
 
   final NavigationPane pane;
-  final Key? paneKey;
-  final GlobalKey? listKey;
-  final GlobalKey? secondaryListKey;
-  final GlobalKey? selectedItemKey;
+  final Key paneKey;
+  final GlobalKey listKey;
+  final GlobalKey secondaryListKey;
+  final GlobalKey selectedItemKey;
   final VoidCallback? onToggle;
   final VoidCallback? onOpenSearch;
-  final VoidCallback? onAnimationEnd;
+  final VoidCallback onAnimationEnd;
 
   static Widget _buildItem(
     NavigationPaneItem item,
@@ -1320,10 +1320,10 @@ class _OpenNavigationPane extends StatefulWidget {
   _OpenNavigationPane({
     required this.pane,
     required this.theme,
-    this.paneKey,
-    this.listKey,
-    this.secondaryListKey,
-    this.selectedItemKey,
+    required this.paneKey,
+    required this.listKey,
+    required this.secondaryListKey,
+    required this.selectedItemKey,
     this.onToggle,
     this.onItemSelected,
     this.initiallyOpen = false,

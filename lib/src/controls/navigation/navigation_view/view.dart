@@ -639,6 +639,7 @@ class NavigationViewState extends State<NavigationView> {
                                       as bool? ??
                                   mounted,
                               onAnimationEnd: _animationEndCallback,
+                              selectedItemKey: _selectedItemKey,
                             ),
                           ),
                           Expanded(child: content),
@@ -725,6 +726,7 @@ class NavigationViewState extends State<NavigationView> {
                                   }
                                 });
                               },
+                              selectedItemKey: _selectedItemKey,
                             ),
                           ),
                         ),
@@ -826,6 +828,7 @@ class NavigationViewState extends State<NavigationView> {
                                 : null,
                             initiallyOpen: true,
                             onAnimationEnd: _animationEndCallback,
+                            selectedItemKey: _selectedItemKey,
                           ),
                         ),
                       );
@@ -836,6 +839,8 @@ class NavigationViewState extends State<NavigationView> {
                           pane: pane,
                           paneKey: _panelKey,
                           listKey: _listKey,
+                          secondaryListKey: _secondaryListKey,
+                          selectedItemKey: _selectedItemKey,
                           onToggle: pane.toggleable
                               ? toggleCompactOpenMode
                               : null,
@@ -901,9 +906,11 @@ class NavigationViewState extends State<NavigationView> {
                         pane: pane,
                         paneKey: _panelKey,
                         listKey: _listKey,
+                        secondaryListKey: _secondaryListKey,
                         onToggle: toggleCompactOpenMode,
                         onItemSelected: toggleCompactOpenMode,
                         onAnimationEnd: _animationEndCallback,
+                        selectedItemKey: _selectedItemKey,
                       ),
                     ),
                   ),
@@ -922,6 +929,7 @@ class NavigationViewState extends State<NavigationView> {
                       onToggle: toggleCompactOpenMode,
                       onOpenSearch: widget.onOpenSearch,
                       onAnimationEnd: _animationEndCallback,
+                      selectedItemKey: _selectedItemKey,
                     ),
                   ),
                 );
