@@ -223,6 +223,12 @@ class PaneItem extends NavigationPaneItem {
     final button = HoverButton(
       autofocus: autofocus ?? this.autofocus,
       focusNode: focusNode,
+      onFocusChange: (hasFocus) {
+        Scrollable.ensureVisible(
+          context,
+          alignmentPolicy: ScrollPositionAlignmentPolicy.keepVisibleAtStart,
+        );
+      },
       onPressed: onItemTapped,
       cursor: mouseCursor,
       focusEnabled: !isMinimal || maybeView.isMinimalPaneOpen,

@@ -308,6 +308,10 @@ class NavigationPane with Diagnosticable {
     return effectiveItems[selected!];
   }
 
+  int indexOf(NavigationPaneItem item) {
+    return allItems.indexOf(item);
+  }
+
   /// Get the effective index of the navigation pane.
   int effectiveIndexOf(NavigationPaneItem item) {
     if (item is! PaneItem) return -1;
@@ -341,18 +345,22 @@ class NavigationPane with Diagnosticable {
           return item.build(context, Axis.horizontal);
         } else if (item is PaneItem) {
           final view = NavigationView.dataOf(context);
-          final selected = isSelected(item);
-          return _SelectedItemKeyWrapper(
-            isSelected: selected,
-            child: item.build(
-              context: context,
-              selected: selected,
-              onPressed: () {
-                changeTo(item);
-              },
-              displayMode: view.displayMode,
-              itemIndex: effectiveIndexOf(item),
-              showTextOnTop: !footerItems.contains(item),
+          final index = effectiveIndexOf(item);
+          final selected = index == view.pane?.selected;
+          return FocusTraversalOrder(
+            order: NumericFocusOrder(index.toDouble()),
+            child: _SelectedItemKeyWrapper(
+              isSelected: selected,
+              child: item.build(
+                context: context,
+                selected: selected,
+                onPressed: () {
+                  changeTo(item);
+                },
+                displayMode: view.displayMode,
+                itemIndex: index,
+                showTextOnTop: !footerItems.contains(item),
+              ),
             ),
           );
         } else if (item is PaneItemWidgetAdapter) {
@@ -636,8 +644,6 @@ class _SelectedItemKeyWrapper extends StatelessWidget {
   }
 }
 
-// TODO(bdlukaa): Adjust pane traversal order
-
 /// Creates a top navigation pane.
 ///
 /// ![Top Pane Anatomy](https://docs.microsoft.com/en-us/windows/uwp/design/controls-and-patterns/images/navview-pane-anatomy-horizontal.png)
@@ -775,76 +781,79 @@ class _TopNavigationPaneState extends State<_TopNavigationPane> {
     return SizedBox(
       key: widget.pane.paneKey,
       height: height,
-      child: Row(
-        children: [
-          if (widget.pane.leading != null)
-            Padding(
-              padding: const EdgeInsetsDirectional.symmetric(
-                horizontal: 8,
-                vertical: 6,
+      child: FocusTraversalGroup(
+        policy: OrderedTraversalPolicy(),
+        child: Row(
+          children: [
+            if (widget.pane.leading != null)
+              Padding(
+                padding: const EdgeInsetsDirectional.symmetric(
+                  horizontal: 8,
+                  vertical: 6,
+                ),
+                child: widget.pane.leading,
               ),
-              child: widget.pane.leading,
-            ),
-          if (widget.pane.header != null)
-            Padding(
-              padding: const EdgeInsetsDirectional.symmetric(
-                horizontal: 8,
-                vertical: 6,
+            if (widget.pane.header != null)
+              Padding(
+                padding: const EdgeInsetsDirectional.symmetric(
+                  horizontal: 8,
+                  vertical: 6,
+                ),
+                child: widget.pane.header,
               ),
-              child: widget.pane.header,
-            ),
-          Expanded(
-            child: DynamicOverflow(
-              overflowWidgetAlignment: MainAxisAlignment.start,
-              overflowWidget: FlyoutTarget(
-                key: overflowKey,
-                controller: overflowController,
-                // TODO(bdlukaa): Allow customizing the overflow widget
-                child: PaneItem(icon: const WindowsIcon(WindowsIcons.more))
-                    .build(
-                      context: context,
-                      selected: false,
-                      onPressed: openOverflowFlyout,
-                      showTextOnTop: false,
-                      displayMode: PaneDisplayMode.top,
-                      itemIndex: -1,
-                    ),
-              ),
-              overflowChangedCallback: (hiddenItems) {
-                setState(() {
-                  // indexes should always be valid
-                  assert(() {
-                    for (var i = 0; i < hiddenItems.length; i++) {
-                      if (hiddenItems[i] < 0 ||
-                          hiddenItems[i] >= widget.pane.items.length) {
-                        return false;
+            Expanded(
+              child: DynamicOverflow(
+                overflowWidgetAlignment: MainAxisAlignment.start,
+                overflowWidget: FlyoutTarget(
+                  key: overflowKey,
+                  controller: overflowController,
+                  // TODO(bdlukaa): Allow customizing the overflow widget
+                  child: PaneItem(icon: const WindowsIcon(WindowsIcons.more))
+                      .build(
+                        context: context,
+                        selected: false,
+                        onPressed: openOverflowFlyout,
+                        showTextOnTop: false,
+                        displayMode: PaneDisplayMode.top,
+                        itemIndex: -1,
+                      ),
+                ),
+                overflowChangedCallback: (hiddenItems) {
+                  setState(() {
+                    // indexes should always be valid
+                    assert(() {
+                      for (var i = 0; i < hiddenItems.length; i++) {
+                        if (hiddenItems[i] < 0 ||
+                            hiddenItems[i] >= widget.pane.items.length) {
+                          return false;
+                        }
                       }
-                    }
-                    return true;
-                  }());
+                      return true;
+                    }());
 
-                  hiddenPaneItems = hiddenItems;
-                });
-              },
-              children: _localItemHold.map((index) {
-                final item = widget.pane.items[index];
-                return SizedBox(
-                  height: height,
-                  child: _buildItem(item, height),
-                );
-              }).toList(),
+                    hiddenPaneItems = hiddenItems;
+                  });
+                },
+                children: _localItemHold.map((index) {
+                  final item = widget.pane.items[index];
+                  return SizedBox(
+                    height: height,
+                    child: _buildItem(item, height),
+                  );
+                }).toList(),
+              ),
             ),
-          ),
-          if (widget.pane.autoSuggestBox != null)
-            Container(
-              margin: const EdgeInsetsDirectional.only(start: 30),
-              constraints: const BoxConstraints(minWidth: 100, maxWidth: 215),
-              child: widget.pane.autoSuggestBox,
-            ),
-          ...widget.pane.footerItems.map((item) {
-            return _buildItem(item, height);
-          }),
-        ],
+            if (widget.pane.autoSuggestBox != null)
+              Container(
+                margin: const EdgeInsetsDirectional.only(start: 30),
+                constraints: const BoxConstraints(minWidth: 100, maxWidth: 215),
+                child: widget.pane.autoSuggestBox,
+              ),
+            ...widget.pane.footerItems.map((item) {
+              return _buildItem(item, height);
+            }),
+          ],
+        ),
       ),
     );
   }
@@ -1043,20 +1052,26 @@ class _CompactNavigationPane extends StatelessWidget {
                     ),
               ),
             Expanded(
-              child: ListView.builder(
-                key: view._listKey,
-                primary: true,
-                itemCount: pane.items.length,
-                itemBuilder: (context, index) =>
-                    pane._buildItem(pane.items[index]),
+              child: FocusTraversalGroup(
+                policy: OrderedTraversalPolicy(),
+                child: ListView.builder(
+                  key: view._listKey,
+                  primary: true,
+                  itemCount: pane.items.length,
+                  itemBuilder: (context, index) =>
+                      pane._buildItem(pane.items[index]),
+                ),
               ),
             ),
-            ListView(
-              key: view._secondaryListKey,
-              shrinkWrap: true,
-              physics: const NeverScrollableScrollPhysics(),
-              primary: false,
-              children: pane.footerItems.map(pane._buildItem).toList(),
+            FocusTraversalGroup(
+              policy: OrderedTraversalPolicy(),
+              child: ListView(
+                key: view._secondaryListKey,
+                shrinkWrap: true,
+                physics: const NeverScrollableScrollPhysics(),
+                primary: false,
+                children: pane.footerItems.map(pane._buildItem).toList(),
+              ),
             ),
           ],
         ),
@@ -1184,24 +1199,32 @@ class _OpenNavigationPaneState extends State<_OpenNavigationPane> {
                         ),
                   ),
               Expanded(
-                child: ListView.builder(
-                  key: view._listKey,
-                  primary: true,
-                  itemCount: widget.pane.items.length,
-                  itemBuilder: (context, index) {
-                    return widget.pane._buildItem(widget.pane.items[index]);
-                  },
+                child: FocusTraversalGroup(
+                  policy: OrderedTraversalPolicy(),
+                  child: ListView.builder(
+                    key: view._listKey,
+                    primary: true,
+                    itemCount: widget.pane.items.length,
+                    itemBuilder: (context, index) {
+                      return widget.pane._buildItem(widget.pane.items[index]);
+                    },
+                  ),
                 ),
               ),
-              ListView.builder(
-                key: view._secondaryListKey,
-                primary: false,
-                shrinkWrap: true,
-                physics: const NeverScrollableScrollPhysics(),
-                itemCount: widget.pane.footerItems.length,
-                itemBuilder: (context, index) {
-                  return widget.pane._buildItem(widget.pane.footerItems[index]);
-                },
+              FocusTraversalGroup(
+                policy: OrderedTraversalPolicy(),
+                child: ListView.builder(
+                  key: view._secondaryListKey,
+                  primary: false,
+                  shrinkWrap: true,
+                  physics: const NeverScrollableScrollPhysics(),
+                  itemCount: widget.pane.footerItems.length,
+                  itemBuilder: (context, index) {
+                    return widget.pane._buildItem(
+                      widget.pane.footerItems[index],
+                    );
+                  },
+                ),
               ),
             ],
           );
