@@ -34,6 +34,7 @@ class _NavigationViewPageState extends State<NavigationViewPage>
     'Sticky': const StickyNavigationIndicator(),
     'End': const EndNavigationIndicator(),
   };
+  bool hasTopBar = true;
 
   List<NavigationPaneItem> items = [];
 
@@ -145,6 +146,16 @@ class _NavigationViewPageState extends State<NavigationViewPage>
                 context.push('/navigation_view');
               },
               child: const Text('Open in a new shell route'),
+            ),
+          ),
+          InfoLabel(
+            label: '',
+            child: Checkbox(
+              checked: hasTopBar,
+              onChanged: (final value) {
+                setState(() => hasTopBar = value ?? false);
+              },
+              content: const Text('Has top bar'),
             ),
           ),
         ],
@@ -279,24 +290,31 @@ NavigationView(
         child: SizedBox(
           height: itemHeight,
           child: NavigationView(
-            titleBar: TitleBar(
-              icon: const FlutterLogo(),
-              title: const Text('Windows UI for Flutter'),
-              subtitle: const Text('Preview'),
-              content: Container(
-                margin: const EdgeInsetsDirectional.symmetric(vertical: 10),
-                constraints: const BoxConstraints(maxWidth: 380),
-                child: AutoSuggestBox(
-                  items: [
-                    AutoSuggestBoxItem(value: 'Home', label: 'Home'),
-                    AutoSuggestBoxItem(value: 'Settings', label: 'Settings'),
-                    AutoSuggestBoxItem(value: 'About', label: 'About'),
-                  ],
-                ),
-              ),
-              endHeader: const FlutterLogo(),
-              captionControls: const WindowButtons(),
-            ),
+            titleBar: hasTopBar
+                ? TitleBar(
+                    icon: const FlutterLogo(),
+                    title: const Text('Windows UI for Flutter'),
+                    subtitle: const Text('Preview'),
+                    content: Container(
+                      margin: const EdgeInsetsDirectional.symmetric(
+                        vertical: 10,
+                      ),
+                      constraints: const BoxConstraints(maxWidth: 380),
+                      child: AutoSuggestBox(
+                        items: [
+                          AutoSuggestBoxItem(value: 'Home', label: 'Home'),
+                          AutoSuggestBoxItem(
+                            value: 'Settings',
+                            label: 'Settings',
+                          ),
+                          AutoSuggestBoxItem(value: 'About', label: 'About'),
+                        ],
+                      ),
+                    ),
+                    endHeader: const FlutterLogo(),
+                    captionControls: const WindowButtons(),
+                  )
+                : null,
             onDisplayModeChanged: (final mode) {
               debugPrint('Changed to $mode');
             },

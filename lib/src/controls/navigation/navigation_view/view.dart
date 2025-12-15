@@ -411,6 +411,7 @@ class NavigationViewState extends State<NavigationView> {
     );
   }
 
+  /// Toggles the current minimal pane.
   void toggleMinimalPane() {
     if (_displayMode != PaneDisplayMode.minimal) return;
     isMinimalPaneOpen = !isMinimalPaneOpen;
@@ -430,6 +431,7 @@ class NavigationViewState extends State<NavigationView> {
     }
   }
 
+  /// Whether the toggle pane button should be shown.
   bool get isTogglePaneButtonVisible {
     switch (_displayMode) {
       case PaneDisplayMode.compact:
@@ -441,6 +443,9 @@ class NavigationViewState extends State<NavigationView> {
         return false;
     }
   }
+
+  /// Whether the navigation view has a title bar.
+  bool get hasTitleBar => widget.titleBar != null;
 
   /// Whether the navigation pane is currently transitioning
   ///
@@ -742,10 +747,6 @@ class NavigationViewState extends State<NavigationView> {
                         key: _overlayKey,
                         child: _CompactNavigationPane(
                           pane: pane,
-                          onToggle: null,
-                          // onToggle: pane.toggleable
-                          //     ? toggleCompactOpenMode
-                          //     : null,
                           onOpenSearch: widget.onOpenSearch,
                           onAnimationEnd: _animationEndCallback,
                         ),
@@ -821,7 +822,6 @@ class NavigationViewState extends State<NavigationView> {
                     padding: const EdgeInsetsDirectional.only(top: 38),
                     child: _CompactNavigationPane(
                       pane: pane,
-                      onToggle: toggleCompactOpenMode,
                       onOpenSearch: widget.onOpenSearch,
                       onAnimationEnd: _animationEndCallback,
                     ),

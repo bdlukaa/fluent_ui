@@ -4,30 +4,6 @@ import 'package:flutter_test/flutter_test.dart';
 
 void main() {
   group('NavigationView', () {
-    testWidgets('NavigationAppBar takes viewPadding into consideration', (
-      tester,
-    ) async {
-      final navigationViewKey = GlobalKey();
-      await tester.pumpWidget(
-        FluentApp(
-          builder: (context, child) {
-            return MediaQuery(
-              data: const MediaQueryData(padding: EdgeInsets.only(top: 27)),
-              child: child!,
-            );
-          },
-          home: NavigationView(key: navigationViewKey, pane: NavigationPane()),
-        ),
-      );
-
-      const appBar = NavigationAppBar();
-      expect(
-        appBar.finalHeight(navigationViewKey.currentContext!),
-        // _kDefaultAppBarHeight
-        50 + 27,
-      );
-    });
-
     testWidgets('NavigationView renders with basic pane items', (tester) async {
       var selectedIndex = 0;
 
@@ -111,36 +87,6 @@ void main() {
 
       // Verify the navigation view renders with expander
       expect(find.byType(NavigationView), findsOneWidget);
-    });
-
-    testWidgets('NavigationAppBar layoutBuilder works', (tester) async {
-      var layoutBuilderCalled = false;
-
-      await tester.pumpWidget(
-        FluentApp(
-          home: NavigationView(
-            appBar: NavigationAppBar(
-              title: const Text('Custom Layout'),
-              layoutBuilder: (context, data) {
-                layoutBuilderCalled = true;
-                return Row(
-                  children: [
-                    data.leading,
-                    Expanded(child: Center(child: data.title)),
-                    if (data.actions != null) data.actions!,
-                  ],
-                );
-              },
-            ),
-            content: const Center(child: Text('Content')),
-          ),
-        ),
-      );
-
-      await tester.pumpAndSettle();
-
-      expect(layoutBuilderCalled, isTrue);
-      expect(find.text('Custom Layout'), findsOneWidget);
     });
 
     testWidgets('StickyNavigationIndicator renders correctly', (tester) async {
@@ -324,65 +270,10 @@ void main() {
       // Verify expander renders correctly
       expect(find.byType(NavigationView), findsOneWidget);
     });
-
-    testWidgets('NavigationAppBar supports custom layoutBuilder', (
-      tester,
-    ) async {
-      // Tests the flexible NavigationAppBar with custom layout
-      NavigationAppBarData? receivedData;
-
-      await tester.pumpWidget(
-        FluentApp(
-          home: SizedBox(
-            width: 1200,
-            height: 800,
-            child: NavigationView(
-              appBar: NavigationAppBar(
-                title: const Text('Test Title'),
-                actions: const Icon(FluentIcons.settings),
-                layoutBuilder: (context, data) {
-                  receivedData = data;
-                  return Row(
-                    children: [
-                      data.leading,
-                      if (data.additionalLeading != null)
-                        data.additionalLeading!,
-                      Expanded(child: Center(child: data.title)),
-                      if (data.actions != null) data.actions!,
-                    ],
-                  );
-                },
-              ),
-              pane: NavigationPane(
-                selected: 0,
-                displayMode: PaneDisplayMode.expanded,
-                items: [
-                  PaneItem(
-                    icon: const Icon(FluentIcons.home),
-                    title: const Text('Home'),
-                    body: const SizedBox(),
-                  ),
-                ],
-              ),
-            ),
-          ),
-        ),
-      );
-
-      await tester.pumpAndSettle();
-
-      // Verify layoutBuilder was called with correct data
-      expect(receivedData, isNotNull);
-      expect(receivedData!.displayMode, PaneDisplayMode.expanded);
-    });
   });
 
-  // Tests for GitHub Issue #1180 - Repaint isolation
-  // https://github.com/bdlukaa/fluent_ui/issues/1180
   group('Issue #1180 - Repaint isolation', () {
     testWidgets('Body content is wrapped in RepaintBoundary', (tester) async {
-      // This tests that the body content has proper repaint isolation
-      // so nested animations don't cause entire pane to repaint
       await tester.pumpWidget(
         FluentApp(
           home: SizedBox(

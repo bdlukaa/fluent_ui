@@ -23,6 +23,7 @@ class TitleBar extends StatelessWidget {
     super.key,
     this.isBackButtonEnabled,
     this.isBackButtonVisible = true,
+    this.backButton,
     this.isPaneToggleButtonVisible,
     this.onPaneToggleRequested,
     this.paneToggleButton,
@@ -47,6 +48,11 @@ class TitleBar extends StatelessWidget {
 
   /// Whether the back button is visible.
   final bool isBackButtonVisible;
+
+  /// The back button widget.
+  ///
+  /// Usually a [PaneBackButton] widget.
+  final Widget? backButton;
 
   /// Whether the pane toggle button is visible.
   ///
@@ -116,13 +122,8 @@ class TitleBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     assert(debugCheckHasFluentTheme(context));
-    assert(debugCheckHasFluentLocalizations(context));
     final theme = FluentTheme.of(context);
-    final localizations = FluentLocalizations.of(context);
     final view = NavigationView.dataOf(context);
-
-    final isBackButtonEnabled =
-        this.isBackButtonEnabled ?? Navigator.of(context).canPop();
 
     final isPaneToggleButtonVisible =
         this.isPaneToggleButtonVisible ?? view.isTogglePaneButtonVisible;
@@ -148,23 +149,7 @@ class TitleBar extends StatelessWidget {
               child: Row(
                 children: [
                   if (isBackButtonVisible)
-                    Container(
-                      padding: const EdgeInsetsDirectional.symmetric(
-                        horizontal: 6,
-                      ),
-                      width:
-                          view.pane?.size?.compactWidth ??
-                          kCompactNavigationPaneWidth,
-                      child: Tooltip(
-                        message: localizations.backButtonTooltip,
-                        child: IconButton(
-                          icon: const Icon(WindowsIcons.back),
-                          onPressed: isBackButtonEnabled
-                              ? onBackRequested
-                              : null,
-                        ),
-                      ),
-                    ),
+                    backButton ?? PaneBackButton(onPressed: onBackRequested),
                   if (isPaneToggleButtonVisible)
                     paneToggleButton ??
                         PaneToggleButton(onPressed: onPaneToggleRequested),
@@ -601,6 +586,45 @@ class PaneToggleButton extends StatelessWidget {
               () {
                 NavigationView.maybeOf(context)?.togglePane();
               },
+        ),
+      ),
+    );
+  }
+}
+
+/// A button that navigates back in the pane.
+///
+/// See also:
+///
+///   * [TitleBar], for the title bar that contains the pane back button
+///   * [NavigationView], for the container that holds the title bar
+class PaneBackButton extends StatelessWidget {
+  /// Creates a pane back button.
+  const PaneBackButton({super.key, this.onPressed});
+
+  /// The callback to call when the pane back button is pressed.
+  final VoidCallback? onPressed;
+
+  @override
+  Widget build(BuildContext context) {
+    assert(debugCheckHasFluentLocalizations(context));
+    final localizations = FluentLocalizations.of(context);
+    final view = NavigationView.dataOf(context);
+
+    final width = view.pane?.size?.compactWidth ?? kCompactNavigationPaneWidth;
+    return Container(
+      padding: const EdgeInsetsDirectional.symmetric(horizontal: 6),
+      constraints: BoxConstraints(
+        minWidth: width,
+        maxWidth: width,
+        // minHeight: kPaneItemMinHeight,
+        maxHeight: kPaneItemMinHeight,
+      ),
+      child: Tooltip(
+        message: localizations.backButtonTooltip,
+        child: IconButton(
+          icon: const Icon(WindowsIcons.back),
+          onPressed: onPressed,
         ),
       ),
     );

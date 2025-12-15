@@ -331,35 +331,6 @@ class NavigationPane with Diagnosticable {
     return result;
   }
 
-  /// Builds the hamburger menu button for the navigation pane.
-  ///
-  /// If the [pane] has a [menuButton] set, it will be returned instead.
-  static Widget buildMenuButton(
-    BuildContext context,
-    Widget itemTitle,
-    NavigationPane pane, {
-    required VoidCallback onPressed,
-    EdgeInsetsGeometry padding = EdgeInsetsDirectional.zero,
-  }) {
-    if (pane.menuButton != null) return pane.menuButton!;
-    return Container(
-      width: pane.size?.compactWidth ?? kCompactNavigationPaneWidth,
-      padding: padding,
-      child:
-          PaneItem(
-            title: itemTitle,
-            icon: const WindowsIcon(WindowsIcons.global_nav_button),
-            body: const SizedBox.shrink(),
-          ).build(
-            context: context,
-            selected: false,
-            onPressed: onPressed,
-            displayMode: PaneDisplayMode.compact,
-            itemIndex: -1,
-          ),
-    );
-  }
-
   @override
   bool operator ==(Object other) {
     if (identical(this, other)) return true;
@@ -1164,20 +1135,17 @@ class _MenuFlyoutPaneItemExpanderState
 class _CompactNavigationPane extends StatelessWidget {
   _CompactNavigationPane({
     required this.pane,
-    required this.onToggle,
     required this.onOpenSearch,
     required this.onAnimationEnd,
   }) : super(key: pane.key);
 
   final NavigationPane pane;
-  final VoidCallback? onToggle;
   final VoidCallback? onOpenSearch;
   final VoidCallback onAnimationEnd;
 
   static Widget _buildItem(NavigationPaneItem item) {
     return Builder(
       builder: (context) {
-        assert(debugCheckHasFluentTheme(context));
         final pane = NavigationViewContext.of(context).pane!;
         if (item is PaneItemHeader) {
           // Item Header is not visible on compact pane
@@ -1229,7 +1197,7 @@ class _CompactNavigationPane extends StatelessWidget {
     assert(debugCheckHasFluentTheme(context));
     final view = NavigationView.of(context);
     final theme = NavigationPaneTheme.of(context);
-    const EdgeInsetsGeometry topPadding = EdgeInsetsDirectional.only(bottom: 8);
+    const EdgeInsetsGeometry topPadding = EdgeInsetsDirectional.only(bottom: 6);
     final showReplacement =
         pane.autoSuggestBox != null && pane.autoSuggestBoxReplacement != null;
     return AnimatedContainer(
@@ -1244,23 +1212,10 @@ class _CompactNavigationPane extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            () {
-              if (pane.menuButton != null) return pane.menuButton!;
-              if (onToggle != null) {
-                return NavigationPane.buildMenuButton(
-                  context,
-                  Text(FluentLocalizations.of(context).openNavigationTooltip),
-                  pane,
-                  onPressed: () {
-                    onToggle?.call();
-                  },
-                  padding: showReplacement
-                      ? EdgeInsetsDirectional.zero
-                      : topPadding,
-                );
-              }
-              return const SizedBox.shrink();
-            }(),
+            if (pane.menuButton != null)
+              Padding(padding: topPadding, child: pane.menuButton)
+            else if (view.isTogglePaneButtonVisible && !view.hasTitleBar)
+              const Padding(padding: topPadding, child: PaneToggleButton()),
             if (showReplacement)
               Padding(
                 padding: topPadding,
@@ -1275,7 +1230,6 @@ class _CompactNavigationPane extends StatelessWidget {
                       context: context,
                       selected: false,
                       onPressed: () {
-                        onToggle?.call();
                         onOpenSearch?.call();
                       },
                       displayMode: PaneDisplayMode.compact,
@@ -1283,8 +1237,6 @@ class _CompactNavigationPane extends StatelessWidget {
                     ),
               ),
             Expanded(
-              // Use ListView.builder for lazy item building to handle
-              // large lists efficiently. See: https://github.com/bdlukaa/fluent_ui/issues/742
               child: ListView.builder(
                 key: view._listKey,
                 primary: true,
@@ -1329,11 +1281,11 @@ class _OpenNavigationPane extends StatefulWidget {
     VoidCallback? onChanged,
     double? width,
   ]) {
+    if (width != null && width < kOpenNavigationPaneWidth / 1.5) {
+      return _CompactNavigationPane._buildItem(item);
+    }
     return Builder(
       builder: (context) {
-        if (width != null && width < kOpenNavigationPaneWidth / 1.5) {
-          return _CompactNavigationPane._buildItem(item);
-        }
         if (item is PaneItemHeader) {
           return item.build(context);
         } else if (item is PaneItemSeparator) {
@@ -1403,20 +1355,12 @@ class _OpenNavigationPaneState extends State<_OpenNavigationPane> {
     assert(debugCheckHasFluentTheme(context));
     final view = NavigationView.of(context);
     const EdgeInsetsGeometry topPadding = EdgeInsetsDirectional.only(bottom: 6);
-    final menuButton = () {
-      if (widget.pane.menuButton != null) return widget.pane.menuButton;
-      if (widget.onToggle != null) {
-        return NavigationPane.buildMenuButton(
-          context,
-          Text(FluentLocalizations.of(context).closeNavigationTooltip),
-          widget.pane,
-          onPressed: () {
-            widget.onToggle?.call();
-          },
-        );
-      }
-      return null;
-    }();
+    final menuButton = widget.pane.menuButton != null
+        ? widget.pane.menuButton!
+        : (view.isTogglePaneButtonVisible && !view.hasTitleBar)
+        ? const PaneToggleButton()
+        : null;
+
     final paneWidth =
         widget.pane.size?.openPaneWidth ?? kOpenNavigationPaneWidth;
 
@@ -1437,17 +1381,15 @@ class _OpenNavigationPaneState extends State<_OpenNavigationPane> {
           return Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              if (paneHeaderHeight == null || paneHeaderHeight >= 0)
-                Container(
-                  margin: widget.pane.autoSuggestBox != null
-                      ? (menuButton == null ? theme.iconPadding : null)
-                      : topPadding,
-                  height: paneHeaderHeight,
-                  child: () {
-                    if (widget.pane.header != null) {
-                      return Row(
+              Container(
+                margin: widget.pane.autoSuggestBox != null
+                    ? (menuButton == null ? theme.iconPadding : null)
+                    : topPadding,
+                height: paneHeaderHeight,
+                child: widget.pane.header != null
+                    ? Row(
                         children: [
-                          menuButton ?? const SizedBox.shrink(),
+                          ?menuButton,
                           Expanded(
                             child: Align(
                               alignment: AlignmentDirectional.centerStart,
@@ -1464,12 +1406,9 @@ class _OpenNavigationPaneState extends State<_OpenNavigationPane> {
                             ),
                           ),
                         ],
-                      );
-                    } else {
-                      return menuButton ?? const SizedBox.shrink();
-                    }
-                  }(),
-                ),
+                      )
+                    : menuButton,
+              ),
               if (widget.pane.autoSuggestBox != null)
                 if (width > kOpenNavigationPaneWidth / 1.5)
                   Container(
