@@ -1,6 +1,19 @@
-// ignore_for_file: use_key_in_widget_constructors
-
 part of 'view.dart';
+
+class _ForceShowIndicator extends InheritedWidget {
+  const _ForceShowIndicator({required super.child, this.forceShow = false});
+
+  final bool forceShow;
+
+  static bool forceShowOf(BuildContext context) {
+    final widget = context
+        .dependOnInheritedWidgetOfExactType<_ForceShowIndicator>();
+    return widget?.forceShow ?? false;
+  }
+
+  @override
+  bool updateShouldNotify(_ForceShowIndicator oldWidget) => false;
+}
 
 /// A indicator used by [NavigationPane] to render the selected
 /// indicator.
@@ -13,7 +26,7 @@ part of 'view.dart';
 abstract class NavigationIndicator extends StatefulWidget {
   /// Creates a navigation indicator used by [NavigationPane]
   /// to render the selected indicator.
-  const NavigationIndicator({this.curve, this.color, this.duration});
+  const NavigationIndicator({super.key, this.curve, this.color, this.duration});
 
   /// The curve used on the animation, if any
   ///
@@ -105,6 +118,7 @@ class EndNavigationIndicator extends NavigationIndicator {
 
   /// Creates an end navigation indicator.
   const EndNavigationIndicator({
+    super.key,
     super.color,
     this.unselectedColor = Colors.transparent,
   });
@@ -120,6 +134,7 @@ class _EndNavigationIndicatorState
   Widget build(BuildContext context) {
     if (selectedIndex.isNegative) return const SizedBox.shrink();
     assert(debugCheckHasFluentTheme(context));
+    final forceShow = _ForceShowIndicator.forceShowOf(context);
 
     final isTop = axis == Axis.vertical;
     final theme = NavigationPaneTheme.of(context);
@@ -138,7 +153,7 @@ class _EndNavigationIndicatorState
           width: isTop ? 20.0 : 6.0,
           height: isTop ? 3.0 : double.infinity,
           decoration: BoxDecoration(
-            color: isSelected
+            color: isSelected || forceShow
                 ? (widget.color ?? theme.highlightColor)
                 : widget.unselectedColor,
             borderRadius: BorderRadius.circular(100),
@@ -171,6 +186,7 @@ class _EndNavigationIndicatorState
 class StickyNavigationIndicator extends NavigationIndicator {
   /// Creates a sticky navigation indicator.
   const StickyNavigationIndicator({
+    super.key,
     super.curve,
     super.color,
     super.duration,
@@ -308,16 +324,15 @@ class _StickyNavigationIndicatorState
     if (itemIndex == previousItemIndex && _shrinkController.isAnimating) {
       return true;
     }
-    // TODO(bdlukaa): If current item is child of a expander and it is closed
-    // render the indicator
-
+    if (selectedIndex.isNegative) return false;
     return false;
   }
 
   @override
   Widget build(BuildContext context) {
-    if (selectedIndex.isNegative || !_shouldRender) {
-      return const SizedBox.shrink();
+    final forceShow = _ForceShowIndicator.forceShowOf(context);
+    if (!forceShow && !_shouldRender) {
+      return const IgnorePointer(child: SizedBox.shrink());
     }
 
     assert(debugCheckHasFluentTheme(context));
@@ -345,38 +360,43 @@ class _StickyNavigationIndicatorState
               var topPadding = widget.leftPadding;
               var bottomPadding = widget.leftPadding;
 
-              if (isSelected) {
-                final growAnimation = CurvedAnimation(
-                  parent: _growController,
-                  curve: Interval(0.5, 1, curve: _cachedCurve),
-                );
-                final growProgress = growAnimation.value;
+              if (!forceShow) {
+                if (isSelected) {
+                  final growAnimation = CurvedAnimation(
+                    parent: _growController,
+                    curve: Interval(0.5, 1, curve: _cachedCurve),
+                  );
+                  final growProgress = growAnimation.value;
 
-                if (growProgress == 0) {
-                  return const SizedBox.shrink();
-                }
+                  if (growProgress == 0) {
+                    return const SizedBox.shrink();
+                  }
 
-                if (_goingDown) {
-                  bottomPadding = widget.leftPadding * growProgress;
-                } else {
-                  topPadding = widget.leftPadding * growProgress;
-                }
-              } else if (itemIndex == previousItemIndex) {
-                final shrinkAnimation = CurvedAnimation(
-                  parent: _shrinkController,
-                  curve: Interval(0, 0.5, curve: _cachedCurve),
-                );
-                final shrinkProgress = shrinkAnimation.value;
+                  if (_goingDown) {
+                    bottomPadding = widget.leftPadding * growProgress;
+                  } else {
+                    topPadding = widget.leftPadding * growProgress;
+                  }
+                } else if (itemIndex == previousItemIndex) {
+                  final shrinkAnimation = CurvedAnimation(
+                    parent: _shrinkController,
+                    curve: Interval(0, 0.5, curve: _cachedCurve),
+                  );
+                  final shrinkProgress = shrinkAnimation.value;
 
-                if (shrinkProgress == 1) {
-                  return const SizedBox.shrink();
-                }
+                  if (shrinkProgress == 1) {
+                    return const SizedBox.shrink();
+                  }
 
-                if (_goingDown) {
-                  topPadding = widget.leftPadding * (1.0 - shrinkProgress);
-                } else {
-                  bottomPadding = widget.leftPadding * (1.0 - shrinkProgress);
+                  if (_goingDown) {
+                    topPadding = widget.leftPadding * (1.0 - shrinkProgress);
+                  } else {
+                    bottomPadding = widget.leftPadding * (1.0 - shrinkProgress);
+                  }
                 }
+              } else {
+                // TODO(bdlukaa): When showing forced, add a showing animation
+                // when this icon is shown.
               }
 
               return Padding(

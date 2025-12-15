@@ -407,16 +407,11 @@ class PaneItem extends NavigationPaneItem {
       }
     }();
 
-    final shouldShowIndicator =
-        maybeBody?.pane?.indicator != null &&
-        index != null &&
-        !index.isNegative;
-
     return Padding(
       key: key,
       padding: const EdgeInsetsDirectional.only(bottom: 4),
       child: () {
-        if (shouldShowIndicator) {
+        if (maybeBody?.pane?.indicator != null) {
           return Stack(
             children: [
               button,
@@ -810,12 +805,17 @@ class __PaneItemExpanderState extends State<_PaneItemExpander>
     final body = InheritedNavigationView.maybeOf(context);
     if (body?.pane == null) return false;
 
-    return widget.items.any((item) {
-      if (item is PaneItem) {
+    bool checkSelected(NavigationPaneItem item) {
+      if (item is PaneItemExpander) {
+        if (body!.pane!.isSelected(item)) return true;
+        if (item.items.any(checkSelected)) return true;
+      } else if (item is PaneItem) {
         return body!.pane!.isSelected(item);
       }
       return false;
-    });
+    }
+
+    return widget.items.any(checkSelected);
   }
 
   void toggleOpen({bool doFlyout = true}) {
@@ -898,42 +898,45 @@ class __PaneItemExpanderState extends State<_PaneItemExpander>
     final expanderIndex = body.pane!.effectiveIndexOf(widget.item);
     final isExpanderSelected = widget.selected;
 
-    final expanderWidget = widget.item
-        .copyWith(
-          trailing: GestureDetector(
-            onTap: toggleOpen,
-            child: Padding(
-              padding: const EdgeInsetsDirectional.only(end: 14),
-              child: AnimatedBuilder(
-                animation: controller,
-                builder: (context, child) => RotationTransition(
-                  turns: controller.drive(
-                    Tween<double>(
-                      begin: _open ? 0 : 1.0,
-                      end: _open ? 0.5 : 0.5,
+    final expanderWidget = _ForceShowIndicator(
+      forceShow: !_open && hasSelectedChild,
+      child: widget.item
+          .copyWith(
+            trailing: GestureDetector(
+              onTap: toggleOpen,
+              child: Padding(
+                padding: const EdgeInsetsDirectional.only(end: 14),
+                child: AnimatedBuilder(
+                  animation: controller,
+                  builder: (context, child) => RotationTransition(
+                    turns: controller.drive(
+                      Tween<double>(
+                        begin: _open ? 0 : 1.0,
+                        end: _open ? 0.5 : 0.5,
+                      ),
                     ),
+                    child: child,
                   ),
-                  child: child,
+                  child: widget.item.trailing,
                 ),
-                child: widget.item.trailing,
               ),
             ),
+          )
+          .build(
+            context,
+            isExpanderSelected,
+            () {
+              if (widget.item.body != null) {
+                widget.onPressed?.call();
+              }
+              toggleOpen();
+            },
+            displayMode: widget.displayMode,
+            showTextOnTop: widget.showTextOnTop,
+            itemIndex: expanderIndex,
+            depth: widget.depth,
           ),
-        )
-        .build(
-          context,
-          isExpanderSelected,
-          () {
-            if (widget.item.body != null) {
-              widget.onPressed?.call();
-            }
-            toggleOpen();
-          },
-          displayMode: widget.displayMode,
-          showTextOnTop: widget.showTextOnTop,
-          itemIndex: expanderIndex,
-          depth: widget.depth,
-        );
+    );
 
     if (widget.items.isEmpty) {
       return expanderWidget;
