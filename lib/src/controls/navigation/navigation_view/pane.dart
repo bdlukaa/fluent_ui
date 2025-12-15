@@ -94,6 +94,7 @@ class NavigationPane with Diagnosticable {
     this.scrollBehavior,
     this.leading,
     this.indicator = const StickyNavigationIndicator(),
+    this.acrylicDisabled,
   }) : assert(
          selected == null || !selected.isNegative,
          'The selected index must not be negative',
@@ -210,6 +211,13 @@ class NavigationPane with Diagnosticable {
 
   /// A function called when building the navigation indicator
   final Widget? indicator;
+
+  /// Whether the acrylic effect is disabled for the pane.
+  ///
+  /// See also:
+  ///
+  ///   * [DisableAcrylic], which disables all the acrylic effects down the widget tree
+  final bool? acrylicDisabled;
 
   @override
   void debugFillProperties(DiagnosticPropertiesBuilder properties) {
@@ -336,7 +344,7 @@ class NavigationPane with Diagnosticable {
     if (pane.menuButton != null) return pane.menuButton!;
     return Container(
       width: pane.size?.compactWidth ?? kCompactNavigationPaneWidth,
-      margin: padding,
+      padding: padding,
       child:
           PaneItem(
             title: itemTitle,
@@ -371,7 +379,8 @@ class NavigationPane with Diagnosticable {
         other.onChanged == onChanged &&
         other.onItemPressed == onItemPressed &&
         other.scrollController == scrollController &&
-        other.indicator == indicator;
+        other.indicator == indicator &&
+        other.acrylicDisabled == acrylicDisabled;
   }
 
   @override
@@ -390,7 +399,8 @@ class NavigationPane with Diagnosticable {
         onChanged.hashCode ^
         onItemPressed.hashCode ^
         scrollController.hashCode ^
-        indicator.hashCode;
+        indicator.hashCode ^
+        acrylicDisabled.hashCode;
   }
 }
 

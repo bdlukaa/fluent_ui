@@ -273,7 +273,7 @@ class PaneItem extends NavigationPaneItem {
                 child: IconTheme.merge(
                   data: iconThemeData,
                   child: Align(
-                    alignment: AlignmentDirectional.centerStart,
+                    alignment: AlignmentDirectional.center,
                     child: () {
                       if (infoBadge != null) {
                         return Stack(

@@ -378,6 +378,8 @@ class _StickyNavigationIndicatorState
       borderRadius: BorderRadius.circular(100),
     );
 
+    final view = NavigationView.dataOf(context);
+
     return IgnorePointer(
       child: Align(
         alignment: switch (axis) {
@@ -399,7 +401,12 @@ class _StickyNavigationIndicatorState
                   var topPadding = widget.leftPadding;
                   var bottomPadding = widget.leftPadding;
 
-                  if (!_isForceShow && !_isAnimatingForceShow) {
+                  if (view.displayMode == PaneDisplayMode.minimal) {
+                    // On minimal mode, animation is disabled.
+                    if (itemIndex == previousItemIndex) {
+                      return const SizedBox.shrink();
+                    }
+                  } else if (!_isForceShow && !_isAnimatingForceShow) {
                     if (isSelected) {
                       final growAnimation = CurvedAnimation(
                         parent: _growController,

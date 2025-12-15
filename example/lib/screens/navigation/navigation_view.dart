@@ -283,7 +283,8 @@ NavigationView(
               icon: const FlutterLogo(),
               title: const Text('Windows UI for Flutter'),
               subtitle: const Text('Preview'),
-              content: ConstrainedBox(
+              content: Container(
+                margin: const EdgeInsetsDirectional.symmetric(vertical: 10),
                 constraints: const BoxConstraints(maxWidth: 380),
                 child: AutoSuggestBox(
                   items: [
@@ -502,7 +503,79 @@ class _NavigationBodyItem extends StatelessWidget {
   Widget build(final BuildContext context) {
     return ScaffoldPage.withPadding(
       header: PageHeader(title: Text(header ?? 'This is a header text')),
-      content: content ?? const SizedBox.shrink(),
+      content:
+          content ??
+          LayoutBuilder(
+            builder: (context, constraints) {
+              final isLargeScreen = constraints.maxWidth > 600;
+              final crossAxisCount = isLargeScreen ? 3 : 2;
+              final itemCount = isLargeScreen ? 9 : 6;
+
+              return GridView.builder(
+                padding: const EdgeInsets.all(16),
+                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                  crossAxisCount: crossAxisCount,
+                  crossAxisSpacing: 12,
+                  mainAxisSpacing: 12,
+                  childAspectRatio: 1.2,
+                ),
+                itemCount: itemCount,
+                itemBuilder: (context, index) {
+                  final colors = [
+                    Colors.blue.normal,
+                    Colors.green.normal,
+                    Colors.orange.normal,
+                    Colors.purple.normal,
+                    Colors.red.normal,
+                    Colors.teal.normal,
+                    Colors.magenta.normal,
+                    Colors.yellow.normal,
+                    Colors.blue.dark,
+                  ];
+                  final color = colors[index % colors.length];
+
+                  return DecoratedBox(
+                    decoration: BoxDecoration(
+                      color: color,
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                    child: Center(
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Icon(
+                            FluentIcons.circle_fill,
+                            size: isLargeScreen ? 48 : 32,
+                            color: Colors.white,
+                          ),
+                          const SizedBox(height: 8),
+                          Text(
+                            'Item ${index + 1}',
+                            style: const TextStyle(
+                              color: Colors.white,
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                          if (isLargeScreen)
+                            Padding(
+                              padding: const EdgeInsets.only(top: 4),
+                              child: Text(
+                                'Large Screen',
+                                style: TextStyle(
+                                  color: Colors.white.withValues(alpha: 0.8),
+                                  fontSize: 12,
+                                ),
+                              ),
+                            ),
+                        ],
+                      ),
+                    ),
+                  );
+                },
+              );
+            },
+          ),
     );
   }
 }

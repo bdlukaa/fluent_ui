@@ -398,19 +398,42 @@ class NavigationViewState extends State<NavigationView> {
 
   /// Toggles the current compact mode
   void toggleCompactOpenMode() {
+    if (_displayMode != PaneDisplayMode.compact) return;
     compactOverlayOpen = !compactOverlayOpen;
     widget.onDisplayModeChanged?.call(
       compactOverlayOpen ? PaneDisplayMode.expanded : PaneDisplayMode.compact,
     );
   }
 
-  bool get isTogglePaneButtonVisible {
-    if (widget.pane != null && widget.pane!.toggleable) {
-      return compactOverlayOpen ||
-          isMinimalPaneOpen ||
-          _displayMode == PaneDisplayMode.compact;
+  void toggleMinimalPane() {
+    if (_displayMode != PaneDisplayMode.minimal) return;
+    isMinimalPaneOpen = !isMinimalPaneOpen;
+  }
+
+  /// Toggles the current pane.
+  void togglePane() {
+    switch (_displayMode) {
+      case PaneDisplayMode.compact:
+      case PaneDisplayMode.expanded:
+        toggleCompactOpenMode();
+      case PaneDisplayMode.minimal:
+        toggleMinimalPane();
+      case PaneDisplayMode.top:
+      case PaneDisplayMode.auto:
+        return;
     }
-    return false;
+  }
+
+  bool get isTogglePaneButtonVisible {
+    switch (_displayMode) {
+      case PaneDisplayMode.compact:
+      case PaneDisplayMode.minimal:
+        return true;
+      case PaneDisplayMode.expanded:
+      case PaneDisplayMode.top:
+      case PaneDisplayMode.auto:
+        return false;
+    }
   }
 
   /// Whether the navigation pane is currently transitioning
@@ -485,37 +508,11 @@ class NavigationViewState extends State<NavigationView> {
     );
 
     final theme = NavigationPaneTheme.of(context);
-    final fluentTheme = FluentTheme.of(context);
-    final localizations = FluentLocalizations.of(context);
-
     final direction = Directionality.of(context);
 
-    Widget? paneNavigationButton() {
-      final minimalLeading =
-          PaneItem(
-            title: Text(
-              !isMinimalPaneOpen
-                  ? localizations.openNavigationTooltip
-                  : localizations.closeNavigationTooltip,
-            ),
-            icon: Icon(theme.paneNavigationButtonIcon),
-            body: const SizedBox.shrink(),
-          ).build(
-            context: context,
-            selected: false,
-            onPressed: () async {
-              isMinimalPaneOpen = !isMinimalPaneOpen;
-              _isTransitioning = true;
-            },
-            displayMode: PaneDisplayMode.compact,
-            itemIndex: -1,
-          );
-      return minimalLeading;
-    }
-
     return LayoutBuilder(
-      builder: (context, consts) {
-        _resolveDisplayMode(consts);
+      builder: (context, constraints) {
+        _resolveDisplayMode(constraints);
 
         late Widget paneResult;
         if (widget.pane != null) {
@@ -602,7 +599,7 @@ class NavigationViewState extends State<NavigationView> {
                   context: context,
                   pane: pane,
                   content: content,
-                  constraints: consts,
+                  constraints: constraints,
                 );
               case PaneDisplayMode.expanded:
                 paneResult = Column(
@@ -634,87 +631,10 @@ class NavigationViewState extends State<NavigationView> {
                   ],
                 );
               case PaneDisplayMode.minimal:
-                final openSize =
-                    pane.size?.openPaneWidth ?? kOpenNavigationPaneWidth;
-
-                paneResult = Stack(
-                  children: [
-                    PositionedDirectional(
-                      top: 0,
-                      start: 0,
-                      end: 0,
-                      height: 38,
-                      child: ColoredBox(
-                        color: fluentTheme.scaffoldBackgroundColor,
-                      ),
-                    ),
-                    PositionedDirectional(
-                      top: 38,
-                      start: 0,
-                      end: 0,
-                      bottom: 0,
-                      child: content,
-                    ),
-                    if (isMinimalPaneOpen)
-                      Positioned.fill(
-                        child: GestureDetector(
-                          onTap: () => isMinimalPaneOpen = false,
-                          child: AbsorbPointer(
-                            child: Semantics(
-                              label: localizations.modalBarrierDismissLabel,
-                              child: const SizedBox.expand(),
-                            ),
-                          ),
-                        ),
-                      ),
-                    AnimatedPositionedDirectional(
-                      key: _overlayKey,
-                      duration: theme.animationDuration ?? Duration.zero,
-                      curve: theme.animationCurve ?? Curves.linear,
-                      start: isMinimalPaneOpen ? 0.0 : -openSize,
-                      width: openSize,
-                      height: MediaQuery.heightOf(context),
-                      onEnd: () {
-                        _isTransitioning = false;
-                        if (mounted) setState(() {});
-                      },
-                      child: _NavigationViewPaneScrollConfiguration(
-                        controller: paneScrollController,
-                        hasTitleBar: widget.titleBar != null,
-                        child: Mica(
-                          backgroundColor: theme.overlayBackgroundColor,
-                          child: Container(
-                            decoration: BoxDecoration(
-                              border: Border.all(
-                                color: const Color(0xFF6c6c6c),
-                                width: 0.15,
-                              ),
-                              borderRadius: BorderRadius.circular(8),
-                            ),
-                            margin: const EdgeInsetsDirectional.symmetric(
-                              vertical: 1,
-                            ),
-                            padding: const EdgeInsetsDirectional.only(top: 38),
-                            child: _OpenNavigationPane(
-                              theme: theme,
-                              pane: pane,
-                              onItemSelected: () {
-                                WidgetsBinding.instance.addPostFrameCallback((
-                                  _,
-                                ) {
-                                  if (mounted &&
-                                      _displayMode == PaneDisplayMode.minimal) {
-                                    isMinimalPaneOpen = false;
-                                  }
-                                });
-                              },
-                            ),
-                          ),
-                        ),
-                      ),
-                    ),
-                    ?widget.titleBar,
-                  ],
+                paneResult = _buildMinimalView(
+                  context: context,
+                  pane: pane,
+                  content: content,
                 );
               default:
                 paneResult = content;
@@ -908,6 +828,135 @@ class NavigationViewState extends State<NavigationView> {
         ],
       );
     }
+  }
+
+  Widget _buildMinimalView({
+    required BuildContext context,
+    required NavigationPane pane,
+    required Widget content,
+  }) {
+    final theme = NavigationPaneTheme.of(context);
+    final fluentTheme = FluentTheme.of(context);
+    final localizations = FluentLocalizations.of(context);
+
+    final openSize = pane.size?.openPaneWidth ?? kOpenNavigationPaneWidth;
+
+    return Stack(
+      children: [
+        PositionedDirectional(
+          top: 0,
+          start: 0,
+          end: 0,
+          height: 38,
+          child: ColoredBox(color: fluentTheme.scaffoldBackgroundColor),
+        ),
+        PositionedDirectional(
+          top: 38,
+          start: 0,
+          end: 0,
+          bottom: 0,
+          child: content,
+        ),
+        if (isMinimalPaneOpen)
+          Positioned.fill(
+            child: GestureDetector(
+              onTap: () => isMinimalPaneOpen = false,
+              child: AbsorbPointer(
+                child: Semantics(
+                  label: localizations.modalBarrierDismissLabel,
+                  child: const SizedBox.expand(),
+                ),
+              ),
+            ),
+          ),
+        AnimatedPositionedDirectional(
+          key: _overlayKey,
+          duration: theme.animationDuration ?? Duration.zero,
+          curve: theme.animationCurve ?? Curves.linear,
+          start: isMinimalPaneOpen ? 0.0 : -openSize,
+          width: openSize,
+          top: 0,
+          bottom: 0,
+          onEnd: () {
+            _isTransitioning = false;
+            if (mounted) setState(() {});
+          },
+          child: _NavigationViewPaneScrollConfiguration(
+            controller: paneScrollController,
+            hasTitleBar: widget.titleBar != null,
+            child: Container(
+              decoration: BoxDecoration(
+                border: Border.all(
+                  color: fluentTheme.resources.cardStrokeColorDefault,
+                  width: 0.5,
+                ),
+                borderRadius: const BorderRadius.horizontal(
+                  right: Radius.circular(8),
+                ),
+                boxShadow: kElevationToShadow[10],
+              ),
+              margin: const EdgeInsetsDirectional.symmetric(vertical: 1),
+              child: _wrapWithAcrylic(
+                shape: const RoundedRectangleBorder(
+                  borderRadius: BorderRadius.horizontal(
+                    right: Radius.circular(8),
+                  ),
+                ),
+                child: Padding(
+                  padding: const EdgeInsetsDirectional.only(top: 38 + 6),
+                  child: _OpenNavigationPane(
+                    theme: theme,
+                    pane: pane,
+                    onItemSelected: () {
+                      WidgetsBinding.instance.addPostFrameCallback((_) {
+                        if (mounted &&
+                            _displayMode == PaneDisplayMode.minimal) {
+                          isMinimalPaneOpen = false;
+                        }
+                      });
+                    },
+                  ),
+                ),
+              ),
+            ),
+          ),
+        ),
+        ?widget.titleBar,
+      ],
+    );
+  }
+
+  Widget _wrapWithAcrylic({
+    required Widget child,
+    ShapeBorder? shape,
+    Color? tint,
+    double? tintAlpha,
+    double? luminosityAlpha,
+    double? blurAmount,
+  }) {
+    return Builder(
+      builder: (context) {
+        final theme = NavigationPaneTheme.of(context);
+        final pane = NavigationView.dataOf(context).pane;
+
+        Widget widget = ClipRect(
+          child: Acrylic(
+            tint: tint ?? theme.overlayBackgroundColor,
+            tintAlpha: tintAlpha ?? 0.9,
+            luminosityAlpha: luminosityAlpha ?? 0.9,
+            blurAmount: blurAmount ?? 50,
+            shape: shape,
+            child: child,
+          ),
+        );
+
+        if (pane?.acrylicDisabled ?? true) {
+          widget = DisableAcrylic(child: widget);
+        }
+
+        return widget;
+      },
+    );
   }
 }
 

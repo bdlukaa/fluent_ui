@@ -24,6 +24,7 @@ class TitleBar extends StatelessWidget {
     this.isBackButtonVisible = true,
     this.isPaneToggleButtonVisible,
     this.onPaneToggleRequested,
+    this.paneToggleButton,
     this.onBackRequested,
     this.leftHeader,
     this.icon,
@@ -54,6 +55,13 @@ class TitleBar extends StatelessWidget {
 
   /// The callback to call when the pane toggle button is pressed.
   final VoidCallback? onPaneToggleRequested;
+
+  /// The pane toggle button widget.
+  ///
+  /// If provided, [onPaneToggleRequested] will not be called.
+  ///
+  /// Usually a [PaneToggleButton] widget.
+  final Widget? paneToggleButton;
 
   /// The callback to call when the back button is pressed.
   ///
@@ -110,13 +118,13 @@ class TitleBar extends StatelessWidget {
     assert(debugCheckHasFluentLocalizations(context));
     final theme = FluentTheme.of(context);
     final localizations = FluentLocalizations.of(context);
+    final view = NavigationView.dataOf(context);
 
     final isBackButtonEnabled =
         this.isBackButtonEnabled ?? Navigator.of(context).canPop();
 
     final isPaneToggleButtonVisible =
-        this.isPaneToggleButtonVisible ??
-        NavigationView.dataOf(context).isTogglePaneButtonVisible;
+        this.isPaneToggleButtonVisible ?? view.isTogglePaneButtonVisible;
 
     return GestureDetector(
       behavior: HitTestBehavior.translucent,
@@ -131,51 +139,64 @@ class TitleBar extends StatelessWidget {
           minHeight: content != null ? 48 : 32,
           maxHeight: 48,
         ),
-        padding: const EdgeInsetsDirectional.only(start: 16),
         child: Row(
           spacing: 16,
           children: [
             Expanded(
               child: Row(
-                spacing: 16,
                 children: [
                   if (isBackButtonVisible)
-                    Tooltip(
-                      message: localizations.backButtonTooltip,
-                      child: IconButton(
-                        icon: const Icon(WindowsIcons.back),
-                        onPressed: isBackButtonEnabled ? onBackRequested : null,
+                    Container(
+                      padding: const EdgeInsetsDirectional.symmetric(
+                        horizontal: 6,
+                      ),
+                      width:
+                          view.pane?.size?.compactWidth ??
+                          kCompactNavigationPaneWidth,
+                      child: Tooltip(
+                        message: localizations.backButtonTooltip,
+                        child: IconButton(
+                          icon: const Icon(WindowsIcons.back),
+                          onPressed: isBackButtonEnabled
+                              ? onBackRequested
+                              : null,
+                        ),
                       ),
                     ),
                   if (isPaneToggleButtonVisible)
-                    Tooltip(
-                      message: 'Toggle navigation',
-                      child: IconButton(
-                        icon: const Icon(WindowsIcons.global_nav_button),
-                        onPressed:
-                            onPaneToggleRequested ??
-                            () {
-                              NavigationView.of(
-                                context,
-                              ).toggleCompactOpenMode();
-                            },
-                      ),
+                    paneToggleButton ??
+                        PaneToggleButton(onPressed: onPaneToggleRequested),
+                  if (leftHeader != null)
+                    Padding(
+                      padding: const EdgeInsetsDirectional.only(end: 16),
+                      child: leftHeader,
                     ),
-                  if (leftHeader != null) leftHeader!,
-                  if (icon != null) icon!,
+                  if (icon != null)
+                    Padding(
+                      padding: const EdgeInsetsDirectional.only(end: 16),
+                      child: icon,
+                    ),
                   if (title != null)
-                    DefaultTextStyle.merge(
-                      style: theme.typography.body?.copyWith(
-                        color: theme.resources.textFillColorPrimary,
+                    Padding(
+                      padding: const EdgeInsetsDirectional.symmetric(
+                        horizontal: 6,
                       ),
-                      child: title!,
+                      child: DefaultTextStyle.merge(
+                        style: theme.typography.body?.copyWith(
+                          color: theme.resources.textFillColorPrimary,
+                        ),
+                        child: title!,
+                      ),
                     ),
                   if (subtitle != null)
-                    DefaultTextStyle.merge(
-                      style: theme.typography.body?.copyWith(
-                        color: theme.resources.textFillColorSecondary,
+                    Padding(
+                      padding: const EdgeInsetsDirectional.only(end: 6),
+                      child: DefaultTextStyle.merge(
+                        style: theme.typography.body?.copyWith(
+                          color: theme.resources.textFillColorSecondary,
+                        ),
+                        child: subtitle!,
                       ),
-                      child: subtitle!,
                     ),
                 ],
               ),
@@ -196,6 +217,47 @@ class TitleBar extends StatelessWidget {
               ),
             ),
           ],
+        ),
+      ),
+    );
+  }
+}
+
+/// A button that toggles the pane navigation.
+///
+/// See also:
+///
+///   * [TitleBar], for the title bar that contains the pane toggle button
+///   * [NavigationView], for the container that holds the title bar
+class PaneToggleButton extends StatelessWidget {
+  /// Creates a pane toggle button.
+  const PaneToggleButton({super.key, this.onPressed});
+
+  /// The callback to call when the pane toggle button is pressed.
+  final VoidCallback? onPressed;
+
+  @override
+  Widget build(BuildContext context) {
+    final view = NavigationView.dataOf(context);
+
+    final width = view.pane?.size?.compactWidth ?? kCompactNavigationPaneWidth;
+    return Container(
+      padding: const EdgeInsetsDirectional.symmetric(horizontal: 6),
+      constraints: BoxConstraints(
+        minWidth: width,
+        maxWidth: width,
+        // minHeight: kPaneItemMinHeight,
+        maxHeight: kPaneItemMinHeight,
+      ),
+      child: Tooltip(
+        message: 'Toggle navigation',
+        child: IconButton(
+          icon: const Icon(WindowsIcons.global_nav_button),
+          onPressed:
+              onPressed ??
+              () {
+                NavigationView.maybeOf(context)?.togglePane();
+              },
         ),
       ),
     );
