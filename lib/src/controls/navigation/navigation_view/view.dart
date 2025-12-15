@@ -228,9 +228,8 @@ class NavigationView extends StatefulWidget {
   /// Get useful info about the current navigation view.
   ///
   /// As a normal user, you will rarely need this information.
-  static InheritedNavigationView dataOf(BuildContext context) {
-    return context
-        .dependOnInheritedWidgetOfExactType<InheritedNavigationView>()!;
+  static NavigationViewContext dataOf(BuildContext context) {
+    return context.dependOnInheritedWidgetOfExactType<NavigationViewContext>()!;
   }
 
   @override
@@ -260,7 +259,7 @@ class NavigationViewState extends State<NavigationView> {
   ///
   /// It's also used to display and control the [Scrollbar] introduced
   /// by the panes.
-  late ScrollController paneScrollController;
+  late final ScrollController paneScrollController;
 
   /// The key used to animate between open and compact display mode
   final _panelKey = GlobalKey();
@@ -275,9 +274,9 @@ class NavigationViewState extends State<NavigationView> {
   /// Whether the minimal pane is open.
   ///
   /// Always false if the current display mode is not minimal.
-  bool get minimalPaneOpen => _minimalPaneOpen;
-  set minimalPaneOpen(bool open) {
-    if (displayMode == PaneDisplayMode.minimal) {
+  bool get isMinimalPaneOpen => _minimalPaneOpen;
+  set isMinimalPaneOpen(bool open) {
+    if (_displayMode == PaneDisplayMode.minimal) {
       if (_minimalPaneOpen != open) {
         setState(() => _minimalPaneOpen = open);
         widget.onDisplayModeChanged?.call(
@@ -297,17 +296,22 @@ class NavigationViewState extends State<NavigationView> {
   ///
   /// Always false if the current display mode is not open nor compact
   bool get compactOverlayOpen {
-    if ([PaneDisplayMode.open, PaneDisplayMode.compact].contains(displayMode)) {
+    if ([
+      PaneDisplayMode.open,
+      PaneDisplayMode.compact,
+    ].contains(_displayMode)) {
       return _compactOverlayOpen;
     }
     _compactOverlayOpen = false;
-
     return false;
   }
 
   set compactOverlayOpen(bool value) {
     if (value == _compactOverlayOpen) return;
-    if ([PaneDisplayMode.open, PaneDisplayMode.compact].contains(displayMode)) {
+    if ([
+      PaneDisplayMode.open,
+      PaneDisplayMode.compact,
+    ].contains(_displayMode)) {
       setState(() {
         _compactOverlayOpen = value;
         _isTransitioning = true;
@@ -323,18 +327,6 @@ class NavigationViewState extends State<NavigationView> {
   }
 
   int _previousItemIndex = 0;
-
-  PaneDisplayMode? _autoDisplayMode;
-
-  /// Gets the current display mode. If it's automatic, it'll adapt to the other
-  /// display modes according to the current available space.
-  PaneDisplayMode get displayMode {
-    if (widget.pane?.displayMode == PaneDisplayMode.auto) {
-      return _autoDisplayMode ?? PaneDisplayMode.minimal;
-    }
-
-    return widget.pane?.displayMode ?? PaneDisplayMode.minimal;
-  }
 
   @override
   void initState() {
@@ -416,15 +408,24 @@ class NavigationViewState extends State<NavigationView> {
     top: widget.appBar?.finalHeight(context) ?? 0.0,
   ).resolve(Directionality.of(context));
 
-  PaneDisplayMode _resolveDisplayMode(
-    BoxConstraints constraints,
-    Size mediaQuerySize,
-  ) {
-    var displayMode = widget.pane?.displayMode ?? PaneDisplayMode.auto;
+  PaneDisplayMode _displayMode = PaneDisplayMode.auto;
 
-    if (displayMode == PaneDisplayMode.auto) {
+  /// The current display mode.
+  ///
+  /// If the pane display mode is automatic, it will adapt to the available
+  /// space.
+  PaneDisplayMode get displayMode => _displayMode;
+
+  /// The layout adapts based on available width:
+  /// - Width >= 1008px: Open mode (expanded pane)
+  /// - Width 641-1007px: Compact mode (icons only)
+  /// - Width <= 640px: Minimal mode (hamburger menu)
+  void _resolveDisplayMode(BoxConstraints constraints) {
+    final paneDisplayMode = widget.pane?.displayMode ?? PaneDisplayMode.auto;
+
+    if (paneDisplayMode == PaneDisplayMode.auto) {
       var width = constraints.biggest.width;
-      if (width.isInfinite) width = mediaQuerySize.width;
+      if (width.isInfinite) width = MediaQuery.widthOf(context);
 
       PaneDisplayMode autoDisplayMode;
       if (width <= 640) {
@@ -435,14 +436,12 @@ class NavigationViewState extends State<NavigationView> {
         autoDisplayMode = PaneDisplayMode.compact;
       }
 
-      if (autoDisplayMode != _autoDisplayMode) {
+      if (autoDisplayMode != _displayMode) {
         widget.onDisplayModeChanged?.call(autoDisplayMode);
       }
 
-      displayMode = _autoDisplayMode = autoDisplayMode;
+      _displayMode = autoDisplayMode;
     }
-    assert(displayMode != PaneDisplayMode.auto);
-    return displayMode;
   }
 
   /// Builds the navigation view with adaptive layout based on display mode.
@@ -453,11 +452,6 @@ class NavigationViewState extends State<NavigationView> {
   /// - Overlay management for compact and minimal modes
   /// - Content clipping and shaping
   /// - Animation coordination between pane transitions
-  ///
-  /// The layout adapts based on available width:
-  /// - Width >= 1008px: Open mode (expanded pane)
-  /// - Width 641-1007px: Compact mode (icons only)
-  /// - Width <= 640px: Minimal mode (hamburger menu)
   @override
   Widget build(BuildContext context) {
     assert(debugCheckHasFluentTheme(context));
@@ -472,14 +466,14 @@ class NavigationViewState extends State<NavigationView> {
     final theme = NavigationPaneTheme.of(context);
     final fluentTheme = FluentTheme.of(context);
     final localizations = FluentLocalizations.of(context);
-    final mediaQuerySize = MediaQuery.sizeOf(context);
+
     final direction = Directionality.of(context);
 
     Widget? paneNavigationButton() {
       final minimalLeading =
           PaneItem(
             title: Text(
-              !minimalPaneOpen
+              !isMinimalPaneOpen
                   ? localizations.openNavigationTooltip
                   : localizations.closeNavigationTooltip,
             ),
@@ -489,7 +483,7 @@ class NavigationViewState extends State<NavigationView> {
             context: context,
             selected: false,
             onPressed: () async {
-              minimalPaneOpen = !minimalPaneOpen;
+              isMinimalPaneOpen = !isMinimalPaneOpen;
               _isTransitioning = true;
             },
             displayMode: PaneDisplayMode.compact,
@@ -500,7 +494,7 @@ class NavigationViewState extends State<NavigationView> {
 
     return LayoutBuilder(
       builder: (context, consts) {
-        final displayMode = _resolveDisplayMode(consts, mediaQuerySize);
+        _resolveDisplayMode(consts);
 
         Widget appBar;
         if (widget.appBar != null) {
@@ -508,7 +502,7 @@ class NavigationViewState extends State<NavigationView> {
             appBar: widget.appBar!,
             additionalLeading: () {
               if (widget.pane != null) {
-                return displayMode == PaneDisplayMode.minimal
+                return _displayMode == PaneDisplayMode.minimal
                     ? paneNavigationButton()
                     : null;
               }
@@ -561,7 +555,7 @@ class NavigationViewState extends State<NavigationView> {
                       context,
                     ).resources.cardStrokeColorDefault,
                   ),
-                  borderRadius: displayMode == PaneDisplayMode.top
+                  borderRadius: _displayMode == PaneDisplayMode.top
                       ? BorderRadius.zero
                       : const BorderRadiusDirectional.only(
                           topStart: Radius.circular(8),
@@ -570,7 +564,7 @@ class NavigationViewState extends State<NavigationView> {
 
             final Widget content = ClipRect(
               key: _contentKey,
-              child: displayMode == PaneDisplayMode.minimal
+              child: _displayMode == PaneDisplayMode.minimal
                   ? body
                   : DecoratedBox(
                       position: DecorationPosition.foreground,
@@ -582,12 +576,12 @@ class NavigationViewState extends State<NavigationView> {
                       ),
                     ),
             );
-            if (displayMode != PaneDisplayMode.open) {
+            if (_displayMode != PaneDisplayMode.open) {
               PageStorage.of(
                 context,
               ).writeState(context, false, identifier: 'openModeOpen');
             }
-            switch (displayMode) {
+            switch (_displayMode) {
               case PaneDisplayMode.top:
                 _isTransitioning = false;
                 paneResult = Column(
@@ -670,10 +664,10 @@ class NavigationViewState extends State<NavigationView> {
                       bottom: 0,
                       child: content,
                     ),
-                    if (minimalPaneOpen)
+                    if (isMinimalPaneOpen)
                       Positioned.fill(
                         child: GestureDetector(
-                          onTap: () => minimalPaneOpen = false,
+                          onTap: () => isMinimalPaneOpen = false,
                           child: AbsorbPointer(
                             child: Semantics(
                               label: localizations.modalBarrierDismissLabel,
@@ -686,9 +680,9 @@ class NavigationViewState extends State<NavigationView> {
                       key: _overlayKey,
                       duration: theme.animationDuration ?? Duration.zero,
                       curve: theme.animationCurve ?? Curves.linear,
-                      start: minimalPaneOpen ? 0.0 : -openSize,
+                      start: isMinimalPaneOpen ? 0.0 : -openSize,
                       width: openSize,
-                      height: mediaQuerySize.height,
+                      height: MediaQuery.heightOf(context),
                       onEnd: () {
                         _isTransitioning = false;
                         if (mounted) setState(() {});
@@ -721,8 +715,8 @@ class NavigationViewState extends State<NavigationView> {
                                   _,
                                 ) {
                                   if (mounted &&
-                                      displayMode == PaneDisplayMode.minimal) {
-                                    minimalPaneOpen = false;
+                                      _displayMode == PaneDisplayMode.minimal) {
+                                    isMinimalPaneOpen = false;
                                   }
                                 });
                               },
@@ -752,11 +746,12 @@ class NavigationViewState extends State<NavigationView> {
 
         return Mica(
           backgroundColor: theme.backgroundColor,
-          child: InheritedNavigationView(
+          child: NavigationViewContext(
             displayMode: _compactOverlayOpen
                 ? PaneDisplayMode.open
-                : displayMode,
-            minimalPaneOpen: minimalPaneOpen,
+                : _displayMode,
+            isMinimalPaneOpen: isMinimalPaneOpen,
+            isCompactOverlayOpen: _compactOverlayOpen,
             pane: widget.pane,
             previousItemIndex: _previousItemIndex,
             isTransitioning: _isTransitioning,
@@ -1231,8 +1226,7 @@ class _NavigationAppBar extends StatelessWidget {
     assert(debugCheckHasFluentLocalizations(context));
 
     final displayMode =
-        InheritedNavigationView.maybeOf(context)?.displayMode ??
-        PaneDisplayMode.top;
+        NavigationView.maybeOf(context)?._displayMode ?? PaneDisplayMode.top;
     final leading = appBar._buildLeading(displayMode != PaneDisplayMode.top);
     final title = () {
       if (appBar.title != null) {

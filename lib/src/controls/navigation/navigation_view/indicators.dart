@@ -58,14 +58,9 @@ abstract class NavigationIndicator extends StatefulWidget {
 /// ensures pixel-perfect indicator positioning.
 abstract class NavigationIndicatorState<T extends NavigationIndicator>
     extends State<T> {
-  /// The current navigation pane from the inherited navigation view.
-  NavigationPane get pane {
-    return InheritedNavigationView.of(context).pane!;
-  }
-
   /// The currently selected item index.
   int get selectedIndex {
-    return pane.selected ?? -1;
+    return NavigationView.dataOf(context).pane!.selected ?? -1;
   }
 
   /// Whether the current item is selected.
@@ -75,8 +70,7 @@ abstract class NavigationIndicatorState<T extends NavigationIndicator>
 
   /// The axis of the navigation indicator based on the display mode.
   Axis get axis {
-    if (InheritedNavigationView.maybeOf(context)?.displayMode ==
-        PaneDisplayMode.top) {
+    if (NavigationView.dataOf(context).displayMode == PaneDisplayMode.top) {
       return Axis.vertical;
     }
     return Axis.horizontal;
@@ -84,17 +78,17 @@ abstract class NavigationIndicatorState<T extends NavigationIndicator>
 
   /// The index of the current item.
   int get itemIndex {
-    return InheritedNavigationView.of(context).currentItemIndex;
+    return _PaneItemContext.of(context).index;
   }
 
   /// The index of the previously selected item.
   int get previousItemIndex {
-    return InheritedNavigationView.of(context).previousItemIndex;
+    return NavigationView.dataOf(context).previousItemIndex;
   }
 
   /// The current pane item.
   PaneItem get item {
-    return pane.effectiveItems[itemIndex];
+    return NavigationView.dataOf(context).pane!.effectiveItems[itemIndex];
   }
 
   /// Whether this indicator should be visible
@@ -337,6 +331,7 @@ class _StickyNavigationIndicatorState
 
     assert(debugCheckHasFluentTheme(context));
     final theme = NavigationPaneTheme.of(context);
+    final itemContext = _PaneItemContext.of(context);
     final isHorizontal = axis == Axis.horizontal;
     final isVertical = axis == Axis.vertical;
 
@@ -404,10 +399,7 @@ class _StickyNavigationIndicatorState
                     ? EdgeInsetsDirectional.only(
                         top: topPadding,
                         bottom: bottomPadding,
-                        start:
-                            6 +
-                            (InheritedNavigationView.of(context).itemDepth *
-                                28.0),
+                        start: 6 + (itemContext.depth * 28.0),
                         end: 6,
                       )
                     : EdgeInsetsDirectional.only(

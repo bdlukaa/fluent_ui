@@ -115,7 +115,8 @@ class _NavigationViewPageState extends State<NavigationViewPage>
     PaneItemWidgetAdapter(
       child: Builder(
         builder: (final context) {
-          if (NavigationView.of(context).displayMode ==
+          NavigationView.of(context);
+          if (NavigationView.dataOf(context).displayMode ==
               PaneDisplayMode.compact) {
             return const FlutterLogo();
           }

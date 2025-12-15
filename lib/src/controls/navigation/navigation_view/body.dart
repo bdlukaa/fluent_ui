@@ -76,7 +76,7 @@ class _NavigationBodyState extends State<_NavigationBody> {
   @override
   Widget build(BuildContext context) {
     assert(debugCheckHasFluentTheme(context));
-    final view = InheritedNavigationView.of(context);
+    final view = NavigationViewContext.of(context);
     final theme = FluentTheme.of(context);
 
     return ColoredBox(
@@ -176,109 +176,62 @@ class _KeepAlivePageState extends State<_KeepAlivePage>
 /// See also:
 ///
 ///  * [NavigationView], which provides the information for this
-class InheritedNavigationView extends InheritedWidget {
+class NavigationViewContext extends InheritedWidget {
   /// Creates an inherited navigation view.
-  const InheritedNavigationView({
+  const NavigationViewContext({
     required super.child,
     required this.displayMode,
+    required this.isMinimalPaneOpen,
+    required this.isCompactOverlayOpen,
+    required this.pane,
+    required this.previousItemIndex,
+    required this.isTransitioning,
     super.key,
-    this.minimalPaneOpen = false,
-    this.pane,
-    this.previousItemIndex = 0,
-    this.currentItemIndex = -1,
-    this.isTransitioning = false,
-    this.itemDepth = 0,
   });
 
   /// The current pane display mode according to the current state.
   final PaneDisplayMode displayMode;
 
   /// Whether the minimal pane is open or not
-  final bool minimalPaneOpen;
+  final bool isMinimalPaneOpen;
+
+  final bool isCompactOverlayOpen;
 
   /// The current navigation pane, if any
   final NavigationPane? pane;
 
-  /// The previous index selected index.
+  /// The previous selected index.
   ///
   /// Used by [NavigationIndicator]s to animate from the old item to the new one.
   /// This enables the "sticky" indicator effect where the indicator stretches
   /// from the previous position to the new position.
   final int previousItemIndex;
 
-  /// Used by [NavigationIndicator] to know what's the current index of the
-  /// item being rendered.
-  final int currentItemIndex;
-
   /// Whether the navigation panes are transitioning or not.
   ///
-  /// When true, interactive features on pane items (like info badges) are hidden
-  /// to provide a cleaner transition animation.
+  /// When true, interactive features on pane items (like info badges) are
+  /// hidden to provide a cleaner transition animation.
   final bool isTransitioning;
 
-  /// The depth level of the current item in the navigation hierarchy (0 = root level).
-  ///
-  /// Used by [NavigationIndicator]s to adjust padding based on nesting level.
-  final int itemDepth;
-
-  /// Returns the closest [InheritedNavigationView] ancestor, if any.
-  static InheritedNavigationView? maybeOf(BuildContext context) {
-    return context
-        .dependOnInheritedWidgetOfExactType<InheritedNavigationView>();
+  /// Returns the closest [NavigationViewContext] ancestor, if any.
+  static NavigationViewContext? maybeOf(BuildContext context) {
+    return context.dependOnInheritedWidgetOfExactType<NavigationViewContext>();
   }
 
-  /// Returns the closest [InheritedNavigationView] ancestor.
+  /// Returns the closest [NavigationViewContext] ancestor.
   ///
   /// Throws if no ancestor is found.
-  static InheritedNavigationView of(BuildContext context) {
+  static NavigationViewContext of(BuildContext context) {
     return maybeOf(context)!;
   }
 
-  /// Creates a widget that merges the current navigation view state with
-  /// the given values.
-  ///
-  /// This is used internally by [PaneItem] to provide indicator-specific
-  /// context without creating a full new inherited widget.
-  static Widget merge({
-    required Widget child,
-    Key? key,
-    int? currentItemIndex,
-    NavigationPane? pane,
-    PaneDisplayMode? displayMode,
-    bool? minimalPaneOpen,
-    int? previousItemIndex,
-    bool? currentItemSelected,
-    bool? isTransitioning,
-    int? itemDepth,
-  }) {
-    return Builder(
-      builder: (context) {
-        final current = InheritedNavigationView.maybeOf(context);
-        return InheritedNavigationView(
-          key: key,
-          displayMode:
-              displayMode ?? current?.displayMode ?? PaneDisplayMode.open,
-          minimalPaneOpen: minimalPaneOpen ?? current?.minimalPaneOpen ?? false,
-          currentItemIndex: currentItemIndex ?? current?.currentItemIndex ?? -1,
-          pane: pane ?? current?.pane,
-          previousItemIndex:
-              previousItemIndex ?? current?.previousItemIndex ?? 0,
-          isTransitioning: isTransitioning ?? current?.isTransitioning ?? false,
-          itemDepth: itemDepth ?? current?.itemDepth ?? 0,
-          child: child,
-        );
-      },
-    );
-  }
-
   @override
-  bool updateShouldNotify(covariant InheritedNavigationView oldWidget) {
+  bool updateShouldNotify(covariant NavigationViewContext oldWidget) {
     return oldWidget.displayMode != displayMode ||
-        oldWidget.minimalPaneOpen != minimalPaneOpen ||
+        oldWidget.isMinimalPaneOpen != isMinimalPaneOpen ||
+        oldWidget.isCompactOverlayOpen != isCompactOverlayOpen ||
         oldWidget.pane != pane ||
         oldWidget.previousItemIndex != previousItemIndex ||
-        oldWidget.currentItemIndex != currentItemIndex ||
-        oldWidget.isTransitioning != isTransitioning ||
-        oldWidget.itemDepth != itemDepth;
+        oldWidget.isTransitioning != isTransitioning;
   }
 }

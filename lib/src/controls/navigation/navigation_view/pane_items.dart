@@ -25,6 +25,44 @@ class NavigationPaneItem with Diagnosticable {
   NavigationPaneItem({this.key});
 }
 
+/// A widget that provides information about a specific [NavigationPaneItem]
+/// to its descendants via an [InheritedWidget].
+///
+/// Use this for context-aware styling, focus management, or interacting with
+/// the current item deeper in the widget tree (e.g., for badges, secondary actions, etc).
+class _PaneItemContext extends InheritedWidget {
+  const _PaneItemContext({
+    required this.item,
+    required super.child,
+    required this.index,
+    required this.isSelected,
+    required this.depth,
+  });
+
+  /// The navigation pane item being provided.
+  final PaneItem item;
+
+  /// The index of the current item.
+  final int index;
+
+  /// Whether the current item is selected.
+  final bool isSelected;
+
+  /// The depth of this item in the hierarchy.
+  final int depth;
+
+  /// Retrieve the [_PaneItemContext], throws if not found.
+  static _PaneItemContext of(BuildContext context) {
+    return context.dependOnInheritedWidgetOfExactType<_PaneItemContext>()!;
+  }
+
+  @override
+  bool updateShouldNotify(_PaneItemContext oldWidget) {
+    // Update children if item or depth changes.
+    return item != oldWidget.item || depth != oldWidget.depth;
+  }
+}
+
 /// The item used by [NavigationView] to display the tiles.
 ///
 /// On [PaneDisplayMode.compact], only [icon] is displayed, and [title] is
@@ -153,16 +191,12 @@ class PaneItem extends NavigationPaneItem {
     bool showTextOnTop = true,
     int depth = 0,
   }) {
-    final maybeBody = InheritedNavigationView.maybeOf(context);
-    final mode =
-        displayMode ??
-        maybeBody?.displayMode ??
-        maybeBody?.pane?.displayMode ??
-        PaneDisplayMode.minimal;
+    final maybeBody = NavigationView.dataOf(context);
+    final mode = displayMode ?? maybeBody.displayMode;
     assert(mode != PaneDisplayMode.auto);
     assert(debugCheckHasFluentTheme(context));
 
-    final isTransitioning = maybeBody?.isTransitioning ?? false;
+    final isTransitioning = maybeBody.isTransitioning;
 
     final theme = NavigationPaneTheme.of(context);
     final titleText = title?.getProperty<String>() ?? '';
@@ -186,7 +220,7 @@ class PaneItem extends NavigationPaneItem {
       focusNode: focusNode,
       onPressed: onItemTapped,
       cursor: mouseCursor,
-      focusEnabled: !isMinimal || (maybeBody?.minimalPaneOpen ?? false),
+      focusEnabled: !isMinimal || maybeBody.isMinimalPaneOpen,
       forceEnabled: enabled,
       builder: (context, states) {
         final textStyle = () {
@@ -394,27 +428,26 @@ class PaneItem extends NavigationPaneItem {
       },
     );
 
-    return Padding(
-      padding: const EdgeInsetsDirectional.only(bottom: 4),
-      child: () {
-        if (maybeBody?.pane?.indicator != null) {
-          return Stack(
-            children: [
-              button,
-              Positioned.fill(
-                child: InheritedNavigationView.merge(
-                  currentItemIndex: itemIndex,
-                  currentItemSelected: selected,
-                  itemDepth: depth,
-                  child: maybeBody!.pane!.indicator!,
-                ),
-              ),
-            ],
-          );
-        }
+    return _PaneItemContext(
+      item: this,
+      index: itemIndex,
+      isSelected: selected,
+      depth: depth,
+      child: Padding(
+        padding: const EdgeInsetsDirectional.only(bottom: 4),
+        child: () {
+          if (maybeBody.pane?.indicator != null) {
+            return Stack(
+              children: [
+                button,
+                Positioned.fill(child: maybeBody.pane!.indicator!),
+              ],
+            );
+          }
 
-        return button;
-      }(),
+          return button;
+        }(),
+      ),
     );
   }
 
@@ -514,7 +547,7 @@ class PaneItemHeader extends NavigationPaneItem {
   Widget build(BuildContext context, {int depth = 0}) {
     assert(debugCheckHasFluentTheme(context));
     final theme = NavigationPaneTheme.of(context);
-    final view = InheritedNavigationView.of(context);
+    final view = NavigationViewContext.of(context);
 
     return Container(
       key: key,
@@ -641,12 +674,8 @@ class PaneItemExpander extends PaneItem {
     bool showTextOnTop = true,
     int depth = 0,
   }) {
-    final maybeBody = InheritedNavigationView.maybeOf(context);
-    final mode =
-        displayMode ??
-        maybeBody?.displayMode ??
-        maybeBody?.pane?.displayMode ??
-        PaneDisplayMode.minimal;
+    final maybeBody = NavigationView.dataOf(context);
+    final mode = displayMode ?? maybeBody.displayMode;
 
     return RepaintBoundary(
       child: _PaneItemExpander(
@@ -750,21 +779,21 @@ class __PaneItemExpanderState extends State<_PaneItemExpander>
   }
 
   int get index {
-    final body = InheritedNavigationView.of(context);
+    final body = NavigationViewContext.of(context);
     return body.pane?.effectiveIndexOf(widget.item) ?? 0;
   }
 
   /// Checks if any child of this expander is currently selected
   bool get hasSelectedChild {
-    final body = InheritedNavigationView.maybeOf(context);
-    if (body?.pane == null) return false;
+    final body = NavigationView.dataOf(context);
+    if (body.pane == null) return false;
 
     bool checkSelected(NavigationPaneItem item) {
       if (item is PaneItemExpander) {
-        if (body!.pane!.isSelected(item)) return true;
+        if (body.pane!.isSelected(item)) return true;
         if (item.items.any(checkSelected)) return true;
       } else if (item is PaneItem) {
-        return body!.pane!.isSelected(item);
+        return body.pane!.isSelected(item);
       }
       return false;
     }
@@ -778,7 +807,7 @@ class __PaneItemExpanderState extends State<_PaneItemExpander>
 
     if (_open) {
       if (useFlyout && doFlyout && flyoutController.isAttached) {
-        final body = InheritedNavigationView.of(context);
+        final body = NavigationViewContext.of(context);
         final displayMode = body.displayMode;
         final navigationTheme = NavigationPaneTheme.of(context);
 
@@ -847,7 +876,7 @@ class __PaneItemExpanderState extends State<_PaneItemExpander>
     super.build(context);
     assert(debugCheckHasFluentTheme(context));
     final theme = FluentTheme.of(context);
-    final body = InheritedNavigationView.of(context);
+    final body = NavigationViewContext.of(context);
 
     final expanderIndex = body.pane!.effectiveIndexOf(widget.item);
     final isExpanderSelected = widget.selected;
@@ -1066,7 +1095,7 @@ class PaneItemWidgetAdapter extends NavigationPaneItem {
   Widget build(BuildContext context) {
     assert(debugCheckHasFluentTheme(context));
     final theme = NavigationPaneTheme.of(context);
-    final view = InheritedNavigationView.of(context);
+    final view = NavigationViewContext.of(context);
 
     return Padding(
       key: key,

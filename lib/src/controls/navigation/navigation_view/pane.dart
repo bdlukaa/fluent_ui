@@ -770,7 +770,7 @@ class _TopNavigationPaneState extends State<_TopNavigationPane> {
   @override
   Widget build(BuildContext context) {
     assert(debugCheckHasFluentTheme(context));
-    final view = InheritedNavigationView.of(context);
+    final view = NavigationViewContext.of(context);
     final height = widget.pane.size?.topHeight ?? kOneLineTileHeight;
     return SizedBox(
       key: widget.pane.paneKey,
@@ -811,12 +811,13 @@ class _TopNavigationPaneState extends State<_TopNavigationPane> {
                           placementMode: FlyoutPlacementMode.bottomCenter,
                           forceAvailableSpace: true,
                           builder: (context) {
-                            return InheritedNavigationView(
+                            return NavigationViewContext(
                               displayMode: view.displayMode,
-                              currentItemIndex: view.currentItemIndex,
-                              minimalPaneOpen: view.minimalPaneOpen,
+                              isMinimalPaneOpen: view.isMinimalPaneOpen,
+                              isCompactOverlayOpen: view.isCompactOverlayOpen,
                               previousItemIndex: view.previousItemIndex,
                               pane: view.pane,
+                              isTransitioning: view.isTransitioning,
                               child: MenuFlyout(
                                 items: _localItemHold
                                     .sublist(hiddenPaneItems.first)
@@ -943,7 +944,7 @@ class _MenuFlyoutPaneItem extends MenuFlyoutItemBase {
     assert(debugCheckHasFluentTheme(context));
     final theme = NavigationPaneTheme.of(context);
     final fluentTheme = FluentTheme.of(context);
-    final view = InheritedNavigationView.of(context);
+    final view = NavigationViewContext.of(context);
 
     final selected = view.pane?.isSelected(item) ?? false;
     final titleText = item.title?.getProperty<String>() ?? '';
@@ -1184,7 +1185,7 @@ class _CompactNavigationPane extends StatelessWidget {
     return Builder(
       builder: (context) {
         assert(debugCheckHasFluentTheme(context));
-        final pane = InheritedNavigationView.of(context).pane!;
+        final pane = NavigationViewContext.of(context).pane!;
         if (item is PaneItemHeader) {
           // Item Header is not visible on compact pane
           return const SizedBox();
