@@ -337,11 +337,18 @@ class NavigationPane with Diagnosticable {
     return Container(
       width: pane.size?.compactWidth ?? kCompactNavigationPaneWidth,
       margin: padding,
-      child: PaneItem(
-        title: itemTitle,
-        icon: const WindowsIcon(WindowsIcons.global_nav_button),
-        body: const SizedBox.shrink(),
-      ).build(context, false, onPressed, displayMode: PaneDisplayMode.compact),
+      child:
+          PaneItem(
+            title: itemTitle,
+            icon: const WindowsIcon(WindowsIcons.global_nav_button),
+            body: const SizedBox.shrink(),
+          ).build(
+            context: context,
+            selected: false,
+            onPressed: onPressed,
+            displayMode: PaneDisplayMode.compact,
+            itemIndex: -1,
+          ),
     );
   }
 
@@ -595,15 +602,39 @@ abstract class NavigationPaneWidget {
   Widget build(BuildContext context, NavigationPaneWidgetData data);
 }
 
+class _SelectedItemKeyWrapper extends StatelessWidget {
+  const _SelectedItemKeyWrapper({
+    required this.child,
+    required this.isSelected,
+    required this.selectedItemKey,
+  });
+
+  final Widget child;
+  final bool isSelected;
+  final GlobalKey selectedItemKey;
+
+  @override
+  Widget build(BuildContext context) {
+    return KeyedSubtree(key: isSelected ? selectedItemKey : null, child: child);
+  }
+}
+
 /// Creates a top navigation pane.
 ///
 /// ![Top Pane Anatomy](https://docs.microsoft.com/en-us/windows/uwp/design/controls-and-patterns/images/navview-pane-anatomy-horizontal.png)
 class _TopNavigationPane extends StatefulWidget {
-  _TopNavigationPane({required this.pane, this.listKey, this.appBar})
-    : super(key: pane.key);
+  _TopNavigationPane({
+    required this.pane,
+    required this.listKey,
+    required this.secondaryListKey,
+    required this.selectedItemKey,
+    this.appBar,
+  }) : super(key: pane.key);
 
   final NavigationPane pane;
   final GlobalKey? listKey;
+  final GlobalKey? secondaryListKey;
+  final GlobalKey? selectedItemKey;
   final NavigationAppBar? appBar;
 
   @override
@@ -654,24 +685,33 @@ class _TopNavigationPaneState extends State<_TopNavigationPane> {
           return item.build(context, Axis.vertical);
         } else if (item is PaneItemExpander) {
           final selected = widget.pane.isSelected(item);
-          return item.build(
-            context,
-            selected,
-            () => _onPressed(item),
-            onItemPressed: _onPressed,
-            // only show the text if the item is not in the footer
-            showTextOnTop: !widget.pane.footerItems.contains(item),
-            displayMode: PaneDisplayMode.top,
+          return _SelectedItemKeyWrapper(
+            isSelected: selected,
+            selectedItemKey: widget.selectedItemKey ?? GlobalKey(),
+            child: item.build(
+              context: context,
+              selected: selected,
+              onPressed: () => _onPressed(item),
+              onItemPressed: _onPressed,
+              itemIndex: widget.pane.effectiveIndexOf(item),
+              displayMode: PaneDisplayMode.top,
+              showTextOnTop: !widget.pane.footerItems.contains(item),
+            ),
           );
         } else if (item is PaneItem) {
           final selected = widget.pane.isSelected(item);
-          return item.build(
-            context,
-            selected,
-            () => _onPressed(item),
-            // only show the text if the item is not in the footer
-            showTextOnTop: !widget.pane.footerItems.contains(item),
-            displayMode: PaneDisplayMode.top,
+          return _SelectedItemKeyWrapper(
+            isSelected: selected,
+            selectedItemKey: widget.selectedItemKey ?? GlobalKey(),
+            child: item.build(
+              context: context,
+              selected: selected,
+              onPressed: () => _onPressed(item),
+              itemIndex: widget.pane.effectiveIndexOf(item),
+              // only show the text if the item is not in the footer
+              showTextOnTop: !widget.pane.footerItems.contains(item),
+              displayMode: PaneDisplayMode.top,
+            ),
           );
         } else if (item is PaneItemWidgetAdapter) {
           return item.build(context);
@@ -764,9 +804,9 @@ class _TopNavigationPaneState extends State<_TopNavigationPane> {
                       icon: const WindowsIcon(WindowsIcons.more),
                       body: const SizedBox.shrink(),
                     ).build(
-                      context,
-                      false,
-                      () {
+                      context: context,
+                      selected: false,
+                      onPressed: () {
                         overflowController.showFlyout<void>(
                           placementMode: FlyoutPlacementMode.bottomCenter,
                           forceAvailableSpace: true,
@@ -796,6 +836,7 @@ class _TopNavigationPaneState extends State<_TopNavigationPane> {
                       },
                       showTextOnTop: false,
                       displayMode: PaneDisplayMode.top,
+                      itemIndex: -1,
                     ),
               ),
               overflowChangedCallback: (hiddenItems) {
@@ -1120,6 +1161,8 @@ class _CompactNavigationPane extends StatelessWidget {
     required this.pane,
     this.paneKey,
     this.listKey,
+    this.secondaryListKey,
+    this.selectedItemKey,
     this.onToggle,
     this.onOpenSearch,
     this.onAnimationEnd,
@@ -1128,11 +1171,16 @@ class _CompactNavigationPane extends StatelessWidget {
   final NavigationPane pane;
   final Key? paneKey;
   final GlobalKey? listKey;
+  final GlobalKey? secondaryListKey;
+  final GlobalKey? selectedItemKey;
   final VoidCallback? onToggle;
   final VoidCallback? onOpenSearch;
   final VoidCallback? onAnimationEnd;
 
-  static Widget _buildItem(NavigationPaneItem item) {
+  static Widget _buildItem(
+    NavigationPaneItem item,
+    GlobalKey? selectedItemKey,
+  ) {
     return Builder(
       builder: (context) {
         assert(debugCheckHasFluentTheme(context));
@@ -1144,14 +1192,35 @@ class _CompactNavigationPane extends StatelessWidget {
           return item.build(context, Axis.horizontal);
         } else if (item is PaneItemExpander) {
           final selected = pane.isSelected(item);
-          return item.build(context, selected, () {
-            pane.changeTo(item);
-          }, onItemPressed: pane.changeTo);
+          return _SelectedItemKeyWrapper(
+            isSelected: selected,
+            selectedItemKey: selectedItemKey ?? GlobalKey(),
+            child: item.build(
+              context: context,
+              selected: selected,
+              onPressed: () {
+                pane.changeTo(item);
+              },
+              onItemPressed: pane.changeTo,
+              displayMode: PaneDisplayMode.compact,
+              itemIndex: pane.effectiveIndexOf(item),
+            ),
+          );
         } else if (item is PaneItem) {
           final selected = pane.isSelected(item);
-          return item.build(context, selected, () {
-            pane.changeTo(item);
-          });
+          return _SelectedItemKeyWrapper(
+            isSelected: selected,
+            selectedItemKey: selectedItemKey ?? GlobalKey(),
+            child: item.build(
+              context: context,
+              selected: selected,
+              onPressed: () {
+                pane.changeTo(item);
+              },
+              displayMode: PaneDisplayMode.compact,
+              itemIndex: pane.effectiveIndexOf(item),
+            ),
+          );
         } else if (item is PaneItemWidgetAdapter) {
           return item.build(context);
         } else {
@@ -1209,10 +1278,16 @@ class _CompactNavigationPane extends StatelessWidget {
                       ),
                       icon: pane.autoSuggestBoxReplacement,
                       body: const SizedBox.shrink(),
-                    ).build(context, false, () {
-                      onToggle?.call();
-                      onOpenSearch?.call();
-                    }),
+                    ).build(
+                      context: context,
+                      selected: false,
+                      onPressed: () {
+                        onToggle?.call();
+                        onOpenSearch?.call();
+                      },
+                      displayMode: PaneDisplayMode.compact,
+                      itemIndex: -1,
+                    ),
               ),
             Expanded(
               // Use ListView.builder for lazy item building to handle
@@ -1221,14 +1296,18 @@ class _CompactNavigationPane extends StatelessWidget {
                 key: listKey,
                 primary: true,
                 itemCount: pane.items.length,
-                itemBuilder: (context, index) => _buildItem(pane.items[index]),
+                itemBuilder: (context, index) =>
+                    _buildItem(pane.items[index], selectedItemKey),
               ),
             ),
             ListView(
+              key: secondaryListKey,
               shrinkWrap: true,
               physics: const NeverScrollableScrollPhysics(),
               primary: false,
-              children: pane.footerItems.map(_buildItem).toList(),
+              children: pane.footerItems
+                  .map((item) => _buildItem(item, selectedItemKey))
+                  .toList(),
             ),
           ],
         ),
@@ -1243,6 +1322,8 @@ class _OpenNavigationPane extends StatefulWidget {
     required this.theme,
     this.paneKey,
     this.listKey,
+    this.secondaryListKey,
+    this.selectedItemKey,
     this.onToggle,
     this.onItemSelected,
     this.initiallyOpen = false,
@@ -1252,6 +1333,8 @@ class _OpenNavigationPane extends StatefulWidget {
   final NavigationPane pane;
   final Key? paneKey;
   final GlobalKey? listKey;
+  final GlobalKey? secondaryListKey;
+  final GlobalKey? selectedItemKey;
   final VoidCallback? onToggle;
   final VoidCallback? onItemSelected;
   final NavigationPaneThemeData theme;
@@ -1260,14 +1343,16 @@ class _OpenNavigationPane extends StatefulWidget {
 
   static Widget buildItem(
     NavigationPane pane,
-    NavigationPaneItem item, [
+    NavigationPaneItem item,
+
+    GlobalKey? selectedItemKey, [
     VoidCallback? onChanged,
     double? width,
   ]) {
     return Builder(
       builder: (context) {
         if (width != null && width < kOpenNavigationPaneWidth / 1.5) {
-          return _CompactNavigationPane._buildItem(item);
+          return _CompactNavigationPane._buildItem(item, selectedItemKey);
         }
         if (item is PaneItemHeader) {
           return item.build(context);
@@ -1275,24 +1360,40 @@ class _OpenNavigationPane extends StatefulWidget {
           return item.build(context, Axis.horizontal);
         } else if (item is PaneItemExpander) {
           final selected = pane.isSelected(item);
-          return item.build(
-            context,
-            selected,
-            () {
-              pane.changeTo(item);
-              onChanged?.call();
-            },
-            onItemPressed: (item) {
-              pane.changeTo(item);
-              onChanged?.call();
-            },
+          return _SelectedItemKeyWrapper(
+            isSelected: selected,
+            selectedItemKey: selectedItemKey ?? GlobalKey(),
+            child: item.build(
+              context: context,
+              selected: selected,
+              onPressed: () {
+                pane.changeTo(item);
+                onChanged?.call();
+              },
+              onItemPressed: (item) {
+                pane.changeTo(item);
+                onChanged?.call();
+              },
+              displayMode: PaneDisplayMode.open,
+              itemIndex: pane.effectiveIndexOf(item),
+            ),
           );
         } else if (item is PaneItem) {
           final selected = pane.isSelected(item);
-          return item.build(context, selected, () {
-            pane.changeTo(item);
-            onChanged?.call();
-          });
+          return _SelectedItemKeyWrapper(
+            isSelected: selected,
+            selectedItemKey: selectedItemKey ?? GlobalKey(),
+            child: item.build(
+              context: context,
+              selected: selected,
+              onPressed: () {
+                pane.changeTo(item);
+                onChanged?.call();
+              },
+              displayMode: PaneDisplayMode.open,
+              itemIndex: pane.effectiveIndexOf(item),
+            ),
+          );
         } else if (item is PaneItemWidgetAdapter) {
           return item.build(context);
         } else {
@@ -1411,10 +1512,11 @@ class _OpenNavigationPaneState extends State<_OpenNavigationPane> {
                           icon: widget.pane.autoSuggestBoxReplacement,
                           body: const SizedBox.shrink(),
                         ).build(
-                          context,
-                          false,
-                          () {},
+                          context: context,
+                          selected: false,
+                          onPressed: () {},
                           displayMode: PaneDisplayMode.compact,
+                          itemIndex: -1,
                         ),
                   ),
               Expanded(
@@ -1426,24 +1528,28 @@ class _OpenNavigationPaneState extends State<_OpenNavigationPane> {
                     return _OpenNavigationPane.buildItem(
                       widget.pane,
                       widget.pane.items[index],
+                      widget.selectedItemKey,
                       widget.onItemSelected,
                       width,
                     );
                   },
                 ),
               ),
-              ListView(
+              ListView.builder(
+                key: widget.secondaryListKey,
                 primary: false,
                 shrinkWrap: true,
                 physics: const NeverScrollableScrollPhysics(),
-                children: widget.pane.footerItems.map((item) {
+                itemCount: widget.pane.footerItems.length,
+                itemBuilder: (context, index) {
                   return _OpenNavigationPane.buildItem(
                     widget.pane,
-                    item,
+                    widget.pane.footerItems[index],
+                    widget.selectedItemKey,
                     widget.onItemSelected,
                     width,
                   );
-                }).toList(),
+                },
               ),
             ],
           );

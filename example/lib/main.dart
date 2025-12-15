@@ -220,10 +220,11 @@ class _MyHomePageState extends State<MyHomePage> with WindowListener {
                     body: const SizedBox.shrink(),
                     enabled: enabled,
                   ).build(
-                    context,
-                    false,
-                    onPressed,
+                    context: context,
+                    selected: false,
+                    onPressed: onPressed,
                     displayMode: PaneDisplayMode.compact,
+                    itemIndex: -1,
                   ),
             ),
           );
@@ -540,24 +541,24 @@ class _LinkPaneItemAction extends PaneItem {
   final String link;
 
   @override
-  Widget build(
-    final BuildContext context,
-    final bool selected,
-    final VoidCallback? onPressed, {
-    final PaneDisplayMode? displayMode,
-    final bool showTextOnTop = true,
-    final bool? autofocus,
-    final int? itemIndex,
-    final int depth = 0,
+  Widget build({
+    required BuildContext context,
+    required bool selected,
+    required VoidCallback? onPressed,
+    required PaneDisplayMode? displayMode,
+    required int itemIndex,
+    bool? autofocus,
+    bool showTextOnTop = true,
+    int depth = 0,
   }) {
     return Link(
       uri: Uri.parse(link),
       builder: (final context, final followLink) => Semantics(
         link: true,
         child: super.build(
-          context,
-          selected,
-          followLink,
+          context: context,
+          selected: selected,
+          onPressed: followLink,
           displayMode: displayMode,
           showTextOnTop: showTextOnTop,
           itemIndex: itemIndex,

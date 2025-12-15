@@ -265,6 +265,8 @@ class NavigationViewState extends State<NavigationView> {
   /// The key used to animate between open and compact display mode
   final _panelKey = GlobalKey();
   final _listKey = GlobalKey();
+  final _secondaryListKey = GlobalKey();
+  final _selectedItemKey = GlobalKey();
   final _contentKey = GlobalKey();
   final _overlayKey = GlobalKey();
 
@@ -360,20 +362,21 @@ class NavigationViewState extends State<NavigationView> {
     if (oldWidget.pane?.selected != widget.pane?.selected) {
       _previousItemIndex = oldWidget.pane?.selected ?? -1;
 
-      final item = widget.pane?.selected == null
-          ? null
-          : widget.pane?.selectedItem.itemKey.currentContext;
-
+      final item = _selectedItemKey.currentContext;
       if (item != null) {
         final atEnd =
             (widget.pane!.effectiveItems.length / 2) < widget.pane!.selected!;
 
-        Scrollable.ensureVisible(
-          item,
-          alignmentPolicy: atEnd
-              ? ScrollPositionAlignmentPolicy.keepVisibleAtEnd
-              : ScrollPositionAlignmentPolicy.keepVisibleAtStart,
-        );
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          if (item.mounted) {
+            Scrollable.ensureVisible(
+              item,
+              alignmentPolicy: atEnd
+                  ? ScrollPositionAlignmentPolicy.keepVisibleAtEnd
+                  : ScrollPositionAlignmentPolicy.keepVisibleAtStart,
+            );
+          }
+        });
       }
     }
   }
@@ -482,10 +485,16 @@ class NavigationViewState extends State<NavigationView> {
             ),
             icon: Icon(theme.paneNavigationButtonIcon),
             body: const SizedBox.shrink(),
-          ).build(context, false, () async {
-            minimalPaneOpen = !minimalPaneOpen;
-            _isTransitioning = true;
-          }, displayMode: PaneDisplayMode.compact);
+          ).build(
+            context: context,
+            selected: false,
+            onPressed: () async {
+              minimalPaneOpen = !minimalPaneOpen;
+              _isTransitioning = true;
+            },
+            displayMode: PaneDisplayMode.compact,
+            itemIndex: -1,
+          );
       return minimalLeading;
     }
 
@@ -590,6 +599,8 @@ class NavigationViewState extends State<NavigationView> {
                       child: _TopNavigationPane(
                         pane: pane,
                         listKey: _listKey,
+                        secondaryListKey: _secondaryListKey,
+                        selectedItemKey: _selectedItemKey,
                         appBar: widget.appBar,
                       ),
                     ),
@@ -619,6 +630,7 @@ class NavigationViewState extends State<NavigationView> {
                               pane: pane,
                               paneKey: _panelKey,
                               listKey: _listKey,
+                              secondaryListKey: _secondaryListKey,
                               initiallyOpen:
                                   PageStorage.of(context).readState(
                                         context,
@@ -702,6 +714,7 @@ class NavigationViewState extends State<NavigationView> {
                               pane: pane,
                               paneKey: _panelKey,
                               listKey: _listKey,
+                              secondaryListKey: _secondaryListKey,
                               onItemSelected: () {
                                 WidgetsBinding.instance.addPostFrameCallback((
                                   _,
@@ -807,6 +820,7 @@ class NavigationViewState extends State<NavigationView> {
                             pane: pane,
                             paneKey: _panelKey,
                             listKey: _listKey,
+                            secondaryListKey: _secondaryListKey,
                             onToggle: pane.toggleable
                                 ? toggleCompactOpenMode
                                 : null,
@@ -904,6 +918,7 @@ class NavigationViewState extends State<NavigationView> {
                       pane: pane,
                       paneKey: _panelKey,
                       listKey: _listKey,
+                      secondaryListKey: _secondaryListKey,
                       onToggle: toggleCompactOpenMode,
                       onOpenSearch: widget.onOpenSearch,
                       onAnimationEnd: _animationEndCallback,
@@ -1162,10 +1177,11 @@ class NavigationAppBar with Diagnosticable {
                     title: Text(localizations.backButtonTooltip),
                     body: const SizedBox.shrink(),
                   ).build(
-                    context,
-                    false,
-                    onPressed,
+                    context: context,
+                    selected: false,
+                    onPressed: onPressed,
                     displayMode: PaneDisplayMode.compact,
+                    itemIndex: -1,
                   ),
             ),
           );

@@ -398,6 +398,7 @@ NavigationView(
               header: const Text('Pane Header'),
               items: items,
               footerItems: [
+                PaneItemSeparator(),
                 PaneItem(
                   icon: const WindowsIcon(WindowsIcons.settings),
                   title: const Text('Settings'),

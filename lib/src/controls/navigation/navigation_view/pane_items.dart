@@ -5,17 +5,11 @@ part of 'view.dart';
 /// Subclasses include [PaneItem], [PaneItemSeparator], [PaneItemHeader],
 /// [PaneItemAction], [PaneItemExpander], and [PaneItemWidgetAdapter].
 class NavigationPaneItem with Diagnosticable {
-  /// The key used for the item itself. Useful to find the position and size of
-  /// the pane item within the screen
+  /// The key used for the item itself.
   ///
   /// See also:
   ///
   ///   * [PaneItem.build], which assigns this to its children
-  // TODO(bdlukaa): Find a way to remove this
-  late final GlobalKey itemKey = GlobalKey();
-
-  /// The key used for the item itself. Useful to find the position and size of
-  /// the pane.
   final Key? key;
 
   /// The parent item of this item.
@@ -149,14 +143,14 @@ class PaneItem extends NavigationPaneItem {
   /// - Focus management and accessibility
   ///
   /// You can customize the appearance by overriding this method.
-  Widget build(
-    BuildContext context,
-    bool selected,
-    VoidCallback? onPressed, {
-    PaneDisplayMode? displayMode,
-    bool showTextOnTop = true,
-    int? itemIndex,
+  Widget build({
+    required BuildContext context,
+    required bool selected,
+    required VoidCallback? onPressed,
+    required PaneDisplayMode? displayMode,
+    required int itemIndex,
     bool? autofocus,
+    bool showTextOnTop = true,
     int depth = 0,
   }) {
     final maybeBody = InheritedNavigationView.maybeOf(context);
@@ -235,7 +229,7 @@ class PaneItem extends NavigationPaneItem {
           switch (mode) {
             case PaneDisplayMode.compact:
               return Container(
-                key: itemKey,
+                key: key,
                 constraints: const BoxConstraints(
                   minHeight: kPaneItemMinHeight,
                 ),
@@ -268,7 +262,7 @@ class PaneItem extends NavigationPaneItem {
               final shouldShowTrailing = !isTransitioning;
 
               return ConstrainedBox(
-                key: itemKey,
+                key: key,
                 constraints: const BoxConstraints(
                   minHeight: kPaneItemMinHeight,
                 ),
@@ -332,7 +326,7 @@ class PaneItem extends NavigationPaneItem {
               );
               if (infoBadge != null) {
                 return Stack(
-                  key: itemKey,
+                  key: key,
                   clipBehavior: Clip.none,
                   children: [
                     result,
@@ -340,7 +334,7 @@ class PaneItem extends NavigationPaneItem {
                   ],
                 );
               }
-              return KeyedSubtree(key: itemKey, child: result);
+              return KeyedSubtree(key: key, child: result);
             default:
               throw UnsupportedError('$mode is not a supported type');
           }
@@ -400,15 +394,7 @@ class PaneItem extends NavigationPaneItem {
       },
     );
 
-    final index = () {
-      if (itemIndex != null) return itemIndex;
-      if (maybeBody?.pane?.indicator != null) {
-        return maybeBody!.pane!.effectiveIndexOf(this);
-      }
-    }();
-
     return Padding(
-      key: key,
       padding: const EdgeInsetsDirectional.only(bottom: 4),
       child: () {
         if (maybeBody?.pane?.indicator != null) {
@@ -417,7 +403,7 @@ class PaneItem extends NavigationPaneItem {
               button,
               Positioned.fill(
                 child: InheritedNavigationView.merge(
-                  currentItemIndex: index,
+                  currentItemIndex: itemIndex,
                   currentItemSelected: selected,
                   itemDepth: depth,
                   child: maybeBody!.pane!.indicator!,
@@ -486,22 +472,19 @@ class PaneItemSeparator extends NavigationPaneItem {
 
   /// Builds the separator widget.
   Widget build(BuildContext context, Axis direction, {int depth = 0}) {
-    return KeyedSubtree(
+    return Divider(
       key: key,
-      child: Divider(
-        key: itemKey,
-        direction: direction,
-        style: DividerThemeData(
-          thickness: thickness,
-          decoration: color != null ? BoxDecoration(color: color) : null,
-          verticalMargin: const EdgeInsetsDirectional.symmetric(
-            horizontal: 8,
-            vertical: 10,
-          ),
-          horizontalMargin: const EdgeInsetsDirectional.symmetric(
-            horizontal: 8,
-            vertical: 10,
-          ),
+      direction: direction,
+      style: DividerThemeData(
+        thickness: thickness,
+        decoration: color != null ? BoxDecoration(color: color) : null,
+        verticalMargin: const EdgeInsetsDirectional.symmetric(
+          horizontal: 8,
+          vertical: 10,
+        ),
+        horizontalMargin: const EdgeInsetsDirectional.symmetric(
+          horizontal: 8,
+          vertical: 10,
         ),
       ),
     );
@@ -533,28 +516,25 @@ class PaneItemHeader extends NavigationPaneItem {
     final theme = NavigationPaneTheme.of(context);
     final view = InheritedNavigationView.of(context);
 
-    return KeyedSubtree(
-      key: itemKey,
-      child: Container(
-        key: key,
-        constraints: const BoxConstraints(minHeight: kPaneItemHeaderMinHeight),
-        padding: (theme.iconPadding ?? EdgeInsetsDirectional.zero)
-            .add(
-              view.displayMode == PaneDisplayMode.top
-                  ? EdgeInsetsDirectional.zero
-                  : theme.headerPadding ?? EdgeInsetsDirectional.zero,
-            )
-            .add(EdgeInsetsDirectional.only(start: depth * 28)),
-        child: DefaultTextStyle.merge(
-          style: theme.itemHeaderTextStyle,
-          softWrap: false,
-          maxLines: 1,
-          overflow: TextOverflow.fade,
-          textAlign: view.displayMode == PaneDisplayMode.top
-              ? TextAlign.center
-              : TextAlign.left,
-          child: header,
-        ),
+    return Container(
+      key: key,
+      constraints: const BoxConstraints(minHeight: kPaneItemHeaderMinHeight),
+      padding: (theme.iconPadding ?? EdgeInsetsDirectional.zero)
+          .add(
+            view.displayMode == PaneDisplayMode.top
+                ? EdgeInsetsDirectional.zero
+                : theme.headerPadding ?? EdgeInsetsDirectional.zero,
+          )
+          .add(EdgeInsetsDirectional.only(start: depth * 28)),
+      child: DefaultTextStyle.merge(
+        style: theme.itemHeaderTextStyle,
+        softWrap: false,
+        maxLines: 1,
+        overflow: TextOverflow.fade,
+        textAlign: view.displayMode == PaneDisplayMode.top
+            ? TextAlign.center
+            : TextAlign.left,
+        child: header,
       ),
     );
   }
@@ -592,29 +572,6 @@ class PaneItemAction extends PaneItem {
     super.trailing,
     super.enabled = true,
   });
-
-  @override
-  Widget build(
-    BuildContext context,
-    bool selected,
-    VoidCallback? onPressed, {
-    PaneDisplayMode? displayMode,
-    bool showTextOnTop = true,
-    bool? autofocus,
-    int? itemIndex,
-    int depth = 0,
-  }) {
-    return super.build(
-      context,
-      selected,
-      onPressed,
-      displayMode: displayMode,
-      showTextOnTop: showTextOnTop,
-      autofocus: autofocus,
-      itemIndex: itemIndex,
-      depth: depth,
-    );
-  }
 }
 
 /// Hierhical navigation item used on [NavigationView]
@@ -673,15 +630,15 @@ class PaneItemExpander extends PaneItem {
   );
 
   @override
-  Widget build(
-    BuildContext context,
-    bool selected,
-    VoidCallback? onPressed, {
-    PaneDisplayMode? displayMode,
-    bool showTextOnTop = true,
+  Widget build({
+    required BuildContext context,
+    required bool selected,
+    required VoidCallback? onPressed,
+    required PaneDisplayMode? displayMode,
+    required int itemIndex,
     ValueChanged<PaneItem>? onItemPressed,
     bool? autofocus,
-    int? itemIndex,
+    bool showTextOnTop = true,
     int depth = 0,
   }) {
     final maybeBody = InheritedNavigationView.maybeOf(context);
@@ -692,20 +649,17 @@ class PaneItemExpander extends PaneItem {
         PaneDisplayMode.minimal;
 
     return RepaintBoundary(
-      child: KeyedSubtree(
+      child: _PaneItemExpander(
         key: key,
-        child: _PaneItemExpander(
-          key: itemKey,
-          item: this,
-          items: items,
-          displayMode: mode,
-          showTextOnTop: showTextOnTop,
-          selected: selected,
-          onPressed: onPressed,
-          onItemPressed: onItemPressed,
-          initiallyExpanded: initiallyExpanded,
-          depth: depth,
-        ),
+        item: this,
+        items: items,
+        displayMode: mode,
+        showTextOnTop: showTextOnTop,
+        selected: selected,
+        onPressed: onPressed,
+        onItemPressed: onItemPressed,
+        initiallyExpanded: initiallyExpanded,
+        depth: depth,
       ),
     );
   }
@@ -923,9 +877,9 @@ class __PaneItemExpanderState extends State<_PaneItemExpander>
             ),
           )
           .build(
-            context,
-            isExpanderSelected,
-            () {
+            context: context,
+            selected: isExpanderSelected,
+            onPressed: () {
               if (widget.item.body != null) {
                 widget.onPressed?.call();
               }
@@ -966,9 +920,9 @@ class __PaneItemExpanderState extends State<_PaneItemExpander>
                           final childDepth = widget.depth + 1;
                           if (childItem is PaneItemExpander) {
                             return childItem.build(
-                              context,
-                              body.pane!.isSelected(childItem),
-                              () {
+                              context: context,
+                              selected: body.pane!.isSelected(childItem),
+                              onPressed: () {
                                 if (childItem.body != null) {
                                   widget.onItemPressed?.call(childItem);
                                 }
@@ -982,9 +936,11 @@ class __PaneItemExpanderState extends State<_PaneItemExpander>
                           } else if (childItem is PaneItem) {
                             return ClipRect(
                               child: childItem.build(
-                                context,
-                                body.pane!.isSelected(childItem),
-                                () => widget.onItemPressed?.call(childItem),
+                                context: context,
+                                selected: body.pane!.isSelected(childItem),
+                                onPressed: () {
+                                  widget.onItemPressed?.call(childItem);
+                                },
                                 displayMode: widget.displayMode,
                                 showTextOnTop: widget.showTextOnTop,
                                 itemIndex: body.pane!.effectiveIndexOf(
