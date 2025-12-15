@@ -352,6 +352,7 @@ class NavigationPane with Diagnosticable {
               },
               displayMode: view.displayMode,
               itemIndex: effectiveIndexOf(item),
+              showTextOnTop: !footerItems.contains(item),
             ),
           );
         } else if (item is PaneItemWidgetAdapter) {
@@ -673,9 +674,9 @@ class _TopNavigationPaneState extends State<_TopNavigationPane> {
   }
 
   Widget _buildItem(NavigationPaneItem item, double height) {
-    return Builder(
-      builder: (context) {
-        if (item is PaneItemHeader) {
+    if (item is PaneItemHeader) {
+      return Builder(
+        builder: (context) {
           final theme = NavigationPaneTheme.of(context);
           final style =
               item.header._getProperty<TextStyle>() ??
@@ -684,50 +685,19 @@ class _TopNavigationPaneState extends State<_TopNavigationPane> {
 
           return Padding(
             padding: EdgeInsetsDirectional.only(
+              // TODO(bdlukaa): Remove this
+              // This is needed because we use [DynamicOverflow] to render the
+              // items
               // This will center the item header
               top: (height - (style.fontSize ?? 14.0)) / 4,
             ),
             child: item.build(context),
           );
-        } else if (item is PaneItemSeparator) {
-          return item.build(context, Axis.vertical);
-        } else if (item is PaneItemExpander) {
-          final selected = widget.pane.isSelected(item);
-          return _SelectedItemKeyWrapper(
-            isSelected: selected,
-            child: item.build(
-              context: context,
-              selected: selected,
-              onPressed: () => _onPressed(item),
-              onItemPressed: _onPressed,
-              itemIndex: widget.pane.effectiveIndexOf(item),
-              displayMode: PaneDisplayMode.top,
-              showTextOnTop: !widget.pane.footerItems.contains(item),
-            ),
-          );
-        } else if (item is PaneItem) {
-          final selected = widget.pane.isSelected(item);
-          return _SelectedItemKeyWrapper(
-            isSelected: selected,
-            child: item.build(
-              context: context,
-              selected: selected,
-              onPressed: () => _onPressed(item),
-              itemIndex: widget.pane.effectiveIndexOf(item),
-              // only show the text if the item is not in the footer
-              showTextOnTop: !widget.pane.footerItems.contains(item),
-              displayMode: PaneDisplayMode.top,
-            ),
-          );
-        } else if (item is PaneItemWidgetAdapter) {
-          return item.build(context);
-        } else {
-          throw UnsupportedError(
-            '${item.runtimeType} is not a supported navigation pane item type.',
-          );
-        }
-      },
-    );
+        },
+      );
+    } else {
+      return widget.pane._buildItem(item);
+    }
   }
 
   @override
@@ -773,10 +743,34 @@ class _TopNavigationPaneState extends State<_TopNavigationPane> {
     super.didUpdateWidget(oldWidget);
   }
 
+  void openOverflowFlyout() {
+    final view = NavigationViewContext.of(context);
+    overflowController.showFlyout<void>(
+      placementMode: FlyoutPlacementMode.bottomCenter,
+      forceAvailableSpace: true,
+      builder: (context) {
+        return NavigationViewContext(
+          displayMode: view.displayMode,
+          isMinimalPaneOpen: view.isMinimalPaneOpen,
+          isCompactOverlayOpen: view.isCompactOverlayOpen,
+          previousItemIndex: view.previousItemIndex,
+          pane: view.pane,
+          isTransitioning: view.isTransitioning,
+          isTogglePaneButtonVisible: view.isTogglePaneButtonVisible,
+          child: MenuFlyout(
+            items: _localItemHold.sublist(hiddenPaneItems.first).map((i) {
+              final item = widget.pane.items[i];
+              return item.buildMenuFlyoutItem(context, _onPressed);
+            }).toList(),
+          ),
+        );
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     assert(debugCheckHasFluentTheme(context));
-    final view = NavigationViewContext.of(context);
     final height = widget.pane.size?.topHeight ?? kOneLineTileHeight;
     return SizedBox(
       key: widget.pane.paneKey,
@@ -805,43 +799,12 @@ class _TopNavigationPaneState extends State<_TopNavigationPane> {
               overflowWidget: FlyoutTarget(
                 key: overflowKey,
                 controller: overflowController,
-                child:
-                    PaneItem(
-                      icon: const WindowsIcon(WindowsIcons.more),
-                      body: const SizedBox.shrink(),
-                    ).build(
+                // TODO(bdlukaa): Allow customizing the overflow widget
+                child: PaneItem(icon: const WindowsIcon(WindowsIcons.more))
+                    .build(
                       context: context,
                       selected: false,
-                      onPressed: () {
-                        overflowController.showFlyout<void>(
-                          placementMode: FlyoutPlacementMode.bottomCenter,
-                          forceAvailableSpace: true,
-                          builder: (context) {
-                            return NavigationViewContext(
-                              displayMode: view.displayMode,
-                              isMinimalPaneOpen: view.isMinimalPaneOpen,
-                              isCompactOverlayOpen: view.isCompactOverlayOpen,
-                              previousItemIndex: view.previousItemIndex,
-                              pane: view.pane,
-                              isTransitioning: view.isTransitioning,
-                              isTogglePaneButtonVisible:
-                                  view.isTogglePaneButtonVisible,
-                              child: MenuFlyout(
-                                items: _localItemHold
-                                    .sublist(hiddenPaneItems.first)
-                                    .map((i) {
-                                      final item = widget.pane.items[i];
-                                      return item.buildMenuFlyoutItem(
-                                        context,
-                                        _onPressed,
-                                      );
-                                    })
-                                    .toList(),
-                              ),
-                            );
-                          },
-                        );
-                      },
+                      onPressed: openOverflowFlyout,
                       showTextOnTop: false,
                       displayMode: PaneDisplayMode.top,
                       itemIndex: -1,
@@ -883,118 +846,6 @@ class _TopNavigationPaneState extends State<_TopNavigationPane> {
           }),
         ],
       ),
-    );
-  }
-}
-
-class _MenuFlyoutPaneItem extends MenuFlyoutItemBase {
-  _MenuFlyoutPaneItem({
-    required this.item,
-    required this.onPressed,
-    this.trailing = const SizedBox.shrink(),
-    this.padding,
-  });
-
-  final PaneItem item;
-  final VoidCallback? onPressed;
-  final Widget trailing;
-  final EdgeInsetsGeometry? padding;
-
-  @override
-  Widget build(BuildContext context) {
-    assert(debugCheckHasFluentTheme(context));
-    final theme = NavigationPaneTheme.of(context);
-    final fluentTheme = FluentTheme.of(context);
-    final view = NavigationViewContext.of(context);
-
-    final selected = view.pane?.isSelected(item) ?? false;
-    final titleText = item.title?._getProperty<String>() ?? '';
-    final baseStyle =
-        item.title?._getProperty<TextStyle>() ?? const TextStyle();
-
-    return HoverButton(
-      onPressed: () {
-        item.onTap?.call();
-        onPressed?.call();
-      },
-      builder: (context, states) {
-        final textStyle = () {
-          final style = theme.unselectedTextStyle?.resolve(states);
-          if (style == null) return baseStyle;
-          return style.merge(baseStyle);
-        }();
-
-        final textResult = titleText.isNotEmpty
-            ? Padding(
-                padding: theme.labelPadding ?? EdgeInsetsDirectional.zero,
-                child: RichText(
-                  text: item.title!._getProperty<InlineSpan>(textStyle)!,
-                  maxLines: 1,
-                  overflow: TextOverflow.fade,
-                  softWrap: false,
-                  textAlign:
-                      item.title?._getProperty<TextAlign>() ?? TextAlign.start,
-                  textHeightBehavior: item.title
-                      ?._getProperty<TextHeightBehavior>(),
-                  textWidthBasis:
-                      item.title?._getProperty<TextWidthBasis>() ??
-                      TextWidthBasis.parent,
-                ),
-              )
-            : const SizedBox.shrink();
-
-        return Container(
-          padding: const EdgeInsetsDirectional.only(
-            end: 4,
-          ).add(padding ?? EdgeInsetsDirectional.zero),
-          height: 36,
-          color: ButtonThemeData.uncheckedInputColor(
-            fluentTheme,
-            states,
-            transparentWhenNone: true,
-            transparentWhenDisabled: true,
-          ),
-          child: Row(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Center(
-                child: Padding(
-                  padding: EdgeInsetsDirectional.symmetric(
-                    vertical: kDefaultListTilePadding.vertical,
-                  ),
-                  child: Container(
-                    height: 30 * 0.7,
-                    width: 3,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(100),
-                      color: selected
-                          ? fluentTheme.accentColor.defaultBrushFor(
-                              fluentTheme.brightness,
-                            )
-                          : Colors.transparent,
-                    ),
-                  ),
-                ),
-              ),
-              Padding(
-                padding: theme.iconPadding ?? EdgeInsetsDirectional.zero,
-                child: IconTheme.merge(
-                  data: IconThemeData(
-                    color:
-                        theme.unselectedIconColor?.resolve(states) ??
-                        baseStyle.color,
-                    size: 16,
-                  ),
-                  child: Center(child: item.icon),
-                ),
-              ),
-              Expanded(child: textResult),
-              if (item.infoBadge != null) item.infoBadge!,
-              trailing,
-            ],
-          ),
-        );
-      },
     );
   }
 }
@@ -1077,23 +928,34 @@ class _MenuFlyoutPaneItemExpanderState
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          _MenuFlyoutPaneItem(
-            item: widget.item,
-            onPressed: () {
-              toggleOpen();
-              widget.onPressed?.call();
+          Builder(
+            builder: (context) {
+              return widget.item
+                  .copyWith(
+                    trailing: AnimatedBuilder(
+                      animation: controller,
+                      builder: (context, child) => RotationTransition(
+                        turns: controller.drive(
+                          Tween<double>(
+                            begin: _open ? 0 : 1.0,
+                            end: _open ? 0.5 : 0.5,
+                          ),
+                        ),
+                        child: child,
+                      ),
+                      child: const WindowsIcon(
+                        WindowsIcons.chevron_down,
+                        size: 10,
+                      ),
+                    ),
+                  )
+                  .buildMenuFlyoutItem(context, (item) {
+                    toggleOpen();
+                    widget.onPressed?.call();
+                  })
+                  .build(context);
             },
-            trailing: AnimatedBuilder(
-              animation: controller,
-              builder: (context, child) => RotationTransition(
-                turns: controller.drive(
-                  Tween<double>(begin: _open ? 0 : 1.0, end: _open ? 0.5 : 0.5),
-                ),
-                child: child,
-              ),
-              child: const WindowsIcon(WindowsIcons.chevron_down, size: 10),
-            ),
-          ).build(context),
+          ),
           AnimatedSize(
             duration: theme.fastAnimationDuration,
             curve: Curves.easeIn,

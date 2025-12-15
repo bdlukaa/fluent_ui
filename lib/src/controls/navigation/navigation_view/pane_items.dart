@@ -484,10 +484,44 @@ class PaneItem extends NavigationPaneItem {
     BuildContext context, [
     ValueChanged<PaneItem>? onItemPressed,
   ]) {
-    return _MenuFlyoutPaneItem(
-      item: this,
+    assert(debugCheckHasFluentTheme(context));
+    final theme = NavigationPaneTheme.of(context);
+    final view = NavigationViewContext.of(context);
+
+    final selected = view.pane?.isSelected(this) ?? false;
+    final baseStyle = title?._getProperty<TextStyle>() ?? const TextStyle();
+
+    return MenuFlyoutItem(
+      selected: selected,
+      text: title != null
+          ? Padding(
+              padding: theme.labelPadding ?? EdgeInsetsDirectional.zero,
+              child: DefaultTextStyle(
+                style: baseStyle,
+                overflow: TextOverflow.fade,
+                softWrap: false,
+                textAlign: TextAlign.start,
+                maxLines: 1,
+                child: title!,
+              ),
+            )
+          : const SizedBox.shrink(),
       onPressed: () => onItemPressed?.call(this),
-      // padding: paneItemPadding,
+      trailing: () {
+        if (infoBadge != null && trailing == null) {
+          return infoBadge;
+        } else if (trailing != null && infoBadge == null) {
+          return trailing;
+        } else if (trailing != null && infoBadge != null) {
+          return Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [trailing!, infoBadge!],
+          );
+        } else {
+          return null;
+        }
+      }(),
+      // padding: padding,
     );
   }
 }
