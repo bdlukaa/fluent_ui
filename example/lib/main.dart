@@ -182,7 +182,6 @@ class _MyHomePageState extends State<MyHomePage> with WindowListener {
       titleBar: TitleBar(
         icon: const FlutterLogo(),
         title: const Text(appTitle),
-        subtitle: const Text('Preview'),
         content: ConstrainedBox(
           constraints: const BoxConstraints(maxWidth: 200),
           child: Padding(
@@ -205,7 +204,7 @@ class _MyHomePageState extends State<MyHomePage> with WindowListener {
               appTheme.mode = ThemeMode.light;
             }
           },
-          child: const Text('Dark Mode'),
+          child: const Icon(WindowsIcons.lightbulb),
         ),
         captionControls: const WindowButtons(),
         onDragStarted: !kIsWeb ? windowManager.startDragging : null,
