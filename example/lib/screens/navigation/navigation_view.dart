@@ -115,7 +115,6 @@ class _NavigationViewPageState extends State<NavigationViewPage>
     PaneItemWidgetAdapter(
       child: Builder(
         builder: (final context) {
-          NavigationView.of(context);
           if (NavigationView.dataOf(context).displayMode ==
               PaneDisplayMode.compact) {
             return const FlutterLogo();
@@ -123,10 +122,11 @@ class _NavigationViewPageState extends State<NavigationViewPage>
           return ConstrainedBox(
             constraints: const BoxConstraints(maxWidth: 200),
             child: const Row(
+              mainAxisSize: MainAxisSize.min,
               children: [
                 FlutterLogo(),
                 SizedBox(width: 6),
-                Text('This is a custom widget'),
+                Flexible(child: Text('This is a custom widget')),
               ],
             ),
           );

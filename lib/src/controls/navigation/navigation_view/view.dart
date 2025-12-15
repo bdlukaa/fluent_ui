@@ -259,7 +259,16 @@ class NavigationViewState extends State<NavigationView> {
   ///
   /// It's also used to display and control the [Scrollbar] introduced
   /// by the panes.
-  late final ScrollController paneScrollController;
+  ScrollController? _paneScrollController;
+  ScrollController get paneScrollController {
+    if (widget.pane?.scrollController != null) {
+      return widget.pane!.scrollController!;
+    }
+    _paneScrollController ??= ScrollController(
+      debugLabel: '${widget.runtimeType} scroll controller',
+    );
+    return _paneScrollController!;
+  }
 
   /// The key used to animate between open and compact display mode
   final _panelKey = GlobalKey();
@@ -331,10 +340,6 @@ class NavigationViewState extends State<NavigationView> {
   @override
   void initState() {
     super.initState();
-    paneScrollController =
-        widget.pane?.scrollController ??
-        ScrollController(debugLabel: '${widget.runtimeType} scroll controller');
-
     _compactOverlayOpen =
         PageStorage.of(
               context,
@@ -346,9 +351,11 @@ class NavigationViewState extends State<NavigationView> {
   @override
   void didUpdateWidget(NavigationView oldWidget) {
     super.didUpdateWidget(oldWidget);
-    if (widget.pane?.scrollController != paneScrollController) {
-      paneScrollController =
-          widget.pane?.scrollController ?? paneScrollController;
+    if (widget.pane?.scrollController != oldWidget.pane?.scrollController) {
+      if (widget.pane?.scrollController != null) {
+        _paneScrollController?.dispose();
+        _paneScrollController = null;
+      }
     }
 
     if (oldWidget.pane?.selected != widget.pane?.selected) {
@@ -441,6 +448,8 @@ class NavigationViewState extends State<NavigationView> {
       }
 
       _displayMode = autoDisplayMode;
+    } else {
+      _displayMode = paneDisplayMode;
     }
   }
 
