@@ -369,6 +369,7 @@ class _StickyNavigationIndicatorState
 
     assert(debugCheckHasFluentTheme(context));
     final theme = NavigationPaneTheme.of(context);
+    final view = NavigationView.dataOf(context);
     final itemContext = _PaneItemContext.of(context);
     final isHorizontal = axis == Axis.horizontal;
     final isVertical = axis == Axis.vertical;
@@ -377,8 +378,6 @@ class _StickyNavigationIndicatorState
       color: widget.color ?? theme.highlightColor,
       borderRadius: BorderRadius.circular(100),
     );
-
-    final view = NavigationView.dataOf(context);
 
     return IgnorePointer(
       child: Align(

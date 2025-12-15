@@ -331,6 +331,40 @@ class NavigationPane with Diagnosticable {
     return result;
   }
 
+  Widget _buildItem(NavigationPaneItem item) {
+    return Builder(
+      builder: (context) {
+        if (item is PaneItemHeader) {
+          // Item Header is not visible on compact pane
+          return const SizedBox();
+        } else if (item is PaneItemSeparator) {
+          return item.build(context, Axis.horizontal);
+        } else if (item is PaneItem) {
+          final view = NavigationView.dataOf(context);
+          final selected = isSelected(item);
+          return _SelectedItemKeyWrapper(
+            isSelected: selected,
+            child: item.build(
+              context: context,
+              selected: selected,
+              onPressed: () {
+                changeTo(item);
+              },
+              displayMode: view.displayMode,
+              itemIndex: effectiveIndexOf(item),
+            ),
+          );
+        } else if (item is PaneItemWidgetAdapter) {
+          return item.build(context);
+        } else {
+          throw UnsupportedError(
+            '${item.runtimeType} is not a supported pane item type.',
+          );
+        }
+      },
+    );
+  }
+
   @override
   bool operator ==(Object other) {
     if (identical(this, other)) return true;
@@ -797,9 +831,8 @@ class _TopNavigationPaneState extends State<_TopNavigationPane> {
                                     .sublist(hiddenPaneItems.first)
                                     .map((i) {
                                       final item = widget.pane.items[i];
-                                      return _buildMenuPaneItem(
+                                      return item.buildMenuFlyoutItem(
                                         context,
-                                        item,
                                         _onPressed,
                                       );
                                     })
@@ -850,52 +883,6 @@ class _TopNavigationPaneState extends State<_TopNavigationPane> {
           }),
         ],
       ),
-    );
-  }
-}
-
-MenuFlyoutItemBase _buildMenuPaneItem(
-  BuildContext context,
-  NavigationPaneItem item,
-  ValueChanged<PaneItem> onPressed, {
-  EdgeInsetsGeometry? paneItemPadding,
-}) {
-  if (item is PaneItemSeparator) {
-    return const MenuFlyoutSeparator();
-  } else if (item is PaneItemExpander) {
-    return _MenuFlyoutPaneItemExpander(
-      item: item,
-      onPressed: () => onPressed(item),
-      onItemPressed: onPressed,
-    );
-  } else if (item is PaneItem) {
-    return _MenuFlyoutPaneItem(
-      item: item,
-      onPressed: () => onPressed(item),
-      padding: paneItemPadding,
-    );
-  } else if (item is PaneItemHeader) {
-    return _MenuFlyoutHeader(header: item);
-  } else if (item is PaneItemWidgetAdapter) {
-    return MenuFlyoutItemBuilder(builder: item.build);
-  } else {
-    throw UnsupportedError(
-      '${item.runtimeType} is not a supported navigation pane item type',
-    );
-  }
-}
-
-class _MenuFlyoutHeader extends MenuFlyoutItemBase {
-  final PaneItemHeader header;
-
-  const _MenuFlyoutHeader({required this.header});
-
-  @override
-  Widget build(BuildContext context) {
-    final theme = NavigationPaneTheme.of(context);
-    return Padding(
-      padding: theme.headerPadding ?? EdgeInsetsDirectional.zero,
-      child: header.build(context),
     );
   }
 }
@@ -1115,14 +1102,19 @@ class _MenuFlyoutPaneItemExpanderState
                 : Column(
                     mainAxisSize: MainAxisSize.min,
                     children: widget.item.items.map((item) {
-                      return _buildMenuPaneItem(
-                        context,
-                        item,
-                        widget.onItemPressed,
-                        paneItemPadding: const EdgeInsetsDirectional.only(
-                          start: 24,
-                        ),
-                      ).build(context);
+                      return Builder(
+                        builder: (builder) {
+                          return item
+                              .buildMenuFlyoutItem(
+                                context,
+                                widget.onItemPressed,
+                                // TODO(bdlukaa): See this
+                                // paneItemPadding:
+                                //     const EdgeInsetsDirectional.only(start: 24),
+                              )
+                              .build(context);
+                        },
+                      );
                     }).toList(),
                   ),
           ),
@@ -1143,55 +1135,6 @@ class _CompactNavigationPane extends StatelessWidget {
   final VoidCallback? onOpenSearch;
   final VoidCallback onAnimationEnd;
 
-  static Widget _buildItem(NavigationPaneItem item) {
-    return Builder(
-      builder: (context) {
-        final pane = NavigationViewContext.of(context).pane!;
-        if (item is PaneItemHeader) {
-          // Item Header is not visible on compact pane
-          return const SizedBox();
-        } else if (item is PaneItemSeparator) {
-          return item.build(context, Axis.horizontal);
-        } else if (item is PaneItemExpander) {
-          final selected = pane.isSelected(item);
-          return _SelectedItemKeyWrapper(
-            isSelected: selected,
-            child: item.build(
-              context: context,
-              selected: selected,
-              onPressed: () {
-                pane.changeTo(item);
-              },
-              onItemPressed: pane.changeTo,
-              displayMode: PaneDisplayMode.compact,
-              itemIndex: pane.effectiveIndexOf(item),
-            ),
-          );
-        } else if (item is PaneItem) {
-          final selected = pane.isSelected(item);
-          return _SelectedItemKeyWrapper(
-            isSelected: selected,
-            child: item.build(
-              context: context,
-              selected: selected,
-              onPressed: () {
-                pane.changeTo(item);
-              },
-              displayMode: PaneDisplayMode.compact,
-              itemIndex: pane.effectiveIndexOf(item),
-            ),
-          );
-        } else if (item is PaneItemWidgetAdapter) {
-          return item.build(context);
-        } else {
-          throw UnsupportedError(
-            '${item.runtimeType} is not a supported pane item type.',
-          );
-        }
-      },
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
     assert(debugCheckHasFluentTheme(context));
@@ -1200,6 +1143,7 @@ class _CompactNavigationPane extends StatelessWidget {
     const EdgeInsetsGeometry topPadding = EdgeInsetsDirectional.only(bottom: 6);
     final showReplacement =
         pane.autoSuggestBox != null && pane.autoSuggestBoxReplacement != null;
+
     return AnimatedContainer(
       key: view._panelKey,
       duration: theme.animationDuration ?? Duration.zero,
@@ -1241,7 +1185,8 @@ class _CompactNavigationPane extends StatelessWidget {
                 key: view._listKey,
                 primary: true,
                 itemCount: pane.items.length,
-                itemBuilder: (context, index) => _buildItem(pane.items[index]),
+                itemBuilder: (context, index) =>
+                    pane._buildItem(pane.items[index]),
               ),
             ),
             ListView(
@@ -1249,7 +1194,7 @@ class _CompactNavigationPane extends StatelessWidget {
               shrinkWrap: true,
               physics: const NeverScrollableScrollPhysics(),
               primary: false,
-              children: pane.footerItems.map(_buildItem).toList(),
+              children: pane.footerItems.map(pane._buildItem).toList(),
             ),
           ],
         ),
@@ -1274,66 +1219,6 @@ class _OpenNavigationPane extends StatefulWidget {
   final NavigationPaneThemeData theme;
   final bool initiallyOpen;
   final VoidCallback? onAnimationEnd;
-
-  static Widget buildItem(
-    NavigationPane pane,
-    NavigationPaneItem item, [
-    VoidCallback? onChanged,
-    double? width,
-  ]) {
-    if (width != null && width < kOpenNavigationPaneWidth / 1.5) {
-      return _CompactNavigationPane._buildItem(item);
-    }
-    return Builder(
-      builder: (context) {
-        if (item is PaneItemHeader) {
-          return item.build(context);
-        } else if (item is PaneItemSeparator) {
-          return item.build(context, Axis.horizontal);
-        } else if (item is PaneItemExpander) {
-          final selected = pane.isSelected(item);
-          return _SelectedItemKeyWrapper(
-            isSelected: selected,
-            child: item.build(
-              context: context,
-              selected: selected,
-              onPressed: () {
-                onChanged?.call();
-                pane.changeTo(item);
-              },
-              onItemPressed: (item) {
-                onChanged?.call();
-                pane.changeTo(item);
-              },
-              displayMode: PaneDisplayMode.expanded,
-              itemIndex: pane.effectiveIndexOf(item),
-            ),
-          );
-        } else if (item is PaneItem) {
-          final selected = pane.isSelected(item);
-          return _SelectedItemKeyWrapper(
-            isSelected: selected,
-            child: item.build(
-              context: context,
-              selected: selected,
-              onPressed: () {
-                pane.changeTo(item);
-                onChanged?.call();
-              },
-              displayMode: PaneDisplayMode.expanded,
-              itemIndex: pane.effectiveIndexOf(item),
-            ),
-          );
-        } else if (item is PaneItemWidgetAdapter) {
-          return item.build(context);
-        } else {
-          throw UnsupportedError(
-            '${item.runtimeType} is not a supported pane item type.',
-          );
-        }
-      },
-    );
-  }
 
   @override
   State<_OpenNavigationPane> createState() => _OpenNavigationPaneState();
@@ -1442,12 +1327,7 @@ class _OpenNavigationPaneState extends State<_OpenNavigationPane> {
                   primary: true,
                   itemCount: widget.pane.items.length,
                   itemBuilder: (context, index) {
-                    return _OpenNavigationPane.buildItem(
-                      widget.pane,
-                      widget.pane.items[index],
-                      widget.onItemSelected,
-                      width,
-                    );
+                    return widget.pane._buildItem(widget.pane.items[index]);
                   },
                 ),
               ),
@@ -1458,12 +1338,7 @@ class _OpenNavigationPaneState extends State<_OpenNavigationPane> {
                 physics: const NeverScrollableScrollPhysics(),
                 itemCount: widget.pane.footerItems.length,
                 itemBuilder: (context, index) {
-                  return _OpenNavigationPane.buildItem(
-                    widget.pane,
-                    widget.pane.footerItems[index],
-                    widget.onItemSelected,
-                    width,
-                  );
+                  return widget.pane._buildItem(widget.pane.footerItems[index]);
                 },
               ),
             ],

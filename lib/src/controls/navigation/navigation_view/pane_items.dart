@@ -4,7 +4,7 @@ part of 'view.dart';
 ///
 /// Subclasses include [PaneItem], [PaneItemSeparator], [PaneItemHeader],
 /// [PaneItemAction], [PaneItemExpander], and [PaneItemWidgetAdapter].
-class NavigationPaneItem with Diagnosticable {
+abstract class NavigationPaneItem with Diagnosticable {
   /// The key used for the item itself.
   ///
   /// See also:
@@ -23,6 +23,11 @@ class NavigationPaneItem with Diagnosticable {
 
   /// Creates a navigation pane item.
   NavigationPaneItem({this.key});
+
+  MenuFlyoutItemBase buildMenuFlyoutItem(
+    BuildContext context, [
+    ValueChanged<PaneItem>? onItemPressed,
+  ]);
 }
 
 /// A widget that provides information about a specific [NavigationPaneItem]
@@ -473,6 +478,18 @@ class PaneItem extends NavigationPaneItem {
       enabled: enabled ?? this.enabled,
     );
   }
+
+  @override
+  MenuFlyoutItemBase buildMenuFlyoutItem(
+    BuildContext context, [
+    ValueChanged<PaneItem>? onItemPressed,
+  ]) {
+    return _MenuFlyoutPaneItem(
+      item: this,
+      onPressed: () => onItemPressed?.call(this),
+      // padding: paneItemPadding,
+    );
+  }
 }
 
 /// Separators for grouping navigation items. Set the color property to
@@ -513,6 +530,14 @@ class PaneItemSeparator extends NavigationPaneItem {
         ),
       ),
     );
+  }
+
+  @override
+  MenuFlyoutItemBase buildMenuFlyoutItem(
+    BuildContext context, [
+    ValueChanged<PaneItem>? onItemPressed,
+  ]) {
+    return const MenuFlyoutSeparator();
   }
 }
 
@@ -561,6 +586,22 @@ class PaneItemHeader extends NavigationPaneItem {
             : TextAlign.left,
         child: header,
       ),
+    );
+  }
+
+  @override
+  MenuFlyoutItemBase buildMenuFlyoutItem(
+    BuildContext context, [
+    ValueChanged<PaneItem>? onItemPressed,
+  ]) {
+    return MenuFlyoutItemBuilder(
+      builder: (context) {
+        final theme = NavigationPaneTheme.of(context);
+        return Padding(
+          padding: theme.headerPadding ?? EdgeInsetsDirectional.zero,
+          child: build(context),
+        );
+      },
     );
   }
 }
@@ -682,6 +723,18 @@ class PaneItemExpander extends PaneItem {
         initiallyExpanded: initiallyExpanded,
         depth: depth,
       ),
+    );
+  }
+
+  @override
+  MenuFlyoutItemBase buildMenuFlyoutItem(
+    BuildContext context, [
+    ValueChanged<PaneItem>? onItemPressed,
+  ]) {
+    return _MenuFlyoutPaneItemExpander(
+      item: this,
+      onPressed: () => onItemPressed?.call(this),
+      onItemPressed: onItemPressed ?? (item) {},
     );
   }
 }
@@ -1101,6 +1154,14 @@ class PaneItemWidgetAdapter extends NavigationPaneItem {
           : EdgeInsetsDirectional.zero,
       child: child,
     );
+  }
+
+  @override
+  MenuFlyoutItemBase buildMenuFlyoutItem(
+    BuildContext context, [
+    ValueChanged<PaneItem>? onItemPressed,
+  ]) {
+    return MenuFlyoutItemBuilder(builder: build);
   }
 }
 

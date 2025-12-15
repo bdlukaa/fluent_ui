@@ -665,11 +665,11 @@ class NavigationViewState extends State<NavigationView> {
         return Mica(
           backgroundColor: theme.backgroundColor,
           child: NavigationViewContext(
-            displayMode: _compactOverlayOpen
+            displayMode: compactOverlayOpen
                 ? PaneDisplayMode.expanded
                 : _displayMode,
             isMinimalPaneOpen: isMinimalPaneOpen,
-            isCompactOverlayOpen: _compactOverlayOpen,
+            isCompactOverlayOpen: compactOverlayOpen,
             pane: widget.pane,
             previousItemIndex: _previousItemIndex,
             isTransitioning: _isTransitioning,
