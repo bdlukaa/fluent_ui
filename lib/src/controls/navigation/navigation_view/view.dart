@@ -6,12 +6,7 @@ part 'body.dart';
 part 'indicators.dart';
 part 'pane.dart';
 part 'pane_items.dart';
-part 'style.dart';
-
-/// The default size used by the app top bar.
-///
-/// Value eyeballed from Windows 10 v10.0.19041.928
-const double _kDefaultAppBarHeight = 50;
+part 'theme.dart';
 
 /// The minimum height of a pane item.
 const double kPaneItemMinHeight = 40;
@@ -116,7 +111,7 @@ class NavigationView extends StatefulWidget {
   /// Creates a navigation view.
   const NavigationView({
     super.key,
-    this.appBar,
+    this.titleBar,
     this.pane,
     this.content,
     this.clipBehavior = Clip.antiAlias,
@@ -130,8 +125,7 @@ class NavigationView extends StatefulWidget {
          'Either pane or content must be provided',
        );
 
-  /// The app bar of the app.
-  final NavigationAppBar? appBar;
+  final Widget? titleBar;
 
   /// Can be used to override the widget that is built from
   /// the [PaneItem.body]. Only used if [pane] is provided.
@@ -236,7 +230,7 @@ class NavigationView extends StatefulWidget {
   void debugFillProperties(DiagnosticPropertiesBuilder properties) {
     super.debugFillProperties(properties);
     properties
-      ..add(DiagnosticsProperty('appBar', appBar))
+      ..add(DiagnosticsProperty('titleBar', titleBar))
       ..add(DiagnosticsProperty('pane', pane))
       ..add(
         DiagnosticsProperty(
@@ -410,6 +404,15 @@ class NavigationViewState extends State<NavigationView> {
     );
   }
 
+  bool get isTogglePaneButtonVisible {
+    if (widget.pane != null && widget.pane!.toggleable) {
+      return compactOverlayOpen ||
+          isMinimalPaneOpen ||
+          _displayMode == PaneDisplayMode.compact;
+    }
+    return false;
+  }
+
   /// Whether the navigation pane is currently transitioning
   ///
   /// This is useful to prevent the user from interacting with the pane and to
@@ -423,10 +426,6 @@ class NavigationViewState extends State<NavigationView> {
     _isTransitioning = false;
     if (mounted && notify) setState(() {});
   }
-
-  EdgeInsets get appBarPadding => EdgeInsetsDirectional.only(
-    top: widget.appBar?.finalHeight(context) ?? 0.0,
-  ).resolve(Directionality.of(context));
 
   PaneDisplayMode _displayMode = PaneDisplayMode.auto;
 
@@ -518,25 +517,6 @@ class NavigationViewState extends State<NavigationView> {
       builder: (context, consts) {
         _resolveDisplayMode(consts);
 
-        Widget appBar;
-        if (widget.appBar != null) {
-          appBar = _NavigationAppBar(
-            appBar: widget.appBar!,
-            additionalLeading: () {
-              if (widget.pane != null) {
-                return _displayMode == PaneDisplayMode.minimal
-                    ? paneNavigationButton()
-                    : null;
-              }
-            }(),
-          );
-        } else {
-          appBar = LayoutBuilder(
-            builder: (context, constraints) =>
-                SizedBox(width: constraints.maxWidth, height: 0),
-          );
-        }
-
         late Widget paneResult;
         if (widget.pane != null) {
           final pane = widget.pane!;
@@ -553,11 +533,11 @@ class NavigationViewState extends State<NavigationView> {
               builder: (context) {
                 return _NavigationViewPaneScrollConfiguration(
                   controller: paneScrollController,
-                  hasAppBar: widget.appBar != null,
+                  hasTitleBar: widget.titleBar != null,
                   child: pane.customPane!.build(
                     context,
                     NavigationPaneWidgetData(
-                      appBar: appBar,
+                      titleBar: widget.titleBar,
                       content: ClipRect(child: body),
                       listKey: _listKey,
                       paneKey: _panelKey,
@@ -608,14 +588,11 @@ class NavigationViewState extends State<NavigationView> {
                 _isTransitioning = false;
                 paneResult = Column(
                   children: [
-                    appBar,
+                    ?widget.titleBar,
                     _NavigationViewPaneScrollConfiguration(
                       controller: paneScrollController,
-                      hasAppBar: widget.appBar != null,
-                      child: _TopNavigationPane(
-                        pane: pane,
-                        appBar: widget.appBar,
-                      ),
+                      hasTitleBar: widget.titleBar != null,
+                      child: _TopNavigationPane(pane: pane),
                     ),
                     Expanded(child: content),
                   ],
@@ -624,20 +601,19 @@ class NavigationViewState extends State<NavigationView> {
                 paneResult = _buildCompactView(
                   context: context,
                   pane: pane,
-                  appBar: appBar,
                   content: content,
                   constraints: consts,
                 );
               case PaneDisplayMode.expanded:
                 paneResult = Column(
                   children: [
-                    appBar,
+                    ?widget.titleBar,
                     Expanded(
                       child: Row(
                         children: [
                           _NavigationViewPaneScrollConfiguration(
                             controller: paneScrollController,
-                            hasAppBar: widget.appBar != null,
+                            hasTitleBar: widget.titleBar != null,
                             child: _OpenNavigationPane(
                               theme: theme,
                               pane: pane,
@@ -667,13 +643,13 @@ class NavigationViewState extends State<NavigationView> {
                       top: 0,
                       start: 0,
                       end: 0,
-                      height: widget.appBar?.finalHeight(context) ?? 0.0,
+                      height: 38,
                       child: ColoredBox(
                         color: fluentTheme.scaffoldBackgroundColor,
                       ),
                     ),
                     PositionedDirectional(
-                      top: widget.appBar?.finalHeight(context) ?? 0.0,
+                      top: 38,
                       start: 0,
                       end: 0,
                       bottom: 0,
@@ -704,7 +680,7 @@ class NavigationViewState extends State<NavigationView> {
                       },
                       child: _NavigationViewPaneScrollConfiguration(
                         controller: paneScrollController,
-                        hasAppBar: widget.appBar != null,
+                        hasTitleBar: widget.titleBar != null,
                         child: Mica(
                           backgroundColor: theme.overlayBackgroundColor,
                           child: Container(
@@ -718,7 +694,7 @@ class NavigationViewState extends State<NavigationView> {
                             margin: const EdgeInsetsDirectional.symmetric(
                               vertical: 1,
                             ),
-                            padding: appBarPadding,
+                            padding: const EdgeInsetsDirectional.only(top: 38),
                             child: _OpenNavigationPane(
                               theme: theme,
                               pane: pane,
@@ -737,7 +713,7 @@ class NavigationViewState extends State<NavigationView> {
                         ),
                       ),
                     ),
-                    appBar,
+                    ?widget.titleBar,
                   ],
                 );
               default:
@@ -747,7 +723,7 @@ class NavigationViewState extends State<NavigationView> {
         } else if (widget.content != null) {
           paneResult = Column(
             children: [
-              appBar,
+              ?widget.titleBar,
               Expanded(child: widget.content!),
             ],
           );
@@ -766,6 +742,7 @@ class NavigationViewState extends State<NavigationView> {
             pane: widget.pane,
             previousItemIndex: _previousItemIndex,
             isTransitioning: _isTransitioning,
+            isTogglePaneButtonVisible: isTogglePaneButtonVisible,
             child: paneResult,
           ),
         );
@@ -783,7 +760,6 @@ class NavigationViewState extends State<NavigationView> {
   Widget _buildCompactView({
     required final BuildContext context,
     required final NavigationPane pane,
-    required final Widget appBar,
     required final Widget content,
     required final BoxConstraints constraints,
   }) {
@@ -807,13 +783,13 @@ class NavigationViewState extends State<NavigationView> {
     if (noOverlayRequired) {
       return Column(
         children: [
-          appBar,
+          ?widget.titleBar,
           Expanded(
             child: Row(
               children: [
                 _NavigationViewPaneScrollConfiguration(
                   controller: paneScrollController,
-                  hasAppBar: widget.appBar != null,
+                  hasTitleBar: widget.titleBar != null,
                   child: () {
                     if (openedWithoutOverlay) {
                       return Mica(
@@ -826,9 +802,10 @@ class NavigationViewState extends State<NavigationView> {
                           child: _OpenNavigationPane(
                             theme: theme,
                             pane: pane,
-                            onToggle: pane.toggleable
-                                ? toggleCompactOpenMode
-                                : null,
+                            // TODO(bdlukaa): Pane Toggle Button Position
+                            // onToggle: pane.toggleable
+                            //     ? toggleCompactOpenMode
+                            //     : null,
                             initiallyOpen: true,
                             onAnimationEnd: _animationEndCallback,
                           ),
@@ -839,9 +816,10 @@ class NavigationViewState extends State<NavigationView> {
                         key: _overlayKey,
                         child: _CompactNavigationPane(
                           pane: pane,
-                          onToggle: pane.toggleable
-                              ? toggleCompactOpenMode
-                              : null,
+                          onToggle: null,
+                          // onToggle: pane.toggleable
+                          //     ? toggleCompactOpenMode
+                          //     : null,
                           onOpenSearch: widget.onOpenSearch,
                           onAnimationEnd: _animationEndCallback,
                         ),
@@ -860,7 +838,7 @@ class NavigationViewState extends State<NavigationView> {
         children: [
           Padding(
             padding: EdgeInsetsDirectional.only(
-              top: appBarPadding.top,
+              top: 38,
               start: pane.size?.compactWidth ?? kCompactNavigationPaneWidth,
             ),
             child: content,
@@ -879,7 +857,7 @@ class NavigationViewState extends State<NavigationView> {
             ),
           _NavigationViewPaneScrollConfiguration(
             controller: paneScrollController,
-            hasAppBar: widget.appBar != null,
+            hasTitleBar: widget.titleBar != null,
             child: () {
               if (_compactOverlayOpen) {
                 return ClipRect(
@@ -898,7 +876,7 @@ class NavigationViewState extends State<NavigationView> {
                       margin: const EdgeInsetsDirectional.symmetric(
                         vertical: 1,
                       ),
-                      padding: appBarPadding,
+                      padding: const EdgeInsetsDirectional.only(top: 38),
                       child: _OpenNavigationPane(
                         theme: theme,
                         pane: pane,
@@ -914,7 +892,7 @@ class NavigationViewState extends State<NavigationView> {
                   key: _overlayKey,
                   backgroundColor: theme.backgroundColor,
                   child: Padding(
-                    padding: EdgeInsetsDirectional.only(top: appBarPadding.top),
+                    padding: const EdgeInsetsDirectional.only(top: 38),
                     child: _CompactNavigationPane(
                       pane: pane,
                       onToggle: toggleCompactOpenMode,
@@ -926,7 +904,7 @@ class NavigationViewState extends State<NavigationView> {
               }
             }(),
           ),
-          appBar,
+          ?widget.titleBar,
         ],
       );
     }
@@ -936,12 +914,12 @@ class NavigationViewState extends State<NavigationView> {
 class _NavigationViewPaneScrollConfiguration extends StatelessWidget {
   const _NavigationViewPaneScrollConfiguration({
     required this.controller,
-    required this.hasAppBar,
+    required this.hasTitleBar,
     required this.child,
   });
 
   final ScrollController controller;
-  final bool hasAppBar;
+  final bool hasTitleBar;
   final Widget child;
 
   @override
@@ -952,374 +930,10 @@ class _NavigationViewPaneScrollConfiguration extends StatelessWidget {
         behavior: const NavigationViewScrollBehavior(),
         child: MediaQuery.removePadding(
           context: context,
-          removeTop: hasAppBar,
+          removeTop: hasTitleBar,
           child: RepaintBoundary(child: child),
         ),
       ),
-    );
-  }
-}
-
-/// Data passed to [NavigationAppBarLayoutBuilder] for custom layouts.
-class NavigationAppBarData {
-  /// Creates navigation app bar data.
-  const NavigationAppBarData({
-    required this.leading,
-    required this.title,
-    required this.actions,
-    required this.displayMode,
-    required this.additionalLeading,
-  });
-
-  /// The leading widget (typically a back button).
-  final Widget leading;
-
-  /// The title widget.
-  final Widget title;
-
-  /// The actions widget.
-  final Widget? actions;
-
-  /// The current display mode of the navigation pane.
-  final PaneDisplayMode displayMode;
-
-  /// Additional leading widget (e.g., hamburger menu in minimal mode).
-  final Widget? additionalLeading;
-}
-
-/// A builder function for creating custom app bar layouts.
-///
-/// Use this when you need complete control over the app bar layout.
-///
-/// Example:
-/// ```dart
-/// NavigationAppBar(
-///   title: Text('My App'),
-///   layoutBuilder: (context, data) {
-///     return Row(
-///       children: [
-///         data.leading,
-///         Expanded(child: data.title),
-///         if (data.actions != null) data.actions!,
-///       ],
-///     );
-///   },
-/// )
-/// ```
-typedef NavigationAppBarLayoutBuilder =
-    Widget Function(BuildContext context, NavigationAppBarData data);
-
-/// The bar displayed at the top of the app. It can adapt itself to
-/// all the display modes.
-///
-/// The app bar can be customized using the standard properties ([leading],
-/// [title], [actions]), or fully customized using [layoutBuilder] for
-/// complete control over the layout.
-///
-/// See also:
-///
-///   * [NavigationView], which uses this to render the app bar
-class NavigationAppBar with Diagnosticable {
-  /// {@macro flutter.widgets.Widget.key}
-  final Key? key;
-
-  /// The widget at the beggining of the app bar, before [title].
-  ///
-  /// Typically the [leading] widget is an [Icon] or an [IconButton].
-  ///
-  /// If this is null and [automaticallyImplyLeading] is set to true, the
-  /// view will imply an appropriate widget. If  the parent [Navigator] can
-  /// go back, the app bar will use an [IconButton] that calls [Navigator.maybePop].
-  ///
-  /// See also:
-  ///   * [automaticallyImplyLeading], that controls whether we should try to
-  ///     imply the leading widget, if [leading] is null
-  final Widget? leading;
-
-  /// {@macro flutter.material.appbar.automaticallyImplyLeading}
-  final bool automaticallyImplyLeading;
-
-  /// Typically a [Text] widget that contains the app name.
-  final Widget? title;
-
-  /// A list of Widgets to display in a row after the [title] widget.
-  ///
-  /// Typically these widgets are [IconButton]s representing common
-  /// operations.
-  final Widget? actions;
-
-  /// The height of the app bar. [_kDefaultAppBarHeight] is used by default
-  final double height;
-
-  /// The background color of this app bar.
-  ///
-  /// If this is provided, [decoration] must be null.
-  final Color? backgroundColor;
-
-  /// The decoration of this app bar.
-  ///
-  /// If this is provided, [backgroundColor] must be null.
-  final Decoration? decoration;
-
-  /// A builder for creating custom app bar layouts.
-  ///
-  /// When provided, this builder is used instead of the default layout.
-  /// This gives complete control over how the app bar content is arranged.
-  ///
-  /// The builder receives [NavigationAppBarData] containing all the default
-  /// widgets that would normally be displayed, allowing you to rearrange
-  /// or replace them as needed.
-  ///
-  /// Example:
-  /// ```dart
-  /// NavigationAppBar(
-  ///   title: Text('My App'),
-  ///   actions: IconButton(...),
-  ///   layoutBuilder: (context, data) {
-  ///     // Custom centered title layout
-  ///     return Stack(
-  ///       children: [
-  ///         Align(
-  ///           alignment: Alignment.centerLeft,
-  ///           child: Row(
-  ///             mainAxisSize: MainAxisSize.min,
-  ///             children: [
-  ///               data.leading,
-  ///               if (data.additionalLeading != null) data.additionalLeading!,
-  ///             ],
-  ///           ),
-  ///         ),
-  ///         Center(child: data.title),
-  ///         if (data.actions != null)
-  ///           Align(
-  ///             alignment: Alignment.centerRight,
-  ///             child: data.actions,
-  ///           ),
-  ///       ],
-  ///     );
-  ///   },
-  /// )
-  /// ```
-  final NavigationAppBarLayoutBuilder? layoutBuilder;
-
-  /// Creates a windows-styled app bar.
-  const NavigationAppBar({
-    this.key,
-    this.leading,
-    this.title,
-    this.actions,
-    this.automaticallyImplyLeading = true,
-    this.height = _kDefaultAppBarHeight,
-    this.backgroundColor,
-    this.decoration,
-    this.layoutBuilder,
-  }) : assert(
-         (backgroundColor == null && decoration == null) ||
-             (backgroundColor != null && decoration == null) ||
-             (backgroundColor == null && decoration != null),
-         'Only one of backgroundColor or decoration can be provided',
-       );
-
-  @override
-  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
-    super.debugFillProperties(properties);
-    properties
-      ..add(
-        FlagProperty(
-          'automatically imply leading',
-          value: automaticallyImplyLeading,
-          ifFalse: 'do not imply leading',
-          defaultValue: true,
-        ),
-      )
-      ..add(ColorProperty('backgroundColor', backgroundColor))
-      ..add(DiagnosticsProperty<Decoration>('decoration', decoration))
-      ..add(
-        DoubleProperty('height', height, defaultValue: _kDefaultAppBarHeight),
-      );
-  }
-
-  Widget _buildLeading([bool imply = true]) {
-    return Builder(
-      builder: (context) {
-        late Widget widget;
-        if (leading != null) {
-          widget = leading!;
-        } else if (automaticallyImplyLeading && imply) {
-          final ModalRoute<dynamic>? parentRoute = ModalRoute.of(context);
-          final canPop = parentRoute?.canPop ?? false;
-
-          assert(debugCheckHasFluentLocalizations(context));
-          assert(debugCheckHasFluentTheme(context));
-          final localizations = FluentLocalizations.of(context);
-          final localFluentTheme = FluentTheme.of(context);
-          final onPressed = canPop ? () => Navigator.maybePop(context) : null;
-          widget = NavigationPaneTheme(
-            data: NavigationPaneTheme.of(context).merge(
-              NavigationPaneThemeData(
-                unselectedIconColor: WidgetStateProperty.resolveWith((states) {
-                  if (states.isDisabled) {
-                    return ButtonThemeData.buttonColor(context, states);
-                  }
-                  return ButtonThemeData.uncheckedInputColor(
-                    localFluentTheme,
-                    states,
-                  ).basedOnLuminance();
-                }),
-              ),
-            ),
-            child: Builder(
-              builder: (context) =>
-                  PaneItem(
-                    icon: const WindowsIcon(WindowsIcons.back, size: 14),
-                    title: Text(localizations.backButtonTooltip),
-                    body: const SizedBox.shrink(),
-                  ).build(
-                    context: context,
-                    selected: false,
-                    onPressed: onPressed,
-                    displayMode: PaneDisplayMode.compact,
-                    itemIndex: -1,
-                  ),
-            ),
-          );
-        } else {
-          return const SizedBox.shrink();
-        }
-        return ConstrainedBox(
-          constraints: const BoxConstraints(
-            minWidth: kCompactNavigationPaneWidth,
-          ),
-          child: widget,
-        );
-      },
-    );
-  }
-
-  /// Determines the height of this app bar based on its height and the top
-  /// padding from the system.
-  @visibleForTesting
-  double finalHeight(BuildContext context) {
-    assert(debugCheckHasMediaQuery(context));
-    final topPadding = MediaQuery.paddingOf(context).top;
-    return height + topPadding;
-  }
-}
-
-class _NavigationAppBar extends StatelessWidget {
-  const _NavigationAppBar({
-    required this.appBar,
-    required this.additionalLeading,
-  });
-
-  final NavigationAppBar appBar;
-  final Widget? additionalLeading;
-
-  @override
-  Widget build(BuildContext context) {
-    assert(debugCheckHasMediaQuery(context));
-    assert(debugCheckHasFluentLocalizations(context));
-
-    final displayMode =
-        NavigationView.maybeOf(context)?._displayMode ?? PaneDisplayMode.top;
-    final leading = appBar._buildLeading(displayMode != PaneDisplayMode.top);
-    final title = () {
-      if (appBar.title != null) {
-        assert(debugCheckHasFluentTheme(context));
-        final theme = NavigationPaneTheme.of(context);
-        final fluentTheme = FluentTheme.of(context);
-
-        return AnimatedPadding(
-          duration: theme.animationDuration ?? Duration.zero,
-          curve: theme.animationCurve ?? Curves.linear,
-          padding: (theme.iconPadding ?? EdgeInsetsDirectional.zero).add(
-            const EdgeInsetsDirectional.only(start: 6),
-          ),
-          child: DefaultTextStyle.merge(
-            style: fluentTheme.typography.caption,
-            maxLines: 1,
-            softWrap: false,
-            child: appBar.title!,
-          ),
-        );
-      } else {
-        return const SizedBox.shrink();
-      }
-    }();
-
-    late Widget result;
-
-    // Check if a custom layout builder is provided
-    if (appBar.layoutBuilder != null) {
-      result = appBar.layoutBuilder!(
-        context,
-        NavigationAppBarData(
-          leading: leading,
-          title: title,
-          actions: appBar.actions,
-          displayMode: displayMode,
-          additionalLeading: additionalLeading,
-        ),
-      );
-    } else {
-      // Use default layout based on display mode
-      switch (displayMode) {
-        case PaneDisplayMode.top:
-          result = Stack(
-            children: [
-              Row(
-                children: [
-                  leading,
-                  if (additionalLeading != null) additionalLeading!,
-                  Expanded(child: title),
-                ],
-              ),
-              if (appBar.actions != null)
-                PositionedDirectional(end: 0, child: appBar.actions!),
-            ],
-          );
-        case PaneDisplayMode.minimal:
-        case PaneDisplayMode.expanded:
-        case PaneDisplayMode.compact:
-          result = Stack(
-            children: [
-              Align(
-                alignment: AlignmentDirectional.centerStart,
-                child: Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    leading,
-                    if (additionalLeading != null) additionalLeading!,
-                    Flexible(child: title),
-                  ],
-                ),
-              ),
-              if (appBar.actions != null)
-                PositionedDirectional(
-                  start: 0,
-                  end: 0,
-                  top: 0,
-                  bottom: 0,
-                  child: Align(
-                    alignment: AlignmentDirectional.topEnd,
-                    child: appBar.actions,
-                  ),
-                ),
-            ],
-          );
-        default:
-          return const SizedBox.shrink();
-      }
-    }
-
-    final mediaQueryPadding = MediaQuery.paddingOf(context);
-
-    return Container(
-      color: appBar.backgroundColor,
-      decoration: appBar.decoration,
-      height: appBar.finalHeight(context),
-      padding: EdgeInsetsDirectional.only(top: mediaQueryPadding.top),
-      child: result,
     );
   }
 }

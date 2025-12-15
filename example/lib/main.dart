@@ -170,8 +170,6 @@ class _MyHomePageState extends State<MyHomePage> with WindowListener {
 
   @override
   Widget build(final BuildContext context) {
-    final localizations = FluentLocalizations.of(context);
-
     final appTheme = context.watch<AppTheme>();
     final theme = FluentTheme.of(context);
     if (widget.shellContext != null) {
@@ -181,91 +179,36 @@ class _MyHomePageState extends State<MyHomePage> with WindowListener {
     }
     return NavigationView(
       key: viewKey,
-      appBar: NavigationAppBar(
-        automaticallyImplyLeading: false,
-        leading: () {
-          final enabled = widget.shellContext != null && router.canPop();
-
-          final onPressed = enabled
-              ? () {
-                  if (router.canPop()) {
-                    context.pop();
-                    setState(() {});
-                  }
-                }
-              : null;
-          return NavigationPaneTheme(
-            data: NavigationPaneTheme.of(context).merge(
-              NavigationPaneThemeData(
-                unselectedIconColor: WidgetStateProperty.resolveWith((
-                  final states,
-                ) {
-                  if (states.isDisabled) {
-                    return ButtonThemeData.buttonColor(context, states);
-                  }
-                  return ButtonThemeData.uncheckedInputColor(
-                    FluentTheme.of(context),
-                    states,
-                  ).basedOnLuminance();
-                }),
-              ),
+      titleBar: TitleBar(
+        icon: const FlutterLogo(),
+        title: const Text(appTitle),
+        subtitle: const Text('Preview'),
+        content: ConstrainedBox(
+          constraints: const BoxConstraints(maxWidth: 200),
+          child: Padding(
+            padding: const EdgeInsetsDirectional.symmetric(vertical: 8),
+            child: AutoSuggestBox(
+              items: [
+                AutoSuggestBoxItem(value: 'Home', label: 'Home'),
+                AutoSuggestBoxItem(value: 'Settings', label: 'Settings'),
+                AutoSuggestBoxItem(value: 'About', label: 'About'),
+              ],
             ),
-            child: Builder(
-              builder: (final context) =>
-                  PaneItem(
-                    icon: const Center(
-                      child: WindowsIcon(WindowsIcons.back, size: 12),
-                    ),
-                    title: Text(localizations.backButtonTooltip),
-                    body: const SizedBox.shrink(),
-                    enabled: enabled,
-                  ).build(
-                    context: context,
-                    selected: false,
-                    onPressed: onPressed,
-                    displayMode: PaneDisplayMode.compact,
-                    itemIndex: -1,
-                  ),
-            ),
-          );
-        }(),
-        title: () {
-          if (kIsWeb) {
-            return const Align(
-              alignment: AlignmentDirectional.centerStart,
-              child: Text(appTitle),
-            );
-          }
-          return const DragToMoveArea(
-            child: Align(
-              alignment: AlignmentDirectional.centerStart,
-              child: Text(appTitle),
-            ),
-          );
-        }(),
-        actions: Row(
-          mainAxisAlignment: MainAxisAlignment.end,
-          children: [
-            Align(
-              alignment: AlignmentDirectional.centerEnd,
-              child: Padding(
-                padding: const EdgeInsetsDirectional.only(end: 8),
-                child: ToggleButton(
-                  checked: theme.brightness == Brightness.dark,
-                  onChanged: (final v) {
-                    if (v) {
-                      appTheme.mode = ThemeMode.dark;
-                    } else {
-                      appTheme.mode = ThemeMode.light;
-                    }
-                  },
-                  child: const Text('Dark Mode'),
-                ),
-              ),
-            ),
-            if (!kIsWeb) const WindowButtons(),
-          ],
+          ),
         ),
+        endHeader: ToggleButton(
+          checked: theme.brightness == Brightness.dark,
+          onChanged: (final v) {
+            if (v) {
+              appTheme.mode = ThemeMode.dark;
+            } else {
+              appTheme.mode = ThemeMode.light;
+            }
+          },
+          child: const Text('Dark Mode'),
+        ),
+        captionControls: const WindowButtons(),
+        onDragStarted: !kIsWeb ? windowManager.startDragging : null,
       ),
       pane: NavigationPane(
         selected: _index,
@@ -467,7 +410,11 @@ class _MyHomePageState extends State<MyHomePage> with WindowListener {
         ],
         footerItems: [
           PaneItemSeparator(),
-          PaneItem(title: const Text('Settings'), body: const Settings()),
+          PaneItem(
+            icon: const WindowsIcon(WindowsIcons.settings),
+            title: const Text('Settings'),
+            body: const Settings(),
+          ),
           _LinkPaneItemAction(
             icon: const WindowsIcon(WindowsIcons.code),
             title: const Text('Source code'),

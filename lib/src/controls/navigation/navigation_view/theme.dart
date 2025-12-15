@@ -181,7 +181,9 @@ class NavigationPaneThemeData with Diagnosticable {
       backgroundColor: resources.solidBackgroundFillColorBase,
       overlayBackgroundColor: resources.systemFillColorSolidNeutralBackground,
       highlightColor: highlightColor,
-      itemHeaderTextStyle: typography.bodyStrong,
+      itemHeaderTextStyle: typography.bodyStrong?.copyWith(
+        color: resources.textFillColorSecondary,
+      ),
       selectedTextStyle: WidgetStateProperty.resolveWith((states) {
         return typography.body?.copyWith(
           color: states.isPressed

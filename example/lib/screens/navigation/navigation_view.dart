@@ -1,3 +1,4 @@
+import 'package:example/main.dart';
 import 'package:example/widgets/card_highlight.dart';
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter/foundation.dart';
@@ -278,7 +279,23 @@ NavigationView(
         child: SizedBox(
           height: itemHeight,
           child: NavigationView(
-            appBar: const NavigationAppBar(title: Text('NavigationView')),
+            titleBar: TitleBar(
+              icon: const FlutterLogo(),
+              title: const Text('Windows UI for Flutter'),
+              subtitle: const Text('Preview'),
+              content: ConstrainedBox(
+                constraints: const BoxConstraints(maxWidth: 380),
+                child: AutoSuggestBox(
+                  items: [
+                    AutoSuggestBoxItem(value: 'Home', label: 'Home'),
+                    AutoSuggestBoxItem(value: 'Settings', label: 'Settings'),
+                    AutoSuggestBoxItem(value: 'About', label: 'About'),
+                  ],
+                ),
+              ),
+              endHeader: const FlutterLogo(),
+              captionControls: const WindowButtons(),
+            ),
             onDisplayModeChanged: (final mode) {
               debugPrint('Changed to $mode');
             },
@@ -463,18 +480,9 @@ class NavigationViewShellRoute extends StatelessWidget {
   @override
   Widget build(final BuildContext context) {
     return NavigationView(
-      appBar: NavigationAppBar(
-        title: () {
-          const title = Text('NavigationView');
-
-          if (kIsWeb) return title;
-
-          return const DragToMoveArea(child: title);
-        }(),
-        leading: IconButton(
-          icon: const WindowsIcon(WindowsIcons.back),
-          onPressed: context.pop,
-        ),
+      titleBar: TitleBar(
+        title: const Text('NavigationView'),
+        onDragStarted: !kIsWeb ? windowManager.startDragging : null,
       ),
       content: const ScaffoldPage(
         header: PageHeader(title: Text('New Page')),

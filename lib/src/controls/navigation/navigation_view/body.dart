@@ -186,6 +186,7 @@ class NavigationViewContext extends InheritedWidget {
     required this.pane,
     required this.previousItemIndex,
     required this.isTransitioning,
+    required this.isTogglePaneButtonVisible,
     super.key,
   });
 
@@ -212,6 +213,9 @@ class NavigationViewContext extends InheritedWidget {
   /// When true, interactive features on pane items (like info badges) are
   /// hidden to provide a cleaner transition animation.
   final bool isTransitioning;
+
+  /// Whether the pane toggle button is visible.
+  final bool isTogglePaneButtonVisible;
 
   /// Returns the closest [NavigationViewContext] ancestor, if any.
   static NavigationViewContext? maybeOf(BuildContext context) {

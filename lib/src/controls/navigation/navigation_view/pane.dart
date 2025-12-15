@@ -560,7 +560,7 @@ class NavigationPaneWidgetData {
   /// Creates navigation pane widget data.
   const NavigationPaneWidgetData({
     required this.content,
-    required this.appBar,
+    required this.titleBar,
     required this.scrollController,
     required this.paneKey,
     required this.listKey,
@@ -571,7 +571,7 @@ class NavigationPaneWidgetData {
   final Widget content;
 
   /// The app bar widget.
-  final Widget appBar;
+  final Widget? titleBar;
 
   /// The scroll controller for the pane.
   final ScrollController scrollController;
@@ -620,14 +620,15 @@ class _SelectedItemKeyWrapper extends StatelessWidget {
   }
 }
 
+// TODO(bdlukaa): Adjust pane traversal order
+
 /// Creates a top navigation pane.
 ///
 /// ![Top Pane Anatomy](https://docs.microsoft.com/en-us/windows/uwp/design/controls-and-patterns/images/navview-pane-anatomy-horizontal.png)
 class _TopNavigationPane extends StatefulWidget {
-  _TopNavigationPane({required this.pane, this.appBar}) : super(key: pane.key);
+  _TopNavigationPane({required this.pane}) : super(key: pane.key);
 
   final NavigationPane pane;
-  final NavigationAppBar? appBar;
 
   @override
   State<_TopNavigationPane> createState() => _TopNavigationPaneState();
@@ -808,6 +809,8 @@ class _TopNavigationPaneState extends State<_TopNavigationPane> {
                               previousItemIndex: view.previousItemIndex,
                               pane: view.pane,
                               isTransitioning: view.isTransitioning,
+                              isTogglePaneButtonVisible:
+                                  view.isTogglePaneButtonVisible,
                               child: MenuFlyout(
                                 items: _localItemHold
                                     .sublist(hiddenPaneItems.first)
