@@ -1346,12 +1346,12 @@ class _OpenNavigationPane extends StatefulWidget {
               context: context,
               selected: selected,
               onPressed: () {
-                pane.changeTo(item);
                 onChanged?.call();
+                pane.changeTo(item);
               },
               onItemPressed: (item) {
-                pane.changeTo(item);
                 onChanged?.call();
+                pane.changeTo(item);
               },
               displayMode: PaneDisplayMode.expanded,
               itemIndex: pane.effectiveIndexOf(item),

@@ -366,6 +366,8 @@ class NavigationViewState extends State<NavigationView> {
       _updatePreviousItemIndex(oldWidget.pane?.selected ?? -1);
 
       WidgetsBinding.instance.addPostFrameCallback((_) {
+        // We need to run this after the frame to ensure the [_selectedItemKey]
+        // is attached to correct item.
         ensureSelectedItemVisible();
       });
     }
@@ -382,8 +384,10 @@ class NavigationViewState extends State<NavigationView> {
 
   /// Ensures the selected item is visible in the pane.
   void ensureSelectedItemVisible() {
+    if (!mounted) return;
     final item = _selectedItemKey.currentContext;
     if (item != null) {
+      final theme = FluentTheme.of(context);
       final atEnd =
           (widget.pane!.effectiveItems.length / 2) < widget.pane!.selected!;
 
@@ -392,6 +396,8 @@ class NavigationViewState extends State<NavigationView> {
         alignmentPolicy: atEnd
             ? ScrollPositionAlignmentPolicy.keepVisibleAtEnd
             : ScrollPositionAlignmentPolicy.keepVisibleAtStart,
+        duration: theme.fastAnimationDuration,
+        curve: theme.animationCurve,
       );
     }
   }
@@ -908,12 +914,9 @@ class NavigationViewState extends State<NavigationView> {
                     theme: theme,
                     pane: pane,
                     onItemSelected: () {
-                      WidgetsBinding.instance.addPostFrameCallback((_) {
-                        if (mounted &&
-                            _displayMode == PaneDisplayMode.minimal) {
-                          isMinimalPaneOpen = false;
-                        }
-                      });
+                      if (_displayMode == PaneDisplayMode.minimal) {
+                        isMinimalPaneOpen = false;
+                      }
                     },
                   ),
                 ),
@@ -950,7 +953,7 @@ class NavigationViewState extends State<NavigationView> {
           ),
         );
 
-        if (pane?.acrylicDisabled ?? true) {
+        if (pane?.acrylicDisabled ?? false) {
           widget = DisableAcrylic(child: widget);
         }
 
