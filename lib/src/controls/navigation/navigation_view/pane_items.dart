@@ -119,7 +119,9 @@ class PaneItem extends NavigationPaneItem {
   /// Usually an [Icon] widget
   final Widget? icon;
 
-  /// The info badge used by this item
+  /// The info badge used by this item.
+  ///
+  /// Usually an [InfoBadge] widget.
   final Widget? infoBadge;
 
   /// The trailing widget used by this item. If the current display mode is
@@ -264,14 +266,6 @@ class PaneItem extends NavigationPaneItem {
             : null;
 
         Widget result() {
-          final iconThemeData = IconThemeData(
-            color:
-                textStyle.color ??
-                (selected
-                    ? theme.selectedIconColor?.resolve(states)
-                    : theme.unselectedIconColor?.resolve(states)),
-            size: textStyle.fontSize ?? 16.0,
-          );
           switch (mode) {
             case PaneDisplayMode.compact:
               return Container(
@@ -279,33 +273,22 @@ class PaneItem extends NavigationPaneItem {
                 constraints: const BoxConstraints(
                   minHeight: kPaneItemMinHeight,
                 ),
-                alignment: AlignmentDirectional.center,
+                alignment: AlignmentDirectional.centerStart,
                 padding: theme.iconPadding ?? EdgeInsetsDirectional.zero,
-                child: IconTheme.merge(
-                  data: iconThemeData,
-                  child: Align(
-                    alignment: maybeView.isTransitioning
-                        ? AlignmentDirectional.centerStart
-                        : AlignmentDirectional.center,
-                    child: () {
-                      if (infoBadge != null) {
-                        return Stack(
-                          alignment: AlignmentDirectional.center,
-                          clipBehavior: Clip.none,
-                          children: [
-                            ?icon,
-                            PositionedDirectional(
-                              end: -10,
-                              top: -10,
-                              child: infoBadge!,
-                            ),
-                          ],
-                        );
-                      }
-                      return icon;
-                    }(),
-                  ),
-                ),
+                child: infoBadge != null
+                    ? Stack(
+                        alignment: AlignmentDirectional.center,
+                        clipBehavior: Clip.none,
+                        children: [
+                          ?icon,
+                          PositionedDirectional(
+                            end: -10,
+                            top: -10,
+                            child: infoBadge!,
+                          ),
+                        ],
+                      )
+                    : icon,
               );
             case PaneDisplayMode.minimal:
             case PaneDisplayMode.expanded:
@@ -323,10 +306,7 @@ class PaneItem extends NavigationPaneItem {
                       Padding(
                         padding:
                             theme.iconPadding ?? EdgeInsetsDirectional.zero,
-                        child: IconTheme.merge(
-                          data: iconThemeData,
-                          child: Center(child: icon),
-                        ),
+                        child: Center(child: icon),
                       ),
 
                       Expanded(child: textResult ?? const SizedBox.shrink()),
@@ -356,10 +336,7 @@ class PaneItem extends NavigationPaneItem {
                   children: [
                     Padding(
                       padding: theme.iconPadding ?? EdgeInsetsDirectional.zero,
-                      child: IconTheme.merge(
-                        data: iconThemeData,
-                        child: Center(child: icon),
-                      ),
+                      child: Center(child: icon),
                     ),
                     if (showTextOnTop) ?textResult,
                     if (trailing != null)
@@ -415,16 +392,26 @@ class PaneItem extends NavigationPaneItem {
               }(),
               borderRadius: BorderRadius.circular(4),
             ),
-            child: FocusBorder(
-              focused: states.isFocused,
-              renderOutside: false,
-              child: shouldShowTooltip
-                  ? Tooltip(
-                      richMessage: title?._getProperty<InlineSpan>(),
-                      style: TooltipThemeData(textStyle: baseStyle),
-                      child: result(),
-                    )
-                  : result(),
+            child: IconTheme.merge(
+              data: IconThemeData(
+                color:
+                    textStyle.color ??
+                    (selected
+                        ? theme.selectedIconColor?.resolve(states)
+                        : theme.unselectedIconColor?.resolve(states)),
+                size: textStyle.fontSize ?? 16.0,
+              ),
+              child: FocusBorder(
+                focused: states.isFocused,
+                renderOutside: false,
+                child: shouldShowTooltip
+                    ? Tooltip(
+                        richMessage: title?._getProperty<InlineSpan>(),
+                        style: TooltipThemeData(textStyle: baseStyle),
+                        child: result(),
+                      )
+                    : result(),
+              ),
             ),
           ),
         );

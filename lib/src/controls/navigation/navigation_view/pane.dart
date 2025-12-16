@@ -67,9 +67,10 @@ enum PaneDisplayMode {
 /// When the user taps on a navigation item, [onChanged], if non-null, is called.
 ///
 /// See also:
+///
 ///   * [NavigationView], used alongside this to navigate through pages
 ///   * [PaneDisplayMode], that defines how this pane is rendered
-///   * [NavigationBody], the widget that implement transitions to the pages
+///   * [TitleBar], used to display the title of the pane
 @immutable
 class NavigationPane with Diagnosticable {
   /// Creates a navigation pane.
@@ -89,7 +90,8 @@ class NavigationPane with Diagnosticable {
     this.displayMode = PaneDisplayMode.auto,
     this.toggleable = true,
     this.customPane,
-    this.menuButton,
+    this.toggleButton = const PaneToggleButton(),
+    this.toggleButtonPosition = PaneToggleButtonPreferredPosition.auto,
     this.scrollController,
     this.scrollBehavior,
     this.leading,
@@ -117,8 +119,8 @@ class NavigationPane with Diagnosticable {
 
   /// Whether the pane can be toggled or not.
   ///
-  /// This is used when [displayMode] is [PaneDisplayMode.compact]. If false,
-  /// the pane will always be closed.
+  /// This is used when the current display mod is [PaneDisplayMode.compact].
+  /// If `false`, the pane will always be closed.
   final bool toggleable;
 
   /// Creates a Custom pane that will be used
@@ -126,8 +128,20 @@ class NavigationPane with Diagnosticable {
 
   /// The menu button used by this pane.
   ///
-  /// If null, [buildMenuButton] is used
-  final Widget? menuButton;
+  /// If null, no toggle button will be displayed. [PaneToggleButton] is used by
+  /// default.
+  ///
+  /// See also:
+  ///
+  ///   * [toggleButtonPosition], which defines the preferred position of the toggle button.
+  final Widget? toggleButton;
+
+  /// The position of the toggle button.
+  ///
+  /// See also:
+  ///
+  ///   * [toggleButton], which defines the toggle button to use.
+  final PaneToggleButtonPreferredPosition toggleButtonPosition;
 
   /// The size of the pane in its various mode.
   final NavigationPaneSize? size;
@@ -137,7 +151,7 @@ class NavigationPane with Diagnosticable {
   /// If null, the space it should have taken will be removed from
   /// the pane ([PaneDisplayMode.minimal] and [PaneDisplayMode.expanded] only).
   ///
-  /// Usually a [Text] or an [Image].
+  /// Usually a [Text], [Image] or [Icon].
   ///
   /// ![Top Pane Header](https://docs.microsoft.com/en-us/windows/uwp/design/controls-and-patterns/images/navview-freeform-header-top.png)
   /// ![Left Pane Header](https://docs.microsoft.com/en-us/windows/uwp/design/controls-and-patterns/images/navview-freeform-header-left.png)
@@ -382,7 +396,7 @@ class NavigationPane with Diagnosticable {
         other.key == key &&
         other.displayMode == displayMode &&
         other.customPane == customPane &&
-        other.menuButton == menuButton &&
+        other.toggleButton == toggleButton &&
         other.size == size &&
         other.header == header &&
         listEquals(other.items, items) &&
@@ -402,7 +416,7 @@ class NavigationPane with Diagnosticable {
     return key.hashCode ^
         displayMode.hashCode ^
         customPane.hashCode ^
-        menuButton.hashCode ^
+        toggleButton.hashCode ^
         size.hashCode ^
         header.hashCode ^
         items.hashCode ^
@@ -441,12 +455,12 @@ class NavigationPaneSize with Diagnosticable {
   /// The height of the pane when it's in top mode.
   ///
   /// If null, 40.0 is used.
-  final double? topHeight;
+  final double topHeight;
 
   /// The width of the pane when it's in compact mode.
   ///
   /// If null, 50.0 is used.
-  final double? compactWidth;
+  final double compactWidth;
 
   /// The width of the pane when it's open.
   ///
@@ -456,7 +470,7 @@ class NavigationPaneSize with Diagnosticable {
   ///
   ///  * [openMinWidth]
   ///  * [openMaxWidth]
-  final double? openWidth;
+  final double openWidth;
 
   /// The minimum width of the pane when it's open.
   ///
@@ -477,45 +491,29 @@ class NavigationPaneSize with Diagnosticable {
   /// Only used when NavigationPane mode is open.
   ///
   /// If null, 40.0 is used.
-  final double? headerHeight;
+  final double headerHeight;
 
   /// Creates a navigation pane size.
   const NavigationPaneSize({
-    this.topHeight,
-    this.compactWidth,
-    this.openWidth,
+    this.topHeight = kOneLineTileHeight,
+    this.compactWidth = kCompactNavigationPaneWidth,
+    this.openWidth = kOpenNavigationPaneWidth,
     this.openMinWidth,
     this.openMaxWidth,
-    this.headerHeight,
+    this.headerHeight = kOneLineTileHeight,
   }) : assert(
          openMinWidth == null ||
              openMaxWidth == null ||
              openMinWidth <= openMaxWidth,
          'openMinWidth must be greater than openMaxWidth',
        ),
-       assert(
-         topHeight == null || topHeight >= 0,
-         'topHeight must be greater than 0',
-       ),
-       assert(
-         compactWidth == null || compactWidth >= 0,
-         'compactWidth must be greater than 0',
-       ),
-       assert(
-         headerHeight == null || headerHeight >= 0,
-         'headerHeight must be greater than 0',
-       );
+       assert(topHeight >= 0, 'topHeight must be greater than 0'),
+       assert(compactWidth >= 0, 'compactWidth must be greater than 0'),
+       assert(headerHeight >= 0, 'headerHeight must be greater than 0');
 
-  /// Gets the open pane width with constraints applied.
+  /// Gets the width of the open pane with the constraints applied.
   double get openPaneWidth {
-    var paneWidth = openWidth ?? kOpenNavigationPaneWidth;
-    if (openMaxWidth != null && paneWidth > openMaxWidth!) {
-      paneWidth = openMaxWidth!;
-    }
-    if (openMinWidth != null && paneWidth < openMinWidth!) {
-      paneWidth = openMinWidth!;
-    }
-    return paneWidth;
+    return openWidth.clamp(openMinWidth ?? 0, openMaxWidth ?? double.infinity);
   }
 
   @override
@@ -626,6 +624,8 @@ abstract class NavigationPaneWidget {
   Widget build(BuildContext context, NavigationPaneWidgetData data);
 }
 
+/// Wraps the child in a KeyedSubtree with the selected item key, if the item is
+/// selected.
 class _SelectedItemKeyWrapper extends StatelessWidget {
   const _SelectedItemKeyWrapper({
     required this.child,
@@ -762,7 +762,7 @@ class _TopNavigationPaneState extends State<_TopNavigationPane> {
           previousItemIndex: view.previousItemIndex,
           pane: view.pane,
           isTransitioning: view.isTransitioning,
-          isTogglePaneButtonVisible: view.isTogglePaneButtonVisible,
+          toggleButtonPosition: view.toggleButtonPosition,
           child: MenuFlyout(
             items: _localItemHold.sublist(hiddenPaneItems.first).map((i) {
               final item = widget.pane.items[i];
@@ -1027,10 +1027,8 @@ class _CompactNavigationPane extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            if (pane.menuButton != null)
-              Padding(padding: topPadding, child: pane.menuButton)
-            else if (view.isTogglePaneButtonVisible && !view.hasTitleBar)
-              const Padding(padding: topPadding, child: PaneToggleButton()),
+            if (view.toggleButtonPosition == PaneToggleButtonPosition.pane)
+              Padding(padding: topPadding, child: pane.toggleButton),
             if (showReplacement)
               Padding(
                 padding: topPadding,
@@ -1084,14 +1082,12 @@ class _OpenNavigationPane extends StatefulWidget {
   _OpenNavigationPane({
     required this.pane,
     required this.theme,
-    this.onToggle,
     this.onItemSelected,
     this.initiallyOpen = false,
     this.onAnimationEnd,
   }) : super(key: pane.key);
 
   final NavigationPane pane;
-  final VoidCallback? onToggle;
   final VoidCallback? onItemSelected;
   final NavigationPaneThemeData theme;
   final bool initiallyOpen;
@@ -1117,10 +1113,9 @@ class _OpenNavigationPaneState extends State<_OpenNavigationPane> {
     assert(debugCheckHasFluentTheme(context));
     final view = NavigationView.of(context);
     const EdgeInsetsGeometry topPadding = EdgeInsetsDirectional.only(bottom: 6);
-    final menuButton = widget.pane.menuButton != null
-        ? widget.pane.menuButton!
-        : (view.isTogglePaneButtonVisible && !view.hasTitleBar)
-        ? const PaneToggleButton()
+    final menuButton =
+        view.toggleButtonPosition == PaneToggleButtonPosition.pane
+        ? Padding(padding: topPadding, child: widget.pane.toggleButton)
         : null;
 
     final paneWidth =

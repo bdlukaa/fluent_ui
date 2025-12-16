@@ -24,9 +24,6 @@ class TitleBar extends StatelessWidget {
     this.isBackButtonEnabled,
     this.isBackButtonVisible = true,
     this.backButton,
-    this.isPaneToggleButtonVisible,
-    this.onPaneToggleRequested,
-    this.paneToggleButton,
     this.onBackRequested,
     this.leftHeader,
     this.icon,
@@ -53,22 +50,6 @@ class TitleBar extends StatelessWidget {
   ///
   /// Usually a [PaneBackButton] widget.
   final Widget? backButton;
-
-  /// Whether the pane toggle button is visible.
-  ///
-  /// If not provided, the pane toggle button is visible if the parent
-  /// [NavigationView] allows.
-  final bool? isPaneToggleButtonVisible;
-
-  /// The callback to call when the pane toggle button is pressed.
-  final VoidCallback? onPaneToggleRequested;
-
-  /// The pane toggle button widget.
-  ///
-  /// If provided, [onPaneToggleRequested] will not be called.
-  ///
-  /// Usually a [PaneToggleButton] widget.
-  final Widget? paneToggleButton;
 
   /// The callback to call when the back button is pressed.
   ///
@@ -126,7 +107,7 @@ class TitleBar extends StatelessWidget {
     final view = NavigationView.dataOf(context);
 
     final isPaneToggleButtonVisible =
-        this.isPaneToggleButtonVisible ?? view.isTogglePaneButtonVisible;
+        view.toggleButtonPosition == PaneToggleButtonPosition.titleBar;
 
     return GestureDetector(
       behavior: HitTestBehavior.translucent,
@@ -150,9 +131,7 @@ class TitleBar extends StatelessWidget {
                 children: [
                   if (isBackButtonVisible)
                     backButton ?? PaneBackButton(onPressed: onBackRequested),
-                  if (isPaneToggleButtonVisible)
-                    paneToggleButton ??
-                        PaneToggleButton(onPressed: onPaneToggleRequested),
+                  if (isPaneToggleButtonVisible) ?view.pane?.toggleButton,
                   if (leftHeader != null)
                     Padding(
                       padding: const EdgeInsetsDirectional.only(end: 16),
@@ -549,6 +528,30 @@ class _RenderTitleSubtitleOverflow extends RenderBox
       child = childAfter(child);
     }
   }
+}
+
+/// The preferred position for the pane toggle button.
+enum PaneToggleButtonPreferredPosition {
+  /// Let the [NavigationView] decide what position should be used based on
+  /// the current context.
+  auto,
+
+  /// The pane toggle button is positioned in the pane.
+  pane,
+
+  /// The pane toggle button is positioned in the title bar.
+  titleBar,
+}
+
+enum PaneToggleButtonPosition {
+  /// The pane toggle button is not positioned.
+  none,
+
+  /// The pane toggle button is positioned in the pane.
+  pane,
+
+  /// The pane toggle button is positioned in the title bar.
+  titleBar,
 }
 
 /// A button that toggles the pane navigation.

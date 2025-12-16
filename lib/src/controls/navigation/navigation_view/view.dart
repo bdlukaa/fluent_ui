@@ -247,13 +247,13 @@ class NavigationView extends StatefulWidget {
 }
 
 class NavigationViewState extends State<NavigationView> {
-  /// The scroll controller used to keep the scrolling state of
-  /// the list view when the display mode is switched between open
-  /// and compact, and even keep it for the minimal state.
-  ///
-  /// It's also used to display and control the [Scrollbar] introduced
-  /// by the panes.
   ScrollController? _paneScrollController;
+
+  /// The scroll controller used to keep the scrolling state of the list view
+  /// when the display mode is switched between open and compact, and even keep
+  /// it for the minimal state.
+  ///
+  /// It's also used to display and control the [Scrollbar] introduced by the panes.
   ScrollController get paneScrollController {
     if (widget.pane?.scrollController != null) {
       return widget.pane!.scrollController!;
@@ -382,8 +382,10 @@ class NavigationViewState extends State<NavigationView> {
     super.dispose();
   }
 
-  /// Ensures the selected item is visible in the pane.
-  void ensureSelectedItemVisible() {
+  /// Ensures the current selected item is visible in the pane.
+  ///
+  /// If the item is not visible, this does nothing.
+  void ensureSelectedItemVisible({Duration? duration, Curve? curve}) {
     if (!mounted) return;
     final item = _selectedItemKey.currentContext;
     if (item != null) {
@@ -396,13 +398,18 @@ class NavigationViewState extends State<NavigationView> {
         alignmentPolicy: atEnd
             ? ScrollPositionAlignmentPolicy.keepVisibleAtEnd
             : ScrollPositionAlignmentPolicy.keepVisibleAtStart,
-        duration: theme.fastAnimationDuration,
-        curve: theme.animationCurve,
+        duration: duration ?? theme.fastAnimationDuration,
+        curve: curve ?? theme.animationCurve,
       );
     }
   }
 
-  /// Toggles the current compact mode
+  /// Toggles the compact open mode.
+  ///
+  /// If the compact open mode is already open, it will be closed.
+  /// If the compact open mode is closed, it will be opened.
+  ///
+  /// If the display mode is not compact, this does nothing.
   void toggleCompactOpenMode() {
     if (_displayMode != PaneDisplayMode.compact) return;
     compactOverlayOpen = !compactOverlayOpen;
@@ -411,13 +418,25 @@ class NavigationViewState extends State<NavigationView> {
     );
   }
 
-  /// Toggles the current minimal pane.
+  /// Toggles the minimal pane open mode.
+  ///
+  /// If the minimal pane open mode is already open, it will be closed.
+  /// If the minimal pane open mode is closed, it will be opened.
+  ///
+  /// If the display mode is not minimal, this does nothing.
   void toggleMinimalPane() {
     if (_displayMode != PaneDisplayMode.minimal) return;
     isMinimalPaneOpen = !isMinimalPaneOpen;
   }
 
   /// Toggles the current pane.
+  ///
+  /// This does nothing on top display mode.
+  ///
+  /// See also:
+  ///
+  ///   * [toggleCompactOpenMode], to toggle the compact open mode
+  ///   * [toggleMinimalPane], to toggle the minimal pane open mode
   void togglePane() {
     switch (_displayMode) {
       case PaneDisplayMode.compact:
@@ -431,16 +450,37 @@ class NavigationViewState extends State<NavigationView> {
     }
   }
 
-  /// Whether the toggle pane button should be shown.
-  bool get isTogglePaneButtonVisible {
-    switch (_displayMode) {
-      case PaneDisplayMode.compact:
-      case PaneDisplayMode.minimal:
-        return true;
-      case PaneDisplayMode.expanded:
-      case PaneDisplayMode.top:
-      case PaneDisplayMode.auto:
-        return false;
+  /// The position of the toggle pane button.
+  PaneToggleButtonPosition get toggleButtonPosition {
+    if (widget.pane?.toggleButton == null) return PaneToggleButtonPosition.none;
+    final preferredPosition =
+        widget.pane?.toggleButtonPosition ??
+        PaneToggleButtonPreferredPosition.auto;
+
+    if (hasTitleBar) {
+      switch (displayMode) {
+        case PaneDisplayMode.minimal:
+          return PaneToggleButtonPosition.titleBar;
+        case PaneDisplayMode.compact:
+          switch (preferredPosition) {
+            case PaneToggleButtonPreferredPosition.pane:
+              return PaneToggleButtonPosition.pane;
+            case PaneToggleButtonPreferredPosition.auto:
+            case PaneToggleButtonPreferredPosition.titleBar:
+              return PaneToggleButtonPosition.titleBar;
+          }
+        case PaneDisplayMode.expanded:
+        case PaneDisplayMode.top:
+        case PaneDisplayMode.auto:
+          return PaneToggleButtonPosition.none;
+      }
+    } else {
+      switch (preferredPosition) {
+        case PaneToggleButtonPreferredPosition.pane:
+        case PaneToggleButtonPreferredPosition.titleBar:
+        case PaneToggleButtonPreferredPosition.auto:
+          return PaneToggleButtonPosition.pane;
+      }
     }
   }
 
@@ -455,7 +495,6 @@ class NavigationViewState extends State<NavigationView> {
   ///
   /// This is always false when display mode is top
   bool _isTransitioning = false;
-
   void _animationEndCallback([bool notify = true]) {
     _isTransitioning = false;
     if (mounted && notify) setState(() {});
@@ -528,12 +567,15 @@ class NavigationViewState extends State<NavigationView> {
         late Widget paneResult;
         if (widget.pane != null) {
           final pane = widget.pane!;
-          final body = _NavigationBody(
-            itemKey: ValueKey(pane.selected ?? -1),
-            transitionBuilder: widget.transitionBuilder,
-            paneBodyBuilder: widget.paneBodyBuilder,
-            animationCurve: theme.animationCurve,
-            animationDuration: theme.animationDuration,
+          final body = ClipRect(
+            key: _contentKey,
+            child: _NavigationBody(
+              itemKey: ValueKey(pane.selected ?? -1),
+              transitionBuilder: widget.transitionBuilder,
+              paneBodyBuilder: widget.paneBodyBuilder,
+              animationCurve: theme.animationCurve,
+              animationDuration: theme.animationDuration,
+            ),
           );
 
           if (pane.customPane != null) {
@@ -572,20 +614,17 @@ class NavigationViewState extends State<NavigationView> {
                         ).resolve(direction),
                 );
 
-            final Widget content = ClipRect(
-              key: _contentKey,
-              child: _displayMode == PaneDisplayMode.minimal
-                  ? body
-                  : DecoratedBox(
-                      position: DecorationPosition.foreground,
-                      decoration: ShapeDecoration(shape: contentShape),
-                      child: ClipPath(
-                        clipBehavior: widget.clipBehavior,
-                        clipper: ShapeBorderClipper(shape: contentShape),
-                        child: body,
-                      ),
+            final Widget content = _displayMode == PaneDisplayMode.minimal
+                ? body
+                : DecoratedBox(
+                    position: DecorationPosition.foreground,
+                    decoration: ShapeDecoration(shape: contentShape),
+                    child: ClipPath(
+                      clipBehavior: widget.clipBehavior,
+                      clipper: ShapeBorderClipper(shape: contentShape),
+                      child: body,
                     ),
-            );
+                  );
             if (_displayMode != PaneDisplayMode.expanded) {
               PageStorage.of(
                 context,
@@ -673,7 +712,7 @@ class NavigationViewState extends State<NavigationView> {
             pane: widget.pane,
             previousItemIndex: _previousItemIndex,
             isTransitioning: _isTransitioning,
-            isTogglePaneButtonVisible: isTogglePaneButtonVisible,
+            toggleButtonPosition: toggleButtonPosition,
             child: paneResult,
           ),
         );
@@ -733,10 +772,6 @@ class NavigationViewState extends State<NavigationView> {
                           child: _OpenNavigationPane(
                             theme: theme,
                             pane: pane,
-                            // TODO(bdlukaa): Pane Toggle Button Position
-                            // onToggle: pane.toggleable
-                            //     ? toggleCompactOpenMode
-                            //     : null,
                             initiallyOpen: true,
                             onAnimationEnd: _animationEndCallback,
                           ),
@@ -807,7 +842,6 @@ class NavigationViewState extends State<NavigationView> {
                       child: _OpenNavigationPane(
                         theme: theme,
                         pane: pane,
-                        onToggle: toggleCompactOpenMode,
                         onItemSelected: toggleCompactOpenMode,
                         onAnimationEnd: _animationEndCallback,
                       ),
@@ -1006,7 +1040,6 @@ class NavigationViewScrollBehavior extends FluentScrollBehavior {
   ) {
     return Scrollbar(
       controller: details.controller,
-      thumbVisibility: false,
       interactive: true,
       child: child,
     );

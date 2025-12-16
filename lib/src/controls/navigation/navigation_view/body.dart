@@ -119,11 +119,9 @@ class _NavigationBodyState extends State<_NavigationBody> {
           } else {
             return _KeepAlivePage(
               key: ValueKey('nav_page_${view.pane?.selected}'),
-              child: ExcludeFocus(
-                child: FocusTraversalGroup(
-                  policy: WidgetOrderTraversalPolicy(),
-                  child: view.pane!.selectedItem.body!,
-                ),
+              child: FocusTraversalGroup(
+                policy: WidgetOrderTraversalPolicy(),
+                child: view.pane!.selectedItem.body!,
               ),
             );
           }
@@ -186,7 +184,7 @@ class NavigationViewContext extends InheritedWidget {
     required this.pane,
     required this.previousItemIndex,
     required this.isTransitioning,
-    required this.isTogglePaneButtonVisible,
+    required this.toggleButtonPosition,
     super.key,
   });
 
@@ -214,8 +212,8 @@ class NavigationViewContext extends InheritedWidget {
   /// hidden to provide a cleaner transition animation.
   final bool isTransitioning;
 
-  /// Whether the pane toggle button is visible.
-  final bool isTogglePaneButtonVisible;
+  /// The position of the toggle pane button.
+  final PaneToggleButtonPosition toggleButtonPosition;
 
   /// Returns the closest [NavigationViewContext] ancestor, if any.
   static NavigationViewContext? maybeOf(BuildContext context) {
@@ -236,6 +234,7 @@ class NavigationViewContext extends InheritedWidget {
         oldWidget.isCompactOverlayOpen != isCompactOverlayOpen ||
         oldWidget.pane != pane ||
         oldWidget.previousItemIndex != previousItemIndex ||
-        oldWidget.isTransitioning != isTransitioning;
+        oldWidget.isTransitioning != isTransitioning ||
+        oldWidget.toggleButtonPosition != toggleButtonPosition;
   }
 }
