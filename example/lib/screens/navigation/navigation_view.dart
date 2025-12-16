@@ -297,18 +297,37 @@ NavigationView(
                     subtitle: const Text('Preview'),
                     content: Container(
                       margin: const EdgeInsetsDirectional.symmetric(
-                        vertical: 10,
+                        vertical: 6,
                       ),
                       constraints: const BoxConstraints(maxWidth: 380),
-                      child: AutoSuggestBox(
-                        items: [
-                          AutoSuggestBoxItem(value: 'Home', label: 'Home'),
-                          AutoSuggestBoxItem(
-                            value: 'Settings',
-                            label: 'Settings',
-                          ),
-                          AutoSuggestBoxItem(value: 'About', label: 'About'),
-                        ],
+                      child: Builder(
+                        builder: (context) {
+                          final allItems = NavigationView.dataOf(context)
+                              .pane!
+                              .allItems
+                              .where(
+                                (i) =>
+                                    i is PaneItem &&
+                                    i is! PaneItemExpander &&
+                                    i.body != null &&
+                                    i.enabled,
+                              )
+                              .cast<PaneItem>();
+                          return AutoSuggestBox(
+                            items: [
+                              for (final item in allItems)
+                                AutoSuggestBoxItem<String>(
+                                  value: (item.title! as Text).data,
+                                  label: (item.title! as Text).data!,
+                                  onSelected: () {
+                                    NavigationView.dataOf(
+                                      context,
+                                    ).pane?.changeTo(item);
+                                  },
+                                ),
+                            ],
+                          );
+                        },
                       ),
                     ),
                     endHeader: const FlutterLogo(),
@@ -320,17 +339,10 @@ NavigationView(
             },
             pane: NavigationPane(
               selected: topIndex,
-              onItemPressed: (final index) {
-                // Do anything you want to do, such as:
-                // if (index == topIndex) {
-                //   if (displayMode == PaneDisplayMode.expanded) {
-                //     setState(() => this.displayMode = PaneDisplayMode.compact);
-                //   } else if (displayMode == PaneDisplayMode.compact) {
-                //     setState(() => this.displayMode = PaneDisplayMode.expanded);
-                //   }
-                // }
+              onChanged: (final index) {
+                debugPrint('Changed to $index');
+                setState(() => topIndex = index);
               },
-              onChanged: (final index) => setState(() => topIndex = index),
               displayMode: displayMode,
               indicator: indicators[indicator],
               header: const Text('Pane Header'),
@@ -371,8 +383,6 @@ NavigationView(
                   icon: const WindowsIcon(WindowsIcons.switch_user),
                   title: const Text('Account'),
                   initiallyExpanded: true,
-                  // body is null - clicking only expands/collapses, doesn't navigate
-                  // See: https://github.com/bdlukaa/fluent_ui/issues/1189
                   // ignore: avoid_redundant_argument_values
                   body: null,
                   onTap: () =>

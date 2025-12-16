@@ -18,7 +18,7 @@ abstract class NavigationPaneItem with Diagnosticable {
   ///
   /// See also:
   ///
-  ///   * [PaneItemExpander], which creates hierhical navigation
+  ///   * [PaneItemExpander], which creates hierarchical navigation
   NavigationPaneItem? parent;
 
   /// Creates a navigation pane item.
@@ -81,7 +81,7 @@ class _PaneItemContext extends InheritedWidget {
 ///   * [PaneItemSeparator], used to group navigation items
 ///   * [PaneItemHeader], used to label groups of items.
 ///   * [PaneItemAction], the item used for execute an action on click
-///   * [PaneItemExpander], which creates hierhical navigation
+///   * [PaneItemExpander], which creates hierarchical navigation
 class PaneItem extends NavigationPaneItem {
   /// Creates a pane item.
   PaneItem({
@@ -152,7 +152,7 @@ class PaneItem extends NavigationPaneItem {
 
   /// The color of the tile when selected.
   ///
-  /// If null, [NavigationPaneThemeData.tileColor] with hover state is used.
+  /// If null, [NavigationPaneThemeData.tileColor] with the resolved button state.
   final WidgetStateProperty<Color?>? selectedTileColor;
 
   /// Called when the item is tapped, regardless of selected or not
@@ -528,7 +528,7 @@ class PaneItem extends NavigationPaneItem {
 ///   * [PaneItem], the item used by [NavigationView] to render tiles
 ///   * [PaneItemHeader], used to label groups of items.
 ///   * [PaneItemAction], the item used for execute an action on click
-///   * [PaneItemExpander], which creates hierhical navigation
+///   * [PaneItemExpander], which creates hierarchical navigation
 class PaneItemSeparator extends NavigationPaneItem {
   /// Creates an item separator.
   PaneItemSeparator({super.key, this.color, this.thickness});
@@ -576,7 +576,7 @@ class PaneItemSeparator extends NavigationPaneItem {
 ///   * [PaneItem], the item used by [NavigationView] to render tiles
 ///   * [PaneItemSeparator], used to group navigation items
 ///   * [PaneItemAction], the item used for execute an action on click
-///   * [PaneItemExpander], which creates hierhical navigation
+///   * [PaneItemExpander], which creates hierarchical navigation
 class PaneItemHeader extends NavigationPaneItem {
   /// Creates a pane header.
   PaneItemHeader({required this.header, super.key});
@@ -647,7 +647,7 @@ class PaneItemHeader extends NavigationPaneItem {
 ///   * [PaneItem], the item used by [NavigationView] to render tiles
 ///   * [PaneItemSeparator], used to group navigation items
 ///   * [PaneItemHeader], used to label groups of items.
-///   * [PaneItemExpander], which creates hierhical navigation
+///   * [PaneItemExpander], which creates hierarchical navigation
 class PaneItemAction extends PaneItem {
   /// Creates a pane item action.
   PaneItemAction({
@@ -667,7 +667,7 @@ class PaneItemAction extends PaneItem {
   });
 }
 
-/// Hierhical navigation item used on [NavigationView]
+/// hierarchical navigation item used on [NavigationView]
 ///
 /// Some apps may have a more complex hierarchical structure that requires more
 /// than just a flat list of navigation items. You may want to use top-level
@@ -878,6 +878,8 @@ class __PaneItemExpanderState extends State<_PaneItemExpander>
     setState(() => _open = !_open);
 
     if (hasSelectedChild) {
+      // If the expander has a selected child, update the previous item index
+      //to -1 to prevent the sticky indicator from animating undulately.
       NavigationView.of(context)._updatePreviousItemIndex(-1);
     }
 
@@ -952,9 +954,9 @@ class __PaneItemExpanderState extends State<_PaneItemExpander>
     super.build(context);
     assert(debugCheckHasFluentTheme(context));
     final theme = FluentTheme.of(context);
-    final body = NavigationViewContext.of(context);
+    final view = NavigationViewContext.of(context);
 
-    final expanderIndex = body.pane!.effectiveIndexOf(widget.item);
+    final expanderIndex = view.pane!.effectiveIndexOf(widget.item);
     final isExpanderSelected = widget.selected;
 
     final expanderWidget = _ForceShowIndicator(
@@ -1001,7 +1003,7 @@ class __PaneItemExpanderState extends State<_PaneItemExpander>
       return expanderWidget;
     }
 
-    final displayMode = body.displayMode;
+    final displayMode = view.displayMode;
     switch (displayMode) {
       case PaneDisplayMode.expanded:
       case PaneDisplayMode.minimal:
@@ -1020,52 +1022,10 @@ class __PaneItemExpanderState extends State<_PaneItemExpander>
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: widget.items.map((childItem) {
                           final childDepth = widget.depth + 1;
-                          if (childItem is PaneItemExpander) {
-                            return childItem.build(
-                              context: context,
-                              selected: body.pane!.isSelected(childItem),
-                              onPressed: () {
-                                if (childItem.body != null) {
-                                  widget.onItemPressed?.call(childItem);
-                                }
-                              },
-                              displayMode: widget.displayMode,
-                              showTextOnTop: widget.showTextOnTop,
-                              onItemPressed: widget.onItemPressed,
-                              itemIndex: body.pane!.effectiveIndexOf(childItem),
-                              depth: childDepth,
-                            );
-                          } else if (childItem is PaneItem) {
-                            return ClipRect(
-                              child: childItem.build(
-                                context: context,
-                                selected: body.pane!.isSelected(childItem),
-                                onPressed: () {
-                                  widget.onItemPressed?.call(childItem);
-                                },
-                                displayMode: widget.displayMode,
-                                showTextOnTop: widget.showTextOnTop,
-                                itemIndex: body.pane!.effectiveIndexOf(
-                                  childItem,
-                                ),
-                                depth: childDepth,
-                              ),
-                            );
-                          } else if (childItem is PaneItemHeader) {
-                            return childItem.build(context, depth: childDepth);
-                          } else if (childItem is PaneItemSeparator) {
-                            return childItem.build(
-                              context,
-                              widget.displayMode == PaneDisplayMode.top
-                                  ? Axis.vertical
-                                  : Axis.horizontal,
-                              depth: childDepth,
-                            );
-                          } else {
-                            throw UnsupportedError(
-                              '${childItem.runtimeType} is not a supported item type',
-                            );
-                          }
+                          return view.pane!._buildItem(
+                            childItem,
+                            depth: childDepth,
+                          );
                         }).toList(),
                       ),
                     ),
@@ -1149,7 +1109,7 @@ class _PaneItemExpanderMenuItem extends MenuFlyoutItemBase {
 ///   * [PaneItem], the item used by [NavigationView] to render tiles
 ///   * [PaneItemSeparator], used to group navigation items
 ///   * [PaneItemAction], the item used for execute an action on click
-///   * [PaneItemExpander], which creates hierhical navigation
+///   * [PaneItemExpander], which creates hierarchical navigation
 class PaneItemWidgetAdapter extends NavigationPaneItem {
   /// Creates a pane header.
   PaneItemWidgetAdapter({

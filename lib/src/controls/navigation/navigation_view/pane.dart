@@ -349,7 +349,7 @@ class NavigationPane with Diagnosticable {
     return result;
   }
 
-  Widget _buildItem(NavigationPaneItem item) {
+  Widget _buildItem(NavigationPaneItem item, {int depth = 0}) {
     return Builder(
       builder: (context) {
         if (item is PaneItemHeader) {
@@ -368,12 +368,11 @@ class NavigationPane with Diagnosticable {
               child: item.build(
                 context: context,
                 selected: selected,
-                onPressed: () {
-                  changeTo(item);
-                },
+                onPressed: () => changeTo(item),
                 displayMode: view.displayMode,
                 itemIndex: index,
                 showTextOnTop: !footerItems.contains(item),
+                depth: depth,
               ),
             ),
           );

@@ -172,11 +172,6 @@ class _MyHomePageState extends State<MyHomePage> with WindowListener {
   Widget build(final BuildContext context) {
     final appTheme = context.watch<AppTheme>();
     final theme = FluentTheme.of(context);
-    if (widget.shellContext != null) {
-      if (router.canPop() == false) {
-        setState(() {});
-      }
-    }
     return NavigationView(
       key: viewKey,
       titleBar: TitleBar(
@@ -186,12 +181,30 @@ class _MyHomePageState extends State<MyHomePage> with WindowListener {
           constraints: const BoxConstraints(maxWidth: 200),
           child: Padding(
             padding: const EdgeInsetsDirectional.symmetric(vertical: 8),
-            child: AutoSuggestBox(
-              items: [
-                AutoSuggestBoxItem(value: 'Home', label: 'Home'),
-                AutoSuggestBoxItem(value: 'Settings', label: 'Settings'),
-                AutoSuggestBoxItem(value: 'About', label: 'About'),
-              ],
+            child: Builder(
+              builder: (context) {
+                final allItems = NavigationView.dataOf(context).pane!.allItems
+                    .where(
+                      (i) =>
+                          i is PaneItem &&
+                          i is! PaneItemExpander &&
+                          i.body != null &&
+                          i.enabled,
+                    )
+                    .cast<PaneItem>();
+                return AutoSuggestBox<PaneItem>(
+                  onSelected: (item) {
+                    NavigationView.dataOf(context).pane?.changeTo(item.value!);
+                  },
+                  items: [
+                    for (final item in allItems)
+                      AutoSuggestBoxItem<PaneItem>(
+                        value: item,
+                        label: (item.title! as Text).data!,
+                      ),
+                  ],
+                );
+              },
             ),
           ),
         ),
@@ -211,6 +224,10 @@ class _MyHomePageState extends State<MyHomePage> with WindowListener {
       ),
       pane: NavigationPane(
         selected: _index,
+        onChanged: (index) {
+          debugPrint('Changed to $index');
+          setState(() => _index = index);
+        },
         header: SizedBox(
           height: kOneLineTileHeight,
           child: ShaderMask(
@@ -235,7 +252,7 @@ class _MyHomePageState extends State<MyHomePage> with WindowListener {
               return const StickyNavigationIndicator();
           }
         }(),
-        onChanged: (index) => setState(() => _index = index),
+
         items: [
           PaneItem(
             icon: const WindowsIcon(WindowsIcons.home),
