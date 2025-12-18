@@ -1,4 +1,4 @@
-import 'package:example/widgets/card_highlight.dart';
+import 'package:example/widgets/code_snippet_card.dart';
 import 'package:example/widgets/page.dart';
 import 'package:fluent_ui/fluent_ui.dart';
 
@@ -24,7 +24,7 @@ class _CheckBoxPageState extends State<CheckBoxPage> with PageMixin {
           "CheckBox controls let the user select a combination of binary options. In contrast, RadioButton controls allow the user to select from mutually exclusive options. The indeterminate state is used to indicate that an option is set for some, but not all, child options. Don't allow users to set an indeterminate state directly to indicate a third option.",
         ),
         subtitle(content: const Text('A 2-state Checkbox')),
-        CardHighlight(
+        CodeSnippetCard(
           codeSnippet: '''
 bool checked = false;
 
@@ -55,7 +55,7 @@ Checkbox(
           ),
         ),
         subtitle(content: const Text('A 3-state Checkbox')),
-        CardHighlight(
+        CodeSnippetCard(
           codeSnippet: '''
 bool checked = false;
 

@@ -3,8 +3,8 @@ import 'package:flutter/services.dart';
 import 'package:flutter_syntax_view/flutter_syntax_view.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-class CardHighlight extends StatefulWidget {
-  const CardHighlight({
+class CodeSnippetCard extends StatefulWidget {
+  const CodeSnippetCard({
     required this.child,
     required this.codeSnippet,
     super.key,
@@ -21,11 +21,11 @@ class CardHighlight extends StatefulWidget {
   final bool initiallyOpen;
 
   @override
-  State<CardHighlight> createState() => _CardHighlightState();
+  State<CodeSnippetCard> createState() => _CodeSnippetCardState();
 }
 
-class _CardHighlightState extends State<CardHighlight>
-    with AutomaticKeepAliveClientMixin<CardHighlight> {
+class _CodeSnippetCardState extends State<CodeSnippetCard>
+    with AutomaticKeepAliveClientMixin<CodeSnippetCard> {
   late bool isOpen = widget.initiallyOpen;
   bool isCopying = false;
 
@@ -71,7 +71,7 @@ class _CardHighlightState extends State<CardHighlight>
               trailing: isOpen
                   ? Container(
                       height: 31,
-                      constraints: const BoxConstraints(minWidth: 75),
+                      constraints: const BoxConstraints(minWidth: 80),
                       child: Button(
                         style: ButtonStyle(
                           backgroundColor: isCopying
@@ -82,21 +82,24 @@ class _CardHighlightState extends State<CardHighlight>
                                 )
                               : null,
                         ),
-                        child: isCopying
-                            ? Icon(
-                                FluentIcons.check_mark,
-                                color: theme
-                                    .resources
-                                    .textOnAccentFillColorPrimary,
-                                size: 18,
-                              )
-                            : const Row(
-                                children: [
-                                  WindowsIcon(WindowsIcons.copy),
-                                  SizedBox(width: 6),
-                                  Text('Copy'),
-                                ],
-                              ),
+                        child: AnimatedSwitcher(
+                          duration: const Duration(milliseconds: 200),
+                          child: isCopying
+                              ? Icon(
+                                  FluentIcons.check_mark,
+                                  color: theme
+                                      .resources
+                                      .textOnAccentFillColorPrimary,
+                                  size: 18,
+                                )
+                              : const Row(
+                                  children: [
+                                    WindowsIcon(WindowsIcons.copy),
+                                    SizedBox(width: 6),
+                                    Text('Copy'),
+                                  ],
+                                ),
+                        ),
                         onPressed: () {
                           Clipboard.setData(
                             ClipboardData(text: widget.codeSnippet),
@@ -121,9 +124,32 @@ class _CardHighlightState extends State<CardHighlight>
                 borderRadius: const BorderRadius.vertical(
                   bottom: Radius.circular(6),
                 ),
-                child: SyntaxView(
-                  code: widget.codeSnippet.trim(),
-                  syntaxTheme: getSyntaxTheme(theme),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  spacing: 8,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Column(
+                      spacing: 4,
+                      children: [
+                        const Text('Dart'),
+                        Container(
+                          height: 3,
+                          width: 10,
+                          decoration: BoxDecoration(
+                            color: theme.accentColor.defaultBrushFor(
+                              theme.brightness,
+                            ),
+                            borderRadius: BorderRadius.circular(100),
+                          ),
+                        ),
+                      ],
+                    ),
+                    SyntaxView(
+                      code: widget.codeSnippet.trim(),
+                      syntaxTheme: getSyntaxTheme(theme),
+                    ),
+                  ],
                 ),
               ),
             ),

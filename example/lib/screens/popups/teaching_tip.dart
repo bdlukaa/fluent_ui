@@ -1,5 +1,5 @@
 import 'package:example/theme.dart';
-import 'package:example/widgets/card_highlight.dart';
+import 'package:example/widgets/code_snippet_card.dart';
 import 'package:example/widgets/page.dart';
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:provider/provider.dart';
@@ -68,7 +68,7 @@ class _TeachingTipPageState extends State<TeachingTipPage> with PageMixin {
         subtitle(
           content: const Text('Show a non-targeted TeachingTip with buttons.'),
         ),
-        CardHighlight(
+        CodeSnippetCard(
           codeSnippet:
               '''final flyoutController = FlyoutController();
 
@@ -172,7 +172,7 @@ showTeachingTip(
           ),
         ),
         subtitle(content: const Text('Show a targeted TeachingTip.')),
-        CardHighlight(
+        CodeSnippetCard(
           codeSnippet:
               '''final flyoutController = FlyoutController();
 

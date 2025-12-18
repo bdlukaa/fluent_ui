@@ -3,18 +3,17 @@ import 'dart:math';
 import 'package:example/widgets/page.dart';
 import 'package:fluent_ui/fluent_ui.dart';
 
-import '../../widgets/card_highlight.dart';
+import '../../widgets/code_snippet_card.dart';
 
-class ProgressIndicatorsPage extends StatefulWidget {
-  const ProgressIndicatorsPage({super.key});
+class ProgressRingPage extends StatefulWidget {
+  const ProgressRingPage({super.key});
 
   @override
-  State<ProgressIndicatorsPage> createState() => _ProgressIndicatorsPageState();
+  State<ProgressRingPage> createState() => _ProgressRingPageState();
 }
 
-class _ProgressIndicatorsPageState extends State<ProgressIndicatorsPage>
-    with PageMixin {
-  double determinateValue = Random().nextDouble() * 100;
+class _ProgressRingPageState extends State<ProgressRingPage> with PageMixin {
+  int determinateValue = Random().nextInt(100);
   @override
   Widget build(final BuildContext context) {
     return ScaffoldPage.scrollable(
@@ -35,18 +34,9 @@ class _ProgressIndicatorsPageState extends State<ProgressIndicatorsPage>
             'completion time is unknown.',
           ),
         ),
-        const CardHighlight(
-          codeSnippet: '''
-// indeterminate progress bar
-ProgressBar(),
-
-// indeterminate progress ring
-ProgressRing(),''',
-          child: RepaintBoundary(
-            child: Row(
-              children: [ProgressBar(), SizedBox(width: 20), ProgressRing()],
-            ),
-          ),
+        const CodeSnippetCard(
+          codeSnippet: 'ProgressRing()',
+          child: RepaintBoundary(child: Row(children: [ProgressRing()])),
         ),
         subtitle(content: const Text('Determinate Progress Indicators')),
         description(
@@ -56,26 +46,26 @@ ProgressRing(),''',
             "its progress should not block the user's interaction with the app.",
           ),
         ),
-        CardHighlight(
-          codeSnippet:
-              '''// determinate progress bar
-ProgressBar(value: ${determinateValue.toInt()}),
-
-// determinate progress ring
-ProgressRing(value: ${determinateValue.toInt()}),''',
+        CodeSnippetCard(
+          codeSnippet: 'ProgressRing(value: $determinateValue)',
           child: Row(
+            spacing: 20,
             children: [
-              ProgressBar(value: determinateValue),
-              const SizedBox(width: 20),
-              ProgressRing(value: determinateValue),
-              const Spacer(),
-              InfoLabel(
-                label: 'Progress: ${determinateValue.toInt()}',
-                child: Slider(
-                  value: determinateValue,
-                  onChanged: (final v) => setState(() => determinateValue = v),
+              ProgressRing(value: determinateValue.toDouble()),
+              Flexible(
+                child: InfoLabel(
+                  label: 'Progress',
+                  child: NumberBox<int>(
+                    value: determinateValue,
+                    min: 0,
+                    max: 100,
+                    onChanged: (final v) =>
+                        setState(() => determinateValue = v ?? 0),
+                    mode: SpinButtonPlacementMode.inline,
+                  ),
                 ),
               ),
+              const Spacer(),
             ],
           ),
         ),

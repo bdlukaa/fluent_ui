@@ -1,4 +1,4 @@
-import 'package:example/widgets/card_highlight.dart';
+import 'package:example/widgets/code_snippet_card.dart';
 import 'package:example/widgets/page.dart';
 import 'package:fluent_ui/fluent_ui.dart';
 
@@ -37,7 +37,7 @@ class _AutoSuggestBoxPageState extends State<AutoSuggestBoxPage>
           'for providing relevant suggestions for this control to display.',
         ),
         subtitle(content: const Text('A basic AutoSuggestBox')),
-        CardHighlight(
+        CodeSnippetCard(
           codeSnippet: r'''
 String? selectedCat;
 
@@ -107,7 +107,7 @@ const cats = <String>[
             ' AutoSuggestBox can be used as a replacement of a ComboBox.',
           ),
         ),
-        CardHighlight(
+        CodeSnippetCard(
           codeSnippet: r'''
 class Cat {
   final int id;
@@ -194,7 +194,7 @@ const objectCats = [
             'the overlay is visible, you can use the "isOverlayVisible" property',
           ),
         ),
-        CardHighlight(
+        CodeSnippetCard(
           codeSnippet: r'''
 final asgbKey = GlobalKey<AutoSuggestBoxState>(
   debugLabel: 'Manually controlled AutoSuggestBox',

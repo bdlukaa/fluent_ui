@@ -1,4 +1,4 @@
-import 'package:example/widgets/card_highlight.dart';
+import 'package:example/widgets/code_snippet_card.dart';
 import 'package:example/widgets/page.dart';
 import 'package:fluent_ui/fluent_ui.dart';
 
@@ -43,7 +43,7 @@ class _DatePickerPageState extends State<DatePickerPage> with PageMixin {
           "other UI; it doesn't push other UI out of the way.",
         ),
         subtitle(content: const Text('A simple DatePicker with a header')),
-        CardHighlight(
+        CodeSnippetCard(
           codeSnippet: '''
 DateTime? selected;
 
@@ -99,7 +99,7 @@ DatePicker(
           ),
         ),
         subtitle(content: const Text('A DatePicker with year hidden')),
-        CardHighlight(
+        CodeSnippetCard(
           codeSnippet: '''
 DateTime? selected;
 
@@ -125,7 +125,7 @@ DatePicker(
           ),
         ),
         subtitle(content: const Text('A DatePicker with flex layout')),
-        CardHighlight(
+        CodeSnippetCard(
           codeSnippet: '''
 DateTime? selected;
 

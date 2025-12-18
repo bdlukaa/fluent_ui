@@ -1,4 +1,4 @@
-import 'package:example/widgets/card_highlight.dart';
+import 'package:example/widgets/code_snippet_card.dart';
 import 'package:example/widgets/page.dart';
 import 'package:fluent_ui/fluent_ui.dart';
 
@@ -23,7 +23,7 @@ class _MenuBarPageState extends State<MenuBarPage> with PageMixin {
           'A MenuBar is a horizontal list of items that can be clicked to show a menu flyout. It is used to provide a list of options to the user.',
         ),
         subtitle(content: const Text('A simple MenuBar')),
-        CardHighlight(
+        CodeSnippetCard(
           codeSnippet: '''
 var _orientation = 'landscape';
 var _iconSize = 'medium_icons';''
@@ -89,7 +89,7 @@ MenuBar(
             'MenuBar with submenus, separators and radio items',
           ),
         ),
-        CardHighlight(
+        CodeSnippetCard(
           codeSnippet: '''
 var _orientation = 'landscape';
 var _iconSize = 'medium_icons';''
@@ -260,7 +260,7 @@ MenuBar(
             'You can open a MenuBar programatically using a global key.',
           ),
         ),
-        CardHighlight(
+        CodeSnippetCard(
           codeSnippet: '''
 final key = GlobalKey<MenuBarState>();
 

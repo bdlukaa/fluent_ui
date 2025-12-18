@@ -1,5 +1,5 @@
-import 'package:example/widgets/card_highlight.dart';
 import 'package:example/widgets/changelog.dart';
+import 'package:example/widgets/code_snippet_card.dart';
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:url_launcher/link.dart';
 
@@ -47,7 +47,7 @@ class _HomePageState extends State<HomePage> with PageMixin {
         ),
       ),
       children: [
-        CardHighlight(
+        CodeSnippetCard(
           initiallyOpen: true,
           codeSnippet: '''
 import 'package:fluent_ui/fluent_ui.dart';

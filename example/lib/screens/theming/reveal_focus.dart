@@ -1,6 +1,6 @@
 import 'dart:math';
 
-import 'package:example/widgets/card_highlight.dart';
+import 'package:example/widgets/code_snippet_card.dart';
 import 'package:fluent_ui/fluent_ui.dart' hide Page;
 
 import '../../widgets/page.dart';
@@ -33,7 +33,7 @@ class RevealFocusPage extends StatelessWidget with PageMixin {
             ),
           ),
           subtitle(content: const Text('Enabling reveal focus')),
-          CardHighlight(
+          CodeSnippetCard(
             codeSnippet: '''
 FocusTheme(
   data: FocusThemeData(

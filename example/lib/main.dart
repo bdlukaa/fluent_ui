@@ -97,6 +97,7 @@ class MyApp extends StatelessWidget {
             focusTheme: FocusThemeData(
               glowFactor: is10footScreen(context) ? 2.0 : 0.0,
             ),
+            fontFamily: kIsWeb ? 'Segoe UI' : null,
           ),
           theme: FluentThemeData(
             accentColor: appTheme.color,
@@ -104,6 +105,7 @@ class MyApp extends StatelessWidget {
             focusTheme: FocusThemeData(
               glowFactor: is10footScreen(context) ? 2.0 : 0.0,
             ),
+            fontFamily: kIsWeb ? 'Segoe UI' : null,
           ),
           locale: appTheme.locale,
           builder: (final context, final child) {
@@ -396,7 +398,7 @@ class _MyHomePageState extends State<MyHomePage> with WindowListener {
               ),
               PaneItem(
                 title: const Text('ProgressRing'),
-                body: surfaces.ProgressIndicatorsPage(),
+                body: surfaces.ProgressRingPage(),
               ),
               PaneItem(
                 title: const Text('ProgressBar'),
@@ -435,7 +437,6 @@ class _MyHomePageState extends State<MyHomePage> with WindowListener {
             icon: const WindowsIcon(WindowsIcons.code),
             title: const Text('Source code'),
             link: 'https://github.com/bdlukaa/fluent_ui',
-            body: const SizedBox.shrink(),
           ),
         ],
       ),
@@ -494,12 +495,7 @@ class WindowButtons extends StatelessWidget {
 }
 
 class _LinkPaneItemAction extends PaneItem {
-  _LinkPaneItemAction({
-    required super.icon,
-    required this.link,
-    required super.body,
-    super.title,
-  });
+  _LinkPaneItemAction({required super.icon, required this.link, super.title});
 
   final String link;
 
@@ -746,7 +742,7 @@ final router = GoRouter(
           path: '/surfaces/progress_indicators',
           builder: (final context, final state) => DeferredWidget(
             surfaces.loadLibrary,
-            () => surfaces.ProgressIndicatorsPage(),
+            () => surfaces.ProgressRingPage(),
           ),
         ),
 

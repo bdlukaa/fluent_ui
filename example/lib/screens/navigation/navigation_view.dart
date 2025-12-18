@@ -1,5 +1,5 @@
 import 'package:example/main.dart';
-import 'package:example/widgets/card_highlight.dart';
+import 'package:example/widgets/code_snippet_card.dart';
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter/foundation.dart';
 import 'package:go_router/go_router.dart';
@@ -162,7 +162,7 @@ class _NavigationViewPageState extends State<NavigationViewPage>
       ),
       subtitle(content: Text(title)),
       description(content: Text(desc)),
-      CardHighlight(
+      CodeSnippetCard(
         codeSnippet: '''
 // Do not define the `items` inside the `Widget Build` function
 // otherwise on running `setstate`, new item can not be added.

@@ -1,4 +1,4 @@
-import 'package:example/widgets/card_highlight.dart';
+import 'package:example/widgets/code_snippet_card.dart';
 import 'package:example/widgets/page.dart';
 import 'package:fluent_ui/fluent_ui.dart';
 
@@ -41,7 +41,7 @@ class _CalendarViewPageState extends State<CalendarViewPage> with PageMixin {
           'Selections are updated instantly as users interact with the calendar, and you can respond to changes through callbacks in your app.',
         ),
         subtitle(content: const Text('A basic calendar View')),
-        CardHighlight(
+        CodeSnippetCard(
           codeSnippet:
               '''CalendarView(
   selectionMode: $selectionMode,

@@ -1,4 +1,4 @@
-import 'package:example/widgets/card_highlight.dart';
+import 'package:example/widgets/code_snippet_card.dart';
 import 'package:example/widgets/page.dart';
 import 'package:fluent_ui/fluent_ui.dart';
 
@@ -40,7 +40,7 @@ class _CalendarDatePickerPageState extends State<CalendarDatePickerPage>
           'or to limit available dates.',
         ),
         subtitle(content: const Text('A basic calendar date picker')),
-        CardHighlight(
+        CodeSnippetCard(
           codeSnippet:
               '''CalendarDatePicker(
   onSelectionChanged: (value) {

@@ -1,4 +1,4 @@
-import 'package:example/widgets/card_highlight.dart';
+import 'package:example/widgets/code_snippet_card.dart';
 import 'package:fluent_ui/fluent_ui.dart';
 
 import '../../widgets/page.dart';
@@ -203,7 +203,7 @@ class _CommandBarsPageState extends State<CommandBarsPage> with PageMixin {
         subtitle(
           content: const Text('Command bar with many items (dynamic overflow)'),
         ),
-        CardHighlight(
+        CodeSnippetCard(
           codeSnippet:
               '''final commandBarKey = GlobalKey<CommandBarState>();
 

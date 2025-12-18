@@ -1,4 +1,4 @@
-import 'package:example/widgets/card_highlight.dart';
+import 'package:example/widgets/code_snippet_card.dart';
 import 'package:example/widgets/page.dart';
 import 'package:fluent_ui/fluent_ui.dart';
 
@@ -36,7 +36,7 @@ class _SliderPageState extends State<SliderPage> with PageMixin {
           'the value to 2 or 5.',
         ),
         subtitle(content: const Text('A simple Slider')),
-        CardHighlight(
+        CodeSnippetCard(
           codeSnippet: r'''
 double value = 0;
 
@@ -74,7 +74,7 @@ You can orient your slider horizontally or vertically. Use these guidelines to d
     *   If you're still not sure which orientation to use, use the one that best fits your page layout.''',
           ),
         ),
-        CardHighlight(
+        CodeSnippetCard(
           codeSnippet: r'''
 double value = 0;
 

@@ -1,6 +1,6 @@
 import 'package:example/main.dart';
 import 'package:example/theme.dart';
-import 'package:example/widgets/card_highlight.dart';
+import 'package:example/widgets/code_snippet_card.dart';
 import 'package:example/widgets/page.dart';
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter/gestures.dart';
@@ -113,7 +113,7 @@ class _Flyout2ScreenState extends State<Flyout2Screen> with PageMixin {
           ),
         ),
         subtitle(content: const Text('A button with a flyout')),
-        CardHighlight(
+        CodeSnippetCard(
           codeSnippet:
               '''FlyoutTarget(
   controller: controller,
@@ -206,7 +206,7 @@ class _Flyout2ScreenState extends State<Flyout2Screen> with PageMixin {
             'position at the top of the app window).',
           ),
         ),
-        CardHighlight(
+        CodeSnippetCard(
           codeSnippet:
               '''final menuController = FlyoutController();
 
@@ -379,7 +379,7 @@ FlyoutTarget(
             'toggle and radio items.',
           ),
         ),
-        CardHighlight(
+        CodeSnippetCard(
           codeSnippet:
               '''final itemsController = FlyoutController();
 final itemsAttachKey = GlobalKey();
@@ -540,7 +540,7 @@ FlyoutTarget(
             'open the context menu.',
           ),
         ),
-        CardHighlight(
+        CodeSnippetCard(
           codeSnippet: '''
 final contextController = FlyoutController();
 final contextAttachKey = GlobalKey();
