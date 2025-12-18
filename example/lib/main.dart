@@ -97,6 +97,7 @@ class MyApp extends StatelessWidget {
             focusTheme: FocusThemeData(
               glowFactor: is10footScreen(context) ? 2.0 : 0.0,
             ),
+            fontFamily: kIsWeb ? 'Segoe UI' : null,
           ),
           theme: FluentThemeData(
             accentColor: appTheme.color,
@@ -104,6 +105,7 @@ class MyApp extends StatelessWidget {
             focusTheme: FocusThemeData(
               glowFactor: is10footScreen(context) ? 2.0 : 0.0,
             ),
+            fontFamily: kIsWeb ? 'Segoe UI' : null,
           ),
           locale: appTheme.locale,
           builder: (final context, final child) {

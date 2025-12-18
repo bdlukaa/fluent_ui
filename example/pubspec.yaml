@@ -41,6 +41,18 @@ dev_dependencies:
 flutter:
   uses-material-design: true
 
+  fonts:
+    - family: Segoe UI
+      fonts:
+        - asset: fonts/segoeuithis.ttf
+        - asset: fonts/segoeuithibd.ttf
+          weight: 700
+        - asset: fonts/segoeuithisi.ttf
+          style: italic
+        - asset: fonts/segoeuithisz.ttf
+          style: italic
+          weight: 700
+
 flutter_native_splash:
   color: "#000000"
   image: assets/logo.png
