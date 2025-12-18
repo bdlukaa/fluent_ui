@@ -437,7 +437,6 @@ class _MyHomePageState extends State<MyHomePage> with WindowListener {
             icon: const WindowsIcon(WindowsIcons.code),
             title: const Text('Source code'),
             link: 'https://github.com/bdlukaa/fluent_ui',
-            body: const SizedBox.shrink(),
           ),
         ],
       ),
@@ -496,12 +495,7 @@ class WindowButtons extends StatelessWidget {
 }
 
 class _LinkPaneItemAction extends PaneItem {
-  _LinkPaneItemAction({
-    required super.icon,
-    required this.link,
-    required super.body,
-    super.title,
-  });
+  _LinkPaneItemAction({required super.icon, required this.link, super.title});
 
   final String link;
 
