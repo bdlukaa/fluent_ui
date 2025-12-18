@@ -1,6 +1,7 @@
 import 'dart:math';
 
 import 'package:clipboard/clipboard.dart';
+import 'package:collection/collection.dart';
 import 'package:example/screens/settings.dart';
 import 'package:example/screens/theming/typography.dart';
 import 'package:example/widgets/card_highlight.dart';
@@ -82,8 +83,8 @@ class _IconsPageState extends State<IconsPage> {
       _ => 'Icons',
     };
     final iconName = widget.set.entries
-        .firstWhere((final e) => e.value == icon)
-        .key;
+        .firstWhereOrNull((final e) => e.value == icon)
+        ?.key;
 
     return ScaffoldPage(
       header: PageHeader(

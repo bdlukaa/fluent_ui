@@ -181,7 +181,9 @@ class NavigationPaneThemeData with Diagnosticable {
       backgroundColor: resources.solidBackgroundFillColorBase,
       overlayBackgroundColor: resources.systemFillColorSolidNeutralBackground,
       highlightColor: highlightColor,
-      itemHeaderTextStyle: typography.bodyStrong,
+      itemHeaderTextStyle: typography.bodyStrong?.copyWith(
+        color: resources.textFillColorSecondary,
+      ),
       selectedTextStyle: WidgetStateProperty.resolveWith((states) {
         return typography.body?.copyWith(
           color: states.isPressed
@@ -219,8 +221,8 @@ class NavigationPaneThemeData with Diagnosticable {
         );
       }),
       labelPadding: const EdgeInsetsDirectional.only(end: 10),
-      iconPadding: const EdgeInsetsDirectional.symmetric(horizontal: 10),
-      headerPadding: const EdgeInsetsDirectional.only(top: 10),
+      iconPadding: const EdgeInsetsDirectional.symmetric(horizontal: 12),
+      headerPadding: const EdgeInsetsDirectional.symmetric(vertical: 8),
       paneNavigationButtonIcon: FluentIcons.global_nav_button,
     );
   }

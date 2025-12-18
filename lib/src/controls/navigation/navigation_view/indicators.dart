@@ -1,13 +1,33 @@
-// ignore_for_file: use_key_in_widget_constructors
-
 part of 'view.dart';
+
+class _ForceShowIndicator extends InheritedWidget {
+  const _ForceShowIndicator({required super.child, this.forceShow = false});
+
+  final bool forceShow;
+
+  static bool forceShowOf(BuildContext context) {
+    final widget = context
+        .dependOnInheritedWidgetOfExactType<_ForceShowIndicator>();
+    return widget?.forceShow ?? false;
+  }
+
+  @override
+  bool updateShouldNotify(_ForceShowIndicator oldWidget) =>
+      forceShow != oldWidget.forceShow;
+}
 
 /// A indicator used by [NavigationPane] to render the selected
 /// indicator.
-class NavigationIndicator extends StatefulWidget {
+///
+/// The indicator is rendered locally inside each [PaneItem], not globally.
+/// This approach:
+/// - Eliminates memory overhead from storing global coordinates
+/// - Ensures pixel-perfect positioning
+/// - Simplifies the animation logic
+abstract class NavigationIndicator extends StatefulWidget {
   /// Creates a navigation indicator used by [NavigationPane]
   /// to render the selected indicator.
-  const NavigationIndicator({this.curve, this.color, this.duration});
+  const NavigationIndicator({super.key, this.curve, this.color, this.duration});
 
   /// The curve used on the animation, if any
   ///
@@ -30,58 +50,28 @@ class NavigationIndicator extends StatefulWidget {
       ..add(ColorProperty('highlight color', color))
       ..add(DiagnosticsProperty<Duration>('duration', duration));
   }
-
-  @override
-  NavigationIndicatorState createState() => NavigationIndicatorState();
 }
 
 /// The state for a [NavigationIndicator] widget.
 ///
-/// Subclasses can override this to provide custom indicator behavior.
-class NavigationIndicatorState<T extends NavigationIndicator> extends State<T> {
-  /// The offsets of all navigation pane items.
-  Iterable<Offset>? offsets;
-
-  @override
-  void initState() {
-    super.initState();
-    fetch();
-  }
-
-  /// Fetches the current offsets of all pane items.
-  void fetch() {
-    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-      if (!mounted) return;
-
-      final localOffsets = pane.effectiveItems._getPaneItemsOffsets(
-        pane.paneKey,
-      );
-      if (offsets != localOffsets) {
-        offsets = localOffsets;
-        if (mounted) setState(() {});
-      }
-    });
-  }
-
-  /// The current navigation pane from the inherited navigation view.
-  NavigationPane get pane {
-    return InheritedNavigationView.of(context).pane!;
-  }
-
+/// This state is designed to work with local positioning inside each PaneItem,
+/// rather than using global coordinates. This eliminates memory overhead and
+/// ensures pixel-perfect indicator positioning.
+abstract class NavigationIndicatorState<T extends NavigationIndicator>
+    extends State<T> {
   /// The currently selected item index.
   int get selectedIndex {
-    return pane.selected ?? -1;
+    return NavigationView.dataOf(context).pane!.selected ?? -1;
   }
 
   /// Whether the current item is selected.
   bool get isSelected {
-    return pane.isSelected(item);
+    return itemIndex == selectedIndex;
   }
 
   /// The axis of the navigation indicator based on the display mode.
   Axis get axis {
-    if (InheritedNavigationView.maybeOf(context)?.displayMode ==
-        PaneDisplayMode.top) {
+    if (NavigationView.dataOf(context).displayMode == PaneDisplayMode.top) {
       return Axis.vertical;
     }
     return Axis.horizontal;
@@ -89,31 +79,23 @@ class NavigationIndicatorState<T extends NavigationIndicator> extends State<T> {
 
   /// The index of the current item.
   int get itemIndex {
-    return InheritedNavigationView.of(context).currentItemIndex;
+    return _PaneItemContext.of(context).index;
   }
 
   /// The index of the previously selected item.
   int get previousItemIndex {
-    return InheritedNavigationView.of(context).previousItemIndex;
+    return NavigationView.dataOf(context).previousItemIndex;
   }
 
   /// The current pane item.
   PaneItem get item {
-    return pane.effectiveItems[itemIndex];
+    return NavigationView.dataOf(context).pane!.effectiveItems[itemIndex];
   }
 
-  /// The parent of this item, if any
-  PaneItemExpander? get parent {
-    final items = pane.effectiveItems;
-
-    final expandableItems = items.whereType<PaneItemExpander>();
-    if (expandableItems.isEmpty) return null;
-
-    for (final expandable in expandableItems) {
-      if (expandable.items.contains(item)) return expandable;
-    }
-
-    return null;
+  /// Whether this indicator should be visible
+  bool get shouldShow {
+    if (selectedIndex.isNegative) return false;
+    return isSelected;
   }
 
   @override
@@ -123,12 +105,15 @@ class NavigationIndicatorState<T extends NavigationIndicator> extends State<T> {
 }
 
 /// The end navigation indicator
+///
+/// A simple indicator that shows a colored bar at the edge of the selected item.
 class EndNavigationIndicator extends NavigationIndicator {
   /// The color of the indicator when the item is not selected
   final Color unselectedColor;
 
   /// Creates an end navigation indicator.
   const EndNavigationIndicator({
+    super.key,
     super.color,
     this.unselectedColor = Colors.transparent,
   });
@@ -144,6 +129,7 @@ class _EndNavigationIndicatorState
   Widget build(BuildContext context) {
     if (selectedIndex.isNegative) return const SizedBox.shrink();
     assert(debugCheckHasFluentTheme(context));
+    final forceShow = _ForceShowIndicator.forceShowOf(context);
 
     final isTop = axis == Axis.vertical;
     final theme = NavigationPaneTheme.of(context);
@@ -153,20 +139,19 @@ class _EndNavigationIndicatorState
         alignment: isTop
             ? AlignmentDirectional.bottomCenter
             : AlignmentDirectional.centerStart,
-        child: AnimatedSwitcher(
-          duration: const Duration(milliseconds: 75),
-          reverseDuration: Duration.zero,
-          child: Container(
-            key: ValueKey<int>(itemIndex),
-            margin: EdgeInsetsDirectional.symmetric(
-              vertical: isTop ? 0.0 : 10.0,
-              horizontal: isTop ? 10.0 : 0.0,
-            ),
-            width: isTop ? 20.0 : 6.0,
-            height: isTop ? 4.5 : double.infinity,
-            color: itemIndex != selectedIndex
-                ? widget.unselectedColor
-                : widget.color ?? theme.highlightColor,
+        child: AnimatedContainer(
+          duration: const Duration(milliseconds: 150),
+          margin: EdgeInsetsDirectional.symmetric(
+            vertical: isTop ? 0.0 : 10.0,
+            horizontal: isTop ? 12.0 : 0.0,
+          ),
+          width: isTop ? 20.0 : 6.0,
+          height: isTop ? 3.0 : double.infinity,
+          decoration: BoxDecoration(
+            color: isSelected || forceShow
+                ? (widget.color ?? theme.highlightColor)
+                : widget.unselectedColor,
+            borderRadius: BorderRadius.circular(100),
           ),
         ),
       ),
@@ -175,15 +160,34 @@ class _EndNavigationIndicatorState
 }
 
 /// A sticky navigation indicator.
+///
+/// This indicator animates between navigation items with a "sticky" effect,
+/// stretching and contracting smoothly as the selection changes.
+///
+/// ## Behavior
+///
+/// **At rest (not transitioning):**
+/// The indicator is displayed in the center of the selected item with equal
+/// padding on both ends.
+///
+/// **During transition:**
+/// - The **old item's** indicator shrinks towards the new item (padding
+///   increases on the side facing the new item)
+/// - The **new item's** indicator grows from the direction of the old item
+///   (padding decreases on the side facing the old item)
+///
+/// This creates a "sticky" stretching effect as if the indicator is being
+/// pulled from one item to another.
 class StickyNavigationIndicator extends NavigationIndicator {
   /// Creates a sticky navigation indicator.
   const StickyNavigationIndicator({
+    super.key,
     super.curve,
     super.color,
     super.duration,
     this.topPadding = 12.0,
-    this.leftPadding = kPaneItemMinHeight * 0.3,
-    this.indicatorSize = 2.75,
+    this.leftPadding = 10.0,
+    this.indicatorSize = 3.0,
   });
 
   /// The padding used on both horizontal sides of the indicator when the
@@ -195,7 +199,8 @@ class StickyNavigationIndicator extends NavigationIndicator {
   /// The padding used on both vertical sides of the indicator when the current
   /// display mode is not top.
   ///
-  /// Defaults to 10.0
+  /// Defaults to 10.0px, which provides 10px padding on each side for a
+  /// properly sized indicator that matches WinUI3 specifications.
   final double leftPadding;
 
   /// The size of the indicator.
@@ -203,7 +208,7 @@ class StickyNavigationIndicator extends NavigationIndicator {
   /// On top display mode, this represents the height of the indicator. On other
   /// display modes, this represents the width of the indicator.
   ///
-  /// Defaults to 2.0
+  /// Defaults to 3.0px to match WinUI3 NavigationView standard.
   final double indicatorSize;
 
   @override
@@ -213,222 +218,276 @@ class StickyNavigationIndicator extends NavigationIndicator {
 
 class _StickyNavigationIndicatorState
     extends NavigationIndicatorState<StickyNavigationIndicator>
-    with TickerProviderStateMixin, AutomaticKeepAliveClientMixin {
-  static final _kAnimationTween = Tween<double>(begin: 0, end: 1);
+    with TickerProviderStateMixin {
+  /// Controller for animating the indicator shrinking out from the old item.
+  late AnimationController _shrinkController;
 
-  late AnimationController upController;
-  late AnimationController downController;
+  /// Controller for animating the indicator growing into the new item.
+  late AnimationController _growController;
+
+  /// Controller for animating the indicator expanding into the new item.
+  late AnimationController _expandController;
 
   Curve _cachedCurve = Curves.easeInOut;
+  int _cachedPreviousIndex = -1;
+  int _cachedSelectedIndex = -1;
+
+  /// Whether the transition is moving downward in the list.
+  ///
+  /// - `true`: New item is below the old item (moving down)
+  /// - `false`: New item is above the old item (moving up)
+  bool _goingDown = true;
 
   @override
   void initState() {
     super.initState();
-    upController = AnimationController(
+    _shrinkController = AnimationController(
       vsync: this,
-      duration: widget.duration,
+      duration: widget.duration ?? const Duration(milliseconds: 150),
+    );
+    _growController = AnimationController(
+      vsync: this,
+      duration: widget.duration ?? const Duration(milliseconds: 150),
       value: 1,
     );
-    downController = AnimationController(
+    _expandController = AnimationController(
       vsync: this,
-      duration: widget.duration,
-      value: 1,
+      duration: widget.duration ?? const Duration(milliseconds: 150),
+      value: 0,
     );
   }
 
-  Animation<double>? upAnimation;
-  Animation<double>? downAnimation;
-
-  int _old = -1;
-
-  @override
-  void dispose() {
-    upController.dispose();
-    downController.dispose();
-    super.dispose();
-  }
+  bool _isForceShow = false;
+  bool _isAnimatingForceShow = false;
 
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
+
     final theme = FluentTheme.of(context);
     _cachedCurve = widget.curve ?? theme.animationCurve;
-    if (widget.duration == null) {
-      upController.duration = downController.duration =
-          theme.fasterAnimationDuration;
-    }
 
-    animate();
+    final duration = widget.duration ?? theme.slowAnimationDuration;
+    _shrinkController.duration = duration;
+    _growController.duration = duration;
+    _expandController.duration = duration;
+    _updateAnimation();
   }
 
   @override
   void didUpdateWidget(StickyNavigationIndicator oldWidget) {
     super.didUpdateWidget(oldWidget);
     if (widget.duration != oldWidget.duration) {
-      upController.duration = downController.duration = widget.duration;
+      final duration =
+          widget.duration ?? FluentTheme.of(context).fastAnimationDuration;
+      _shrinkController.duration = duration;
+      _growController.duration = duration;
+      _expandController.duration = duration;
     }
     if (widget.curve != oldWidget.curve) {
       _cachedCurve = widget.curve ?? FluentTheme.of(context).animationCurve;
     }
   }
 
-  bool get isShowing {
-    if (itemIndex.isNegative) return false;
+  /// Updates the animation state when selection changes.
+  ///
+  /// This method:
+  /// - Determines the direction of the transition (up or down)
+  /// - Starts the grow animation for the newly selected item
+  /// - Starts the shrink animation for the previously selected item
+  /// - Caches the current state to avoid redundant updates
+  void _updateAnimation() {
+    if (!mounted) return;
 
-    if (itemIndex == selectedIndex) return true;
-    return itemIndex == previousItemIndex && _old != previousItemIndex;
+    final currentPreviousIndex = previousItemIndex;
+    final currentSelectedIndex = selectedIndex;
+
+    if (_cachedPreviousIndex == currentPreviousIndex &&
+        _cachedSelectedIndex == currentSelectedIndex) {
+      return;
+    }
+
+    _goingDown = currentPreviousIndex > currentSelectedIndex;
+
+    if (isSelected) {
+      _growController.forward(from: 0);
+    } else if (itemIndex == currentPreviousIndex &&
+        currentPreviousIndex != currentSelectedIndex) {
+      _shrinkController.forward(from: 0);
+    }
+
+    _cachedPreviousIndex = currentPreviousIndex;
+    _cachedSelectedIndex = currentSelectedIndex;
   }
 
-  bool get isAbove => previousItemIndex < selectedIndex;
-  bool get isBelow => previousItemIndex > selectedIndex;
-
-  Future<void> animate() async {
-    if (!mounted) {
-      return;
-    }
-
-    _old =
-        (PageStorage.of(
-                  context,
-                ).readState(context, identifier: 'previousItemIndex$itemIndex')
-                as num?)
-            ?.toInt() ??
-        _old;
-
-    // do not perform the animation twice
-    if (_old == previousItemIndex) {
-      return;
-    }
-
-    if (isShowing) {
-      if (isBelow) {
-        if (isSelected) {
-          downAnimation = _kAnimationTween.animate(
-            CurvedAnimation(
-              curve: Interval(0.5, 1, curve: _cachedCurve),
-              parent: downController,
-            ),
-          );
-          upAnimation = null;
-          downController.forward(from: 0);
-        } else {
-          upAnimation = _kAnimationTween.animate(
-            CurvedAnimation(curve: _cachedCurve, parent: upController),
-          );
-          downAnimation = null;
-          upController.reverse(from: 1);
-        }
-      } else if (isAbove) {
-        if (isSelected) {
-          upAnimation = _kAnimationTween.animate(
-            CurvedAnimation(
-              curve: Interval(0.5, 1, curve: _cachedCurve),
-              parent: upController,
-            ),
-          );
-          downAnimation = null;
-          upController.forward(from: 0);
-        } else {
-          downAnimation = _kAnimationTween.animate(
-            CurvedAnimation(curve: _cachedCurve, parent: downController),
-          );
-          upAnimation = null;
-          downController.reverse(from: 1);
-        }
+  /// Ensures the force show animation is running.
+  ///
+  /// This method needs to be called at build time.
+  void _ensureForceShowAnimation() {
+    final isForceShow = _ForceShowIndicator.forceShowOf(context);
+    if (isForceShow != _isForceShow) {
+      if (isForceShow) {
+        _isAnimatingForceShow = true;
+        _expandController.forward(from: 0).then((_) {
+          _isAnimatingForceShow = false;
+          if (mounted) setState(() {});
+        });
+      } else {
+        _isAnimatingForceShow = true;
+        _expandController.reverse(from: 1).then((_) {
+          _isAnimatingForceShow = false;
+          if (mounted) setState(() {});
+        });
       }
     }
+    _isForceShow = isForceShow;
+  }
 
-    _old = previousItemIndex;
-    if (mounted) {
-      PageStorage.of(
-        context,
-      ).writeState(context, _old, identifier: 'previousItemIndex$itemIndex');
-      setState(() {});
+  @override
+  void dispose() {
+    _shrinkController.dispose();
+    _growController.dispose();
+    _expandController.dispose();
+    super.dispose();
+  }
+
+  bool get _shouldRender {
+    if (isSelected || _isForceShow || _isAnimatingForceShow) return true;
+    if (selectedIndex.isNegative || previousItemIndex.isNegative) return false;
+    if (itemIndex == previousItemIndex && _shrinkController.isAnimating) {
+      return true;
     }
+    return false;
   }
 
   @override
   Widget build(BuildContext context) {
-    if (offsets == null || !isShowing || selectedIndex.isNegative) {
-      return const SizedBox.shrink();
+    _ensureForceShowAnimation();
+    if (!_shouldRender) {
+      return const IgnorePointer(child: SizedBox.shrink());
     }
 
-    // Ensure it is only kept alive after if it's showing and after the offets
-    // are fetched
-    super.build(context);
     assert(debugCheckHasFluentTheme(context));
-
     final theme = NavigationPaneTheme.of(context);
+    final view = NavigationView.dataOf(context);
+    final itemContext = _PaneItemContext.of(context);
     final isHorizontal = axis == Axis.horizontal;
+    final isVertical = axis == Axis.vertical;
 
     final decoration = BoxDecoration(
       color: widget.color ?? theme.highlightColor,
       borderRadius: BorderRadius.circular(100),
     );
 
-    return SizedBox(
-      height: double.infinity,
-      child: IgnorePointer(
-        child: AnimatedBuilder(
-          animation: Listenable.merge([upController, downController]),
-          child: isHorizontal
-              ? Align(
-                  alignment: AlignmentDirectional.centerStart,
-                  child: Container(
-                    width: widget.indicatorSize,
-                    decoration: decoration,
-                  ),
-                )
-              : Align(
-                  alignment: AlignmentDirectional.bottomCenter,
-                  child: Container(
-                    height: widget.indicatorSize,
-                    decoration: decoration,
-                  ),
-                ),
-          builder: (context, child) {
-            if (!isSelected) {
-              if (upController.status == AnimationStatus.dismissed ||
-                  downController.status == AnimationStatus.dismissed) {
-                return const SizedBox.shrink();
-              }
-            }
-            return Padding(
-              padding: isHorizontal
-                  ? EdgeInsetsDirectional.only(
-                      start: () {
-                        final x = offsets!.elementAt(itemIndex).dx;
-                        if (parent != null) {
-                          final isOpen =
-                              parent!.expanderKey.currentState?._open ?? false;
-                          if (isOpen) {
-                            return x + _PaneItemExpander.leadingPadding.start;
-                          }
+    return IgnorePointer(
+      child: Align(
+        alignment: switch (axis) {
+          Axis.horizontal => AlignmentDirectional.centerStart,
+          Axis.vertical => AlignmentDirectional.bottomCenter,
+        },
+        child: SizedBox(
+          width: isVertical ? kPaneItemTopMinWidth : null,
+          height: isHorizontal ? kPaneItemMinHeight : null,
+          child: LayoutBuilder(
+            builder: (context, constraints) {
+              return AnimatedBuilder(
+                animation: Listenable.merge([
+                  _shrinkController,
+                  _growController,
+                  _expandController,
+                ]),
+                builder: (context, child) {
+                  var topPadding = widget.leftPadding;
+                  var bottomPadding = widget.leftPadding;
 
-                          final parentIndex = pane.effectiveItems.indexOf(
-                            parent!,
-                          );
-                          final parentX = offsets!.elementAt(parentIndex).dx;
-                          return parentX;
-                        }
-                        return x;
-                      }(),
-                      top: widget.leftPadding * (upAnimation?.value ?? 1.0),
-                      bottom:
-                          widget.leftPadding * (downAnimation?.value ?? 1.0),
-                    )
-                  : EdgeInsetsDirectional.only(
-                      start: widget.topPadding * (upAnimation?.value ?? 1.0),
-                      end: widget.topPadding * (downAnimation?.value ?? 1.0),
-                    ),
-              child: child,
-            );
-          },
+                  if (view.displayMode == PaneDisplayMode.minimal) {
+                    // On minimal mode, animation is disabled.
+                    if (itemIndex == previousItemIndex) {
+                      return const SizedBox.shrink();
+                    }
+                  } else if (!_isForceShow && !_isAnimatingForceShow) {
+                    if (isSelected) {
+                      final growAnimation = CurvedAnimation(
+                        parent: _growController,
+                        curve: Interval(0.5, 1, curve: _cachedCurve),
+                      );
+                      final growProgress = growAnimation.value;
+
+                      if (growProgress == 0) {
+                        return const SizedBox.shrink();
+                      }
+
+                      if (_goingDown) {
+                        bottomPadding = widget.leftPadding * growProgress;
+                      } else {
+                        topPadding = widget.leftPadding * growProgress;
+                      }
+                    } else if (itemIndex == previousItemIndex) {
+                      final shrinkAnimation = CurvedAnimation(
+                        parent: _shrinkController,
+                        curve: Interval(0, 0.5, curve: _cachedCurve),
+                      );
+                      final shrinkProgress = shrinkAnimation.value;
+
+                      if (shrinkProgress == 1) {
+                        return const SizedBox.shrink();
+                      }
+
+                      if (_goingDown) {
+                        topPadding =
+                            widget.leftPadding * (1.0 - shrinkProgress);
+                      } else {
+                        bottomPadding =
+                            widget.leftPadding * (1.0 - shrinkProgress);
+                      }
+                    }
+                  } else {
+                    final expandAnimation = CurvedAnimation(
+                      parent: _expandController,
+                      curve: _cachedCurve,
+                    );
+                    final expandProgress = expandAnimation.value;
+                    final tileHeight = constraints.maxHeight;
+                    final distanceToBottom = tileHeight - widget.leftPadding;
+                    topPadding = (distanceToBottom * (1.0 - expandProgress))
+                        .clamp(widget.leftPadding, distanceToBottom);
+                  }
+
+                  return Padding(
+                    padding: isHorizontal
+                        ? EdgeInsetsDirectional.only(
+                            top: topPadding,
+                            bottom: bottomPadding,
+                            start: 6 + (itemContext.depth * 28.0),
+                            end: 6,
+                          )
+                        : EdgeInsetsDirectional.only(
+                            start: topPadding,
+                            end: bottomPadding,
+                          ),
+                    child: child,
+                  );
+                },
+                child: isHorizontal
+                    ? Align(
+                        alignment: AlignmentDirectional.centerStart,
+                        child: Container(
+                          width: widget.indicatorSize,
+                          decoration: decoration,
+                        ),
+                      )
+                    : Align(
+                        alignment: AlignmentDirectional.bottomCenter,
+                        child: Container(
+                          height: widget.indicatorSize,
+                          decoration: decoration,
+                        ),
+                      ),
+              );
+            },
+          ),
         ),
       ),
     );
   }
-
-  @override
-  bool get wantKeepAlive => true;
 }

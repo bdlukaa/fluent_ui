@@ -21,6 +21,25 @@
 - feat: Add latest color resources from Microsoft UI XAML.
 - refactor(perf): Optimize animation handling in Scrollbar, NavigationView, Acrylic and buttons.
 - refactor(perf): Reduce calls to `setState` and frames scheduling in several widgets.
+- **BREAKING CHANGE** `NavigationView` reworked to be more flexible and match the Windows UI 3 specs.
+  - Renamed `PaneDisplayMode.open` to `PaneDisplayMode.expanded`.
+  - Renamed `appBar` to `titleBar`.
+  - Removed `NavigationAppBar` class. Any widget can now be a title bar.
+  - Introduced the `TitleBar` widget, which matches the design and functionality of a Window title bar.
+  - Added `PaneBackButton` widget, a button that allows the user to pop the current route.
+  - Added `PaneToggleButton` widget, a button that opens or close the navigation view pane. ([#1051](https://github.com/bdlukaa/fluent_ui/issues/1051))
+  - Added `NavigationPane.toggleButtonPosition`, which sets the preferred position of the toggle button. ([#669](https://github.com/bdlukaa/fluent_ui/issues/669))
+  - `PaneItem`s are now lazy-loaded, improving overall performance ([#742](https://github.com/bdlukaa/fluent_ui/issues/742))
+  - Updated `StickyNavigationIndicator` animation to match Win UI 3 specs ([#540](https://github.com/bdlukaa/fluent_ui/issues/540))
+  - Updated colors and margins to match Win UI 3 specs ([#1181](https://github.com/bdlukaa/fluent_ui/issues/1181))
+  - `PaneItemExpander` now supports deep nesting ([#1019](https://github.com/bdlukaa/fluent_ui/issues/1019))
+  - `PaneItemExpander` no longer resets itself when the tree is updated. ([#876](https://github.com/bdlukaa/fluent_ui/issues/876))
+  - `PaneItemExpander` doesn't require a body anymore. If no body is provided, the item will not be selectable. ([#1189](https://github.com/bdlukaa/fluent_ui/issues/1189))
+  - Keyboard Navigation was enhanced. Items are visible in the scroll view when focused.
+  - Updated content management to only display the current visible item at once. ([#1101](https://github.com/bdlukaa/fluent_ui/issues/1101))
+  - Expose `NavigationView` important data using `NavigationView.dataOf(context)`
+  - Added `NavigationPane.acrylicDisabled`, which allows disabling acrylic material effect of the pane overlays
+
 
 ## 4.13.0
 
