@@ -1,4 +1,4 @@
-import 'package:example/widgets/card_highlight.dart';
+import 'package:example/widgets/code_snippet_card.dart';
 import 'package:example/widgets/page.dart';
 import 'package:fluent_ui/fluent_ui.dart';
 
@@ -43,7 +43,7 @@ class _BreadcrumbBarPageState extends State<BreadcrumbBarPage> with PageMixin {
           ),
         ),
         subtitle(content: const Text('A BreadcrumbBar control')),
-        CardHighlight(
+        CodeSnippetCard(
           header: Row(
             children: [
               const Expanded(child: Text('Source code')),

@@ -398,7 +398,7 @@ class _MyHomePageState extends State<MyHomePage> with WindowListener {
               ),
               PaneItem(
                 title: const Text('ProgressRing'),
-                body: surfaces.ProgressIndicatorsPage(),
+                body: surfaces.ProgressRingPage(),
               ),
               PaneItem(
                 title: const Text('ProgressBar'),
@@ -742,7 +742,7 @@ final router = GoRouter(
           path: '/surfaces/progress_indicators',
           builder: (final context, final state) => DeferredWidget(
             surfaces.loadLibrary,
-            () => surfaces.ProgressIndicatorsPage(),
+            () => surfaces.ProgressRingPage(),
           ),
         ),
 

@@ -1,7 +1,7 @@
 import 'package:example/widgets/page.dart';
 import 'package:fluent_ui/fluent_ui.dart';
 
-import '../../widgets/card_highlight.dart';
+import '../../widgets/code_snippet_card.dart';
 
 class ExpanderPage extends StatefulWidget {
   const ExpanderPage({super.key});
@@ -52,7 +52,7 @@ class _ExpanderPageState extends State<ExpanderPage> with PageMixin {
             'In this example, the trailing vanishes when the expander is open.',
           ),
         ),
-        CardHighlight(
+        CodeSnippetCard(
           codeSnippet: '''
 Expander(
   leading: RadioButton(
@@ -114,7 +114,7 @@ Expander(
           ),
         ),
         subtitle(content: const Text('Scrollable content')),
-        CardHighlight(
+        CodeSnippetCard(
           codeSnippet: '''
 Expander(
   header: Text('Open to see the scrollable text'),
@@ -148,7 +148,7 @@ Fusce nunc neque, imperdiet id justo non, porttitor finibus massa. Ut quis risus
           ),
         ),
         subtitle(content: const Text('Expander opened programatically')),
-        CardHighlight(
+        CodeSnippetCard(
           codeSnippet:
               '''final expanderKey = GlobalKey<ExpanderState>(debugLabel: 'Expander key');
 

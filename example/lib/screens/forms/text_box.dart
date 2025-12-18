@@ -1,4 +1,4 @@
-import 'package:example/widgets/card_highlight.dart';
+import 'package:example/widgets/code_snippet_card.dart';
 import 'package:example/widgets/page.dart';
 import 'package:fluent_ui/fluent_ui.dart';
 
@@ -21,7 +21,7 @@ class TextBoxPage extends StatelessWidget with PageMixin {
           'enabled by default.',
         ),
         subtitle(content: const Text('A simple TextBox')),
-        const CardHighlight(
+        const CodeSnippetCard(
           codeSnippet: '''TextBox()''',
           child: Row(
             children: [
@@ -36,7 +36,7 @@ class TextBoxPage extends StatelessWidget with PageMixin {
         subtitle(
           content: const Text('A TextBox with a header and placeholder text'),
         ),
-        CardHighlight(
+        CodeSnippetCard(
           codeSnippet: '''
 InfoLabel(
   label: 'Enter your name:',
@@ -55,7 +55,7 @@ InfoLabel(
             'A read-only TextBox with various properties set',
           ),
         ),
-        const CardHighlight(
+        const CodeSnippetCard(
           codeSnippet: '''
 TextBox(
   readOnly: true,
@@ -81,7 +81,7 @@ TextBox(
           ),
         ),
         subtitle(content: const Text('A multi-line TextBox')),
-        const CardHighlight(
+        const CodeSnippetCard(
           codeSnippet: '''
 TextBox(
   maxLines: null,
@@ -89,7 +89,7 @@ TextBox(
           child: TextBox(maxLines: null),
         ),
         subtitle(content: const Text('A big TextBox')),
-        const CardHighlight(
+        const CodeSnippetCard(
           codeSnippet: '''
 SizedBox(
   height: 200.0,
