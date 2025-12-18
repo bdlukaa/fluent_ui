@@ -1,0 +1,754 @@
+{
+  "@@locale": "ug",
+  "backButtonTooltip": "قايتىش",
+  "@backButtonTooltip": {
+    "description": "The tooltip for the back button on [NavigationAppBar]."
+  },
+  "closeButtonLabel": "تاقاش",
+  "@closeButtonLabel": {
+    "description": "Label for \"close\" buttons and menu items."
+  },
+  "searchLabel": "ئىزدەش",
+  "@searchLabel": {
+    "description": "Label for \"search\" text fields."
+  },
+  "closeNavigationTooltip": "يولباشچىنى تاقاش",
+  "@closeNavigationTooltip": {
+    "description": "The tooltip for the toggle navigation button."
+  },
+  "openNavigationTooltip": "يولباشچىنى ئېچىش",
+  "@openNavigationTooltip": {
+    "description": "The tooltip for the toogle navigation button."
+  },
+  "clickToSearch": "ئىزدەش ئۈچۈن بېسىڭ",
+  "@clickToSearch": {
+    "description": "The tooltip for the \"Click to Search\" button."
+  },
+  "modalBarrierDismissLabel": "تاقاش",
+  "@modalBarrierDismissLabel": {
+    "description": "Label read out by accessibility tools (TalkBack or VoiceOver) for a modal barrier to indicate that a tap dismisses the barrier. A modal barrier can for example be found behind an alert or popup to block user interaction with elements behind it."
+  },
+  "minimizeWindowTooltip": "كىچىكلىتىش",
+  "@minimizeWindowTooltip": {
+    "description": "The tooltip used by the \"Minimize\" button on desktop windows."
+  },
+  "restoreWindowTooltip": "ئەسلىگە كەلتۈرۈش",
+  "@restoreWindowTooltip": {
+    "description": "The tooltip used by the \"Restore\" button on desktop windows."
+  },
+  "closeWindowTooltip": "تاقاش",
+  "@closeWindowTooltip": {
+    "description": "The tooltip used by the \"Close\" button on desktop windows."
+  },
+  "dialogLabel": "دىئالوگ",
+  "@dialogLabel": {
+    "description": "The dialog label."
+  },
+  "cutActionLabel": "كېسىش",
+  "@cutActionLabel": {
+    "description": "The label for the cut action on the text selection controls."
+  },
+  "copyActionLabel": "كۆچۈرۈش",
+  "@copyActionLabel": {
+    "description": "The label for the copy action on the text selection controls."
+  },
+  "pasteActionLabel": "چاپلاش",
+  "@pasteActionLabel": {
+    "description": "The label for the paste button on the text selection controls."
+  },
+  "selectAllActionLabel": "ھەممىنى تاللاش",
+  "@selectAllActionLabel": {
+    "description": "The label for the select all button on the text selection controls."
+  },
+  "undoActionLabel": "يېنىۋېلىش",
+  "@undoActionLabel": {
+    "description": "The label for the undo button on the text selection controls."
+  },
+  "newTabLabel": "يېڭى بەتكۈچ قوشۇش",
+  "@newTabLabel": {
+    "description": "The label used by [TabView]'s new button."
+  },
+  "closeTabLabelSuffix": "بەتكۈچنى تاقاش",
+  "@closeTabLabelSuffix": {
+    "description": "The label used by [TabView]'s close button."
+  },
+  "scrollTabBackwardLabel": "بەتكۈچ تىزىملىكىنى ئارقىغا سۈرۈش",
+  "@scrollTabBackwardLabel": {
+    "description": "The label used by [TabView]'s scroll backward button."
+  },
+  "scrollTabForwardLabel": "بەتكۈچ تىزىملىكىنى ئالدىغا سۈرۈش",
+  "@scrollTabForwardLabel": {
+    "description": "The label used by [TabView]'s scroll forward button."
+  },
+  "noResultsFoundLabel": "نەتىجە تېپىلمىدى",
+  "@noResultsFoundLabel": {
+    "description": "The label used by [AutoSuggestBox] when the results can't be found."
+  },
+  "copyActionTooltip": "تاللانغان مەزمۇننى چاپلاش تاختىسىغا كۆچۈرۈش",
+  "@copyActionTooltip": {
+    "description": "The tooltip for the copy action on the text selection controls."
+  },
+  "cutActionTooltip": "تاللانغان مەزمۇننى ئۆچۈرۈپ چاپلاش تاختىسىغا قويۇش",
+  "@cutActionTooltip": {
+    "description": "The tooltip for the cut action on the text selection controls."
+  },
+  "pasteActionTooltip": "چاپلاش تاختىسىدىكى مەزمۇننى نۆۋەتتىكى ئورۇنغا قىستۇرۇش",
+  "@pasteActionTooltip": {
+    "description": "The tooltip for the paste action on the text selection controls."
+  },
+  "selectAllActionTooltip": "بارلىق مەزمۇننى تاللاش",
+  "@selectAllActionTooltip": {
+    "description": "The tooltip for the select all action on the text selection controls."
+  },
+  "undoActionTooltip": "ئاخىرقى مەشغۇلاتنى يېنىۋېلىش",
+  "@undoActionTooltip": {
+    "description": "The tooltip for the undo action on the text selection controls."
+  },
+  "hour": "سائەت",
+  "@hour": {
+    "description": "The text used by [TimePicker] for the hour field."
+  },
+  "minute": "مىنۇت",
+  "@minute": {
+    "description": "The text used by [TimePicker] for the minute field."
+  },
+  "am": "چۈشتىن بۇرۇن",
+  "@am": {
+    "description": "The text used by [TimePicker] for the AM field."
+  },
+  "pm": "چۈشتىن كېيىن",
+  "@pm": {
+    "description": "The text used by [TimePicker] for the PM field."
+  },
+  "month": "ئاي",
+  "@month": {
+    "description": "The text used by [DatePicker] for the month field"
+  },
+  "day": "كۈن",
+  "@day": {
+    "description": "The text used by [DatePicker] for the day field"
+  },
+  "year": "يىل",
+  "@year": {
+    "description": "The text used by [DatePicker] for the year field"
+  },
+  "pickADate": "چېسلا تاللاڭ",
+  "@pickADate": {
+    "description": "The text used by [CalendarDatePicker] to prompt the user to pick a date."
+  },
+  "seeMore": "تېخىمۇ كۆپ",
+  "@seeMore": {
+    "description": "The text used by [CommandBar] to show more items."
+  },
+  "seeLess": "ئاز كۆرسىتىش",
+  "@seeLess": {
+    "description": "The text used by [CommandBar] to show less items."
+  },
+  "redLabel": "قىزىل",
+  "@redLabel": {
+    "description": "Label for red color component in color picker"
+  },
+  "greenLabel": "يېشىل",
+  "@greenLabel": {
+    "description": "Label for green color component in color picker"
+  },
+  "blueLabel": "كۆك",
+  "@blueLabel": {
+    "description": "Label for blue color component in color picker"
+  },
+  "opacityLabel": "سۈزۈكلۈك",
+  "@opacityLabel": {
+    "description": "Label for opacity component in color picker"
+  },
+  "hueLabel": "رەڭ تونى",
+  "@hueLabel": {
+    "description": "Label for hue component in color picker"
+  },
+  "saturationLabel": "توينۇقلۇق",
+  "@saturationLabel": {
+    "description": "Label for saturation component in color picker"
+  },
+  "valueLabel": "قىممەت",
+  "@valueLabel": {
+    "description": "Label for value component in color picker"
+  },
+  "moreText": "تېخىمۇ كۆپ",
+  "@moreText": {
+    "description": "Text for expanding color picker options"
+  },
+  "lessText": "ئاز",
+  "@lessText": {
+    "description": "Text for collapsing color picker options"
+  },
+  "valueSliderTooltip": "قىممىتى {value} ({colorName})",
+  "@valueSliderTooltip": {
+    "placeholders": {
+      "value": {
+        "type": "int"
+      },
+      "colorName": {
+        "type": "String"
+      }
+    }
+  },
+  "alphaSliderTooltip": "{value}% سۈزۈكلۈك",
+  "@alphaSliderTooltip": {
+    "placeholders": {
+      "value": {
+        "type": "int"
+      }
+    }
+  },
+  "colorBlack": "قارا",
+  "@colorBlack": {
+    "description": "The name of the color, Black."
+  },
+  "colorNavy": "توق كۆك",
+  "@colorNavy": {
+    "description": "The name of the color, Navy."
+  },
+  "colorDarkBlue": "توق كۆك",
+  "@colorDarkBlue": {
+    "description": "The name of the color, Dark Blue."
+  },
+  "colorMediumBlue": "كۆك",
+  "@colorMediumBlue": {
+    "description": "The name of the color, Medium Blue."
+  },
+  "colorBlue": "كۆك",
+  "@colorBlue": {
+    "description": "The name of the color, Blue."
+  },
+  "colorDarkGreen": "توق يېشىل",
+  "@colorDarkGreen": {
+    "description": "The name of the color, Dark Green."
+  },
+  "colorGreen": "توق يېشىل",
+  "@colorGreen": {
+    "description": "The name of the color, Green."
+  },
+  "colorTeal": "توق كۆكۈش يېشىل",
+  "@colorTeal": {
+    "description": "The name of the color, Teal."
+  },
+  "colorDarkCyan": "توق كۆكۈش يېشىل",
+  "@colorDarkCyan": {
+    "description": "The name of the color, Dark Cyan."
+  },
+  "colorDeepSkyBlue": "ئاسمان كۆكى",
+  "@colorDeepSkyBlue": {
+    "description": "The name of the color, Deep Sky Blue."
+  },
+  "colorDarkTurquoise": "سۇ كۆكى",
+  "@colorDarkTurquoise": {
+    "description": "The name of the color, Dark Turquoise."
+  },
+  "colorMediumSpringGreen": "يېشىل",
+  "@colorMediumSpringGreen": {
+    "description": "The name of the color, Medium Spring Green."
+  },
+  "colorLime": "يېشىل",
+  "@colorLime": {
+    "description": "The name of the color, Lime."
+  },
+  "colorSpringGreen": "يېشىل",
+  "@colorSpringGreen": {
+    "description": "The name of the color, Spring Green."
+  },
+  "colorCyan": "سۇ كۆكى",
+  "@colorCyan": {
+    "description": "The name of the color, Cyan."
+  },
+  "colorMidnightBlue": "توق كۆك",
+  "@colorMidnightBlue": {
+    "description": "The name of the color, Midnight Blue."
+  },
+  "colorDodgerBlue": "كۆك",
+  "@colorDodgerBlue": {
+    "description": "The name of the color, Dodger Blue."
+  },
+  "colorLightSeaGreen": "كۆكۈش يېشىل",
+  "@colorLightSeaGreen": {
+    "description": "The name of the color, Light Sea Green."
+  },
+  "colorForestGreen": "توق يېشىل",
+  "@colorForestGreen": {
+    "description": "The name of the color, Forest Green."
+  },
+  "colorSeaGreen": "توق يېشىل",
+  "@colorSeaGreen": {
+    "description": "The name of the color, Sea Green."
+  },
+  "colorDarkSlateGray": "توق كۆكۈش يېشىل",
+  "@colorDarkSlateGray": {
+    "description": "The name of the color, Dark Slate Gray."
+  },
+  "colorLimeGreen": "يېشىل",
+  "@colorLimeGreen": {
+    "description": "The name of the color, Lime Green."
+  },
+  "colorMediumSeaGreen": "يېشىل",
+  "@colorMediumSeaGreen": {
+    "description": "The name of the color, Medium Sea Green."
+  },
+  "colorTurquoise": "كۆكۈش يېشىل",
+  "@colorTurquoise": {
+    "description": "The name of the color, Turquoise."
+  },
+  "colorRoyalBlue": "كۆك",
+  "@colorRoyalBlue": {
+    "description": "The name of the color, Royal Blue."
+  },
+  "colorSteelBlue": "كۆكۈش كۈل",
+  "@colorSteelBlue": {
+    "description": "The name of the color, Steel Blue."
+  },
+  "colorDarkSlateBlue": "بىنەپشە",
+  "@colorDarkSlateBlue": {
+    "description": "The name of the color, Dark Slate Blue."
+  },
+  "colorMediumTurquoise": "كۆكۈش يېشىل",
+  "@colorMediumTurquoise": {
+    "description": "The name of the color, Medium Turquoise."
+  },
+  "colorIndigo": "توق بىنەپشە",
+  "@colorIndigo": {
+    "description": "The name of the color, Indigo."
+  },
+  "colorDarkOliveGreen": "توق يېشىل",
+  "@colorDarkOliveGreen": {
+    "description": "The name of the color, Dark Olive Green."
+  },
+  "colorCadetBlue": "كۆكۈش يېشىل",
+  "@colorCadetBlue": {
+    "description": "The name of the color, Cadet Blue."
+  },
+  "colorCornflowerBlue": "كۆك",
+  "@colorCornflowerBlue": {
+    "description": "The name of the color, Cornflower Blue."
+  },
+  "colorMediumAquamarine": "يېشىل",
+  "@colorMediumAquamarine": {
+    "description": "The name of the color, Medium Aquamarine."
+  },
+  "colorDimGray": "كۈل",
+  "@colorDimGray": {
+    "description": "The name of the color, Dim Gray."
+  },
+  "colorSlateBlue": "نىل",
+  "@colorSlateBlue": {
+    "description": "The name of the color, Slate Blue."
+  },
+  "colorOliveDrab": "توق يېشىل",
+  "@colorOliveDrab": {
+    "description": "The name of the color, Olive Drab."
+  },
+  "colorSlateGray": "كۆكۈش كۈل",
+  "@colorSlateGray": {
+    "description": "The name of the color, Slate Gray."
+  },
+  "colorLightSlateGray": "كۆكۈش كۈل",
+  "@colorLightSlateGray": {
+    "description": "The name of the color, Light Slate Gray."
+  },
+  "colorMediumSlateBlue": "ئوچۇق كۆك",
+  "@colorMediumSlateBlue": {
+    "description": "The name of the color, Medium Slate Blue."
+  },
+  "colorLawnGreen": "يېشىل",
+  "@colorLawnGreen": {
+    "description": "The name of the color, Lawn Green."
+  },
+  "colorChartreuse": "يېشىل",
+  "@colorChartreuse": {
+    "description": "The name of the color, Chartreuse."
+  },
+  "colorAquamarine": "ئوچۇق يېشىل",
+  "@colorAquamarine": {
+    "description": "The name of the color, Aquamarine."
+  },
+  "colorMaroon": "توق قىزىل",
+  "@colorMaroon": {
+    "description": "The name of the color, Maroon."
+  },
+  "colorPurple": "توق بىنەپشە",
+  "@colorPurple": {
+    "description": "The name of the color, Purple."
+  },
+  "colorOlive": "توق سېرىق",
+  "@colorOlive": {
+    "description": "The name of the color, Olive."
+  },
+  "colorGray": "كۈل",
+  "@colorGray": {
+    "description": "The name of the color, Gray."
+  },
+  "colorSkyBlue": "ئوچۇق ئاسمان كۆكى",
+  "@colorSkyBlue": {
+    "description": "The name of the color, Sky Blue."
+  },
+  "colorLightSkyBlue": "ئوچۇق كۆك",
+  "@colorLightSkyBlue": {
+    "description": "The name of the color, Light Sky Blue."
+  },
+  "colorBlueViolet": "بىنەپشە",
+  "@colorBlueViolet": {
+    "description": "The name of the color, Blue Violet."
+  },
+  "colorDarkRed": "توق قىزىل",
+  "@colorDarkRed": {
+    "description": "The name of the color, Dark Red."
+  },
+  "colorDarkMagenta": "توق بىنەپشە",
+  "@colorDarkMagenta": {
+    "description": "The name of the color, Dark Magenta."
+  },
+  "colorSaddleBrown": "قوڭۇر",
+  "@colorSaddleBrown": {
+    "description": "The name of the color, Saddle Brown."
+  },
+  "colorDarkSeaGreen": "يېشىل",
+  "@colorDarkSeaGreen": {
+    "description": "The name of the color, Dark Sea Green."
+  },
+  "colorLightGreen": "ئوچۇق يېشىل",
+  "@colorLightGreen": {
+    "description": "The name of the color, Light Green."
+  },
+  "colorMediumPurple": "سۇسۇن بىنەپشە",
+  "@colorMediumPurple": {
+    "description": "The name of the color, Medium Purple."
+  },
+  "colorDarkViolet": "بىنەپشە",
+  "@colorDarkViolet": {
+    "description": "The name of the color, Dark Violet."
+  },
+  "colorPaleGreen": "ئوچۇق يېشىل",
+  "@colorPaleGreen": {
+    "description": "The name of the color, Pale Green."
+  },
+  "colorDarkOrchid": "بىنەپشە",
+  "@colorDarkOrchid": {
+    "description": "The name of the color, Dark Orchid."
+  },
+  "colorYellowGreen": "يېشىل",
+  "@colorYellowGreen": {
+    "description": "The name of the color, Yellow Green."
+  },
+  "colorSienna": "قوڭۇر سېرىق",
+  "@colorSienna": {
+    "description": "The name of the color, Sienna."
+  },
+  "colorBrown": "قىزىل",
+  "@colorBrown": {
+    "description": "The name of the color, Brown."
+  },
+  "colorDarkGray": "كۈل",
+  "@colorDarkGray": {
+    "description": "The name of the color, Dark Gray."
+  },
+  "colorLightBlue": "ئاسمان كۆكى",
+  "@colorLightBlue": {
+    "description": "The name of the color, Light Blue."
+  },
+  "colorGreenYellow": "يېشىل",
+  "@colorGreenYellow": {
+    "description": "The name of the color, Green Yellow."
+  },
+  "colorPaleTurquoise": "سۇ كۆكى",
+  "@colorPaleTurquoise": {
+    "description": "The name of the color, Pale Turquoise."
+  },
+  "colorLightSteelBlue": "مۇز كۆكى",
+  "@colorLightSteelBlue": {
+    "description": "The name of the color, Light Steel Blue."
+  },
+  "colorPowderBlue": "ئاسمان كۆكى",
+  "@colorPowderBlue": {
+    "description": "The name of the color, Powder Blue."
+  },
+  "colorFirebrick": "قىزىل",
+  "@colorFirebrick": {
+    "description": "The name of the color, Firebrick."
+  },
+  "colorDarkGoldenrod": "توق سېرىق",
+  "@colorDarkGoldenrod": {
+    "description": "The name of the color, Dark Goldenrod."
+  },
+  "colorMediumOrchid": "بىنەپشە",
+  "@colorMediumOrchid": {
+    "description": "The name of the color, Medium Orchid."
+  },
+  "colorRosyBrown": "مەرجان",
+  "@colorRosyBrown": {
+    "description": "The name of the color, Rosy Brown."
+  },
+  "colorDarkKhaki": "قوڭۇر سېرىق",
+  "@colorDarkKhaki": {
+    "description": "The name of the color, Dark Khaki."
+  },
+  "colorSilver": "ئوچۇق كۈل",
+  "@colorSilver": {
+    "description": "The name of the color, Silver."
+  },
+  "colorMediumVioletRed": "قىزغۇچ",
+  "@colorMediumVioletRed": {
+    "description": "The name of the color, Medium Violet Red."
+  },
+  "colorIndianRed": "قىزىل",
+  "@colorIndianRed": {
+    "description": "The name of the color, Indian Red."
+  },
+  "colorPeru": "قوڭۇر سېرىق",
+  "@colorPeru": {
+    "description": "The name of the color, Peru."
+  },
+  "colorChocolate": "قىزغۇچ سېرىق",
+  "@colorChocolate": {
+    "description": "The name of the color, Chocolate."
+  },
+  "colorTan": "قوڭۇر سېرىق",
+  "@colorTan": {
+    "description": "The name of the color, Tan."
+  },
+  "colorLightGray": "ئوچۇق كۈل",
+  "@colorLightGray": {
+    "description": "The name of the color, Light Gray."
+  },
+  "colorThistle": "سۇسۇن بىنەپشە",
+  "@colorThistle": {
+    "description": "The name of the color, Thistle."
+  },
+  "colorOrchid": "سۇسۇن بىنەپشە",
+  "@colorOrchid": {
+    "description": "The name of the color, Orchid."
+  },
+  "colorGoldenrod": "ئالتۇن",
+  "@colorGoldenrod": {
+    "description": "The name of the color, Goldenrod."
+  },
+  "colorPaleVioletRed": "قىزغۇچ",
+  "@colorPaleVioletRed": {
+    "description": "The name of the color, Pale Violet Red."
+  },
+  "colorCrimson": "قىزىل",
+  "@colorCrimson": {
+    "description": "The name of the color, Crimson."
+  },
+  "colorGainsboro": "ئوچۇق كۈل",
+  "@colorGainsboro": {
+    "description": "The name of the color, Gainsboro."
+  },
+  "colorPlum": "قىزغۇچ",
+  "@colorPlum": {
+    "description": "The name of the color, Plum."
+  },
+  "colorBurlyWood": "قوڭۇر سېرىق",
+  "@colorBurlyWood": {
+    "description": "The name of the color, Burly Wood."
+  },
+  "colorLightCyan": "ئاسمان كۆكى",
+  "@colorLightCyan": {
+    "description": "The name of the color, Light Cyan."
+  },
+  "colorLavender": "ئوچۇق كۆك",
+  "@colorLavender": {
+    "description": "The name of the color, Lavender."
+  },
+  "colorDarkSalmon": "قىزغۇچ",
+  "@colorDarkSalmon": {
+    "description": "The name of the color, Dark Salmon."
+  },
+  "colorViolet": "سۇسۇن بىنەپشە",
+  "@colorViolet": {
+    "description": "The name of the color, Violet."
+  },
+  "colorPaleGoldenrod": "ئوچۇق سېرىق",
+  "@colorPaleGoldenrod": {
+    "description": "The name of the color, Pale Goldenrod."
+  },
+  "colorLightCoral": "قىزغۇچ",
+  "@colorLightCoral": {
+    "description": "The name of the color, Light Coral."
+  },
+  "colorKhaki": "ئوچۇق سېرىق",
+  "@colorKhaki": {
+    "description": "The name of the color, Khaki."
+  },
+  "colorAliceBlue": "ئاق",
+  "@colorAliceBlue": {
+    "description": "The name of the color, Alice Blue."
+  },
+  "colorHoneydew": "ئاق",
+  "@colorHoneydew": {
+    "description": "The name of the color, Honeydew."
+  },
+  "colorAzure": "ئاق",
+  "@colorAzure": {
+    "description": "The name of the color, Azure."
+  },
+  "colorSandyBrown": "ئوچۇق قىزغۇچ سېرىق",
+  "@colorSandyBrown": {
+    "description": "The name of the color, Sandy Brown."
+  },
+  "colorWheat": "ئوچۇق سېرىق",
+  "@colorWheat": {
+    "description": "The name of the color, Wheat."
+  },
+  "colorBeige": "ئوچۇق سېرىق",
+  "@colorBeige": {
+    "description": "The name of the color, Beige."
+  },
+  "colorWhiteSmoke": "ئاق",
+  "@colorWhiteSmoke": {
+    "description": "The name of the color, White Smoke."
+  },
+  "colorMintCream": "ئاق",
+  "@colorMintCream": {
+    "description": "The name of the color, Mint Cream."
+  },
+  "colorGhostWhite": "ئاق",
+  "@colorGhostWhite": {
+    "description": "The name of the color, Ghost White."
+  },
+  "colorSalmon": "قىزغۇچ",
+  "@colorSalmon": {
+    "description": "The name of the color, Salmon."
+  },
+  "colorAntiqueWhite": "ئوچۇق قىزغۇچ سېرىق",
+  "@colorAntiqueWhite": {
+    "description": "The name of the color, Antique White."
+  },
+  "colorLinen": "ئوچۇق قىزغۇچ سېرىق",
+  "@colorLinen": {
+    "description": "The name of the color, Linen."
+  },
+  "colorLightGoldenrodYellow": "ئوچۇق سېرىق",
+  "@colorLightGoldenrodYellow": {
+    "description": "The name of the color, Light Goldenrod Yellow."
+  },
+  "colorOldLace": "ئاق",
+  "@colorOldLace": {
+    "description": "The name of the color, Old Lace."
+  },
+  "colorRed": "قىزىل",
+  "@colorRed": {
+    "description": "The name of the color, Red."
+  },
+  "colorMagenta": "بىنەپشە",
+  "@colorMagenta": {
+    "description": "The name of the color, Magenta."
+  },
+  "colorDeepPink": "قىزغۇچ",
+  "@colorDeepPink": {
+    "description": "The name of the color, Deep Pink."
+  },
+  "colorOrangeRed": "قىزىل",
+  "@colorOrangeRed": {
+    "description": "The name of the color, Orange Red."
+  },
+  "colorTomato": "قىزىل",
+  "@colorTomato": {
+    "description": "The name of the color, Tomato."
+  },
+  "colorHotPink": "قىزغۇچ",
+  "@colorHotPink": {
+    "description": "The name of the color, Hot Pink."
+  },
+  "colorCoral": "قىزىل",
+  "@colorCoral": {
+    "description": "The name of the color, Coral."
+  },
+  "colorDarkOrange": "قىزغۇچ سېرىق",
+  "@colorDarkOrange": {
+    "description": "The name of the color, Dark Orange."
+  },
+  "colorLightSalmon": "قىزغۇچ",
+  "@colorLightSalmon": {
+    "description": "The name of the color, Light Salmon."
+  },
+  "colorOrange": "ئالتۇن",
+  "@colorOrange": {
+    "description": "The name of the color, Orange."
+  },
+  "colorLightPink": "قىزغۇچ",
+  "@colorLightPink": {
+    "description": "The name of the color, Light Pink."
+  },
+  "colorPink": "قىزغۇچ",
+  "@colorPink": {
+    "description": "The name of the color, Pink."
+  },
+  "colorGold": "ئالتۇن",
+  "@colorGold": {
+    "description": "The name of the color, Gold."
+  },
+  "colorPeachPuff": "ئوچۇق قىزغۇچ سېرىق",
+  "@colorPeachPuff": {
+    "description": "The name of the color, Peach Puff."
+  },
+  "colorNavajoWhite": "ئوچۇق قىزغۇچ سېرىق",
+  "@colorNavajoWhite": {
+    "description": "The name of the color, Navajo White."
+  },
+  "colorMoccasin": "ئوچۇق قىزغۇچ سېرىق",
+  "@colorMoccasin": {
+    "description": "The name of the color, Moccasin."
+  },
+  "colorBisque": "ئوچۇق قىزغۇچ سېرىق",
+  "@colorBisque": {
+    "description": "The name of the color, Bisque."
+  },
+  "colorMistyRose": "قىزغۇچ",
+  "@colorMistyRose": {
+    "description": "The name of the color, Misty Rose."
+  },
+  "colorBlanchedAlmond": "ئوچۇق قىزغۇچ سېرىق",
+  "@colorBlanchedAlmond": {
+    "description": "The name of the color, Blanched Almond."
+  },
+  "colorPapayaWhip": "ئوچۇق قىزغۇچ سېرىق",
+  "@colorPapayaWhip": {
+    "description": "The name of the color, Papaya Whip."
+  },
+  "colorLavenderBlush": "ئاق",
+  "@colorLavenderBlush": {
+    "description": "The name of the color, Lavender Blush."
+  },
+  "colorSeaShell": "ئاق",
+  "@colorSeaShell": {
+    "description": "The name of the color, Sea Shell."
+  },
+  "colorCornsilk": "ئوچۇق سېرىق",
+  "@colorCornsilk": {
+    "description": "The name of the color, Cornsilk."
+  },
+  "colorLemonChiffon": "ئوچۇق سېرىق",
+  "@colorLemonChiffon": {
+    "description": "The name of the color, Lemon Chiffon."
+  },
+  "colorFloralWhite": "ئاق",
+  "@colorFloralWhite": {
+    "description": "The name of the color, Floral White."
+  },
+  "colorSnow": "ئاق",
+  "@colorSnow": {
+    "description": "The name of the color, Snow."
+  },
+  "colorYellow": "سېرىق",
+  "@colorYellow": {
+    "description": "The name of the color, Yellow."
+  },
+  "colorLightYellow": "ئوچۇق سېرىق",
+  "@colorLightYellow": {
+    "description": "The name of the color, Light Yellow."
+  },
+  "colorIvory": "ئاق",
+  "@colorIvory": {
+    "description": "The name of the color, Ivory."
+  },
+  "colorWhite": "ئاق",
+  "@colorWhite": {
+    "description": "The name of the color, White."
+  }
+}
