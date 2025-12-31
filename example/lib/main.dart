@@ -404,6 +404,10 @@ class _MyHomePageState extends State<MyHomePage> with WindowListener {
                 title: const Text('ProgressBar'),
                 body: surfaces.ProgressBarPage(),
               ),
+              PaneItem(
+                title: const Text('RatingBar'),
+                body: inputs.RatingBarPage(),
+              ),
             ],
           ),
           PaneItemExpander(
