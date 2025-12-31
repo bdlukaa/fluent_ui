@@ -17,7 +17,7 @@ class _ProgressRingPageState extends State<ProgressRingPage> with PageMixin {
   @override
   Widget build(final BuildContext context) {
     return ScaffoldPage.scrollable(
-      header: const PageHeader(title: Text('Progress controls')),
+      header: const PageHeader(title: Text('Progress Ring')),
       children: [
         description(
           content: const Text(
@@ -27,7 +27,7 @@ class _ProgressRingPageState extends State<ProgressRingPage> with PageMixin {
             'how long the wait time might be, depending on the indicator used.',
           ),
         ),
-        subtitle(content: const Text('Indeterminate Progress Indicators')),
+        subtitle(content: const Text('Indeterminate Progress Ring')),
         description(
           content: const Text(
             'The indeterminate state shows that an operation is underway and its '
@@ -36,9 +36,9 @@ class _ProgressRingPageState extends State<ProgressRingPage> with PageMixin {
         ),
         const CodeSnippetCard(
           codeSnippet: 'ProgressRing()',
-          child: RepaintBoundary(child: Row(children: [ProgressRing()])),
+          child: SizedBox.square(dimension: 60, child: ProgressRing()),
         ),
-        subtitle(content: const Text('Determinate Progress Indicators')),
+        subtitle(content: const Text('Determinate Progress Ring')),
         description(
           content: const Text(
             'The determinate state shows the percentage completed of a task. '
@@ -51,8 +51,12 @@ class _ProgressRingPageState extends State<ProgressRingPage> with PageMixin {
           child: Row(
             spacing: 20,
             children: [
-              ProgressRing(value: determinateValue.toDouble()),
-              Flexible(
+              SizedBox.square(
+                dimension: 60,
+                child: ProgressRing(value: determinateValue.toDouble()),
+              ),
+              SizedBox(
+                width: 200,
                 child: InfoLabel(
                   label: 'Progress',
                   child: NumberBox<int>(
@@ -65,7 +69,6 @@ class _ProgressRingPageState extends State<ProgressRingPage> with PageMixin {
                   ),
                 ),
               ),
-              const Spacer(),
             ],
           ),
         ),

@@ -51,9 +51,12 @@ class _CodeSnippetCardState extends State<CodeSnippetCard>
               backgroundColor: widget.backgroundColor,
               child: Padding(
                 padding: const EdgeInsetsDirectional.all(12),
-                child: Align(
-                  alignment: AlignmentDirectional.topStart,
-                  child: SizedBox(width: double.infinity, child: widget.child),
+                child: SizedBox(
+                  width: double.infinity,
+                  child: Align(
+                    alignment: AlignmentDirectional.topStart,
+                    child: widget.child,
+                  ),
                 ),
               ),
             ),
