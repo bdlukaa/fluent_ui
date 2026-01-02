@@ -680,9 +680,11 @@ class _TopNavigationPaneState extends State<_TopNavigationPane> {
   }
 
   void _onPressed(PaneItem item) {
-    widget.pane.changeTo(item);
-    if (overflowController.isOpen) {
-      Navigator.of(context).pop();
+    if (widget.pane.canChangeTo(item)) {
+      widget.pane.changeTo(item);
+      if (overflowController.isOpen) {
+        Navigator.of(context).pop();
+      }
     }
   }
 
@@ -939,6 +941,7 @@ class _MenuFlyoutPaneItemExpanderState
     final theme = FluentTheme.of(context);
 
     return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
       mainAxisSize: MainAxisSize.min,
       children: [
         Builder(
@@ -979,6 +982,7 @@ class _MenuFlyoutPaneItemExpanderState
           child: !_open
               ? const SizedBox()
               : Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   mainAxisSize: MainAxisSize.min,
                   children: widget.item.items.map((item) {
                     return NavigationPaneTheme.merge(
