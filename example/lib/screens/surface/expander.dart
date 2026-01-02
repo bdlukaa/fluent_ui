@@ -55,9 +55,10 @@ class _ExpanderPageState extends State<ExpanderPage> with PageMixin {
         CodeSnippetCard(
           codeSnippet: '''
 Expander(
-  leading: RadioButton(
-    checked: checked,
-    onChanged: (v) => setState(() => checked = v),
+  leading: RadioButton<bool>(
+    value: true,
+    groupValue: checked ? true : null,
+    onChanged: (v) => setState(() => checked = v == true),
   ),
   header: Text('This text is in header'),
   content: Text('This text is in content'),
@@ -80,10 +81,11 @@ Expander(
                       .map(
                         (final e) => Padding(
                           padding: const EdgeInsetsDirectional.only(bottom: 8),
-                          child: RadioButton(
-                            checked: crost == e,
+                          child: RadioButton<String>(
+                            value: e,
+                            groupValue: crost,
                             onChanged: (final selected) {
-                              if (selected) setState(() => crost = e);
+                              setState(() => crost = selected!);
                             },
                             content: Text(e),
                           ),
@@ -98,10 +100,11 @@ Expander(
                       .map(
                         (final e) => Padding(
                           padding: const EdgeInsetsDirectional.only(bottom: 8),
-                          child: RadioButton(
-                            checked: size == e,
+                          child: RadioButton<String>(
+                            value: e,
+                            groupValue: size,
                             onChanged: (final selected) {
-                              if (selected) setState(() => size = e);
+                              setState(() => size = selected!);
                             },
                             content: Text(e),
                           ),

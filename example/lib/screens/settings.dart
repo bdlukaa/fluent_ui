@@ -100,17 +100,16 @@ class _SettingsState extends State<Settings> with PageMixin {
           final mode = ThemeMode.values[index];
           return Padding(
             padding: const EdgeInsetsDirectional.only(bottom: 8),
-            child: RadioButton(
-              checked: appTheme.mode == mode,
+            child: RadioButton<ThemeMode>(
+              value: mode,
+              groupValue: appTheme.mode,
               onChanged: (final value) {
-                if (value) {
-                  appTheme.mode = mode;
+                appTheme.mode = value!;
 
-                  if (kIsWindowEffectsSupported) {
-                    // some window effects require on [dark] to look good.
-                    // appTheme.setEffect(WindowEffect.disabled, context);
-                    appTheme.setEffect(appTheme.windowEffect, context);
-                  }
+                if (kIsWindowEffectsSupported) {
+                  // some window effects require on [dark] to look good.
+                  // appTheme.setEffect(WindowEffect.disabled, context);
+                  appTheme.setEffect(appTheme.windowEffect, context);
                 }
               },
               content: Text('$mode'.replaceAll('ThemeMode.', '')),
@@ -127,10 +126,11 @@ class _SettingsState extends State<Settings> with PageMixin {
           final mode = PaneDisplayMode.values[index];
           return Padding(
             padding: const EdgeInsetsDirectional.only(bottom: 8),
-            child: RadioButton(
-              checked: appTheme.displayMode == mode,
+            child: RadioButton<PaneDisplayMode>(
+              value: mode,
+              groupValue: appTheme.displayMode,
               onChanged: (final value) {
-                if (value) appTheme.displayMode = mode;
+                appTheme.displayMode = value!;
               },
               content: Text(mode.toString().replaceAll('PaneDisplayMode.', '')),
             ),
@@ -146,10 +146,11 @@ class _SettingsState extends State<Settings> with PageMixin {
           final mode = NavigationIndicators.values[index];
           return Padding(
             padding: const EdgeInsetsDirectional.only(bottom: 8),
-            child: RadioButton(
-              checked: appTheme.indicator == mode,
+            child: RadioButton<NavigationIndicators>(
+              value: mode,
+              groupValue: appTheme.indicator,
               onChanged: (final value) {
-                if (value) appTheme.indicator = mode;
+                appTheme.indicator = value!;
               },
               content: Text(
                 mode.toString().replaceAll('NavigationIndicators.', ''),
@@ -194,13 +195,12 @@ class _SettingsState extends State<Settings> with PageMixin {
             final mode = currentWindowEffects[index];
             return Padding(
               padding: const EdgeInsetsDirectional.only(bottom: 8),
-              child: RadioButton(
-                checked: appTheme.windowEffect == mode,
+              child: RadioButton<WindowEffect>(
+                value: mode,
+                groupValue: appTheme.windowEffect,
                 onChanged: (final value) {
-                  if (value) {
-                    appTheme.windowEffect = mode;
-                    appTheme.setEffect(mode, context);
-                  }
+                  appTheme.windowEffect = value!;
+                  appTheme.setEffect(value, context);
                 },
                 content: Text(mode.toString().replaceAll('WindowEffect.', '')),
               ),
@@ -217,12 +217,11 @@ class _SettingsState extends State<Settings> with PageMixin {
           final direction = TextDirection.values[index];
           return Padding(
             padding: const EdgeInsetsDirectional.only(bottom: 8),
-            child: RadioButton(
-              checked: appTheme.textDirection == direction,
+            child: RadioButton<TextDirection>(
+              value: direction,
+              groupValue: appTheme.textDirection,
               onChanged: (final value) {
-                if (value) {
-                  appTheme.textDirection = direction;
-                }
+                appTheme.textDirection = value!;
               },
               content: Text(
                 '$direction'
@@ -250,12 +249,11 @@ class _SettingsState extends State<Settings> with PageMixin {
 
             return Padding(
               padding: const EdgeInsetsDirectional.only(bottom: 8),
-              child: RadioButton(
-                checked: currentLocale == locale,
+              child: RadioButton<Locale>(
+                value: locale,
+                groupValue: currentLocale,
                 onChanged: (final value) {
-                  if (value) {
-                    appTheme.locale = locale;
-                  }
+                  appTheme.locale = value!;
                 },
                 content: Text('$locale'),
               ),
