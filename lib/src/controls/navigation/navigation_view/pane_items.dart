@@ -486,6 +486,7 @@ class PaneItem extends NavigationPaneItem {
 
     return MenuFlyoutItem(
       selected: selected,
+      closeAfterClick: false,
       text: title != null
           ? Padding(
               padding: theme.labelPadding ?? EdgeInsetsDirectional.zero,
@@ -898,46 +899,62 @@ class __PaneItemExpanderState extends State<_PaneItemExpander>
           forceAvailableSpace: true,
           barrierColor: Colors.transparent,
           builder: (context) {
-            return MenuFlyout(
-              items: widget.items.map<MenuFlyoutItemBase>((item) {
-                if (item is PaneItem) {
-                  return _PaneItemExpanderMenuItem(
-                    item: item,
-                    onPressed: () {
-                      Navigator.pop(context);
-                      widget.onItemPressed?.call(item);
-                      item.onTap?.call();
-                      viewData.pane?.changeTo(item);
-                    },
-                    isSelected: body.pane!.isSelected(item),
-                  );
-                } else if (item is PaneItemSeparator) {
-                  return const MenuFlyoutSeparator();
-                } else if (item is PaneItemHeader) {
-                  return MenuFlyoutItemBuilder(
-                    builder: (context) {
-                      return Container(
-                        padding: const EdgeInsetsDirectional.symmetric(
-                          horizontal: 10,
-                          vertical: 8,
-                        ),
-                        margin: const EdgeInsetsDirectional.only(bottom: 4),
-                        child: DefaultTextStyle.merge(
-                          style: navigationTheme.itemHeaderTextStyle,
-                          softWrap: false,
-                          maxLines: 1,
-                          overflow: TextOverflow.fade,
-                          child: item.header,
-                        ),
-                      );
-                    },
-                  );
-                } else {
-                  throw UnsupportedError(
-                    '${item.runtimeType} is not a supported item type',
-                  );
-                }
-              }).toList(),
+            return NavigationViewContext.copy(
+              parent: body,
+              child: MenuFlyout(
+                items: widget.items.map<MenuFlyoutItemBase>((item) {
+                  if (item is PaneItemExpander) {
+                    return _MenuFlyoutPaneItemExpander(
+                      item: item,
+                      onPressed: () {
+                        if (viewData.pane?.canChangeTo(item) ?? false) {
+                          Navigator.pop(context);
+                          widget.onPressed?.call();
+                          item.onTap?.call();
+                          viewData.pane?.changeTo(item);
+                        }
+                      },
+                      onItemPressed: widget.onItemPressed ?? (_) {},
+                    );
+                  } else if (item is PaneItem) {
+                    return _PaneItemExpanderMenuItem(
+                      item: item,
+                      onPressed: () {
+                        Navigator.pop(context);
+                        widget.onItemPressed?.call(item);
+                        item.onTap?.call();
+                        viewData.pane?.changeTo(item);
+                      },
+                      isSelected: body.pane!.isSelected(item),
+                    );
+                  } else if (item is PaneItemSeparator) {
+                    return const MenuFlyoutSeparator();
+                  } else if (item is PaneItemHeader) {
+                    return MenuFlyoutItemBuilder(
+                      builder: (context) {
+                        return Container(
+                          padding: const EdgeInsetsDirectional.symmetric(
+                            horizontal: 10,
+                            vertical: 8,
+                          ),
+                          margin: const EdgeInsetsDirectional.only(bottom: 4),
+                          child: DefaultTextStyle.merge(
+                            style: navigationTheme.itemHeaderTextStyle,
+                            softWrap: false,
+                            maxLines: 1,
+                            overflow: TextOverflow.fade,
+                            child: item.header,
+                          ),
+                        );
+                      },
+                    );
+                  } else {
+                    throw UnsupportedError(
+                      '${item.runtimeType} is not a supported item type',
+                    );
+                  }
+                }).toList(),
+              ),
             );
           },
         );

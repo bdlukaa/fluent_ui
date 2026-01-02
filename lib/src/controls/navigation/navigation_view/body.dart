@@ -188,6 +188,22 @@ class NavigationViewContext extends InheritedWidget {
     super.key,
   });
 
+  factory NavigationViewContext.copy({
+    required NavigationViewContext parent,
+    required Widget child,
+  }) {
+    return NavigationViewContext(
+      displayMode: parent.displayMode,
+      isMinimalPaneOpen: parent.isMinimalPaneOpen,
+      isCompactOverlayOpen: parent.isCompactOverlayOpen,
+      pane: parent.pane,
+      previousItemIndex: parent.previousItemIndex,
+      isTransitioning: parent.isTransitioning,
+      toggleButtonPosition: parent.toggleButtonPosition,
+      child: child,
+    );
+  }
+
   /// The current pane display mode according to the current state.
   final PaneDisplayMode displayMode;
 

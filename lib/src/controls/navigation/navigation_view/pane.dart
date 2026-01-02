@@ -269,8 +269,16 @@ class NavigationPane with Diagnosticable {
       ..add(ObjectFlagProperty<Widget>.has('autoSuggestBox', autoSuggestBox));
   }
 
+  bool canChangeTo(NavigationPaneItem item) {
+    final index = effectiveIndexOf(item);
+    if (index.isNegative) return false;
+
+    return effectiveIndexOf(item) != selected;
+  }
+
   /// Changes the selected item to [item].
   void changeTo(NavigationPaneItem item) {
+    if (!canChangeTo(item)) return;
     final index = effectiveIndexOf(item);
     if (!index.isNegative) onItemPressed?.call(index);
     if (selected != index && !index.isNegative) onChanged?.call(index);
@@ -754,19 +762,17 @@ class _TopNavigationPaneState extends State<_TopNavigationPane> {
       placementMode: FlyoutPlacementMode.bottomCenter,
       forceAvailableSpace: true,
       builder: (context) {
-        return NavigationViewContext(
-          displayMode: view.displayMode,
-          isMinimalPaneOpen: view.isMinimalPaneOpen,
-          isCompactOverlayOpen: view.isCompactOverlayOpen,
-          previousItemIndex: view.previousItemIndex,
-          pane: view.pane,
-          isTransitioning: view.isTransitioning,
-          toggleButtonPosition: view.toggleButtonPosition,
-          child: MenuFlyout(
-            items: _localItemHold.sublist(hiddenPaneItems.first).map((i) {
-              final item = widget.pane.items[i];
-              return item.buildMenuFlyoutItem(context, _onPressed);
-            }).toList(),
+        return NavigationViewContext.copy(
+          parent: view,
+          child: Builder(
+            builder: (context) {
+              return MenuFlyout(
+                items: _localItemHold.sublist(hiddenPaneItems.first).map((i) {
+                  final item = widget.pane.items[i];
+                  return item.buildMenuFlyoutItem(context, _onPressed);
+                }).toList(),
+              );
+            },
           ),
         );
       },
@@ -932,15 +938,17 @@ class _MenuFlyoutPaneItemExpanderState
     assert(debugCheckHasFluentTheme(context));
     final theme = FluentTheme.of(context);
 
-    return SizedBox(
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Builder(
-            builder: (context) {
-              return widget.item
-                  .copyWith(
-                    trailing: AnimatedBuilder(
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        Builder(
+          builder: (context) {
+            return widget.item
+                .copyWith(
+                  trailing: GestureDetector(
+                    behavior: HitTestBehavior.opaque,
+                    onTap: toggleOpen,
+                    child: AnimatedBuilder(
                       animation: controller,
                       builder: (context, child) => RotationTransition(
                         turns: controller.drive(
@@ -956,40 +964,42 @@ class _MenuFlyoutPaneItemExpanderState
                         size: 10,
                       ),
                     ),
-                  )
-                  .buildMenuFlyoutItem(context, (item) {
-                    toggleOpen();
-                    widget.onPressed?.call();
-                  })
-                  .build(context);
-            },
-          ),
-          AnimatedSize(
-            duration: theme.fastAnimationDuration,
-            curve: Curves.easeIn,
-            child: !_open
-                ? const SizedBox()
-                : Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: widget.item.items.map((item) {
-                      return Builder(
-                        builder: (builder) {
+                  ),
+                )
+                .buildMenuFlyoutItem(context, (item) {
+                  toggleOpen();
+                  widget.onPressed?.call();
+                })
+                .build(context);
+          },
+        ),
+        AnimatedSize(
+          duration: theme.fastAnimationDuration,
+          curve: Curves.easeIn,
+          child: !_open
+              ? const SizedBox()
+              : Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: widget.item.items.map((item) {
+                    return NavigationPaneTheme.merge(
+                      data: const NavigationPaneThemeData(
+                        labelPadding: EdgeInsetsDirectional.only(start: 6),
+                      ),
+                      child: Builder(
+                        builder: (context) {
                           return item
                               .buildMenuFlyoutItem(
                                 context,
                                 widget.onItemPressed,
-                                // TODO(bdlukaa): See this
-                                // paneItemPadding:
-                                //     const EdgeInsetsDirectional.only(start: 24),
                               )
                               .build(context);
                         },
-                      );
-                    }).toList(),
-                  ),
-          ),
-        ],
-      ),
+                      ),
+                    );
+                  }).toList(),
+                ),
+        ),
+      ],
     );
   }
 }
