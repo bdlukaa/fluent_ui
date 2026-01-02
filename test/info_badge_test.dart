@@ -14,8 +14,8 @@ void main() {
     expect(decoration.borderRadius, BorderRadius.circular(100));
 
     // Verify size through constraints on the Container
-    expect(container.width, 6);
-    expect(container.height, 6);
+    expect(container.constraints?.minWidth, 6);
+    expect(container.constraints?.minHeight, 6);
     expect(container.child, isNull);
   });
 
@@ -86,6 +86,9 @@ void main() {
     );
 
     final container = tester.widget<Container>(find.byType(Container));
-    expect(container.padding, const EdgeInsets.symmetric(horizontal: 4, vertical: 2));
+    expect(
+      container.padding,
+      const EdgeInsets.symmetric(horizontal: 4, vertical: 2),
+    );
   });
 }
