@@ -182,16 +182,6 @@ class RadioButton<T> extends StatelessWidget {
       ..add(StringProperty('semanticLabel', semanticLabel));
   }
 
-  void _handleChanged(bool? selected) {
-    if (selected == null) {
-      onChanged!(null);
-      return;
-    }
-    if (selected) {
-      onChanged!(value);
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
     assert(debugCheckHasFluentTheme(context));
