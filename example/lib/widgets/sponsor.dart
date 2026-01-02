@@ -11,7 +11,7 @@ class SponsorDialog extends StatelessWidget {
       constraints: const BoxConstraints(maxWidth: 600),
       title: Row(
         children: [
-          const WindowsIcon(FluentIcons.diamond_user, size: 24),
+          const WindowsIcon(WindowsIcons.special_effect_size, size: 24),
           const SizedBox(width: 8),
           const Expanded(child: Text('Benefits')),
           SmallIconButton(

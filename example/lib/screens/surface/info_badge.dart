@@ -55,10 +55,10 @@ class _InfoBadgePageState extends State<InfoBadgePage> with PageMixin {
         subtitle(content: const Text('InfoBadge with Icon')),
         const CodeSnippetCard(
           codeSnippet: '''InfoBadge(
-  source: Icon(FluentIcons.message),
+  source: Icon(WindowsIcons.message),
 ),
 ''',
-          child: Row(children: [InfoBadge(source: Icon(FluentIcons.message))]),
+          child: Row(children: [InfoBadge(source: Icon(WindowsIcons.message))]),
         ),
         subtitle(content: const Text('Dot InfoBadge')),
         const CodeSnippetCard(
@@ -92,7 +92,7 @@ class _InfoBadgePageState extends State<InfoBadgePage> with PageMixin {
         ),
         CodeSnippetCard(
           codeSnippet: '''PaneItem(
-  icon: const Icon(FluentIcons.mail),
+  icon: const Icon(WindowsIcons.mail),
   title: const Text('Mail'),
   infoBadge: const InfoBadge(source: Text('9+')),
   body: const SizedBox.shrink(),
@@ -106,7 +106,7 @@ class _InfoBadgePageState extends State<InfoBadgePage> with PageMixin {
                 displayMode: PaneDisplayMode.compact,
                 items: [
                   PaneItem(
-                    icon: const Icon(FluentIcons.mail),
+                    icon: const Icon(WindowsIcons.mail),
                     title: const Text('Mail'),
                     infoBadge: const InfoBadge(source: Text('9+')),
                     body: const SizedBox.shrink(),

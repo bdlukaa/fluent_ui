@@ -10,7 +10,7 @@ class TilesPage extends StatefulWidget {
 }
 
 class _TilesPageState extends State<TilesPage> with PageMixin {
-  final shuffledIcons = FluentIcons.allIcons.values.toList()..shuffle();
+  final shuffledIcons = WindowsIcons.allIcons.values.toList()..shuffle();
 
   // first
   final firstController = ScrollController();

@@ -552,7 +552,7 @@ class _NavigationBodyItem extends StatelessWidget {
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           Icon(
-                            FluentIcons.circle_fill,
+                            WindowsIcons.circle_fill,
                             size: isLargeScreen ? 48 : 32,
                             color: Colors.white,
                           ),

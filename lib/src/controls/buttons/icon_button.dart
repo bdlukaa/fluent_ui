@@ -26,11 +26,11 @@ enum IconButtonMode {
 /// Row(
 ///   children: [
 ///     IconButton(
-///       icon: Icon(FluentIcons.add),
+///       icon: Icon(WindowsIcons.add),
 ///       onPressed: () => addItem(),
 ///     ),
 ///     IconButton(
-///       icon: Icon(FluentIcons.delete),
+///       icon: Icon(WindowsIcons.delete),
 ///       onPressed: () => deleteItem(),
 ///     ),
 ///   ],
@@ -45,17 +45,17 @@ enum IconButtonMode {
 /// Row(
 ///   children: [
 ///     IconButton(
-///       icon: Icon(FluentIcons.settings),
+///       icon: Icon(WindowsIcons.settings),
 ///       iconButtonMode: IconButtonMode.tiny,
 ///       onPressed: () {},
 ///     ),
 ///     IconButton(
-///       icon: Icon(FluentIcons.settings),
+///       icon: Icon(WindowsIcons.settings),
 ///       iconButtonMode: IconButtonMode.small,
 ///       onPressed: () {},
 ///     ),
 ///     IconButton(
-///       icon: Icon(FluentIcons.settings),
+///       icon: Icon(WindowsIcons.settings),
 ///       iconButtonMode: IconButtonMode.large,
 ///       onPressed: () {},
 ///     ),

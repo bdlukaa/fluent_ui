@@ -277,10 +277,6 @@ class _MyHomePageState extends State<MyHomePage> with WindowListener {
                 body: inputs.ToggleSwitchPage(),
               ),
               PaneItem(
-                title: const Text('Expander'),
-                body: surfaces.ExpanderPage(),
-              ),
-              PaneItem(
                 title: const Text('ComboBox'),
                 body: forms.ComboBoxPage(),
               ),
@@ -325,6 +321,10 @@ class _MyHomePageState extends State<MyHomePage> with WindowListener {
                 body: popups.TeachingTipPage(),
               ),
               PaneItem(
+                title: const Text('Tooltip'),
+                body: popups.TooltipPage(),
+              ),
+              PaneItem(
                 title: const Text('MenuBar'),
                 body: popups.MenuBarPage(),
               ),
@@ -358,7 +358,7 @@ class _MyHomePageState extends State<MyHomePage> with WindowListener {
           ),
           PaneItemExpander(
             icon: const WindowsIcon(WindowsIcons.surface_hub),
-            title: const Text('Surfaces & Styles'),
+            title: const Text('Surfaces & Layout'),
             items: [
               PaneItem(
                 title: const Text('Acrylic'),
@@ -368,6 +368,18 @@ class _MyHomePageState extends State<MyHomePage> with WindowListener {
                 title: const Text('Mica'),
                 //  body: surfaces.AcrylicPage()
               ),
+              PaneItem(title: const Text('Tiles'), body: surfaces.TilesPage()),
+              PaneItem(
+                title: const Text('Expander'),
+                body: surfaces.ExpanderPage(),
+              ),
+            ],
+          ),
+
+          PaneItemExpander(
+            icon: const WindowsIcon(WindowsIcons.app_icon_default),
+            title: const Text('Styles & Icons'),
+            items: [
               PaneItem(
                 title: const Text('Windows Icons'),
                 body: theming.IconsPage(set: WindowsIcons.allIcons),
@@ -383,7 +395,6 @@ class _MyHomePageState extends State<MyHomePage> with WindowListener {
               PaneItem(title: const Text('Colors'), body: theming.ColorsPage()),
             ],
           ),
-
           PaneItemExpander(
             icon: const WindowsIcon(WindowsIcons.progress_ring_dots),
             title: const Text('Status & info'),

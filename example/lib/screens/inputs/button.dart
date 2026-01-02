@@ -194,7 +194,7 @@ IconButton(
               () {
                 final button = IconButton(
                   icon: Icon(
-                    FluentIcons.graph_symbol,
+                    WindowsIcons.app_icon_default,
                     size: iconSmall ? 20.0 : 24.0,
                   ),
                   onPressed: iconDisabled ? null : () {},

@@ -23,7 +23,7 @@ import 'package:flutter/rendering.dart';
 /// Tooltip(
 ///   message: 'This is a tooltip',
 ///   child: IconButton(
-///     icon: Icon(FluentIcons.info),
+///     icon: Icon(WindowsIcons.info),
 ///     onPressed: () {},
 ///   ),
 /// )

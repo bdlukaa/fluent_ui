@@ -89,7 +89,7 @@ class _CodeSnippetCardState extends State<CodeSnippetCard>
                           duration: const Duration(milliseconds: 200),
                           child: isCopying
                               ? Icon(
-                                  FluentIcons.check_mark,
+                                  WindowsIcons.check_mark,
                                   color: theme
                                       .resources
                                       .textOnAccentFillColorPrimary,

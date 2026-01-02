@@ -132,7 +132,7 @@ class MyApp extends StatelessWidget {
                 ),
                 InfoLabel(
                   label: 'Icons',
-                  child: const WindowsIcon(FluentIcons.flag, size: 30),
+                  child: const WindowsIcon(WindowsIcons.flag, size: 30),
                 ),
                 InfoLabel(
                   label: 'Colors',
@@ -244,7 +244,7 @@ class MyApp extends StatelessWidget {
                       },
                       blendMode: BlendMode.srcATop,
                       child: const WindowsIcon(
-                        FluentIcons.diamond_user,
+                        WindowsIcons.special_effect_size,
                         size: 60,
                       ),
                     ),

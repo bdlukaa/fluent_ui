@@ -61,7 +61,10 @@ Tooltip(
               useMousePosition: false,
               style: const TooltipThemeData(preferBelow: true),
               child: IconButton(
-                icon: const WindowsIcon(FluentIcons.graph_symbol, size: 24),
+                icon: const WindowsIcon(
+                  WindowsIcons.app_icon_default,
+                  size: 24,
+                ),
                 onPressed: () {},
               ),
             ),
@@ -85,7 +88,7 @@ Tooltip(
             alignment: AlignmentDirectional.centerStart,
             child: Row(
               children: List.generate(4, (final index) {
-                final icons = FluentIcons.allIcons.values;
+                final icons = WindowsIcons.allIcons.values;
                 return Tooltip(
                   message: 'Message',
                   useMousePosition: false,
@@ -137,7 +140,10 @@ Tooltip(
                 waitDuration: Duration.zero,
               ),
               child: IconButton(
-                icon: const WindowsIcon(FluentIcons.text_overflow, size: 24),
+                icon: const WindowsIcon(
+                  WindowsIcons.app_icon_default,
+                  size: 24,
+                ),
                 onPressed: () {},
               ),
             ),
