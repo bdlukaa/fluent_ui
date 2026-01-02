@@ -1,4 +1,4 @@
-import 'package:example/widgets/card_highlight.dart';
+import 'package:example/widgets/code_snippet_card.dart';
 import 'package:fluent_ui/fluent_ui.dart';
 
 import '../../widgets/page.dart';
@@ -33,7 +33,7 @@ class _InfoBarsPageState extends State<InfoBarsPage> with PageMixin {
           'not necessarily break user flow.',
         ),
         subtitle(content: const Text('A InfoBar as a popup')),
-        CardHighlight(
+        CodeSnippetCard(
           backgroundColor: FluentTheme.of(context).micaBackgroundColor,
           codeSnippet: '''
 await displayInfoBar(context, builder: (context, close) {
@@ -78,7 +78,7 @@ await displayInfoBar(context, builder: (context, close) {
             'A closable InfoBar with options to change its severity',
           ),
         ),
-        CardHighlight(
+        CodeSnippetCard(
           backgroundColor: FluentTheme.of(context).micaBackgroundColor,
           codeSnippet:
               '''InfoBar(
@@ -154,7 +154,7 @@ await displayInfoBar(context, builder: (context, close) {
             'A closable InfoBar with a long and short message and action button',
           ),
         ),
-        CardHighlight(
+        CodeSnippetCard(
           backgroundColor: FluentTheme.of(context).micaBackgroundColor,
           codeSnippet:
               '''InfoBar(

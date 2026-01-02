@@ -1,4 +1,4 @@
-import 'package:example/widgets/card_highlight.dart';
+import 'package:example/widgets/code_snippet_card.dart';
 import 'package:example/widgets/page.dart';
 import 'package:fluent_ui/fluent_ui.dart';
 
@@ -197,7 +197,7 @@ class _ColorPickerPageState extends State<ColorPickerPage> with PageMixin {
         ),
         const SizedBox(height: 20),
         subtitle(content: const Text('ColorPicker Demo')),
-        CardHighlight(
+        CodeSnippetCard(
           codeSnippet: '''
 Color selectedColor = Colors.blue;
 ColorSpectrumShape spectrumShape = ColorSpectrumShape.box;

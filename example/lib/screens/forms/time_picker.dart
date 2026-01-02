@@ -1,4 +1,4 @@
-import 'package:example/widgets/card_highlight.dart';
+import 'package:example/widgets/code_snippet_card.dart';
 import 'package:example/widgets/page.dart';
 import 'package:fluent_ui/fluent_ui.dart';
 
@@ -39,7 +39,7 @@ class _TimePickerPageState extends State<TimePickerPage> with PageMixin {
           "it doesn't push other UI out of the way.",
         ),
         subtitle(content: const Text('A simple TimePicker')),
-        CardHighlight(
+        CodeSnippetCard(
           codeSnippet: '''
 DateTime? selected;
 
@@ -67,7 +67,7 @@ TimePicker(
             'A TimePicker with a header and minute increments specified',
           ),
         ),
-        CardHighlight(
+        CodeSnippetCard(
           codeSnippet: '''
 DateTime? selected;
         
@@ -89,7 +89,7 @@ TimePicker(
           ),
         ),
         subtitle(content: const Text('A TimePicker using a 24-hour clock')),
-        CardHighlight(
+        CodeSnippetCard(
           codeSnippet: '''
 DateTime? selected;
         

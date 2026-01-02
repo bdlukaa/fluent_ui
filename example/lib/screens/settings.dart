@@ -290,7 +290,7 @@ class _SettingsState extends State<Settings> with PageMixin {
           alignment: AlignmentDirectional.center,
           child: appTheme.color == color
               ? Icon(
-                  FluentIcons.check_mark,
+                  WindowsIcons.check_mark,
                   color: color.basedOnLuminance(),
                   size: 22,
                 )

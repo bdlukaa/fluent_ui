@@ -4,7 +4,7 @@ import 'package:example/widgets/page.dart';
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:url_launcher/link.dart';
 
-import '../../widgets/card_highlight.dart';
+import '../../widgets/code_snippet_card.dart';
 
 const _kSplitButtonHeight = 32.0;
 const _kSplitButtonWidth = 36.0;
@@ -70,7 +70,7 @@ class _ButtonPageState extends State<ButtonPage> with PageMixin {
         description(
           content: const Text('A button that initiates an immediate action.'),
         ),
-        CardHighlight(
+        CodeSnippetCard(
           codeSnippet: '''
 Button(
   child: const Text('Standard Button'),
@@ -96,7 +96,7 @@ Button(
           ),
         ),
         subtitle(content: const Text('Accent Style applied to Button')),
-        CardHighlight(
+        CodeSnippetCard(
           codeSnippet: '''
 FilledButton(
   child: const Text('Filled Button'),
@@ -127,7 +127,7 @@ FilledButton(
           'app, or launch a specific uniform resource identifier (URI) using a '
           'separate browser app.',
         ),
-        CardHighlight(
+        CodeSnippetCard(
           codeSnippet: '''
 Link( // from the url_launcher package
   uri: Uri.parse('https://github.com/bdlukaa/fluent_ui')
@@ -171,7 +171,7 @@ Link( // from the url_launcher package
         subtitle(
           content: const Text('A Button with graphical content (IconButton)'),
         ),
-        CardHighlight(
+        CodeSnippetCard(
           codeSnippet: () {
             if (iconSmall) {
               return '''
@@ -194,7 +194,7 @@ IconButton(
               () {
                 final button = IconButton(
                   icon: Icon(
-                    FluentIcons.graph_symbol,
+                    WindowsIcons.app_icon_default,
                     size: iconSmall ? 20.0 : 24.0,
                   ),
                   onPressed: iconDisabled ? null : () {},
@@ -241,7 +241,7 @@ IconButton(
             'typically has two states, checked (on) or unchecked (off).',
           ),
         ),
-        CardHighlight(
+        CodeSnippetCard(
           codeSnippet: '''
 bool checked = false;
 
@@ -280,7 +280,7 @@ ToggleButton(
         const Text(
           'A control that drops down a flyout of choices from which one can be chosen',
         ),
-        CardHighlight(
+        CodeSnippetCard(
           codeSnippet: '''
 DropDownButton(
   title: Text('Email'),
@@ -337,7 +337,7 @@ DropDownButton(
             'a flyout.',
           ),
         ),
-        CardHighlight(
+        CodeSnippetCard(
           codeSnippet:
               '''final splitButtonKey = GlobalKey<SplitButtonState>();
 
@@ -465,7 +465,7 @@ splitButtonKey.currentState?.showFlyout<void>();
             'represented by one radio button in the group.',
           ),
         ),
-        CardHighlight(
+        CodeSnippetCard(
           codeSnippet: '''
 int? selected;
 
