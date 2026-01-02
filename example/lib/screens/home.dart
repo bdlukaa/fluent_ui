@@ -1,12 +1,9 @@
-import 'package:example/widgets/changelog.dart';
 import 'package:example/widgets/code_snippet_card.dart';
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:url_launcher/link.dart';
 
-import '../models/sponsor.dart';
 import '../widgets/material_equivalents.dart';
 import '../widgets/page.dart';
-import '../widgets/sponsor.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -180,90 +177,6 @@ class MyApp extends StatelessWidget {
           ),
         ),
         const SizedBox(height: 22),
-        IconButton(
-          onPressed: () {
-            showDialog(
-              context: context,
-              barrierDismissible: true,
-              builder: (final context) => const Changelog(),
-            );
-          },
-          icon: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                "What's new on 4.0.0",
-                style: theme.typography.body?.copyWith(
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-              Text('June 21, 2022', style: theme.typography.caption),
-              Text(
-                'A native look-and-feel out of the box',
-                style: theme.typography.bodyLarge,
-              ),
-            ],
-          ),
-        ),
-        const SizedBox(height: 22),
-        Row(
-          children: [
-            Text('SPONSORS', style: theme.typography.bodyStrong),
-            const SizedBox(width: 4),
-            const WindowsIcon(WindowsIcons.heart_fill, size: 16),
-          ],
-        ),
-        const SizedBox(height: 4),
-        Wrap(
-          spacing: 10,
-          runSpacing: 10,
-          children: <Widget>[
-            ...sponsors.map((final sponsor) {
-              return sponsor.build();
-            }),
-            IconButton(
-              onPressed: () {
-                showDialog(
-                  context: context,
-                  builder: (final context) => const SponsorDialog(),
-                );
-              },
-              icon: Column(
-                children: [
-                  SizedBox(
-                    height: 60,
-                    width: 60,
-                    child: ShaderMask(
-                      shaderCallback: (final rect) {
-                        return LinearGradient(
-                          colors: [
-                            Colors.white.withValues(alpha: 0.8),
-                            ...Colors.accentColors,
-                          ],
-                        ).createShader(rect);
-                      },
-                      blendMode: BlendMode.srcATop,
-                      child: const WindowsIcon(
-                        WindowsIcons.special_effect_size,
-                        size: 60,
-                      ),
-                    ),
-                  ),
-                  const Text('Become a Sponsor!'),
-                ],
-              ),
-            ),
-          ],
-        ),
-        const SizedBox(height: 22),
-        Text('CONTRIBUTORS', style: theme.typography.bodyStrong),
-        Wrap(
-          spacing: 10,
-          runSpacing: 10,
-          children: contributors.map((final contributor) {
-            return contributor.build();
-          }).toList(),
-        ),
         subtitle(
           content: const Text(
             'Equivalents with the material and cupertino libraries',

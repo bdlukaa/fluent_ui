@@ -1,4 +1,3 @@
-import 'package:example/main.dart';
 import 'package:example/theme.dart';
 import 'package:example/widgets/code_snippet_card.dart';
 import 'package:example/widgets/page.dart';
@@ -166,7 +165,6 @@ class _Flyout2ScreenState extends State<Flyout2Screen> with PageMixin {
                       barrierDismissible: barrierDismissible,
                       dismissOnPointerMoveAway: dismissOnPointerMoveAway,
                       dismissWithEsc: dismissWithEsc,
-                      navigatorKey: rootNavigatorKey.currentState,
                       builder: (final context) {
                         return FlyoutContent(
                           child: Column(
@@ -301,7 +299,6 @@ FlyoutTarget(
                       barrierDismissible: barrierDismissible,
                       dismissOnPointerMoveAway: dismissOnPointerMoveAway,
                       dismissWithEsc: dismissWithEsc,
-                      navigatorKey: rootNavigatorKey.currentState,
                       builder: (final context) {
                         return MenuFlyout(
                           items: [
@@ -466,7 +463,6 @@ FlyoutTarget(
                       barrierDismissible: barrierDismissible,
                       dismissOnPointerMoveAway: dismissOnPointerMoveAway,
                       dismissWithEsc: dismissWithEsc,
-                      navigatorKey: rootNavigatorKey.currentState,
                       builder: (final context) {
                         var repeat = true;
                         var shuffle = false;

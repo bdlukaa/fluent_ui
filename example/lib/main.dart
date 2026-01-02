@@ -3,7 +3,6 @@ import 'package:example/screens/settings.dart';
 import 'package:fluent_ui/fluent_ui.dart' hide Page;
 import 'package:flutter/foundation.dart';
 import 'package:flutter_acrylic/flutter_acrylic.dart' as flutter_acrylic;
-import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import 'package:system_theme/system_theme.dart';
 import 'package:url_launcher/link.dart';
@@ -18,7 +17,7 @@ import 'routes/theming.dart' deferred as theming;
 import 'theme.dart';
 import 'widgets/deferred_widget.dart';
 
-const String appTitle = 'Win UI for Flutter';
+const String appTitle = 'Win UI for Flutter Gallery';
 
 /// Checks if the current environment is a desktop environment.
 bool get isDesktop {
@@ -85,7 +84,7 @@ class MyApp extends StatelessWidget {
       value: _appTheme,
       builder: (final context, final child) {
         final appTheme = context.watch<AppTheme>();
-        return FluentApp.router(
+        return FluentApp(
           title: appTitle,
           themeMode: appTheme.mode,
           debugShowCheckedModeBanner: false,
@@ -123,9 +122,7 @@ class MyApp extends StatelessWidget {
               ),
             );
           },
-          routeInformationParser: router.routeInformationParser,
-          routerDelegate: router.routerDelegate,
-          routeInformationProvider: router.routeInformationProvider,
+          home: const MyHomePage(),
         );
       },
     );
@@ -133,14 +130,7 @@ class MyApp extends StatelessWidget {
 }
 
 class MyHomePage extends StatefulWidget {
-  const MyHomePage({
-    required this.child,
-    required this.shellContext,
-    super.key,
-  });
-
-  final Widget child;
-  final BuildContext? shellContext;
+  const MyHomePage({super.key});
 
   @override
   State<MyHomePage> createState() => _MyHomePageState();
@@ -210,16 +200,19 @@ class _MyHomePageState extends State<MyHomePage> with WindowListener {
             ),
           ),
         ),
-        endHeader: ToggleButton(
-          checked: theme.brightness == Brightness.dark,
-          onChanged: (final v) {
-            if (v) {
-              appTheme.mode = ThemeMode.dark;
-            } else {
-              appTheme.mode = ThemeMode.light;
-            }
-          },
-          child: const Icon(WindowsIcons.lightbulb),
+        endHeader: Tooltip(
+          message: 'Toggle theme',
+          child: ToggleButton(
+            checked: theme.brightness == Brightness.dark,
+            onChanged: (final v) {
+              if (v) {
+                appTheme.mode = ThemeMode.dark;
+              } else {
+                appTheme.mode = ThemeMode.light;
+              }
+            },
+            child: const Icon(WindowsIcons.lightbulb),
+          ),
         ),
         captionControls: const WindowButtons(),
         onDragStarted: !kIsWeb ? windowManager.startDragging : null,
@@ -279,6 +272,10 @@ class _MyHomePageState extends State<MyHomePage> with WindowListener {
               PaneItem(
                 title: const Text('ComboBox'),
                 body: forms.ComboBoxPage(),
+              ),
+              PaneItem(
+                title: const Text('ColorPicker'),
+                body: forms.ColorPickerPage(),
               ),
             ],
           ),
@@ -364,10 +361,10 @@ class _MyHomePageState extends State<MyHomePage> with WindowListener {
                 title: const Text('Acrylic'),
                 body: surfaces.AcrylicPage(),
               ),
-              PaneItem(
-                title: const Text('Mica'),
-                //  body: surfaces.AcrylicPage()
-              ),
+              // PaneItem(
+              //   title: const Text('Mica'),
+              //   //  body: surfaces.AcrylicPage()
+              // ),
               PaneItem(title: const Text('Tiles'), body: surfaces.TilesPage()),
               PaneItem(
                 title: const Text('Expander'),
@@ -542,317 +539,3 @@ class _LinkPaneItemAction extends PaneItem {
     );
   }
 }
-
-final rootNavigatorKey = GlobalKey<NavigatorState>();
-final _shellNavigatorKey = GlobalKey<NavigatorState>();
-final router = GoRouter(
-  navigatorKey: rootNavigatorKey,
-  routes: [
-    ShellRoute(
-      navigatorKey: _shellNavigatorKey,
-      builder: (final context, final state, final child) {
-        return MyHomePage(
-          shellContext: _shellNavigatorKey.currentContext,
-          child: child,
-        );
-      },
-      routes: <GoRoute>[
-        /// Home
-        GoRoute(
-          path: '/',
-          builder: (final context, final state) => const HomePage(),
-        ),
-
-        /// Settings
-        GoRoute(
-          path: '/settings',
-          builder: (final context, final state) => const Settings(),
-        ),
-
-        /// /// Input
-        /// Buttons
-        GoRoute(
-          path: '/inputs/buttons',
-          builder: (final context, final state) =>
-              DeferredWidget(inputs.loadLibrary, () => inputs.ButtonPage()),
-        ),
-
-        /// Checkbox
-        GoRoute(
-          path: '/inputs/checkbox',
-          builder: (final context, final state) =>
-              DeferredWidget(inputs.loadLibrary, () => inputs.CheckBoxPage()),
-        ),
-
-        /// Slider
-        GoRoute(
-          path: '/inputs/slider',
-          builder: (final context, final state) =>
-              DeferredWidget(inputs.loadLibrary, () => inputs.SliderPage()),
-        ),
-
-        /// ToggleSwitch
-        GoRoute(
-          path: '/inputs/toggle_switch',
-          builder: (final context, final state) => DeferredWidget(
-            inputs.loadLibrary,
-            () => inputs.ToggleSwitchPage(),
-          ),
-        ),
-
-        /// /// Form
-        /// TextBox
-        GoRoute(
-          path: '/forms/text_box',
-          builder: (final context, final state) =>
-              DeferredWidget(forms.loadLibrary, () => forms.TextBoxPage()),
-        ),
-
-        /// AutoSuggestBox
-        GoRoute(
-          path: '/forms/auto_suggest_box',
-          builder: (final context, final state) => DeferredWidget(
-            forms.loadLibrary,
-            () => forms.AutoSuggestBoxPage(),
-          ),
-        ),
-
-        /// ComboBox
-        GoRoute(
-          path: '/forms/combobox',
-          builder: (final context, final state) =>
-              DeferredWidget(forms.loadLibrary, () => forms.ComboBoxPage()),
-        ),
-
-        /// NumberBox
-        GoRoute(
-          path: '/forms/numberbox',
-          builder: (final context, final state) =>
-              DeferredWidget(forms.loadLibrary, () => forms.NumberBoxPage()),
-        ),
-
-        GoRoute(
-          path: '/forms/passwordbox',
-          builder: (final context, final state) =>
-              DeferredWidget(forms.loadLibrary, () => forms.PasswordBoxPage()),
-        ),
-
-        /// TimePicker
-        GoRoute(
-          path: '/forms/time_picker',
-          builder: (final context, final state) =>
-              DeferredWidget(forms.loadLibrary, () => forms.TimePickerPage()),
-        ),
-
-        /// DatePicker
-        GoRoute(
-          path: '/forms/date_picker',
-          builder: (final context, final state) =>
-              DeferredWidget(forms.loadLibrary, () => forms.DatePickerPage()),
-        ),
-
-        GoRoute(
-          path: '/forms/calendar_view',
-          builder: (final context, final state) =>
-              DeferredWidget(forms.loadLibrary, () => forms.CalendarViewPage()),
-        ),
-        GoRoute(
-          path: '/forms/calendar_date_picker',
-          builder: (final context, final state) => DeferredWidget(
-            forms.loadLibrary,
-            () => forms.CalendarDatePickerPage(),
-          ),
-        ),
-
-        /// ColorPicker
-        GoRoute(
-          path: '/forms/color_picker',
-          builder: (final context, final state) =>
-              DeferredWidget(forms.loadLibrary, () => forms.ColorPickerPage()),
-        ),
-
-        /// /// Navigation
-        /// NavigationView
-        GoRoute(
-          path: '/navigation/navigation_view',
-          builder: (final context, final state) => DeferredWidget(
-            navigation.loadLibrary,
-            () => navigation.NavigationViewPage(),
-          ),
-        ),
-        GoRoute(
-          path: '/navigation_view',
-          builder: (final context, final state) => DeferredWidget(
-            navigation.loadLibrary,
-            () => navigation.NavigationViewShellRoute(),
-          ),
-        ),
-
-        /// TabView
-        GoRoute(
-          path: '/navigation/tab_view',
-          builder: (final context, final state) => DeferredWidget(
-            navigation.loadLibrary,
-            () => navigation.TabViewPage(),
-          ),
-        ),
-
-        /// TreeView
-        GoRoute(
-          path: '/navigation/tree_view',
-          builder: (final context, final state) => DeferredWidget(
-            navigation.loadLibrary,
-            () => navigation.TreeViewPage(),
-          ),
-        ),
-
-        /// BreadcrumbBar
-        GoRoute(
-          path: '/navigation/breadcrumb_bar',
-          builder: (final context, final state) => DeferredWidget(
-            navigation.loadLibrary,
-            () => navigation.BreadcrumbBarPage(),
-          ),
-        ),
-
-        /// /// Surfaces
-        /// Acrylic
-        GoRoute(
-          path: '/surfaces/acrylic',
-          builder: (final context, final state) => DeferredWidget(
-            surfaces.loadLibrary,
-            () => surfaces.AcrylicPage(),
-          ),
-        ),
-
-        /// CommandBar
-        GoRoute(
-          path: '/surfaces/command_bar',
-          builder: (final context, final state) => DeferredWidget(
-            surfaces.loadLibrary,
-            () => surfaces.CommandBarsPage(),
-          ),
-        ),
-
-        /// Expander
-        GoRoute(
-          path: '/surfaces/expander',
-          builder: (final context, final state) => DeferredWidget(
-            surfaces.loadLibrary,
-            () => surfaces.ExpanderPage(),
-          ),
-        ),
-
-        /// InfoBar
-        GoRoute(
-          path: '/surfaces/info_bar',
-          builder: (final context, final state) => DeferredWidget(
-            surfaces.loadLibrary,
-            () => surfaces.InfoBarsPage(),
-          ),
-        ),
-
-        /// Progress Indicators
-        GoRoute(
-          path: '/surfaces/progress_indicators',
-          builder: (final context, final state) => DeferredWidget(
-            surfaces.loadLibrary,
-            () => surfaces.ProgressRingPage(),
-          ),
-        ),
-
-        /// Tiles
-        GoRoute(
-          path: '/surfaces/tiles',
-          builder: (final context, final state) =>
-              DeferredWidget(surfaces.loadLibrary, () => surfaces.TilesPage()),
-        ),
-
-        /// Popups
-        /// ContentDialog
-        GoRoute(
-          path: '/popups/content_dialog',
-          builder: (final context, final state) => DeferredWidget(
-            surfaces.loadLibrary,
-            () => popups.ContentDialogPage(),
-          ),
-        ),
-
-        /// MenuBar
-        GoRoute(
-          path: '/popups/menu_bar',
-          builder: (final context, final state) =>
-              DeferredWidget(surfaces.loadLibrary, () => popups.MenuBarPage()),
-        ),
-
-        /// Tooltip
-        GoRoute(
-          path: '/popups/tooltip',
-          builder: (final context, final state) =>
-              DeferredWidget(surfaces.loadLibrary, () => popups.TooltipPage()),
-        ),
-
-        /// Flyout
-        GoRoute(
-          path: '/popups/flyout',
-          builder: (final context, final state) => DeferredWidget(
-            surfaces.loadLibrary,
-            () => popups.Flyout2Screen(),
-          ),
-        ),
-
-        /// Teaching Tip
-        GoRoute(
-          path: '/popups/teaching_tip',
-          builder: (final context, final state) => DeferredWidget(
-            surfaces.loadLibrary,
-            () => popups.TeachingTipPage(),
-          ),
-        ),
-
-        /// /// Theming
-        /// Colors
-        GoRoute(
-          path: '/theming/colors',
-          builder: (final context, final state) =>
-              DeferredWidget(theming.loadLibrary, () => theming.ColorsPage()),
-        ),
-
-        /// Typography
-        GoRoute(
-          path: '/theming/typography',
-          builder: (final context, final state) => DeferredWidget(
-            theming.loadLibrary,
-            () => theming.TypographyPage(),
-          ),
-        ),
-
-        /// Icons
-        GoRoute(
-          path: '/theming/icons/windows',
-          builder: (final context, final state) => DeferredWidget(
-            theming.loadLibrary,
-            () => theming.IconsPage(set: WindowsIcons.allIcons),
-          ),
-        ),
-
-        GoRoute(
-          path: '/theming/icons/fluent',
-          builder: (final context, final state) => DeferredWidget(
-            theming.loadLibrary,
-            () => theming.IconsPage(set: FluentIcons.allIcons),
-          ),
-        ),
-
-        /// Reveal Focus
-        GoRoute(
-          path: '/theming/reveal_focus',
-          builder: (final context, final state) => DeferredWidget(
-            theming.loadLibrary,
-            () => theming.RevealFocusPage(),
-          ),
-        ),
-      ],
-    ),
-  ],
-);
