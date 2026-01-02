@@ -22,6 +22,42 @@ class InfoBadge extends StatelessWidget {
   /// Creates an info badge.
   const InfoBadge({super.key, this.source, this.color, this.foregroundColor});
 
+  /// Creates an informational info badge.
+  ///
+  /// Uses the default accent color to indicate informational content.
+  const InfoBadge.attention({
+    super.key,
+    this.source,
+    this.foregroundColor,
+  }) : color = null;
+
+  /// Creates an informational info badge.
+  ///
+  /// Uses the default accent color to indicate informational content.
+  const InfoBadge.informational({
+    super.key,
+    this.source,
+    this.foregroundColor,
+  }) : color = null;
+
+  /// Creates a success info badge.
+  ///
+  /// Uses the success color to indicate successful completion or positive status.
+  const InfoBadge.success({
+    super.key,
+    this.source,
+    this.foregroundColor,
+  }) : color = Colors.successPrimaryColor;
+
+  /// Creates a critical info badge.
+  ///
+  /// Uses the error color to indicate critical issues or errors.
+  const InfoBadge.critical({
+    super.key,
+    this.source,
+    this.foregroundColor,
+  }) : color = Colors.errorPrimaryColor;
+
   /// The source of the badge.
   ///
   /// Usually a [Text] or an [Icon]
@@ -52,24 +88,34 @@ class InfoBadge extends StatelessWidget {
     final foregroundColor =
         this.foregroundColor ?? theme.resources.textOnAccentFillColorPrimary;
 
+    // Dot badge (no source) - smaller size
+    if (source == null) {
+      return Container(
+        width: 6,
+        height: 6,
+        decoration: BoxDecoration(
+          color: color,
+          borderRadius: BorderRadius.circular(100),
+        ),
+      );
+    }
+
+    // Content badge - adaptive width with minimum constraints
     return Container(
-      constraints: source == null
-          ? const BoxConstraints(maxWidth: 10, maxHeight: 10)
-          : const BoxConstraints(minWidth: 16, minHeight: 16, maxHeight: 16),
+      constraints: const BoxConstraints(minWidth: 16, minHeight: 16),
+      padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 2),
       decoration: BoxDecoration(
         color: color,
         borderRadius: BorderRadius.circular(100),
       ),
-      child: source == null
-          ? null
-          : DefaultTextStyle.merge(
-              textAlign: TextAlign.center,
-              style: TextStyle(color: foregroundColor, fontSize: 11),
-              child: IconTheme.merge(
-                data: IconThemeData(color: foregroundColor, size: 8),
-                child: source!,
-              ),
-            ),
+      child: DefaultTextStyle.merge(
+        textAlign: TextAlign.center,
+        style: TextStyle(color: foregroundColor, fontSize: 11),
+        child: IconTheme.merge(
+          data: IconThemeData(color: foregroundColor, size: 8),
+          child: source!,
+        ),
+      ),
     );
   }
 }
