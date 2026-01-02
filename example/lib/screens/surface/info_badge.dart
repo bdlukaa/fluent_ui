@@ -54,11 +54,9 @@ class _InfoBadgePageState extends State<InfoBadgePage> with PageMixin {
         ),
         subtitle(content: const Text('InfoBadge with Icon')),
         const CodeSnippetCard(
-          codeSnippet: '''InfoBadge(
-  source: Icon(WindowsIcons.message),
-),
+          codeSnippet: '''InfoBadge(source: Icon(WindowsIcons.message)),
 ''',
-          child: Row(children: [InfoBadge(source: Icon(WindowsIcons.message))]),
+          child: InfoBadge(source: Icon(WindowsIcons.asterisk, size: 10)),
         ),
         subtitle(content: const Text('Dot InfoBadge')),
         const CodeSnippetCard(
@@ -68,21 +66,11 @@ class _InfoBadgePageState extends State<InfoBadgePage> with PageMixin {
         ),
         subtitle(content: const Text('Customized InfoBadge')),
         const CodeSnippetCard(
-          codeSnippet: '''InfoBadge(
+          codeSnippet: '''InfoBadge.success(
   source: const Text('1'),
-  color: Colors.errorPrimaryColor,
-  foregroundColor: Colors.white,
 ),
 ''',
-          child: Row(
-            children: [
-              InfoBadge(
-                source: Text('1'),
-                color: Colors.errorPrimaryColor,
-                foregroundColor: Colors.white,
-              ),
-            ],
-          ),
+          child: InfoBadge.success(source: Text('1')),
         ),
         subtitle(content: const Text('InfoBadge inside a NavigationView')),
         description(

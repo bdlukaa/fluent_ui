@@ -39,7 +39,7 @@
   - Updated content management to only display the current visible item at once. ([#1101](https://github.com/bdlukaa/fluent_ui/issues/1101))
   - Expose `NavigationView` important data using `NavigationView.dataOf(context)`
   - Added `NavigationPane.acrylicDisabled`, which allows disabling acrylic material effect of the pane overlays
-
+  - `InfoBadge` style variants (success, attention, critical), dot badges and adaptive sizing ([#1277](https://github.com/bdlukaa/fluent_ui/pull/1277))
 
 ## 4.13.0
 
