@@ -761,7 +761,7 @@ class PaneItemExpander extends PaneItem {
     return _MenuFlyoutPaneItemExpander(
       item: this,
       onPressed: () => onItemPressed?.call(this),
-      onItemPressed: onItemPressed ?? (item) {},
+      onItemPressed: onItemPressed ?? (_) {},
     );
   }
 }
@@ -876,11 +876,13 @@ class __PaneItemExpanderState extends State<_PaneItemExpander>
   void toggleOpen({bool doFlyout = true}) {
     if (!mounted) return;
     setState(() => _open = !_open);
+    final view = NavigationView.of(context);
+    final viewData = NavigationView.dataOf(context);
 
     if (hasSelectedChild) {
       // If the expander has a selected child, update the previous item index
-      //to -1 to prevent the sticky indicator from animating undulately.
-      NavigationView.of(context)._updatePreviousItemIndex(-1);
+      // to -1 to prevent the sticky indicator from animating undulately.
+      view._updatePreviousItemIndex(-1);
     }
 
     if (_open) {
@@ -902,9 +904,10 @@ class __PaneItemExpanderState extends State<_PaneItemExpander>
                   return _PaneItemExpanderMenuItem(
                     item: item,
                     onPressed: () {
+                      Navigator.pop(context);
                       widget.onItemPressed?.call(item);
                       item.onTap?.call();
-                      Navigator.pop(context);
+                      viewData.pane?.changeTo(item);
                     },
                     isSelected: body.pane!.isSelected(item),
                   );
