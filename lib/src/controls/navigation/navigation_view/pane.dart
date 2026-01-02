@@ -979,6 +979,7 @@ class _MenuFlyoutPaneItemExpanderState
         AnimatedSize(
           duration: theme.fastAnimationDuration,
           curve: Curves.easeIn,
+          alignment: AlignmentDirectional.topStart,
           child: !_open
               ? const SizedBox()
               : Column(
