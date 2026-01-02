@@ -738,8 +738,7 @@ class PaneItemExpander extends PaneItem {
     final maybeBody = NavigationView.dataOf(context);
     final mode = displayMode ?? maybeBody.displayMode;
 
-    return KeyedSubtree(
-      key: ValueKey(itemIndex),
+    return RepaintBoundary(
       child: _PaneItemExpander(
         key: key,
         item: this,

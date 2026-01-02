@@ -300,7 +300,7 @@ class NavigationPane with Diagnosticable {
     final index = effectiveIndexOf(item);
     if (index.isNegative) return false;
 
-    return effectiveIndexOf(item) != selected;
+    return index != selected;
   }
 
   /// Changes the selected item to [item].
@@ -399,7 +399,7 @@ class NavigationPane with Diagnosticable {
           return FocusTraversalOrder(
             order: NumericFocusOrder(index.toDouble()),
             child: _SelectedItemKeyWrapper(
-              isSelected: selected,
+              isSelected: item is! PaneItemExpander && selected,
               child: item.build(
                 context: context,
                 selected: selected,
