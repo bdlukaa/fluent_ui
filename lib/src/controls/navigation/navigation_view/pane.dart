@@ -97,6 +97,7 @@ class NavigationPane with Diagnosticable {
     this.leading,
     this.indicator = const StickyNavigationIndicator(),
     this.acrylicDisabled,
+    this.buildTopOverflowButton = defaultBuildTopOverflowButton,
   }) : assert(
          selected == null || !selected.isNegative,
          'The selected index must not be negative',
@@ -220,18 +221,29 @@ class NavigationPane with Diagnosticable {
   /// If null, [NavigationViewScrollBehavior] is used.
   final ScrollBehavior? scrollBehavior;
 
-  /// The leading Widget for the Pane
+  /// The leading Widget for the Pane.
   final Widget? leading;
 
-  /// A function called when building the navigation indicator
+  /// The navigation indicator.
+  ///
+  /// See also:
+  ///
+  ///  * [StickyNavigationIndicator], the default navigation indicator.
+  ///  * [EndNavigationIndicator], the Windows 10 indicator.
   final Widget? indicator;
 
   /// Whether the acrylic effect is disabled for the pane.
   ///
   /// See also:
   ///
-  ///   * [DisableAcrylic], which disables all the acrylic effects down the widget tree
+  ///   * [DisableAcrylic], which disables all the acrylic effects down the
+  ///      widget tree
   final bool? acrylicDisabled;
+
+  /// Builds the top overflow button.
+  ///
+  /// [defaultBuildTopOverflowButton] is used by default.
+  final Widget Function(VoidCallback openFlyout) buildTopOverflowButton;
 
   @override
   void debugFillProperties(DiagnosticPropertiesBuilder properties) {
@@ -267,6 +279,21 @@ class NavigationPane with Diagnosticable {
       )
       ..add(DiagnosticsProperty<NavigationPaneSize>('size', size))
       ..add(ObjectFlagProperty<Widget>.has('autoSuggestBox', autoSuggestBox));
+  }
+
+  static Widget defaultBuildTopOverflowButton(VoidCallback openFlyout) {
+    return Builder(
+      builder: (context) {
+        return PaneItem(icon: const WindowsIcon(WindowsIcons.more)).build(
+          context: context,
+          selected: false,
+          onPressed: openFlyout,
+          showTextOnTop: false,
+          displayMode: PaneDisplayMode.top,
+          itemIndex: -1,
+        );
+      },
+    );
   }
 
   bool canChangeTo(NavigationPaneItem item) {
@@ -814,16 +841,7 @@ class _TopNavigationPaneState extends State<_TopNavigationPane> {
                 overflowWidget: FlyoutTarget(
                   key: overflowKey,
                   controller: overflowController,
-                  // TODO(bdlukaa): Allow customizing the overflow widget
-                  child: PaneItem(icon: const WindowsIcon(WindowsIcons.more))
-                      .build(
-                        context: context,
-                        selected: false,
-                        onPressed: openOverflowFlyout,
-                        showTextOnTop: false,
-                        displayMode: PaneDisplayMode.top,
-                        itemIndex: -1,
-                      ),
+                  child: widget.pane.buildTopOverflowButton(openOverflowFlyout),
                 ),
                 overflowChangedCallback: (hiddenItems) {
                   setState(() {
