@@ -1,12 +1,9 @@
-import 'package:example/widgets/card_highlight.dart';
-import 'package:example/widgets/changelog.dart';
+import 'package:example/widgets/code_snippet_card.dart';
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:url_launcher/link.dart';
 
-import '../models/sponsor.dart';
 import '../widgets/material_equivalents.dart';
 import '../widgets/page.dart';
-import '../widgets/sponsor.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -20,7 +17,7 @@ class _HomePageState extends State<HomePage> with PageMixin {
   String? comboboxValue;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(final BuildContext context) {
     assert(debugCheckHasFluentTheme(context));
     final theme = FluentTheme.of(context);
 
@@ -32,12 +29,12 @@ class _HomePageState extends State<HomePage> with PageMixin {
           children: [
             Link(
               uri: Uri.parse('https://github.com/bdlukaa/fluent_ui'),
-              builder: (context, open) => Semantics(
+              builder: (final context, final open) => Semantics(
                 link: true,
                 child: Tooltip(
                   message: 'Source code',
                   child: IconButton(
-                    icon: const WindowsIcon(WindowsIcons.code, size: 24.0),
+                    icon: const WindowsIcon(WindowsIcons.code, size: 24),
                     onPressed: open,
                   ),
                 ),
@@ -47,9 +44,10 @@ class _HomePageState extends State<HomePage> with PageMixin {
         ),
       ),
       children: [
-        CardHighlight(
+        CodeSnippetCard(
           initiallyOpen: true,
-          codeSnippet: '''import 'package:fluent_ui/fluent_ui.dart';
+          codeSnippet: '''
+import 'package:fluent_ui/fluent_ui.dart';
 
 void main() => runApp(const MyApp());
 
@@ -72,13 +70,13 @@ class MyApp extends StatelessWidget {
           child: Card(
             child: Wrap(
               alignment: WrapAlignment.center,
-              spacing: 10.0,
+              spacing: 10,
               children: [
                 InfoLabel(
                   label: 'Inputs',
                   child: ToggleSwitch(
                     checked: selected,
-                    onChanged: (v) => setState(() => selected = v),
+                    onChanged: (final v) => setState(() => selected = v),
                   ),
                 ),
                 SizedBox(
@@ -88,16 +86,18 @@ class MyApp extends StatelessWidget {
                     child: ComboBox<String>(
                       value: comboboxValue,
                       items: ['Item 1', 'Item 2']
-                          .map((e) => ComboBoxItem(value: e, child: Text(e)))
+                          .map(
+                            (final e) => ComboBoxItem(value: e, child: Text(e)),
+                          )
                           .toList(),
                       isExpanded: true,
-                      onChanged: (v) => setState(() => comboboxValue = v),
+                      onChanged: (final v) => setState(() => comboboxValue = v),
                     ),
                   ),
                 ),
                 RepaintBoundary(
                   child: Padding(
-                    padding: const EdgeInsetsDirectional.only(start: 4.0),
+                    padding: const EdgeInsetsDirectional.only(start: 4),
                     child: InfoLabel(
                       label: 'Progress',
                       child: const SizedBox(
@@ -129,7 +129,7 @@ class MyApp extends StatelessWidget {
                 ),
                 InfoLabel(
                   label: 'Icons',
-                  child: const WindowsIcon(FluentIcons.flag, size: 30.0),
+                  child: const WindowsIcon(WindowsIcons.flag, size: 30),
                 ),
                 InfoLabel(
                   label: 'Colors',
@@ -144,7 +144,7 @@ class MyApp extends StatelessWidget {
                             Colors.warningPrimaryColor,
                             Colors.errorPrimaryColor,
                             Colors.grey,
-                          ].map((color) {
+                          ].map((final color) {
                             return Container(
                               height: 10,
                               width: 10,
@@ -157,7 +157,7 @@ class MyApp extends StatelessWidget {
                 InfoLabel(
                   label: 'Typography',
                   child: ShaderMask(
-                    shaderCallback: (rect) {
+                    shaderCallback: (final rect) {
                       return LinearGradient(
                         colors: [Colors.white, ...Colors.accentColors],
                       ).createShader(rect);
@@ -176,91 +176,7 @@ class MyApp extends StatelessWidget {
             ),
           ),
         ),
-        const SizedBox(height: 22.0),
-        IconButton(
-          onPressed: () {
-            showDialog(
-              context: context,
-              barrierDismissible: true,
-              builder: (context) => const Changelog(),
-            );
-          },
-          icon: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                'What\'s new on 4.0.0',
-                style: theme.typography.body?.copyWith(
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-              Text('June 21, 2022', style: theme.typography.caption),
-              Text(
-                'A native look-and-feel out of the box',
-                style: theme.typography.bodyLarge,
-              ),
-            ],
-          ),
-        ),
-        const SizedBox(height: 22.0),
-        Row(
-          children: [
-            Text('SPONSORS', style: theme.typography.bodyStrong),
-            const SizedBox(width: 4.0),
-            const WindowsIcon(WindowsIcons.heart_fill, size: 16.0),
-          ],
-        ),
-        const SizedBox(height: 4.0),
-        Wrap(
-          spacing: 10.0,
-          runSpacing: 10.0,
-          children: <Widget>[
-            ...sponsors.map((sponsor) {
-              return sponsor.build();
-            }),
-            IconButton(
-              onPressed: () {
-                showDialog(
-                  context: context,
-                  builder: (context) => const SponsorDialog(),
-                );
-              },
-              icon: Column(
-                children: [
-                  SizedBox(
-                    height: 60,
-                    width: 60,
-                    child: ShaderMask(
-                      shaderCallback: (rect) {
-                        return LinearGradient(
-                          colors: [
-                            Colors.white.withValues(alpha: 0.8),
-                            ...Colors.accentColors,
-                          ],
-                        ).createShader(rect);
-                      },
-                      blendMode: BlendMode.srcATop,
-                      child: const WindowsIcon(
-                        FluentIcons.diamond_user,
-                        size: 60,
-                      ),
-                    ),
-                  ),
-                  const Text('Become a Sponsor!'),
-                ],
-              ),
-            ),
-          ],
-        ),
-        const SizedBox(height: 22.0),
-        Text('CONTRIBUTORS', style: theme.typography.bodyStrong),
-        Wrap(
-          spacing: 10.0,
-          runSpacing: 10.0,
-          children: contributors.map((contributor) {
-            return contributor.build();
-          }).toList(),
-        ),
+        const SizedBox(height: 22),
         subtitle(
           content: const Text(
             'Equivalents with the material and cupertino libraries',
@@ -274,16 +190,16 @@ class MyApp extends StatelessWidget {
 
 class SponsorButton extends StatelessWidget {
   const SponsorButton({
-    super.key,
     required this.imageUrl,
     required this.username,
+    super.key,
   });
 
   final String imageUrl;
   final String username;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(final BuildContext context) {
     return Column(
       children: [
         Container(

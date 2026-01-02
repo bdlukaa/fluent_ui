@@ -6,7 +6,7 @@ import 'app_test.dart';
 void main() {
   testWidgets(
     'TreeView calculates the selected property for parent as soon as it is built',
-    (WidgetTester tester) async {
+    (tester) async {
       final itemOne = TreeViewItem(
         content: const Text('Item 1'),
         selected: true,
@@ -30,9 +30,7 @@ void main() {
     },
   );
 
-  testWidgets('TreeViewItem deep copy rebuilds parent linkage', (
-    WidgetTester tester,
-  ) async {
+  testWidgets('TreeViewItem deep copy rebuilds parent linkage', (tester) async {
     final items = [
       TreeViewItem(
         content: const Text('Parent item'),

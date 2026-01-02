@@ -3,19 +3,42 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/services.dart';
 
+/// The default icon data for the rating bar.
 const IconData kRatingBarIcon = FluentIcons.favorite_star_fill;
 
-/// The rating bar allows users to view and set ratings that
-/// reflect degrees of satisfaction with content and services.
-/// Users can interact with the rating control with touch, pen,
-/// mouse, gamepad or keyboard. The follow guidance shows how to
-/// use the rating control's features to provide flexibility and
-/// customization.
+/// A control for viewing and setting star ratings.
 ///
-/// ![RatingBar Preview](https://docs.microsoft.com/en-us/windows/uwp/design/controls-and-patterns/images/rating_rs2_doc_ratings_intro.png)
+/// The [RatingBar] allows users to rate content with a configurable number
+/// of stars. Users can interact with touch, mouse, keyboard, or gamepad.
+///
+/// ![RatingBar Preview](https://learn.microsoft.com/en-us/windows/apps/design/controls/images/rating_rs2_doc_ratings_intro.png)
+///
+/// {@tool snippet}
+/// This example shows a basic rating bar:
+///
+/// ```dart
+/// RatingBar(
+///   rating: currentRating,
+///   onChanged: (rating) => setState(() => currentRating = rating),
+/// )
+/// ```
+/// {@end-tool}
+///
+/// {@tool snippet}
+/// This example shows a read-only rating display:
+///
+/// ```dart
+/// RatingBar(
+///   rating: 4.5,
+///   onChanged: null, // Read-only
+/// )
+/// ```
+/// {@end-tool}
 ///
 /// See also:
-///   - [Slider]
+///
+///  * [Slider], for selecting numeric values from a range
+///  * <https://learn.microsoft.com/en-us/windows/apps/design/controls/rating>
 class RatingBar extends StatefulWidget {
   /// Creates a new rating bar.
   ///
@@ -23,8 +46,8 @@ class RatingBar extends StatefulWidget {
   ///
   /// [starSpacing] and [amount] must be greater than 0
   const RatingBar({
-    super.key,
     required this.rating,
+    super.key,
     this.onChanged,
     this.amount = 5,
     this.animationDuration = Duration.zero,
@@ -182,28 +205,20 @@ class _RatingBarState extends State<RatingBar> {
         switch (directionality) {
           case TextDirection.rtl:
             decrease();
-            break;
           case TextDirection.ltr:
             increase();
-            break;
         }
-        break;
       case _SliderAdjustmentType.left:
         switch (directionality) {
           case TextDirection.rtl:
             increase();
-            break;
           case TextDirection.ltr:
             decrease();
-            break;
         }
-        break;
       case _SliderAdjustmentType.up:
         increase();
-        break;
       case _SliderAdjustmentType.down:
         decrease();
-        break;
     }
   }
 
@@ -257,7 +272,7 @@ class _RatingBarState extends State<RatingBar> {
                       } else if (r < 0) {
                         r = 0;
                       }
-                      Widget icon = RatingIcon(
+                      final Widget icon = RatingIcon(
                         rating: r,
                         icon: widget.icon ?? kRatingBarIcon,
                         ratedColor: widget.ratedIconColor,

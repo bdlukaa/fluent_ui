@@ -1,5 +1,6 @@
 part of 'view.dart';
 
+/// The default color for a pane item.
 WidgetStateProperty<Color?> kDefaultPaneItemColor(
   BuildContext context,
   bool isTop,
@@ -25,44 +26,40 @@ WidgetStateProperty<Color?> kDefaultPaneItemColor(
 /// Values specified here are used for [NavigationPane] properties that are not
 /// given an explicit non-null value.
 class NavigationPaneTheme extends InheritedTheme {
-  /// Creates a navigation pane theme that controls the configurations for
-  /// [NavigationPane].
+  /// Creates a theme that controls how descendant [NavigationPane]s should
+  /// look like.
   const NavigationPaneTheme({
-    super.key,
     required this.data,
     required super.child,
+    super.key,
   });
 
   /// The properties for descendant [NavigationPane] widgets.
   final NavigationPaneThemeData data;
 
-  /// Creates a button theme that controls how descendant [NavigationPane]s
-  /// should look like, and merges in the current slider theme, if any.
+  /// Creates a theme that merges the nearest [NavigationPaneTheme] with [data].
   static Widget merge({
-    Key? key,
     required NavigationPaneThemeData data,
     required Widget child,
+    Key? key,
   }) {
     return Builder(
-      builder: (BuildContext context) {
+      builder: (context) {
         return NavigationPaneTheme(
           key: key,
-          data: _getInheritedThemeData(context).merge(data),
+          data: NavigationPaneTheme.of(context).merge(data),
           child: child,
         );
       },
     );
   }
 
-  static NavigationPaneThemeData _getInheritedThemeData(BuildContext context) {
-    final theme = context
-        .dependOnInheritedWidgetOfExactType<NavigationPaneTheme>();
-    return theme?.data ?? FluentTheme.of(context).navigationPaneTheme;
-  }
-
-  /// Returns the [data] from the closest [NavigationPaneTheme] ancestor. If there is
-  /// no ancestor, it returns [FluentThemeData.navigationPaneTheme]. Applications can assume
-  /// that the returned value will not be null.
+  /// Returns the closest [NavigationPaneThemeData] which encloses the given
+  /// context.
+  ///
+  /// Resolution order:
+  /// 1. Global theme from [FluentThemeData.navigationPaneTheme]
+  /// 2. Local [NavigationPaneTheme] ancestor
   ///
   /// Typical usage is as follows:
   ///
@@ -70,9 +67,11 @@ class NavigationPaneTheme extends InheritedTheme {
   /// NavigationPaneThemeData theme = NavigationPaneTheme.of(context);
   /// ```
   static NavigationPaneThemeData of(BuildContext context) {
-    return FluentTheme.of(
-      context,
-    ).navigationPaneTheme.merge(_getInheritedThemeData(context));
+    assert(debugCheckHasFluentTheme(context));
+    final theme = FluentTheme.of(context);
+    final inheritedTheme = context
+        .dependOnInheritedWidgetOfExactType<NavigationPaneTheme>();
+    return theme.navigationPaneTheme.merge(inheritedTheme?.data);
   }
 
   @override
@@ -105,26 +104,47 @@ class NavigationPaneThemeData with Diagnosticable {
   /// If null, [FluentThemeData.accentColor] is used.
   final Color? highlightColor;
 
+  /// The padding applied to the label.
   final EdgeInsetsGeometry? labelPadding;
+
+  /// The padding applied to the icon.
   final EdgeInsetsGeometry? iconPadding;
 
   /// The padding applied to the header. This padding is not applied when
   /// display mode is top
   final EdgeInsetsGeometry? headerPadding;
 
+  /// The text style applied to the item header.
   final TextStyle? itemHeaderTextStyle;
+
+  /// The text style applied to the selected item.
   final WidgetStateProperty<TextStyle?>? selectedTextStyle;
+
+  /// The text style applied to the unselected item.
   final WidgetStateProperty<TextStyle?>? unselectedTextStyle;
+
+  /// The text style applied to the selected top item.
   final WidgetStateProperty<TextStyle?>? selectedTopTextStyle;
+
+  /// The text style applied to the unselected top item.
   final WidgetStateProperty<TextStyle?>? unselectedTopTextStyle;
+
+  /// The color applied to the selected icon.
   final WidgetStateProperty<Color?>? selectedIconColor;
+
+  /// The color applied to the unselected icon.
   final WidgetStateProperty<Color?>? unselectedIconColor;
 
+  /// The icon used for the pane navigation button.
   final IconData? paneNavigationButtonIcon;
 
+  /// The duration of the animation.
   final Duration? animationDuration;
+
+  /// The curve of the animation.
   final Curve? animationCurve;
 
+  /// Creates a navigation pane theme data.
   const NavigationPaneThemeData({
     this.backgroundColor,
     this.overlayBackgroundColor,
@@ -161,7 +181,9 @@ class NavigationPaneThemeData with Diagnosticable {
       backgroundColor: resources.solidBackgroundFillColorBase,
       overlayBackgroundColor: resources.systemFillColorSolidNeutralBackground,
       highlightColor: highlightColor,
-      itemHeaderTextStyle: typography.bodyStrong,
+      itemHeaderTextStyle: typography.bodyStrong?.copyWith(
+        color: resources.textFillColorSecondary,
+      ),
       selectedTextStyle: WidgetStateProperty.resolveWith((states) {
         return typography.body?.copyWith(
           color: states.isPressed
@@ -198,13 +220,16 @@ class NavigationPaneThemeData with Diagnosticable {
               : resources.textFillColorPrimary,
         );
       }),
-      labelPadding: const EdgeInsetsDirectional.only(end: 10.0),
-      iconPadding: const EdgeInsets.symmetric(horizontal: 10.0),
-      headerPadding: const EdgeInsetsDirectional.only(top: 10.0),
+      labelPadding: const EdgeInsetsDirectional.only(end: 10),
+      iconPadding: const EdgeInsetsDirectional.symmetric(horizontal: 12),
+      headerPadding: const EdgeInsetsDirectional.symmetric(vertical: 8),
       paneNavigationButtonIcon: FluentIcons.global_nav_button,
     );
   }
 
+  /// Lerps the navigation pane theme data.
+  ///
+  /// {@macro fluent_ui.lerp.t}
   static NavigationPaneThemeData lerp(
     NavigationPaneThemeData? a,
     NavigationPaneThemeData? b,
@@ -222,7 +247,7 @@ class NavigationPaneThemeData with Diagnosticable {
         b?.headerPadding,
         t,
       ),
-      tileColor: WidgetStateProperty.lerp<Color?>(
+      tileColor: lerpWidgetStateProperty<Color?>(
         a?.tileColor,
         b?.tileColor,
         t,
@@ -239,25 +264,25 @@ class NavigationPaneThemeData with Diagnosticable {
         b?.itemHeaderTextStyle,
         t,
       ),
-      selectedTextStyle: WidgetStateProperty.lerp<TextStyle?>(
+      selectedTextStyle: lerpWidgetStateProperty<TextStyle?>(
         a?.selectedTextStyle,
         b?.selectedTextStyle,
         t,
         TextStyle.lerp,
       ),
-      unselectedTextStyle: WidgetStateProperty.lerp<TextStyle?>(
+      unselectedTextStyle: lerpWidgetStateProperty<TextStyle?>(
         a?.unselectedTextStyle,
         b?.unselectedTextStyle,
         t,
         TextStyle.lerp,
       ),
-      selectedTopTextStyle: WidgetStateProperty.lerp<TextStyle?>(
+      selectedTopTextStyle: lerpWidgetStateProperty<TextStyle?>(
         a?.selectedTextStyle,
         b?.selectedTextStyle,
         t,
         TextStyle.lerp,
       ),
-      unselectedTopTextStyle: WidgetStateProperty.lerp<TextStyle?>(
+      unselectedTopTextStyle: lerpWidgetStateProperty<TextStyle?>(
         a?.unselectedTextStyle,
         b?.unselectedTextStyle,
         t,
@@ -270,13 +295,13 @@ class NavigationPaneThemeData with Diagnosticable {
         b?.animationDuration ?? Duration.zero,
         t,
       ),
-      selectedIconColor: WidgetStateProperty.lerp<Color?>(
+      selectedIconColor: lerpWidgetStateProperty<Color?>(
         a?.selectedIconColor,
         b?.selectedIconColor,
         t,
         Color.lerp,
       ),
-      unselectedIconColor: WidgetStateProperty.lerp<Color?>(
+      unselectedIconColor: lerpWidgetStateProperty<Color?>(
         a?.unselectedIconColor,
         b?.unselectedIconColor,
         t,
@@ -288,6 +313,7 @@ class NavigationPaneThemeData with Diagnosticable {
     );
   }
 
+  /// Merges the navigation pane theme data with another.
   NavigationPaneThemeData merge(NavigationPaneThemeData? style) {
     return NavigationPaneThemeData(
       iconPadding: style?.iconPadding ?? iconPadding,

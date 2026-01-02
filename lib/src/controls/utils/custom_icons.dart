@@ -27,10 +27,12 @@ class ChevronDown extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    assert(debugCheckHasFluentTheme(context));
+    final theme = FluentTheme.of(context);
     final states = HoverButton.maybeOf(context)?.states;
 
     return TweenAnimationBuilder<double>(
-      duration: const Duration(milliseconds: 50),
+      duration: theme.fasterAnimationDuration,
       curve: Curves.ease,
       tween: Tween(
         begin: 1,
@@ -61,8 +63,8 @@ class ChevronDown extends StatelessWidget {
 class RatingIcon extends StatelessWidget {
   /// Creates a rating-icon.
   const RatingIcon({
-    super.key,
     required this.rating,
+    super.key,
     this.ratedColor,
     this.unratedColor,
     this.icon = kRatingBarIcon,

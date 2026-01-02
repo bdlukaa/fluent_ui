@@ -82,11 +82,11 @@ class Settings extends StatefulWidget {
 
 class _SettingsState extends State<Settings> with PageMixin {
   @override
-  Widget build(BuildContext context) {
+  Widget build(final BuildContext context) {
     assert(debugCheckHasMediaQuery(context));
     final appTheme = context.watch<AppTheme>();
-    const spacer = SizedBox(height: 10.0);
-    const biggerSpacer = SizedBox(height: 40.0);
+    const spacer = SizedBox(height: 10);
+    const biggerSpacer = SizedBox(height: 40);
 
     const supportedLocales = FluentLocalizations.supportedLocales;
     final currentLocale =
@@ -96,13 +96,13 @@ class _SettingsState extends State<Settings> with PageMixin {
       children: [
         Text('Theme mode', style: FluentTheme.of(context).typography.subtitle),
         spacer,
-        ...List.generate(ThemeMode.values.length, (index) {
+        ...List.generate(ThemeMode.values.length, (final index) {
           final mode = ThemeMode.values[index];
           return Padding(
-            padding: const EdgeInsetsDirectional.only(bottom: 8.0),
+            padding: const EdgeInsetsDirectional.only(bottom: 8),
             child: RadioButton(
               checked: appTheme.mode == mode,
-              onChanged: (value) {
+              onChanged: (final value) {
                 if (value) {
                   appTheme.mode = mode;
 
@@ -123,13 +123,13 @@ class _SettingsState extends State<Settings> with PageMixin {
           style: FluentTheme.of(context).typography.subtitle,
         ),
         spacer,
-        ...List.generate(PaneDisplayMode.values.length, (index) {
+        ...List.generate(PaneDisplayMode.values.length, (final index) {
           final mode = PaneDisplayMode.values[index];
           return Padding(
-            padding: const EdgeInsetsDirectional.only(bottom: 8.0),
+            padding: const EdgeInsetsDirectional.only(bottom: 8),
             child: RadioButton(
               checked: appTheme.displayMode == mode,
-              onChanged: (value) {
+              onChanged: (final value) {
                 if (value) appTheme.displayMode = mode;
               },
               content: Text(mode.toString().replaceAll('PaneDisplayMode.', '')),
@@ -142,13 +142,13 @@ class _SettingsState extends State<Settings> with PageMixin {
           style: FluentTheme.of(context).typography.subtitle,
         ),
         spacer,
-        ...List.generate(NavigationIndicators.values.length, (index) {
+        ...List.generate(NavigationIndicators.values.length, (final index) {
           final mode = NavigationIndicators.values[index];
           return Padding(
-            padding: const EdgeInsetsDirectional.only(bottom: 8.0),
+            padding: const EdgeInsetsDirectional.only(bottom: 8),
             child: RadioButton(
               checked: appTheme.indicator == mode,
-              onChanged: (value) {
+              onChanged: (final value) {
                 if (value) appTheme.indicator = mode;
               },
               content: Text(
@@ -169,7 +169,7 @@ class _SettingsState extends State<Settings> with PageMixin {
               message: accentColorNames[0],
               child: _buildColorBlock(appTheme, systemAccentColor),
             ),
-            ...List.generate(Colors.accentColors.length, (index) {
+            ...List.generate(Colors.accentColors.length, (final index) {
               final color = Colors.accentColors[index];
               return Tooltip(
                 message: accentColorNames[index + 1],
@@ -190,13 +190,13 @@ class _SettingsState extends State<Settings> with PageMixin {
             ),
           ),
           spacer,
-          ...List.generate(currentWindowEffects.length, (index) {
+          ...List.generate(currentWindowEffects.length, (final index) {
             final mode = currentWindowEffects[index];
             return Padding(
-              padding: const EdgeInsetsDirectional.only(bottom: 8.0),
+              padding: const EdgeInsetsDirectional.only(bottom: 8),
               child: RadioButton(
                 checked: appTheme.windowEffect == mode,
-                onChanged: (value) {
+                onChanged: (final value) {
                   if (value) {
                     appTheme.windowEffect = mode;
                     appTheme.setEffect(mode, context);
@@ -213,13 +213,13 @@ class _SettingsState extends State<Settings> with PageMixin {
           style: FluentTheme.of(context).typography.subtitle,
         ),
         spacer,
-        ...List.generate(TextDirection.values.length, (index) {
+        ...List.generate(TextDirection.values.length, (final index) {
           final direction = TextDirection.values[index];
           return Padding(
-            padding: const EdgeInsetsDirectional.only(bottom: 8.0),
+            padding: const EdgeInsetsDirectional.only(bottom: 8),
             child: RadioButton(
               checked: appTheme.textDirection == direction,
-              onChanged: (value) {
+              onChanged: (final value) {
                 if (value) {
                   appTheme.textDirection = direction;
                 }
@@ -243,16 +243,16 @@ class _SettingsState extends State<Settings> with PageMixin {
         ),
         spacer,
         Wrap(
-          spacing: 15.0,
-          runSpacing: 10.0,
-          children: List.generate(supportedLocales.length, (index) {
+          spacing: 15,
+          runSpacing: 10,
+          children: List.generate(supportedLocales.length, (final index) {
             final locale = supportedLocales[index];
 
             return Padding(
-              padding: const EdgeInsetsDirectional.only(bottom: 8.0),
+              padding: const EdgeInsetsDirectional.only(bottom: 8),
               child: RadioButton(
                 checked: currentLocale == locale,
-                onChanged: (value) {
+                onChanged: (final value) {
                   if (value) {
                     appTheme.locale = locale;
                   }
@@ -266,16 +266,16 @@ class _SettingsState extends State<Settings> with PageMixin {
     );
   }
 
-  Widget _buildColorBlock(AppTheme appTheme, AccentColor color) {
+  Widget _buildColorBlock(final AppTheme appTheme, final AccentColor color) {
     return Padding(
-      padding: const EdgeInsets.all(2.0),
+      padding: const EdgeInsetsDirectional.all(2),
       child: Button(
         onPressed: () {
           appTheme.color = color;
         },
         style: ButtonStyle(
-          padding: const WidgetStatePropertyAll(EdgeInsets.zero),
-          backgroundColor: WidgetStateProperty.resolveWith((states) {
+          padding: const WidgetStatePropertyAll(EdgeInsetsDirectional.zero),
+          backgroundColor: WidgetStateProperty.resolveWith((final states) {
             if (states.isPressed) {
               return color.light;
             } else if (states.isHovered) {
@@ -290,9 +290,9 @@ class _SettingsState extends State<Settings> with PageMixin {
           alignment: AlignmentDirectional.center,
           child: appTheme.color == color
               ? Icon(
-                  FluentIcons.check_mark,
+                  WindowsIcons.check_mark,
                   color: color.basedOnLuminance(),
-                  size: 22.0,
+                  size: 22,
                 )
               : null,
         ),

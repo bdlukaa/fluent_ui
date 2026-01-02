@@ -13,8 +13,8 @@ void main() {
       await tester.pumpWidget(
         wrapApp(
           child: CommandBarCard(
-            margin: const EdgeInsets.all(8),
-            padding: const EdgeInsets.all(12),
+            margin: const EdgeInsetsDirectional.all(8),
+            padding: const EdgeInsetsDirectional.all(12),
             borderRadius: const BorderRadius.all(Radius.circular(10)),
             borderColor: Colors.red,
             backgroundColor: Colors.green,
@@ -24,8 +24,8 @@ void main() {
       );
       expect(find.byKey(testKey), findsOneWidget);
       final card = tester.widget<Card>(find.byType(Card));
-      expect(card.margin, const EdgeInsets.all(8));
-      expect(card.padding, const EdgeInsets.all(12));
+      expect(card.margin, const EdgeInsetsDirectional.all(8));
+      expect(card.padding, const EdgeInsetsDirectional.all(12));
       expect(card.borderRadius, const BorderRadius.all(Radius.circular(10)));
       expect(card.borderColor, Colors.red);
       expect(card.backgroundColor, Colors.green);
@@ -54,7 +54,7 @@ void main() {
   testWidgets(
     'CommandBar renders secondary items and shows flyout on overflow button tap',
     (tester) async {
-      bool pressed = false;
+      var pressed = false;
       await tester.pumpWidget(
         wrapApp(
           child: SizedBox(

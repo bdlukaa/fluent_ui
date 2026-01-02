@@ -38,14 +38,14 @@ class WindowsIcon extends Icon {
 
   @override
   Widget build(BuildContext context) {
-    IconData? resolvedIcon = () {
+    final resolvedIcon = () {
       final isWindows =
           !kIsWeb && defaultTargetPlatform == TargetPlatform.windows;
 
       if (isWindows) {
         return icon;
       } else if (fallbackIcon != null) {
-        return fallbackIcon!;
+        return fallbackIcon;
       } else {
         final iconId = WindowsIcons.allIcons.entries.firstWhereOrNull((entry) {
           return entry.value == icon;

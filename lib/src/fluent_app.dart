@@ -3,9 +3,9 @@ import 'package:flutter/cupertino.dart' show CupertinoScrollbar;
 import 'package:flutter/material.dart' as m;
 import 'package:flutter_localizations/flutter_localizations.dart'
     show
+        GlobalCupertinoLocalizations,
         GlobalMaterialLocalizations,
-        GlobalWidgetsLocalizations,
-        GlobalCupertinoLocalizations;
+        GlobalWidgetsLocalizations;
 
 /// An application that uses Windows design.
 ///
@@ -469,7 +469,7 @@ class _FluentAppState extends State<FluentApp> {
         data: themeData,
         child: widget.builder != null
             ? Builder(
-                builder: (BuildContext context) {
+                builder: (context) {
                   // Why are we surrounding a builder with a builder?
                   //
                   // The widget.builder may contain code that invokes
@@ -542,7 +542,7 @@ class _FluentAppState extends State<FluentApp> {
       actions: widget.actions,
       restorationScopeId: widget.restorationScopeId,
       localizationsDelegates: _localizationsDelegates,
-      pageRouteBuilder: <T>(RouteSettings settings, WidgetBuilder builder) {
+      pageRouteBuilder: <T>(settings, builder) {
         return FluentPageRoute<T>(settings: settings, builder: builder);
       },
     );
@@ -568,7 +568,11 @@ class FluentScrollBehavior extends ScrollBehavior {
   const FluentScrollBehavior();
 
   @override
-  Widget buildScrollbar(context, child, details) {
+  Widget buildScrollbar(
+    BuildContext context,
+    Widget child,
+    ScrollableDetails details,
+  ) {
     // When modifying this function, consider modifying the implementation in
     // the base class as well.
     switch (axisDirectionToAxis(details.direction)) {

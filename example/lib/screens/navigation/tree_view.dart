@@ -1,4 +1,4 @@
-import 'package:example/widgets/card_highlight.dart';
+import 'package:example/widgets/code_snippet_card.dart';
 import 'package:example/widgets/page.dart';
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter/gestures.dart';
@@ -14,7 +14,7 @@ class _TreeViewPageState extends State<TreeViewPage> with PageMixin {
   final treeViewKey = GlobalKey<TreeViewState>(debugLabel: 'TreeView key');
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(final BuildContext context) {
     return ScaffoldPage.scrollable(
       header: const PageHeader(title: Text('TreeView')),
       children: [
@@ -30,8 +30,9 @@ class _TreeViewPageState extends State<TreeViewPage> with PageMixin {
         subtitle(
           content: const Text('A TreeView with Multi-selection enabled'),
         ),
-        CardHighlight(
-          codeSnippet: r'''final items = [
+        CodeSnippetCard(
+          codeSnippet: r'''
+final items = [
   TreeViewItem(
     content: const Text('Personal Documents'),
     value: 'personal_docs',
@@ -96,19 +97,20 @@ TreeView(
             key: treeViewKey,
             selectionMode: TreeViewSelectionMode.multiple,
             items: items,
-            onItemInvoked: (item, reason) async =>
+            onItemInvoked: (final item, final reason) async =>
                 debugPrint('onItemInvoked(reason=$reason): $item'),
-            onSelectionChanged: (selectedItems) async => debugPrint(
-              'onSelectionChanged: ${selectedItems.map((i) => i.value)}',
+            onSelectionChanged: (final selectedItems) async => debugPrint(
+              'onSelectionChanged: ${selectedItems.map((final i) => i.value)}',
             ),
-            onSecondaryTap: (item, details) async {
+            onSecondaryTap: (final item, final details) async {
               debugPrint('onSecondaryTap $item at ${details.globalPosition}');
             },
           ),
         ),
         subtitle(content: const Text('A TreeView with lazy-loading items')),
-        CardHighlight(
-          codeSnippet: r'''final lazyItems = [
+        CodeSnippetCard(
+          codeSnippet: r'''
+final lazyItems = [
   TreeViewItem(
     content: const Text('Item with lazy loading'),
     value: 'lazy_load',
@@ -122,7 +124,7 @@ TreeView(
       if (item.children.isNotEmpty) return;
 
       // Do your fetching...
-      await Future.delayed(const Duration(seconds: 2));
+      await Future<void>.delayed(const Duration(seconds: 2));
       
       // ...and add the fetched nodes.
       item.children.addAll([
@@ -163,12 +165,12 @@ TreeView(
 )''',
           child: TreeView(
             items: lazyItems,
-            onItemInvoked: (item, reason) async =>
+            onItemInvoked: (final item, final reason) async =>
                 debugPrint('onItemInvoked(reason=$reason): $item'),
-            onSelectionChanged: (selectedItems) async => debugPrint(
-              'onSelectionChanged: ${selectedItems.map((i) => i.value)}',
+            onSelectionChanged: (final selectedItems) async => debugPrint(
+              'onSelectionChanged: ${selectedItems.map((final i) => i.value)}',
             ),
-            onSecondaryTap: (item, details) async {
+            onSecondaryTap: (final item, final details) async {
               debugPrint('onSecondaryTap $item at ${details.globalPosition}');
             },
           ),
@@ -182,8 +184,9 @@ TreeView(
             'callback, whether it is built-in or custom.',
           ),
         ),
-        CardHighlight(
-          codeSnippet: r'''TreeView(
+        CodeSnippetCard(
+          codeSnippet: r'''
+TreeView(
   ...,
   gesturesBuilder: (item) {
     return <Type, GestureRecognizerFactory>{
@@ -199,22 +202,20 @@ TreeView(
 ),''',
           child: TreeView(
             items: items,
-            onItemInvoked: (item, reason) async =>
+            onItemInvoked: (final item, final reason) async =>
                 debugPrint('onItemInvoked(reason=$reason): $item'),
-            onSelectionChanged: (selectedItems) async => debugPrint(
-              'onSelectionChanged: ${selectedItems.map((i) => i.value)}',
+            onSelectionChanged: (final selectedItems) async => debugPrint(
+              'onSelectionChanged: ${selectedItems.map((final i) => i.value)}',
             ),
-            onSecondaryTap: (item, details) async {
+            onSecondaryTap: (final item, final details) async {
               debugPrint('onSecondaryTap $item at ${details.globalPosition}');
             },
-            gesturesBuilder: (item) {
+            gesturesBuilder: (final item) {
               return <Type, GestureRecognizerFactory>{
                 DoubleTapGestureRecognizer:
                     GestureRecognizerFactoryWithHandlers<
                       DoubleTapGestureRecognizer
-                    >(() => DoubleTapGestureRecognizer(), (
-                      DoubleTapGestureRecognizer instance,
-                    ) {
+                    >(DoubleTapGestureRecognizer.new, (final instance) {
                       instance.onDoubleTap = () =>
                           debugPrint('onDoubleTap $item');
                     }),
@@ -257,22 +258,22 @@ TreeView(
           content: const Text('Tax Documents'),
           value: 'tax_docs',
           children: [
-            TreeViewItem(content: const Text('2017'), value: "tax_2017"),
+            TreeViewItem(content: const Text('2017'), value: 'tax_2017'),
             TreeViewItem(
               content: const Text('Middle Years'),
               value: 'tax_middle_years',
               children: [
-                TreeViewItem(content: const Text('2018'), value: "tax_2018"),
+                TreeViewItem(content: const Text('2018'), value: 'tax_2018'),
                 TreeViewItem(
                   content: const Text('2019'),
-                  value: "tax_2019",
+                  value: 'tax_2019',
                   selected: true,
                 ),
-                TreeViewItem(content: const Text('2020'), value: "tax_2020"),
+                TreeViewItem(content: const Text('2020'), value: 'tax_2020'),
               ],
             ),
-            TreeViewItem(content: const Text('2021'), value: "tax_2021"),
-            TreeViewItem(content: const Text('Current Year'), value: "tax_cur"),
+            TreeViewItem(content: const Text('2021'), value: 'tax_2021'),
+            TreeViewItem(content: const Text('Current Year'), value: 'tax_cur'),
           ],
         ),
       ],
@@ -288,12 +289,12 @@ TreeView(
       lazy: true,
       // Ensure the list is modifiable.
       children: [],
-      onExpandToggle: (item, getsExpanded) async {
+      onExpandToggle: (final item, final getsExpanded) async {
         // If it's already populated, return.
         if (item.children.isNotEmpty) return;
 
         // Do your fetching...
-        await Future.delayed(const Duration(seconds: 2));
+        await Future<void>.delayed(const Duration(seconds: 2));
 
         // ...and add the fetched nodes.
         item.children.addAll([

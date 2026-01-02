@@ -38,22 +38,55 @@ enum DatePickerField {
   year,
 }
 
-/// The date picker gives you a standardized way to let users pick a localized
-/// date value using touch, mouse, or keyboard input.
+/// A picker control that lets users select a date.
 ///
-/// ![DatePicker Preview](https://docs.microsoft.com/en-us/windows/apps/design/controls/images/controls-datepicker-expand.gif)
+/// The date picker provides a standardized way for users to pick a localized
+/// date value using touch, mouse, or keyboard input. It displays separate
+/// fields for month, day, and year that expand into scrollable lists.
+///
+/// ![DatePicker Preview](https://learn.microsoft.com/en-us/windows/apps/design/controls/images/controls-datepicker-expand.gif)
+///
+/// {@tool snippet}
+/// This example shows a basic date picker:
+///
+/// ```dart
+/// DatePicker(
+///   selected: selectedDate,
+///   onChanged: (date) => setState(() => selectedDate = date),
+///   header: 'Select a date',
+/// )
+/// ```
+/// {@end-tool}
+///
+/// {@tool snippet}
+/// This example shows a date picker with restricted range:
+///
+/// ```dart
+/// DatePicker(
+///   selected: selectedDate,
+///   onChanged: (date) => setState(() => selectedDate = date),
+///   startDate: DateTime(2020, 1, 1),
+///   endDate: DateTime(2025, 12, 31),
+/// )
+/// ```
+/// {@end-tool}
+///
+/// ## Field configuration
+///
+/// Use [showMonth], [showDay], and [showYear] to show or hide specific fields.
+/// Use [fieldOrder] to customize the order of fields based on locale.
 ///
 /// See also:
 ///
-///  * [TimePicker], which gives you a standardized way to let users pick a time
-///    value
-///  * [CalendarView], which lets a user view and interact with a calendar
-///  * <https://docs.microsoft.com/en-us/windows/apps/design/controls/date-picker>
+///  * [TimePicker], for selecting time values
+///  * [CalendarDatePicker], for selecting dates from a calendar view
+///  * [CalendarView], for displaying and interacting with a calendar
+///  * <https://learn.microsoft.com/en-us/windows/apps/design/controls/date-picker>
 class DatePicker extends StatefulWidget {
   /// Creates a date picker.
   DatePicker({
-    super.key,
     required this.selected,
+    super.key,
     this.onChanged,
     this.onCancel,
     this.header,
@@ -214,19 +247,23 @@ class DatePicker extends StatefulWidget {
 }
 
 class DatePickerState extends State<DatePicker> {
-  late DateTime date;
+  late DateTime _date;
 
   late FixedExtentScrollController _monthController;
   late FixedExtentScrollController _dayController;
   late FixedExtentScrollController _yearController;
 
+  /// The year that the date picker starts from
   int get startYear => widget.startDate.year;
+
+  /// The year that the date picker ends at
   int get endYear => widget.endDate.year;
 
+  /// The current year that the date picker is currently displaying
   int get currentYear {
     return List.generate(endYear - startYear + 1, (index) {
       return startYear + index;
-    }).firstWhere((v) => v == date.year, orElse: () => 0);
+    }).firstWhere((v) => v == _date.year, orElse: () => 0);
   }
 
   final _pickerKey = GlobalKey<PickerState>();
@@ -234,22 +271,22 @@ class DatePickerState extends State<DatePicker> {
   @override
   void initState() {
     super.initState();
-    date = widget.selected ?? DateTime.now();
-    initControllers();
+    _date = widget.selected ?? DateTime.now();
+    _initControllers();
   }
 
-  void initControllers() {
+  void _initControllers() {
     if (widget.selected == null && mounted) {
-      setState(() => date = DateTime.now());
+      setState(() => _date = DateTime.now());
     }
     _monthController = FixedExtentScrollController(
       initialItem: _monthsInYear(
-        date,
+        _date,
         widget.startDate,
         widget.endDate,
-      ).toList().indexOf(date.month),
+      ).toList().indexOf(_date.month),
     );
-    _dayController = FixedExtentScrollController(initialItem: date.day - 1);
+    _dayController = FixedExtentScrollController(initialItem: _date.day - 1);
     _yearController = FixedExtentScrollController(
       initialItem: currentYear - startYear,
     );
@@ -266,21 +303,23 @@ class DatePickerState extends State<DatePicker> {
   @override
   void didUpdateWidget(DatePicker oldWidget) {
     super.didUpdateWidget(oldWidget);
-    if (widget.selected != date) {
+    if (widget.selected != _date) {
       WidgetsBinding.instance.addPostFrameCallback((_) {
-        date = widget.selected ?? DateTime.now();
-        _monthController.jumpToItem(date.month - 1);
-        _dayController.jumpToItem(date.day - 1);
+        _date = widget.selected ?? DateTime.now();
+        _monthController.jumpToItem(_date.month - 1);
+        _dayController.jumpToItem(_date.day - 1);
         _yearController.jumpToItem(currentYear - startYear - 1);
       });
     }
   }
 
+  /// Update the current date with a new date.
   void handleDateChanged(DateTime newDate) {
-    if (mounted) setState(() => date = newDate);
+    if (mounted) setState(() => _date = newDate);
   }
 
-  void open() async {
+  /// Open the date picker popup.
+  Future<void> open() async {
     await _pickerKey.currentState?.open();
   }
 
@@ -309,11 +348,11 @@ class DatePickerState extends State<DatePicker> {
       'There can be only one year field',
     );
 
-    Widget picker = Picker(
+    final Widget picker = Picker(
       key: _pickerKey,
       pickerContent: (context) {
         return _DatePickerContentPopUp(
-          date: date,
+          date: _date,
           dayController: _dayController,
           monthController: _monthController,
           onCancel: () => widget.onCancel?.call(),
@@ -339,7 +378,7 @@ class DatePickerState extends State<DatePicker> {
                 _monthController.dispose();
                 _dayController.dispose();
                 _yearController.dispose();
-                initControllers();
+                _initControllers();
                 await open();
               },
         builder: (context, states) {
@@ -347,8 +386,8 @@ class DatePickerState extends State<DatePicker> {
           const divider = Divider(
             direction: Axis.vertical,
             style: DividerThemeData(
-              verticalMargin: EdgeInsets.zero,
-              horizontalMargin: EdgeInsets.zero,
+              verticalMargin: EdgeInsetsDirectional.zero,
+              horizontalMargin: EdgeInsetsDirectional.zero,
             ),
           );
 
@@ -546,8 +585,8 @@ class __DatePickerContentPopUpState extends State<_DatePickerContentPopUp> {
     const divider = Divider(
       direction: Axis.vertical,
       style: DividerThemeData(
-        verticalMargin: EdgeInsets.zero,
-        horizontalMargin: EdgeInsets.zero,
+        verticalMargin: EdgeInsetsDirectional.zero,
+        horizontalMargin: EdgeInsetsDirectional.zero,
       ),
     );
 
@@ -658,7 +697,7 @@ class __DatePickerContentPopUpState extends State<_DatePickerContentPopUp> {
                   final selected = day == localDate.day;
 
                   return ListTile(
-                    contentPadding: EdgeInsets.zero,
+                    contentPadding: EdgeInsetsDirectional.zero,
                     key: ValueKey(day),
                     onPressed: selected
                         ? null
@@ -745,7 +784,7 @@ class __DatePickerContentPopUpState extends State<_DatePickerContentPopUp> {
                 final realYear = widget.startDate.year + index;
                 final selected = realYear == localDate.year;
                 return ListTile(
-                  contentPadding: EdgeInsets.zero,
+                  contentPadding: EdgeInsetsDirectional.zero,
                   onPressed: selected
                       ? null
                       : () {
@@ -804,8 +843,8 @@ class __DatePickerContentPopUpState extends State<_DatePickerContentPopUp> {
           ),
           const Divider(
             style: DividerThemeData(
-              verticalMargin: EdgeInsets.zero,
-              horizontalMargin: EdgeInsets.zero,
+              verticalMargin: EdgeInsetsDirectional.zero,
+              horizontalMargin: EdgeInsetsDirectional.zero,
             ),
           ),
           YesNoPickerControl(onChanged: onSelect, onCancel: onDismiss),

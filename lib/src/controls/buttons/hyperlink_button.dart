@@ -1,21 +1,51 @@
 import 'package:fluent_ui/fluent_ui.dart';
 
-/// A borderless button with mainly text-based content
+/// A borderless button styled like a hyperlink.
 ///
-/// {@macro fluent_ui.buttons.base}
+/// The [HyperlinkButton] is used for less prominent actions or for inline
+/// actions within text. It has a transparent background and displays text
+/// in the accent color, similar to a web hyperlink.
+///
+/// {@tool snippet}
+/// This example shows a basic hyperlink button:
+///
+/// ```dart
+/// HyperlinkButton(
+///   child: Text('Learn more'),
+///   onPressed: () => launchUrl(Uri.parse('https://example.com')),
+/// )
+/// ```
+/// {@end-tool}
+///
+/// {@tool snippet}
+/// This example shows a hyperlink button used for navigation:
+///
+/// ```dart
+/// Row(
+///   children: [
+///     Text('Don\'t have an account?'),
+///     HyperlinkButton(
+///       child: Text('Sign up'),
+///       onPressed: () => navigateToSignUp(),
+///     ),
+///   ],
+/// )
+/// ```
+/// {@end-tool}
 ///
 /// See also:
 ///
-///   * [OutlinedButton], an outlined button
-///   * [FilledButton], a colored button
-///   * <https://learn.microsoft.com/en-us/windows/windows-app-sdk/api/winrt/microsoft.ui.xaml.controls.hyperlinkbutton>
-///   * <https://github.com/microsoft/microsoft-ui-xaml/blob/main/dev/CommonStyles/HyperlinkButton_themeresources.xaml>
+///  * [Button], for standard button actions
+///  * [FilledButton], for primary actions
+///  * <https://learn.microsoft.com/en-us/windows/apps/design/controls/hyperlinks>
 class HyperlinkButton extends BaseButton {
-  /// Creates a text-button.
+  /// Creates a hyperlink button.
+  ///
+  /// The [child] is typically a [Text] widget styled as a link.
   const HyperlinkButton({
-    super.key,
     required super.child,
     required super.onPressed,
+    super.key,
     super.onLongPress,
     super.onTapDown,
     super.onTapUp,
@@ -33,7 +63,7 @@ class HyperlinkButton extends BaseButton {
     return ButtonStyle(
       backgroundColor: backgroundColor(theme),
       shape: WidgetStatePropertyAll(
-        RoundedRectangleBorder(borderRadius: BorderRadius.circular(4.0)),
+        RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)),
       ),
       padding: const WidgetStatePropertyAll(kDefaultButtonPadding),
       foregroundColor: WidgetStateProperty.resolveWith((states) {
@@ -59,8 +89,9 @@ class HyperlinkButton extends BaseButton {
     return ButtonTheme.of(context).hyperlinkButtonStyle;
   }
 
-  static WidgetStateProperty<Color> backgroundColor(FluentThemeData theme) {
-    return WidgetStateProperty.resolveWith((states) {
+  /// Returns the background color for a hyperlink button based on its state.
+  static WidgetStateColor backgroundColor(FluentThemeData theme) {
+    return WidgetStateColor.resolveWith((states) {
       if (states.isDisabled) {
         return theme.resources.subtleFillColorDisabled;
       } else if (states.isPressed) {

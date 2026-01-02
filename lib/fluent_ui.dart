@@ -1,35 +1,35 @@
 export 'package:flutter/material.dart'
     show
+        AdaptiveTextSelectionToolbar,
+        AnimatedIcon,
+        AnimatedIconData,
+        AnimatedIcons,
         Brightness,
-        VisualDensity,
-        ThemeMode,
+        CircleAvatar,
+        DatePickerMode,
+        DateTimeRange,
+        DateUtils,
+        DefaultMaterialLocalizations,
         Feedback,
         FlutterLogo,
-        CircleAvatar,
-        kElevationToShadow,
-        DateTimeRange,
         HourFormat,
-        AnimatedIcon,
-        AnimatedIcons,
-        AnimatedIconData,
-        DateUtils,
-        SelectableDayPredicate,
-        DatePickerMode,
-        ReorderableListView,
-        DefaultMaterialLocalizations,
-        ReorderableDragStartListener,
-        kThemeAnimationDuration,
-        TooltipVisibility,
-        TooltipTriggerMode,
-        TextInputAction,
         MaterialLocalizations,
-        TextSelectionTheme,
-        TextSelectionThemeData,
+        ReorderableDragStartListener,
+        ReorderableListView,
+        SelectableDayPredicate,
         SelectableText,
         SelectionArea,
-        ThemeExtension,
+        TextInputAction,
         TextMagnifier,
-        AdaptiveTextSelectionToolbar;
+        TextSelectionTheme,
+        TextSelectionThemeData,
+        ThemeExtension,
+        ThemeMode,
+        TooltipTriggerMode,
+        TooltipVisibility,
+        VisualDensity,
+        kElevationToShadow,
+        kThemeAnimationDuration;
 export 'package:flutter/widgets.dart' hide TextBox;
 export 'package:scroll_pos/scroll_pos.dart';
 
@@ -69,8 +69,8 @@ export 'src/controls/inputs/toggle_switch.dart';
 export 'src/controls/layout/dynamic_overflow.dart';
 export 'src/controls/layout/horizontal_scroll_view.dart';
 export 'src/controls/layout/page.dart';
-export 'src/controls/navigation/bottom_navigation.dart';
 export 'src/controls/navigation/breadcrumb_bar.dart';
+export 'src/controls/navigation/navigation_view/title_bar.dart';
 export 'src/controls/navigation/navigation_view/view.dart';
 export 'src/controls/navigation/tab_view/tab_view.dart';
 export 'src/controls/navigation/tree_view.dart';

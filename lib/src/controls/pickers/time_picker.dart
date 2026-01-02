@@ -3,6 +3,7 @@ import 'package:fluent_ui/src/controls/pickers/pickers.dart';
 import 'package:fluent_ui/src/intl_script_locale_apply_mixin.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/rendering.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:intl/intl.dart';
 
 String _formatHour(int hour, String locale) {
@@ -28,22 +29,56 @@ String _formatMinute(int minute, String locale) {
   );
 }
 
-/// The time picker gives you a standardized way to let users pick a time value
-/// using touch, mouse, or keyboard input.
+/// A picker control that lets users select a time.
 ///
-/// ![TimePicker Preview](https://docs.microsoft.com/en-us/windows/apps/design/controls/images/controls-timepicker-expand.gif)
+/// The time picker provides a standardized way for users to pick a time value
+/// using touch, mouse, or keyboard input. It displays separate fields for
+/// hour, minute, and optionally AM/PM that expand into scrollable lists.
+///
+/// ![TimePicker Preview](https://learn.microsoft.com/en-us/windows/apps/design/controls/images/controls-timepicker-expand.gif)
+///
+/// {@tool snippet}
+/// This example shows a basic time picker:
+///
+/// ```dart
+/// TimePicker(
+///   selected: selectedTime,
+///   onChanged: (time) => setState(() => selectedTime = time),
+///   header: 'Select a time',
+/// )
+/// ```
+/// {@end-tool}
+///
+/// {@tool snippet}
+/// This example shows a 24-hour format time picker with 15-minute increments:
+///
+/// ```dart
+/// TimePicker(
+///   selected: selectedTime,
+///   onChanged: (time) => setState(() => selectedTime = time),
+///   hourFormat: HourFormat.HH,
+///   minuteIncrement: 15,
+/// )
+/// ```
+/// {@end-tool}
+///
+/// ## Hour formats
+///
+/// Use [hourFormat] to specify the clock system:
+///
+/// * [HourFormat.h] - 12-hour format with AM/PM
+/// * [HourFormat.HH] - 24-hour format
 ///
 /// See also:
 ///
-///  * [DatePicker], which gives you a standardized way to let users pick a
-///    localized date value
-///  * [CalendarView], which lets a user view and interact with a calendar
-///  * <https://docs.microsoft.com/en-us/windows/apps/design/controls/time-picker>
+///  * [DatePicker], for selecting date values
+///  * [CalendarView], for selecting dates from a calendar
+///  * <https://learn.microsoft.com/en-us/windows/apps/design/controls/time-picker>
 class TimePicker extends StatefulWidget {
   /// Creates a time picker.
   const TimePicker({
-    super.key,
     required this.selected,
+    super.key,
     this.onChanged,
     this.onCancel,
     this.hourFormat = HourFormat.h,
@@ -107,6 +142,7 @@ class TimePicker extends StatefulWidget {
   /// If null, the system locale will be used.
   final Locale? locale;
 
+  /// Whether the time picker is using the 24-hour format.
   bool get use24Format => [HourFormat.HH, HourFormat.H].contains(hourFormat);
 
   @override
@@ -153,7 +189,7 @@ class TimePicker extends StatefulWidget {
 
 class TimePickerState extends State<TimePicker>
     with IntlScriptLocaleApplyMixin {
-  late DateTime time;
+  late DateTime _time;
 
   final GlobalKey _buttonKey = GlobalKey(debugLabel: 'Time Picker button key');
 
@@ -161,15 +197,13 @@ class TimePickerState extends State<TimePicker>
   late FixedExtentScrollController _minuteController;
   late FixedExtentScrollController _amPmController;
 
-  bool am = true;
-
   final _pickerKey = GlobalKey<PickerState>();
 
   @override
   void initState() {
     super.initState();
-    time = widget.selected ?? DateTime.now();
-    initControllers();
+    _time = widget.selected ?? DateTime.now();
+    _initControllers();
   }
 
   @override
@@ -183,46 +217,49 @@ class TimePickerState extends State<TimePicker>
   @override
   void didUpdateWidget(TimePicker oldWidget) {
     super.didUpdateWidget(oldWidget);
-    if (widget.selected != time) {
+    if (widget.selected != _time) {
       WidgetsBinding.instance.addPostFrameCallback((_) {
-        time = widget.selected ?? DateTime.now();
+        _time = widget.selected ?? DateTime.now();
         _hourController.jumpToItem(() {
-          var hour = time.hour;
+          var hour = _time.hour;
           if (!widget.use24Format) {
             hour -= 12;
           }
           return hour;
         }());
-        _minuteController.jumpToItem(time.minute);
-        _amPmController.jumpToItem(_isPm ? 1 : 0);
+        _minuteController.jumpToItem(_time.minute);
+        _amPmController.jumpToItem(isPm ? 1 : 0);
       });
     }
   }
 
+  /// Update the current time with a new time.
   void handleDateChanged(DateTime date) {
-    setState(() => time = date);
+    setState(() => _time = date);
   }
 
-  void initControllers() {
+  void _initControllers() {
     if (widget.selected == null && mounted) {
-      setState(() => time = DateTime.now());
+      setState(() => _time = DateTime.now());
     }
     _hourController = FixedExtentScrollController(
       initialItem: () {
-        var hour = time.hour;
+        var hour = _time.hour;
         if (!widget.use24Format) {
           hour -= 12;
         }
         return hour;
       }(),
     );
-    _minuteController = FixedExtentScrollController(initialItem: time.minute);
+    _minuteController = FixedExtentScrollController(initialItem: _time.minute);
 
-    _amPmController = FixedExtentScrollController(initialItem: _isPm ? 1 : 0);
+    _amPmController = FixedExtentScrollController(initialItem: isPm ? 1 : 0);
   }
 
-  bool get _isPm => time.hour >= 12;
+  /// Whether the current time is in the PM period.
+  bool get isPm => _time.hour >= 12;
 
+  /// Open the time picker popup.
   void open() {
     _pickerKey.currentState?.open();
   }
@@ -236,7 +273,7 @@ class TimePickerState extends State<TimePicker>
     final localizations = FluentLocalizations.of(context);
     final locale = widget.locale ?? Localizations.maybeLocaleOf(context);
 
-    Widget picker = Picker(
+    final Widget picker = Picker(
       key: _pickerKey,
       pickerHeight: widget.popupHeight,
       pickerContent: (context) {
@@ -264,15 +301,15 @@ class TimePickerState extends State<TimePicker>
                 _hourController.dispose();
                 _minuteController.dispose();
                 _amPmController.dispose();
-                initControllers();
+                _initControllers();
                 await open();
               },
         builder: (context, states) {
           const divider = Divider(
             direction: Axis.vertical,
             style: DividerThemeData(
-              verticalMargin: EdgeInsets.zero,
-              horizontalMargin: EdgeInsets.zero,
+              verticalMargin: EdgeInsetsDirectional.zero,
+              horizontalMargin: EdgeInsetsDirectional.zero,
             ),
           );
           return FocusBorder(
@@ -299,7 +336,7 @@ class TimePickerState extends State<TimePicker>
                             return localizations.hour;
                           }
                           late int finalHour;
-                          var hour = time.hour;
+                          final hour = _time.hour;
                           if (!widget.use24Format && hour > 12) {
                             finalHour = hour - 12;
                           } else {
@@ -317,7 +354,7 @@ class TimePickerState extends State<TimePicker>
                         child: Text(
                           widget.selected == null
                               ? localizations.minute
-                              : _formatMinute(time.minute, '$locale'),
+                              : _formatMinute(_time.minute, '$locale'),
                           textAlign: TextAlign.center,
                         ),
                       ),
@@ -328,7 +365,7 @@ class TimePickerState extends State<TimePicker>
                         child: Padding(
                           padding: widget.contentPadding,
                           child: Text(() {
-                            if (_isPm) return localizations.pm;
+                            if (isPm) return localizations.pm;
                             return localizations.am;
                           }(), textAlign: TextAlign.center),
                         ),
@@ -413,9 +450,11 @@ class __TimePickerContentPopupState extends State<_TimePickerContentPopup> {
 
   void handleDateChanged(DateTime time) {
     localDate = time;
-    Future.delayed(const Duration(milliseconds: 1), () {
-      if (mounted) setState(() {});
-    });
+    if (mounted) {
+      SchedulerBinding.instance.addPostFrameCallback((_) {
+        if (mounted) setState(() {});
+      });
+    }
   }
 
   int getClosestMinute(List<int> possibleMinutes, int goal) {
@@ -447,8 +486,8 @@ class __TimePickerContentPopupState extends State<_TimePickerContentPopup> {
     const divider = Divider(
       direction: Axis.vertical,
       style: DividerThemeData(
-        verticalMargin: EdgeInsets.zero,
-        horizontalMargin: EdgeInsets.zero,
+        verticalMargin: EdgeInsetsDirectional.zero,
+        horizontalMargin: EdgeInsetsDirectional.zero,
       ),
     );
     final duration = theme.fasterAnimationDuration;
@@ -723,8 +762,8 @@ class __TimePickerContentPopupState extends State<_TimePickerContentPopup> {
           ),
           const Divider(
             style: DividerThemeData(
-              verticalMargin: EdgeInsets.zero,
-              horizontalMargin: EdgeInsets.zero,
+              verticalMargin: EdgeInsetsDirectional.zero,
+              horizontalMargin: EdgeInsetsDirectional.zero,
             ),
           ),
           YesNoPickerControl(onChanged: onSelect, onCancel: onDismiss),

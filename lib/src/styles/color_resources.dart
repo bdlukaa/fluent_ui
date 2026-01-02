@@ -1,11 +1,19 @@
 // GENERATED FILE, DO NOT EDIT
 // This generates the values from https://github.com/microsoft/microsoft-ui-xaml/blob/main/dev/CommonStyles/Common_themeresources_any.xaml
 
-// ignore_for_file: constant_identifier_names
+// ignore_for_file: constant_identifier_names, public_member_api_docs
 
-import 'package:flutter/foundation.dart';
 import 'package:flutter/widgets.dart' show Color, ColorProperty;
+import 'package:flutter/foundation.dart';
 
+/// A dictionary of colors used by all the components.
+///
+/// Use `ResourceDictionary.dark` or `ResourceDictionary.light` to get colors
+/// adapted to dark and light mode, respectively
+///
+/// See also:
+///
+///   * <https://github.com/microsoft/microsoft-ui-xaml/blob/main/dev/CommonStyles/Common_themeresources_any.xaml>
 class ResourceDictionary with Diagnosticable {
   final Color textFillColorPrimary;
   final Color textFillColorSecondary;
@@ -20,6 +28,7 @@ class ResourceDictionary with Diagnosticable {
   final Color controlFillColorDefault;
   final Color controlFillColorSecondary;
   final Color controlFillColorTertiary;
+  final Color controlFillColorQuarternary;
   final Color controlFillColorDisabled;
   final Color controlFillColorTransparent;
   final Color controlFillColorInputActive;
@@ -59,6 +68,7 @@ class ResourceDictionary with Diagnosticable {
   final Color focusStrokeColorInner;
   final Color cardBackgroundFillColorDefault;
   final Color cardBackgroundFillColorSecondary;
+  final Color cardBackgroundFillColorTertiary;
   final Color smokeFillColorDefault;
   final Color layerFillColorDefault;
   final Color layerFillColorAlt;
@@ -72,6 +82,8 @@ class ResourceDictionary with Diagnosticable {
   final Color solidBackgroundFillColorSecondary;
   final Color solidBackgroundFillColorTertiary;
   final Color solidBackgroundFillColorQuarternary;
+  final Color solidBackgroundFillColorQuinary;
+  final Color solidBackgroundFillColorSenary;
   final Color solidBackgroundFillColorTransparent;
   final Color solidBackgroundFillColorBaseAlt;
   final Color systemFillColorSuccess;
@@ -101,6 +113,7 @@ class ResourceDictionary with Diagnosticable {
     required this.controlFillColorDefault,
     required this.controlFillColorSecondary,
     required this.controlFillColorTertiary,
+    required this.controlFillColorQuarternary,
     required this.controlFillColorDisabled,
     required this.controlFillColorTransparent,
     required this.controlFillColorInputActive,
@@ -140,6 +153,7 @@ class ResourceDictionary with Diagnosticable {
     required this.focusStrokeColorInner,
     required this.cardBackgroundFillColorDefault,
     required this.cardBackgroundFillColorSecondary,
+    required this.cardBackgroundFillColorTertiary,
     required this.smokeFillColorDefault,
     required this.layerFillColorDefault,
     required this.layerFillColorAlt,
@@ -153,6 +167,8 @@ class ResourceDictionary with Diagnosticable {
     required this.solidBackgroundFillColorSecondary,
     required this.solidBackgroundFillColorTertiary,
     required this.solidBackgroundFillColorQuarternary,
+    required this.solidBackgroundFillColorQuinary,
+    required this.solidBackgroundFillColorSenary,
     required this.solidBackgroundFillColorTransparent,
     required this.solidBackgroundFillColorBaseAlt,
     required this.systemFillColorSuccess,
@@ -169,6 +185,7 @@ class ResourceDictionary with Diagnosticable {
     required this.systemFillColorSolidNeutralBackground,
   });
 
+  // Colors adapted for dark mode
   const ResourceDictionary.dark({
     this.textFillColorPrimary = const Color(0xFFffffff),
     this.textFillColorSecondary = const Color(0xc5ffffff),
@@ -183,6 +200,7 @@ class ResourceDictionary with Diagnosticable {
     this.controlFillColorDefault = const Color(0x0fffffff),
     this.controlFillColorSecondary = const Color(0x15ffffff),
     this.controlFillColorTertiary = const Color(0x08ffffff),
+    this.controlFillColorQuarternary = const Color(0x0fffffff),
     this.controlFillColorDisabled = const Color(0x0bffffff),
     this.controlFillColorTransparent = const Color(0x00ffffff),
     this.controlFillColorInputActive = const Color(0xb31e1e1e),
@@ -222,6 +240,7 @@ class ResourceDictionary with Diagnosticable {
     this.focusStrokeColorInner = const Color(0xb3000000),
     this.cardBackgroundFillColorDefault = const Color(0x0dffffff),
     this.cardBackgroundFillColorSecondary = const Color(0x08ffffff),
+    this.cardBackgroundFillColorTertiary = const Color(0x12ffffff),
     this.smokeFillColorDefault = const Color(0x4d000000),
     this.layerFillColorDefault = const Color(0x4c3a3a3a),
     this.layerFillColorAlt = const Color(0x0dffffff),
@@ -235,6 +254,8 @@ class ResourceDictionary with Diagnosticable {
     this.solidBackgroundFillColorSecondary = const Color(0xFF1c1c1c),
     this.solidBackgroundFillColorTertiary = const Color(0xFF282828),
     this.solidBackgroundFillColorQuarternary = const Color(0xFF2c2c2c),
+    this.solidBackgroundFillColorQuinary = const Color(0xFF333333),
+    this.solidBackgroundFillColorSenary = const Color(0xFF373737),
     this.solidBackgroundFillColorTransparent = const Color(0x00202020),
     this.solidBackgroundFillColorBaseAlt = const Color(0xFF0a0a0a),
     this.systemFillColorSuccess = const Color(0xFF6ccb5f),
@@ -251,6 +272,7 @@ class ResourceDictionary with Diagnosticable {
     this.systemFillColorSolidNeutralBackground = const Color(0xFF2e2e2e),
   });
 
+  // Colors adapted for light mode
   const ResourceDictionary.light({
     this.textFillColorPrimary = const Color(0xe4000000),
     this.textFillColorSecondary = const Color(0x9e000000),
@@ -265,6 +287,7 @@ class ResourceDictionary with Diagnosticable {
     this.controlFillColorDefault = const Color(0xb3ffffff),
     this.controlFillColorSecondary = const Color(0x80f9f9f9),
     this.controlFillColorTertiary = const Color(0x4df9f9f9),
+    this.controlFillColorQuarternary = const Color(0xc2f3f3f3),
     this.controlFillColorDisabled = const Color(0x4df9f9f9),
     this.controlFillColorTransparent = const Color(0x00ffffff),
     this.controlFillColorInputActive = const Color(0xFFffffff),
@@ -304,6 +327,7 @@ class ResourceDictionary with Diagnosticable {
     this.focusStrokeColorInner = const Color(0xb3ffffff),
     this.cardBackgroundFillColorDefault = const Color(0xb3ffffff),
     this.cardBackgroundFillColorSecondary = const Color(0x80f6f6f6),
+    this.cardBackgroundFillColorTertiary = const Color(0xFFffffff),
     this.smokeFillColorDefault = const Color(0x4d000000),
     this.layerFillColorDefault = const Color(0x80ffffff),
     this.layerFillColorAlt = const Color(0xFFffffff),
@@ -317,6 +341,8 @@ class ResourceDictionary with Diagnosticable {
     this.solidBackgroundFillColorSecondary = const Color(0xFFeeeeee),
     this.solidBackgroundFillColorTertiary = const Color(0xFFf9f9f9),
     this.solidBackgroundFillColorQuarternary = const Color(0xFFffffff),
+    this.solidBackgroundFillColorQuinary = const Color(0xFFfdfdfd),
+    this.solidBackgroundFillColorSenary = const Color(0xFFffffff),
     this.solidBackgroundFillColorTransparent = const Color(0x00f3f3f3),
     this.solidBackgroundFillColorBaseAlt = const Color(0xFFdadada),
     this.systemFillColorSuccess = const Color(0xFF0f7b0f),
@@ -402,6 +428,11 @@ class ResourceDictionary with Diagnosticable {
       controlFillColorTertiary: Color.lerp(
         a.controlFillColorTertiary,
         b.controlFillColorTertiary,
+        t,
+      )!,
+      controlFillColorQuarternary: Color.lerp(
+        a.controlFillColorQuarternary,
+        b.controlFillColorQuarternary,
         t,
       )!,
       controlFillColorDisabled: Color.lerp(
@@ -599,6 +630,11 @@ class ResourceDictionary with Diagnosticable {
         b.cardBackgroundFillColorSecondary,
         t,
       )!,
+      cardBackgroundFillColorTertiary: Color.lerp(
+        a.cardBackgroundFillColorTertiary,
+        b.cardBackgroundFillColorTertiary,
+        t,
+      )!,
       smokeFillColorDefault: Color.lerp(
         a.smokeFillColorDefault,
         b.smokeFillColorDefault,
@@ -662,6 +698,16 @@ class ResourceDictionary with Diagnosticable {
       solidBackgroundFillColorQuarternary: Color.lerp(
         a.solidBackgroundFillColorQuarternary,
         b.solidBackgroundFillColorQuarternary,
+        t,
+      )!,
+      solidBackgroundFillColorQuinary: Color.lerp(
+        a.solidBackgroundFillColorQuinary,
+        b.solidBackgroundFillColorQuinary,
+        t,
+      )!,
+      solidBackgroundFillColorSenary: Color.lerp(
+        a.solidBackgroundFillColorSenary,
+        b.solidBackgroundFillColorSenary,
         t,
       )!,
       solidBackgroundFillColorTransparent: Color.lerp(
@@ -781,6 +827,12 @@ class ResourceDictionary with Diagnosticable {
         ColorProperty('controlFillColorSecondary', controlFillColorSecondary),
       )
       ..add(ColorProperty('controlFillColorTertiary', controlFillColorTertiary))
+      ..add(
+        ColorProperty(
+          'controlFillColorQuarternary',
+          controlFillColorQuarternary,
+        ),
+      )
       ..add(ColorProperty('controlFillColorDisabled', controlFillColorDisabled))
       ..add(
         ColorProperty(
@@ -955,6 +1007,12 @@ class ResourceDictionary with Diagnosticable {
           cardBackgroundFillColorSecondary,
         ),
       )
+      ..add(
+        ColorProperty(
+          'cardBackgroundFillColorTertiary',
+          cardBackgroundFillColorTertiary,
+        ),
+      )
       ..add(ColorProperty('smokeFillColorDefault', smokeFillColorDefault))
       ..add(ColorProperty('layerFillColorDefault', layerFillColorDefault))
       ..add(ColorProperty('layerFillColorAlt', layerFillColorAlt))
@@ -1016,6 +1074,18 @@ class ResourceDictionary with Diagnosticable {
         ColorProperty(
           'solidBackgroundFillColorQuarternary',
           solidBackgroundFillColorQuarternary,
+        ),
+      )
+      ..add(
+        ColorProperty(
+          'solidBackgroundFillColorQuinary',
+          solidBackgroundFillColorQuinary,
+        ),
+      )
+      ..add(
+        ColorProperty(
+          'solidBackgroundFillColorSenary',
+          solidBackgroundFillColorSenary,
         ),
       )
       ..add(

@@ -1,4 +1,4 @@
-import 'package:example/widgets/card_highlight.dart';
+import 'package:example/widgets/code_snippet_card.dart';
 import 'package:example/widgets/page.dart';
 import 'package:fluent_ui/fluent_ui.dart';
 
@@ -13,7 +13,7 @@ class _ContentDialogPageState extends State<ContentDialogPage> with PageMixin {
   String? result = '';
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(final BuildContext context) {
     return ScaffoldPage.scrollable(
       header: const PageHeader(title: Text('ContentDialog')),
       children: [
@@ -24,8 +24,9 @@ class _ContentDialogPageState extends State<ContentDialogPage> with PageMixin {
           'user.',
         ),
         subtitle(content: const Text('A basic content dialog with content')),
-        CardHighlight(
-          codeSnippet: '''Button(
+        CodeSnippetCard(
+          codeSnippet: r'''
+Button(
   child: const Text('Show dialog'),
   onPressed: () => showContentDialog(context),
 ),
@@ -36,7 +37,7 @@ void showContentDialog(BuildContext context) async {
     builder: (context) => ContentDialog(
       title: const Text('Delete file permanently?'),
       content: const Text(
-        'If you delete this file, you won\\'t be able to recover it. Do you want to delete it?',
+        'If you delete this file, you won\'t be able to recover it. Do you want to delete it?',
       ),
       actions: [
         Button(
@@ -61,7 +62,7 @@ void showContentDialog(BuildContext context) async {
                 child: const Text('Show dialog'),
                 onPressed: () => showContentDialog(context),
               ),
-              const SizedBox(width: 10.0),
+              const SizedBox(width: 10),
               Text(result ?? ''),
               const Spacer(),
             ],
@@ -71,13 +72,13 @@ void showContentDialog(BuildContext context) async {
     );
   }
 
-  void showContentDialog(BuildContext context) async {
+  Future<void> showContentDialog(final BuildContext context) async {
     result = await showDialog<String>(
       context: context,
-      builder: (context) => ContentDialog(
+      builder: (final context) => ContentDialog(
         title: const Text('Delete file permanently?'),
         content: const Text(
-          'If you delete this file, you won\'t be able to recover it. Do you want to delete it?',
+          "If you delete this file, you won't be able to recover it. Do you want to delete it?",
         ),
         actions: [
           Button(

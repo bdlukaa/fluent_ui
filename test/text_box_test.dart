@@ -7,10 +7,10 @@ import 'app_test.dart';
 void main() {
   testWidgets('TextBox displays entered text using controller', (tester) async {
     final controller = TextEditingController();
-    const inputText = "fluent_ui";
+    const inputText = 'fluent_ui';
     await tester.pumpWidget(
       StatefulBuilder(
-        builder: (BuildContext context, StateSetter setState) {
+        builder: (context, setState) {
           return wrapApp(child: TextBox(controller: controller));
         },
       ),
@@ -25,11 +25,11 @@ void main() {
   testWidgets('TextBox updates value via onChanged callback when user types', (
     tester,
   ) async {
-    String text = "";
-    const inputText = "fluent_ui";
+    var text = '';
+    const inputText = 'fluent_ui';
     await tester.pumpWidget(
       StatefulBuilder(
-        builder: (BuildContext context, StateSetter setState) {
+        builder: (context, setState) {
           return wrapApp(
             child: TextBox(
               onChanged: (value) {
@@ -54,11 +54,11 @@ void main() {
     'TextBox should maintain cursor position correctly during edits',
     (tester) async {
       final controller = TextEditingController();
-      const inputText = "fluent_ui";
+      const inputText = 'fluent_ui';
 
       await tester.pumpWidget(
         StatefulBuilder(
-          builder: (BuildContext context, StateSetter setState) {
+          builder: (context, setState) {
             return wrapApp(child: TextBox(controller: controller));
           },
         ),
@@ -78,7 +78,7 @@ void main() {
     const maxLength = 5;
     await tester.pumpWidget(
       StatefulBuilder(
-        builder: (BuildContext context, StateSetter setState) {
+        builder: (context, setState) {
           return wrapApp(
             child: TextBox(maxLength: maxLength, controller: controller),
           );
@@ -87,10 +87,10 @@ void main() {
     );
     final textBoxFinder = find.byType(TextBox);
     expect(textBoxFinder, findsOneWidget);
-    await tester.enterText(textBoxFinder, "fluent_ui");
+    await tester.enterText(textBoxFinder, 'fluent_ui');
     await tester.pumpAndSettle();
     expect(controller.text.length, equals(maxLength));
-    expect(controller.text, "fluen");
+    expect(controller.text, 'fluen');
   });
 
   testWidgets('TextBox should gain focus when tapped', (tester) async {
@@ -98,7 +98,7 @@ void main() {
 
     await tester.pumpWidget(
       StatefulBuilder(
-        builder: (BuildContext context, StateSetter setState) {
+        builder: (context, setState) {
           return wrapApp(child: TextBox(focusNode: focusNode));
         },
       ),
@@ -115,20 +115,20 @@ void main() {
 
     await tester.pumpWidget(
       StatefulBuilder(
-        builder: (BuildContext context, StateSetter setState) {
+        builder: (context, setState) {
           return wrapApp(
             child: Column(
               children: [
-                TextBox(key: const Key("TextBox1"), focusNode: focusNode),
-                const TextBox(key: Key("TextBox2")),
+                TextBox(key: const Key('TextBox1'), focusNode: focusNode),
+                const TextBox(key: Key('TextBox2')),
               ],
             ),
           );
         },
       ),
     );
-    final textBoxFinder1 = find.byKey(const Key("TextBox1"));
-    final textBoxFinder2 = find.byKey(const Key("TextBox2"));
+    final textBoxFinder1 = find.byKey(const Key('TextBox1'));
+    final textBoxFinder2 = find.byKey(const Key('TextBox2'));
 
     expect(textBoxFinder1, findsOneWidget);
     expect(textBoxFinder2, findsOneWidget);
@@ -147,24 +147,24 @@ void main() {
     final focusNode2 = FocusNode();
     await tester.pumpWidget(
       StatefulBuilder(
-        builder: (BuildContext context, StateSetter setState) {
+        builder: (context, setState) {
           return wrapApp(
             child: Column(
               children: [
                 TextBox(
                   autofocus: true,
-                  key: const Key("TextBox1"),
+                  key: const Key('TextBox1'),
                   focusNode: focusNode1,
                 ),
-                TextBox(focusNode: focusNode2, key: const Key("TextBox2")),
+                TextBox(focusNode: focusNode2, key: const Key('TextBox2')),
               ],
             ),
           );
         },
       ),
     );
-    final textBoxFinder1 = find.byKey(const Key("TextBox1"));
-    final textBoxFinder2 = find.byKey(const Key("TextBox2"));
+    final textBoxFinder1 = find.byKey(const Key('TextBox1'));
+    final textBoxFinder2 = find.byKey(const Key('TextBox2'));
 
     expect(textBoxFinder1, findsOneWidget);
     expect(textBoxFinder2, findsOneWidget);

@@ -1,20 +1,28 @@
 import 'dart:ui' show lerpDouble;
 
 import 'package:fluent_ui/fluent_ui.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 
-/// The default constraints for [ContentDialog]
+/// The default constraints for [ContentDialog].
+///
+/// The dialog is constrained to 368 logical pixels wide and 756 logical pixels
+/// tall by default, following the Windows design guidelines.
 const kDefaultContentDialogConstraints = BoxConstraints(
-  maxWidth: 368.0,
-  maxHeight: 756.0,
+  maxWidth: 368,
+  maxHeight: 756,
 );
 
-/// Dialog controls are modal UI overlays that provide contextual
-/// app information. They block interactions with the app window
-/// until being explicitly dismissed. They often request some kind
-/// of action from the user.
+/// A modal dialog that displays contextual information and requires user action.
 ///
-/// To display a dialog, use the function `showDialog`:
+/// Content dialogs block interactions with the app window until explicitly
+/// dismissed. They are typically used to request user confirmation, display
+/// important information, or gather input before proceeding.
+///
+/// ![ContentDialog example](https://learn.microsoft.com/en-us/windows/apps/design/controls/images/dialogs/dialog_rs2_delete_file.png)
+///
+/// {@tool snippet}
+/// This example shows a confirmation dialog:
 ///
 /// ```dart
 /// showDialog(
@@ -23,32 +31,34 @@ const kDefaultContentDialogConstraints = BoxConstraints(
 ///     return ContentDialog(
 ///       title: Text('Delete file permanently?'),
 ///       content: Text(
-///         'If you delete this file, you won\'t be able to recover it. Do you want to delete it?',
+///         'If you delete this file, you won\'t be able to recover it. '
+///         'Do you want to delete it?',
 ///       ),
 ///       actions: [
 ///         Button(
 ///           child: Text('Delete'),
-///           autofocus: true,
 ///           onPressed: () {
 ///             // Delete file here
+///             Navigator.pop(context, 'delete');
 ///           },
 ///         ),
-///         Button(
+///         FilledButton(
 ///           child: Text('Cancel'),
 ///           onPressed: () => Navigator.pop(context),
 ///         ),
 ///       ],
 ///     );
-///   }
-/// )
+///   },
+/// );
 /// ```
-///
-/// ![ContentDialog example](https://docs.microsoft.com/en-us/windows/uwp/design/controls-and-patterns/images/dialogs/dialog_rs2_delete_file.png)
+/// {@end-tool}
 ///
 /// See also:
 ///
-///   * <showDialog>, used to display dialogs on top of the app content
-///   * <https://docs.microsoft.com/en-us/windows/apps/design/controls/dialogs-and-flyouts/dialogs>
+///  * [showDialog], used to display dialogs on top of the app content
+///  * [Flyout], for non-modal contextual UI
+///  * [TeachingTip], for educational or guidance content
+///  * <https://learn.microsoft.com/en-us/windows/apps/design/controls/dialogs-and-flyouts/dialogs>
 class ContentDialog extends StatelessWidget {
   /// Creates a content dialog.
   const ContentDialog({
@@ -79,9 +89,7 @@ class ContentDialog extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     assert(debugCheckHasFluentTheme(context));
-    final style = ContentDialogThemeData.standard(
-      FluentTheme.of(context),
-    ).merge(FluentTheme.of(context).dialogTheme.merge(this.style));
+    final style = ContentDialogTheme.of(context).merge(this.style);
 
     return Align(
       alignment: AlignmentDirectional.center,
@@ -94,14 +102,15 @@ class ContentDialog extends StatelessWidget {
           children: [
             Flexible(
               child: Padding(
-                padding: style.padding ?? EdgeInsets.zero,
+                padding: style.padding ?? EdgeInsetsDirectional.zero,
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     if (title != null)
                       Padding(
-                        padding: style.titlePadding ?? EdgeInsets.zero,
+                        padding:
+                            style.titlePadding ?? EdgeInsetsDirectional.zero,
                         child: DefaultTextStyle.merge(
                           style: style.titleStyle,
                           child: title!,
@@ -110,7 +119,8 @@ class ContentDialog extends StatelessWidget {
                     if (content != null)
                       Flexible(
                         child: Padding(
-                          padding: style.bodyPadding ?? EdgeInsets.zero,
+                          padding:
+                              style.bodyPadding ?? EdgeInsetsDirectional.zero,
                           child: DefaultTextStyle.merge(
                             style: style.bodyStyle,
                             child: content!,
@@ -356,23 +366,113 @@ class _DismissAction extends DismissAction {
   }
 }
 
+/// An inherited widget that defines the configuration for
+/// [ContentDialog]s in this widget's subtree.
+///
+/// Values specified here are used for [ContentDialog] properties that are not
+/// given an explicit non-null value.
+class ContentDialogTheme extends InheritedTheme {
+  /// Creates a theme that controls how descendant [ContentDialog]s should
+  /// look like.
+  const ContentDialogTheme({
+    required this.data,
+    required super.child,
+    super.key,
+  });
+
+  /// The properties for descendant [ContentDialog] widgets.
+  final ContentDialogThemeData data;
+
+  /// Creates a theme that merges the nearest [ContentDialogTheme] with [data].
+  static Widget merge({
+    required ContentDialogThemeData data,
+    required Widget child,
+    Key? key,
+  }) {
+    return Builder(
+      builder: (context) {
+        return ContentDialogTheme(
+          key: key,
+          data: ContentDialogTheme.of(context).merge(data),
+          child: child,
+        );
+      },
+    );
+  }
+
+  /// Returns the closest [ContentDialogThemeData] which encloses the given
+  /// context.
+  ///
+  /// Resolution order:
+  /// 1. Defaults from [ContentDialogThemeData.standard]
+  /// 2. Global theme from [FluentThemeData.dialogTheme]
+  /// 3. Local [ContentDialogTheme] ancestor
+  ///
+  /// Typical usage is as follows:
+  ///
+  /// ```dart
+  /// ContentDialogThemeData theme = ContentDialogTheme.of(context);
+  /// ```
+  static ContentDialogThemeData of(BuildContext context) {
+    assert(debugCheckHasFluentTheme(context));
+    final theme = FluentTheme.of(context);
+    final inheritedTheme = context
+        .dependOnInheritedWidgetOfExactType<ContentDialogTheme>();
+    return ContentDialogThemeData.standard(
+      theme,
+    ).merge(theme.dialogTheme).merge(inheritedTheme?.data);
+  }
+
+  @override
+  Widget wrap(BuildContext context, Widget child) {
+    return ContentDialogTheme(data: data, child: child);
+  }
+
+  @override
+  bool updateShouldNotify(ContentDialogTheme oldWidget) =>
+      data != oldWidget.data;
+}
+
+/// Theme data for [ContentDialog] widgets.
+///
+/// This class defines the visual appearance of content dialogs, including
+/// their decoration, padding, and action button styling.
 @immutable
-class ContentDialogThemeData {
+class ContentDialogThemeData with Diagnosticable {
+  /// The padding around the entire dialog content.
   final EdgeInsetsGeometry? padding;
+
+  /// The padding around the title.
   final EdgeInsetsGeometry? titlePadding;
+
+  /// The padding around the body content.
   final EdgeInsetsGeometry? bodyPadding;
 
+  /// The decoration of the dialog background.
   final Decoration? decoration;
+
+  /// The color of the barrier behind the dialog.
   final Color? barrierColor;
 
+  /// The theme data for action buttons in the dialog.
   final ButtonThemeData? actionThemeData;
+
+  /// The spacing between action buttons.
   final double? actionsSpacing;
+
+  /// The decoration of the actions area.
   final Decoration? actionsDecoration;
+
+  /// The padding around the actions area.
   final EdgeInsetsGeometry? actionsPadding;
 
+  /// The text style for the dialog title.
   final TextStyle? titleStyle;
+
+  /// The text style for the dialog body.
   final TextStyle? bodyStyle;
 
+  /// Creates content dialog theme data.
   const ContentDialogThemeData({
     this.decoration,
     this.barrierColor,
@@ -387,6 +487,7 @@ class ContentDialogThemeData {
     this.bodyStyle,
   });
 
+  /// Creates the standard [ContentDialogThemeData] based on the given [theme].
   factory ContentDialogThemeData.standard(FluentThemeData theme) {
     return ContentDialogThemeData(
       decoration: BoxDecoration(
@@ -394,7 +495,7 @@ class ContentDialogThemeData {
         borderRadius: BorderRadius.circular(12),
         boxShadow: kElevationToShadow[6],
       ),
-      padding: const EdgeInsets.all(20),
+      padding: const EdgeInsetsDirectional.all(20),
       titlePadding: const EdgeInsetsDirectional.only(bottom: 12),
       actionsSpacing: 10,
       actionsDecoration: BoxDecoration(
@@ -402,13 +503,16 @@ class ContentDialogThemeData {
         borderRadius: const BorderRadius.vertical(bottom: Radius.circular(12)),
         // boxShadow: kElevationToShadow[1],
       ),
-      actionsPadding: const EdgeInsets.all(20),
+      actionsPadding: const EdgeInsetsDirectional.all(20),
       barrierColor: Colors.grey[200].withValues(alpha: 0.8),
       titleStyle: theme.typography.title,
       bodyStyle: theme.typography.body,
     );
   }
 
+  /// Linearly interpolates between two [ContentDialogThemeData] objects.
+  ///
+  /// {@macro fluent_ui.lerp.t}
   static ContentDialogThemeData lerp(
     ContentDialogThemeData? a,
     ContentDialogThemeData? b,
@@ -445,6 +549,8 @@ class ContentDialogThemeData {
     );
   }
 
+  /// Merges this [ContentDialogThemeData] with another, with the other taking
+  /// precedence.
   ContentDialogThemeData merge(ContentDialogThemeData? style) {
     if (style == null) return this;
     return ContentDialogThemeData(
@@ -460,5 +566,36 @@ class ContentDialogThemeData {
       titleStyle: style.titleStyle ?? titleStyle,
       bodyStyle: style.bodyStyle ?? bodyStyle,
     );
+  }
+
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties
+      ..add(DiagnosticsProperty<Decoration>('decoration', decoration))
+      ..add(ColorProperty('barrierColor', barrierColor))
+      ..add(DiagnosticsProperty<EdgeInsetsGeometry>('padding', padding))
+      ..add(DiagnosticsProperty<EdgeInsetsGeometry>('bodyPadding', bodyPadding))
+      ..add(
+        DiagnosticsProperty<EdgeInsetsGeometry>('titlePadding', titlePadding),
+      )
+      ..add(DoubleProperty('actionsSpacing', actionsSpacing))
+      ..add(
+        DiagnosticsProperty<ButtonThemeData>(
+          'actionThemeData',
+          actionThemeData,
+        ),
+      )
+      ..add(
+        DiagnosticsProperty<Decoration>('actionsDecoration', actionsDecoration),
+      )
+      ..add(
+        DiagnosticsProperty<EdgeInsetsGeometry>(
+          'actionsPadding',
+          actionsPadding,
+        ),
+      )
+      ..add(DiagnosticsProperty<TextStyle>('titleStyle', titleStyle))
+      ..add(DiagnosticsProperty<TextStyle>('bodyStyle', bodyStyle));
   }
 }

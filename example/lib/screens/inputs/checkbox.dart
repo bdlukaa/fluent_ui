@@ -1,4 +1,4 @@
-import 'package:example/widgets/card_highlight.dart';
+import 'package:example/widgets/code_snippet_card.dart';
 import 'package:example/widgets/page.dart';
 import 'package:fluent_ui/fluent_ui.dart';
 
@@ -16,16 +16,17 @@ class _CheckBoxPageState extends State<CheckBoxPage> with PageMixin {
   bool secondDisabled = false;
   bool iconDisabled = false;
   @override
-  Widget build(BuildContext context) {
+  Widget build(final BuildContext context) {
     return ScaffoldPage.scrollable(
       header: const PageHeader(title: Text('Checkbox')),
       children: [
         const Text(
-          'CheckBox controls let the user select a combination of binary options. In contrast, RadioButton controls allow the user to select from mutually exclusive options. The indeterminate state is used to indicate that an option is set for some, but not all, child options. Don\'t allow users to set an indeterminate state directly to indicate a third option.',
+          "CheckBox controls let the user select a combination of binary options. In contrast, RadioButton controls allow the user to select from mutually exclusive options. The indeterminate state is used to indicate that an option is set for some, but not all, child options. Don't allow users to set an indeterminate state directly to indicate a third option.",
         ),
         subtitle(content: const Text('A 2-state Checkbox')),
-        CardHighlight(
-          codeSnippet: '''bool checked = false;
+        CodeSnippetCard(
+          codeSnippet: '''
+bool checked = false;
 
 Checkbox(
   checked: checked,
@@ -37,13 +38,13 @@ Checkbox(
                 checked: firstChecked,
                 onChanged: firstDisabled
                     ? null
-                    : (v) => setState(() => firstChecked = v!),
+                    : (final v) => setState(() => firstChecked = v!),
                 content: const Text('Two-state Checkbox'),
               ),
               const Spacer(),
               ToggleSwitch(
                 checked: firstDisabled,
-                onChanged: (v) {
+                onChanged: (final v) {
                   setState(() {
                     firstDisabled = v;
                   });
@@ -54,8 +55,9 @@ Checkbox(
           ),
         ),
         subtitle(content: const Text('A 3-state Checkbox')),
-        CardHighlight(
-          codeSnippet: '''bool checked = false;
+        CodeSnippetCard(
+          codeSnippet: '''
+bool checked = false;
 
 Checkbox(
   checked: checked,
@@ -82,15 +84,13 @@ Checkbox(
                 // checked: null,
                 onChanged: secondDisabled
                     ? null
-                    : (v) {
+                    : (final v) {
                         setState(() {
-                          secondChecked = v == true
+                          secondChecked = v ?? false
                               ? true
                               : v == false
                               ? null
-                              : v == null
-                              ? false
-                              : true;
+                              : !(v == null);
                         });
                       },
                 content: const Text('Three-state Checkbox'),
@@ -98,7 +98,7 @@ Checkbox(
               const Spacer(),
               ToggleSwitch(
                 checked: secondDisabled,
-                onChanged: (v) {
+                onChanged: (final v) {
                   setState(() {
                     secondDisabled = v;
                   });

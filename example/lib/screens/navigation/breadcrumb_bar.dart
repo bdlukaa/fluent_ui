@@ -1,4 +1,4 @@
-import 'package:example/widgets/card_highlight.dart';
+import 'package:example/widgets/code_snippet_card.dart';
 import 'package:example/widgets/page.dart';
 import 'package:fluent_ui/fluent_ui.dart';
 
@@ -31,7 +31,7 @@ class _BreadcrumbBarPageState extends State<BreadcrumbBarPage> with PageMixin {
   }
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(final BuildContext context) {
     return ScaffoldPage.scrollable(
       header: const PageHeader(title: Text('BreadcrumbBar')),
       children: [
@@ -43,14 +43,15 @@ class _BreadcrumbBarPageState extends State<BreadcrumbBarPage> with PageMixin {
           ),
         ),
         subtitle(content: const Text('A BreadcrumbBar control')),
-        CardHighlight(
+        CodeSnippetCard(
           header: Row(
             children: [
               const Expanded(child: Text('Source code')),
               Button(onPressed: resetItems, child: const Text('Reset sample')),
             ],
           ),
-          codeSnippet: '''final _items = <BreadcrumbItem<int>>[
+          codeSnippet: '''
+final _items = <BreadcrumbItem<int>>[
   BreadcrumbItem(label: Text('Home'), value: 0),
   BreadcrumbItem(label: Text('Documents'), value: 1),
   BreadcrumbItem(label: Text('Design'), value: 2),
@@ -74,7 +75,7 @@ BreadcrumbBar<int>(
   },
 ),''',
           child: BreadcrumbBar<int>(
-            onItemPressed: (item) {
+            onItemPressed: (final item) {
               setState(() {
                 final index = _items.indexOf(item);
                 _items.removeRange(index + 1, _items.length);

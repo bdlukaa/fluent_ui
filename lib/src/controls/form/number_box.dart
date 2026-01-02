@@ -6,15 +6,25 @@ import 'package:flutter/services.dart';
 import 'package:intl/intl.dart' hide TextDirection;
 import 'package:math_expressions/math_expressions.dart';
 
+/// The width of the compact overlay shown in [SpinButtonPlacementMode.compact] mode.
 const kNumberBoxOverlayWidth = 60.0;
+
+/// The height of the compact overlay shown in [SpinButtonPlacementMode.compact] mode.
 const kNumberBoxOverlayHeight = 100.0;
 
+/// A function that formats a number to a string for display in a [NumberBox].
 typedef NumberBoxFormatFunction = String? Function(num? number);
 
+/// A function that parses a string to a number for use in a [NumberBox].
+typedef NumberBoxParseFunction = num? Function(String text);
+
+/// An interface for formatting numbers in a [NumberBox].
 abstract interface class NumberBoxFormatter {
+  /// Formats the given [number] to a string for display.
   String format(dynamic number);
 }
 
+/// The placement mode for the spin buttons in a [NumberBox].
 enum SpinButtonPlacementMode {
   /// Two buttons will be added as a suffix of the number box field. A button
   /// for increment the value and a button for decrement the value.
@@ -29,35 +39,46 @@ enum SpinButtonPlacementMode {
   none,
 }
 
-/// A Windows design input form for numbers.
+/// A text field optimized for numeric input.
 ///
-/// A NumberBox lets the user enter a number. If the user input a wrong value
-/// (a NaN value), the previous valid value is used.
+/// NumberBox lets users enter and edit numeric values with optional
+/// increment/decrement controls, validation, and formatting.
+///
+/// ![NumberBox preview](https://learn.microsoft.com/en-us/windows/apps/design/controls/images/numberbox-basic.png)
+///
+/// {@tool snippet}
+/// This example shows a basic number box:
+///
+/// ```dart
+/// NumberBox<int>(
+///   value: quantity,
+///   onChanged: (value) => setState(() => quantity = value),
+///   min: 0,
+///   max: 100,
+/// )
+/// ```
+/// {@end-tool}
+///
+/// ## Input methods
 ///
 /// The value can be changed in several ways:
-///   - by input a new value in the text field
-///   - with increment/decrement buttons (only with modes
-///     [SpinButtonPlacementMode.inline] or [SpinButtonPlacementMode.compact]).
-///   - by use the wheel scroll on the number box when he have the focus
-///   - with the shortcut [LogicalKeyboardKey.pageUp] and
-///     [LogicalKeyboardKey.pageDown].
 ///
-/// Modes:
-///  [SpinButtonPlacementMode.inline] : Show two icons as a suffix of the text
-///  field. With for increment the value and one for decrement the value.
-///  [SpinButtonPlacementMode.compact] : Without the focus, it's appears like
-///  a normal text field. But when the widget has the focus, an overlay is
-///  visible with a button for increment the value and another for decrement
-///  the value.
-///  [SpinButtonPlacementMode.none] : Don't show any additional button on the
-///  text field.
+/// * Typing directly in the text field
+/// * Using increment/decrement buttons (inline or compact mode)
+/// * Scrolling the mouse wheel when focused
+/// * Keyboard shortcuts: Page Up/Down for large changes
 ///
-/// If the parameter [clearButton] is enabled, an additional icon is shown
-/// for clear the value when the widget has the focus.
+/// ## Spin button modes
+///
+/// * [SpinButtonPlacementMode.inline] - Shows +/- buttons as a suffix
+/// * [SpinButtonPlacementMode.compact] - Shows +/- buttons in an overlay on focus
+/// * [SpinButtonPlacementMode.none] - No buttons, text input only
 ///
 /// See also:
 ///
-///  * https://learn.microsoft.com/en-us/windows/apps/design/controls/number-box
+///  * [TextBox], for general text input
+///  * [Slider], for selecting from a continuous range
+///  * <https://learn.microsoft.com/en-us/windows/apps/design/controls/number-box>
 class NumberBox<T extends num> extends StatefulWidget {
   /// The value of the number box. When this value is null, the number box field
   /// is empty.
@@ -123,6 +144,25 @@ class NumberBox<T extends num> extends StatefulWidget {
   ///
   /// If set, [pattern], [formatter] and [precision] must be `null`.
   final NumberBoxFormatFunction? format;
+
+  /// The parse function for the number box. The parse function is used to
+  /// parse the formatted text back to a number.
+  ///
+  /// This is useful when using a custom [format] function that adds
+  /// non-numeric characters (e.g., currency symbols, thousand separators).
+  ///
+  /// If not provided, [num.tryParse] is used by default.
+  ///
+  /// Example:
+  /// ```dart
+  /// NumberBox<double>(
+  ///   value: value,
+  ///   onChanged: (v) => setState(() => value = v),
+  ///   format: (number) => NumberFormat.currency().format(number),
+  ///   parse: (text) => NumberFormat.currency().parse(text).toDouble(),
+  /// )
+  /// ```
+  final NumberBoxParseFunction parse;
 
   /// The minimum value allowed. If the user input a value below than min,
   /// the value is replaced by min.
@@ -241,7 +281,7 @@ class NumberBox<T extends num> extends StatefulWidget {
   final Brightness? keyboardAppearance;
 
   /// {@macro flutter.widgets.editableText.scrollPadding}
-  final EdgeInsets scrollPadding;
+  final EdgeInsetsGeometry scrollPadding;
 
   /// {@macro flutter.widgets.editableText.enableInteractiveSelection}
   final bool enableInteractiveSelection;
@@ -272,9 +312,9 @@ class NumberBox<T extends num> extends StatefulWidget {
 
   /// Creates a number box.
   const NumberBox({
-    super.key,
     required this.value,
     required this.onChanged,
+    super.key,
     this.onTextChange,
     this.focusNode,
     this.mode = SpinButtonPlacementMode.compact,
@@ -285,6 +325,7 @@ class NumberBox<T extends num> extends StatefulWidget {
     this.pattern,
     this.formatter,
     this.format,
+    this.parse = defaultParse,
     this.min,
     this.max,
     this.allowExpressions = false,
@@ -294,7 +335,7 @@ class NumberBox<T extends num> extends StatefulWidget {
     this.placeholder,
     this.placeholderStyle,
     this.cursorWidth = 2.0,
-    this.cursorRadius = const Radius.circular(2.0),
+    this.cursorRadius = const Radius.circular(2),
     this.cursorHeight,
     this.cursorColor,
     this.showCursor,
@@ -309,7 +350,7 @@ class NumberBox<T extends num> extends StatefulWidget {
     this.enableInteractiveSelection = true,
     this.keyboardAppearance,
     this.scrollController,
-    this.scrollPadding = const EdgeInsets.all(20.0),
+    this.scrollPadding = const EdgeInsetsDirectional.all(20),
     this.scrollPhysics,
     this.selectionControls,
     this.selectionHeightStyle = ui.BoxHeightStyle.tight,
@@ -340,26 +381,41 @@ class NumberBox<T extends num> extends StatefulWidget {
                  format == null),
        );
 
+  /// The default parse function for the number box. It uses [num.tryParse] to
+  /// parse the text back to a number.
+  static num? defaultParse(String text) => num.tryParse(text);
+
   @override
   State<NumberBox<T>> createState() => NumberBoxState<T>();
 }
 
+/// The state for a [NumberBox] widget.
+///
+/// This class manages the internal state of the number box, including focus
+/// handling, overlay management for compact mode, and value updates.
 class NumberBoxState<T extends num> extends State<NumberBox<T>> {
   FocusNode? _internalNode;
 
+  /// The focus node used to manage focus for the number box.
   FocusNode get focusNode => (widget.focusNode ?? _internalNode)!;
 
   OverlayEntry? _entry;
 
   bool _hasPrimaryFocus = false;
 
+  /// The last valid numeric value entered in the number box.
+  ///
+  /// This is used to restore the value when an invalid input is detected.
   late num? previousValidValue = widget.value;
 
   // use dynamic to simulate duck typing
   late final dynamic _formatter;
   late final NumberBoxFormatFunction _format;
 
+  /// The text editing controller used to manage the text input.
   final controller = TextEditingController();
+  final _evaluator = RealEvaluator();
+  final _parser = ShuntingYardParser();
 
   final LayerLink _layerLink = LayerLink();
   final GlobalKey _textBoxKey = GlobalKey(
@@ -392,17 +448,19 @@ class NumberBoxState<T extends num> extends State<NumberBox<T>> {
       _formatter = NumberFormat(widget.pattern) as dynamic;
     }
     if (widget.formatter != null) {
-      _formatter = widget.formatter!;
+      _formatter = widget.formatter;
     }
     if (widget.format != null) {
       _format = widget.format!;
     } else {
-      _format = (num? value) {
+      _format = (value) {
         if (value == null) return null;
         if (value is int) {
           return value.toString();
         }
-        return _formatter.format(value);
+        // _formatter is dynamic
+        // ignore: avoid_dynamic_calls
+        return _formatter.format(value) as String?;
       };
     }
 
@@ -475,9 +533,9 @@ class NumberBoxState<T extends num> extends State<NumberBox<T>> {
 
         final boxContext = _textBoxKey.currentContext;
         if (boxContext == null) return const SizedBox.shrink();
-        final box = boxContext.findRenderObject() as RenderBox;
+        final box = boxContext.findRenderObject()! as RenderBox;
 
-        Widget child = PositionedDirectional(
+        final Widget child = PositionedDirectional(
           width: kNumberBoxOverlayWidth,
           child: CompositedTransformFollower(
             link: _layerLink,
@@ -507,7 +565,6 @@ class NumberBoxState<T extends num> extends State<NumberBox<T>> {
 
     if (_textBoxKey.currentContext != null) {
       Overlay.of(context).insert(_entry!);
-      if (mounted) setState(() {});
     }
   }
 
@@ -536,7 +593,7 @@ class NumberBoxState<T extends num> extends State<NumberBox<T>> {
           icon: const WindowsIcon(WindowsIcons.clear),
           onPressed: _clearValue,
         ),
-        const SizedBox(width: 4.0),
+        const SizedBox(width: 4),
       ],
     ];
 
@@ -553,12 +610,10 @@ class NumberBoxState<T extends num> extends State<NumberBox<T>> {
             icon: const WindowsIcon(WindowsIcons.chevron_down),
             onPressed: widget.onChanged != null ? decrementSmall : null,
           ),
-          const SizedBox(width: 4.0),
+          const SizedBox(width: 4),
         ]);
-        break;
       case SpinButtonPlacementMode.compact:
         textFieldSuffix.add(const SizedBox(width: kNumberBoxOverlayWidth));
-        break;
       case SpinButtonPlacementMode.none:
         break;
     }
@@ -646,7 +701,7 @@ class NumberBoxState<T extends num> extends State<NumberBox<T>> {
           onPointerSignal: (event) {
             if (_hasPrimaryFocus && event is PointerScrollEvent) {
               GestureBinding.instance.pointerSignalResolver.register(event, (
-                PointerSignalEvent event,
+                event,
               ) {
                 if (event is PointerScrollEvent) {
                   if (event.scrollDelta.direction < 0) {
@@ -669,33 +724,37 @@ class NumberBoxState<T extends num> extends State<NumberBox<T>> {
     updateValue();
   }
 
+  /// Increments the current value by [NumberBox.smallChange].
   void incrementSmall() {
     final value =
-        (num.tryParse(controller.text) ?? widget.value ?? 0) +
+        (widget.parse(controller.text) ?? widget.value ?? 0) +
         widget.smallChange;
     _updateController(value);
     updateValue();
   }
 
+  /// Decrements the current value by [NumberBox.smallChange].
   void decrementSmall() {
     final value =
-        (num.tryParse(controller.text) ?? widget.value ?? 0) -
+        (widget.parse(controller.text) ?? widget.value ?? 0) -
         widget.smallChange;
     _updateController(value);
     updateValue();
   }
 
+  /// Increments the current value by [NumberBox.largeChange].
   void incrementLarge() {
     final value =
-        (num.tryParse(controller.text) ?? widget.value ?? 0) +
+        (widget.parse(controller.text) ?? widget.value ?? 0) +
         widget.largeChange;
     _updateController(value);
     updateValue();
   }
 
+  /// Decrements the current value by [NumberBox.largeChange].
   void decrementLarge() {
     final value =
-        (num.tryParse(controller.text) ?? widget.value ?? 0) -
+        (widget.parse(controller.text) ?? widget.value ?? 0) -
         widget.largeChange;
     _updateController(value);
     updateValue();
@@ -707,19 +766,22 @@ class NumberBoxState<T extends num> extends State<NumberBox<T>> {
       ..selection = TextSelection.collapsed(offset: controller.text.length);
   }
 
+  /// Updates the number box value based on the current text input.
+  ///
+  /// This method parses the text, validates it against min/max constraints,
+  /// and calls [NumberBox.onChanged] if the value has changed.
   void updateValue() {
     num? value;
     if (controller.text.isNotEmpty) {
-      value = num.tryParse(controller.text);
+      value = widget.parse(controller.text);
       if (value == null && widget.allowExpressions) {
         try {
-          value = ShuntingYardParser()
-              .parse(controller.text)
-              .evaluate(EvaluationType.REAL, ContextModel());
+          final expression = _parser.parse(controller.text);
+          value = _evaluator.evaluate(expression);
           // If the value is infinite or not a number, we reset the value with
           // the previous valid value. For example, if the user tap 1024^200
           // (the result is too big), the condition value.isInfinite is true.
-          if (value!.isInfinite || value.isNaN) {
+          if (value.isInfinite || value.isNaN) {
             value = previousValidValue;
           }
         } catch (_) {
@@ -743,10 +805,11 @@ class NumberBoxState<T extends num> extends State<NumberBox<T>> {
 
       controller.text = _format(value) ?? '';
     }
-    previousValidValue = value;
 
-    if (widget.onChanged != null) {
-      widget.onChanged!(value as T?);
+    if (previousValidValue != value) {
+      previousValidValue = value;
+
+      widget.onChanged?.call(value as T?);
     }
   }
 }
@@ -763,6 +826,7 @@ class _NumberBoxCompactOverlay extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     assert(debugCheckHasFluentTheme(context));
+    final theme = FluentTheme.of(context);
 
     return Padding(
       padding: const EdgeInsetsDirectional.only(start: 10),
@@ -776,10 +840,10 @@ class _NumberBoxCompactOverlay extends StatelessWidget {
             height: kNumberBoxOverlayHeight,
             width: kNumberBoxOverlayWidth,
             decoration: BoxDecoration(
-              color: FluentTheme.of(context).menuColor,
+              color: theme.menuColor,
               border: Border.all(
                 width: 0.25,
-                color: FluentTheme.of(context).inactiveBackgroundColor,
+                color: theme.inactiveBackgroundColor,
               ),
             ),
             child: Column(
@@ -858,7 +922,7 @@ class NumberFormBox<T extends num> extends ControllableFormBox {
     bool? showCursor,
     double cursorWidth = 2.0,
     double? cursorHeight,
-    Radius cursorRadius = const Radius.circular(2.0),
+    Radius cursorRadius = const Radius.circular(2),
     Color? cursorColor,
     Color? highlightColor,
     Color? errorHighlightColor,
@@ -875,8 +939,10 @@ class NumberFormBox<T extends num> extends ControllableFormBox {
     num? min,
     int precision = 2,
     SpinButtonPlacementMode mode = SpinButtonPlacementMode.compact,
+    NumberBoxFormatFunction? format,
+    NumberBoxParseFunction parse = NumberBox.defaultParse,
   }) : super(
-         builder: (FormFieldState<String> field) {
+         builder: (field) {
            assert(debugCheckHasFluentTheme(field.context));
            final theme = FluentTheme.of(field.context);
            void onChangedHandler(T? value) {
@@ -887,7 +953,7 @@ class NumberFormBox<T extends num> extends ControllableFormBox {
            return UnmanagedRestorationScope(
              bucket: field.bucket,
              child: FormRow(
-               padding: EdgeInsets.zero,
+               padding: EdgeInsetsDirectional.zero,
                error: (field.errorText == null) ? null : Text(field.errorText!),
                child: NumberBox<T>(
                  focusNode: focusNode,
@@ -912,7 +978,9 @@ class NumberFormBox<T extends num> extends ControllableFormBox {
                  clearButton: clearButton,
                  largeChange: largeChange,
                  smallChange: smallChange,
-                 precision: precision,
+                 precision: format != null ? null : precision,
+                 format: format,
+                 parse: parse,
                  inputFormatters: inputFormatters,
                  mode: mode,
                ),

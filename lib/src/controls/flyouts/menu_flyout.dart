@@ -3,10 +3,13 @@ import 'dart:async';
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter/foundation.dart';
 
-const kDefaultMenuPadding = EdgeInsetsDirectional.symmetric(vertical: 2.0);
+/// The default padding for the [MenuFlyout] content.
+const kDefaultMenuPadding = EdgeInsetsDirectional.symmetric(vertical: 2);
+
+/// The default margin around each item in a [MenuFlyout].
 const kDefaultMenuItemMargin = EdgeInsetsDirectional.symmetric(
-  horizontal: 4.0,
-  vertical: 2.0,
+  horizontal: 4,
+  vertical: 2,
 );
 
 /// Menu flyouts are used in menu and context menu scenarios to display a list
@@ -69,7 +72,7 @@ class MenuFlyout extends StatefulWidget {
 }
 
 class _MenuFlyoutState extends State<MenuFlyout> {
-  var keys = <GlobalKey>[];
+  List<GlobalKey<State<StatefulWidget>>> keys = <GlobalKey>[];
 
   void generateKeys() {
     if (widget.items.whereType<MenuFlyoutSubItem>().isNotEmpty) {
@@ -145,11 +148,12 @@ class _MenuFlyoutState extends State<MenuFlyout> {
             final state = subItem.currentState;
             if (state == null || subItem.currentContext == null) continue;
             if (!state.isShowing(menuInfo)) continue;
+            if (parent == null) continue;
 
             final itemBox =
-                subItem.currentContext!.findRenderObject() as RenderBox;
+                subItem.currentContext!.findRenderObject()! as RenderBox;
             final parentBox =
-                (parent?.widget.root?.context.findRenderObject() as RenderBox);
+                parent.widget.root!.context.findRenderObject as RenderBox;
             final translation = parentBox.getTransformTo(null).getTranslation();
             final offset = Offset(translation[0], translation[1]);
             final itemRect =
@@ -193,10 +197,13 @@ class _MenuScrollBehavior extends FluentScrollBehavior {
 ///    sub-menu in a [MenuFlyout]
 ///  * [MenuFlyoutItemBuilder], which renders the given widget in the items list
 abstract class MenuFlyoutItemBase with Diagnosticable {
+  /// The key for this item, used by the framework for identification.
   final Key? key;
 
+  /// Creates a base menu flyout item.
   const MenuFlyoutItemBase({this.key});
 
+  /// Builds the widget representation of this item.
   Widget build(BuildContext context);
 }
 
@@ -211,10 +218,11 @@ abstract class MenuFlyoutItemBase with Diagnosticable {
 ///  * [MenuFlyoutSubItem], which represents a menu item that displays a
 ///    sub-menu in a [MenuFlyout]
 class MenuFlyoutItemBuilder extends MenuFlyoutItemBase {
+  /// The builder function that creates the widget.
   final WidgetBuilder builder;
 
   /// Creates a menu flyout item builder
-  const MenuFlyoutItemBuilder({super.key, required this.builder});
+  const MenuFlyoutItemBuilder({required this.builder, super.key});
 
   @override
   Widget build(BuildContext context) => builder(context);
@@ -236,11 +244,11 @@ class MenuFlyoutItemBuilder extends MenuFlyoutItemBase {
 class MenuFlyoutItem extends MenuFlyoutItemBase {
   /// Creates a menu flyout item
   MenuFlyoutItem({
+    required this.text,
+    required this.onPressed,
     super.key,
     this.leading,
-    required this.text,
     this.trailing,
-    required this.onPressed,
     this.onLongPress,
     this.focusNode,
     this.selected = false,
@@ -317,7 +325,7 @@ class MenuFlyoutItem extends MenuFlyoutItemBase {
   @override
   Widget build(BuildContext context) {
     return FlyoutListTile(
-      margin: EdgeInsets.zero,
+      margin: EdgeInsetsDirectional.zero,
       selected: selected,
       showSelectedIndicator: false,
       icon:
@@ -328,7 +336,7 @@ class MenuFlyoutItem extends MenuFlyoutItemBase {
           }(),
       text: text,
       trailing: IconTheme.merge(
-        data: const IconThemeData(size: 12.0),
+        data: const IconThemeData(size: 12),
         child: trailing ?? const SizedBox.shrink(),
       ),
       onPressed: onPressed == null
@@ -362,9 +370,9 @@ class MenuFlyoutSeparator extends MenuFlyoutItemBase {
   @override
   Widget build(BuildContext context) {
     return const Padding(
-      padding: EdgeInsetsDirectional.only(bottom: 5.0),
+      padding: EdgeInsetsDirectional.only(bottom: 5),
       child: Divider(
-        style: DividerThemeData(horizontalMargin: EdgeInsets.zero),
+        style: DividerThemeData(horizontalMargin: EdgeInsetsDirectional.zero),
       ),
     );
   }
@@ -393,12 +401,12 @@ class ToggleMenuFlyoutItem extends MenuFlyoutItem {
   /// Creates a menu flyout item that can be toggled on and off.
   ToggleMenuFlyoutItem({
     required super.text,
-    super.trailing,
     required this.value,
     required this.onChanged,
+    super.trailing,
     super.closeAfterClick,
   }) : super(
-         leading: Icon(value ? FluentIcons.check_mark : null, size: 12.0),
+         leading: Icon(value ? FluentIcons.check_mark : null, size: 12),
          onPressed: onChanged == null ? null : () => onChanged(!value),
        );
 
@@ -438,15 +446,15 @@ class RadioMenuFlyoutItem<T extends Object> extends MenuFlyoutItem {
   /// Creates a radio menu item.
   RadioMenuFlyoutItem({
     required super.text,
-    super.trailing,
     required this.value,
     required this.groupValue,
     required this.onChanged,
+    super.trailing,
     super.closeAfterClick,
   }) : super(
          leading: Icon(
            value == groupValue ? FluentIcons.radio_bullet : null,
-           size: 12.0,
+           size: 12,
          ),
          onPressed: onChanged == null ? null : () => onChanged(value),
        );
@@ -476,6 +484,9 @@ enum SubItemShowAction {
   hover,
 }
 
+/// A builder function that creates a list of menu items.
+///
+/// Used by [MenuFlyoutSubItem] to build its child items lazily.
 typedef MenuItemsBuilder =
     List<MenuFlyoutItemBase> Function(BuildContext context);
 
@@ -496,11 +507,11 @@ typedef MenuItemsBuilder =
 class MenuFlyoutSubItem extends MenuFlyoutItem {
   /// Creates a menu flyout sub item
   MenuFlyoutSubItem({
+    required super.text,
+    required this.items,
     super.key,
     super.leading,
-    required super.text,
     super.trailing = const WindowsIcon(WindowsIcons.chevron_right),
-    required this.items,
     this.showBehavior = SubItemShowAction.hover,
     this.showHoverDelay = const Duration(milliseconds: 450),
   }) : super(onPressed: null);
@@ -527,6 +538,9 @@ class MenuFlyoutSubItem extends MenuFlyoutItem {
   /// Only applied if [showBehavior] is [SubItemShowAction.hover]
   final Duration showHoverDelay;
 
+  /// Whether to disable the acrylic effect for this sub-menu.
+  ///
+  /// This is set internally by [MenuFlyout].
   bool disableAcyrlic = false;
 
   @override
@@ -540,9 +554,9 @@ class _MenuFlyoutSubItem extends StatefulWidget {
   final MenuItemsBuilder items;
 
   const _MenuFlyoutSubItem({
-    super.key,
     required this.item,
     required this.items,
+    super.key,
   });
 
   @override
@@ -629,7 +643,7 @@ class _MenuFlyoutSubItemState extends State<_MenuFlyoutSubItem>
 
     final menuFlyout = context.findAncestorWidgetOfExactType<MenuFlyout>();
 
-    final itemBox = context.findRenderObject() as RenderBox;
+    final itemBox = context.findRenderObject()! as RenderBox;
     final itemRect =
         itemBox.localToGlobal(
           Offset.zero,

@@ -29,22 +29,29 @@ typedef TreeViewItemOnSecondaryTap =
 typedef TreeViewItemOnExpandToggle =
     Future<void> Function(TreeViewItem item, bool getsExpanded);
 
+/// A callback that returns the gestures for a [TreeViewItem].
+///
+/// Used by [TreeView.gesturesBuilder]
 typedef TreeViewItemGesturesCallback =
     Map<Type, GestureRecognizerFactory> Function(TreeViewItem item);
 
-const double _whiteSpace = 8.0;
+const double _whiteSpace = 8;
 
 /// Default loading indicator used by [TreeView]
 const Widget kTreeViewLoadingIndicator = Padding(
   // Padding to make it the same width as the expand icon
-  padding: EdgeInsetsDirectional.only(start: 6.0, end: 6.0),
-  child: SizedBox(
-    height: 12.0,
-    width: 12.0,
-    child: ProgressRing(strokeWidth: 3.0),
-  ),
+  padding: EdgeInsetsDirectional.only(start: 6, end: 6),
+  child: SizedBox(height: 12, width: 12, child: ProgressRing(strokeWidth: 3)),
 );
 
+/// The selection mode of a [TreeView].
+///
+/// See also:
+///
+///   * [TreeView], which uses this to determine the selection mode
+///   * [TreeViewSelectionMode.none], which is used by default
+///   * [TreeViewSelectionMode.single], which is used when only one item can be selected
+///   * [TreeViewSelectionMode.multiple], which is used when multiple items can be selected
 enum TreeViewSelectionMode {
   /// Selection is disabled
   none,
@@ -79,24 +86,47 @@ enum TreeViewItemInvokeReason {
   pressed,
 }
 
-/// The item used by [TreeView] to render tiles
+/// An item displayed in a [TreeView] hierarchy.
+///
+/// Each [TreeViewItem] represents a node in the tree and can contain:
+///
+/// * [leading] - An optional widget displayed before the content (usually an icon)
+/// * [content] - The main content of the item (usually text)
+/// * [children] - Nested child items for hierarchical structure
+///
+/// {@tool snippet}
+/// This example shows how to create tree view items:
+///
+/// ```dart
+/// TreeViewItem(
+///   content: Text('Documents'),
+///   leading: Icon(FluentIcons.folder),
+///   children: [
+///     TreeViewItem(
+///       content: Text('Report.docx'),
+///       leading: Icon(FluentIcons.document),
+///     ),
+///   ],
+/// )
+/// ```
+/// {@end-tool}
 ///
 /// See also:
 ///
-///  * <https://docs.microsoft.com/en-us/windows/apps/design/controls/tree-view>
-///  * [TreeView], which render [TreeViewItem]s as tiles
-///  * [Checkbox], used on multiple selection mode
+///  * [TreeView], which renders a collection of [TreeViewItem]s
+///  * <https://learn.microsoft.com/en-us/windows/apps/design/controls/tree-view>
 class TreeViewItem with Diagnosticable {
+  /// {@macro flutter.widgets.Widget.key}
   final Key? key;
 
   /// The item leading
   ///
-  /// Usually an [Icon]
+  /// Usually an [Icon] widget
   final Widget? leading;
 
   /// The item content
   ///
-  /// Usually a [Text]
+  /// Usually a [Text] widget
   final Widget content;
 
   /// An optional/arbitrary value associated with the item.
@@ -165,7 +195,7 @@ class TreeViewItem with Diagnosticable {
   /// See also:
   ///
   ///   * [ButtonThemeData.uncheckedInputColor], which is used by default
-  final WidgetStateProperty<Color>? backgroundColor;
+  final WidgetStateColor? backgroundColor;
 
   /// Whether this item is visible or not. Used to not lose the item state while
   /// it's not on the screen
@@ -196,9 +226,9 @@ class TreeViewItem with Diagnosticable {
 
   /// Creates a tree view item.
   TreeViewItem({
+    required this.content,
     this.key,
     this.leading,
-    required this.content,
     this.value,
     this.children = const [],
     this.collapsable = true,
@@ -257,7 +287,7 @@ class TreeViewItem with Diagnosticable {
   int get depth {
     if (parent != null) {
       var count = 1;
-      TreeViewItem? currentParent = parent!;
+      var currentParent = parent;
       while (currentParent?.parent != null) {
         count++;
         currentParent = currentParent?.parent;
@@ -286,7 +316,7 @@ class TreeViewItem with Diagnosticable {
   /// Executes [callback] for every parent found in the tree
   void executeForAllParents(ValueChanged<TreeViewItem?> callback) {
     if (parent == null) return;
-    TreeViewItem? currentParent = parent!;
+    var currentParent = parent;
     callback(currentParent);
     while (currentParent?.parent != null) {
       currentParent = currentParent?.parent;
@@ -335,7 +365,7 @@ class TreeViewItem with Diagnosticable {
         hasNull = true;
       } else if (child.selected == false) {
         hasFalse = true;
-      } else if (child.selected == true) {
+      } else if (child.selected ?? false) {
         hasTrue = true;
       }
     }
@@ -346,7 +376,7 @@ class TreeViewItem with Diagnosticable {
         // should not be possible unless children were removed after the
         // selected was updated previously...
         selected = true;
-      } else if (selected == true) {
+      } else if (selected ?? false) {
         // we're now only in a partially selected state
         selected = null;
       }
@@ -462,6 +492,7 @@ class TreeViewItem with Diagnosticable {
   }
 }
 
+/// An extension on [List<TreeViewItem>] that adds methods to build the tree view.
 extension TreeViewItemCollection on List<TreeViewItem> {
   /// Adds the [TreeViewItem.parent] property to the [TreeViewItem]s
   /// and calculates other internal properties.
@@ -502,6 +533,8 @@ extension TreeViewItemCollection on List<TreeViewItem> {
     return this;
   }
 
+  /// Executes the [callback] for all items in the tree view and all their
+  /// children, recursively.
   void executeForAll(ValueChanged<TreeViewItem> callback) {
     for (final child in this) {
       callback(child);
@@ -509,6 +542,8 @@ extension TreeViewItemCollection on List<TreeViewItem> {
     }
   }
 
+  /// Returns an iteration of all items in the tree view and all their
+  /// children, recursively, that satisfy the [t] predicate.
   Iterable<TreeViewItem> whereForAll(bool Function(TreeViewItem element) t) {
     var result = where(t);
     for (final child in this) {
@@ -528,35 +563,53 @@ extension TreeViewItemCollection on List<TreeViewItem> {
   }
 }
 
-/// The `TreeView` control enables a hierarchical list with expanding and
-/// collapsing nodes that contain nested items. It can be used to illustrate a
-/// folder structure or nested relationships in your UI.
+/// A hierarchical list with expanding and collapsing nodes.
 ///
-/// The tree view uses a combination of indentation and icons to represent the
-/// nested relationship between parent nodes and child nodes. Collapsed items
-/// use a chevron pointing to the right, and expanded nodes use a chevron
-/// pointing down.
+/// [TreeView] displays nested items in a tree structure, using indentation
+/// and icons to show parent-child relationships. It's ideal for displaying
+/// folder structures, organizational hierarchies, or any nested data.
 ///
-/// ![TreeView Simple](https://docs.microsoft.com/en-us/windows/apps/design/controls/images/treeview-simple.png)
+/// ![TreeView Simple](https://learn.microsoft.com/en-us/windows/apps/design/controls/images/treeview-simple.png)
 ///
-/// You can include an icon in the [TreeViewItem] template to represent items.
-/// For example, if you show a file system hierarchy, you could use folder
-/// icons for the parent items and file icons for the leaf items.
+/// {@tool snippet}
+/// This example shows a basic tree view:
 ///
-/// ![TreeView with Icons](https://docs.microsoft.com/en-us/windows/apps/design/controls/images/treeview-icons.png)
+/// ```dart
+/// TreeView(
+///   items: [
+///     TreeViewItem(
+///       content: Text('Folder 1'),
+///       children: [
+///         TreeViewItem(content: Text('File 1')),
+///         TreeViewItem(content: Text('File 2')),
+///       ],
+///     ),
+///     TreeViewItem(content: Text('Folder 2')),
+///   ],
+/// )
+/// ```
+/// {@end-tool}
+///
+/// ## Selection modes
+///
+/// * [TreeViewSelectionMode.none] - Selection is disabled
+/// * [TreeViewSelectionMode.single] - Only one item can be selected
+/// * [TreeViewSelectionMode.multiple] - Multiple items can be selected with checkboxes
+///
+/// ![TreeView with selection](https://learn.microsoft.com/en-us/windows/apps/design/controls/images/treeview-selection.png)
 ///
 /// See also:
 ///
-///  * <https://docs.microsoft.com/en-us/windows/apps/design/controls/tree-view>
-///  * [TreeViewItem], used to render the tiles
-///  * [Checkbox], used on multiple selection mode
+///  * [TreeViewItem], the data model for tree nodes
+///  * [ListView], for non-hierarchical lists
+///  * <https://learn.microsoft.com/en-us/windows/apps/design/controls/tree-view>
 class TreeView extends StatefulWidget {
   /// Creates a tree view.
   ///
   /// [items] must not be empty
   const TreeView({
-    super.key,
     required this.items,
+    super.key,
     this.selectionMode = TreeViewSelectionMode.none,
     this.onSelectionChanged,
     this.onItemInvoked,
@@ -786,7 +839,7 @@ class TreeViewState extends State<TreeView> with AutomaticKeepAliveClientMixin {
       child: FocusTraversalGroup(
         policy: WidgetOrderTraversalPolicy(),
         child: ConstrainedBox(
-          constraints: const BoxConstraints(minHeight: 28.0),
+          constraints: const BoxConstraints(minHeight: 28),
           child: ListView.builder(
             // If shrinkWrap is true, then we default to not using the primary
             // scroll controller (should not normally need any controller in
@@ -840,7 +893,6 @@ class TreeViewState extends State<TreeView> with AutomaticKeepAliveClientMixin {
                       if (onSelectionChanged != null) {
                         await onSelectionChanged([item]);
                       }
-                      break;
                     case TreeViewSelectionMode.multiple:
                       setState(() {
                         final newSelectionState =
@@ -856,7 +908,6 @@ class TreeViewState extends State<TreeView> with AutomaticKeepAliveClientMixin {
                         );
                         await onSelectionChanged(selectedItems);
                       }
-                      break;
                     default:
                       break;
                   }
@@ -928,7 +979,6 @@ class TreeViewState extends State<TreeView> with AutomaticKeepAliveClientMixin {
 
 class _TreeViewItem extends StatelessWidget {
   const _TreeViewItem({
-    super.key,
     required this.item,
     required this.selectionMode,
     required this.onSelect,
@@ -938,6 +988,7 @@ class _TreeViewItem extends StatelessWidget {
     required this.onInvoked,
     required this.loadingWidgetFallback,
     required this.narrowSpacing,
+    super.key,
   });
 
   final TreeViewItem item;
@@ -1039,7 +1090,10 @@ class _TreeViewItem extends StatelessWidget {
         autofocus: item.autofocus,
         focusNode: item.focusNode,
         semanticLabel: item.semanticLabel,
-        margin: const EdgeInsets.symmetric(vertical: 2.0, horizontal: 4.0),
+        margin: const EdgeInsetsDirectional.symmetric(
+          vertical: 2,
+          horizontal: 4,
+        ),
         builder: (context, states) {
           final itemForegroundColor = WidgetStateExtension.forStates<Color>(
             states,
@@ -1087,7 +1141,7 @@ class _TreeViewItem extends StatelessWidget {
                               : states,
                           transparentWhenNone: true,
                         ),
-                    borderRadius: BorderRadius.circular(6.0),
+                    borderRadius: BorderRadius.circular(6),
                   ),
                   child: Row(
                     children: [
@@ -1095,7 +1149,7 @@ class _TreeViewItem extends StatelessWidget {
                       if (selectionMode == TreeViewSelectionMode.multiple)
                         Padding(
                           padding: EdgeInsetsDirectional.only(
-                            start: 8.0,
+                            start: 8,
                             end: narrowSpacing ? 0.0 : _whiteSpace,
                           ),
                           child: ExcludeFocus(
@@ -1121,7 +1175,7 @@ class _TreeViewItem extends StatelessWidget {
                               // The hitbox fills the available height.
                               decoration: BoxDecoration(
                                 color: Colors.transparent,
-                                borderRadius: BorderRadius.circular(5.0),
+                                borderRadius: BorderRadius.circular(5),
                               ),
                               child: Icon(
                                 item.expanded
@@ -1129,7 +1183,7 @@ class _TreeViewItem extends StatelessWidget {
                                     : direction == TextDirection.ltr
                                     ? FluentIcons.chevron_right
                                     : FluentIcons.chevron_left,
-                                size: 8.0,
+                                size: 8,
                                 color: itemForegroundColor,
                               ),
                             ),
@@ -1139,7 +1193,7 @@ class _TreeViewItem extends StatelessWidget {
                         // have the same indentation, regardless whether or not
                         // they are expandable.
                         const Padding(
-                          padding: EdgeInsetsDirectional.only(start: 24.0),
+                          padding: EdgeInsetsDirectional.only(start: 24),
                         ),
 
                       // Leading icon
@@ -1149,10 +1203,10 @@ class _TreeViewItem extends StatelessWidget {
                             start: narrowSpacing ? 0 : _whiteSpace,
                             end: narrowSpacing ? _whiteSpace : 2 * _whiteSpace,
                           ),
-                          width: 20.0,
+                          width: 20,
                           child: IconTheme.merge(
                             data: IconThemeData(
-                              size: 20.0,
+                              size: 20,
                               color: itemForegroundColor,
                             ),
                             child: item.leading!,
@@ -1165,7 +1219,7 @@ class _TreeViewItem extends StatelessWidget {
                       Expanded(
                         child: DefaultTextStyle.merge(
                           style: TextStyle(
-                            fontSize: 12.0,
+                            fontSize: 12,
                             color: itemForegroundColor,
                           ),
                           child: item.content,
@@ -1176,16 +1230,16 @@ class _TreeViewItem extends StatelessWidget {
                 ),
                 if (selected && selectionMode == TreeViewSelectionMode.single)
                   PositionedDirectional(
-                    top: 6.0,
-                    bottom: 6.0,
-                    start: 0.0,
+                    top: 6,
+                    bottom: 6,
+                    start: 0,
                     child: Container(
-                      width: 3.0,
+                      width: 3,
                       decoration: BoxDecoration(
                         color: theme.accentColor.defaultBrushFor(
                           theme.brightness,
                         ),
-                        borderRadius: BorderRadius.circular(4.0),
+                        borderRadius: BorderRadius.circular(4),
                       ),
                     ),
                   ),

@@ -10,18 +10,18 @@ void main() {
     (tester) async {
       await tester.pumpWidget(
         StatefulBuilder(
-          builder: (BuildContext context, StateSetter setState) {
+          builder: (context, setState) {
             return wrapApp(
               child: ComboBox<String>(
-                placeholder: const Text("Select item", key: Key("placeholder")),
+                placeholder: const Text('Select item', key: Key('placeholder')),
                 items: const [
                   ComboBoxItem(
-                    value: "combo-box-item-1",
-                    child: Text("combo-box-item-1"),
+                    value: 'combo-box-item-1',
+                    child: Text('combo-box-item-1'),
                   ),
                   ComboBoxItem(
-                    value: "combo-box-item-2",
-                    child: Text("combo-box-item-2"),
+                    value: 'combo-box-item-2',
+                    child: Text('combo-box-item-2'),
                   ),
                 ],
                 onChanged: (value) {},
@@ -30,7 +30,7 @@ void main() {
           },
         ),
       );
-      final placeHolderFinder = find.byKey(const Key("placeholder"));
+      final placeHolderFinder = find.byKey(const Key('placeholder'));
 
       expect(placeHolderFinder, findsOneWidget);
     },
@@ -39,22 +39,22 @@ void main() {
   testWidgets('ComboBox should show the correct initial value when provided', (
     tester,
   ) async {
-    const selectedValue = "combo-box-item-1";
+    const selectedValue = 'combo-box-item-1';
     await tester.pumpWidget(
       StatefulBuilder(
-        builder: (BuildContext context, StateSetter setState) {
+        builder: (context, setState) {
           return wrapApp(
             child: ComboBox<String>(
               value: selectedValue,
-              placeholder: const Text("Select item", key: Key("placeholder")),
+              placeholder: const Text('Select item', key: Key('placeholder')),
               items: const [
                 ComboBoxItem(
-                  value: "combo-box-item-1",
-                  child: Text("combo-box-item-1"),
+                  value: 'combo-box-item-1',
+                  child: Text('combo-box-item-1'),
                 ),
                 ComboBoxItem(
-                  value: "combo-box-item-2",
-                  child: Text("combo-box-item-2"),
+                  value: 'combo-box-item-2',
+                  child: Text('combo-box-item-2'),
                 ),
               ],
               onChanged: (value) {},
@@ -76,21 +76,21 @@ void main() {
       String? selectedValue;
       await tester.pumpWidget(
         StatefulBuilder(
-          builder: (BuildContext context, StateSetter setState) {
+          builder: (context, setState) {
             return wrapApp(
               child: ComboBox<String>(
                 autofocus: true,
-                placeholder: const Text("Select item", key: Key("placeholder")),
+                placeholder: const Text('Select item', key: Key('placeholder')),
                 items: const [
                   ComboBoxItem(
-                    key: Key("combo-box-item-1"),
-                    value: "combo-box-item-1",
-                    child: Text("combo-box-item-1"),
+                    key: Key('combo-box-item-1'),
+                    value: 'combo-box-item-1',
+                    child: Text('combo-box-item-1'),
                   ),
                   ComboBoxItem(
-                    key: Key("combo-box-item-2"),
-                    value: "combo-box-item-2",
-                    child: Text("combo-box-item-2"),
+                    key: Key('combo-box-item-2'),
+                    value: 'combo-box-item-2',
+                    child: Text('combo-box-item-2'),
                   ),
                 ],
                 onChanged: (value) {
@@ -107,10 +107,10 @@ void main() {
       await tester.tap(find.byType(ComboBox<String>));
 
       await tester.pumpAndSettle();
-      await tester.tap(find.byKey(const Key("combo-box-item-1")));
+      await tester.tap(find.byKey(const Key('combo-box-item-1')));
       await tester.pumpAndSettle();
 
-      expect(selectedValue, "combo-box-item-1");
+      expect(selectedValue, 'combo-box-item-1');
     },
   );
   testWidgets('ComboBox should open dropdown when clicked/tapped', (
@@ -118,20 +118,20 @@ void main() {
   ) async {
     await tester.pumpWidget(
       StatefulBuilder(
-        builder: (BuildContext context, StateSetter setState) {
+        builder: (context, setState) {
           return wrapApp(
             child: ComboBox<String>(
-              placeholder: const Text("Select item", key: Key("placeholder")),
+              placeholder: const Text('Select item', key: Key('placeholder')),
               items: const [
                 ComboBoxItem(
-                  key: Key("combo-box-item-1"),
-                  value: "combo-box-item-1",
-                  child: Text("combo-box-item-1"),
+                  key: Key('combo-box-item-1'),
+                  value: 'combo-box-item-1',
+                  child: Text('combo-box-item-1'),
                 ),
                 ComboBoxItem(
-                  key: Key("combo-box-item-2"),
-                  value: "combo-box-item-2",
-                  child: Text("combo-box-item-2"),
+                  key: Key('combo-box-item-2'),
+                  value: 'combo-box-item-2',
+                  child: Text('combo-box-item-2'),
                 ),
               ],
               onChanged: (value) {},
@@ -144,9 +144,9 @@ void main() {
     expect(combBoxFinder, findsOneWidget);
     await tester.tap(combBoxFinder);
     await tester.pumpAndSettle();
-    final combBoxItem1Finder = find.byKey(const Key("combo-box-item-1"));
+    final combBoxItem1Finder = find.byKey(const Key('combo-box-item-1'));
 
-    final combBoxItem2Finder = find.byKey(const Key("combo-box-item-2"));
+    final combBoxItem2Finder = find.byKey(const Key('combo-box-item-2'));
     expect(combBoxItem1Finder, findsOneWidget);
     expect(combBoxItem2Finder, findsOneWidget);
   });
@@ -156,30 +156,30 @@ void main() {
   ) async {
     await tester.pumpWidget(
       StatefulBuilder(
-        builder: (BuildContext context, StateSetter setState) {
+        builder: (context, setState) {
           return wrapApp(
             child: Column(
               children: [
                 const SizedBox(
-                  key: Key("empty-area"),
+                  key: Key('empty-area'),
                   height: 200,
                   width: 2000,
                 ),
                 ComboBox<String>(
                   placeholder: const Text(
-                    "Select item",
-                    key: Key("placeholder"),
+                    'Select item',
+                    key: Key('placeholder'),
                   ),
                   items: const [
                     ComboBoxItem(
-                      key: Key("combo-box-item-1"),
-                      value: "combo-box-item-1",
-                      child: Text("combo-box-item-1"),
+                      key: Key('combo-box-item-1'),
+                      value: 'combo-box-item-1',
+                      child: Text('combo-box-item-1'),
                     ),
                     ComboBoxItem(
-                      key: Key("combo-box-item-2"),
-                      value: "combo-box-item-2",
-                      child: Text("combo-box-item-2"),
+                      key: Key('combo-box-item-2'),
+                      value: 'combo-box-item-2',
+                      child: Text('combo-box-item-2'),
                     ),
                   ],
                   onChanged: (value) {},
@@ -195,13 +195,13 @@ void main() {
     await tester.tap(combBoxFinder);
     await tester.pumpAndSettle();
 
-    expect(find.byKey(const Key("combo-box-item-1")), findsOneWidget);
-    final emptyAreaFinder = find.byKey(const Key("empty-area"));
+    expect(find.byKey(const Key('combo-box-item-1')), findsOneWidget);
+    final emptyAreaFinder = find.byKey(const Key('empty-area'));
 
     expect(emptyAreaFinder, findsOneWidget);
     await tester.tap(emptyAreaFinder);
     await tester.pumpAndSettle();
-    expect(find.byKey(const Key("combo-box-item-1")), findsNothing);
+    expect(find.byKey(const Key('combo-box-item-1')), findsNothing);
   });
 
   testWidgets('ComboBox should close dropdown after selecting an item', (
@@ -209,20 +209,20 @@ void main() {
   ) async {
     await tester.pumpWidget(
       StatefulBuilder(
-        builder: (BuildContext context, StateSetter setState) {
+        builder: (context, setState) {
           return wrapApp(
             child: ComboBox<String>(
-              placeholder: const Text("Select item", key: Key("placeholder")),
+              placeholder: const Text('Select item', key: Key('placeholder')),
               items: const [
                 ComboBoxItem(
-                  key: Key("combo-box-item-1"),
-                  value: "combo-box-item-1",
-                  child: Text("combo-box-item-1"),
+                  key: Key('combo-box-item-1'),
+                  value: 'combo-box-item-1',
+                  child: Text('combo-box-item-1'),
                 ),
                 ComboBoxItem(
-                  key: Key("combo-box-item-2"),
-                  value: "combo-box-item-2",
-                  child: Text("combo-box-item-2"),
+                  key: Key('combo-box-item-2'),
+                  value: 'combo-box-item-2',
+                  child: Text('combo-box-item-2'),
                 ),
               ],
               onChanged: (value) {},
@@ -235,12 +235,12 @@ void main() {
     expect(combBoxFinder, findsOneWidget);
     await tester.tap(combBoxFinder);
     await tester.pumpAndSettle();
-    final comboBoxItem1Finder = find.byKey(const Key("combo-box-item-1"));
+    final comboBoxItem1Finder = find.byKey(const Key('combo-box-item-1'));
     expect(comboBoxItem1Finder, findsOneWidget);
 
     await tester.tap(comboBoxItem1Finder);
     await tester.pumpAndSettle();
-    expect(find.byKey(const Key("combo-box-item-1")), findsNothing);
+    expect(find.byKey(const Key('combo-box-item-1')), findsNothing);
   });
 
   testWidgets('ComboBox should open dropdown when pressing enter key', (
@@ -248,21 +248,21 @@ void main() {
   ) async {
     await tester.pumpWidget(
       StatefulBuilder(
-        builder: (BuildContext context, StateSetter setState) {
+        builder: (context, setState) {
           return wrapApp(
             child: ComboBox<String>(
               autofocus: true,
-              placeholder: const Text("Select item", key: Key("placeholder")),
+              placeholder: const Text('Select item', key: Key('placeholder')),
               items: const [
                 ComboBoxItem(
-                  key: Key("combo-box-item-1"),
-                  value: "combo-box-item-1",
-                  child: Text("combo-box-item-1"),
+                  key: Key('combo-box-item-1'),
+                  value: 'combo-box-item-1',
+                  child: Text('combo-box-item-1'),
                 ),
                 ComboBoxItem(
-                  key: Key("combo-box-item-2"),
-                  value: "combo-box-item-2",
-                  child: Text("combo-box-item-2"),
+                  key: Key('combo-box-item-2'),
+                  value: 'combo-box-item-2',
+                  child: Text('combo-box-item-2'),
                 ),
               ],
               onChanged: (value) {},
@@ -275,7 +275,7 @@ void main() {
     await tester.sendKeyEvent(LogicalKeyboardKey.enter);
 
     await tester.pumpAndSettle();
-    final comboBoxItem1Finder = find.byKey(const Key("combo-box-item-1"));
+    final comboBoxItem1Finder = find.byKey(const Key('combo-box-item-1'));
     expect(comboBoxItem1Finder, findsOneWidget);
   });
 }

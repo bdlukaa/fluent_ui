@@ -1,5 +1,11 @@
 import 'package:fluent_ui/fluent_ui.dart';
 
+/// The mode of the password reveal button.
+///
+/// See also:
+///
+/// * [PasswordBox], which is the widget that uses this mode.
+/// * [PasswordFormBox], which is the form field that contains a [PasswordBox].
 enum PasswordRevealMode {
   /// The password reveal button is visible. The password is not obscured while
   /// the button is pressed.
@@ -37,9 +43,9 @@ enum PasswordRevealMode {
 ///
 /// See also:
 ///
-///  * <https://learn.microsoft.com/en-us/windows/apps/design/controls/password-box>
 ///  * [PasswordRevealMode], the different modes that the password box can have
 ///  * [TextBox], the underlaying widget that renders the text box
+///  * <https://learn.microsoft.com/en-us/windows/apps/design/controls/password-box>
 class PasswordBox extends StatefulWidget {
   /// Controls the text being edited.
   ///
@@ -170,7 +176,7 @@ class PasswordBox extends StatefulWidget {
   final EdgeInsetsGeometry padding;
 
   /// {@macro flutter.widgets.editableText.scrollPadding}
-  final EdgeInsets scrollPadding;
+  final EdgeInsetsGeometry scrollPadding;
 
   /// {@macro flutter.widgets.editableText.scrollController}
   final ScrollController? scrollController;
@@ -193,7 +199,7 @@ class PasswordBox extends StatefulWidget {
     this.leadingIcon,
     this.placeholderStyle,
     this.cursorWidth = 1.5,
-    this.cursorRadius = const Radius.circular(2.0),
+    this.cursorRadius = const Radius.circular(2),
     this.cursorHeight,
     this.cursorColor,
     this.showCursor,
@@ -209,7 +215,7 @@ class PasswordBox extends StatefulWidget {
     this.style,
     this.padding = kTextBoxPadding,
     this.scrollController,
-    this.scrollPadding = const EdgeInsets.all(20.0),
+    this.scrollPadding = const EdgeInsetsDirectional.all(20),
     this.scrollPhysics,
   });
 
@@ -449,7 +455,7 @@ class PasswordFormBox extends ControllableFormBox {
     super.controller,
     double cursorWidth = 2.0,
     double? cursorHeight,
-    Radius cursorRadius = const Radius.circular(2.0),
+    Radius cursorRadius = const Radius.circular(2),
     Color? cursorColor,
     VoidCallback? onEditingComplete,
     ValueChanged<String>? onFieldSubmitted,
@@ -459,7 +465,7 @@ class PasswordFormBox extends ControllableFormBox {
     TextStyle? placeholderStyle,
     Widget? leadingIcon,
   }) : super(
-         builder: (FormFieldState<String> field) {
+         builder: (field) {
            assert(debugCheckHasFluentTheme(field.context));
            final theme = FluentTheme.of(field.context);
            void onChangedHandler(String value) {
@@ -469,7 +475,7 @@ class PasswordFormBox extends ControllableFormBox {
            return UnmanagedRestorationScope(
              bucket: field.bucket,
              child: FormRow(
-               padding: EdgeInsets.zero,
+               padding: EdgeInsetsDirectional.zero,
                error: (field.errorText == null) ? null : Text(field.errorText!),
                child: PasswordBox(
                  revealMode: revealMode,

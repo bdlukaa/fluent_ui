@@ -9,24 +9,57 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 
 part 'tab.dart';
 
-const double _kMinTileWidth = 80.0;
-const double _kMaxTileWidth = 240.0;
-const double _kTileHeight = 34.0;
-const double _kButtonWidth = 32.0;
+const double _kMinTileWidth = 80;
+const double _kMaxTileWidth = 240;
+const double _kTileHeight = 34;
+const double _kButtonWidth = 32;
 
-/// The TabView control is a way to display a set of tabs and their respective
-/// content. TabViews are useful for displaying several pages (or documents) of
-/// content while giving a user the capability to rearrange, open, or close new
-/// tabs.
+/// A tabbed interface for displaying multiple pages of content.
 ///
-/// ![TabView Preview](https://docs.microsoft.com/en-us/windows/apps/design/controls/images/tabview/tab-introduction.png)
+/// [TabView] provides a familiar tab-based navigation pattern, similar to
+/// browser tabs. Users can switch between tabs, and optionally rearrange,
+/// open, or close tabs.
 ///
-/// There must be enough space to render the tabview.
+/// ![TabView Preview](https://learn.microsoft.com/en-us/windows/apps/design/controls/images/tabview/tab-introduction.png)
+///
+/// {@tool snippet}
+/// This example shows a basic tab view:
+///
+/// ```dart
+/// TabView(
+///   currentIndex: selectedIndex,
+///   onChanged: (index) => setState(() => selectedIndex = index),
+///   tabs: [
+///     Tab(
+///       text: Text('Document 1'),
+///       body: Center(child: Text('Content 1')),
+///     ),
+///     Tab(
+///       text: Text('Document 2'),
+///       body: Center(child: Text('Content 2')),
+///     ),
+///   ],
+///   onNewPressed: () {
+///     // Add a new tab
+///   },
+/// )
+/// ```
+/// {@end-tool}
+///
+/// ## Keyboard shortcuts
+///
+/// When [shortcutsEnabled] is true, the following shortcuts are available:
+///
+/// * `Ctrl + T` - Create a new tab (if [onNewPressed] is provided)
+/// * `Ctrl + W` or `Ctrl + F4` - Close the current tab
+/// * `Ctrl + 1-8` - Navigate to tabs 1-8
+/// * `Ctrl + 9` - Navigate to the last tab
 ///
 /// See also:
 ///
-///   * [NavigationView], control provides top-level navigation for your app.
-///   * <https://docs.microsoft.com/en-us/windows/apps/design/controls/tab-view>
+///  * [NavigationView], for top-level app navigation
+///  * [Tab], the individual tab widget
+///  * <https://learn.microsoft.com/en-us/windows/apps/design/controls/tab-view>
 class TabView extends StatefulWidget {
   /// Creates a tab view.
   ///
@@ -34,14 +67,12 @@ class TabView extends StatefulWidget {
   ///
   /// [maxTabWidth] must be non-negative
   const TabView({
-    super.key,
     required this.currentIndex,
-    this.onChanged,
     required this.tabs,
+    super.key,
+    this.onChanged,
     this.onNewPressed,
-    this.addIconData,
     this.newTabIcon = const WindowsIcon(WindowsIcons.add),
-    this.addIconBuilder,
     this.shortcutsEnabled = true,
     this.onReorder,
     this.showScrollButtons = true,
@@ -72,26 +103,10 @@ class TabView extends StatefulWidget {
   /// If null, the new button won't be displayed
   final VoidCallback? onNewPressed;
 
-  /// The icon of the new button
-  @Deprecated(
-    'Use newTabIcon instead. This was deprecated on 4.9.0 and will be removed in the next releases.',
-  )
-  final IconData? addIconData;
-
   /// The icon of the "Add new tab" button.
   ///
   /// Defaults to an [Icon] with [FluentIcons.add].
   final Widget newTabIcon;
-
-  /// The builder for the add icon.
-  ///
-  /// This does not build the add button, only its icon.
-  ///
-  /// When null, the add icon is rendered.
-  @Deprecated(
-    'Use newTabIcon instead. This was deprecated on 4.9.0 and will be removed in the next releases.',
-  )
-  final Widget Function(Widget addIcon)? addIconBuilder;
 
   /// Whether the following shortcuts are enabled:
   ///
@@ -195,8 +210,6 @@ class TabView extends StatefulWidget {
           ifFalse: 'no new button',
         ),
       )
-      // ignore: deprecated_member_use_from_same_package
-      ..add(IconDataProperty('addIconData', addIconData))
       ..add(
         DiagnosticsProperty<Widget>(
           'newTabIcon',
@@ -257,7 +270,7 @@ class TabView extends StatefulWidget {
 class _TabViewState extends State<TabView> {
   Timer? closeTimer;
   double? lockedTabWidth;
-  double preferredTabWidth = 0.0;
+  double preferredTabWidth = 0;
 
   late ScrollPosController scrollController;
 
@@ -270,13 +283,7 @@ class _TabViewState extends State<TabView> {
           itemCount: widget.tabs.length,
           animationDuration: const Duration(milliseconds: 100),
         );
-    scrollController
-      ..itemCount = widget.tabs.length
-      ..addListener(_handleScrollUpdate);
-  }
-
-  void _handleScrollUpdate() {
-    if (mounted) setState(() {});
+    scrollController.itemCount = widget.tabs.length;
   }
 
   @override
@@ -289,6 +296,13 @@ class _TabViewState extends State<TabView> {
         scrollController.hasClients) {
       scrollController.scrollToItem(widget.currentIndex);
     }
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    final theme = FluentTheme.of(context);
+    scrollController.animationDuration = theme.fastAnimationDuration;
   }
 
   @override
@@ -401,7 +415,7 @@ class _TabViewState extends State<TabView> {
   ) {
     final item = SizedBox(
       width: _kButtonWidth,
-      height: 28.0,
+      height: 28,
       child: IconButton(
         icon: Center(child: icon),
         onPressed: onPressed,
@@ -422,7 +436,7 @@ class _TabViewState extends State<TabView> {
               states,
             );
           }),
-          padding: const WidgetStatePropertyAll(EdgeInsets.zero),
+          padding: const WidgetStatePropertyAll(EdgeInsetsDirectional.zero),
         ),
       ),
     );
@@ -436,7 +450,7 @@ class _TabViewState extends State<TabView> {
       child: Divider(
         direction: Axis.vertical,
         style: DividerThemeData(
-          verticalMargin: const EdgeInsets.symmetric(vertical: 8),
+          verticalMargin: const EdgeInsetsDirectional.symmetric(vertical: 8),
           decoration:
               ![widget.currentIndex - 1, widget.currentIndex].contains(index)
               ? null
@@ -459,7 +473,7 @@ class _TabViewState extends State<TabView> {
     final headerFooterTextStyle =
         theme.typography.bodyLarge ?? const TextStyle();
 
-    Widget tabBar = Column(
+    final Widget tabBar = Column(
       children: [
         ScrollConfiguration(
           behavior: const _TabViewScrollBehavior(),
@@ -472,7 +486,7 @@ class _TabViewState extends State<TabView> {
               children: [
                 if (widget.header != null)
                   Padding(
-                    padding: const EdgeInsetsDirectional.only(end: 12.0),
+                    padding: const EdgeInsetsDirectional.only(end: 12),
                     child: DefaultTextStyle.merge(
                       style: headerFooterTextStyle,
                       child: widget.header!,
@@ -497,11 +511,11 @@ class _TabViewState extends State<TabView> {
                               .clamp(widget.minTabWidth, widget.maxTabWidth);
 
                       final Widget listView = Listener(
-                        onPointerSignal: (PointerSignalEvent e) {
+                        onPointerSignal: (e) {
                           if (e is PointerScrollEvent &&
                               scrollController.hasClients) {
                             GestureBinding.instance.pointerSignalResolver
-                                .register(e, (PointerSignalEvent event) {
+                                .register(e, (event) {
                                   if (e.scrollDelta.dy > 0) {
                                     scrollController.forward(
                                       align: false,
@@ -546,7 +560,7 @@ class _TabViewState extends State<TabView> {
                       );
 
                       /// Whether the tab bar is scrollable
-                      var scrollable =
+                      final scrollable =
                           preferredTabWidth * widget.tabs.length >
                           width - (widget.showNewButton ? _kButtonWidth : 0);
 
@@ -558,9 +572,9 @@ class _TabViewState extends State<TabView> {
                       Widget backwardButton() {
                         return Padding(
                           padding: const EdgeInsetsDirectional.only(
-                            start: 8.0,
-                            end: 3.0,
-                            bottom: 3.0,
+                            start: 8,
+                            end: 3,
+                            bottom: 3,
                           ),
                           child: _buttonTabBuilder(
                             context,
@@ -585,9 +599,9 @@ class _TabViewState extends State<TabView> {
                       Widget forwardButton() {
                         return Padding(
                           padding: const EdgeInsetsDirectional.only(
-                            start: 3.0,
-                            end: 8.0,
-                            bottom: 3.0,
+                            start: 3,
+                            end: 8,
+                            bottom: 3,
                           ),
                           child: _buttonTabBuilder(
                             context,
@@ -630,30 +644,16 @@ class _TabViewState extends State<TabView> {
                           if (widget.showNewButton)
                             Padding(
                               padding: const EdgeInsetsDirectional.only(
-                                start: 3.0,
-                                bottom: 3.0,
+                                start: 3,
+                                bottom: 3,
                               ),
                               child: _buttonTabBuilder(
                                 context,
-                                () {
-                                  Widget icon;
-                                  // ignore: deprecated_member_use_from_same_package
-                                  if (widget.addIconData != null) {
-                                    // ignore: deprecated_member_use_from_same_package
-                                    icon = Icon(widget.addIconData, size: 12.0);
-                                  } else {
-                                    icon = widget.newTabIcon;
-                                  }
-                                  icon = IconTheme.merge(
-                                    data: const IconThemeData(size: 12.0),
-                                    child: icon,
-                                  );
-
-                                  // ignore: deprecated_member_use_from_same_package
-                                  return widget.addIconBuilder?.call(icon) ??
-                                      icon;
-                                }(),
-                                widget.onNewPressed!,
+                                IconTheme.merge(
+                                  data: const IconThemeData(size: 12),
+                                  child: widget.newTabIcon,
+                                ),
+                                widget.onNewPressed,
                                 localizations.newTabLabel,
                               ),
                             ),
@@ -673,7 +673,7 @@ class _TabViewState extends State<TabView> {
                 ),
                 if (widget.footer != null)
                   Padding(
-                    padding: const EdgeInsetsDirectional.only(start: 12.0),
+                    padding: const EdgeInsetsDirectional.only(start: 12),
                     child: DefaultTextStyle.merge(
                       style: headerFooterTextStyle,
                       child: widget.footer!,
@@ -737,9 +737,14 @@ class _TabViewState extends State<TabView> {
                   LogicalKeyboardKey.digit8,
                   LogicalKeyboardKey.digit9,
                 ];
-                return SingleActivator(digits[i], control: ctrl, meta: meta);
+                return SingleActivator(
+                  digits[i as int],
+                  control: ctrl,
+                  meta: meta,
+                );
               },
-              value: (index) {
+              value: (i) {
+                final index = i as int;
                 return () {
                   // If it's the last, move to the last tab
                   if (index == 8) {

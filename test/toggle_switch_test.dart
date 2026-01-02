@@ -4,18 +4,16 @@ import 'package:flutter_test/flutter_test.dart';
 import 'app_test.dart';
 
 void main() {
-  testWidgets('ToggleSwitch change state accordingly', (
-    WidgetTester tester,
-  ) async {
+  testWidgets('ToggleSwitch change state accordingly', (tester) async {
     var toggleSwitchValue = false;
 
     await tester.pumpWidget(
       StatefulBuilder(
-        builder: (BuildContext context, StateSetter setState) {
+        builder: (context, setState) {
           return wrapApp(
             child: ToggleSwitch(
               checked: toggleSwitchValue,
-              onChanged: (bool value) {
+              onChanged: (value) {
                 setState(() {
                   toggleSwitchValue = value;
                 });
@@ -40,17 +38,17 @@ void main() {
     expect(toggleSwitchValue, false);
   });
 
-  testWidgets('ToggleSwitch can drag (LTR)', (WidgetTester tester) async {
+  testWidgets('ToggleSwitch can drag (LTR)', (tester) async {
     var value = false;
 
     await tester.pumpWidget(
       wrapApp(
         child: StatefulBuilder(
-          builder: (BuildContext context, StateSetter setState) {
+          builder: (context, setState) {
             return Center(
               child: ToggleSwitch(
                 checked: value,
-                onChanged: (bool newValue) {
+                onChanged: (newValue) {
                   setState(() {
                     value = newValue;
                   });
@@ -64,21 +62,21 @@ void main() {
 
     expect(value, isFalse);
 
-    await tester.drag(find.byType(ToggleSwitch), const Offset(-30.0, 0.0));
+    await tester.drag(find.byType(ToggleSwitch), const Offset(-30, 0));
 
     expect(value, isFalse);
 
-    await tester.drag(find.byType(ToggleSwitch), const Offset(30.0, 0.0));
+    await tester.drag(find.byType(ToggleSwitch), const Offset(30, 0));
 
     expect(value, isTrue);
 
     await tester.pump();
-    await tester.drag(find.byType(ToggleSwitch), const Offset(30.0, 0.0));
+    await tester.drag(find.byType(ToggleSwitch), const Offset(30, 0));
 
     expect(value, isTrue);
 
     await tester.pump();
-    await tester.drag(find.byType(ToggleSwitch), const Offset(-30.0, 0.0));
+    await tester.drag(find.byType(ToggleSwitch), const Offset(-30, 0));
 
     expect(value, isFalse);
   });

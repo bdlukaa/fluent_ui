@@ -2,20 +2,35 @@ import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter/foundation.dart';
 
 /// {@template fluent_ui.buttons.base}
-/// Buttons give people a way to trigger an action. They’re typically found in
-/// forms, dialog panels, and dialogs.
+/// A button gives the user a way to trigger an immediate action. Some buttons
+/// are specialized for particular tasks, such as navigation, repeated actions,
+/// or presenting menus.
 /// {@endtemplate}
+///
+/// {@tool snippet}
+/// This example shows how to use a basic button:
+///
+/// ```dart
+/// Button(
+///   child: Text('Click me'),
+///   onPressed: () {
+///     print('Button pressed!');
+///   },
+/// )
+/// ```
+/// {@end-tool}
 ///
 /// See also:
 ///
-///   * <https://developer.microsoft.com/en-us/fluentui#/controls/android/button>
-///   * <https://developer.microsoft.com/en-us/fluentui#/controls/web/button>
-///   * [HyperlinkButton], a borderless button with mainly text-based content
-///   * [OutlinedButton], an outlined button
-///   * [FilledButton], a colored button
+///  * [HyperlinkButton], a borderless button with mainly text-based content
+///  * [OutlinedButton], an outlined button
+///  * [FilledButton], a colored button for primary actions
+///  * [IconButton], a button that displays only an icon
+///  * [ToggleButton], a button that can be toggled on and off
+///  * <https://learn.microsoft.com/en-us/windows/apps/design/controls/buttons>
 abstract class BaseButton extends StatefulWidget {
+  /// Creates a base button.
   const BaseButton({
-    super.key,
     required this.onPressed,
     required this.onLongPress,
     required this.onTapDown,
@@ -25,6 +40,7 @@ abstract class BaseButton extends StatefulWidget {
     required this.autofocus,
     required this.child,
     required this.focusable,
+    super.key,
   });
 
   /// Called when the button is tapped or otherwise activated.
@@ -84,9 +100,11 @@ abstract class BaseButton extends StatefulWidget {
   /// Whether this button can be focused.
   final bool focusable;
 
+  /// Returns the default style for this button type based on the context.
   @protected
   ButtonStyle defaultStyleOf(BuildContext context);
 
+  /// Returns the theme style for this button type, if defined.
   @protected
   ButtonStyle? themeStyleOf(BuildContext context);
 
@@ -153,45 +171,39 @@ class _BaseButtonState extends State<BaseButton> {
         T? resolve<T>(
           WidgetStateProperty<T>? Function(ButtonStyle? style) getProperty,
         ) {
-          return effectiveValue(
-            (ButtonStyle? style) => getProperty(style)?.resolve(states),
-          );
+          return effectiveValue((style) => getProperty(style)?.resolve(states));
         }
 
-        final resolvedElevation = resolve<double?>(
-          (ButtonStyle? style) => style?.elevation,
-        );
+        final resolvedElevation = resolve<double?>((style) => style?.elevation);
         final resolvedTextStyle = theme.typography.body?.merge(
-          resolve<TextStyle?>((ButtonStyle? style) => style?.textStyle),
+          resolve<TextStyle?>((style) => style?.textStyle),
         );
         final resolvedBackgroundColor = resolve<Color?>(
-          (ButtonStyle? style) => style?.backgroundColor,
+          (style) => style?.backgroundColor,
         );
         final resolvedForegroundColor = resolve<Color?>(
-          (ButtonStyle? style) => style?.foregroundColor,
+          (style) => style?.foregroundColor,
         );
         final resolvedShadowColor = resolve<Color?>(
-          (ButtonStyle? style) => style?.shadowColor,
+          (style) => style?.shadowColor,
         );
         final resolvedPadding =
-            resolve<EdgeInsetsGeometry?>(
-              (ButtonStyle? style) => style?.padding,
-            ) ??
-            EdgeInsets.zero;
+            resolve<EdgeInsetsGeometry?>((style) => style?.padding) ??
+            EdgeInsetsDirectional.zero;
         final resolvedShape =
-            resolve<ShapeBorder?>((ButtonStyle? style) => style?.shape) ??
+            resolve<ShapeBorder?>((style) => style?.shape) ??
             const RoundedRectangleBorder();
 
         final padding = resolvedPadding
             .add(
-              EdgeInsets.symmetric(
+              EdgeInsetsDirectional.symmetric(
                 horizontal: theme.visualDensity.horizontal,
                 vertical: theme.visualDensity.vertical,
               ),
             )
-            .clamp(EdgeInsets.zero, EdgeInsetsGeometry.infinity);
+            .clamp(EdgeInsetsDirectional.zero, EdgeInsetsGeometry.infinity);
         final iconSize = resolve<double?>((style) => style?.iconSize);
-        Widget result = PhysicalModel(
+        final Widget result = PhysicalModel(
           color: Colors.transparent,
           shadowColor: resolvedShadowColor ?? Colors.black,
           elevation: resolvedElevation ?? 0.0,
@@ -201,8 +213,8 @@ class _BaseButtonState extends State<BaseButton> {
                     : BorderRadius.zero
               : BorderRadius.zero,
           child: AnimatedContainer(
-            duration: FluentTheme.of(context).fasterAnimationDuration,
-            curve: FluentTheme.of(context).animationCurve,
+            duration: theme.fasterAnimationDuration,
+            curve: theme.animationCurve,
             decoration: ShapeDecoration(
               shape: resolvedShape,
               color: resolvedBackgroundColor,
@@ -214,8 +226,8 @@ class _BaseButtonState extends State<BaseButton> {
                 size: iconSize ?? 14.0,
               ),
               child: AnimatedDefaultTextStyle(
-                duration: FluentTheme.of(context).fastAnimationDuration,
-                curve: FluentTheme.of(context).animationCurve,
+                duration: theme.fastAnimationDuration,
+                curve: theme.animationCurve,
                 style: DefaultTextStyle.of(context).style.merge(
                   (resolvedTextStyle ?? const TextStyle()).copyWith(
                     color: resolvedForegroundColor,

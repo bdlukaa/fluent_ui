@@ -1,4 +1,4 @@
-import 'package:example/widgets/card_highlight.dart';
+import 'package:example/widgets/code_snippet_card.dart';
 import 'package:fluent_ui/fluent_ui.dart';
 
 import '../../widgets/page.dart';
@@ -112,32 +112,33 @@ class _CommandBarsPageState extends State<CommandBarsPage> with PageMixin {
   double? compactBreakpointWidth;
   bool _vertical = false;
   bool _compact = false;
-  var overflowBehavior = CommandBarOverflowBehavior.dynamicOverflow;
+  CommandBarOverflowBehavior overflowBehavior =
+      CommandBarOverflowBehavior.dynamicOverflow;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(final BuildContext context) {
     return ScaffoldPage.scrollable(
       header: const PageHeader(title: Text('CommandBar')),
       children: [
         const Text(
-          'Command bars provide users with easy access to your app\'s most '
+          "Command bars provide users with easy access to your app's most "
           'common tasks. Command bars can provide access to app-level or '
           'page-specific commands and can be used with any navigation pattern.',
         ),
-        const SizedBox(height: 8.0),
+        const SizedBox(height: 8),
         Card(
           child: Wrap(
-            spacing: 12.0,
-            runSpacing: 12.0,
+            spacing: 12,
+            runSpacing: 12,
             crossAxisAlignment: WrapCrossAlignment.end,
             children: [
               SizedBox(
-                width: 200.0,
+                width: 200,
                 child: InfoLabel(
                   label: 'Compact breakpoint width',
                   child: NumberBox<double>(
                     value: compactBreakpointWidth,
-                    onChanged: (value) {
+                    onChanged: (final value) {
                       setState(() {
                         compactBreakpointWidth = value;
                       });
@@ -149,20 +150,23 @@ class _CommandBarsPageState extends State<CommandBarsPage> with PageMixin {
                 label: 'Overflow behavior',
                 child: ComboBox<CommandBarOverflowBehavior>(
                   value: overflowBehavior,
-                  items: CommandBarOverflowBehavior.values.map((behavior) {
+                  items: CommandBarOverflowBehavior.values.map((
+                    final behavior,
+                  ) {
                     return ComboBoxItem<CommandBarOverflowBehavior>(
                       value: behavior,
                       child: Text(
                         behavior.name
                             .replaceAllMapped(
-                              RegExp(r'([a-z])([A-Z])'),
-                              (match) => '${match.group(1)} ${match.group(2)}',
+                              RegExp('([a-z])([A-Z])'),
+                              (final match) =>
+                                  '${match.group(1)} ${match.group(2)}',
                             )
                             .uppercaseFirst(),
                       ),
                     );
                   }).toList(),
-                  onChanged: (value) {
+                  onChanged: (final value) {
                     setState(() {
                       overflowBehavior = value!;
                     });
@@ -171,7 +175,7 @@ class _CommandBarsPageState extends State<CommandBarsPage> with PageMixin {
               ),
               Checkbox(
                 checked: _vertical,
-                onChanged: (value) {
+                onChanged: (final value) {
                   setState(() {
                     _vertical = value!;
                   });
@@ -180,7 +184,7 @@ class _CommandBarsPageState extends State<CommandBarsPage> with PageMixin {
               ),
               Checkbox(
                 checked: _compact,
-                onChanged: (value) {
+                onChanged: (final value) {
                   setState(() {
                     _compact = value!;
                   });
@@ -199,7 +203,7 @@ class _CommandBarsPageState extends State<CommandBarsPage> with PageMixin {
         subtitle(
           content: const Text('Command bar with many items (dynamic overflow)'),
         ),
-        CardHighlight(
+        CodeSnippetCard(
           codeSnippet:
               '''final commandBarKey = GlobalKey<CommandBarState>();
 

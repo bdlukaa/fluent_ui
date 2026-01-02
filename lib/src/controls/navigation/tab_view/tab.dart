@@ -1,5 +1,6 @@
 part of 'tab_view.dart';
 
+/// The visibility mode of the close button.
 enum CloseButtonVisibilityMode {
   /// The close button will never be visible
   never,
@@ -33,8 +34,8 @@ enum TabWidthBehavior {
 ///   * [Tab], the widget that uses this data.
 ///   * [TabView], the widget that uses the [Tab] widget.
 class TabData extends InheritedWidget {
+  /// Creates a data class that describes the state of a tab.
   const TabData({
-    super.key,
     required super.child,
     required this.selected,
     required this.onPressed,
@@ -44,6 +45,7 @@ class TabData extends InheritedWidget {
     required this.animationCurve,
     required this.visibilityMode,
     required this.tabWidthBehavior,
+    super.key,
   });
 
   /// Whether the tab is selected or not.
@@ -84,6 +86,9 @@ class TabData extends InheritedWidget {
   ///     of the tab width.
   final TabWidthBehavior tabWidthBehavior;
 
+  /// Gets the closest [TabData] ancestor, if any.
+  ///
+  /// Use this when the data might not exist in the widget tree.
   static TabData of(BuildContext context) {
     return context.dependOnInheritedWidgetOfExactType<TabData>()!;
   }
@@ -154,10 +159,10 @@ class Tab extends StatefulWidget {
 
   /// Creates a tab.
   Tab({
-    super.key,
-    this.icon = const SizedBox.shrink(),
     required this.text,
     required this.body,
+    super.key,
+    this.icon = const SizedBox.shrink(),
     this.backgroundColor,
     this.selectedBackgroundColor,
     this.foregroundColor,
@@ -198,19 +203,19 @@ class Tab extends StatefulWidget {
   final Widget body;
 
   /// The background color of the tab.
-  final WidgetStateProperty<Color>? backgroundColor;
+  final WidgetStateColor? backgroundColor;
 
   /// The background color of the tab if it is selected.
-  final WidgetStateProperty<Color>? selectedBackgroundColor;
+  final WidgetStateColor? selectedBackgroundColor;
 
   /// The foreground color of the tab.
-  final WidgetStateProperty<Color>? foregroundColor;
+  final WidgetStateColor? foregroundColor;
 
   /// The background color of the tab if it is selected.
-  final WidgetStateProperty<Color>? selectedForegroundColor;
+  final WidgetStateColor? selectedForegroundColor;
 
   /// The outline color of the tab.
-  final WidgetStateProperty<Color>? outlineColor;
+  final WidgetStateColor? outlineColor;
 
   /// Whether the tab is disabled or not.
   ///
@@ -244,25 +249,25 @@ class Tab extends StatefulWidget {
       )
       ..add(ObjectFlagProperty('onClosed', onClosed, ifNull: 'not closeable'))
       ..add(
-        DiagnosticsProperty<WidgetStateProperty<Color>>(
+        DiagnosticsProperty<WidgetStateColor>(
           'backgroundColor',
           backgroundColor,
         ),
       )
       ..add(
-        DiagnosticsProperty<WidgetStateProperty<Color>>(
+        DiagnosticsProperty<WidgetStateColor>(
           'selectedBackgroundColor',
           selectedBackgroundColor,
         ),
       )
       ..add(
-        DiagnosticsProperty<WidgetStateProperty<Color>>(
+        DiagnosticsProperty<WidgetStateColor>(
           'foregroundColor',
           foregroundColor,
         ),
       )
       ..add(
-        DiagnosticsProperty<WidgetStateProperty<Color>>(
+        DiagnosticsProperty<WidgetStateColor>(
           'selectedForegroundColor',
           selectedForegroundColor,
         ),
@@ -280,25 +285,26 @@ class Tab extends StatefulWidget {
 
 class TabState extends State<Tab>
     with SingleTickerProviderStateMixin, AutomaticKeepAliveClientMixin {
-  late final controller = AnimationController(vsync: this);
+  late final _animationController = AnimationController(vsync: this);
 
+  /// The data of the tab.
   TabData get tab => TabData.of(context);
 
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    if (controller.duration == null) {
-      controller
+    if (_animationController.duration == null) {
+      _animationController
         ..duration = tab.animationDuration
         ..forward();
     } else {
-      controller.duration = tab.animationDuration;
+      _animationController.duration = tab.animationDuration;
     }
   }
 
   @override
   void dispose() {
-    controller.dispose();
+    _animationController.dispose();
     super.dispose();
   }
 
@@ -369,11 +375,8 @@ class TabState extends State<Tab>
             key: widget._tabKey,
             height: _kTileHeight,
             constraints: tab.tabWidthBehavior == TabWidthBehavior.sizeToContent
-                ? const BoxConstraints(minHeight: 28.0)
-                : const BoxConstraints(
-                    maxWidth: _kMaxTileWidth,
-                    minHeight: 28.0,
-                  ),
+                ? const BoxConstraints(minHeight: 28)
+                : const BoxConstraints(maxWidth: _kMaxTileWidth, minHeight: 28),
             padding: tab.selected
                 ? const EdgeInsetsDirectional.only(
                     start: 9,
@@ -401,7 +404,7 @@ class TabState extends State<Tab>
               final result = ClipRect(
                 child: DefaultTextStyle.merge(
                   style: (theme.typography.body ?? const TextStyle()).copyWith(
-                    fontSize: 12.0,
+                    fontSize: 12,
                     fontWeight: tab.selected ? FontWeight.w600 : null,
                     color:
                         (tab.selected
@@ -418,17 +421,15 @@ class TabState extends State<Tab>
                                   : widget.foregroundColor)
                               ?.resolve(states) ??
                           foregroundColor,
-                      size: 16.0,
+                      size: 16,
                     ),
                     child: Row(
                       mainAxisSize: MainAxisSize.min,
                       children: [
                         if (widget.icon != null)
                           Padding(
-                            padding: const EdgeInsetsDirectional.only(
-                              end: 10.0,
-                            ),
-                            child: widget.icon!,
+                            padding: const EdgeInsetsDirectional.only(end: 10),
+                            child: widget.icon,
                           ),
                         if (tab.tabWidthBehavior != TabWidthBehavior.compact ||
                             (tab.tabWidthBehavior == TabWidthBehavior.compact &&
@@ -438,14 +439,12 @@ class TabState extends State<Tab>
                                 ? FlexFit.tight
                                 : FlexFit.loose,
                             child: Padding(
-                              padding: const EdgeInsetsDirectional.only(
-                                end: 4.0,
-                              ),
+                              padding: const EdgeInsetsDirectional.only(end: 4),
                               child: DefaultTextStyle.merge(
                                 softWrap: false,
                                 maxLines: 1,
                                 overflow: TextOverflow.clip,
-                                style: const TextStyle(fontSize: 12.0),
+                                style: const TextStyle(fontSize: 12),
                                 child: widget.text,
                               ),
                             ),
@@ -458,9 +457,7 @@ class TabState extends State<Tab>
                                         CloseButtonVisibilityMode.onHover &&
                                     states.isHovered)))
                           Padding(
-                            padding: const EdgeInsetsDirectional.only(
-                              start: 4.0,
-                            ),
+                            padding: const EdgeInsetsDirectional.only(start: 4),
                             child: FocusTheme(
                               data: const FocusThemeData(
                                 primaryBorder: BorderSide.none,
@@ -469,8 +466,8 @@ class TabState extends State<Tab>
                               child: Tooltip(
                                 message: localizations.closeTabLabel,
                                 child: SizedBox(
-                                  height: 24.0,
-                                  width: 32.0,
+                                  height: 24,
+                                  width: 32,
                                   child: IconButton(
                                     icon: widget.closeIcon!,
                                     onPressed: tab.onClose,
@@ -573,7 +570,11 @@ class _TabViewScrollBehavior extends ScrollBehavior {
   const _TabViewScrollBehavior();
 
   @override
-  Widget buildScrollbar(context, child, details) {
+  Widget buildScrollbar(
+    BuildContext context,
+    Widget child,
+    ScrollableDetails details,
+  ) {
     return child;
   }
 }

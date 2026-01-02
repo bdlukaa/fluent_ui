@@ -2,7 +2,7 @@ import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {
-  testWidgets('Icons specify FluentIcons font', (WidgetTester tester) async {
+  testWidgets('Icons specify FluentIcons font', (tester) async {
     await tester.pumpWidget(
       FluentApp(home: NavigationView(pane: NavigationPane())),
     );

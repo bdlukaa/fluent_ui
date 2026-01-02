@@ -28,10 +28,10 @@ enum _ColorMode {
 /// Color picker spacing constants
 enum _ColorPickerSpacing {
   /// Small spacing between widgets
-  small(12.0),
+  small(12),
 
   /// Large spacing between widgets
-  large(24.0);
+  large(24);
 
   final double size;
 
@@ -41,16 +41,16 @@ enum _ColorPickerSpacing {
 /// Color picker component sizing constants
 enum _ColorPickerSizes {
   /// The size of the color spectrum widget
-  spectrum(256.0),
+  spectrum(256),
 
   /// The width of the color preview box
-  preview(44.0),
+  preview(44),
 
   /// The height of the sliders
-  slider(12.0),
+  slider(12),
 
   /// The width of the input boxes
-  inputBox(120.0);
+  inputBox(120);
 
   final double size;
 
@@ -61,17 +61,37 @@ enum _ColorPickerSizes {
       spectrum.size + _ColorPickerSpacing.small.size + preview.size;
 }
 
-/// A color picker is used to browse through and select colors.
-/// By default, it lets a user navigate through colors on a color
-/// spectrum, or specify a color in either Red-Green-Blue (RGB),
-/// Hue-Saturation-Value (HSV), or Hexadecimal text boxes.
+/// A control for selecting colors from a spectrum or via input.
+///
+/// [ColorPicker] lets users browse and select colors visually using a
+/// color spectrum, or enter precise values using RGB, HSV, or hex input.
 ///
 /// ![ColorPicker Preview](https://learn.microsoft.com/en-us/windows/apps/design/controls/images/color-picker-default.png)
 ///
+/// {@tool snippet}
+/// This example shows a basic color picker:
+///
+/// ```dart
+/// ColorPicker(
+///   color: selectedColor,
+///   onChanged: (color) => setState(() => selectedColor = color),
+/// )
+/// ```
+/// {@end-tool}
+///
+/// ## Customization
+///
+/// The picker supports multiple configurations:
+///
+/// * [ColorSpectrumShape.ring] or [ColorSpectrumShape.box] spectrum shapes
+/// * Show/hide color preview, sliders, and text inputs
+/// * Vertical or horizontal orientation
+/// * Alpha channel support via [isAlphaEnabled]
+///
 /// See also:
 ///
-///    * [ColorSpectrumShape], which defines the shape of the color spectrum.
-///    * <https://learn.microsoft.com/en-us/windows/apps/design/controls/color-picker>
+///  * [ColorSpectrumShape], for spectrum shape options
+///  * <https://learn.microsoft.com/en-us/windows/apps/design/controls/color-picker>
 class ColorPicker extends StatefulWidget {
   /// The current color value
   final Color color;
@@ -133,9 +153,9 @@ class ColorPicker extends StatefulWidget {
 
   /// Creates a windows-styled [ColorPicker].
   const ColorPicker({
-    super.key,
     required this.color,
     required this.onChanged,
+    super.key,
     this.orientation = Axis.vertical,
     this.colorSpectrumShape = ColorSpectrumShape.ring,
     this.isColorPreviewVisible = true,
@@ -305,14 +325,14 @@ class _ColorPickerState extends State<ColorPicker> {
     final theme = FluentTheme.of(context);
     final localizations = FluentLocalizations.of(context);
 
-    final bool hasVisibleInputs =
+    final hasVisibleInputs =
         widget.isHexInputVisible ||
         widget.isColorChannelTextInputVisible ||
         (widget.isAlphaEnabled && widget.isAlphaTextInputVisible);
 
-    final bool showMoreButton = widget.isMoreButtonVisible && hasVisibleInputs;
+    final showMoreButton = widget.isMoreButtonVisible && hasVisibleInputs;
 
-    final bool showInputs =
+    final showInputs =
         hasVisibleInputs && (!widget.isMoreButtonVisible || _isMoreExpanded);
 
     // Build the color picker layout based on orientation
@@ -414,11 +434,9 @@ class _ColorPickerState extends State<ColorPicker> {
       child: Button(
         style: ButtonStyle(
           padding: const WidgetStatePropertyAll(
-            EdgeInsets.only(left: 8, right: 4, top: 8, bottom: 8),
+            EdgeInsetsDirectional.only(start: 8, end: 4, top: 8, bottom: 8),
           ),
-          shape: const WidgetStatePropertyAll(
-            RoundedRectangleBorder(side: BorderSide.none),
-          ),
+          shape: const WidgetStatePropertyAll(RoundedRectangleBorder()),
           backgroundColor: const WidgetStatePropertyAll(Colors.transparent),
           foregroundColor: WidgetStateColor.resolveWith((states) {
             if (states.isPressed) {
@@ -598,10 +616,10 @@ class _ColorSpectrumAndPreview extends StatelessWidget {
   }
 
   Widget _buildPreviewBox(BuildContext context) {
-    double width = _ColorPickerSizes.preview.size;
-    double height = _ColorPickerSizes.spectrum.size;
-    const double borderRadius = 4.0;
-    const double borderWidth = 2.0;
+    final width = _ColorPickerSizes.preview.size;
+    final height = _ColorPickerSizes.spectrum.size;
+    const borderRadius = 4.0;
+    const borderWidth = 2.0;
 
     final theme = FluentTheme.of(context);
     final color = colorState.toColor();
@@ -685,7 +703,7 @@ class _ColorSliders extends StatelessWidget {
     final localizations = FluentLocalizations.of(context);
 
     // Determine if the sliders should be displayed horizontally or vertically
-    final bool isVertical = orientation != Axis.vertical;
+    final isVertical = orientation != Axis.vertical;
 
     final sliders = [
       if (isColorSliderVisible)
@@ -717,7 +735,7 @@ class _ColorSliders extends StatelessWidget {
     // Format the value text with color name : "Value 100 (Color Name)"
     final valueText = localizations.valueSliderTooltip(
       (colorState.value * 100).round(),
-      displayName.isNotEmpty ? displayName : "",
+      displayName.isNotEmpty ? displayName : '',
     );
 
     return SizedBox(
@@ -743,7 +761,7 @@ class _ColorSliders extends StatelessWidget {
                     1,
                     math.max(0, colorState.hue),
                     math.max(0, colorState.saturation),
-                    1.0,
+                    1,
                   ).toColor(),
                 ],
               ),
@@ -753,8 +771,8 @@ class _ColorSliders extends StatelessWidget {
           SliderTheme(
             data: SliderThemeData(
               activeColor: WidgetStatePropertyAll(thumbColor),
-              trackHeight: const WidgetStatePropertyAll(0.0),
-              thumbRadius: const WidgetStatePropertyAll(8.0),
+              trackHeight: const WidgetStatePropertyAll(0),
+              thumbRadius: const WidgetStatePropertyAll(8),
               thumbBallInnerFactor: const WidgetStatePropertyAll(0.6),
             ),
             child: Slider(
@@ -818,15 +836,14 @@ class _ColorSliders extends StatelessWidget {
           SliderTheme(
             data: SliderThemeData(
               activeColor: WidgetStatePropertyAll(thumbColor),
-              trackHeight: const WidgetStatePropertyAll(0.0),
-              thumbRadius: const WidgetStatePropertyAll(8.0),
+              trackHeight: const WidgetStatePropertyAll(0),
+              thumbRadius: const WidgetStatePropertyAll(8),
               thumbBallInnerFactor: const WidgetStatePropertyAll(0.6),
             ),
             child: Slider(
               label: opacityText,
               vertical: isVertical,
               value: colorState.alpha,
-              min: 0,
               max: 1,
               onChanged: (value) =>
                   onColorChanged(colorState.copyWith(alpha: value)),
@@ -935,9 +952,10 @@ class _ColorInputs extends StatelessWidget {
                 !isMoreButtonVisible ||
                 isMoreExpanded) ...[
               _buildColorModeAndHexInput(colorMode),
-              colorMode == _ColorMode.rgb
-                  ? _buildRGBInputs(localizations)
-                  : _buildHSVInputs(localizations),
+              if (colorMode == _ColorMode.rgb)
+                _buildRGBInputs(localizations)
+              else
+                _buildHSVInputs(localizations),
             ],
           ],
         );
@@ -1125,7 +1143,7 @@ class _ColorInputs extends StatelessWidget {
   Widget _buildNumberInput(
     String label,
     double value,
-    Function(double) onChanged, {
+    void Function(double) onChanged, {
     required double min,
     required double max,
   }) {
@@ -1133,7 +1151,6 @@ class _ColorInputs extends StatelessWidget {
       children: [
         SizedBox(height: _ColorPickerSpacing.small.size),
         Row(
-          mainAxisAlignment: MainAxisAlignment.start,
           children: [
             SizedBox(
               width: _ColorPickerSizes.inputBox.size,
@@ -1173,7 +1190,7 @@ class _ColorInputs extends StatelessWidget {
 
       // Parse hex string with or without alpha
       int colorValue;
-      double a = colorState.alpha; // Preserve existing alpha
+      var a = colorState.alpha; // Preserve existing alpha
 
       if (cleanText.length == 6) {
         // RGB format: Parse RGB and keep existing alpha

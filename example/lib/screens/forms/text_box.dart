@@ -1,4 +1,4 @@
-import 'package:example/widgets/card_highlight.dart';
+import 'package:example/widgets/code_snippet_card.dart';
 import 'package:example/widgets/page.dart';
 import 'package:fluent_ui/fluent_ui.dart';
 
@@ -6,12 +6,12 @@ class TextBoxPage extends StatelessWidget with PageMixin {
   TextBoxPage({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(final BuildContext context) {
     return ScaffoldPage.scrollable(
       header: const PageHeader(title: Text('TextBox')),
       children: [
         const Text(
-          'The TextBox control lets a user type text into an app. It\'s typically '
+          "The TextBox control lets a user type text into an app. It's typically "
           'used to capture a single line of text, but can be configured to capture '
           'multiple lines of text. The text displays on the screen in a simple, '
           'uniform, plaintext format.\n\n'
@@ -21,12 +21,12 @@ class TextBoxPage extends StatelessWidget with PageMixin {
           'enabled by default.',
         ),
         subtitle(content: const Text('A simple TextBox')),
-        const CardHighlight(
+        const CodeSnippetCard(
           codeSnippet: '''TextBox()''',
           child: Row(
             children: [
               Expanded(child: TextBox()),
-              SizedBox(width: 10.0),
+              SizedBox(width: 10),
               Expanded(
                 child: TextBox(enabled: false, placeholder: 'Disabled TextBox'),
               ),
@@ -36,8 +36,9 @@ class TextBoxPage extends StatelessWidget with PageMixin {
         subtitle(
           content: const Text('A TextBox with a header and placeholder text'),
         ),
-        CardHighlight(
-          codeSnippet: '''InfoLabel(
+        CodeSnippetCard(
+          codeSnippet: '''
+InfoLabel(
   label: 'Enter your name:',
   child: const TextBox(
     placeholder: 'Name',
@@ -46,7 +47,7 @@ class TextBoxPage extends StatelessWidget with PageMixin {
 )''',
           child: InfoLabel(
             label: 'Enter your name:',
-            child: const TextBox(placeholder: 'Name', expands: false),
+            child: const TextBox(placeholder: 'Name'),
           ),
         ),
         subtitle(
@@ -54,8 +55,9 @@ class TextBoxPage extends StatelessWidget with PageMixin {
             'A read-only TextBox with various properties set',
           ),
         ),
-        const CardHighlight(
-          codeSnippet: '''TextBox(
+        const CodeSnippetCard(
+          codeSnippet: '''
+TextBox(
   readOnly: true,
   placeholder: 'I am super excited to be here',
   style: TextStyle(
@@ -71,29 +73,31 @@ class TextBoxPage extends StatelessWidget with PageMixin {
             placeholder: 'I am super excited to be here!',
             style: TextStyle(
               fontFamily: 'Arial',
-              fontSize: 24.0,
-              letterSpacing: 8.0,
+              fontSize: 24,
+              letterSpacing: 8,
               color: Color(0xFF5178BE),
               fontStyle: FontStyle.italic,
             ),
           ),
         ),
         subtitle(content: const Text('A multi-line TextBox')),
-        const CardHighlight(
-          codeSnippet: '''TextBox(
+        const CodeSnippetCard(
+          codeSnippet: '''
+TextBox(
   maxLines: null,
 ),''',
           child: TextBox(maxLines: null),
         ),
         subtitle(content: const Text('A big TextBox')),
-        const CardHighlight(
-          codeSnippet: '''SizedBox(
+        const CodeSnippetCard(
+          codeSnippet: '''
+SizedBox(
   height: 200.0,
   child: TextBox(
     maxLines: null,
   ),
 )''',
-          child: SizedBox(height: 200.0, child: TextBox(maxLines: null)),
+          child: SizedBox(height: 200, child: TextBox(maxLines: null)),
         ),
       ],
     );

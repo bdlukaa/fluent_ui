@@ -4,6 +4,9 @@ import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart' show Icons;
 
+/// A builder function for creating an [InfoBar] within a popup.
+///
+/// The [close] callback should be called to dismiss the popup.
 typedef InfoBarPopupBuilder =
     Widget Function(BuildContext context, VoidCallback close);
 
@@ -48,16 +51,16 @@ Future<void> displayInfoBar(
         child: Align(
           alignment: alignment,
           child: Padding(
-            padding: const EdgeInsets.symmetric(
-              vertical: 24.0,
-              horizontal: 16.0,
+            padding: const EdgeInsetsDirectional.symmetric(
+              vertical: 24,
+              horizontal: 16,
             ),
             child: StatefulBuilder(
               builder: (context, setState) {
                 Future<void> close() async {
                   if (!entry.mounted) return;
                   setState(() => isFading = true);
-                  await Future.delayed(theme.mediumAnimationDuration);
+                  await Future<void>.delayed(theme.mediumAnimationDuration);
                   if (!entry.mounted) return;
                   entry.remove();
                 }
@@ -65,10 +68,10 @@ Future<void> displayInfoBar(
                 if (!alreadyInitialized) {
                   alreadyInitialized = true;
                   () async {
-                    await Future.delayed(theme.mediumAnimationDuration);
+                    await Future<void>.delayed(theme.mediumAnimationDuration);
                     if (!entry.mounted) return;
                     setState(() => isFading = false);
-                    await Future.delayed(duration);
+                    await Future<void>.delayed(duration);
                     await close();
                   }();
                 }
@@ -81,7 +84,7 @@ Future<void> displayInfoBar(
                       ? const SizedBox.shrink()
                       : PhysicalModel(
                           color: Colors.transparent,
-                          elevation: 8.0,
+                          elevation: 8,
                           child: builder(context, close),
                         ),
                 );
@@ -96,37 +99,118 @@ Future<void> displayInfoBar(
   Overlay.of(context).insert(entry);
 }
 
-// This file implements info bar into this library.
-// It follows this https://docs.microsoft.com/en-us/windows/uwp/design/controls-and-patterns/infobar
-
-/// The severities that can be applied to an [InfoBar]
+/// The severity levels that can be applied to an [InfoBar].
+///
+/// Each severity level has a distinct visual appearance with an appropriate
+/// icon and background color to convey the importance of the message.
 enum InfoBarSeverity {
-  /// ![Info InfoBar](https://docs.microsoft.com/en-us/windows/uwp/design/controls-and-patterns/images/infobar-default-hyperlink.png)
+  /// Informational message with a neutral appearance.
+  ///
+  /// Use for general information that doesn't require immediate attention.
+  ///
+  /// ![Info InfoBar](https://learn.microsoft.com/en-us/windows/apps/design/controls/images/infobar-default-hyperlink.png)
   info,
 
-  /// ![Warning InfoBar](https://docs.microsoft.com/en-us/windows/uwp/design/controls-and-patterns/images/infobar-warning-title-message.png)
+  /// Warning message with a yellow/orange appearance.
+  ///
+  /// Use to alert users about potential issues or important notices that
+  /// may require attention but aren't critical.
+  ///
+  /// ![Warning InfoBar](https://learn.microsoft.com/en-us/windows/apps/design/controls/images/infobar-warning-title-message.png)
   warning,
 
-  /// ![Error InfoBar](https://docs.microsoft.com/en-us/windows/uwp/design/controls-and-patterns/images/infobar-error-no-close.png)
+  /// Error message with a red appearance.
+  ///
+  /// Use to notify users about errors or problems that need to be addressed.
+  ///
+  /// ![Error InfoBar](https://learn.microsoft.com/en-us/windows/apps/design/controls/images/infobar-error-no-close.png)
   error,
 
-  /// ![Success InfoBar](https://docs.microsoft.com/en-us/windows/uwp/design/controls-and-patterns/images/infobar-success-content-wrapping.png)
+  /// Success message with a green appearance.
+  ///
+  /// Use to confirm that an operation completed successfully.
+  ///
+  /// ![Success InfoBar](https://learn.microsoft.com/en-us/windows/apps/design/controls/images/infobar-success-content-wrapping.png)
   success,
 }
 
-/// The InfoBar control is for displaying app-wide status messages to
-/// users that are highly visible yet non-intrusive. There are built-in
-/// Severity levels to easily indicate the type of message shown as well
-/// as the option to include your own call to action or hyperlink button.
-/// Since the InfoBar is inline with other UI content the option is there
-/// for the control to always be visible or dismissed by the user.
+/// A control for displaying app-wide status messages that are highly visible
+/// yet non-intrusive.
 ///
-/// ![InfoBar Preview](https://docs.microsoft.com/en-us/windows/uwp/design/controls-and-patterns/images/infobar-success-content-wrapping.png)
+/// The [InfoBar] control is used to display important status messages inline
+/// with other UI content. It supports different [severity] levels to indicate
+/// the type of message (informational, warning, error, or success).
+///
+/// ![InfoBar Preview](https://learn.microsoft.com/en-us/windows/apps/design/controls/images/infobar-success-content-wrapping.png)
+///
+/// {@tool snippet}
+/// This example shows a basic info bar with a title:
+///
+/// ```dart
+/// InfoBar(
+///   title: Text('Update available'),
+///   content: Text('A new version of the app is available.'),
+///   severity: InfoBarSeverity.info,
+/// )
+/// ```
+/// {@end-tool}
+///
+/// {@tool snippet}
+/// This example shows an info bar with an action button:
+///
+/// ```dart
+/// InfoBar(
+///   title: Text('Connection lost'),
+///   content: Text('Please check your internet connection.'),
+///   severity: InfoBarSeverity.error,
+///   action: HyperlinkButton(
+///     child: Text('Retry'),
+///     onPressed: () => retryConnection(),
+///   ),
+///   onClose: () => dismissInfoBar(),
+/// )
+/// ```
+/// {@end-tool}
+///
+/// ## Displaying as a popup
+///
+/// Use [displayInfoBar] to show an info bar as a temporary popup that
+/// automatically dismisses after a duration:
+///
+/// {@tool snippet}
+/// ```dart
+/// displayInfoBar(
+///   context,
+///   builder: (context, close) {
+///     return InfoBar(
+///       title: Text('File saved'),
+///       severity: InfoBarSeverity.success,
+///       action: IconButton(
+///         icon: Icon(FluentIcons.chrome_close),
+///         onPressed: close,
+///       ),
+///     );
+///   },
+/// );
+/// ```
+/// {@end-tool}
+///
+/// ## Long content
+///
+/// For info bars with longer content, set [isLong] to true to display the
+/// content vertically instead of horizontally.
+///
+/// See also:
+///
+///  * [displayInfoBar], a function to show an info bar as a popup
+///  * [ContentDialog], for modal dialogs that require user interaction
+///  * [Flyout], for lightweight contextual information
+///  * <https://learn.microsoft.com/en-us/windows/apps/design/controls/infobar>
 class InfoBar extends StatelessWidget {
   /// Creates an info bar.
   const InfoBar({
-    super.key,
     required this.title,
+    super.key,
     this.content,
     this.action,
     this.severity = InfoBarSeverity.info,
@@ -136,32 +220,116 @@ class InfoBar extends StatelessWidget {
     this.isIconVisible = true,
   });
 
-  /// The severity of this InfoBar.
+  /// Creates an info bar with [InfoBarSeverity.info] severity.
+  const InfoBar.info({
+    required this.title,
+    super.key,
+    this.content,
+    this.action,
+    this.style,
+    this.isLong = false,
+    this.onClose,
+    this.isIconVisible = true,
+  }) : severity = InfoBarSeverity.info;
+
+  /// Creates an info bar with [InfoBarSeverity.warning] severity.
+  const InfoBar.warning({
+    required this.title,
+    super.key,
+    this.content,
+    this.action,
+    this.style,
+    this.isLong = false,
+    this.onClose,
+    this.isIconVisible = true,
+  }) : severity = InfoBarSeverity.warning;
+
+  /// Creates an info bar with [InfoBarSeverity.success] severity.
+  const InfoBar.success({
+    required this.title,
+    super.key,
+    this.content,
+    this.action,
+    this.style,
+    this.isLong = false,
+    this.onClose,
+    this.isIconVisible = true,
+  }) : severity = InfoBarSeverity.success;
+
+  /// Creates an info bar with [InfoBarSeverity.error] severity.
+  const InfoBar.error({
+    required this.title,
+    super.key,
+    this.content,
+    this.action,
+    this.style,
+    this.isLong = false,
+    this.onClose,
+    this.isIconVisible = true,
+  }) : severity = InfoBarSeverity.error;
+
+  /// The severity of this info bar.
   ///
-  /// Defaults to [InfoBarSeverity.info]
+  /// The severity determines the visual appearance of the info bar, including
+  /// its icon, background color, and overall styling.
+  ///
+  /// Defaults to [InfoBarSeverity.info].
   final InfoBarSeverity severity;
 
-  /// The style applied to this info bar. If non-null, it's
-  /// mescled with [FluentThemeData.infoBarTheme]
+  /// The style applied to this info bar.
+  ///
+  /// If non-null, this is merged with [FluentThemeData.infoBarTheme].
+  ///
+  /// Use this to customize the appearance of individual info bars beyond
+  /// the default theme.
   final InfoBarThemeData? style;
 
+  /// The primary text displayed in the info bar.
+  ///
+  /// Typically a short, descriptive message. This is displayed in bold
+  /// to distinguish it from the [content].
+  ///
+  /// Usually a [Text] widget.
   final Widget title;
+
+  /// Additional information displayed below or beside the [title].
+  ///
+  /// Use this for longer explanatory text. For info bars with substantial
+  /// content, consider setting [isLong] to true.
+  ///
+  /// Usually a [Text] widget.
   final Widget? content;
+
+  /// An optional action widget displayed in the info bar.
+  ///
+  /// Typically a [Button], [HyperlinkButton], or [IconButton] that allows
+  /// the user to take action based on the info bar's message.
   final Widget? action;
 
   /// Called when the close button is pressed.
   ///
-  /// If null, this InfoBar will not be closable
+  /// If null, the info bar will not display a close button and cannot be
+  /// dismissed by the user.
+  ///
+  /// When provided, a close button appears at the end of the info bar.
   final VoidCallback? onClose;
 
-  /// If `true`, the info bar will be treated as long.
+  /// Whether the info bar should display content vertically.
   ///
-  /// ![Long InfoBar](https://docs.microsoft.com/en-us/windows/uwp/design/controls-and-patterns/images/infobar-success-content-wrapping.png)
+  /// When `true`, the [title], [content], and [action] are arranged in a
+  /// vertical column, which is better for longer content.
+  ///
+  /// When `false` (the default), content is arranged horizontally.
+  ///
+  /// ![Long InfoBar](https://learn.microsoft.com/en-us/windows/apps/design/controls/images/infobar-success-content-wrapping.png)
   final bool isLong;
 
-  /// Whether the leading icon is visible
+  /// Whether the severity icon is visible.
   ///
-  /// Defaults to true
+  /// The icon is determined by the [severity] and appears at the start
+  /// of the info bar.
+  ///
+  /// Defaults to `true`.
   final bool isIconVisible;
 
   @override
@@ -207,7 +375,7 @@ class InfoBar extends StatelessWidget {
     final icon = isIconVisible ? style.icon?.call(severity) : null;
     final closeIcon = style.closeIcon;
     final title = Padding(
-      padding: const EdgeInsetsDirectional.only(end: 6.0),
+      padding: const EdgeInsetsDirectional.only(end: 6),
       child: DefaultTextStyle.merge(
         style: theme.typography.bodyStrong ?? const TextStyle(),
         child: this.title,
@@ -228,9 +396,9 @@ class InfoBar extends StatelessWidget {
       );
     }();
     return Container(
-      constraints: const BoxConstraints(minHeight: 48.0),
+      constraints: const BoxConstraints(minHeight: 48),
       decoration: style.decoration?.call(severity),
-      padding: style.padding ?? const EdgeInsets.all(10),
+      padding: style.padding ?? const EdgeInsetsDirectional.all(10),
       child: Row(
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: isLong
@@ -239,7 +407,7 @@ class InfoBar extends StatelessWidget {
         children: [
           if (icon != null)
             Padding(
-              padding: const EdgeInsetsDirectional.only(end: 14.0),
+              padding: const EdgeInsetsDirectional.only(end: 14),
               child: Icon(icon, color: style.iconColor?.call(severity)),
             ),
           if (isLong)
@@ -251,12 +419,12 @@ class InfoBar extends StatelessWidget {
                   title,
                   if (content != null)
                     Padding(
-                      padding: const EdgeInsetsDirectional.only(top: 6.0),
+                      padding: const EdgeInsetsDirectional.only(top: 6),
                       child: content,
                     ),
                   if (action != null)
                     Padding(
-                      padding: const EdgeInsetsDirectional.only(top: 12.0),
+                      padding: const EdgeInsetsDirectional.only(top: 12),
                       child: action,
                     ),
                 ],
@@ -272,7 +440,7 @@ class InfoBar extends StatelessWidget {
                   if (content != null) content,
                   if (action != null)
                     Padding(
-                      padding: const EdgeInsetsDirectional.only(start: 16.0),
+                      padding: const EdgeInsetsDirectional.only(start: 16),
                       child: action,
                     ),
                 ],
@@ -280,7 +448,7 @@ class InfoBar extends StatelessWidget {
             ),
           if (closeIcon != null && onClose != null)
             Padding(
-              padding: const EdgeInsetsDirectional.only(start: 10.0),
+              padding: const EdgeInsetsDirectional.only(start: 10),
               child: Tooltip(
                 message: localizations.closeButtonLabel,
                 child: IconButton(
@@ -302,39 +470,35 @@ class InfoBar extends StatelessWidget {
 /// Values specified here are used for [InfoBar] properties that are not
 /// given an explicit non-null value.
 class InfoBarTheme extends InheritedTheme {
-  /// Creates a info bar theme that controls the configurations for
-  /// [InfoBar].
-  const InfoBarTheme({super.key, required this.data, required super.child});
+  /// Creates a theme that controls how descendant [InfoBar]s should look like.
+  const InfoBarTheme({required this.data, required super.child, super.key});
 
   /// The properties for descendant [InfoBar] widgets.
   final InfoBarThemeData data;
 
-  /// Creates a button theme that controls how descendant [InfoBar]s should
-  /// look like, and merges in the current toggle button theme, if any.
+  /// Creates a theme that merges the nearest [InfoBarTheme] with [data].
   static Widget merge({
-    Key? key,
     required InfoBarThemeData data,
     required Widget child,
+    Key? key,
   }) {
     return Builder(
-      builder: (BuildContext context) {
+      builder: (context) {
         return InfoBarTheme(
           key: key,
-          data: _getInheritedThemeData(context).merge(data),
+          data: InfoBarTheme.of(context).merge(data),
           child: child,
         );
       },
     );
   }
 
-  static InfoBarThemeData _getInheritedThemeData(BuildContext context) {
-    final theme = context.dependOnInheritedWidgetOfExactType<InfoBarTheme>();
-    return theme?.data ?? FluentTheme.of(context).infoBarTheme;
-  }
-
-  /// Returns the [data] from the closest [InfoBarTheme] ancestor. If there is
-  /// no ancestor, it returns [FluentThemeData.infoBarTheme]. Applications can assume
-  /// that the returned value will not be null.
+  /// Returns the closest [InfoBarThemeData] which encloses the given context.
+  ///
+  /// Resolution order:
+  /// 1. Defaults from [InfoBarThemeData.standard]
+  /// 2. Global theme from [FluentThemeData.infoBarTheme]
+  /// 3. Local [InfoBarTheme] ancestor
   ///
   /// Typical usage is as follows:
   ///
@@ -342,10 +506,13 @@ class InfoBarTheme extends InheritedTheme {
   /// InfoBarThemeData theme = InfoBarTheme.of(context);
   /// ```
   static InfoBarThemeData of(BuildContext context) {
-    final theme = context.dependOnInheritedWidgetOfExactType<InfoBarTheme>();
+    assert(debugCheckHasFluentTheme(context));
+    final theme = FluentTheme.of(context);
+    final inheritedTheme = context
+        .dependOnInheritedWidgetOfExactType<InfoBarTheme>();
     return InfoBarThemeData.standard(
-      FluentTheme.of(context),
-    ).merge(theme?.data ?? FluentTheme.of(context).infoBarTheme);
+      theme,
+    ).merge(theme.infoBarTheme).merge(inheritedTheme?.data);
   }
 
   @override
@@ -357,20 +524,39 @@ class InfoBarTheme extends InheritedTheme {
   bool updateShouldNotify(InfoBarTheme oldWidget) => data != oldWidget.data;
 }
 
+/// A function that returns a value based on the [InfoBarSeverity].
 typedef InfoBarSeverityCheck<T> = T Function(InfoBarSeverity severity);
 
+/// Theme data for [InfoBar] widgets.
+///
+/// This class defines the visual appearance of info bars, including their
+/// decoration, icons, and styling for different severity levels.
 class InfoBarThemeData with Diagnosticable {
+  /// Returns the decoration based on the severity level.
   final InfoBarSeverityCheck<Decoration?>? decoration;
+
+  /// Returns the icon color based on the severity level.
   final InfoBarSeverityCheck<Color?>? iconColor;
+
+  /// Returns the icon to display based on the severity level.
   final InfoBarSeverityCheck<IconData>? icon;
 
+  /// The style for the close button.
   final ButtonStyle? closeButtonStyle;
+
+  /// The icon to display for the close button.
   final IconData? closeIcon;
+
+  /// The size of the close icon.
   final double? closeIconSize;
 
+  /// The style for the action button.
   final ButtonStyle? actionStyle;
+
+  /// The padding around the info bar content.
   final EdgeInsetsGeometry? padding;
 
+  /// Creates a theme data for [InfoBar] widgets.
   const InfoBarThemeData({
     this.decoration,
     this.icon,
@@ -382,33 +568,30 @@ class InfoBarThemeData with Diagnosticable {
     this.padding,
   });
 
+  /// Creates a standard theme data for [InfoBar] widgets.
   factory InfoBarThemeData.standard(FluentThemeData theme) {
     return InfoBarThemeData(
       padding: const EdgeInsetsDirectional.only(
-        top: 14.0,
-        bottom: 14.0,
-        start: 14.0,
-        end: 8.0,
+        top: 14,
+        bottom: 14,
+        start: 14,
+        end: 8,
       ),
       decoration: (severity) {
         late Color color;
         switch (severity) {
           case InfoBarSeverity.info:
             color = theme.resources.systemFillColorAttentionBackground;
-            break;
           case InfoBarSeverity.warning:
             color = theme.resources.systemFillColorCautionBackground;
-            break;
           case InfoBarSeverity.success:
             color = theme.resources.systemFillColorSuccessBackground;
-            break;
           case InfoBarSeverity.error:
             color = theme.resources.systemFillColorCriticalBackground;
-            break;
         }
         return BoxDecoration(
           color: color,
-          borderRadius: BorderRadius.circular(4.0),
+          borderRadius: BorderRadius.circular(4),
           border: Border.all(color: theme.resources.cardStrokeColorDefault),
         );
       },
@@ -438,14 +621,15 @@ class InfoBarThemeData with Diagnosticable {
         }
       },
       actionStyle: const ButtonStyle(
-        padding: WidgetStatePropertyAll(EdgeInsets.all(6)),
+        padding: WidgetStatePropertyAll(EdgeInsetsDirectional.all(6)),
       ),
-      closeButtonStyle: const ButtonStyle(
-        iconSize: WidgetStatePropertyAll(16.0),
-      ),
+      closeButtonStyle: const ButtonStyle(iconSize: WidgetStatePropertyAll(16)),
     );
   }
 
+  /// Lerps between two [InfoBarThemeData] objects.
+  ///
+  /// {@macro fluent_ui.lerp.t}
   static InfoBarThemeData lerp(
     InfoBarThemeData? a,
     InfoBarThemeData? b,
@@ -460,25 +644,46 @@ class InfoBarThemeData with Diagnosticable {
         t,
       ),
       icon: t < 0.5 ? a?.icon : b?.icon,
-      decoration: (severity) {
-        return Decoration.lerp(
-          a?.decoration?.call(severity),
-          b?.decoration?.call(severity),
-          t,
-        );
-      },
+      decoration: () {
+        final aDecoration = a?.decoration;
+        final bDecoration = b?.decoration;
+        if (aDecoration == null && bDecoration == null) return null;
+        if (aDecoration == null) return bDecoration;
+        if (bDecoration == null) return aDecoration;
+        return (InfoBarSeverity severity) {
+          return Decoration.lerp(
+            aDecoration.call(severity),
+            bDecoration.call(severity),
+            t,
+          );
+        };
+      }(),
       actionStyle: ButtonStyle.lerp(a?.actionStyle, b?.actionStyle, t),
-      iconColor: (severity) {
-        return Color.lerp(
-          a?.iconColor?.call(severity),
-          b?.iconColor?.call(severity),
-          t,
-        );
-      },
-      padding: EdgeInsetsGeometry.lerp(a?.padding, b?.padding, t),
+      iconColor: () {
+        final aIconColor = a?.iconColor;
+        final bIconColor = b?.iconColor;
+        if (aIconColor == null && bIconColor == null) return null;
+        if (aIconColor == null) return bIconColor;
+        if (bIconColor == null) return aIconColor;
+        return (InfoBarSeverity severity) {
+          return Color.lerp(
+            aIconColor.call(severity),
+            bIconColor.call(severity),
+            t,
+          );
+        };
+      }(),
+      padding: () {
+        if (a?.padding == null && b?.padding == null) return null;
+        if (a?.padding == null) return b?.padding;
+        if (b?.padding == null) return a?.padding;
+        return EdgeInsetsGeometry.lerp(a?.padding, b?.padding, t);
+      }(),
     );
   }
 
+  /// Merges this [InfoBarThemeData] with another, with the other taking
+  /// precedence.
   InfoBarThemeData merge(InfoBarThemeData? style) {
     if (style == null) return this;
     return InfoBarThemeData(

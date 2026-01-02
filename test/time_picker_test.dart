@@ -30,11 +30,7 @@ void main() {
     final selectedTime = DateTime(2023, 1, 1, 15, 30);
     await tester.pumpWidget(
       wrapApp(
-        child: TimePicker(
-          hourFormat: HourFormat.h,
-          selected: selectedTime,
-          onChanged: (_) {},
-        ),
+        child: TimePicker(selected: selectedTime, onChanged: (_) {}),
       ),
     );
 
@@ -74,10 +70,8 @@ void main() {
   });
 
   testWidgets('TimePicker is disabled when onChanged is null', (tester) async {
-    final selectedTime = DateTime(2023, 1, 1, 8, 0);
-    await tester.pumpWidget(
-      wrapApp(child: TimePicker(selected: selectedTime, onChanged: null)),
-    );
+    final selectedTime = DateTime(2023, 1, 1, 8);
+    await tester.pumpWidget(wrapApp(child: TimePicker(selected: selectedTime)));
     // Open the picker
     await tester.tap(find.byType(TimePicker));
     await tester.pumpAndSettle();
@@ -100,11 +94,10 @@ void main() {
   });
 
   testWidgets('TimePicker respects minuteIncrement', (tester) async {
-    final selectedTime = DateTime(2023, 1, 1, 1, 0);
+    final selectedTime = DateTime(2023, 1, 1, 1);
     await tester.pumpWidget(
       wrapApp(
         child: TimePicker(
-          hourFormat: HourFormat.h,
           selected: selectedTime,
           onChanged: (_) {},
           minuteIncrement: 13,

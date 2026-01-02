@@ -7,26 +7,74 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart' as m;
 import 'package:flutter/rendering.dart';
 
-/// A slider is a control that lets the user select from a range of values by
-/// moving a thumb control along a track.
+/// A slider lets the user select from a range of values by moving a thumb
+/// control along a track.
 ///
-/// A slider is a good choice when you know that users think of the value as a
-/// relative quantity, not a numeric value. For example, users think about
-/// setting their audio volume to low or medium — not about setting the value to
-/// 2 or 5.
+/// Use a slider when you want users to set a value from a continuous range,
+/// like volume, brightness, or zoom level. Sliders are ideal when users think
+/// of the value as a relative quantity (low, medium, high) rather than a
+/// specific number.
 ///
-/// ![Slider Preview](https://docs.microsoft.com/en-us/windows/apps/design/controls/images/controls/slider.png)
+/// ![Slider Preview](https://learn.microsoft.com/en-us/windows/apps/design/controls/images/controls/slider.png)
+///
+/// {@tool snippet}
+/// This example shows a basic horizontal slider:
+///
+/// ```dart
+/// double volume = 50;
+///
+/// Slider(
+///   value: volume,
+///   min: 0,
+///   max: 100,
+///   onChanged: (value) => setState(() => volume = value),
+///   label: '${volume.round()}%',
+/// )
+/// ```
+/// {@end-tool}
+///
+/// {@tool snippet}
+/// This example shows a slider with discrete divisions:
+///
+/// ```dart
+/// double rating = 3;
+///
+/// Slider(
+///   value: rating,
+///   min: 1,
+///   max: 5,
+///   divisions: 4,
+///   label: rating.round().toString(),
+///   onChanged: (value) => setState(() => rating = value),
+/// )
+/// ```
+/// {@end-tool}
+///
+/// {@tool snippet}
+/// This example shows a vertical slider:
+///
+/// ```dart
+/// Slider(
+///   value: temperature,
+///   min: 0,
+///   max: 100,
+///   vertical: true,
+///   onChanged: (value) => setState(() => temperature = value),
+/// )
+/// ```
+/// {@end-tool}
 ///
 /// See also:
 ///
-///   * [RatingBar], that allows users to view and set ratings
-///   * <https://docs.microsoft.com/en-us/windows/apps/design/controls/slider>
+///  * [RatingBar], that allows users to view and set ratings
+///  * [NumberBox], for precise numeric input
+///  * <https://learn.microsoft.com/en-us/windows/apps/design/controls/slider>
 class Slider extends StatefulWidget {
   /// Creates a windows-styled slider.
   const Slider({
-    super.key,
     required this.value,
     required this.onChanged,
+    super.key,
     this.onChangeStart,
     this.onChangeEnd,
     this.min = 0.0,
@@ -259,13 +307,17 @@ class _SliderState extends State<Slider> {
 
   void _showLabelOverlay() {
     final sliderState = materialSliderKey.currentState as dynamic;
+    // ignore: avoid_dynamic_calls
     (sliderState.overlayController as AnimationController).forward();
+    // ignore: avoid_dynamic_calls
     (sliderState.valueIndicatorController as AnimationController).forward();
   }
 
   void _hideLabelOverlay() {
     final sliderState = materialSliderKey.currentState as dynamic;
+    // ignore: avoid_dynamic_calls
     (sliderState.overlayController as AnimationController).reverse();
+    // ignore: avoid_dynamic_calls
     (sliderState.valueIndicatorController as AnimationController).reverse();
   }
 
@@ -280,14 +332,14 @@ class _SliderState extends State<Slider> {
     final disabledState = {WidgetState.disabled};
     Widget child = HoverButton(
       onPressed: widget.onChanged == null ? null : () {},
-      margin: style.margin ?? EdgeInsets.zero,
+      margin: style.margin ?? EdgeInsetsDirectional.zero,
       cursor: widget.mouseCursor,
       builder: (context, states) => m.Material(
         type: m.MaterialType.transparency,
         child: TweenAnimationBuilder<double>(
           duration: theme.fastAnimationDuration,
           tween: Tween<double>(
-            begin: 1.0,
+            begin: 1,
             end:
                 style.thumbBallInnerFactor?.resolve({
                   ...states,
@@ -304,7 +356,7 @@ class _SliderState extends State<Slider> {
                 color: style.labelForegroundColor,
               ),
               thumbShape: SliderThumbShape(
-                pressedElevation: 1.0,
+                pressedElevation: 1,
                 useBall: style.useThumbBall ?? true,
                 innerFactor: innerFactor,
                 borderColor: theme.resources.controlSolidFillColorDefault,
@@ -384,13 +436,13 @@ class _SliderState extends State<Slider> {
 
 /// This is used to remove the padding the Material Slider adds automatically
 class _CustomTrackShape extends m.RoundedRectSliderTrackShape {
-  static const double _trackSidePadding = 10.0;
+  static const double _trackSidePadding = 10;
 
   @override
   Rect getPreferredRect({
     required RenderBox parentBox,
-    Offset offset = Offset.zero,
     required m.SliderThemeData sliderTheme,
+    Offset offset = Offset.zero,
     bool isEnabled = false,
     bool isDiscrete = false,
   }) {
@@ -445,9 +497,12 @@ class SliderThumbShape extends m.SliderComponentShape {
     this.borderColor = Colors.transparent,
   });
 
+  /// The inner factor controlling how much of the thumb is filled.
+  ///
+  /// A value of 1.0 means the thumb is completely filled.
   final double innerFactor;
 
-  /// Whether to draw a ball instead of a line
+  /// Whether to draw a ball instead of a line.
   final bool useBall;
 
   /// The preferred radius of the round thumb shape when the slider is enabled.
@@ -479,6 +534,7 @@ class SliderThumbShape extends m.SliderComponentShape {
   /// example, a value of 12 will create a very large shadow.
   final double pressedElevation;
 
+  /// The color of the thumb border.
   final Color borderColor;
 
   @override
@@ -560,39 +616,35 @@ class SliderThumbShape extends m.SliderComponentShape {
 /// Values specified here are used for [Slider] properties that are not
 /// given an explicit non-null value.
 class SliderTheme extends InheritedTheme {
-  /// Creates a slider theme that controls the configurations for
-  /// [Slider].
-  const SliderTheme({super.key, required this.data, required super.child});
+  /// Creates a theme that controls how descendant [Slider]s should look like.
+  const SliderTheme({required this.data, required super.child, super.key});
 
   /// The properties for descendant [Slider] widgets.
   final SliderThemeData data;
 
-  /// Creates a button theme that controls how descendant [Slider]s should
-  /// look like, and merges in the current slider theme, if any.
+  /// Creates a theme that merges the nearest [SliderTheme] with [data].
   static Widget merge({
-    Key? key,
     required SliderThemeData data,
     required Widget child,
+    Key? key,
   }) {
     return Builder(
-      builder: (BuildContext context) {
+      builder: (context) {
         return SliderTheme(
           key: key,
-          data: _getInheritedThemeData(context).merge(data),
+          data: SliderTheme.of(context).merge(data),
           child: child,
         );
       },
     );
   }
 
-  static SliderThemeData _getInheritedThemeData(BuildContext context) {
-    final theme = context.dependOnInheritedWidgetOfExactType<SliderTheme>();
-    return theme?.data ?? FluentTheme.of(context).sliderTheme;
-  }
-
-  /// Returns the [data] from the closest [SliderTheme] ancestor. If there is
-  /// no ancestor, it returns [FluentThemeData.sliderTheme]. Applications can assume
-  /// that the returned value will not be null.
+  /// Returns the closest [SliderThemeData] which encloses the given context.
+  ///
+  /// Resolution order:
+  /// 1. Defaults from [SliderThemeData.standard]
+  /// 2. Global theme from [FluentThemeData.sliderTheme]
+  /// 3. Local [SliderTheme] ancestor
   ///
   /// Typical usage is as follows:
   ///
@@ -600,9 +652,13 @@ class SliderTheme extends InheritedTheme {
   /// SliderThemeData theme = SliderTheme.of(context);
   /// ```
   static SliderThemeData of(BuildContext context) {
+    assert(debugCheckHasFluentTheme(context));
+    final theme = FluentTheme.of(context);
+    final inheritedTheme = context
+        .dependOnInheritedWidgetOfExactType<SliderTheme>();
     return SliderThemeData.standard(
-      FluentTheme.of(context),
-    ).merge(_getInheritedThemeData(context));
+      theme,
+    ).merge(theme.sliderTheme).merge(inheritedTheme?.data);
   }
 
   @override
@@ -614,26 +670,43 @@ class SliderTheme extends InheritedTheme {
   bool updateShouldNotify(SliderTheme oldWidget) => data != oldWidget.data;
 }
 
+/// Theme data for [Slider] widgets.
+///
+/// This class defines the visual appearance of sliders, including their
+/// thumb, track, and label styling.
 @immutable
 class SliderThemeData with Diagnosticable {
+  /// The color of the slider thumb.
   final WidgetStateProperty<Color?>? thumbColor;
+
+  /// The radius of the slider thumb.
   final WidgetStateProperty<double?>? thumbRadius;
+
+  /// The height of the slider track.
   final WidgetStateProperty<double?>? trackHeight;
 
-  /// The color of the label background
+  /// The color of the label background.
   final Color? labelBackgroundColor;
 
-  /// The color of the label text
+  /// The color of the label text.
   final Color? labelForegroundColor;
 
+  /// Whether to use a ball-shaped thumb instead of a line.
   final bool? useThumbBall;
+
+  /// The inner factor of the thumb ball, controlling its visual appearance.
   final WidgetStateProperty<double?>? thumbBallInnerFactor;
 
+  /// The color of the active (filled) portion of the track.
   final WidgetStateProperty<Color?>? activeColor;
+
+  /// The color of the inactive (unfilled) portion of the track.
   final WidgetStateProperty<Color?>? inactiveColor;
 
+  /// The margin around the slider.
   final EdgeInsetsGeometry? margin;
 
+  /// Creates slider theme data.
   const SliderThemeData({
     this.margin,
     this.thumbColor,
@@ -647,6 +720,7 @@ class SliderThemeData with Diagnosticable {
     this.thumbBallInnerFactor,
   });
 
+  /// Creates the standard [SliderThemeData] based on the given [theme].
   factory SliderThemeData.standard(FluentThemeData theme) {
     final def = SliderThemeData(
       thumbColor: WidgetStateProperty.resolveWith(
@@ -662,7 +736,7 @@ class SliderThemeData with Diagnosticable {
           return theme.resources.controlStrongFillColorDefault;
         }
       }),
-      margin: EdgeInsets.zero,
+      margin: EdgeInsetsDirectional.zero,
       useThumbBall: true,
       thumbBallInnerFactor: WidgetStateProperty.resolveWith((states) {
         return states.isPressed
@@ -679,34 +753,37 @@ class SliderThemeData with Diagnosticable {
     return def;
   }
 
+  /// Linearly interpolates between two [SliderThemeData] objects.
+  ///
+  /// {@macro fluent_ui.lerp.t}
   static SliderThemeData lerp(SliderThemeData a, SliderThemeData b, double t) {
     return SliderThemeData(
       margin: EdgeInsetsGeometry.lerp(a.margin, b.margin, t),
-      thumbColor: WidgetStateProperty.lerp<Color?>(
+      thumbColor: lerpWidgetStateProperty<Color?>(
         a.thumbColor,
         b.thumbColor,
         t,
         Color.lerp,
       ),
-      thumbRadius: WidgetStateProperty.lerp<double?>(
+      thumbRadius: lerpWidgetStateProperty<double?>(
         a.thumbRadius,
         b.thumbRadius,
         t,
         lerpDouble,
       ),
-      trackHeight: WidgetStateProperty.lerp<double?>(
+      trackHeight: lerpWidgetStateProperty<double?>(
         a.trackHeight,
         b.trackHeight,
         t,
         lerpDouble,
       ),
-      activeColor: WidgetStateProperty.lerp<Color?>(
+      activeColor: lerpWidgetStateProperty<Color?>(
         a.activeColor,
         b.activeColor,
         t,
         Color.lerp,
       ),
-      inactiveColor: WidgetStateProperty.lerp<Color?>(
+      inactiveColor: lerpWidgetStateProperty<Color?>(
         a.inactiveColor,
         b.inactiveColor,
         t,
@@ -723,7 +800,7 @@ class SliderThemeData with Diagnosticable {
         t,
       ),
       useThumbBall: t < 0.5 ? a.useThumbBall : b.useThumbBall,
-      thumbBallInnerFactor: WidgetStateProperty.lerp<double?>(
+      thumbBallInnerFactor: lerpWidgetStateProperty<double?>(
         a.thumbBallInnerFactor,
         b.thumbBallInnerFactor,
         t,
@@ -732,6 +809,8 @@ class SliderThemeData with Diagnosticable {
     );
   }
 
+  /// Merges this [SliderThemeData] with another, with the other taking
+  /// precedence.
   SliderThemeData merge(SliderThemeData? style) {
     return SliderThemeData(
       margin: style?.margin ?? margin,
@@ -833,11 +912,11 @@ class _RectangularSliderValueIndicatorPathPainter {
     this.ltr = false,
   ]);
 
-  static const double _triangleHeight = 8.0;
-  static const double _labelPadding = 8.0;
-  static const double _preferredHeight = 32.0;
-  static const double _minLabelWidth = 16.0;
-  static const double _bottomTipYOffset = 14.0;
+  static const double _triangleHeight = 8;
+  static const double _labelPadding = 8;
+  static const double _preferredHeight = 32;
+  static const double _minLabelWidth = 16;
+  static const double _bottomTipYOffset = 14;
   static const double _preferredHalfHeight = _preferredHeight / 2;
   static const double _upperRectRadius = 4;
 
@@ -997,7 +1076,7 @@ class _RectangularSliderValueIndicatorPathPainter {
     );
     final labelOffset = boxCenter - halfLabelPainterOffset;
 
-    final span = labelPainter.text as TextSpan;
+    final span = labelPainter.text! as TextSpan;
     labelPainter
       ..text = TextSpan(
         text: span.text,

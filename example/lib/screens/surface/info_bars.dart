@@ -1,4 +1,4 @@
-import 'package:example/widgets/card_highlight.dart';
+import 'package:example/widgets/code_snippet_card.dart';
 import 'package:fluent_ui/fluent_ui.dart';
 
 import '../../widgets/page.dart';
@@ -22,7 +22,7 @@ class _InfoBarsPageState extends State<InfoBarsPage> with PageMixin {
   bool _isIconVisible = true;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(final BuildContext context) {
     return ScaffoldPage.scrollable(
       header: const PageHeader(title: Text('InfoBar')),
       children: [
@@ -33,10 +33,10 @@ class _InfoBarsPageState extends State<InfoBarsPage> with PageMixin {
           'not necessarily break user flow.',
         ),
         subtitle(content: const Text('A InfoBar as a popup')),
-        CardHighlight(
+        CodeSnippetCard(
           backgroundColor: FluentTheme.of(context).micaBackgroundColor,
-          codeSnippet:
-              '''await displayInfoBar(context, builder: (context, close) {
+          codeSnippet: '''
+await displayInfoBar(context, builder: (context, close) {
   return InfoBar(
     title: const Text('You can not do that :/'),
     content: const Text(
@@ -49,12 +49,12 @@ class _InfoBarsPageState extends State<InfoBarsPage> with PageMixin {
   );
 });''',
           child: Padding(
-            padding: const EdgeInsets.all(8.0),
+            padding: const EdgeInsetsDirectional.all(8),
             child: Button(
               onPressed: () async {
                 await displayInfoBar(
                   context,
-                  builder: (context, close) {
+                  builder: (final context, final close) {
                     return InfoBar(
                       title: const Text('You can not do that :/'),
                       content: const Text(
@@ -78,7 +78,7 @@ class _InfoBarsPageState extends State<InfoBarsPage> with PageMixin {
             'A closable InfoBar with options to change its severity',
           ),
         ),
-        CardHighlight(
+        CodeSnippetCard(
           backgroundColor: FluentTheme.of(context).micaBackgroundColor,
           codeSnippet:
               '''InfoBar(
@@ -91,7 +91,7 @@ class _InfoBarsPageState extends State<InfoBarsPage> with PageMixin {
   isLong: true,
 )''',
           child: Padding(
-            padding: const EdgeInsets.all(8.0),
+            padding: const EdgeInsetsDirectional.all(8),
             child: Column(
               mainAxisSize: MainAxisSize.min,
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -107,29 +107,30 @@ class _InfoBarsPageState extends State<InfoBarsPage> with PageMixin {
                     isLong: true,
                     onClose: () => setState(() => _firstOpen = false),
                   ),
-                const SizedBox(height: 10.0),
+                const SizedBox(height: 10),
                 const Divider(),
-                const SizedBox(height: 10.0),
+                const SizedBox(height: 10),
                 Checkbox(
                   checked: _firstOpen,
-                  onChanged: (v) => setState(() => _firstOpen = v!),
+                  onChanged: (final v) => setState(() => _firstOpen = v!),
                   content: const Text('Is open'),
                 ),
                 Container(
-                  margin: const EdgeInsetsDirectional.only(top: 10.0),
-                  width: 150.0,
+                  margin: const EdgeInsetsDirectional.only(top: 10),
+                  width: 150,
                   child: ComboBox<InfoBarSeverity>(
                     isExpanded: true,
                     items: InfoBarSeverity.values
                         .map(
-                          (severity) => ComboBoxItem(
+                          (final severity) => ComboBoxItem(
                             value: severity,
                             child: Text(severity.name),
                           ),
                         )
                         .toList(),
                     value: severity,
-                    onChanged: (v) => setState(() => severity = v ?? severity),
+                    onChanged: (final v) =>
+                        setState(() => severity = v ?? severity),
                     popupColor: () {
                       switch (severity) {
                         case InfoBarSeverity.info:
@@ -153,7 +154,7 @@ class _InfoBarsPageState extends State<InfoBarsPage> with PageMixin {
             'A closable InfoBar with a long and short message and action button',
           ),
         ),
-        CardHighlight(
+        CodeSnippetCard(
           backgroundColor: FluentTheme.of(context).micaBackgroundColor,
           codeSnippet:
               '''InfoBar(
@@ -162,20 +163,21 @@ class _InfoBarsPageState extends State<InfoBarsPage> with PageMixin {
     ${_isLong ? '"Essential app message for your users to be informed '
                         'of, acknowledge, or take action on. Lorem Ipsum is '
                         'simply dummy text of the printing and typesetting '
-                        'industry. Lorem Ipsum has been the industry\'s '
+                        "industry. Lorem Ipsum has been the industry's "
                         'standard dummy text ever since the 1500s, when an '
                         'unknown printer took a galley of type and scrambled '
                         'it to make a type specimen book."' : '"A short essential message"'}
   ),
   severity: $severity,
   isLong: true,
-  ${_hasActionButton ? '''action: Button(
+  ${_hasActionButton ? '''
+action: Button(
     child: const Text('Action'),
     onPressed: () {},
   )''' : null}
 )''',
           child: Padding(
-            padding: const EdgeInsets.all(8.0),
+            padding: const EdgeInsetsDirectional.all(8),
             child: Column(
               mainAxisSize: MainAxisSize.min,
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -188,7 +190,7 @@ class _InfoBarsPageState extends State<InfoBarsPage> with PageMixin {
                           ? 'Essential app message for your users to be informed '
                                 'of, acknowledge, or take action on. Lorem Ipsum is '
                                 'simply dummy text of the printing and typesetting '
-                                'industry. Lorem Ipsum has been the industry\'s '
+                                "industry. Lorem Ipsum has been the industry's "
                                 'standard dummy text ever since the 1500s, when an '
                                 'unknown printer took a galley of type and scrambled '
                                 'it to make a type specimen book.'
@@ -202,27 +204,27 @@ class _InfoBarsPageState extends State<InfoBarsPage> with PageMixin {
                         : null,
                     isIconVisible: _isIconVisible,
                   ),
-                const SizedBox(height: 10.0),
+                const SizedBox(height: 10),
                 const Divider(),
-                const SizedBox(height: 10.0),
+                const SizedBox(height: 10),
                 Checkbox(
                   checked: _secondOpen,
-                  onChanged: (v) => setState(() => _secondOpen = v!),
+                  onChanged: (final v) => setState(() => _secondOpen = v!),
                   content: const Text('Is open'),
                 ),
                 Checkbox(
                   checked: _isLong,
-                  onChanged: (v) => setState(() => _isLong = v!),
+                  onChanged: (final v) => setState(() => _isLong = v!),
                   content: const Text('Is long'),
                 ),
                 Checkbox(
                   checked: _hasActionButton,
-                  onChanged: (v) => setState(() => _hasActionButton = v!),
+                  onChanged: (final v) => setState(() => _hasActionButton = v!),
                   content: const Text('Has action button'),
                 ),
                 Checkbox(
                   checked: _isIconVisible,
-                  onChanged: (v) => setState(() => _isIconVisible = v!),
+                  onChanged: (final v) => setState(() => _isIconVisible = v!),
                   content: const Text('Is icon visible'),
                 ),
               ],

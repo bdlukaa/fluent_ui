@@ -9,39 +9,39 @@ class TypographyPage extends StatefulWidget {
   State<TypographyPage> createState() => _TypographyPageState();
 }
 
-Widget buildColorBox(Color color) {
-  const double boxSize = 25.0;
+Widget buildColorBox(final Color color) {
+  const boxSize = 25.0;
   return Container(
     height: boxSize,
     width: boxSize,
     decoration: BoxDecoration(
       color: color,
-      borderRadius: BorderRadius.circular(4.0),
+      borderRadius: BorderRadius.circular(4),
     ),
   );
 }
 
 class _TypographyPageState extends State<TypographyPage> {
   Color? color;
-  double scale = 1.0;
+  double scale = 1;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(final BuildContext context) {
     assert(debugCheckHasFluentTheme(context));
-    Typography typography = FluentTheme.of(context).typography;
+    var typography = FluentTheme.of(context).typography;
     color ??= typography.display!.color;
-    typography = typography.apply(displayColor: color!);
-    const Widget spacer = SizedBox(height: 4.0);
+    typography = typography.apply(displayColor: color);
+    const Widget spacer = SizedBox(height: 4);
     return ScaffoldPage.withPadding(
       header: PageHeader(
         title: const Text('Typography showcase'),
         commandBar: SizedBox(
-          width: 180.0,
+          width: 180,
           child: Tooltip(
             message: 'Pick a text color',
             child: ComboBox<Color>(
               placeholder: const Text('Text Color'),
-              onChanged: (c) => setState(() => color = c),
+              onChanged: (final c) => setState(() => color = c),
               value: color,
               items: [
                 ComboBoxItem(
@@ -49,7 +49,7 @@ class _TypographyPageState extends State<TypographyPage> {
                   child: Row(
                     children: [
                       buildColorBox(Colors.white),
-                      const SizedBox(width: 10.0),
+                      const SizedBox(width: 10),
                       const Text('White'),
                     ],
                   ),
@@ -59,19 +59,19 @@ class _TypographyPageState extends State<TypographyPage> {
                   child: Row(
                     children: [
                       buildColorBox(const Color(0xE4000000)),
-                      const SizedBox(width: 10.0),
+                      const SizedBox(width: 10),
                       const Text('Black'),
                     ],
                   ),
                 ),
-                ...List.generate(Colors.accentColors.length, (index) {
+                ...List.generate(Colors.accentColors.length, (final index) {
                   final color = Colors.accentColors[index];
                   return ComboBoxItem(
                     value: color,
                     child: Row(
                       children: [
                         buildColorBox(color),
-                        const SizedBox(width: 10.0),
+                        const SizedBox(width: 10),
                         Text(accentColorNames[index + 1]),
                       ],
                     ),
@@ -91,9 +91,11 @@ class _TypographyPageState extends State<TypographyPage> {
               mainAxisSize: MainAxisSize.min,
               children: [
                 const Divider(
-                  style: DividerThemeData(horizontalMargin: EdgeInsets.zero),
+                  style: DividerThemeData(
+                    horizontalMargin: EdgeInsetsDirectional.zero,
+                  ),
                 ),
-                const SizedBox(height: 4.0),
+                const SizedBox(height: 4),
                 const Text(
                   'The Windows type ramp establishes crucial relationships '
                   'between the type styles on a page, helping users read content '
@@ -161,7 +163,7 @@ class _TypographyPageState extends State<TypographyPage> {
             child: Slider(
               vertical: true,
               value: scale,
-              onChanged: (v) => setState(() => scale = v),
+              onChanged: (final v) => setState(() => scale = v),
               label: scale.toStringAsFixed(2),
               max: 2,
               min: 0.5,

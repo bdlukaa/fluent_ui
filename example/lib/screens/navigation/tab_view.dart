@@ -1,6 +1,6 @@
 import 'dart:math';
 
-import 'package:example/widgets/card_highlight.dart';
+import 'package:example/widgets/code_snippet_card.dart';
 import 'package:example/widgets/page.dart';
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter/foundation.dart';
@@ -24,8 +24,8 @@ class _TabViewPageState extends State<TabViewPage> with PageMixin {
   bool showScrollButtons = true;
   bool wheelScroll = false;
 
-  Tab generateTab(int index) {
-    final allIcons = FluentIcons.allIcons.values;
+  Tab generateTab(final int index) {
+    final allIcons = WindowsIcons.allIcons.values;
     late Tab tab;
     tab = Tab(
       text: Text('Document $index'),
@@ -49,7 +49,7 @@ class _TabViewPageState extends State<TabViewPage> with PageMixin {
   int _secondaryIndex = 0;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(final BuildContext context) {
     tabs ??= List.generate(3, generateTab);
     final theme = FluentTheme.of(context);
     return ScaffoldPage.scrollable(
@@ -69,7 +69,7 @@ class _TabViewPageState extends State<TabViewPage> with PageMixin {
               text: '  •  ',
               style: TextStyle(fontWeight: FontWeight.bold),
             );
-            TextSpan shortcutSpan(String text) {
+            TextSpan shortcutSpan(final String text) {
               return TextSpan(
                 text: text,
                 style: TextStyle(
@@ -128,8 +128,8 @@ class _TabViewPageState extends State<TabViewPage> with PageMixin {
         ),
         Card(
           child: Wrap(
-            spacing: 10.0,
-            runSpacing: 10.0,
+            spacing: 10,
+            runSpacing: 10,
             crossAxisAlignment: WrapCrossAlignment.end,
             children: [
               SizedBox(
@@ -139,13 +139,13 @@ class _TabViewPageState extends State<TabViewPage> with PageMixin {
                   child: ComboBox<TabWidthBehavior>(
                     isExpanded: true,
                     value: tabWidthBehavior,
-                    items: TabWidthBehavior.values.map((behavior) {
+                    items: TabWidthBehavior.values.map((final behavior) {
                       return ComboBoxItem(
                         value: behavior,
                         child: Text(behavior.name),
                       );
                     }).toList(),
-                    onChanged: (behavior) {
+                    onChanged: (final behavior) {
                       if (behavior != null) {
                         setState(() => tabWidthBehavior = behavior);
                       }
@@ -160,10 +160,10 @@ class _TabViewPageState extends State<TabViewPage> with PageMixin {
                   child: ComboBox<CloseButtonVisibilityMode>(
                     isExpanded: true,
                     value: closeButtonVisibilityMode,
-                    items: CloseButtonVisibilityMode.values.map((mode) {
+                    items: CloseButtonVisibilityMode.values.map((final mode) {
                       return ComboBoxItem(value: mode, child: Text(mode.name));
                     }).toList(),
-                    onChanged: (mode) {
+                    onChanged: (final mode) {
                       if (mode != null) {
                         setState(() => closeButtonVisibilityMode = mode);
                       }
@@ -173,18 +173,18 @@ class _TabViewPageState extends State<TabViewPage> with PageMixin {
               ),
               Checkbox(
                 checked: showScrollButtons,
-                onChanged: (v) => setState(() => showScrollButtons = v!),
+                onChanged: (final v) => setState(() => showScrollButtons = v!),
                 content: const Text('Show scroll buttons'),
               ),
               Checkbox(
                 checked: wheelScroll,
-                onChanged: (v) => setState(() => wheelScroll = v!),
+                onChanged: (final v) => setState(() => wheelScroll = v!),
                 content: const Text('Wheel scroll'),
               ),
             ],
           ),
         ),
-        CardHighlight(
+        CodeSnippetCard(
           codeSnippet:
               '''int currentIndex = 0;
 List<Tab> tabs = [];
@@ -247,7 +247,7 @@ TabView(
               tabs: tabs!,
               reservedStripWidth: 100,
               currentIndex: currentIndex,
-              onChanged: (index) => setState(() => currentIndex = index),
+              onChanged: (final index) => setState(() => currentIndex = index),
               tabWidthBehavior: tabWidthBehavior,
               closeButtonVisibility: closeButtonVisibilityMode,
               showScrollButtons: showScrollButtons,
@@ -258,7 +258,7 @@ TabView(
                   tabs!.add(tab);
                 });
               },
-              onReorder: (oldIndex, newIndex) {
+              onReorder: (final oldIndex, newIndex) {
                 setState(() {
                   if (oldIndex < newIndex) {
                     newIndex -= 1;
@@ -275,13 +275,13 @@ TabView(
               },
               stripBuilder: kIsWeb
                   ? null
-                  : (context, strip) {
+                  : (final context, final strip) {
                       return DragToMoveArea(child: strip);
                     },
             ),
           ),
         ),
-        CardHighlight(
+        CodeSnippetCard(
           codeSnippet: '''
 class MyCustomTab extends Tab {
   MyCustomTab({
@@ -305,7 +305,7 @@ class MyCustomTabState extends TabState {
   }
 
   void _showMenu(Offset position) {
-    _flyoutController.showFlyout(
+    _flyoutController.showFlyout<void>(
       position: position,
       builder: (context) {
         return MenuFlyout(
@@ -394,7 +394,8 @@ TabView(
             height: 200,
             child: TabView(
               currentIndex: _secondaryIndex,
-              onChanged: (index) => setState(() => _secondaryIndex = index),
+              onChanged: (final index) =>
+                  setState(() => _secondaryIndex = index),
               tabWidthBehavior: TabWidthBehavior.sizeToContent,
               closeButtonVisibility: CloseButtonVisibilityMode.never,
               tabs: <Tab>[
@@ -405,14 +406,12 @@ TabView(
                     TapGestureRecognizer:
                         GestureRecognizerFactoryWithHandlers<
                           TapGestureRecognizer
-                        >(() => TapGestureRecognizer(), (
-                          TapGestureRecognizer instance,
-                        ) {
+                        >(TapGestureRecognizer.new, (final instance) {
                           instance.onSecondaryTap = () {
                             debugPrint('Secondary tap recognized');
                             displayInfoBar(
                               context,
-                              builder: (context, close) {
+                              builder: (final context, final close) {
                                 return const InfoBar(
                                   title: Text('Secondary tap recognized'),
                                   severity: InfoBarSeverity.success,
@@ -439,7 +438,7 @@ TabView(
 }
 
 class MyCustomTab extends Tab {
-  MyCustomTab({super.key, required super.body, required super.text});
+  MyCustomTab({required super.body, required super.text, super.key});
 
   @override
   State<Tab> createState() => MyCustomTabState();
@@ -455,10 +454,10 @@ class MyCustomTabState extends TabState {
     _flyoutController = FlyoutController();
   }
 
-  void _showMenu(Offset position) {
-    _flyoutController.showFlyout(
+  void _showMenu(final Offset position) {
+    _flyoutController.showFlyout<void>(
       position: position,
-      builder: (context) {
+      builder: (final context) {
         return MenuFlyout(
           items: [
             MenuFlyoutItem(
@@ -484,14 +483,14 @@ class MyCustomTabState extends TabState {
   }
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(final BuildContext context) {
     return GestureDetector(
-      onSecondaryTapUp: (d) {
+      onSecondaryTapUp: (final d) {
         // This calculates the position of the flyout according to the parent navigator.
         // See https://bdlukaa.github.io/fluent_ui/#/popups/flyout
         final targetContext = _targetKey.currentContext;
         if (targetContext == null) return;
-        final box = targetContext.findRenderObject() as RenderBox;
+        final box = targetContext.findRenderObject()! as RenderBox;
         final position = box.localToGlobal(
           d.localPosition,
           ancestor: Navigator.of(context).context.findRenderObject(),

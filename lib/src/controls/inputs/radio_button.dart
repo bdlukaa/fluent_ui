@@ -1,36 +1,68 @@
 import 'package:fluent_ui/fluent_ui.dart';
-
 import 'package:flutter/foundation.dart';
 import 'package:flutter/rendering.dart';
 
 /// Radio buttons, also called option buttons, let users select one option from
-/// a collection of two or more mutually exclusive, but related, options. Radio
-/// buttons are always used in groups, and each option is represented by one
-/// radio button in the group.
+/// a collection of two or more mutually exclusive, but related, options.
 ///
-/// In the default state, no radio button in a RadioButtons group is selected.
-/// That is, all radio buttons are cleared. However, once a user has selected a
-/// radio button, the user can't deselect the button to restore the group to its
-/// initial cleared state.
+/// Radio buttons are always used in groups, and each option is represented by
+/// one radio button in the group. In the default state, no radio button in a
+/// group is selected. However, once a user has selected a radio button, the user
+/// can't deselect it to restore the group to its initial cleared state—they can
+/// only select a different option.
 ///
-/// The singular behavior of a RadioButtons group distinguishes it from check
-/// boxes, which support multi-selection and deselection, or clearing.
+/// The singular behavior of a radio button group distinguishes it from checkboxes,
+/// which support multi-selection and deselection.
 ///
-/// ![RadioButton](https://docs.microsoft.com/en-us/windows/uwp/design/controls-and-patterns/images/controls/radio-button.png)
+/// ![RadioButton](https://learn.microsoft.com/en-us/windows/apps/design/controls/images/controls/radio-button.png)
+///
+/// {@tool snippet}
+/// This example shows a group of radio buttons:
+///
+/// ```dart
+/// int selectedOption = 0;
+///
+/// Column(
+///   children: [
+///     RadioButton(
+///       checked: selectedOption == 0,
+///       content: Text('Option 1'),
+///       onChanged: (checked) {
+///         if (checked) setState(() => selectedOption = 0);
+///       },
+///     ),
+///     RadioButton(
+///       checked: selectedOption == 1,
+///       content: Text('Option 2'),
+///       onChanged: (checked) {
+///         if (checked) setState(() => selectedOption = 1);
+///       },
+///     ),
+///     RadioButton(
+///       checked: selectedOption == 2,
+///       content: Text('Option 3'),
+///       onChanged: (checked) {
+///         if (checked) setState(() => selectedOption = 2);
+///       },
+///     ),
+///   ],
+/// )
+/// ```
+/// {@end-tool}
+///
 ///
 /// See also:
 ///
-///   * [Slider], which let the user lie within a range of values,
-///     (for example, 10, 20, 30, ... 100).
-///   * [Checkbox], which let the user select multiple options.
-///   * [ComboBox], which let the user select multiple options from a popup
-///   * <https://docs.microsoft.com/en-us/windows/apps/design/controls/radio-button>
+///  * [Slider], which lets the user select from a range of values
+///  * [Checkbox], which lets the user select multiple options
+///  * [ComboBox], which lets the user select from a dropdown list
+///  * <https://learn.microsoft.com/en-us/windows/apps/design/controls/radio-button>
 class RadioButton extends StatelessWidget {
   /// Creates a radio button.
   const RadioButton({
-    super.key,
     required this.checked,
     required this.onChanged,
+    super.key,
     this.style,
     this.content,
     this.semanticLabel,
@@ -129,7 +161,7 @@ class RadioButton extends StatelessWidget {
             mainAxisSize: MainAxisSize.min,
             children: [
               child,
-              const SizedBox(width: 6.0),
+              const SizedBox(width: 6),
               Flexible(
                 child: DefaultTextStyle.merge(
                   style: TextStyle(
@@ -161,40 +193,37 @@ class RadioButton extends StatelessWidget {
 /// Values specified here are used for [RadioButton] properties that are not
 /// given an explicit non-null value.
 class RadioButtonTheme extends InheritedTheme {
-  /// Creates a radio button theme that controls the configurations for
-  /// [RadioButton].
-  const RadioButtonTheme({super.key, required this.data, required super.child});
+  /// Creates a theme that controls how descendant [RadioButton]s should
+  /// look like.
+  const RadioButtonTheme({required this.data, required super.child, super.key});
 
   /// The properties for descendant [RadioButton] widgets.
   final RadioButtonThemeData data;
 
-  /// Creates a button theme that controls how descendant [RadioButton]s should
-  /// look like, and merges in the current radio button theme, if any.
+  /// Creates a theme that merges the nearest [RadioButtonTheme] with [data].
   static Widget merge({
-    Key? key,
     required RadioButtonThemeData data,
     required Widget child,
+    Key? key,
   }) {
     return Builder(
-      builder: (BuildContext context) {
+      builder: (context) {
         return RadioButtonTheme(
           key: key,
-          data: _getInheritedThemeData(context).merge(data),
+          data: RadioButtonTheme.of(context).merge(data),
           child: child,
         );
       },
     );
   }
 
-  static RadioButtonThemeData _getInheritedThemeData(BuildContext context) {
-    final theme = context
-        .dependOnInheritedWidgetOfExactType<RadioButtonTheme>();
-    return theme?.data ?? FluentTheme.of(context).radioButtonTheme;
-  }
-
-  /// Returns the [data] from the closest [RadioButtonTheme] ancestor. If there is
-  /// no ancestor, it returns [FluentThemeData.radioButtonTheme]. Applications can assume
-  /// that the returned value will not be null.
+  /// Returns the closest [RadioButtonThemeData] which encloses the given
+  /// context.
+  ///
+  /// Resolution order:
+  /// 1. Defaults from [RadioButtonThemeData.standard]
+  /// 2. Global theme from [FluentThemeData.radioButtonTheme]
+  /// 3. Local [RadioButtonTheme] ancestor
   ///
   /// Typical usage is as follows:
   ///
@@ -202,9 +231,13 @@ class RadioButtonTheme extends InheritedTheme {
   /// RadioButtonThemeData theme = RadioButtonTheme.of(context);
   /// ```
   static RadioButtonThemeData of(BuildContext context) {
+    assert(debugCheckHasFluentTheme(context));
+    final theme = FluentTheme.of(context);
+    final inheritedTheme = context
+        .dependOnInheritedWidgetOfExactType<RadioButtonTheme>();
     return RadioButtonThemeData.standard(
-      FluentTheme.of(context),
-    ).merge(_getInheritedThemeData(context));
+      theme,
+    ).merge(theme.radioButtonTheme).merge(inheritedTheme?.data);
   }
 
   @override
@@ -216,6 +249,15 @@ class RadioButtonTheme extends InheritedTheme {
   bool updateShouldNotify(RadioButtonTheme oldWidget) => data != oldWidget.data;
 }
 
+/// Theme data for [RadioButton] widgets.
+///
+/// This class defines the default styles for different states of a radio button.
+///
+/// See also:
+///
+/// * [RadioButtonTheme], which is the theme that uses this data.
+/// * [RadioButton], which is the widget that uses this data.
+/// * [WidgetStateProperty], which is the property that controls the style of the radio button.
 @immutable
 class RadioButtonThemeData with Diagnosticable {
   /// The decoration of the radio button when it's checked.
@@ -234,6 +276,7 @@ class RadioButtonThemeData with Diagnosticable {
     this.foregroundColor,
   });
 
+  /// Creates the standard [RadioButtonThemeData] based on the given [theme].
   factory RadioButtonThemeData.standard(FluentThemeData theme) {
     return RadioButtonThemeData(
       foregroundColor: WidgetStateProperty.resolveWith((states) {
@@ -277,25 +320,28 @@ class RadioButtonThemeData with Diagnosticable {
     );
   }
 
+  /// Linearly interpolates between two [RadioButtonThemeData] objects.
+  ///
+  /// {@macro fluent_ui.lerp.t}
   static RadioButtonThemeData lerp(
     RadioButtonThemeData? a,
     RadioButtonThemeData? b,
     double t,
   ) {
     return RadioButtonThemeData(
-      checkedDecoration: WidgetStateProperty.lerp<BoxDecoration?>(
+      checkedDecoration: lerpWidgetStateProperty<BoxDecoration?>(
         a?.checkedDecoration,
         b?.checkedDecoration,
         t,
         BoxDecoration.lerp,
       ),
-      uncheckedDecoration: WidgetStateProperty.lerp<BoxDecoration?>(
+      uncheckedDecoration: lerpWidgetStateProperty<BoxDecoration?>(
         a?.uncheckedDecoration,
         b?.uncheckedDecoration,
         t,
         BoxDecoration.lerp,
       ),
-      foregroundColor: WidgetStateProperty.lerp<Color?>(
+      foregroundColor: lerpWidgetStateProperty<Color?>(
         a?.foregroundColor,
         b?.foregroundColor,
         t,
@@ -304,6 +350,8 @@ class RadioButtonThemeData with Diagnosticable {
     );
   }
 
+  /// Merges this [RadioButtonThemeData] with another, with the other taking
+  /// precedence.
   RadioButtonThemeData merge(RadioButtonThemeData? style) {
     return RadioButtonThemeData(
       checkedDecoration: style?.checkedDecoration ?? checkedDecoration,

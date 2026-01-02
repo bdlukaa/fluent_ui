@@ -3,7 +3,6 @@ import 'package:example/screens/settings.dart';
 import 'package:fluent_ui/fluent_ui.dart' hide Page;
 import 'package:flutter/foundation.dart';
 import 'package:flutter_acrylic/flutter_acrylic.dart' as flutter_acrylic;
-import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import 'package:system_theme/system_theme.dart';
 import 'package:url_launcher/link.dart';
@@ -18,7 +17,7 @@ import 'routes/theming.dart' deferred as theming;
 import 'theme.dart';
 import 'widgets/deferred_widget.dart';
 
-const String appTitle = 'Win UI for Flutter';
+const String appTitle = 'Win UI for Flutter Gallery';
 
 /// Checks if the current environment is a desktop environment.
 bool get isDesktop {
@@ -31,6 +30,8 @@ bool get isDesktop {
 }
 
 void main() async {
+  // main_test.main();
+  // return;
   WidgetsFlutterBinding.ensureInitialized();
 
   // if it's not on the web, windows or android, load the accent color
@@ -60,9 +61,7 @@ void main() async {
     });
   }
 
-  runApp(const MyApp());
-
-  Future.wait([
+  await Future.wait([
     DeferredWidget.preload(popups.loadLibrary),
     DeferredWidget.preload(forms.loadLibrary),
     DeferredWidget.preload(inputs.loadLibrary),
@@ -70,6 +69,8 @@ void main() async {
     DeferredWidget.preload(surfaces.loadLibrary),
     DeferredWidget.preload(theming.loadLibrary),
   ]);
+
+  runApp(const MyApp());
 }
 
 final _appTheme = AppTheme();
@@ -78,12 +79,12 @@ class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(final BuildContext context) {
     return ChangeNotifierProvider.value(
       value: _appTheme,
-      builder: (context, child) {
+      builder: (final context, final child) {
         final appTheme = context.watch<AppTheme>();
-        return FluentApp.router(
+        return FluentApp(
           title: appTitle,
           themeMode: appTheme.mode,
           debugShowCheckedModeBanner: false,
@@ -95,6 +96,7 @@ class MyApp extends StatelessWidget {
             focusTheme: FocusThemeData(
               glowFactor: is10footScreen(context) ? 2.0 : 0.0,
             ),
+            fontFamily: kIsWeb ? 'Segoe UI' : null,
           ),
           theme: FluentThemeData(
             accentColor: appTheme.color,
@@ -102,9 +104,10 @@ class MyApp extends StatelessWidget {
             focusTheme: FocusThemeData(
               glowFactor: is10footScreen(context) ? 2.0 : 0.0,
             ),
+            fontFamily: kIsWeb ? 'Segoe UI' : null,
           ),
           locale: appTheme.locale,
-          builder: (context, child) {
+          builder: (final context, final child) {
             return Directionality(
               textDirection: appTheme.textDirection,
               child: NavigationPaneTheme(
@@ -119,9 +122,7 @@ class MyApp extends StatelessWidget {
               ),
             );
           },
-          routeInformationParser: router.routeInformationParser,
-          routerDelegate: router.routerDelegate,
-          routeInformationProvider: router.routeInformationProvider,
+          home: const MyHomePage(),
         );
       },
     );
@@ -129,14 +130,7 @@ class MyApp extends StatelessWidget {
 }
 
 class MyHomePage extends StatefulWidget {
-  const MyHomePage({
-    super.key,
-    required this.child,
-    required this.shellContext,
-  });
-
-  final Widget child;
-  final BuildContext? shellContext;
+  const MyHomePage({super.key});
 
   @override
   State<MyHomePage> createState() => _MyHomePageState();
@@ -145,317 +139,10 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> with WindowListener {
   bool value = false;
 
-  // int index = 0;
-
   final viewKey = GlobalKey(debugLabel: 'Navigation View Key');
   final searchKey = GlobalKey(debugLabel: 'Search Bar Key');
   final searchFocusNode = FocusNode();
   final searchController = TextEditingController();
-
-  late final List<NavigationPaneItem> originalItems =
-      [
-        PaneItem(
-          key: const ValueKey('/'),
-          icon: const WindowsIcon(WindowsIcons.home),
-          title: const Text('Home'),
-          body: const SizedBox.shrink(),
-        ),
-        PaneItemHeader(header: const Text('Inputs')),
-        PaneItem(
-          key: const ValueKey('/inputs/buttons'),
-          icon: const WindowsIcon(
-            WindowsIcons.n_u_i_f_p_press_hand,
-            fallbackIcon: FluentIcons.button_control,
-          ),
-          title: const Text('Button'),
-          body: const SizedBox.shrink(),
-        ),
-        PaneItem(
-          key: const ValueKey('/inputs/checkbox'),
-          icon: const WindowsIcon(WindowsIcons.checkbox_composite),
-          title: const Text('Checkbox'),
-          body: const SizedBox.shrink(),
-        ),
-        PaneItem(
-          key: const ValueKey('/inputs/slider'),
-          icon: const WindowsIcon(FluentIcons.slider),
-          title: const Text('Slider'),
-          body: const SizedBox.shrink(),
-        ),
-        PaneItem(
-          key: const ValueKey('/inputs/toggle_switch'),
-          icon: const WindowsIcon(WindowsIcons.toggle_left),
-          title: const Text('ToggleSwitch'),
-          body: const SizedBox.shrink(),
-        ),
-        PaneItemHeader(header: const Text('Form')),
-        PaneItem(
-          key: const ValueKey('/forms/text_box'),
-          icon: const WindowsIcon(
-            WindowsIcons.text_select,
-            fallbackIcon: FluentIcons.text_field,
-          ),
-          title: const Text('TextBox'),
-          body: const SizedBox.shrink(),
-        ),
-        PaneItem(
-          key: const ValueKey('/forms/auto_suggest_box'),
-          icon: const WindowsIcon(
-            WindowsIcons.text_bullet_list_square,
-            fallbackIcon: FluentIcons.page_list,
-          ),
-          title: const Text('AutoSuggestBox'),
-          body: const SizedBox.shrink(),
-        ),
-        PaneItem(
-          key: const ValueKey('/forms/combobox'),
-          icon: const WindowsIcon(FluentIcons.combobox),
-          title: const Text('ComboBox'),
-          body: const SizedBox.shrink(),
-        ),
-        PaneItem(
-          key: const ValueKey('/forms/numberbox'),
-          icon: const WindowsIcon(WindowsIcons.dialpad),
-          title: const Text('NumberBox'),
-          body: const SizedBox.shrink(),
-        ),
-        PaneItem(
-          key: const ValueKey('/forms/passwordbox'),
-          icon: const WindowsIcon(WindowsIcons.more),
-          title: const Text('PasswordBox'),
-          body: const SizedBox.shrink(),
-        ),
-        PaneItem(
-          key: const ValueKey('/forms/time_picker'),
-          icon: const WindowsIcon(WindowsIcons.screen_time),
-          title: const Text('TimePicker'),
-          body: const SizedBox.shrink(),
-        ),
-        PaneItem(
-          key: const ValueKey('/forms/date_picker'),
-          icon: const WindowsIcon(WindowsIcons.date_time),
-          title: const Text('DatePicker'),
-          body: const SizedBox.shrink(),
-        ),
-        PaneItem(
-          key: const ValueKey('/forms/calendar_view'),
-          icon: const WindowsIcon(WindowsIcons.calendar),
-          title: const Text('CalendarView'),
-          body: const SizedBox.shrink(),
-        ),
-        PaneItem(
-          key: const ValueKey('/forms/calendar_date_picker'),
-          icon: const WindowsIcon(WindowsIcons.calendar_day),
-          title: const Text('CalendarDatePicker'),
-          body: const SizedBox.shrink(),
-        ),
-        PaneItem(
-          key: const ValueKey('/forms/color_picker'),
-          icon: const WindowsIcon(WindowsIcons.color),
-          title: const Text('ColorPicker'),
-          body: const SizedBox.shrink(),
-        ),
-        PaneItemHeader(header: const Text('Navigation')),
-        PaneItem(
-          key: const ValueKey('/navigation/navigation_view'),
-          icon: const WindowsIcon(WindowsIcons.view_dashboard),
-          title: const Text('NavigationView'),
-          body: const SizedBox.shrink(),
-        ),
-        PaneItem(
-          key: const ValueKey('/navigation/tab_view'),
-          icon: const WindowsIcon(
-            WindowsIcons.stapling_landscape_two_top,
-            fallbackIcon: FluentIcons.table_header_row,
-          ),
-          title: const Text('TabView'),
-          body: const SizedBox.shrink(),
-        ),
-        PaneItem(
-          key: const ValueKey('/navigation/tree_view'),
-          icon: const WindowsIcon(WindowsIcons.all_apps),
-          title: const Text('TreeView'),
-          body: const SizedBox.shrink(),
-        ),
-        PaneItem(
-          key: const ValueKey('/navigation/breadcrumb_bar'),
-          icon: const WindowsIcon(WindowsIcons.list_mirrored),
-          title: const Text('BreadcrumbBar'),
-          body: const SizedBox.shrink(),
-        ),
-        PaneItemHeader(header: const Text('Surfaces')),
-        PaneItem(
-          key: const ValueKey('/surfaces/acrylic'),
-          icon: const WindowsIcon(
-            WindowsIcons.device_monitor_no_pic,
-            fallbackIcon: FluentIcons.un_set_color,
-          ),
-          title: const Text('Acrylic'),
-          body: const SizedBox.shrink(),
-        ),
-        PaneItem(
-          key: const ValueKey('/surfaces/command_bar'),
-          icon: const WindowsIcon(WindowsIcons.dock_left),
-          title: const Text('CommandBar'),
-          body: const SizedBox.shrink(),
-        ),
-        PaneItem(
-          key: const ValueKey('/surfaces/expander'),
-          icon: const WindowsIcon(
-            WindowsIcons.task_view_expanded,
-            fallbackIcon: FluentIcons.expand_all,
-          ),
-          title: const Text('Expander'),
-          body: const SizedBox.shrink(),
-        ),
-        PaneItem(
-          key: const ValueKey('/surfaces/info_bar'),
-          icon: const WindowsIcon(WindowsIcons.info_solid),
-          title: const Text('InfoBar'),
-          body: const SizedBox.shrink(),
-        ),
-        PaneItem(
-          key: const ValueKey('/surfaces/progress_indicators'),
-          icon: const WindowsIcon(WindowsIcons.progress_ring_dots),
-          title: const Text('Progress Indicators'),
-          body: const SizedBox.shrink(),
-        ),
-        PaneItem(
-          key: const ValueKey('/surfaces/tiles'),
-          icon: const WindowsIcon(WindowsIcons.tiles),
-          title: const Text('Tiles'),
-          body: const SizedBox.shrink(),
-        ),
-        PaneItemHeader(header: const Text('Popups')),
-        PaneItem(
-          key: const ValueKey('/popups/content_dialog'),
-          icon: const WindowsIcon(WindowsIcons.comment),
-          title: const Text('ContentDialog'),
-          body: const SizedBox.shrink(),
-        ),
-        PaneItem(
-          key: const ValueKey('/popups/flyout'),
-          icon: const WindowsIcon(
-            WindowsIcons.open_local,
-            fallbackIcon: FluentIcons.pop_expand,
-          ),
-          title: const Text('Flyout'),
-          body: const SizedBox.shrink(),
-        ),
-        PaneItem(
-          key: const ValueKey('/popups/menu_bar'),
-          icon: const WindowsIcon(
-            WindowsIcons.switch_apps,
-            fallbackIcon: FluentIcons.expand_menu,
-          ),
-          title: const Text('MenuBar'),
-          body: const SizedBox.shrink(),
-        ),
-        PaneItem(
-          key: const ValueKey('/popups/teaching_tip'),
-          icon: const WindowsIcon(
-            WindowsIcons.wind_direction,
-            fallbackIcon: FluentIcons.field_filled,
-          ),
-          title: const Text('Teaching Tip'),
-          body: const SizedBox.shrink(),
-        ),
-        PaneItem(
-          key: const ValueKey('/popups/tooltip'),
-          icon: const WindowsIcon(
-            WindowsIcons.tool_tip,
-            fallbackIcon: FluentIcons.hint_text,
-          ),
-          title: const Text('Tooltip'),
-          body: const SizedBox.shrink(),
-        ),
-        PaneItemHeader(header: const Text('Theming')),
-        PaneItem(
-          key: const ValueKey('/theming/colors'),
-          icon: const WindowsIcon(WindowsIcons.color_solid),
-          title: const Text('Colors'),
-          body: const SizedBox.shrink(),
-        ),
-        PaneItem(
-          key: const ValueKey('/theming/typography'),
-          icon: const WindowsIcon(WindowsIcons.font),
-          title: const Text('Typography'),
-          body: const SizedBox.shrink(),
-        ),
-        PaneItem(
-          key: const ValueKey('/theming/icons/windows'),
-          icon: const WindowsIcon(WindowsIcons.flag),
-          title: const Text('Windows Icons'),
-          body: const SizedBox.shrink(),
-        ),
-        PaneItem(
-          key: const ValueKey('/theming/icons/fluent'),
-          icon: const WindowsIcon(WindowsIcons.flag),
-          title: const Text('Fluent Icons'),
-          body: const SizedBox.shrink(),
-        ),
-        PaneItem(
-          key: const ValueKey('/theming/reveal_focus'),
-          icon: const WindowsIcon(
-            WindowsIcons.pagination_dot_outline10,
-            fallbackIcon: FluentIcons.focus,
-          ),
-          title: const Text('Reveal Focus'),
-          body: const SizedBox.shrink(),
-        ),
-        // TODO: Scrollbar, RatingBar
-      ].map<NavigationPaneItem>((e) {
-        PaneItem buildPaneItem(PaneItem item) {
-          return PaneItem(
-            key: item.key,
-            icon: item.icon,
-            title: item.title,
-            body: item.body,
-            onTap: () {
-              final path = (item.key as ValueKey).value;
-              if (GoRouterState.of(context).uri.toString() != path) {
-                context.go(path);
-              }
-              item.onTap?.call();
-            },
-          );
-        }
-
-        if (e is PaneItemExpander) {
-          return PaneItemExpander(
-            key: e.key,
-            icon: e.icon,
-            title: e.title,
-            body: e.body,
-            items: e.items.map((item) {
-              if (item is PaneItem) return buildPaneItem(item);
-              return item;
-            }).toList(),
-          );
-        }
-        if (e is PaneItem) return buildPaneItem(e);
-        return e;
-      }).toList();
-  late final List<NavigationPaneItem> footerItems = [
-    PaneItemSeparator(),
-    PaneItem(
-      key: const ValueKey('/settings'),
-      icon: const WindowsIcon(WindowsIcons.settings),
-      title: const Text('Settings'),
-      body: const SizedBox.shrink(),
-      onTap: () {
-        if (GoRouterState.of(context).uri.toString() != '/settings') {
-          context.go('/settings');
-        }
-      },
-    ),
-    _LinkPaneItemAction(
-      icon: const WindowsIcon(WindowsIcons.code),
-      title: const Text('Source code'),
-      link: 'https://github.com/bdlukaa/fluent_ui',
-      body: const SizedBox.shrink(),
-    ),
-  ];
 
   @override
   void initState() {
@@ -471,148 +158,81 @@ class _MyHomePageState extends State<MyHomePage> with WindowListener {
     super.dispose();
   }
 
-  int _calculateSelectedIndex(BuildContext context) {
-    final location = GoRouterState.of(context).uri.toString();
-    int indexOriginal = originalItems
-        .where((item) => item.key != null)
-        .toList()
-        .indexWhere((item) => item.key == Key(location));
-
-    if (indexOriginal == -1) {
-      int indexFooter = footerItems
-          .where((element) => element.key != null)
-          .toList()
-          .indexWhere((element) => element.key == Key(location));
-      if (indexFooter == -1) {
-        return 0;
-      }
-      return originalItems
-              .where((element) => element.key != null)
-              .toList()
-              .length +
-          indexFooter;
-    } else {
-      return indexOriginal;
-    }
-  }
+  int _index = 0;
 
   @override
-  Widget build(BuildContext context) {
-    final localizations = FluentLocalizations.of(context);
-
+  Widget build(final BuildContext context) {
     final appTheme = context.watch<AppTheme>();
     final theme = FluentTheme.of(context);
-    if (widget.shellContext != null) {
-      if (router.canPop() == false) {
-        setState(() {});
-      }
-    }
     return NavigationView(
       key: viewKey,
-      appBar: NavigationAppBar(
-        automaticallyImplyLeading: false,
-        leading: () {
-          final enabled = widget.shellContext != null && router.canPop();
-
-          final onPressed = enabled
-              ? () {
-                  if (router.canPop()) {
-                    context.pop();
-                    setState(() {});
-                  }
-                }
-              : null;
-          return NavigationPaneTheme(
-            data: NavigationPaneTheme.of(context).merge(
-              NavigationPaneThemeData(
-                unselectedIconColor: WidgetStateProperty.resolveWith((states) {
-                  if (states.isDisabled) {
-                    return ButtonThemeData.buttonColor(context, states);
-                  }
-                  return ButtonThemeData.uncheckedInputColor(
-                    FluentTheme.of(context),
-                    states,
-                  ).basedOnLuminance();
-                }),
-              ),
-            ),
+      titleBar: TitleBar(
+        icon: const FlutterLogo(),
+        title: const Text(appTitle),
+        content: ConstrainedBox(
+          constraints: const BoxConstraints(maxWidth: 200),
+          child: Padding(
+            padding: const EdgeInsetsDirectional.symmetric(vertical: 8),
             child: Builder(
-              builder: (context) =>
-                  PaneItem(
-                    icon: const Center(
-                      child: WindowsIcon(WindowsIcons.back, size: 12.0),
-                    ),
-                    title: Text(localizations.backButtonTooltip),
-                    body: const SizedBox.shrink(),
-                    enabled: enabled,
-                  ).build(
-                    context,
-                    false,
-                    onPressed,
-                    displayMode: PaneDisplayMode.compact,
-                  ),
-            ),
-          );
-        }(),
-        title: () {
-          if (kIsWeb) {
-            return const Align(
-              alignment: AlignmentDirectional.centerStart,
-              child: Text(appTitle),
-            );
-          }
-          return const DragToMoveArea(
-            child: Align(
-              alignment: AlignmentDirectional.centerStart,
-              child: Text(appTitle),
-            ),
-          );
-        }(),
-        actions: Row(
-          mainAxisAlignment: MainAxisAlignment.end,
-          children: [
-            Align(
-              alignment: AlignmentDirectional.centerEnd,
-              child: Padding(
-                padding: const EdgeInsetsDirectional.only(end: 8.0),
-                child: ToggleButton(
-                  checked: FluentTheme.of(context).brightness.isDark,
-                  onChanged: (v) {
-                    if (v) {
-                      appTheme.mode = ThemeMode.dark;
-                    } else {
-                      appTheme.mode = ThemeMode.light;
-                    }
+              builder: (context) {
+                final allItems = NavigationView.dataOf(context).pane!.allItems
+                    .where(
+                      (i) =>
+                          i is PaneItem &&
+                          i is! PaneItemExpander &&
+                          i.body != null &&
+                          i.enabled,
+                    )
+                    .cast<PaneItem>();
+                return AutoSuggestBox<PaneItem>(
+                  onSelected: (item) {
+                    NavigationView.dataOf(context).pane?.changeTo(item.value!);
                   },
-                  child: const Text('Dark Mode'),
-                ),
-              ),
+                  items: [
+                    for (final item in allItems)
+                      AutoSuggestBoxItem<PaneItem>(
+                        value: item,
+                        label: (item.title! as Text).data!,
+                      ),
+                  ],
+                );
+              },
             ),
-            if (!kIsWeb) const WindowButtons(),
-          ],
+          ),
         ),
+        endHeader: Tooltip(
+          message: 'Toggle theme',
+          child: ToggleButton(
+            checked: theme.brightness == Brightness.dark,
+            onChanged: (final v) {
+              if (v) {
+                appTheme.mode = ThemeMode.dark;
+              } else {
+                appTheme.mode = ThemeMode.light;
+              }
+            },
+            child: const Icon(WindowsIcons.lightbulb),
+          ),
+        ),
+        captionControls: const WindowButtons(),
+        onDragStarted: !kIsWeb ? windowManager.startDragging : null,
       ),
-      paneBodyBuilder: (item, child) {
-        final name = item?.key is ValueKey
-            ? (item!.key as ValueKey).value
-            : null;
-        return FocusTraversalGroup(
-          key: ValueKey('body$name'),
-          child: widget.child,
-        );
-      },
       pane: NavigationPane(
-        selected: _calculateSelectedIndex(context),
+        selected: _index,
+        onChanged: (index) {
+          debugPrint('Changed to $index');
+          setState(() => _index = index);
+        },
         header: SizedBox(
           height: kOneLineTileHeight,
           child: ShaderMask(
-            shaderCallback: (rect) {
+            shaderCallback: (final rect) {
               final color = appTheme.color.defaultBrushFor(theme.brightness);
               return LinearGradient(colors: [color, color]).createShader(rect);
             },
             child: const FlutterLogo(
               style: FlutterLogoStyle.horizontal,
-              size: 80.0,
+              size: 80,
               textColor: Colors.white,
               duration: Duration.zero,
             ),
@@ -627,67 +247,218 @@ class _MyHomePageState extends State<MyHomePage> with WindowListener {
               return const StickyNavigationIndicator();
           }
         }(),
-        items: originalItems,
-        autoSuggestBox: Builder(
-          builder: (context) {
-            return AutoSuggestBox(
-              key: searchKey,
-              focusNode: searchFocusNode,
-              controller: searchController,
-              unfocusedColor: Colors.transparent,
-              // also need to include sub items from [PaneItemExpander] items
-              items:
-                  <PaneItem>[
-                    ...originalItems
-                        .whereType<PaneItemExpander>()
-                        .expand<PaneItem>((item) {
-                          return [item, ...item.items.whereType<PaneItem>()];
-                        }),
-                    ...originalItems
-                        .where(
-                          (item) =>
-                              item is PaneItem && item is! PaneItemExpander,
-                        )
-                        .cast<PaneItem>(),
-                  ].map((item) {
-                    assert(item.title is Text);
-                    final text = (item.title as Text).data!;
-                    return AutoSuggestBoxItem(
-                      label: text,
-                      value: text,
-                      onSelected: () {
-                        item.onTap?.call();
-                        searchController.clear();
-                        searchFocusNode.unfocus();
-                        final view = NavigationView.of(context);
-                        if (view.compactOverlayOpen) {
-                          view.compactOverlayOpen = false;
-                        } else if (view.minimalPaneOpen) {
-                          view.minimalPaneOpen = false;
-                        }
-                      },
-                    );
-                  }).toList(),
-              trailingIcon: IgnorePointer(
-                child: IconButton(
-                  onPressed: () {},
-                  icon: const WindowsIcon(WindowsIcons.search),
-                ),
+
+        items: [
+          PaneItem(
+            icon: const WindowsIcon(WindowsIcons.home),
+            title: const Text('Home'),
+            body: const HomePage(),
+          ),
+          PaneItemHeader(header: const Text('Controls')),
+          PaneItemExpander(
+            icon: const WindowsIcon(WindowsIcons.button_a),
+            title: const Text('Basic input'),
+            items: [
+              PaneItem(title: const Text('Button'), body: inputs.ButtonPage()),
+              PaneItem(
+                title: const Text('Checkbox'),
+                body: inputs.CheckBoxPage(),
               ),
-              placeholder: 'Search',
-            );
-          },
-        ),
-        autoSuggestBoxReplacement: const WindowsIcon(WindowsIcons.search),
-        footerItems: footerItems,
+              PaneItem(title: const Text('Slider'), body: inputs.SliderPage()),
+              PaneItem(
+                title: const Text('ToggleSwitch'),
+                body: inputs.ToggleSwitchPage(),
+              ),
+              PaneItem(
+                title: const Text('ComboBox'),
+                body: forms.ComboBoxPage(),
+              ),
+              PaneItem(
+                title: const Text('ColorPicker'),
+                body: forms.ColorPickerPage(),
+              ),
+            ],
+          ),
+          PaneItemExpander(
+            icon: const WindowsIcon(WindowsIcons.date_time),
+            title: const Text('Date & time'),
+            items: [
+              PaneItem(
+                title: const Text('DatePicker'),
+                body: forms.DatePickerPage(),
+              ),
+              PaneItem(
+                title: const Text('TimePicker'),
+                body: forms.TimePickerPage(),
+              ),
+              PaneItem(
+                title: const Text('CalendarView'),
+                body: forms.CalendarViewPage(),
+              ),
+              PaneItem(
+                title: const Text('CalendarDatePicker'),
+                body: forms.CalendarDatePickerPage(),
+              ),
+            ],
+          ),
+          PaneItemExpander(
+            icon: const WindowsIcon(WindowsIcons.chat_bubbles),
+            title: const Text('Dialogs & flyouts'),
+            items: [
+              PaneItem(
+                title: const Text('ContentDialog'),
+                body: popups.ContentDialogPage(),
+              ),
+              PaneItem(
+                title: const Text('Flyout'),
+                body: popups.Flyout2Screen(),
+              ),
+              PaneItem(
+                title: const Text('TeachingTip'),
+                body: popups.TeachingTipPage(),
+              ),
+              PaneItem(
+                title: const Text('Tooltip'),
+                body: popups.TooltipPage(),
+              ),
+              PaneItem(
+                title: const Text('MenuBar'),
+                body: popups.MenuBarPage(),
+              ),
+            ],
+          ),
+          PaneItemExpander(
+            icon: const WindowsIcon(WindowsIcons.text_navigate),
+            title: const Text('Navigation'),
+            items: [
+              PaneItem(
+                title: const Text('Breadcrumb Bar'),
+                body: navigation.BreadcrumbBarPage(),
+              ),
+              PaneItem(
+                title: const Text('Navigation View'),
+                body: navigation.NavigationViewPage(),
+              ),
+              PaneItem(
+                title: const Text('Tab View'),
+                body: navigation.TabViewPage(),
+              ),
+              PaneItem(
+                title: const Text('Tree View'),
+                body: navigation.TreeViewPage(),
+              ),
+              PaneItem(
+                title: const Text('Command Bar'),
+                body: surfaces.CommandBarsPage(),
+              ),
+            ],
+          ),
+          PaneItemExpander(
+            icon: const WindowsIcon(WindowsIcons.surface_hub),
+            title: const Text('Surfaces & Layout'),
+            items: [
+              PaneItem(
+                title: const Text('Acrylic'),
+                body: surfaces.AcrylicPage(),
+              ),
+              // PaneItem(
+              //   title: const Text('Mica'),
+              //   //  body: surfaces.AcrylicPage()
+              // ),
+              PaneItem(title: const Text('Tiles'), body: surfaces.TilesPage()),
+              PaneItem(
+                title: const Text('Expander'),
+                body: surfaces.ExpanderPage(),
+              ),
+            ],
+          ),
+
+          PaneItemExpander(
+            icon: const WindowsIcon(WindowsIcons.app_icon_default),
+            title: const Text('Styles & Icons'),
+            items: [
+              PaneItem(
+                title: const Text('Windows Icons'),
+                body: theming.IconsPage(set: WindowsIcons.allIcons),
+              ),
+              PaneItem(
+                title: const Text('Fluent Icons'),
+                body: theming.IconsPage(set: FluentIcons.allIcons),
+              ),
+              PaneItem(
+                title: const Text('Typography'),
+                body: theming.TypographyPage(),
+              ),
+              PaneItem(title: const Text('Colors'), body: theming.ColorsPage()),
+            ],
+          ),
+          PaneItemExpander(
+            icon: const WindowsIcon(WindowsIcons.progress_ring_dots),
+            title: const Text('Status & info'),
+            items: [
+              PaneItem(
+                title: const Text('InfoBar'),
+                body: surfaces.InfoBarsPage(),
+              ),
+              PaneItem(
+                title: const Text('InfoBadge'),
+                body: surfaces.InfoBadgePage(),
+              ),
+              PaneItem(
+                title: const Text('ProgressRing'),
+                body: surfaces.ProgressRingPage(),
+              ),
+              PaneItem(
+                title: const Text('ProgressBar'),
+                body: surfaces.ProgressBarPage(),
+              ),
+              PaneItem(
+                title: const Text('RatingBar'),
+                body: inputs.RatingBarPage(),
+              ),
+            ],
+          ),
+          PaneItemExpander(
+            icon: const WindowsIcon(WindowsIcons.text_edit),
+            title: const Text('Text'),
+            items: [
+              PaneItem(
+                title: const Text('AutoSuggestBox'),
+                body: forms.AutoSuggestBoxPage(),
+              ),
+              PaneItem(
+                title: const Text('NumberBox'),
+                body: forms.NumberBoxPage(),
+              ),
+              PaneItem(
+                title: const Text('PasswordBox'),
+                body: forms.PasswordBoxPage(),
+              ),
+              PaneItem(title: const Text('TextBox'), body: forms.TextBoxPage()),
+            ],
+          ),
+        ],
+        footerItems: [
+          PaneItemSeparator(),
+          PaneItem(
+            icon: const WindowsIcon(WindowsIcons.settings),
+            title: const Text('Settings'),
+            body: const Settings(),
+          ),
+          _LinkPaneItemAction(
+            icon: const WindowsIcon(WindowsIcons.code),
+            title: const Text('Source code'),
+            link: 'https://github.com/bdlukaa/fluent_ui',
+          ),
+        ],
       ),
       onOpenSearch: searchFocusNode.requestFocus,
     );
   }
 
   @override
-  void onWindowClose() async {
-    bool isPreventClose = await windowManager.isPreventClose();
+  Future<void> onWindowClose() async {
+    final isPreventClose = await windowManager.isPreventClose();
     if (isPreventClose && mounted) {
       showDialog(
         context: context,
@@ -721,8 +492,8 @@ class WindowButtons extends StatelessWidget {
   const WindowButtons({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    final FluentThemeData theme = FluentTheme.of(context);
+  Widget build(final BuildContext context) {
+    final theme = FluentTheme.of(context);
 
     return SizedBox(
       width: 138,
@@ -736,33 +507,29 @@ class WindowButtons extends StatelessWidget {
 }
 
 class _LinkPaneItemAction extends PaneItem {
-  _LinkPaneItemAction({
-    required super.icon,
-    required this.link,
-    required super.body,
-    super.title,
-  });
+  _LinkPaneItemAction({required super.icon, required this.link, super.title});
 
   final String link;
 
   @override
-  Widget build(
-    BuildContext context,
-    bool selected,
-    VoidCallback? onPressed, {
-    PaneDisplayMode? displayMode,
-    bool showTextOnTop = true,
+  Widget build({
+    required BuildContext context,
+    required bool selected,
+    required VoidCallback? onPressed,
+    required PaneDisplayMode? displayMode,
+    required int itemIndex,
     bool? autofocus,
-    int? itemIndex,
+    bool showTextOnTop = true,
+    int depth = 0,
   }) {
     return Link(
       uri: Uri.parse(link),
-      builder: (context, followLink) => Semantics(
+      builder: (final context, final followLink) => Semantics(
         link: true,
         child: super.build(
-          context,
-          selected,
-          followLink,
+          context: context,
+          selected: selected,
+          onPressed: followLink,
           displayMode: displayMode,
           showTextOnTop: showTextOnTop,
           itemIndex: itemIndex,
@@ -772,314 +539,3 @@ class _LinkPaneItemAction extends PaneItem {
     );
   }
 }
-
-final rootNavigatorKey = GlobalKey<NavigatorState>();
-final _shellNavigatorKey = GlobalKey<NavigatorState>();
-final router = GoRouter(
-  navigatorKey: rootNavigatorKey,
-  routes: [
-    ShellRoute(
-      navigatorKey: _shellNavigatorKey,
-      builder: (context, state, child) {
-        return MyHomePage(
-          shellContext: _shellNavigatorKey.currentContext,
-          child: child,
-        );
-      },
-      routes: <GoRoute>[
-        /// Home
-        GoRoute(path: '/', builder: (context, state) => const HomePage()),
-
-        /// Settings
-        GoRoute(
-          path: '/settings',
-          builder: (context, state) => const Settings(),
-        ),
-
-        /// /// Input
-        /// Buttons
-        GoRoute(
-          path: '/inputs/buttons',
-          builder: (context, state) =>
-              DeferredWidget(inputs.loadLibrary, () => inputs.ButtonPage()),
-        ),
-
-        /// Checkbox
-        GoRoute(
-          path: '/inputs/checkbox',
-          builder: (context, state) =>
-              DeferredWidget(inputs.loadLibrary, () => inputs.CheckBoxPage()),
-        ),
-
-        /// Slider
-        GoRoute(
-          path: '/inputs/slider',
-          builder: (context, state) =>
-              DeferredWidget(inputs.loadLibrary, () => inputs.SliderPage()),
-        ),
-
-        /// ToggleSwitch
-        GoRoute(
-          path: '/inputs/toggle_switch',
-          builder: (context, state) => DeferredWidget(
-            inputs.loadLibrary,
-            () => inputs.ToggleSwitchPage(),
-          ),
-        ),
-
-        /// /// Form
-        /// TextBox
-        GoRoute(
-          path: '/forms/text_box',
-          builder: (context, state) =>
-              DeferredWidget(forms.loadLibrary, () => forms.TextBoxPage()),
-        ),
-
-        /// AutoSuggestBox
-        GoRoute(
-          path: '/forms/auto_suggest_box',
-          builder: (context, state) => DeferredWidget(
-            forms.loadLibrary,
-            () => forms.AutoSuggestBoxPage(),
-          ),
-        ),
-
-        /// ComboBox
-        GoRoute(
-          path: '/forms/combobox',
-          builder: (context, state) =>
-              DeferredWidget(forms.loadLibrary, () => forms.ComboBoxPage()),
-        ),
-
-        /// NumberBox
-        GoRoute(
-          path: '/forms/numberbox',
-          builder: (context, state) =>
-              DeferredWidget(forms.loadLibrary, () => forms.NumberBoxPage()),
-        ),
-
-        GoRoute(
-          path: '/forms/passwordbox',
-          builder: (context, state) =>
-              DeferredWidget(forms.loadLibrary, () => forms.PasswordBoxPage()),
-        ),
-
-        /// TimePicker
-        GoRoute(
-          path: '/forms/time_picker',
-          builder: (context, state) =>
-              DeferredWidget(forms.loadLibrary, () => forms.TimePickerPage()),
-        ),
-
-        /// DatePicker
-        GoRoute(
-          path: '/forms/date_picker',
-          builder: (context, state) =>
-              DeferredWidget(forms.loadLibrary, () => forms.DatePickerPage()),
-        ),
-
-        GoRoute(
-          path: '/forms/calendar_view',
-          builder: (context, state) =>
-              DeferredWidget(forms.loadLibrary, () => forms.CalendarViewPage()),
-        ),
-        GoRoute(
-          path: '/forms/calendar_date_picker',
-          builder: (context, state) => DeferredWidget(
-            forms.loadLibrary,
-            () => forms.CalendarDatePickerPage(),
-          ),
-        ),
-
-        /// ColorPicker
-        GoRoute(
-          path: '/forms/color_picker',
-          builder: (context, state) =>
-              DeferredWidget(forms.loadLibrary, () => forms.ColorPickerPage()),
-        ),
-
-        /// /// Navigation
-        /// NavigationView
-        GoRoute(
-          path: '/navigation/navigation_view',
-          builder: (context, state) => DeferredWidget(
-            navigation.loadLibrary,
-            () => navigation.NavigationViewPage(),
-          ),
-        ),
-        GoRoute(
-          path: '/navigation_view',
-          builder: (context, state) => DeferredWidget(
-            navigation.loadLibrary,
-            () => navigation.NavigationViewShellRoute(),
-          ),
-        ),
-
-        /// TabView
-        GoRoute(
-          path: '/navigation/tab_view',
-          builder: (context, state) => DeferredWidget(
-            navigation.loadLibrary,
-            () => navigation.TabViewPage(),
-          ),
-        ),
-
-        /// TreeView
-        GoRoute(
-          path: '/navigation/tree_view',
-          builder: (context, state) => DeferredWidget(
-            navigation.loadLibrary,
-            () => navigation.TreeViewPage(),
-          ),
-        ),
-
-        /// BreadcrumbBar
-        GoRoute(
-          path: '/navigation/breadcrumb_bar',
-          builder: (context, state) => DeferredWidget(
-            navigation.loadLibrary,
-            () => navigation.BreadcrumbBarPage(),
-          ),
-        ),
-
-        /// /// Surfaces
-        /// Acrylic
-        GoRoute(
-          path: '/surfaces/acrylic',
-          builder: (context, state) => DeferredWidget(
-            surfaces.loadLibrary,
-            () => surfaces.AcrylicPage(),
-          ),
-        ),
-
-        /// CommandBar
-        GoRoute(
-          path: '/surfaces/command_bar',
-          builder: (context, state) => DeferredWidget(
-            surfaces.loadLibrary,
-            () => surfaces.CommandBarsPage(),
-          ),
-        ),
-
-        /// Expander
-        GoRoute(
-          path: '/surfaces/expander',
-          builder: (context, state) => DeferredWidget(
-            surfaces.loadLibrary,
-            () => surfaces.ExpanderPage(),
-          ),
-        ),
-
-        /// InfoBar
-        GoRoute(
-          path: '/surfaces/info_bar',
-          builder: (context, state) => DeferredWidget(
-            surfaces.loadLibrary,
-            () => surfaces.InfoBarsPage(),
-          ),
-        ),
-
-        /// Progress Indicators
-        GoRoute(
-          path: '/surfaces/progress_indicators',
-          builder: (context, state) => DeferredWidget(
-            surfaces.loadLibrary,
-            () => surfaces.ProgressIndicatorsPage(),
-          ),
-        ),
-
-        /// Tiles
-        GoRoute(
-          path: '/surfaces/tiles',
-          builder: (context, state) =>
-              DeferredWidget(surfaces.loadLibrary, () => surfaces.TilesPage()),
-        ),
-
-        /// Popups
-        /// ContentDialog
-        GoRoute(
-          path: '/popups/content_dialog',
-          builder: (context, state) => DeferredWidget(
-            surfaces.loadLibrary,
-            () => popups.ContentDialogPage(),
-          ),
-        ),
-
-        /// MenuBar
-        GoRoute(
-          path: '/popups/menu_bar',
-          builder: (context, state) =>
-              DeferredWidget(surfaces.loadLibrary, () => popups.MenuBarPage()),
-        ),
-
-        /// Tooltip
-        GoRoute(
-          path: '/popups/tooltip',
-          builder: (context, state) =>
-              DeferredWidget(surfaces.loadLibrary, () => popups.TooltipPage()),
-        ),
-
-        /// Flyout
-        GoRoute(
-          path: '/popups/flyout',
-          builder: (context, state) => DeferredWidget(
-            surfaces.loadLibrary,
-            () => popups.Flyout2Screen(),
-          ),
-        ),
-
-        /// Teaching Tip
-        GoRoute(
-          path: '/popups/teaching_tip',
-          builder: (context, state) => DeferredWidget(
-            surfaces.loadLibrary,
-            () => popups.TeachingTipPage(),
-          ),
-        ),
-
-        /// /// Theming
-        /// Colors
-        GoRoute(
-          path: '/theming/colors',
-          builder: (context, state) =>
-              DeferredWidget(theming.loadLibrary, () => theming.ColorsPage()),
-        ),
-
-        /// Typography
-        GoRoute(
-          path: '/theming/typography',
-          builder: (context, state) => DeferredWidget(
-            theming.loadLibrary,
-            () => theming.TypographyPage(),
-          ),
-        ),
-
-        /// Icons
-        GoRoute(
-          path: '/theming/icons/windows',
-          builder: (context, state) => DeferredWidget(
-            theming.loadLibrary,
-            () => theming.IconsPage(set: WindowsIcons.allIcons),
-          ),
-        ),
-
-        GoRoute(
-          path: '/theming/icons/fluent',
-          builder: (context, state) => DeferredWidget(
-            theming.loadLibrary,
-            () => theming.IconsPage(set: FluentIcons.allIcons),
-          ),
-        ),
-
-        /// Reveal Focus
-        GoRoute(
-          path: '/theming/reveal_focus',
-          builder: (context, state) => DeferredWidget(
-            theming.loadLibrary,
-            () => theming.RevealFocusPage(),
-          ),
-        ),
-      ],
-    ),
-  ],
-);

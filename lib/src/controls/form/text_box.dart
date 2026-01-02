@@ -7,6 +7,7 @@ import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
 
 // From https://github.com/microsoft/microsoft-ui-xaml/blob/main/dev/CommonStyles/Common_themeresources.xaml#L18
+/// The default padding used inside a [TextBox].
 const kTextBoxPadding = EdgeInsetsDirectional.fromSTEB(10, 5, 6, 6);
 
 /// Visibility of text field overlays based on the state of the current text entry.
@@ -54,12 +55,55 @@ class _TextBoxSelectionGestureDetectorBuilder
   }
 }
 
-/// A Windows-style text field.
+/// A Windows-style text field for user text input.
 ///
-/// A text field lets the user enter text, either with a hardware keyboard or with
-/// an onscreen keyboard.
+/// A text field lets the user enter text, either with a hardware keyboard or
+/// with an onscreen keyboard. This widget corresponds to the WinUI `TextBox`
+/// control.
 ///
-/// This widget corresponds to `TextBox` on Windows.
+/// ![TextBox Preview](https://learn.microsoft.com/en-us/windows/apps/design/controls/images/text-box.png)
+///
+/// {@tool snippet}
+/// This example shows a basic text box:
+///
+/// ```dart
+/// TextBox(
+///   placeholder: 'Enter your name',
+///   onChanged: (value) => print('Name: $value'),
+/// )
+/// ```
+/// {@end-tool}
+///
+/// {@tool snippet}
+/// This example shows a text box with a controller:
+///
+/// ```dart
+/// final controller = TextEditingController();
+///
+/// TextBox(
+///   controller: controller,
+///   placeholder: 'Email address',
+///   suffix: IconButton(
+///     icon: Icon(FluentIcons.clear),
+///     onPressed: () => controller.clear(),
+///   ),
+/// )
+/// ```
+/// {@end-tool}
+///
+/// {@tool snippet}
+/// This example shows a multiline text box:
+///
+/// ```dart
+/// TextBox(
+///   placeholder: 'Enter your message',
+///   maxLines: 5,
+///   minLines: 3,
+/// )
+/// ```
+/// {@end-tool}
+///
+/// ## Text field behavior
 ///
 /// The text field calls the [onChanged] callback whenever the user changes the
 /// text in the field. If the user indicates that they are done typing in the
@@ -70,6 +114,8 @@ class _TextBoxSelectionGestureDetectorBuilder
 ///
 /// The [controller] can also control the selection and composing region (and to
 /// observe changes to the text, selection, and composing region).
+///
+/// ## Decoration
 ///
 /// The text field has an overridable [decoration] that, by default, draws a
 /// rounded rectangle border around the text field. If you set the [decoration]
@@ -86,8 +132,10 @@ class _TextBoxSelectionGestureDetectorBuilder
 ///
 /// See also:
 ///
-///  * [EditableText], which is the raw text editing control at the heart of a
-///    text field.
+///  * [PasswordBox], for entering passwords with obscured text
+///  * [TextFormBox], for use in forms with validation
+///  * [AutoSuggestBox], for text input with suggestions
+///  * [EditableText], which is the raw text editing control
 ///  * <https://learn.microsoft.com/en-us/windows/apps/design/controls/text-box>
 class TextBox extends StatefulWidget {
   /// Creates a Windows-style text field.
@@ -178,13 +226,13 @@ class TextBox extends StatefulWidget {
     this.enabled = true,
     this.cursorWidth = 2.0,
     this.cursorHeight,
-    this.cursorRadius = const Radius.circular(2.0),
+    this.cursorRadius = const Radius.circular(2),
     this.cursorOpacityAnimates,
     this.cursorColor,
     this.selectionHeightStyle = ui.BoxHeightStyle.tight,
     this.selectionWidthStyle = ui.BoxWidthStyle.tight,
     this.keyboardAppearance,
-    this.scrollPadding = const EdgeInsets.all(20.0),
+    this.scrollPadding = const EdgeInsetsDirectional.all(20),
     this.dragStartBehavior = DragStartBehavior.start,
     bool? enableInteractiveSelection,
     this.selectionControls,
@@ -513,7 +561,7 @@ class TextBox extends StatefulWidget {
   final Brightness? keyboardAppearance;
 
   /// {@macro flutter.widgets.editableText.scrollPadding}
-  final EdgeInsets scrollPadding;
+  final EdgeInsetsGeometry scrollPadding;
 
   /// {@macro flutter.widgets.editableText.enableInteractiveSelection}
   final bool enableInteractiveSelection;
@@ -566,6 +614,10 @@ class TextBox extends StatefulWidget {
   ///  * [AdaptiveTextSelectionToolbar], which is built by default.
   final EditableTextContextMenuBuilder? contextMenuBuilder;
 
+  /// The default context menu builder for [TextBox].
+  ///
+  /// Builds a [FluentTextSelectionToolbar] with the standard context menu items
+  /// plus an undo action if an [UndoHistoryController] is available.
   static Widget defaultContextMenuBuilder(
     BuildContext context,
     EditableTextState editableTextState,
@@ -575,7 +627,7 @@ class TextBox extends StatefulWidget {
       buttonItems: [
         ...editableTextState.contextMenuButtonItems,
         if (undoController != null)
-          UndoContextMenuButtonItem(onPressed: () => undoController.undo()),
+          UndoContextMenuButtonItem(onPressed: undoController.undo),
       ],
       anchors: editableTextState.contextMenuAnchors,
     );
@@ -636,7 +688,7 @@ class TextBox extends StatefulWidget {
   /// {@macro flutter.widgets.editableText.scrollBehavior}
   final ScrollBehavior? scrollBehavior;
 
-  // {@macro flutter.painting.textPainter.textScaler}
+  /// {@macro flutter.painting.textPainter.textScaler}
   final TextScaler? textScaler;
 
   /// {@macro dart.ui.textHeightBehavior}
@@ -1063,7 +1115,6 @@ class _TextBoxState extends State<TextBox>
         if (cause == SelectionChangedCause.drag) {
           _editableText.hideToolbar();
         }
-        break;
     }
   }
 
@@ -1113,9 +1164,9 @@ class _TextBoxState extends State<TextBox>
     return ValueListenableBuilder<TextEditingValue>(
       valueListenable: _effectiveController,
       child: editableText,
-      builder: (BuildContext context, TextEditingValue text, Widget? child) {
-        final bool hasText = text.text.isNotEmpty;
-        final String? placeholderText = widget.placeholder;
+      builder: (context, text, child) {
+        final hasText = text.text.isNotEmpty;
+        final placeholderText = widget.placeholder;
         final Widget? placeholder = placeholderText == null
             ? null
             // Make the placeholder invisible when hasText is true.
@@ -1144,7 +1195,7 @@ class _TextBoxState extends State<TextBox>
                 ),
               );
 
-        final Widget? prefixWidget =
+        final prefixWidget =
             _shouldShowAttachment(
               attachment: widget.prefixMode,
               hasText: hasText,
@@ -1152,7 +1203,7 @@ class _TextBoxState extends State<TextBox>
             ? widget.prefix
             : null;
 
-        final Widget? suffixWidget =
+        final suffixWidget =
             _shouldShowAttachment(
               attachment: widget.suffixMode,
               hasText: hasText,
@@ -1231,7 +1282,6 @@ class _TextBoxState extends State<TextBox>
         textSelectionControls ??= FluentTextSelectionHandleControls(
           undoHistoryController: _effectiveUndoController,
         );
-        break;
 
       case TargetPlatform.macOS:
       case TargetPlatform.windows:
@@ -1245,11 +1295,10 @@ class _TextBoxState extends State<TextBox>
             _effectiveFocusNode.requestFocus();
           }
         };
-        break;
     }
 
     final enabled = widget.enabled;
-    const cursorOffset = Offset(0, 0);
+    const cursorOffset = Offset.zero;
     final formatters = <TextInputFormatter>[
       ...?widget.inputFormatters,
       if (widget.maxLength != null)
@@ -1356,7 +1405,9 @@ class _TextBoxState extends State<TextBox>
             backgroundCursorColor: disabledColor,
             selectionHeightStyle: widget.selectionHeightStyle,
             selectionWidthStyle: widget.selectionWidthStyle,
-            scrollPadding: widget.scrollPadding,
+            scrollPadding: widget.scrollPadding.resolve(
+              Directionality.of(context),
+            ),
             keyboardAppearance: keyboardAppearance,
             dragStartBehavior: widget.dragStartBehavior,
             scrollController: widget.scrollController,
@@ -1460,7 +1511,6 @@ class _TextBoxState extends State<TextBox>
           ignoring: !enabled,
           child: HoverButton(
             focusEnabled: false,
-            forceEnabled: false,
             hitTestBehavior: HitTestBehavior.translucent,
             builder: (context, states) {
               // Since we manage focus outside of the HoverButton (see focusEnabled: false)
@@ -1479,7 +1529,7 @@ class _TextBoxState extends State<TextBox>
                   resolvedWidgetDecoration?.borderRadius?.resolve(
                     Directionality.of(context),
                   ) ??
-                  BorderRadius.circular(4.0);
+                  BorderRadius.circular(4);
               final decoration =
                   WidgetStateProperty.resolveWith((states) {
                         return BoxDecoration(
@@ -1561,12 +1611,12 @@ class _TextBoxState extends State<TextBox>
                   decoration: decoration,
                   child: Container(
                     foregroundDecoration: foregroundDecoration,
-                    constraints: const BoxConstraints(minHeight: 32.0),
+                    constraints: const BoxConstraints(minHeight: 32),
                     child: _selectionGestureDetectorBuilder
                         .buildGestureDetector(
                           behavior: HitTestBehavior.translucent,
                           child: Align(
-                            alignment: Alignment(-1.0, _textAlignVertical.y),
+                            alignment: Alignment(-1, _textAlignVertical.y),
                             child: SmallIconButton(
                               child: _addTextDependentAttachments(
                                 paddedEditable,

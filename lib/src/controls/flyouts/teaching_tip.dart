@@ -1,12 +1,16 @@
 import 'package:fluent_ui/fluent_ui.dart';
 
+/// The default constraints for a [TeachingTip].
+///
+/// Based on Windows UI guidelines.
 /// https://github.com/microsoft/microsoft-ui-xaml/blob/main/src/controls/dev/TeachingTip/TeachingTip_themeresources.xaml
 const kTeachingTipConstraints = BoxConstraints(
-  minHeight: 40.0,
-  maxHeight: 520.0,
-  maxWidth: 336.0,
+  minHeight: 40,
+  maxHeight: 520,
+  maxWidth: 336,
 );
 
+/// A callback function for closing a teaching tip.
 typedef TooltipCloseCallback = void Function(BuildContext context);
 
 /// Displays a Windows teaching tip at the desired position, with entrance
@@ -90,14 +94,35 @@ Future<T?> showTeachingTip<T extends Object?>({
   );
 }
 
-/// A teaching tip is a semi-persistent and content-rich flyout that provides
-/// contextual information. It is often used for informing, reminding, and
-/// teaching users about important and new features that may enhance their
-/// experience.
+/// A semi-persistent flyout for teaching users about features.
 ///
-/// A teaching tip may be light-dismiss or require explicit action to close. A
-/// teaching tip can target a specific UI element with its tail and also be used
-/// without a tail or target.
+/// Teaching tips provide contextual information and guidance about new or
+/// important features. They're ideal for onboarding, feature discovery,
+/// and providing helpful tips without interrupting the user's workflow.
+///
+/// ![TeachingTip example](https://learn.microsoft.com/en-us/windows/apps/develop/ui/controls/images/teaching-tip-non-targeted.png)
+///
+/// {@tool snippet}
+/// This example shows a teaching tip with a title and subtitle:
+///
+/// ```dart
+/// TeachingTip(
+///   title: Text('New feature'),
+///   subtitle: Text('Try out our new editing tools to enhance your photos.'),
+///   action: Button(
+///     child: Text('Got it'),
+///     onPressed: () => Navigator.pop(context),
+///   ),
+/// )
+/// ```
+/// {@end-tool}
+///
+/// ## Targeted vs non-targeted
+///
+/// * **Targeted** - Points to a specific UI element with a tail/arrow
+/// * **Non-targeted** - Appears without pointing to any element
+///
+/// A teaching tip may be light-dismiss or require explicit action to close.
 ///
 /// See also:
 ///
@@ -107,10 +132,10 @@ Future<T?> showTeachingTip<T extends Object?>({
 class TeachingTip extends StatelessWidget {
   /// Creates a teaching tip.
   const TeachingTip({
-    super.key,
-    this.leading,
     required this.title,
     required this.subtitle,
+    super.key,
+    this.leading,
     this.buttons,
     this.mediaContent,
     this.onClose = defaultCloseCallback,
@@ -169,6 +194,9 @@ class TeachingTip extends StatelessWidget {
     Navigator.of(context).pop();
   }
 
+  /// The default transition animation builder for teaching tips.
+  ///
+  /// Creates a scale and fade animation from the placement direction.
   static Widget defaultTransitionBuilder(
     BuildContext context,
     Animation<double> animation,
@@ -178,33 +206,25 @@ class TeachingTip extends StatelessWidget {
     late Alignment alignment;
     switch (placementMode) {
       case FlyoutPlacementMode.bottomCenter:
-        alignment = const Alignment(0.0, 0.75);
-        break;
+        alignment = const Alignment(0, 0.75);
       case FlyoutPlacementMode.bottomLeft:
         alignment = const Alignment(-0.65, 0.75);
-        break;
       case FlyoutPlacementMode.bottomRight:
         alignment = const Alignment(0.75, 0.75);
-        break;
       case FlyoutPlacementMode.topCenter:
-        alignment = const Alignment(0.0, -0.75);
-        break;
+        alignment = const Alignment(0, -0.75);
       case FlyoutPlacementMode.topLeft:
         alignment = const Alignment(-0.65, -0.75);
-        break;
       case FlyoutPlacementMode.topRight:
         alignment = const Alignment(0.75, -0.75);
-        break;
       case FlyoutPlacementMode.leftTop:
       case FlyoutPlacementMode.leftCenter:
       case FlyoutPlacementMode.leftBottom:
-        alignment = const Alignment(0.75, 0.0);
-        break;
+        alignment = const Alignment(0.75, 0);
       case FlyoutPlacementMode.rightTop:
       case FlyoutPlacementMode.rightCenter:
       case FlyoutPlacementMode.rightBottom:
-        alignment = const Alignment(-0.75, 0.0);
-        break;
+        alignment = const Alignment(-0.75, 0);
       default:
         return flyout;
     }
@@ -231,12 +251,11 @@ class TeachingTip extends StatelessWidget {
       child: ConstrainedBox(
         constraints: kTeachingTipConstraints,
         child: Acrylic(
-          elevation: 1.0,
+          elevation: 1,
           shadowColor: Colors.black,
           shape: TeachingTipBorder(
             placement: flyout.placementMode,
             borderColor: theme.resources.surfaceStrokeColorDefault,
-            arrowCrossAxisWidth: horizontalPadding,
             arrowMainAxisWidth: verticalPadding,
           ),
           child: Container(
@@ -288,9 +307,9 @@ class TeachingTip extends StatelessWidget {
                         Padding(
                           padding: const EdgeInsetsDirectional.only(
                             top: verticalPadding,
-                            end: 8.0,
+                            end: 8,
                           ),
-                          child: leading!,
+                          child: leading,
                         ),
                       Flexible(
                         child: Column(
@@ -314,7 +333,7 @@ class TeachingTip extends StatelessWidget {
                           child: Padding(
                             padding: const EdgeInsetsDirectional.only(
                               top: verticalPadding / 2,
-                              start: 4.0,
+                              start: 4,
                               end: verticalPadding / 2,
                             ),
                             child: Builder(
@@ -324,7 +343,7 @@ class TeachingTip extends StatelessWidget {
                                   child: IconButton(
                                     icon: const Icon(
                                       FluentIcons.chrome_close,
-                                      size: 12.0,
+                                      size: 12,
                                     ),
                                     onPressed: () => onClose!(context),
                                   ),
@@ -342,11 +361,11 @@ class TeachingTip extends StatelessWidget {
                   Padding(
                     padding: const EdgeInsetsDirectional.only(
                       start: horizontalPadding,
-                      top: 6.0,
+                      top: 6,
                       end: horizontalPadding,
                     ),
                     child: Row(
-                      spacing: 6.0,
+                      spacing: 6,
                       children: buttons!.map<Widget>((button) {
                         return Expanded(child: button);
                       }).toList(),
@@ -374,6 +393,12 @@ class TeachingTip extends StatelessWidget {
   }
 }
 
+/// The default teaching tip border.
+///
+/// See also:
+///
+/// * [ShapeBorder], which is the base class for this class.
+/// * [TeachingTip], which is the widget that uses this border.
 class TeachingTipBorder extends ShapeBorder {
   /// The placement of the teaching tip.
   final FlyoutPlacementMode placement;
@@ -393,6 +418,7 @@ class TeachingTipBorder extends ShapeBorder {
   /// The width of the arrow in the cross axis.
   final double arrowCrossAxisWidth;
 
+  /// Creates a border for the teaching tip.
   const TeachingTipBorder({
     required this.placement,
     required this.borderColor,
@@ -403,7 +429,8 @@ class TeachingTipBorder extends ShapeBorder {
   });
 
   @override
-  EdgeInsetsGeometry get dimensions => EdgeInsets.all(arrowMainAxisWidth);
+  EdgeInsetsGeometry get dimensions =>
+      EdgeInsetsDirectional.all(arrowMainAxisWidth);
 
   @override
   Path getOuterPath(Rect rect, {TextDirection? textDirection}) {
@@ -456,7 +483,6 @@ class TeachingTipBorder extends ShapeBorder {
           rect.top,
         );
         path.close();
-        break;
       case FlyoutPlacementMode.topCenter:
         path.moveTo(rect.left + borderRadius, rect.top);
         path.lineTo(rect.right - borderRadius, rect.top);
@@ -505,7 +531,6 @@ class TeachingTipBorder extends ShapeBorder {
           rect.top,
         );
         path.close();
-        break;
       case FlyoutPlacementMode.topRight:
         path.moveTo(rect.left + borderRadius, rect.top);
         path.lineTo(rect.right - borderRadius, rect.top);
@@ -557,7 +582,6 @@ class TeachingTipBorder extends ShapeBorder {
           rect.top,
         );
 
-        break;
       case FlyoutPlacementMode.bottomLeft:
         path.moveTo(rect.left + borderRadius, rect.top + arrowCrossAxisWidth);
         path.lineTo(rect.left + borderMargin, rect.top + arrowCrossAxisWidth);
@@ -598,7 +622,6 @@ class TeachingTipBorder extends ShapeBorder {
           rect.top + arrowCrossAxisWidth,
         );
         path.close();
-        break;
       case FlyoutPlacementMode.bottomCenter:
         path.moveTo(rect.left + borderRadius, rect.top + arrowCrossAxisWidth);
         path.lineTo(
@@ -641,7 +664,6 @@ class TeachingTipBorder extends ShapeBorder {
           rect.top + arrowCrossAxisWidth,
         );
         path.close();
-        break;
       case FlyoutPlacementMode.bottomRight:
         path.moveTo(rect.left + borderRadius, rect.top + arrowCrossAxisWidth);
         path.lineTo(
@@ -682,7 +704,6 @@ class TeachingTipBorder extends ShapeBorder {
           rect.top + arrowCrossAxisWidth,
         );
         path.close();
-        break;
       case FlyoutPlacementMode.leftTop:
         path.moveTo(rect.right - arrowCrossAxisWidth, rect.top + borderRadius);
         path.lineTo(rect.right - arrowCrossAxisWidth, rect.top + borderMargin);
@@ -726,7 +747,6 @@ class TeachingTipBorder extends ShapeBorder {
           rect.top + borderRadius,
         );
         path.close();
-        break;
       case FlyoutPlacementMode.leftCenter:
         path.moveTo(rect.right - arrowMainAxisWidth, rect.top + borderRadius);
         // create arrow
@@ -776,7 +796,6 @@ class TeachingTipBorder extends ShapeBorder {
         );
         path.close();
 
-        break;
       case FlyoutPlacementMode.leftBottom:
         path.moveTo(rect.right - arrowCrossAxisWidth, rect.top + borderRadius);
         path.lineTo(
@@ -823,7 +842,6 @@ class TeachingTipBorder extends ShapeBorder {
           rect.top + borderRadius,
         );
         path.close();
-        break;
       case FlyoutPlacementMode.rightTop:
         path.moveTo(rect.left + arrowCrossAxisWidth, rect.top + borderRadius);
         path.lineTo(rect.left + arrowCrossAxisWidth, rect.top + borderMargin);
@@ -867,7 +885,6 @@ class TeachingTipBorder extends ShapeBorder {
           rect.top + borderRadius,
         );
         path.close();
-        break;
       case FlyoutPlacementMode.rightCenter:
         path.moveTo(rect.left + arrowMainAxisWidth, rect.top + borderRadius);
         // create arrow
@@ -913,7 +930,6 @@ class TeachingTipBorder extends ShapeBorder {
           rect.top + borderRadius,
         );
         path.close();
-        break;
       case FlyoutPlacementMode.rightBottom:
         path.moveTo(rect.left + arrowCrossAxisWidth, rect.top + borderRadius);
         path.lineTo(
@@ -956,12 +972,10 @@ class TeachingTipBorder extends ShapeBorder {
           rect.top + borderRadius,
         );
         path.close();
-        break;
       case FlyoutPlacementMode.full:
         path.addRRect(
           RRect.fromRectAndRadius(rect, Radius.circular(borderRadius)),
         );
-        break;
       case FlyoutPlacementMode.auto:
         throw UnsupportedError('Auto placement is not supported');
     }

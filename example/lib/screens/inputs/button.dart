@@ -4,7 +4,7 @@ import 'package:example/widgets/page.dart';
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:url_launcher/link.dart';
 
-import '../../widgets/card_highlight.dart';
+import '../../widgets/code_snippet_card.dart';
 
 const _kSplitButtonHeight = 32.0;
 const _kSplitButtonWidth = 36.0;
@@ -32,19 +32,19 @@ class _ButtonPageState extends State<ButtonPage> with PageMixin {
   AccentColor splitButtonColor = Colors.red;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(final BuildContext context) {
     final theme = FluentTheme.of(context);
 
     final splitButtonFlyout = FlyoutContent(
-      constraints: BoxConstraints(maxWidth: 200.0),
+      constraints: BoxConstraints(maxWidth: 200),
       child: Wrap(
-        runSpacing: 10.0,
-        spacing: 8.0,
-        children: Colors.accentColors.map((color) {
+        runSpacing: 10,
+        spacing: 8,
+        children: Colors.accentColors.map((final color) {
           return IconButton(
             autofocus: splitButtonColor == color,
             style: ButtonStyle(
-              padding: WidgetStatePropertyAll(EdgeInsets.all(4.0)),
+              padding: WidgetStatePropertyAll(EdgeInsetsDirectional.all(4)),
             ),
             onPressed: () {
               setState(() => splitButtonColor = color);
@@ -70,8 +70,9 @@ class _ButtonPageState extends State<ButtonPage> with PageMixin {
         description(
           content: const Text('A button that initiates an immediate action.'),
         ),
-        CardHighlight(
-          codeSnippet: '''Button(
+        CodeSnippetCard(
+          codeSnippet: '''
+Button(
   child: const Text('Standard Button'),
   onPressed: disabled ? null : () => debugPrint('pressed button'),
 )''',
@@ -84,7 +85,7 @@ class _ButtonPageState extends State<ButtonPage> with PageMixin {
               const Spacer(),
               ToggleSwitch(
                 checked: simpleDisabled,
-                onChanged: (v) {
+                onChanged: (final v) {
                   setState(() {
                     simpleDisabled = v;
                   });
@@ -95,8 +96,9 @@ class _ButtonPageState extends State<ButtonPage> with PageMixin {
           ),
         ),
         subtitle(content: const Text('Accent Style applied to Button')),
-        CardHighlight(
-          codeSnippet: '''FilledButton(
+        CodeSnippetCard(
+          codeSnippet: '''
+FilledButton(
   child: const Text('Filled Button'),
   onPressed: disabled ? null : () => debugPrint('pressed button'),
 )''',
@@ -109,7 +111,7 @@ class _ButtonPageState extends State<ButtonPage> with PageMixin {
               const Spacer(),
               ToggleSwitch(
                 checked: filledDisabled,
-                onChanged: (v) {
+                onChanged: (final v) {
                   setState(() {
                     filledDisabled = v;
                   });
@@ -125,8 +127,9 @@ class _ButtonPageState extends State<ButtonPage> with PageMixin {
           'app, or launch a specific uniform resource identifier (URI) using a '
           'separate browser app.',
         ),
-        CardHighlight(
-          codeSnippet: '''Link( // from the url_launcher package
+        CodeSnippetCard(
+          codeSnippet: '''
+Link( // from the url_launcher package
   uri: Uri.parse('https://github.com/bdlukaa/fluent_ui')
   builder: (Context, open) {
     return HyperlinkButton(
@@ -140,7 +143,7 @@ class _ButtonPageState extends State<ButtonPage> with PageMixin {
             children: [
               Link(
                 uri: Uri.parse('https://github.com/bdlukaa/fluent_ui'),
-                builder: (context, open) {
+                builder: (final context, final open) {
                   return Align(
                     alignment: AlignmentDirectional.centerStart,
                     child: HyperlinkButton(
@@ -155,7 +158,7 @@ class _ButtonPageState extends State<ButtonPage> with PageMixin {
               ),
               ToggleSwitch(
                 checked: hyperlinkDisabled,
-                onChanged: (v) {
+                onChanged: (final v) {
                   setState(() {
                     hyperlinkDisabled = v;
                   });
@@ -168,10 +171,11 @@ class _ButtonPageState extends State<ButtonPage> with PageMixin {
         subtitle(
           content: const Text('A Button with graphical content (IconButton)'),
         ),
-        CardHighlight(
+        CodeSnippetCard(
           codeSnippet: () {
             if (iconSmall) {
-              return '''SmallIconButton(
+              return '''
+SmallIconButton(
   child: IconButton(
     icon: const WindowsIcon(WindowsIcons.graph_symbol, size: 20.0),
     onPressed: disabled ? null : () => debugPrint('pressed button'),
@@ -179,7 +183,8 @@ class _ButtonPageState extends State<ButtonPage> with PageMixin {
 )''';
             }
 
-            return '''IconButton(
+            return '''
+IconButton(
   icon: const WindowsIcon(WindowsIcons.graph_symbol, size: 24.0),
   onPressed: disabled ? null : () => debugPrint('pressed button'),
 )''';
@@ -189,7 +194,7 @@ class _ButtonPageState extends State<ButtonPage> with PageMixin {
               () {
                 final button = IconButton(
                   icon: Icon(
-                    FluentIcons.graph_symbol,
+                    WindowsIcons.app_icon_default,
                     size: iconSmall ? 20.0 : 24.0,
                   ),
                   onPressed: iconDisabled ? null : () {},
@@ -205,17 +210,17 @@ class _ButtonPageState extends State<ButtonPage> with PageMixin {
                 children: [
                   Checkbox(
                     checked: iconSmall,
-                    onChanged: (v) {
+                    onChanged: (final v) {
                       setState(() {
                         iconSmall = v ?? !iconSmall;
                       });
                     },
                     content: const Text('Small'),
                   ),
-                  const SizedBox(height: 4.0),
+                  const SizedBox(height: 4),
                   Checkbox(
                     checked: iconDisabled,
-                    onChanged: (v) {
+                    onChanged: (final v) {
                       setState(() {
                         iconDisabled = v ?? !iconDisabled;
                       });
@@ -236,13 +241,14 @@ class _ButtonPageState extends State<ButtonPage> with PageMixin {
             'typically has two states, checked (on) or unchecked (off).',
           ),
         ),
-        CardHighlight(
-          codeSnippet: '''bool checked = false;
+        CodeSnippetCard(
+          codeSnippet: '''
+bool checked = false;
 
 ToggleButton(
   child: const Text('Toggle Button'),
   checked: checked,
-  onPressed: disabled ? null : (v) => setState(() => checked = v),
+  onChanged: disabled ? null : (v) => setState(() => checked = v),
 )''',
           child: Row(
             children: [
@@ -250,7 +256,7 @@ ToggleButton(
                 checked: toggleState,
                 onChanged: toggleDisabled
                     ? null
-                    : (v) {
+                    : (final v) {
                         setState(() {
                           toggleState = v;
                         });
@@ -260,7 +266,7 @@ ToggleButton(
               const Spacer(),
               ToggleSwitch(
                 checked: toggleDisabled,
-                onChanged: (v) {
+                onChanged: (final v) {
                   setState(() {
                     toggleDisabled = v;
                   });
@@ -274,8 +280,9 @@ ToggleButton(
         const Text(
           'A control that drops down a flyout of choices from which one can be chosen',
         ),
-        CardHighlight(
-          codeSnippet: '''DropDownButton(
+        CodeSnippetCard(
+          codeSnippet: '''
+DropDownButton(
   title: Text('Email'),
   items: [
     MenuFlyoutItem(text: const Text('Send'), onPressed: () {}),
@@ -298,7 +305,7 @@ ToggleButton(
                   ),
                 ],
               ),
-              SizedBox(width: 10.0),
+              SizedBox(width: 10),
               DropDownButton(
                 title: WindowsIcon(WindowsIcons.mail),
                 items: [
@@ -330,7 +337,7 @@ ToggleButton(
             'a flyout.',
           ),
         ),
-        CardHighlight(
+        CodeSnippetCard(
           codeSnippet:
               '''final splitButtonKey = GlobalKey<SplitButtonState>();
 
@@ -360,7 +367,7 @@ SplitButton(
           autofocus: splitButtonColor == color,
           style: ButtonStyle(
             padding: WidgetStatePropertyAll(
-              EdgeInsets.all(4.0),
+              EdgeInsetsDirectional.all(4.0),
             ),
           ),
           onPressed: () {
@@ -379,7 +386,7 @@ SplitButton(
 )
 
 // Show the flyout programmatically
-splitButtonKey.currentState?.showFlyout();
+splitButtonKey.currentState?.showFlyout<void>();
 ''',
           child: Row(
             children: [
@@ -387,7 +394,7 @@ splitButtonKey.currentState?.showFlyout();
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Padding(
-                    padding: const EdgeInsets.only(bottom: 4.0),
+                    padding: const EdgeInsetsDirectional.only(bottom: 4),
                     child: Text(
                       'SplitButton with custom content',
                       style: theme.typography.caption,
@@ -404,7 +411,7 @@ splitButtonKey.currentState?.showFlyout();
                               )
                             : splitButtonColor,
                         borderRadius: const BorderRadiusDirectional.horizontal(
-                          start: Radius.circular(4.0),
+                          start: Radius.circular(4),
                         ),
                       ),
                       height: _kSplitButtonHeight,
@@ -412,7 +419,10 @@ splitButtonKey.currentState?.showFlyout();
                     ),
                   ),
                   Padding(
-                    padding: const EdgeInsets.only(bottom: 4.0, top: 8.0),
+                    padding: const EdgeInsetsDirectional.only(
+                      bottom: 4,
+                      top: 8,
+                    ),
                     child: Text(
                       'A toggleable SplitButton with text content',
                       style: theme.typography.caption,
@@ -427,7 +437,7 @@ splitButtonKey.currentState?.showFlyout();
                     },
                     flyout: splitButtonFlyout,
                     child: Padding(
-                      padding: const EdgeInsets.all(8.0),
+                      padding: const EdgeInsetsDirectional.all(8),
                       child: Text('Choose color'),
                     ),
                   ),
@@ -436,7 +446,7 @@ splitButtonKey.currentState?.showFlyout();
               const Spacer(),
               ToggleSwitch(
                 checked: splitButtonDisabled,
-                onChanged: (v) {
+                onChanged: (final v) {
                   setState(() {
                     splitButtonDisabled = v;
                   });
@@ -455,8 +465,9 @@ splitButtonKey.currentState?.showFlyout();
             'represented by one radio button in the group.',
           ),
         ),
-        CardHighlight(
-          codeSnippet: '''int? selected;
+        CodeSnippetCard(
+          codeSnippet: '''
+int? selected;
 
 Column(
   children: List.generate(3, (index) {
@@ -474,7 +485,7 @@ Column(
             children: [
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
-                children: List.generate(3, (index) {
+                children: List.generate(3, (final index) {
                   return Padding(
                     padding: EdgeInsetsDirectional.only(
                       bottom: index == 2 ? 0.0 : 14.0,
@@ -483,7 +494,7 @@ Column(
                       checked: radioButtonSelected == index,
                       onChanged: radioButtonDisabled
                           ? null
-                          : (v) {
+                          : (final v) {
                               if (v) {
                                 setState(() {
                                   radioButtonSelected = index;
@@ -498,7 +509,7 @@ Column(
               const Spacer(),
               ToggleSwitch(
                 checked: radioButtonDisabled,
-                onChanged: (v) {
+                onChanged: (final v) {
                   setState(() {
                     radioButtonDisabled = v;
                   });

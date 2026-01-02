@@ -3,6 +3,43 @@ import 'dart:ui' show lerpDouble;
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter/foundation.dart';
 
+/// A thin line used to separate content into groups.
+///
+/// Dividers help organize content and establish visual hierarchy by creating
+/// clear boundaries between sections or items.
+///
+/// {@tool snippet}
+/// This example shows a horizontal divider between text:
+///
+/// ```dart
+/// Column(
+///   children: [
+///     Text('Section 1'),
+///     Divider(),
+///     Text('Section 2'),
+///   ],
+/// )
+/// ```
+/// {@end-tool}
+///
+/// {@tool snippet}
+/// This example shows a vertical divider in a row:
+///
+/// ```dart
+/// Row(
+///   children: [
+///     Text('Left'),
+///     Divider(direction: Axis.vertical, size: 20),
+///     Text('Right'),
+///   ],
+/// )
+/// ```
+/// {@end-tool}
+///
+/// See also:
+///
+///  * [DividerTheme], for customizing divider appearance
+///  * <https://learn.microsoft.com/en-us/windows/apps/design/controls/separator>
 class Divider extends StatelessWidget {
   /// Creates a divider.
   const Divider({
@@ -12,9 +49,10 @@ class Divider extends StatelessWidget {
     this.size,
   });
 
-  /// The current direction of the slider.
+  /// The direction of the divider.
   ///
-  /// Uses [Axis.horizontal] by default
+  /// Use [Axis.horizontal] for a line that spans horizontally (default).
+  /// Use [Axis.vertical] for a line that spans vertically.
   final Axis direction;
 
   /// The `style` of the divider. It's mescled with [FluentThemeData.dividerTheme]
@@ -62,39 +100,35 @@ class Divider extends StatelessWidget {
 /// Values specified here are used for [Divider] properties that are not
 /// given an explicit non-null value.
 class DividerTheme extends InheritedTheme {
-  /// Creates a divider theme that controls the configurations for
-  /// [Divider].
-  const DividerTheme({super.key, required this.data, required super.child});
+  /// Creates a theme that controls how descendant [Divider]s should look like.
+  const DividerTheme({required this.data, required super.child, super.key});
 
   /// The properties for descendant [Divider] widgets.
   final DividerThemeData data;
 
-  /// Creates a button theme that controls how descendant [Divider]s should
-  /// look like, and merges in the current toggle button theme, if any.
+  /// Creates a theme that merges the nearest [DividerTheme] with [data].
   static Widget merge({
-    Key? key,
     required DividerThemeData data,
     required Widget child,
+    Key? key,
   }) {
     return Builder(
-      builder: (BuildContext context) {
+      builder: (context) {
         return DividerTheme(
           key: key,
-          data: _getInheritedThemeData(context).merge(data),
+          data: DividerTheme.of(context).merge(data),
           child: child,
         );
       },
     );
   }
 
-  static DividerThemeData _getInheritedThemeData(BuildContext context) {
-    final theme = context.dependOnInheritedWidgetOfExactType<DividerTheme>();
-    return theme?.data ?? FluentTheme.of(context).dividerTheme;
-  }
-
-  /// Returns the [data] from the closest [DividerTheme] ancestor. If there is
-  /// no ancestor, it returns [FluentThemeData.dividerTheme]. Applications can assume
-  /// that the returned value will not be null.
+  /// Returns the closest [DividerThemeData] which encloses the given context.
+  ///
+  /// Resolution order:
+  /// 1. Defaults from [DividerThemeData.standard]
+  /// 2. Global theme from [FluentThemeData.dividerTheme]
+  /// 3. Local [DividerTheme] ancestor
   ///
   /// Typical usage is as follows:
   ///
@@ -102,9 +136,13 @@ class DividerTheme extends InheritedTheme {
   /// DividerThemeData theme = DividerTheme.of(context);
   /// ```
   static DividerThemeData of(BuildContext context) {
+    assert(debugCheckHasFluentTheme(context));
+    final theme = FluentTheme.of(context);
+    final inheritedTheme = context
+        .dependOnInheritedWidgetOfExactType<DividerTheme>();
     return DividerThemeData.standard(
-      FluentTheme.of(context),
-    ).merge(_getInheritedThemeData(context));
+      theme,
+    ).merge(theme.dividerTheme).merge(inheritedTheme?.data);
   }
 
   @override
@@ -117,6 +155,7 @@ class DividerTheme extends InheritedTheme {
 }
 
 @immutable
+/// Theme data for [Divider] widgets.
 class DividerThemeData with Diagnosticable {
   /// The thickness of the style.
   ///
@@ -135,6 +174,7 @@ class DividerThemeData with Diagnosticable {
   /// The horizontal margin of the style.
   final EdgeInsetsGeometry? horizontalMargin;
 
+  /// Creates a divider theme data.
   const DividerThemeData({
     this.thickness,
     this.decoration,
@@ -142,17 +182,21 @@ class DividerThemeData with Diagnosticable {
     this.horizontalMargin,
   });
 
+  /// Creates the standard [DividerThemeData] based on the given [theme].
   factory DividerThemeData.standard(FluentThemeData theme) {
     return DividerThemeData(
       thickness: 1,
-      horizontalMargin: const EdgeInsets.symmetric(horizontal: 10),
-      verticalMargin: const EdgeInsets.symmetric(vertical: 10),
+      horizontalMargin: const EdgeInsetsDirectional.symmetric(horizontal: 10),
+      verticalMargin: const EdgeInsetsDirectional.symmetric(vertical: 10),
       decoration: BoxDecoration(
         color: theme.resources.dividerStrokeColorDefault,
       ),
     );
   }
 
+  /// Linearly interpolates between two [DividerThemeData] objects.
+  ///
+  /// {@macro fluent_ui.lerp.t}
   static DividerThemeData lerp(
     DividerThemeData? a,
     DividerThemeData? b,
@@ -174,6 +218,8 @@ class DividerThemeData with Diagnosticable {
     );
   }
 
+  /// Merges this [DividerThemeData] with another, with the other taking
+  /// precedence.
   DividerThemeData merge(DividerThemeData? style) {
     if (style == null) return this;
     return DividerThemeData(

@@ -3,26 +3,35 @@ import 'package:flutter/gestures.dart';
 
 /// A specialized kind of [SingleChildScrollView] that only scrolls
 /// horizontally, and allows the mouse wheel to control scrolling.
+///
 /// If vertical scrolling is indeed necessary, can set [scrollDirection]
 /// to [Axis.vertical] also.
+///
+/// See also:
+///
+///   * [SingleChildScrollView], the base class for this widget.
 class HorizontalScrollView extends StatefulWidget {
+  /// A widget that scrolls its child.
+  ///
+  /// {@macro flutter.widgets.ProxyWidget.child}
   final Widget child;
+
+  /// {@macro flutter.widgets.scrollable.physics}
   final ScrollPhysics? scrollPhysics;
 
-  /// Whether or not the mouse wheel can be used to scroll
-  /// horizontally. On desktop platforms under a default Flutter
-  /// configuration, this may be the only way to scroll horizontally
-  /// unless the user has a trackpad.
+  /// Whether or not the mouse wheel can be used to scroll horizontally.
+  ///
+  /// On desktop platforms under a default Flutter configuration, this may be
+  /// the only way to scroll horizontally unless the user has a trackpad.
   final bool mouseWheelScrolls;
 
-  /// The default is [Axis.horizontal], just like the file name.
-  /// However, as the demand develops, expanding this attribute
-  /// that does not match the file name.
+  /// The default is [Axis.horizontal].
   final Axis scrollDirection;
 
+  /// Creates a horizontal scroll view.
   const HorizontalScrollView({
-    super.key,
     required this.child,
+    super.key,
     this.scrollPhysics,
     this.mouseWheelScrolls = true,
     this.scrollDirection = Axis.horizontal,

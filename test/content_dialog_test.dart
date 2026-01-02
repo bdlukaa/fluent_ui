@@ -40,7 +40,7 @@ void main() {
   });
 
   testWidgets('ContentDialog actions work and dialog closes', (tester) async {
-    bool pressed = false;
+    var pressed = false;
     await tester.pumpWidget(
       wrapApp(
         child: Builder(
@@ -117,10 +117,10 @@ void main() {
 
   testWidgets('ContentDialog uses custom style', (tester) async {
     const customStyle = ContentDialogThemeData(
-      padding: EdgeInsets.all(10),
-      titlePadding: EdgeInsets.all(20),
-      bodyPadding: EdgeInsets.all(30),
-      actionsPadding: EdgeInsets.all(40),
+      padding: EdgeInsetsDirectional.all(10),
+      titlePadding: EdgeInsetsDirectional.all(20),
+      bodyPadding: EdgeInsetsDirectional.all(30),
+      actionsPadding: EdgeInsetsDirectional.all(40),
       titleStyle: TextStyle(fontSize: 30),
     );
     await tester.pumpWidget(
@@ -165,9 +165,9 @@ void main() {
           .ancestor(of: find.byType(Button), matching: find.byType(Padding))
           .first,
     );
-    expect(bodyPadding.padding, const EdgeInsets.all(30));
-    expect(actionsPadding.padding, const EdgeInsets.all(40));
-    expect(titlePadding.padding, const EdgeInsets.all(20));
+    expect(bodyPadding.padding, const EdgeInsetsDirectional.all(30));
+    expect(actionsPadding.padding, const EdgeInsetsDirectional.all(40));
+    expect(titlePadding.padding, const EdgeInsetsDirectional.all(20));
 
     final text = tester.widget<DefaultTextStyle>(
       find

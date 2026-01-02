@@ -4,18 +4,16 @@ import 'package:flutter_test/flutter_test.dart';
 import 'app_test.dart';
 
 void main() {
-  testWidgets('ToggleButton change state accordingly', (
-    WidgetTester tester,
-  ) async {
+  testWidgets('ToggleButton change state accordingly', (tester) async {
     var toggleButtonValue = false;
 
     await tester.pumpWidget(
       StatefulBuilder(
-        builder: (BuildContext context, StateSetter setState) {
+        builder: (context, setState) {
           return wrapApp(
             child: ToggleButton(
               checked: toggleButtonValue,
-              onChanged: (bool value) {
+              onChanged: (value) {
                 setState(() {
                   toggleButtonValue = value;
                 });

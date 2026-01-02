@@ -31,7 +31,7 @@ dependencies:
   recase: ^4.1.0
 
   # Used on NumberBox
-  math_expressions: ^2.7.0
+  math_expressions: ^3.1.0
 
 dev_dependencies:
   flutter_test:
@@ -40,7 +40,6 @@ dev_dependencies:
   intl_utils: ^2.8.11
 
 flutter:
-  generate: true
   uses-material-design: true
   assets:
     - assets/AcrylicNoise.png

@@ -1,4 +1,4 @@
-import 'package:example/widgets/card_highlight.dart';
+import 'package:example/widgets/code_snippet_card.dart';
 import 'package:example/widgets/page.dart';
 import 'package:fluent_ui/fluent_ui.dart';
 
@@ -17,7 +17,7 @@ class _TimePickerPageState extends State<TimePickerPage> with PageMixin {
   final timePickerKey = GlobalKey<TimePickerState>();
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(final BuildContext context) {
     return ScaffoldPage.scrollable(
       header: PageHeader(
         title: const Text('TimePicker'),
@@ -36,11 +36,12 @@ class _TimePickerPageState extends State<TimePickerPage> with PageMixin {
           'The entry point displays the chosen time, and when the user selects '
           'the entry point, a picker surface expands vertically from the middle '
           'for the user to make a selection. The time picker overlays other UI; '
-          'it doesn\'t push other UI out of the way.',
+          "it doesn't push other UI out of the way.",
         ),
         subtitle(content: const Text('A simple TimePicker')),
-        CardHighlight(
-          codeSnippet: '''DateTime? selected;
+        CodeSnippetCard(
+          codeSnippet: '''
+DateTime? selected;
 
 TimePicker(
   selected: selected,
@@ -51,7 +52,7 @@ TimePicker(
               TimePicker(
                 key: timePickerKey,
                 selected: simpleTime,
-                onChanged: (time) => setState(() => simpleTime = time),
+                onChanged: (final time) => setState(() => simpleTime = time),
               ),
               const Spacer(),
               Button(
@@ -66,8 +67,9 @@ TimePicker(
             'A TimePicker with a header and minute increments specified',
           ),
         ),
-        CardHighlight(
-          codeSnippet: '''DateTime? selected;
+        CodeSnippetCard(
+          codeSnippet: '''
+DateTime? selected;
         
 TimePicker(
   selected: selected,
@@ -80,15 +82,16 @@ TimePicker(
               TimePicker(
                 header: 'Arrival time',
                 selected: arrivalTime,
-                onChanged: (time) => setState(() => arrivalTime = time),
+                onChanged: (final time) => setState(() => arrivalTime = time),
                 minuteIncrement: 15,
               ),
             ],
           ),
         ),
         subtitle(content: const Text('A TimePicker using a 24-hour clock')),
-        CardHighlight(
-          codeSnippet: '''DateTime? selected;
+        CodeSnippetCard(
+          codeSnippet: '''
+DateTime? selected;
         
 TimePicker(
   selected: selected,
@@ -101,7 +104,7 @@ TimePicker(
             child: TimePicker(
               header: '24 hour clock',
               selected: hhTime,
-              onChanged: (v) => setState(() => hhTime = v),
+              onChanged: (final v) => setState(() => hhTime = v),
               hourFormat: HourFormat.HH,
             ),
           ),

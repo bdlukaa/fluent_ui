@@ -1,5 +1,5 @@
 import 'package:example/theme.dart';
-import 'package:example/widgets/card_highlight.dart';
+import 'package:example/widgets/code_snippet_card.dart';
 import 'package:example/widgets/page.dart';
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:provider/provider.dart';
@@ -38,9 +38,9 @@ class _TeachingTipPageState extends State<TeachingTipPage> with PageMixin {
     'Left Center': FlyoutPlacementMode.leftCenter,
     'Left Bottom': FlyoutPlacementMode.leftBottom,
   };
-  var alignment = 'Bottom center';
-  var placement = 'Top center';
-  var showMediaContent = false;
+  String alignment = 'Bottom center';
+  String placement = 'Top center';
+  bool showMediaContent = false;
 
   @override
   void dispose() {
@@ -50,7 +50,7 @@ class _TeachingTipPageState extends State<TeachingTipPage> with PageMixin {
   }
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(final BuildContext context) {
     final theme = FluentTheme.of(context);
     final appTheme = context.watch<AppTheme>();
 
@@ -68,7 +68,7 @@ class _TeachingTipPageState extends State<TeachingTipPage> with PageMixin {
         subtitle(
           content: const Text('Show a non-targeted TeachingTip with buttons.'),
         ),
-        CardHighlight(
+        CodeSnippetCard(
           codeSnippet:
               '''final flyoutController = FlyoutController();
 
@@ -95,16 +95,16 @@ showTeachingTip(
         Button(
           child: const Text('Toggle theme now'),
           onPressed: () {
-            if (theme.brightness.isDark) {
+            if (theme.brightness == Brightness.dark) {
               appTheme.mode = ThemeMode.light;
             } else {
               appTheme.mode = ThemeMode.dark;
             }
-            flyoutController.close();
+            flyoutController.close<void>();
           },
         ),
         Button(
-          onPressed: () => flyoutController.close(),
+          onPressed: () => flyoutController.close<void>(),
           child: const Text('Got it'),
         ),
       ],
@@ -122,25 +122,25 @@ showTeachingTip(
                     showTeachingTip(
                       flyoutController: nonTargetedController,
                       nonTargetedAlignment: alignments[alignment],
-                      builder: (context) => TeachingTip(
+                      builder: (final context) => TeachingTip(
                         title: const Text('Change themes without hassle'),
                         subtitle: const Text(
-                          'It\'s easier to see control samples in both light and dark theme',
+                          "It's easier to see control samples in both light and dark theme",
                         ),
                         buttons: [
                           Button(
                             child: const Text('Toggle theme now'),
                             onPressed: () {
-                              if (theme.brightness.isDark) {
+                              if (theme.brightness == Brightness.dark) {
                                 appTheme.mode = ThemeMode.light;
                               } else {
                                 appTheme.mode = ThemeMode.dark;
                               }
-                              nonTargetedController.close();
+                              nonTargetedController.close<void>();
                             },
                           ),
                           Button(
-                            onPressed: () => nonTargetedController.close(),
+                            onPressed: nonTargetedController.close,
                             child: const Text('Got it'),
                           ),
                         ],
@@ -149,12 +149,12 @@ showTeachingTip(
                   },
                 ),
               ),
-              const SizedBox(width: 18.0),
+              const SizedBox(width: 18),
               SizedBox(
-                width: 150.0,
+                width: 150,
                 child: ComboBox<String>(
                   placeholder: const Text('Alignment'),
-                  items: List.generate(alignments.length, (index) {
+                  items: List.generate(alignments.length, (final index) {
                     final entry = alignments.entries.elementAt(index);
 
                     return ComboBoxItem(
@@ -163,7 +163,7 @@ showTeachingTip(
                     );
                   }),
                   value: alignment,
-                  onChanged: (a) {
+                  onChanged: (final a) {
                     if (a != null) setState(() => alignment = a);
                   },
                 ),
@@ -172,7 +172,7 @@ showTeachingTip(
           ),
         ),
         subtitle(content: const Text('Show a targeted TeachingTip.')),
-        CardHighlight(
+        CodeSnippetCard(
           codeSnippet:
               '''final flyoutController = FlyoutController();
 
@@ -192,7 +192,8 @@ showTeachingTip(
     return TeachingTip(
       leading: const WindowsIcon(WindowsIcons.refresh),
       title: const Text('This is the title'),
-      subtitle: const Text('And this is the subtitle'),${showMediaContent ? '''\n      mediaContent: SizedBox(
+      subtitle: const Text('And this is the subtitle'),${showMediaContent ? '''
+\n      mediaContent: SizedBox(
         width: double.infinity,
         child: ColoredBox(
           color: Colors.blue.defaultBrushFor(theme.brightness),
@@ -222,13 +223,13 @@ showTeachingTip(
               IntrinsicWidth(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.end,
-                  spacing: 8.0,
+                  spacing: 8,
                   children: [
                     InfoLabel(
                       label: 'Placement',
                       child: ComboBox<String>(
                         placeholder: const Text('Placement'),
-                        items: List.generate(placements.length, (index) {
+                        items: List.generate(placements.length, (final index) {
                           final entry = placements.entries.elementAt(index);
 
                           return ComboBoxItem(
@@ -237,7 +238,7 @@ showTeachingTip(
                           );
                         }),
                         value: placement,
-                        onChanged: (a) {
+                        onChanged: (final a) {
                           if (a != null) setState(() => placement = a);
                         },
                         isExpanded: true,
@@ -245,7 +246,7 @@ showTeachingTip(
                     ),
                     Checkbox(
                       checked: showMediaContent,
-                      onChanged: (v) {
+                      onChanged: (final v) {
                         if (v != null) setState(() => showMediaContent = v);
                       },
                       content: const Text('Show media content'),
@@ -259,7 +260,7 @@ showTeachingTip(
                           showTeachingTip(
                             flyoutController: targetedController,
                             placementMode: placements[placement]!,
-                            builder: (context) {
+                            builder: (final context) {
                               return TeachingTip(
                                 leading: const WindowsIcon(
                                   WindowsIcons.refresh,

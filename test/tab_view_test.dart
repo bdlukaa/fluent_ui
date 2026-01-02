@@ -47,12 +47,12 @@ void main() {
   testWidgets('TabView calls onNewPressed when add button is tapped', (
     tester,
   ) async {
-    bool pressed = false;
+    var pressed = false;
     final tabs = [Tab(text: const Text('Tab 1'), body: const Text('Body 1'))];
     await tester.pumpWidget(
       wrapApp(
         child: TabView(
-          addIconData: FluentIcons.add,
+          newTabIcon: const Icon(FluentIcons.add),
           currentIndex: 0,
           tabs: tabs,
           onNewPressed: () {
@@ -85,7 +85,7 @@ void main() {
   testWidgets('TabView calls onClosed when close button is tapped', (
     tester,
   ) async {
-    bool closed = false;
+    var closed = false;
     final tabs = [
       Tab(
         text: const Text('Tab 1'),
@@ -110,7 +110,7 @@ void main() {
   testWidgets('TabView disables shortcuts when shortcutsEnabled is false', (
     tester,
   ) async {
-    bool pressed = false;
+    var pressed = false;
     final tabs = [Tab(text: const Text('Tab 1'), body: const Text('Body 1'))];
     await tester.pumpWidget(
       wrapApp(

@@ -1,7 +1,7 @@
 import 'package:example/widgets/page.dart';
 import 'package:fluent_ui/fluent_ui.dart';
 
-import '../../widgets/card_highlight.dart';
+import '../../widgets/code_snippet_card.dart';
 
 class ExpanderPage extends StatefulWidget {
   const ExpanderPage({super.key});
@@ -21,7 +21,7 @@ class _ExpanderPageState extends State<ExpanderPage> with PageMixin {
   bool checked = false;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(final BuildContext context) {
     final open = expanderKey.currentState?.isExpanded ?? false;
     return ScaffoldPage.scrollable(
       header: const PageHeader(title: Text('Expander')),
@@ -29,7 +29,7 @@ class _ExpanderPageState extends State<ExpanderPage> with PageMixin {
         description(
           content: const Text(
             'The Expander control lets you show or hide less important content '
-            'that\'s related to a piece of primary content that\'s always visible. '
+            "that's related to a piece of primary content that's always visible. "
             'Items contained in the Header are always visible. The user can expand '
             'and collapse the Content area, where secondary content is displayed, '
             'by interacting with the header. When the content area is expanded, it '
@@ -42,7 +42,7 @@ class _ExpanderPageState extends State<ExpanderPage> with PageMixin {
             'but related secondary content may be hidden until needed. This UI is '
             'commonly used when display space is limited and when information or '
             'options can be grouped together. Hiding the secondary content until '
-            'it\'s needed can also help to focus the user on the most important '
+            "it's needed can also help to focus the user on the most important "
             'parts of your app.',
           ),
         ),
@@ -52,8 +52,9 @@ class _ExpanderPageState extends State<ExpanderPage> with PageMixin {
             'In this example, the trailing vanishes when the expander is open.',
           ),
         ),
-        CardHighlight(
-          codeSnippet: '''Expander(
+        CodeSnippetCard(
+          codeSnippet: '''
+Expander(
   leading: RadioButton(
     checked: checked,
     onChanged: (v) => setState(() => checked = v),
@@ -63,7 +64,7 @@ class _ExpanderPageState extends State<ExpanderPage> with PageMixin {
 )''',
           child: Expander(
             header: const Text('Choose your crost'),
-            onStateChanged: (open) => setState(() => crostOpen = open),
+            onStateChanged: (final open) => setState(() => crostOpen = open),
             trailing: crostOpen
                 ? null
                 : Text(
@@ -77,13 +78,11 @@ class _ExpanderPageState extends State<ExpanderPage> with PageMixin {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: crosts
                       .map(
-                        (e) => Padding(
-                          padding: const EdgeInsetsDirectional.only(
-                            bottom: 8.0,
-                          ),
+                        (final e) => Padding(
+                          padding: const EdgeInsetsDirectional.only(bottom: 8),
                           child: RadioButton(
                             checked: crost == e,
-                            onChanged: (selected) {
+                            onChanged: (final selected) {
                               if (selected) setState(() => crost = e);
                             },
                             content: Text(e),
@@ -92,18 +91,16 @@ class _ExpanderPageState extends State<ExpanderPage> with PageMixin {
                       )
                       .toList(),
                 ),
-                const SizedBox(width: 12.0),
+                const SizedBox(width: 12),
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: sizes
                       .map(
-                        (e) => Padding(
-                          padding: const EdgeInsetsDirectional.only(
-                            bottom: 8.0,
-                          ),
+                        (final e) => Padding(
+                          padding: const EdgeInsetsDirectional.only(bottom: 8),
                           child: RadioButton(
                             checked: size == e,
-                            onChanged: (selected) {
+                            onChanged: (final selected) {
                               if (selected) setState(() => size = e);
                             },
                             content: Text(e),
@@ -117,8 +114,9 @@ class _ExpanderPageState extends State<ExpanderPage> with PageMixin {
           ),
         ),
         subtitle(content: const Text('Scrollable content')),
-        CardHighlight(
-          codeSnippet: '''Expander(
+        CodeSnippetCard(
+          codeSnippet: '''
+Expander(
   header: Text('Open to see the scrollable text'),
   content: SizedBox(
     height: 300,
@@ -133,7 +131,8 @@ class _ExpanderPageState extends State<ExpanderPage> with PageMixin {
               height: 300,
               child: SingleChildScrollView(
                 child: SelectableText(
-                  '''Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis porta lectus lacus, ut viverra ex aliquet at. Sed ac tempus magna. Ut velit diam, condimentum ac bibendum sit amet, aliquam at quam. Mauris bibendum, elit ut mollis molestie, neque risus lacinia libero, id fringilla lacus odio a nisl. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia curae; Aliquam viverra tincidunt diam, id porta justo iaculis ac. Aenean ornare bibendum rutrum. Aenean dignissim egestas augue id elementum. Suspendisse dapibus, felis nec varius porta, purus turpis sodales est, sit amet consectetur velit turpis in orci. Curabitur sed tortor purus. Donec ut ligula tortor. Quisque ac nulla dui. Praesent sed diam id dui pharetra facilisis. Maecenas lacinia augue eu metus luctus, vitae efficitur ex accumsan. Sed viverra tellus quis ex tempus, sit amet aliquam mauris hendrerit. Proin tempus nisl mauris, eget ultricies ligula aliquet id.
+                  '''
+Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis porta lectus lacus, ut viverra ex aliquet at. Sed ac tempus magna. Ut velit diam, condimentum ac bibendum sit amet, aliquam at quam. Mauris bibendum, elit ut mollis molestie, neque risus lacinia libero, id fringilla lacus odio a nisl. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia curae; Aliquam viverra tincidunt diam, id porta justo iaculis ac. Aenean ornare bibendum rutrum. Aenean dignissim egestas augue id elementum. Suspendisse dapibus, felis nec varius porta, purus turpis sodales est, sit amet consectetur velit turpis in orci. Curabitur sed tortor purus. Donec ut ligula tortor. Quisque ac nulla dui. Praesent sed diam id dui pharetra facilisis. Maecenas lacinia augue eu metus luctus, vitae efficitur ex accumsan. Sed viverra tellus quis ex tempus, sit amet aliquam mauris hendrerit. Proin tempus nisl mauris, eget ultricies ligula aliquet id.
 
 Fusce molestie quis augue vel eleifend. Praesent ligula velit, porta id diam sed, malesuada molestie odio. Proin egestas nisl vel leo accumsan, vel ullamcorper ipsum dapibus. Curabitur libero augue, porttitor dictum mauris ut, dignissim blandit lacus. Suspendisse lacinia augue elit, sit amet auctor eros pretium sit amet. Proin ullamcorper augue nulla, sit amet rhoncus nisl gravida ac. Aenean auctor ligula in nibh fermentum fermentum. Aliquam erat volutpat. Sed molestie vulputate diam, id rhoncus augue mattis vitae. Ut tempus tempus dui, in imperdiet elit tincidunt id. Integer congue urna eu nisl bibendum accumsan. Aliquam commodo tempor turpis sit amet suscipit.
 
@@ -149,7 +148,7 @@ Fusce nunc neque, imperdiet id justo non, porttitor finibus massa. Ut quis risus
           ),
         ),
         subtitle(content: const Text('Expander opened programatically')),
-        CardHighlight(
+        CodeSnippetCard(
           codeSnippet:
               '''final expanderKey = GlobalKey<ExpanderState>(debugLabel: 'Expander key');
 
@@ -178,13 +177,13 @@ void toggle() {
                   key: expanderKey,
                   header: const Text('This text is in header'),
                   content: const Text('This text is in content'),
-                  onStateChanged: (open) => setState(() {}),
+                  onStateChanged: (final open) => setState(() {}),
                 ),
               ),
               const SizedBox(width: 20),
               ToggleSwitch(
                 checked: open,
-                onChanged: (v) {
+                onChanged: (final v) {
                   setState(() {
                     expanderKey.currentState?.isExpanded = v;
                   });

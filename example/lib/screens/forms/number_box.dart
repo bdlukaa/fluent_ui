@@ -1,6 +1,7 @@
-import 'package:example/widgets/card_highlight.dart';
+import 'package:example/widgets/code_snippet_card.dart';
 import 'package:example/widgets/page.dart';
 import 'package:fluent_ui/fluent_ui.dart';
+import 'package:intl/intl.dart';
 
 class NumberBoxPage extends StatefulWidget {
   const NumberBoxPage({super.key});
@@ -12,40 +13,49 @@ class NumberBoxPage extends StatefulWidget {
 class _NumberBoxPageState extends State<NumberBoxPage> with PageMixin {
   String? selectedColor = 'Green';
   String? selectedCat;
-  double fontSize = 20.0;
+  double fontSize = 20;
   bool disabled = false;
   final comboboxKey = GlobalKey<ComboBoxState>(debugLabel: 'Combobox Key');
 
   int? numberBoxValue = 0;
   int? numberBoxValueMinMax = 0;
   double? numberBoxValueDouble = 0;
+  double? numberBoxValueCurrency = 1234.56;
 
-  void _valueChanged(int? newValue) {
+  final currencyFormat = NumberFormat.currency(symbol: r'$');
+
+  void _valueChanged(final int? newValue) {
     setState(() {
       numberBoxValue = newValue;
     });
   }
 
-  void _valueChangedMinMax(int? newValue) {
+  void _valueChangedMinMax(final int? newValue) {
     setState(() {
       numberBoxValueMinMax = newValue;
     });
   }
 
-  void _valueChangedDouble(double? newValue) {
+  void _valueChangedDouble(final double? newValue) {
     setState(() {
       numberBoxValueDouble = newValue;
     });
   }
 
+  void _valueChangedCurrency(final double? newValue) {
+    setState(() {
+      numberBoxValueCurrency = newValue;
+    });
+  }
+
   @override
-  Widget build(BuildContext context) {
+  Widget build(final BuildContext context) {
     return ScaffoldPage.scrollable(
       header: PageHeader(
         title: const Text('NumberBox'),
         commandBar: ToggleSwitch(
           checked: disabled,
-          onChanged: (v) {
+          onChanged: (final v) {
             setState(() => disabled = v);
           },
           content: const Text('Disabled'),
@@ -57,8 +67,9 @@ class _NumberBoxPageState extends State<NumberBoxPage> with PageMixin {
           'The selection can be applied in compact or in inline mode.',
         ),
         subtitle(content: const Text('A NumberBox in inline mode')),
-        CardHighlight(
-          codeSnippet: '''NumberBox(
+        CodeSnippetCard(
+          codeSnippet: '''
+NumberBox(
   value: numberBoxValue,
   onChanged: _valueChanged,
   mode: SpinButtonPlacementMode.inline,
@@ -76,8 +87,9 @@ class _NumberBoxPageState extends State<NumberBoxPage> with PageMixin {
           ),
         ),
         subtitle(content: const Text('A NumberBox in compact mode')),
-        CardHighlight(
-          codeSnippet: '''NumberBox(
+        CodeSnippetCard(
+          codeSnippet: '''
+NumberBox(
   value: numberBoxValue,
   onChanged: disabled ? null : _valueChanged,
   mode: SpinButtonPlacementMode.compact,
@@ -89,14 +101,14 @@ class _NumberBoxPageState extends State<NumberBoxPage> with PageMixin {
               NumberBox(
                 value: numberBoxValue,
                 onChanged: disabled ? null : _valueChanged,
-                mode: SpinButtonPlacementMode.compact,
               ),
             ],
           ),
         ),
         subtitle(content: const Text('A NumberBox in none mode')),
-        CardHighlight(
-          codeSnippet: '''NumberBox(
+        CodeSnippetCard(
+          codeSnippet: '''
+NumberBox(
   value: numberBoxValue,
   onChanged: disabled ? null : _valueChanged,
   mode: SpinButtonPlacementMode.none,
@@ -118,8 +130,9 @@ class _NumberBoxPageState extends State<NumberBoxPage> with PageMixin {
             'A NumberBox with a min (0) and a max (20) value',
           ),
         ),
-        CardHighlight(
-          codeSnippet: '''NumberBox(
+        CodeSnippetCard(
+          codeSnippet: '''
+NumberBox(
   value: numberBoxValueMinMax,
   min: 0,
   max: 20,
@@ -141,8 +154,9 @@ class _NumberBoxPageState extends State<NumberBoxPage> with PageMixin {
           ),
         ),
         subtitle(content: const Text('A NumberBox mathematical expressions')),
-        CardHighlight(
-          codeSnippet: '''NumberBox(
+        CodeSnippetCard(
+          codeSnippet: '''
+NumberBox(
   value: numberBoxValueMinMax,
   onChanged: disabled ? null : _valueChangedMinMax,
   allowExpressions: true,
@@ -162,8 +176,9 @@ class _NumberBoxPageState extends State<NumberBoxPage> with PageMixin {
           ),
         ),
         subtitle(content: const Text('A NumberBox with double value')),
-        CardHighlight(
-          codeSnippet: '''NumberBox(
+        CodeSnippetCard(
+          codeSnippet: '''
+NumberBox(
   value: numberBoxValueDouble,
   onChanged: disabled ? null : _valueChangedDouble,
   smallChange: 0.1,
@@ -182,9 +197,59 @@ class _NumberBoxPageState extends State<NumberBoxPage> with PageMixin {
             ],
           ),
         ),
+        subtitle(
+          content: const Text('A NumberBox with custom format and parse'),
+        ),
+        description(
+          content: const Text(
+            'Use the format and parse parameters to display and input '
+            'values with custom formatting, such as currency.',
+          ),
+        ),
+        CodeSnippetCard(
+          codeSnippet: r'''
+import 'package:intl/intl.dart';
+
+final currencyFormat = NumberFormat.currency(symbol: r'$');
+
+NumberBox<double>(
+  value: numberBoxValueCurrency,
+  onChanged: _valueChangedCurrency,
+  format: (number) => number == null ? null : currencyFormat.format(number),
+  parse: (text) {
+    try {
+      return currencyFormat.parse(text).toDouble();
+    } catch (_) {
+      return null;
+    }
+  },
+  mode: SpinButtonPlacementMode.inline,
+),
+''',
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              NumberBox<double>(
+                value: numberBoxValueCurrency,
+                onChanged: disabled ? null : _valueChangedCurrency,
+                format: (final number) =>
+                    number == null ? null : currencyFormat.format(number),
+                parse: (final text) {
+                  try {
+                    return currencyFormat.parse(text).toDouble();
+                  } catch (_) {
+                    return null;
+                  }
+                },
+                mode: SpinButtonPlacementMode.inline,
+              ),
+            ],
+          ),
+        ),
         subtitle(content: const Text('A NumberFormBox')),
-        CardHighlight(
-          codeSnippet: '''NumberFormBox(
+        CodeSnippetCard(
+          codeSnippet: '''
+NumberFormBox(
   value: numberBoxValue,
   onChanged: disabled ? null : _valueChanged,
 ),
@@ -196,7 +261,7 @@ class _NumberBoxPageState extends State<NumberBoxPage> with PageMixin {
                 value: numberBoxValue,
                 onChanged: disabled ? null : _valueChanged,
                 autovalidateMode: AutovalidateMode.always,
-                validator: (v) {
+                validator: (final v) {
                   if (v == null || int.tryParse(v) == null) {
                     return 'Provide a valid number';
                   }

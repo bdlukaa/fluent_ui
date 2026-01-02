@@ -28,7 +28,7 @@
   </p>
 
   <p>
-  Unofficial implementation of Windows UI for <a href="https://flutter.dev">Flutter</a>. It's written based on the <a href="https://docs.microsoft.com/en-us/windows/uwp/design">official documentation</a>.
+  Unofficial implementation of Windows UI for <a href="https://flutter.dev">Flutter</a>. It's written based on the <a href="https://learn.microsoft.com/en-us/windows/apps/develop/ui/controls/">official documentation</a>.
   </p>
   <h3>
   Read the <a href="https://bdlukaa.github.io/fluent_ui/">documentation</a>

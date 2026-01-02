@@ -1,15 +1,46 @@
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter/foundation.dart';
 
-/// A set of predefined colors used by Windows UI widgets.
+/// The Fluent Design color palette.
+///
+/// [Colors] provides a set of predefined colors matching the Windows system
+/// palette. These colors are designed to work well together and with Windows
+/// UI elements.
 ///
 /// ![Colors used in fluent_ui widgets](https://learn.microsoft.com/en-us/windows/apps/design/style/images/color/windows-controls.svg)
 ///
+/// {@tool snippet}
+/// Using standard colors:
+///
+/// ```dart
+/// Container(
+///   color: Colors.blue,
+///   child: Text('Blue background'),
+/// )
+/// ```
+/// {@end-tool}
+///
+/// {@tool snippet}
+/// Using accent color shades:
+///
+/// ```dart
+/// // Access specific shades of accent colors
+/// final lightBlue = Colors.blue.light;
+/// final darkBlue = Colors.blue.dark;
+/// ```
+/// {@end-tool}
+///
+/// ## Shaded colors
+///
+/// Some colors like [grey] have numbered shades (e.g., `Colors.grey[120]`).
+/// Accent colors like [blue], [red], [green] have named shades (e.g.,
+/// `Colors.blue.light`, `Colors.blue.darker`).
+///
 /// See also:
 ///
-///   * <https://learn.microsoft.com/en-us/windows/apps/design/style/color>
-///   * [Colors], which defines all the colors provided by this library.
-///   * [AccentColor], which defines a color that can have multiple shades.
+///  * [AccentColor], for colors with light/dark shade variants
+///  * [ShadedColor], for colors with numbered shade variants
+///  * <https://learn.microsoft.com/en-us/windows/apps/design/style/color>
 class Colors {
   /// The transparent color. This should not be used in animations
   /// because it'll cause a weird effect.
@@ -78,6 +109,7 @@ class Colors {
   /// A opaque white color.
   static const Color white = Color(0xFFFFFFFF);
 
+  /// The yellow accent color.
   static final AccentColor yellow = AccentColor.swatch(const <String, Color>{
     'darkest': Color(0xfff9a825),
     'darker': Color(0xfffbc02d),
@@ -88,6 +120,7 @@ class Colors {
     'lightest': Color(0xfffff59d),
   });
 
+  /// The orange accent color.
   static final AccentColor orange = AccentColor.swatch(const <String, Color>{
     'darkest': Color(0xff993d07),
     'darker': Color(0xffac4508),
@@ -98,6 +131,7 @@ class Colors {
     'lightest': Color(0xfffa9e68),
   });
 
+  /// The red accent color.
   static final AccentColor red = AccentColor.swatch(const <String, Color>{
     'darkest': Color(0xff8f0a15),
     'darker': Color(0xffa20b18),
@@ -108,6 +142,7 @@ class Colors {
     'lightest': Color(0xfff06b76),
   });
 
+  /// The magenta accent color.
   static final AccentColor magenta = AccentColor.swatch(const <String, Color>{
     'darkest': Color(0xff6f0061),
     'darker': Color(0xff7e006e),
@@ -118,6 +153,7 @@ class Colors {
     'lightest': Color(0xffd060c2),
   });
 
+  /// The purple accent color.
   static final AccentColor purple = AccentColor.swatch(const <String, Color>{
     'darkest': Color(0xff472f68),
     'darker': Color(0xff513576),
@@ -128,6 +164,7 @@ class Colors {
     'lightest': Color(0xffa890c9),
   });
 
+  /// The blue accent color.
   static final AccentColor blue = AccentColor.swatch(const <String, Color>{
     'darkest': Color(0xff004a83),
     'darker': Color(0xff005494),
@@ -138,6 +175,7 @@ class Colors {
     'lightest': Color(0xff60abe4),
   });
 
+  /// The teal accent color.
   static final AccentColor teal = AccentColor.swatch(const <String, Color>{
     'darkest': Color(0xff006e5b),
     'darker': Color(0xff007c67),
@@ -148,6 +186,7 @@ class Colors {
     'lightest': Color(0xff60cfbc),
   });
 
+  /// The green accent color.
   static final AccentColor green = AccentColor.swatch(const <String, Color>{
     'darkest': Color(0xff094c09),
     'darker': Color(0xff0c5d0c),
@@ -158,17 +197,28 @@ class Colors {
     'lightest': Color(0xff6aad6a),
   });
 
+  /// The primary color for warning.
   static const Color warningPrimaryColor = Color(0xFFd83b01);
+
+  /// The secondary color for warning.
   static final warningSecondaryColor = AccentColor.swatch(const <String, Color>{
     'dark': Color(0xFF433519),
     'normal': Color(0xFFfff4ce),
   });
+
+  /// The primary color for error.
   static const Color errorPrimaryColor = Color(0xFFa80000);
+
+  /// The secondary color for error.
   static final errorSecondaryColor = AccentColor.swatch(const <String, Color>{
     'dark': Color(0xFF442726),
     'normal': Color(0xFFfde7e9),
   });
+
+  /// The primary color for success.
   static const Color successPrimaryColor = Color(0xFF107c10);
+
+  /// The secondary color for success.
   static final successSecondaryColor = AccentColor.swatch(const <String, Color>{
     'dark': Color(0xFF393d1b),
     'normal': Color(0xFFdff6dd),
@@ -187,9 +237,21 @@ class Colors {
   ];
 }
 
+/// A [ColorSwatch] with numbered shade variants.
+///
+/// Access shades using the index operator: `Colors.grey[120]`.
+///
+/// See also:
+///
+///  * [AccentColor], for colors with named shade variants
+///  * [Colors.grey], which uses this class
 class ShadedColor extends ColorSwatch<int> {
+  /// Creates a shaded color with the given primary value and swatch.
   const ShadedColor(super.primary, super.swatch);
 
+  /// Returns the shade at the given [key].
+  ///
+  /// Unlike the base class, this returns a non-null [Color].
   @override
   Color operator [](int key) {
     return super[key]!;
@@ -283,11 +345,10 @@ class AccentColor extends ColorSwatch<String> {
   /// See also:
   ///  * <https://github.com/microsoft/microsoft-ui-xaml/blob/main/dev/CommonStyles/Common_themeresources_any.xaml#L163-L166>
   Color defaultBrushFor(Brightness brightness) {
-    if (brightness.isDark) {
-      return lighter;
-    } else {
-      return dark;
-    }
+    return switch (brightness) {
+      Brightness.light => dark,
+      Brightness.dark => lighter,
+    };
   }
 
   /// Get the secondary brush for this accent color based on the brightness.
@@ -374,6 +435,7 @@ extension ColorExtension on Color {
     return Color.lerp(this, color, t)!;
   }
 
+  /// Get the color value as an integer.
   @protected
   int get colorValue {
     return _floatToInt8(a) << 24 |

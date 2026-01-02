@@ -4,9 +4,12 @@ import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/services.dart';
 
+/// A base class for form fields that can have a [TextEditingController].
 abstract class ControllableFormBox extends FormField<String> {
+  /// The controller for the text input.
   final TextEditingController? controller;
 
+  /// Creates a controllable form box.
   const ControllableFormBox({
     required super.builder,
     super.autovalidateMode,
@@ -99,10 +102,10 @@ class TextFormBox extends ControllableFormBox {
     super.enabled = true,
     double cursorWidth = 2.0,
     double? cursorHeight,
-    Radius cursorRadius = const Radius.circular(2.0),
+    Radius cursorRadius = const Radius.circular(2),
     Color? cursorColor,
     Brightness? keyboardAppearance,
-    EdgeInsets scrollPadding = const EdgeInsets.all(20.0),
+    EdgeInsetsGeometry scrollPadding = const EdgeInsetsDirectional.all(20),
     bool? enableInteractiveSelection,
     TextSelectionControls? selectionControls,
     ScrollPhysics? scrollPhysics,
@@ -123,7 +126,6 @@ class TextFormBox extends ControllableFormBox {
     ui.BoxWidthStyle selectionWidthStyle = ui.BoxWidthStyle.tight,
     WidgetStateProperty<BoxDecoration>? decoration,
     bool enableIMEPersonalizedLearning = true,
-    MouseCursor? mouseCursor,
     bool stylusHandwritingEnabled =
         EditableText.defaultStylusHandwritingEnabled,
     Color? highlightColor,
@@ -154,7 +156,7 @@ class TextFormBox extends ControllableFormBox {
          initialValue: controller != null
              ? controller.text
              : (initialValue ?? ''),
-         builder: (FormFieldState<String> field) {
+         builder: (field) {
            assert(debugCheckHasFluentTheme(field.context));
            final theme = FluentTheme.of(field.context);
            final state = field as TextFormBoxState;
@@ -169,7 +171,7 @@ class TextFormBox extends ControllableFormBox {
            return UnmanagedRestorationScope(
              bucket: field.bucket,
              child: FormRow(
-               padding: EdgeInsets.zero,
+               padding: EdgeInsetsDirectional.zero,
                error: (field.errorText == null) ? null : Text(field.errorText!),
                child: TextBox(
                  controller: state._effectiveController,

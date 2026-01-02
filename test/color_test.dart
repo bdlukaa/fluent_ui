@@ -24,7 +24,7 @@ void main() {
   });
 
   test('All grey variants are opaque', () {
-    var currentValue = 210;
+    const currentValue = 210;
     for (var i = currentValue; i > 0; i -= 10) {
       expect(Colors.grey[i].a, 1.0);
     }

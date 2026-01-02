@@ -18,7 +18,7 @@ void main() {
     );
     expect(controller.isAttached, isTrue);
 
-    controller.showFlyout(
+    controller.showFlyout<void>(
       builder: (context) => const FlyoutContent(child: Text('Flyout')),
     );
     await tester.pumpAndSettle();
@@ -26,7 +26,7 @@ void main() {
     expect(controller.isOpen, isTrue);
 
     // Close flyout
-    controller.close();
+    controller.close<void>();
     await tester.pumpAndSettle();
     expect(controller.isOpen, isFalse);
     expect(find.text('Flyout'), findsNothing);
@@ -47,9 +47,8 @@ void main() {
         ),
       );
 
-      controller.showFlyout(
+      controller.showFlyout<void>(
         builder: (context) => const FlyoutContent(child: Text('Flyout')),
-        barrierDismissible: true,
       );
       await tester.pumpAndSettle();
       expect(controller.isOpen, isTrue);
@@ -63,7 +62,7 @@ void main() {
   );
 
   testWidgets('MenuFlyout displays items and responds to tap', (tester) async {
-    bool pressed = false;
+    var pressed = false;
     final controller = FlyoutController();
 
     await tester.pumpWidget(
@@ -75,7 +74,7 @@ void main() {
       ),
     );
 
-    controller.showFlyout(
+    controller.showFlyout<void>(
       builder: (context) => MenuFlyout(
         items: [
           MenuFlyoutItem(
@@ -112,7 +111,7 @@ void main() {
       ),
     );
 
-    controller.showFlyout(
+    controller.showFlyout<void>(
       builder: (context) => MenuFlyout(
         items: [
           MenuFlyoutItem(text: const Text('Disabled Item'), onPressed: null),
@@ -146,7 +145,7 @@ void main() {
       ),
     );
 
-    controller.showFlyout(
+    controller.showFlyout<void>(
       builder: (context) => MenuFlyout(
         items: [
           ToggleMenuFlyoutItem(
@@ -179,7 +178,7 @@ void main() {
       ),
     );
 
-    controller.showFlyout(
+    controller.showFlyout<void>(
       builder: (context) => MenuFlyout(
         items: [
           RadioMenuFlyoutItem<String>(
@@ -216,7 +215,7 @@ void main() {
       ),
     );
 
-    controller.showFlyout(
+    controller.showFlyout<void>(
       builder: (context) => MenuFlyout(
         items: [
           MenuFlyoutItemBuilder(

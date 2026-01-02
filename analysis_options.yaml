@@ -1,10 +1,129 @@
 include: package:flutter_lints/flutter.yaml
 
-exclude:
-  - lib/l10n/
-  - bin/**
+analyzer:
+  exclude:
+    - lib/l10n/
+    - lib/src/controls/utils/windows_icon.dart
+    - lib/src/icons.dart
+    - lib/src/styles/color_resources.dart
+    - bin/**
+    - "**/*.g.dart"
+  language:
+    strict-casts: true
+    strict-inference: true
+    strict-raw-types: true
+  errors:
+    # Treat missing required parameters as errors
+    missing_required_param: error
+    # Treat missing returns as errors
+    missing_return: error
+    # Treat deprecated member use as warnings (not errors, for migration flexibility)
+    deprecated_member_use_from_same_package: warning
 
 linter:
   rules:
+    public_member_api_docs: false
     unintended_html_in_doc_comment: false
+
+    # === Error prevention ===
+    avoid_dynamic_calls: true
+    avoid_slow_async_io: true
+    avoid_type_to_string: true
+    cancel_subscriptions: true
+    close_sinks: true
+    collection_methods_unrelated_type: true
+    literal_only_boolean_expressions: true
+    no_adjacent_strings_in_list: true
+    test_types_in_equals: true
+    throw_in_finally: true
+    unnecessary_statements: true
+    unsafe_html: true
+
+    # === Style consistency ===
+    always_declare_return_types: true
+    always_put_required_named_parameters_first: true
+    avoid_bool_literals_in_conditional_expressions: true
+    avoid_catches_without_on_clauses: false
+    avoid_catching_errors: true
+    avoid_double_and_int_checks: true
+    avoid_escaping_inner_quotes: true
+    avoid_field_initializers_in_const_classes: true
+    avoid_implementing_value_types: true
+    avoid_multiple_declarations_per_line: true
+    avoid_positional_boolean_parameters: false
+    avoid_private_typedef_functions: true
+    avoid_redundant_argument_values: true
+    avoid_returning_this: false
+    avoid_setters_without_getters: true
+    avoid_types_on_closure_parameters: true
+    avoid_unused_constructor_parameters: true
+    avoid_void_async: true
+    cast_nullable_to_non_nullable: true
+    combinators_ordering: true
+    conditional_uri_does_not_exist: true
+    deprecated_consistency: true
+    directives_ordering: true
+    eol_at_end_of_file: true
+    join_return_with_assignment: true
+    leading_newlines_in_multiline_strings: true
+    library_annotations: true
+    missing_whitespace_between_adjacent_strings: true
+    no_leading_underscores_for_library_prefixes: true
+    no_leading_underscores_for_local_identifiers: true
+    no_runtimeType_toString: true
+    noop_primitive_operations: true
+    omit_local_variable_types: true
+    one_member_abstracts: false
+    prefer_asserts_in_initializer_lists: true
+    prefer_asserts_with_message: false
     prefer_const_constructors: true
+    prefer_const_constructors_in_immutables: true
+    prefer_const_declarations: true
+    prefer_const_literals_to_create_immutables: true
+    prefer_expression_function_bodies: false
+    prefer_final_in_for_each: true
+    prefer_final_locals: true
+    prefer_final_parameters: false
+    prefer_foreach: false
+    prefer_if_elements_to_conditional_expressions: true
+    prefer_int_literals: true
+    prefer_mixin: true
+    prefer_null_aware_method_calls: true
+    prefer_single_quotes: true
+    require_trailing_commas: true
+    sized_box_shrink_expand: true
+    sort_constructors_first: false
+    sort_unnamed_constructors_first: true
+    tighten_type_of_initializing_formals: true
+    type_annotate_public_apis: true
+    unnecessary_await_in_return: true
+    unnecessary_breaks: true
+    unnecessary_lambdas: true
+    unnecessary_late: true
+    unnecessary_null_aware_assignments: true
+    unnecessary_null_aware_operator_on_extension_on_nullable: true
+    unnecessary_null_checks: true
+    unnecessary_parenthesis: true
+    unnecessary_raw_strings: true
+    unnecessary_to_list_in_spreads: true
+    use_colored_box: true
+    use_decorated_box: true
+    use_enums: true
+    use_if_null_to_convert_nulls_to_bools: true
+    use_is_even_rather_than_modulo: true
+    use_late_for_private_fields_and_variables: true
+    use_named_constants: true
+    use_raw_strings: true
+    use_setters_to_change_properties: true
+    use_string_buffers: true
+    use_string_in_part_of_directives: true
+    use_super_parameters: true
+    use_test_throws_matchers: true
+    use_to_and_as_if_applicable: true
+
+    avoid_unnecessary_containers: true
+    sized_box_for_whitespace: true
+    sort_child_properties_last: true
+    use_build_context_synchronously: true
+    use_full_hex_values_for_flutter_colors: true
+    use_key_in_widget_constructors: true

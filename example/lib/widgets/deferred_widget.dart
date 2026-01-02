@@ -19,7 +19,7 @@ class DeferredWidget extends StatefulWidget {
     this.libraryLoader,
     this.createWidget, {
     super.key,
-    Widget? placeholder,
+    final Widget? placeholder,
   }) : placeholder = placeholder ?? Container();
 
   final LibraryLoader libraryLoader;
@@ -28,7 +28,7 @@ class DeferredWidget extends StatefulWidget {
   static final Map<LibraryLoader, Future<void>> _moduleLoaders = {};
   static final Set<LibraryLoader> _loadedModules = {};
 
-  static Future<void> preload(LibraryLoader loader) {
+  static Future<void> preload(final LibraryLoader loader) {
     if (!_moduleLoaders.containsKey(loader)) {
       _moduleLoaders[loader] = loader().then((dynamic _) {
         _loadedModules.add(loader);
@@ -69,7 +69,7 @@ class _DeferredWidgetState extends State<DeferredWidget> {
   }
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(final BuildContext context) {
     /// If closure to create widget changed, create new instance, otherwise
     /// treat as const Widget.
     if (_loadedCreator != widget.createWidget && _loadedCreator != null) {
@@ -88,7 +88,7 @@ class DeferredLoadingPlaceholder extends StatelessWidget {
   final String name;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(final BuildContext context) {
     return Center(
       child: Container(
         decoration: BoxDecoration(

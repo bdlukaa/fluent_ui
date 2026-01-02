@@ -9,7 +9,7 @@ const String fileHeader = """
 // GENERATED FILE, DO NOT EDIT
 // This generates the values from https://github.com/microsoft/microsoft-ui-xaml/blob/main/dev/CommonStyles/Common_themeresources_any.xaml
 
-// ignore_for_file: constant_identifier_names
+// ignore_for_file: constant_identifier_names, public_member_api_docs
 
 import 'package:flutter/widgets.dart' show Color, ColorProperty;
 import 'package:flutter/foundation.dart';
@@ -32,7 +32,7 @@ class ResourceDictionary with Diagnosticable {
 /// - Go on `https://github.com/microsoft/microsoft-ui-xaml/blob/main/src/controls/dev/CommonStyles/Common_themeresources_any.xaml`
 /// - Copy the colors under <Default> and paste them on [defaultResourceDirectionary]
 /// - Copy the colors under <Light> and paste them on [lightResourceDictionary]
-/// - Run the generator with `dart bin/dictionary_generator.dart.dart` while being
+/// - Run the generator with `dart bin/dictionary_generator.dart` while being
 ///   on the `lib/` directory as PWD
 /// - Enjoy
 ///

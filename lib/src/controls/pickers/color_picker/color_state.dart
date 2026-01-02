@@ -2,29 +2,50 @@ import 'dart:math' as math;
 
 import 'package:fluent_ui/fluent_ui.dart';
 
-part "color_names.dart";
+part 'color_names.dart';
 
 /// Represents components of a color in the HSV (Hue, Saturation, Value) color space.
 final class HsvComponents {
+  /// Creates a HSV components.
   const HsvComponents(this.h, this.s, this.v);
+
+  /// The hue component (0-360).
   final double h;
+
+  /// The saturation component (0-1).
   final double s;
+
+  /// The value component (0-1).
   final double v;
 }
 
 /// Represents components of a color in the HSL (Hue, Saturation, Lightness) color space.
 final class HslComponents {
+  /// Creates a HSL components.
   const HslComponents(this.h, this.s, this.l);
+
+  /// The hue component (0-360).
   final double h;
+
+  /// The saturation component (0-1).
   final double s;
+
+  /// The lightness component (0-1).
   final double l;
 }
 
 /// Represents components of a color in the RGB (Red, Green, Blue) color space.
 final class RgbComponents {
+  /// Creates a RGB components.
   const RgbComponents(this.r, this.g, this.b);
+
+  /// The red component (0-1).
   final double r;
+
+  /// The green component (0-1).
   final double g;
+
+  /// The blue component (0-1).
   final double b;
 }
 
@@ -81,10 +102,10 @@ class ColorState extends ChangeNotifier {
 
   /// Creates a [ColorState] from a [Color].
   static ColorState fromColor(Color color) {
-    final r = color.r.toDouble();
-    final g = color.g.toDouble();
-    final b = color.b.toDouble();
-    final a = color.a.toDouble();
+    final r = color.r;
+    final g = color.g;
+    final b = color.b;
+    final a = color.a;
 
     final hsv = rgbToHsv(RgbComponents(r, g, b));
     return ColorState(r, g, b, a, hsv.h, hsv.s, hsv.v);
@@ -194,8 +215,8 @@ class ColorState extends ChangeNotifier {
       final rgb1 = RgbComponents(_red, _green, _blue);
       final hsl1 = rgbToHsl(rgb1);
 
-      double minDistance = double.infinity;
-      String closestColorName = '';
+      var minDistance = double.infinity;
+      var closestColorName = '';
 
       for (final entry in _ColorNames._values.entries) {
         final hexColor = entry.key;
@@ -313,16 +334,16 @@ class ColorState extends ChangeNotifier {
 
   /// Validates that all color values are within their valid ranges.
   void _validateColorValues() {
-    assert(_red >= 0 && _red <= 1, "Red must be between 0 and 1");
-    assert(_green >= 0 && _green <= 1, "Green must be between 0 and 1");
-    assert(_blue >= 0 && _blue <= 1, "Blue must be between 0 and 1");
-    assert(_alpha >= 0 && _alpha <= 1, "Alpha must be between 0 and 1");
-    assert(_hue >= 0 && _hue <= 360, "Hue must be between 0 and 360");
+    assert(_red >= 0 && _red <= 1, 'Red must be between 0 and 1');
+    assert(_green >= 0 && _green <= 1, 'Green must be between 0 and 1');
+    assert(_blue >= 0 && _blue <= 1, 'Blue must be between 0 and 1');
+    assert(_alpha >= 0 && _alpha <= 1, 'Alpha must be between 0 and 1');
+    assert(_hue >= 0 && _hue <= 360, 'Hue must be between 0 and 360');
     assert(
       _saturation >= 0 && _saturation <= 1,
-      "Saturation must be between 0 and 1",
+      'Saturation must be between 0 and 1',
     );
-    assert(_value >= 0 && _value <= 1, "Value must be between 0 and 1");
+    assert(_value >= 0 && _value <= 1, 'Value must be between 0 and 1');
   }
 
   /// Creates a copy of this [ColorState] but with the given fields replaced with the new values.
@@ -335,7 +356,7 @@ class ColorState extends ChangeNotifier {
     double? saturation,
     double? value,
   }) {
-    ColorState cs = ColorState(
+    final cs = ColorState(
       _red,
       _green,
       _blue,
@@ -583,7 +604,7 @@ class ColorState extends ChangeNotifier {
     final r = _standardToLinear(color.r);
     final g = _standardToLinear(color.g);
     final b = _standardToLinear(color.b);
-    return (r * 0.2126 + g * 0.7152 + b * 0.0722);
+    return r * 0.2126 + g * 0.7152 + b * 0.0722;
   }
 
   /// Converts a standard RGB color component to linear RGB color space.

@@ -4,11 +4,11 @@ import 'package:fluent_ui/fluent_ui.dart';
 import '../settings.dart';
 
 const questionMark = Padding(
-  padding: EdgeInsetsDirectional.only(start: 4.0),
-  child: WindowsIcon(WindowsIcons.status_circle_question_mark, size: 14.0),
+  padding: EdgeInsetsDirectional.only(start: 4),
+  child: WindowsIcon(WindowsIcons.status_circle_question_mark, size: 14),
 );
 
-InlineSpan _buildLabel(String label, String description) {
+InlineSpan _buildLabel(final String label, final String description) {
   return TextSpan(
     text: label,
     children: [
@@ -38,7 +38,7 @@ class _AcrylicPageState extends State<AcrylicPage> with PageMixin {
   Color? color;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(final BuildContext context) {
     final menuColor = FluentTheme.of(
       context,
     ).menuColor.withValues(alpha: kMenuColorOpacity);
@@ -61,7 +61,7 @@ class _AcrylicPageState extends State<AcrylicPage> with PageMixin {
                 _AcrylicChildren(),
                 Positioned.fill(
                   child: Padding(
-                    padding: EdgeInsets.all(12.0),
+                    padding: EdgeInsetsDirectional.all(12),
                     child: Acrylic(),
                   ),
                 ),
@@ -82,7 +82,7 @@ class _AcrylicPageState extends State<AcrylicPage> with PageMixin {
                       const _AcrylicChildren(),
                       Positioned.fill(
                         child: Padding(
-                          padding: const EdgeInsets.all(12.0),
+                          padding: const EdgeInsetsDirectional.all(12),
                           child: Acrylic(
                             tintAlpha: tintOpacity,
                             luminosityAlpha: luminosityOpacity,
@@ -105,7 +105,7 @@ class _AcrylicPageState extends State<AcrylicPage> with PageMixin {
                       ),
                       child: ComboBox<Color>(
                         placeholder: const Text('Tint color               '),
-                        onChanged: (c) => setState(() => color = c),
+                        onChanged: (final c) => setState(() => color = c),
                         value: color,
                         items: [
                           ComboBoxItem(
@@ -113,7 +113,7 @@ class _AcrylicPageState extends State<AcrylicPage> with PageMixin {
                             child: Row(
                               children: [
                                 buildColorBox(menuColor),
-                                const SizedBox(width: 10.0),
+                                const SizedBox(width: 10),
                                 const Text('Acrylic background'),
                               ],
                             ),
@@ -123,7 +123,7 @@ class _AcrylicPageState extends State<AcrylicPage> with PageMixin {
                             child: Row(
                               children: [
                                 buildColorBox(Colors.white),
-                                const SizedBox(width: 10.0),
+                                const SizedBox(width: 10),
                                 const Text('White'),
                               ],
                             ),
@@ -133,19 +133,21 @@ class _AcrylicPageState extends State<AcrylicPage> with PageMixin {
                             child: Row(
                               children: [
                                 buildColorBox(const Color(0xE4000000)),
-                                const SizedBox(width: 10.0),
+                                const SizedBox(width: 10),
                                 const Text('Black'),
                               ],
                             ),
                           ),
-                          ...List.generate(Colors.accentColors.length, (index) {
+                          ...List.generate(Colors.accentColors.length, (
+                            final index,
+                          ) {
                             final color = Colors.accentColors[index];
                             return ComboBoxItem(
                               value: color,
                               child: Row(
                                 children: [
                                   buildColorBox(color),
-                                  const SizedBox(width: 10.0),
+                                  const SizedBox(width: 10),
                                   Text(accentColorNames[index + 1]),
                                 ],
                               ),
@@ -161,9 +163,8 @@ class _AcrylicPageState extends State<AcrylicPage> with PageMixin {
                       ),
                       child: Slider(
                         value: tintOpacity,
-                        min: 0.0,
-                        max: 1.0,
-                        onChanged: (v) => setState(() => tintOpacity = v),
+                        max: 1,
+                        onChanged: (final v) => setState(() => tintOpacity = v),
                       ),
                     ),
                     InfoLabel.rich(
@@ -174,27 +175,24 @@ class _AcrylicPageState extends State<AcrylicPage> with PageMixin {
                       ),
                       child: Slider(
                         value: luminosityOpacity,
-                        min: 0.0,
-                        max: 1.0,
-                        onChanged: (v) => setState(() => luminosityOpacity = v),
+                        max: 1,
+                        onChanged: (final v) =>
+                            setState(() => luminosityOpacity = v),
                       ),
                     ),
                     InfoLabel(
                       label: 'Blur amount',
                       child: Slider(
                         value: blurAmout,
-                        min: 0.0,
-                        max: 100,
-                        onChanged: (v) => setState(() => blurAmout = v),
+                        onChanged: (final v) => setState(() => blurAmout = v),
                       ),
                     ),
                     InfoLabel(
                       label: 'Elevation',
                       child: Slider(
                         value: elevation,
-                        min: 0,
                         max: 20,
-                        onChanged: (v) => setState(() => elevation = v),
+                        onChanged: (final v) => setState(() => elevation = v),
                       ),
                     ),
                   ],
@@ -207,14 +205,14 @@ class _AcrylicPageState extends State<AcrylicPage> with PageMixin {
     );
   }
 
-  Widget buildColorBox(Color color) {
-    const double boxSize = 16.0;
+  Widget buildColorBox(final Color color) {
+    const boxSize = 16.0;
     return Container(
       height: boxSize,
       width: boxSize,
       decoration: BoxDecoration(
         color: color,
-        borderRadius: BorderRadius.circular(4.0),
+        borderRadius: BorderRadius.circular(4),
       ),
     );
   }
@@ -224,7 +222,7 @@ class _AcrylicChildren extends StatelessWidget {
   const _AcrylicChildren();
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(final BuildContext context) {
     return Stack(
       children: [
         Container(height: 200, width: 100, color: Colors.blue.lightest),

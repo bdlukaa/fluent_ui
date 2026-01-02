@@ -8,15 +8,15 @@ void main() {
   testWidgets('RadioButton initializes with correct selected value', (
     tester,
   ) async {
-    var radioButtonValue = true;
+    const radioButtonValue = true;
 
     await tester.pumpWidget(
       StatefulBuilder(
-        builder: (BuildContext context, StateSetter setState) {
+        builder: (context, setState) {
           return wrapApp(
             child: RadioButton(
               checked: radioButtonValue,
-              onChanged: (bool value) {},
+              onChanged: (value) {},
             ),
           );
         },
@@ -28,18 +28,16 @@ void main() {
       radioButtonValue,
     );
   });
-  testWidgets('RadioButton change state accordingly', (
-    WidgetTester tester,
-  ) async {
+  testWidgets('RadioButton change state accordingly', (tester) async {
     var radioButtonValue = false;
 
     await tester.pumpWidget(
       StatefulBuilder(
-        builder: (BuildContext context, StateSetter setState) {
+        builder: (context, setState) {
           return wrapApp(
             child: RadioButton(
               checked: radioButtonValue,
-              onChanged: (bool value) {
+              onChanged: (value) {
                 setState(() {
                   radioButtonValue = value;
                 });
@@ -61,18 +59,18 @@ void main() {
     expect(radioButtonValue, false);
   });
   testWidgets('Radio Button can be focused and selected with keyboard', (
-    WidgetTester tester,
+    tester,
   ) async {
     var radioButtonValue = false;
     final focusNode = FocusNode();
 
     await tester.pumpWidget(
       StatefulBuilder(
-        builder: (BuildContext context, StateSetter setState) {
+        builder: (context, setState) {
           return wrapApp(
             child: RadioButton(
               focusNode: focusNode,
-              onChanged: (bool value) {
+              onChanged: (value) {
                 setState(() {
                   radioButtonValue = value;
                 });
@@ -94,16 +92,17 @@ void main() {
     expect(radioButtonValue, true);
   });
 
-  testWidgets('Disabled RadioButton cannot be selected', (
-    WidgetTester tester,
-  ) async {
-    var radioButtonValue = false;
+  testWidgets('Disabled RadioButton cannot be selected', (tester) async {
+    const radioButtonValue = false;
 
     await tester.pumpWidget(
       StatefulBuilder(
-        builder: (BuildContext context, StateSetter setState) {
+        builder: (context, setState) {
           return wrapApp(
-            child: RadioButton(onChanged: null, checked: radioButtonValue),
+            child: const RadioButton(
+              onChanged: null,
+              checked: radioButtonValue,
+            ),
           );
         },
       ),
@@ -117,14 +116,14 @@ void main() {
     expect(radioButtonValue, false);
   });
   testWidgets('Focus moves between RadioButtons in correct order', (
-    WidgetTester tester,
+    tester,
   ) async {
     final focusNode1 = FocusNode();
     final focusNode2 = FocusNode();
 
     await tester.pumpWidget(
       StatefulBuilder(
-        builder: (BuildContext context, StateSetter setState) {
+        builder: (context, setState) {
           return wrapApp(
             child: Column(
               children: [
@@ -132,13 +131,13 @@ void main() {
                   autofocus: true,
                   key: const Key('radioButton1'),
                   focusNode: focusNode1,
-                  onChanged: (bool value) {},
+                  onChanged: (value) {},
                   checked: true,
                 ),
                 RadioButton(
                   key: const Key('radioButton2'),
                   focusNode: focusNode2,
-                  onChanged: (bool value) {},
+                  onChanged: (value) {},
                   checked: false,
                 ),
               ],

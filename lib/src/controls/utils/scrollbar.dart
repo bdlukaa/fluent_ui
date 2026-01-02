@@ -1,7 +1,6 @@
 import 'dart:ui' show lerpDouble;
 
 import 'package:fluent_ui/fluent_ui.dart';
-
 import 'package:flutter/foundation.dart';
 import 'package:flutter/gestures.dart';
 
@@ -15,8 +14,8 @@ class Scrollbar extends RawScrollbar {
   /// The [child], [fadeDuration], [pressDuration], and [timeToFade] arguments
   /// must not be null.
   const Scrollbar({
-    super.key,
     required super.child,
+    super.key,
     super.controller,
     super.thumbVisibility = true,
     this.style,
@@ -43,6 +42,10 @@ class _ScrollbarState extends RawScrollbarState<Scrollbar> {
   bool _dragIsActive = false;
   bool _hoverIsActive = false;
 
+  late Tween<double> _thicknessTween;
+  late Tween<double> _crossAxisMarginTween;
+  late Tween<double> _mainAxisMarginTween;
+
   @override
   void initState() {
     super.initState();
@@ -59,6 +62,18 @@ class _ScrollbarState extends RawScrollbarState<Scrollbar> {
     _scrollbarTheme = ScrollbarTheme.of(context).merge(widget.style);
     _hoverAnimationController.duration =
         _scrollbarTheme.expandContractAnimationDuration ?? Duration.zero;
+    _thicknessTween = Tween<double>(
+      begin: _scrollbarTheme.thickness ?? 2.0,
+      end: _scrollbarTheme.hoveringThickness ?? 16.0,
+    );
+    _crossAxisMarginTween = Tween<double>(
+      begin: _scrollbarTheme.crossAxisMargin ?? 0.0,
+      end: _scrollbarTheme.hoveringCrossAxisMargin ?? 0.0,
+    );
+    _mainAxisMarginTween = Tween<double>(
+      begin: _scrollbarTheme.mainAxisMargin ?? 6.0,
+      end: _scrollbarTheme.hoveringMainAxisMargin ?? 0.0,
+    );
     super.didChangeDependencies();
   }
 
@@ -81,8 +96,7 @@ class _ScrollbarState extends RawScrollbarState<Scrollbar> {
     if (state.isPressed) {
       color = _scrollbarTheme.scrollbarPressingColor;
     }
-    color ??= _scrollbarTheme.scrollbarColor ?? Colors.transparent;
-    return color;
+    return color ?? _scrollbarTheme.scrollbarColor ?? Colors.transparent;
   }
 
   @override
@@ -102,39 +116,29 @@ class _ScrollbarState extends RawScrollbarState<Scrollbar> {
             animation.value,
           ) ??
           Colors.transparent
-      ..trackRadius = const Radius.circular(6.0)
-      ..textDirection = Directionality.of(context)
-      ..thickness = Tween<double>(
-        begin: _scrollbarTheme.thickness ?? 2.0,
-        end: _scrollbarTheme.hoveringThickness ?? 16.0,
-      ).evaluate(animation)
+      ..trackRadius = const Radius.circular(6)
+      ..textDirection = direction
+      ..thickness = _thicknessTween.evaluate(animation)
       ..radius = _hoverAnimationController.status != AnimationStatus.dismissed
           ? _scrollbarTheme.hoveringRadius
           : _scrollbarTheme.radius
-      ..crossAxisMargin = Tween<double>(
-        begin: _scrollbarTheme.crossAxisMargin ?? 0.0,
-        end: _scrollbarTheme.hoveringCrossAxisMargin ?? 0.0,
-      ).evaluate(animation)
-      ..mainAxisMargin = Tween<double>(
-        begin: _scrollbarTheme.mainAxisMargin ?? 6.0,
-        end: _scrollbarTheme.hoveringMainAxisMargin ?? 0.0,
-      ).evaluate(animation)
+      ..crossAxisMargin = _crossAxisMarginTween.evaluate(animation)
+      ..mainAxisMargin = _mainAxisMarginTween.evaluate(animation)
       ..minLength = _scrollbarTheme.minThumbLength ?? 48.0
       ..minOverscrollLength =
           widget.minOverscrollLength ?? _scrollbarTheme.minThumbLength ?? 48.0
       ..padding =
-          Tween<EdgeInsets>(
-            begin:
-                _scrollbarTheme.padding?.resolve(direction) ?? EdgeInsets.zero,
-            end:
-                _scrollbarTheme.hoveringPadding?.resolve(direction) ??
+          EdgeInsets.lerp(
+            _scrollbarTheme.padding?.resolve(direction) ?? EdgeInsets.zero,
+            _scrollbarTheme.hoveringPadding?.resolve(direction) ??
                 EdgeInsets.zero,
-          ).evaluate(animation) +
+            animation.value,
+          )! +
           viewPadding;
   }
 
   Future<void> get contractDelay =>
-      Future.delayed(_scrollbarTheme.contractDelay ?? Duration.zero);
+      Future<void>.delayed(_scrollbarTheme.contractDelay ?? Duration.zero);
 
   @override
   void handleThumbPressStart(Offset localPosition) {
@@ -155,7 +159,7 @@ class _ScrollbarState extends RawScrollbarState<Scrollbar> {
   }
 
   @override
-  void handleHover(PointerHoverEvent event) async {
+  Future<void> handleHover(PointerHoverEvent event) async {
     super.handleHover(event);
     // Check if the position of the pointer falls over the painted scrollbar
     if (isPointerOverScrollbar(event.position, event.kind, forHover: true)) {
@@ -205,39 +209,35 @@ class _ScrollbarState extends RawScrollbarState<Scrollbar> {
 /// Values specified here are used for [Scrollbar] properties that are not
 /// given an explicit non-null value.
 class ScrollbarTheme extends InheritedTheme {
-  /// Creates a scrollbar theme that controls the configurations for
-  /// [Scrollbar].
-  const ScrollbarTheme({super.key, required this.data, required super.child});
+  /// Creates a theme that controls how descendant [Scrollbar]s should look like.
+  const ScrollbarTheme({required this.data, required super.child, super.key});
 
   /// The properties for descendant [Scrollbar] widgets.
   final ScrollbarThemeData data;
 
-  /// Creates a button theme that controls how descendant [Scrollbar]s should
-  /// look like, and merges in the current toggle button theme, if any.
+  /// Creates a theme that merges the nearest [ScrollbarTheme] with [data].
   static Widget merge({
-    Key? key,
     required ScrollbarThemeData data,
     required Widget child,
+    Key? key,
   }) {
     return Builder(
-      builder: (BuildContext context) {
+      builder: (context) {
         return ScrollbarTheme(
           key: key,
-          data: _getInheritedThemeData(context).merge(data),
+          data: ScrollbarTheme.of(context).merge(data),
           child: child,
         );
       },
     );
   }
 
-  static ScrollbarThemeData _getInheritedThemeData(BuildContext context) {
-    final theme = context.dependOnInheritedWidgetOfExactType<ScrollbarTheme>();
-    return theme?.data ?? FluentTheme.of(context).scrollbarTheme;
-  }
-
-  /// Returns the [data] from the closest [ScrollbarTheme] ancestor. If there is
-  /// no ancestor, it returns [FluentThemeData.scrollbarTheme]. Applications can assume
-  /// that the returned value will not be null.
+  /// Returns the closest [ScrollbarThemeData] which encloses the given context.
+  ///
+  /// Resolution order:
+  /// 1. Defaults from [ScrollbarThemeData.standard]
+  /// 2. Global theme from [FluentThemeData.scrollbarTheme]
+  /// 3. Local [ScrollbarTheme] ancestor
   ///
   /// Typical usage is as follows:
   ///
@@ -245,9 +245,13 @@ class ScrollbarTheme extends InheritedTheme {
   /// ScrollbarThemeData theme = ScrollbarTheme.of(context);
   /// ```
   static ScrollbarThemeData of(BuildContext context) {
+    assert(debugCheckHasFluentTheme(context));
+    final theme = FluentTheme.of(context);
+    final inheritedTheme = context
+        .dependOnInheritedWidgetOfExactType<ScrollbarTheme>();
     return ScrollbarThemeData.standard(
-      FluentTheme.of(context),
-    ).merge(_getInheritedThemeData(context));
+      theme,
+    ).merge(theme.scrollbarTheme).merge(inheritedTheme?.data);
   }
 
   @override
@@ -260,6 +264,7 @@ class ScrollbarTheme extends InheritedTheme {
 }
 
 @immutable
+/// Theme data for [Scrollbar] widgets.
 class ScrollbarThemeData with Diagnosticable {
   /// Thickness of the scrollbar in its cross-axis in logical
   /// pixels. If null, `2.0` is used
@@ -343,6 +348,7 @@ class ScrollbarThemeData with Diagnosticable {
   /// The padding around the scrollbar thumb when hovering
   final EdgeInsetsGeometry? hoveringPadding;
 
+  /// Creates a scrollbar theme data.
   const ScrollbarThemeData({
     this.thickness,
     this.hoveringThickness,
@@ -364,33 +370,42 @@ class ScrollbarThemeData with Diagnosticable {
     this.contractDelay,
   });
 
+  /// Creates the standard [ScrollbarThemeData] based on the given [theme].
   factory ScrollbarThemeData.standard(FluentThemeData theme) {
     final brightness = theme.brightness;
     return ScrollbarThemeData(
-      scrollbarColor: brightness.isLight
-          ? const Color(0xFF898989)
-          : const Color(0xFFa0a0a0),
-      thickness: 2.0,
-      hoveringThickness: 6.0,
-      backgroundColor: brightness.isLight
-          ? const Color(0xFFf8f8f8)
-          : const Color(0xFF292929),
-      radius: const Radius.circular(100.0),
-      hoveringRadius: const Radius.circular(100.0),
-      crossAxisMargin: 0.0,
-      hoveringCrossAxisMargin: 3.0,
-      mainAxisMargin: 0.0,
-      hoveringMainAxisMargin: 0.0,
-      minThumbLength: 48.0,
+      scrollbarColor: switch (brightness) {
+        Brightness.light => const Color(0xFF898989),
+        Brightness.dark => const Color(0xFFa0a0a0),
+      },
+      thickness: 2,
+      hoveringThickness: 6,
+      backgroundColor: switch (brightness) {
+        Brightness.light => const Color(0xFFf8f8f8),
+        Brightness.dark => const Color(0xFF292929),
+      },
+      radius: const Radius.circular(100),
+      hoveringRadius: const Radius.circular(100),
+      crossAxisMargin: 0,
+      hoveringCrossAxisMargin: 3,
+      mainAxisMargin: 0,
+      hoveringMainAxisMargin: 0,
+      minThumbLength: 48,
       trackBorderColor: Colors.transparent,
       hoveringTrackBorderColor: Colors.transparent,
-      padding: const EdgeInsets.symmetric(horizontal: 4.0, vertical: 4.0),
-      hoveringPadding: const EdgeInsets.symmetric(vertical: 4.0),
-      expandContractAnimationDuration: theme.fastAnimationDuration,
+      padding: const EdgeInsetsDirectional.symmetric(
+        horizontal: 4,
+        vertical: 4,
+      ),
+      hoveringPadding: const EdgeInsetsDirectional.symmetric(vertical: 4),
+      expandContractAnimationDuration: theme.fasterAnimationDuration,
       contractDelay: const Duration(milliseconds: 500),
     );
   }
 
+  /// Linearly interpolates between two [ScrollbarThemeData] objects.
+  ///
+  /// {@macro fluent_ui.lerp.t}
   static ScrollbarThemeData lerp(
     ScrollbarThemeData? a,
     ScrollbarThemeData? b,
@@ -450,6 +465,8 @@ class ScrollbarThemeData with Diagnosticable {
     );
   }
 
+  /// Merges this [ScrollbarThemeData] with another, with the other taking
+  /// precedence.
   ScrollbarThemeData merge(ScrollbarThemeData? style) {
     if (style == null) return this;
     return ScrollbarThemeData(
@@ -536,23 +553,22 @@ class ScrollbarThemeData with Diagnosticable {
         DiagnosticsProperty<Duration>(
           'expandContractAnimationDuration',
           expandContractAnimationDuration,
-          defaultValue: const Duration(milliseconds: 100),
         ),
       )
       ..add(
         DiagnosticsProperty<Duration>(
           'contractDelay',
           contractDelay,
-          defaultValue: const Duration(seconds: 2),
+          defaultValue: const Duration(milliseconds: 500),
         ),
       )
       ..add(
         DiagnosticsProperty(
           'padding',
           padding,
-          defaultValue: const EdgeInsets.symmetric(
-            horizontal: 2.0,
-            vertical: 4.0,
+          defaultValue: const EdgeInsetsDirectional.symmetric(
+            horizontal: 2,
+            vertical: 4,
           ),
         ),
       )
@@ -560,7 +576,7 @@ class ScrollbarThemeData with Diagnosticable {
         DiagnosticsProperty(
           'hoveringPadding',
           hoveringPadding,
-          defaultValue: const EdgeInsets.symmetric(vertical: 4.0),
+          defaultValue: const EdgeInsetsDirectional.symmetric(vertical: 4),
         ),
       );
   }
@@ -575,7 +591,7 @@ extension ScrollViewExtension on SingleChildScrollView {
     ScrollBehavior? behavior,
   }) {
     behavior ??= ScrollConfiguration.of(context);
-    var showScrollbar = scrollDirection != Axis.vertical;
+    final showScrollbar = scrollDirection != Axis.vertical;
     return ScrollConfiguration(
       behavior: behavior.copyWith(scrollbars: showScrollbar),
       child: this,

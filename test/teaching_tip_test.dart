@@ -92,7 +92,7 @@ void main() {
   });
 
   testWidgets('TeachingTip close button calls onClose', (tester) async {
-    bool closed = false;
+    var closed = false;
     final flyoutController = FlyoutController();
     await tester.pumpWidget(
       wrapApp(

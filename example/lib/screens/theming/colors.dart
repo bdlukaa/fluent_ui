@@ -18,11 +18,11 @@ class ColorsPage extends StatelessWidget {
   const ColorsPage({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    const Divider divider = Divider(
+  Widget build(final BuildContext context) {
+    const divider = Divider(
       style: DividerThemeData(
-        verticalMargin: EdgeInsets.all(10),
-        horizontalMargin: EdgeInsets.all(10),
+        verticalMargin: EdgeInsetsDirectional.all(10),
+        horizontalMargin: EdgeInsetsDirectional.all(10),
       ),
     );
     return ScaffoldPage.scrollable(
@@ -37,13 +37,13 @@ class ColorsPage extends StatelessWidget {
         ),
       ),
       children: [
-        const SizedBox(height: 14.0),
+        const SizedBox(height: 14),
         InfoLabel(
           label: 'Primary Colors',
           child: Wrap(
             spacing: 10,
             runSpacing: 10,
-            children: List.generate(Colors.accentColors.length, (index) {
+            children: List.generate(Colors.accentColors.length, (final index) {
               final name = _primaryNames[index];
               final color = Colors.accentColors[index];
               return ColorBlock(
@@ -116,7 +116,7 @@ class ColorsPage extends StatelessWidget {
               ),
               const SizedBox(height: 10),
               Wrap(
-                children: List.generate(22, (index) {
+                children: List.generate(22, (final index) {
                   final factor = (index + 1) * 10;
                   return ColorBlock(
                     name: 'Grey#$factor',
@@ -135,14 +135,14 @@ class ColorsPage extends StatelessWidget {
   }
 
   List<Widget> get accent {
-    List<Widget> children = [];
+    final children = <Widget>[];
     for (var i = 0; i < Colors.accentColors.length; i++) {
       final accent = Colors.accentColors[i];
       final name = _primaryNames[i];
       children.add(
         Column(
           // mainAxisSize: MainAxisSize.min,
-          children: List.generate(accent.swatch.length, (index) {
+          children: List.generate(accent.swatch.length, (final index) {
             final variant = accent.swatch.keys.toList()[index];
             final color = accent.swatch[variant]!;
             return ColorBlock(
@@ -161,11 +161,11 @@ class ColorsPage extends StatelessWidget {
 
 class ColorBlock extends StatelessWidget {
   const ColorBlock({
-    super.key,
     required this.name,
     required this.color,
-    this.variant,
     required this.clipboard,
+    super.key,
+    this.variant,
   });
 
   final String name;
@@ -174,7 +174,7 @@ class ColorBlock extends StatelessWidget {
   final String clipboard;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(final BuildContext context) {
     final textColor = color.basedOnLuminance();
     return Tooltip(
       message: '\n$clipboard\n(tap to copy to clipboard)\n',
@@ -185,15 +185,14 @@ class ColorBlock extends StatelessWidget {
           showCopiedSnackbar(context, clipboard);
         },
         cursor: SystemMouseCursors.copy,
-        builder: (context, states) {
+        builder: (final context, final states) {
           return FocusBorder(
             focused: states.isFocused,
-            useStackApproach: true,
             renderOutside: false,
             child: Container(
               height: 85,
               width: 85,
-              padding: const EdgeInsets.all(6.0),
+              padding: const EdgeInsetsDirectional.all(6),
               color: color,
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.end,

@@ -1,6 +1,9 @@
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter/foundation.dart';
 
+/// A builder function that creates a [ShapeBorder] for an [Expander].
+///
+/// The [open] parameter indicates whether the expander is currently expanded.
 typedef ExpanderShapeBuilder = ShapeBorder Function(bool open);
 
 /// The expander direction
@@ -13,29 +16,90 @@ enum ExpanderDirection {
 }
 
 /// The [Expander] control lets you show or hide less important content that's
-/// related to a piece of primary content that's always visible. Items contained
-/// in the Header are always visible. The user can expand and collapse the
-/// Content area, where secondary content is displayed, by interacting with the
-/// header. When the content area is expanded, it pushes other UI elements out
-/// of the way; it does not overlay other UI. The Expander can expand upwards or
-/// downwards.
+/// related to a piece of primary content that's always visible.
 ///
-/// Both the Header and Content areas can contain any content, from simple text
+/// Items contained in the [header] are always visible. The user can expand and
+/// collapse the [content] area, where secondary content is displayed, by
+/// interacting with the header. When the content area is expanded, it pushes
+/// other UI elements out of the way; it does not overlay other UI. The Expander
+/// can expand upwards or downwards using the [direction] property.
+///
+/// Both the header and content areas can contain any content, from simple text
 /// to complex UI layouts. For example, you can use the control to show
 /// additional options for an item.
 ///
-/// ![Expander Preview](https://docs.microsoft.com/en-us/windows/apps/design/controls/images/expander-default.gif)
+/// ![Expander Preview](https://learn.microsoft.com/en-us/windows/apps/design/controls/images/expander-default.gif)
+///
+/// {@tool snippet}
+/// This example shows a basic expander with text content:
+///
+/// ```dart
+/// Expander(
+///   header: Text('Click to expand'),
+///   content: Text('This is the expanded content.'),
+/// )
+/// ```
+/// {@end-tool}
+///
+/// {@tool snippet}
+/// This example shows an expander with a leading icon and trailing toggle:
+///
+/// ```dart
+/// Expander(
+///   leading: Icon(FluentIcons.settings),
+///   header: Text('Settings'),
+///   trailing: ToggleSwitch(
+///     checked: isEnabled,
+///     onChanged: (value) => setState(() => isEnabled = value),
+///   ),
+///   content: Column(
+///     children: [
+///       // Settings content...
+///     ],
+///   ),
+/// )
+/// ```
+/// {@end-tool}
+///
+/// {@tool snippet}
+/// This example shows nested expanders:
+///
+/// ```dart
+/// Expander(
+///   header: Text('Parent'),
+///   content: Expander(
+///     header: Text('Nested expander'),
+///     content: Text('Nested content'),
+///   ),
+/// )
+/// ```
+/// {@end-tool}
+///
+/// ## State management
+///
+/// The expander maintains its own expanded/collapsed state. Use [initiallyExpanded]
+/// to set the initial state, and [onStateChanged] to be notified when the state
+/// changes. The expander also supports [PageStorage] to persist its state across
+/// rebuilds.
+///
+/// ## Accessibility
+///
+/// The expander is accessible by default. The header acts as a button that
+/// toggles the content visibility. Screen readers will announce the expanded
+/// or collapsed state.
 ///
 /// See also:
 ///
-///   * <https://docs.microsoft.com/en-us/windows/apps/design/controls/expander>
+///  * [TreeView], for displaying hierarchical data
+///  * [InfoBar], for displaying status messages that can be dismissed
+///  * <https://learn.microsoft.com/en-us/windows/apps/design/controls/expander>
 class Expander extends StatefulWidget {
   /// Creates a windows-styled expander.
   const Expander({
-    super.key,
-    this.leading,
     required this.header,
     required this.content,
+    super.key,
+    this.leading,
     this.icon,
     this.trailing,
     this.animationCurve,
@@ -47,7 +111,7 @@ class Expander extends StatefulWidget {
     this.headerBackgroundColor,
     this.headerShape,
     this.contentBackgroundColor,
-    this.contentPadding = const EdgeInsets.all(16.0),
+    this.contentPadding = const EdgeInsetsDirectional.all(16),
     this.contentShape,
   });
 
@@ -65,13 +129,16 @@ class Expander extends StatefulWidget {
   /// Usually a [Text] widget.
   final Widget header;
 
-  /// The expander content
+  /// The content displayed when the expander is expanded.
   ///
   /// You can use complex, interactive UI as the content of the
   /// Expander, including nested Expander controls in the content
   /// of a parent Expander as shown here.
   ///
-  /// ![Expander Nested Content](https://docs.microsoft.com/en-us/windows/apps/design/controls/images/expander-nested.png)
+  /// ![Expander Nested Content](https://learn.microsoft.com/en-us/windows/apps/design/controls/images/expander-nested.png)
+  ///
+  /// The content is hidden when the expander is collapsed and becomes
+  /// visible when expanded. The transition is animated.
   final Widget content;
 
   /// The expander icon.
@@ -120,7 +187,7 @@ class Expander extends StatefulWidget {
   final bool enabled;
 
   /// The background color of the header.
-  final WidgetStateProperty<Color>? headerBackgroundColor;
+  final WidgetStateColor? headerBackgroundColor;
 
   /// The shape of the header.
   ///
@@ -165,7 +232,7 @@ class Expander extends StatefulWidget {
         DiagnosticsProperty<EdgeInsetsGeometry>(
           'contentPadding',
           contentPadding,
-          defaultValue: const EdgeInsets.all(16.0),
+          defaultValue: const EdgeInsetsDirectional.all(16),
         ),
       );
   }
@@ -174,11 +241,19 @@ class Expander extends StatefulWidget {
   State<Expander> createState() => ExpanderState();
 }
 
+/// The state for an [Expander] widget.
+///
+/// Provides access to the [isExpanded] property to programmatically control
+/// the expander's state.
 class ExpanderState extends State<Expander>
     with SingleTickerProviderStateMixin {
   late FluentThemeData _theme;
 
   late bool _isExpanded;
+
+  /// Whether the expander is currently expanded.
+  ///
+  /// Setting this value will animate the expander to the new state.
   bool get isExpanded => _isExpanded;
   set isExpanded(bool value) {
     if (_isExpanded != value) _handlePressed();
@@ -207,14 +282,14 @@ class ExpanderState extends State<Expander>
   void _handlePressed() {
     if (_isExpanded) {
       _controller.animateTo(
-        0.0,
+        0,
         duration: widget.animationDuration ?? _theme.mediumAnimationDuration,
         curve: widget.animationCurve ?? _theme.animationCurve,
       );
       _isExpanded = false;
     } else {
       _controller.animateTo(
-        1.0,
+        1,
         duration: widget.animationDuration ?? _theme.mediumAnimationDuration,
       );
       _isExpanded = true;
@@ -232,8 +307,6 @@ class ExpanderState extends State<Expander>
     super.dispose();
   }
 
-  static const Duration expanderAnimationDuration = Duration(milliseconds: 70);
-
   @override
   Widget build(BuildContext context) {
     assert(debugCheckHasFluentTheme(context));
@@ -245,7 +318,7 @@ class ExpanderState extends State<Expander>
         hitTestBehavior: HitTestBehavior.deferToChild,
         builder: (context, states) {
           return Container(
-            constraints: const BoxConstraints(minHeight: 42.0),
+            constraints: const BoxConstraints(minHeight: 42),
             decoration: ShapeDecoration(
               color:
                   widget.headerBackgroundColor?.resolve(states) ??
@@ -257,40 +330,40 @@ class ExpanderState extends State<Expander>
                       color: theme.resources.cardStrokeColorDefault,
                     ),
                     borderRadius: BorderRadius.vertical(
-                      top: const Radius.circular(6.0),
+                      top: const Radius.circular(6),
                       bottom: Radius.circular(_isExpanded ? 0.0 : 6.0),
                     ),
                   ),
             ),
-            padding: const EdgeInsetsDirectional.only(start: 16.0),
+            padding: const EdgeInsetsDirectional.only(start: 16),
             alignment: AlignmentDirectional.centerStart,
             child: Row(
               mainAxisSize: MainAxisSize.min,
               children: [
                 if (widget.leading != null)
                   Padding(
-                    padding: const EdgeInsetsDirectional.only(end: 10.0),
-                    child: widget.leading!,
+                    padding: const EdgeInsetsDirectional.only(end: 10),
+                    child: widget.leading,
                   ),
                 Expanded(child: widget.header),
                 if (widget.trailing != null)
                   Padding(
-                    padding: const EdgeInsetsDirectional.only(start: 20.0),
-                    child: widget.trailing!,
+                    padding: const EdgeInsetsDirectional.only(start: 20),
+                    child: widget.trailing,
                   ),
                 Padding(
                   padding: EdgeInsetsDirectional.only(
                     start: widget.trailing != null ? 8.0 : 20.0,
-                    end: 8.0,
-                    top: 8.0,
-                    bottom: 8.0,
+                    end: 8,
+                    top: 8,
+                    bottom: 8,
                   ),
                   child: FocusBorder(
                     focused: states.isFocused,
                     child: Container(
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 10.0,
-                        vertical: 10.0,
+                      padding: const EdgeInsetsDirectional.symmetric(
+                        horizontal: 10,
+                        vertical: 10,
                       ),
                       decoration: BoxDecoration(
                         color: ButtonThemeData.uncheckedInputColor(
@@ -298,7 +371,7 @@ class ExpanderState extends State<Expander>
                           states,
                           transparentWhenNone: true,
                         ),
-                        borderRadius: BorderRadius.circular(6.0),
+                        borderRadius: BorderRadius.circular(6),
                       ),
                       child:
                           widget.icon ??
@@ -308,7 +381,7 @@ class ExpanderState extends State<Expander>
                                 parent: _controller,
                                 curve: Interval(
                                   0.5,
-                                  1.0,
+                                  1,
                                   curve:
                                       widget.animationCurve ??
                                       _theme.animationCurve,
@@ -325,7 +398,7 @@ class ExpanderState extends State<Expander>
                                 _isDown
                                     ? FluentIcons.chevron_down
                                     : FluentIcons.chevron_up,
-                                size: 8.0,
+                                size: 8,
                               ),
                             ),
                           ),
@@ -340,7 +413,7 @@ class ExpanderState extends State<Expander>
       SizeTransition(
         sizeFactor: CurvedAnimation(
           curve: Interval(
-            0.0,
+            0,
             0.5,
             curve: widget.animationCurve ?? _theme.animationCurve,
           ),
@@ -357,7 +430,7 @@ class ExpanderState extends State<Expander>
                     color: theme.resources.cardStrokeColorDefault,
                   ),
                   borderRadius: const BorderRadius.vertical(
-                    bottom: Radius.circular(6.0),
+                    bottom: Radius.circular(6),
                   ),
                 ),
             color:

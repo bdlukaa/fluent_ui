@@ -109,7 +109,7 @@ class CalendarDatePickerState extends CalendarViewState {
     bool dismissWithEsc = true,
     bool dismissOnPointerMoveAway = false,
   }) {
-    _flyoutController.showFlyout(
+    _flyoutController.showFlyout<void>(
       barrierColor: Colors.transparent,
       autoModeConfiguration: FlyoutAutoConfiguration(
         preferredMode: widget.placement,
@@ -125,13 +125,13 @@ class CalendarDatePickerState extends CalendarViewState {
           key: _flyoutKey,
           builder: (context, setState) {
             return Mica(
-              borderRadius: BorderRadius.circular(6.0),
+              borderRadius: BorderRadius.circular(6),
               child: Container(
                 height: 350,
                 width: 300,
                 decoration: BoxDecoration(
                   color: theme.resources.controlFillColorDefault,
-                  borderRadius: BorderRadius.circular(6.0),
+                  borderRadius: BorderRadius.circular(6),
                 ),
                 child: super.build(context),
               ),
@@ -144,7 +144,7 @@ class CalendarDatePickerState extends CalendarViewState {
 
   /// Closes the calendar date picker flyout.
   void close({bool force = false}) {
-    _flyoutController.close(force);
+    _flyoutController.close<bool>(force);
   }
 
   @override

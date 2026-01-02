@@ -5,7 +5,7 @@ import 'app_test.dart';
 
 void main() {
   testWidgets('InfoLabel labelStyle is applied correctly to Text', (
-    WidgetTester tester,
+    tester,
   ) async {
     const labelStyle = TextStyle();
 

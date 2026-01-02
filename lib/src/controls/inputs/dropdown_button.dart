@@ -1,54 +1,58 @@
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter/foundation.dart';
 
-const double _kVerticalOffset = 6.0;
+const double _kVerticalOffset = 6;
 const Widget _kDefaultDropdownButtonTrailing = ChevronDown();
 
+/// A builder function for creating a custom dropdown button widget.
+///
+/// The [onOpen] callback opens the dropdown menu.
 typedef DropDownButtonBuilder =
     Widget Function(BuildContext context, VoidCallback? onOpen);
 
-/// A dropdown button is a button that shows a chevron as a visual indicator that
-/// it has an attached flyout that contains more options. It has the same
-/// behavior as a standard Button control with a flyout; only the appearance is
-/// different.
+/// A button that displays a dropdown menu when pressed.
 ///
-/// ![DropDownButton Showcase](https://docs.microsoft.com/en-us/windows/apps/design/controls/images/drop-down-button-align.png)
+/// [DropDownButton] shows a chevron indicator signaling that pressing it
+/// opens a flyout menu with additional options. It's useful for grouping
+/// related actions or presenting a list of choices.
 ///
-/// ## Usage
+/// ![DropDownButton Showcase](https://learn.microsoft.com/en-us/windows/apps/design/controls/images/drop-down-button-align.png)
+///
+/// {@tool snippet}
+/// This example shows a dropdown button with menu items:
 ///
 /// ```dart
 /// DropDownButton(
-///   title: const Text('Select an option'),
+///   title: Text('Options'),
 ///   items: [
 ///     MenuFlyoutItem(
-///       text: const Text('Option 1'),
-///       onPressed: () { /* Handle option 1 */ },
+///       text: Text('Copy'),
+///       leading: Icon(FluentIcons.copy),
+///       onPressed: () => copy(),
 ///     ),
-///     MenuFlyoutSubItem(
-///       text: const Text('Submenu'),
-///       items: (context) => [
-///         MenuFlyoutItem(
-///           text: const Text('Suboption 1'),
-///           onPressed: () { /* Handle suboption 1 */ },
-///         ),
-///       ],
+///     MenuFlyoutItem(
+///       text: Text('Paste'),
+///       leading: Icon(FluentIcons.paste),
+///       onPressed: () => paste(),
 ///     ),
 ///   ],
 /// )
 /// ```
+/// {@end-tool}
 ///
 /// See also:
 ///
-///   * [Flyout], a light dismiss container that can show arbitrary UI as its
-///     content. Used to back this button
-///   * [ComboBox], a list of items that a user can select from
-///   * <https://docs.microsoft.com/en-us/windows/apps/design/controls/buttons#create-a-drop-down-button>
+///  * [ComboBox], a text field with a dropdown menu
+///  * [SplitButton], a button with a dropdown menu
+///  * [MenuFlyout], a menu that can be used to display a list of options
+///  * [Flyout], the underlying light-dismiss container
+///  * <https://learn.microsoft.com/en-us/windows/apps/design/controls/buttons#create-a-drop-down-button>
 class DropDownButton extends StatefulWidget {
   /// Creates a dropdown button.
   const DropDownButton({
+    required this.items,
     super.key,
     this.buttonBuilder,
-    required this.items,
     this.leading,
     this.title,
     this.trailing = _kDefaultDropdownButtonTrailing,
@@ -175,9 +179,10 @@ class DropDownButton extends StatefulWidget {
         if (animation.isCompleted || animation.isDismissed) return child!;
 
         if (animation.status == AnimationStatus.reverse) {
-          return FadeTransition(opacity: animation, child: child!);
+          return FadeTransition(opacity: animation, child: child);
         }
 
+        final animationCurve = FluentTheme.of(context).animationCurve;
         switch (placement) {
           case FlyoutPlacementMode.bottomCenter:
           case FlyoutPlacementMode.bottomLeft:
@@ -188,12 +193,9 @@ class DropDownButton extends StatefulWidget {
                 position:
                     Tween<Offset>(
                       begin: const Offset(0, -1),
-                      end: const Offset(0, 0),
+                      end: Offset.zero,
                     ).animate(
-                      CurvedAnimation(
-                        parent: animation,
-                        curve: FluentTheme.of(context).animationCurve,
-                      ),
+                      CurvedAnimation(parent: animation, curve: animationCurve),
                     ),
                 child: child,
               ),
@@ -207,12 +209,9 @@ class DropDownButton extends StatefulWidget {
                 position:
                     Tween<Offset>(
                       begin: const Offset(0, 1),
-                      end: const Offset(0, 0),
+                      end: Offset.zero,
                     ).animate(
-                      CurvedAnimation(
-                        parent: animation,
-                        curve: FluentTheme.of(context).animationCurve,
-                      ),
+                      CurvedAnimation(parent: animation, curve: animationCurve),
                     ),
                 child: child,
               ),
@@ -263,7 +262,7 @@ class DropDownButtonState extends State<DropDownButton> {
   // See: https://github.com/flutter/flutter/issues/16957#issuecomment-558878770
   List<Widget> _space(
     Iterable<Widget> children, {
-    Widget spacer = const SizedBox(width: 8.0),
+    Widget spacer = const SizedBox(width: 8),
   }) {
     return children
         .expand((child) sync* {
@@ -301,7 +300,7 @@ class DropDownButtonState extends State<DropDownButton> {
                 final state = HoverButton.of(context).states;
 
                 return IconTheme.merge(
-                  data: const IconThemeData(size: 20.0),
+                  data: const IconThemeData(size: 20),
                   child: Row(
                     mainAxisSize: MainAxisSize.min,
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -325,7 +324,7 @@ class DropDownButtonState extends State<DropDownButton> {
                             offset: state.isPressed
                                 ? const Offset(0, 0.1)
                                 : Offset.zero,
-                            child: widget.trailing!,
+                            child: widget.trailing,
                           ),
                         ),
                     ]),
@@ -357,14 +356,14 @@ class DropDownButtonState extends State<DropDownButton> {
   /// See also:
   ///
   ///  * [FlyoutController.showFlyout], which is used to show the dropdown flyout
-  void open({
+  Future<void> open({
     bool barrierDismissible = true,
     bool dismissWithEsc = true,
     bool dismissOnPointerMoveAway = false,
   }) async {
     if (_flyoutController.isOpen) return;
     widget.onOpen?.call();
-    await _flyoutController.showFlyout(
+    await _flyoutController.showFlyout<void>(
       barrierColor: Colors.transparent,
       autoModeConfiguration: FlyoutAutoConfiguration(
         preferredMode: widget.placement,
@@ -418,9 +417,7 @@ class DropDownButtonState extends State<DropDownButton> {
   MenuFlyoutItem _createMenuItem(MenuFlyoutItem item, BuildContext context) {
     return MenuFlyoutItem(
       onPressed: item.onPressed,
-      closeAfterClick: !item.closeAfterClick || !widget.closeAfterClick
-          ? false
-          : true,
+      closeAfterClick: !!item.closeAfterClick || !widget.closeAfterClick,
       key: item.key,
       leading: item.leading,
       text: item.text,

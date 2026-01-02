@@ -76,7 +76,7 @@ void main() {
         wrapApp(
           child: const FlyoutListTile(
             text: Text('Margin'),
-            margin: EdgeInsets.all(20),
+            margin: EdgeInsetsDirectional.all(20),
           ),
         ),
       );
@@ -88,7 +88,7 @@ void main() {
             )
             .first,
       );
-      expect(padding.padding, const EdgeInsets.all(20));
+      expect(padding.padding, const EdgeInsetsDirectional.all(20));
     });
 
     testWidgets('passes semanticLabel', (tester) async {
@@ -125,7 +125,7 @@ void main() {
           matching: find.byType(Container),
         ),
       );
-      final decoration = container.decoration as ShapeDecoration;
+      final decoration = container.decoration! as ShapeDecoration;
       expect(decoration.color, Colors.red);
     });
 
@@ -146,7 +146,7 @@ void main() {
       await tester.pumpWidget(
         wrapApp(
           child: const FlyoutContent(
-            padding: EdgeInsets.all(30),
+            padding: EdgeInsetsDirectional.all(30),
             child: Text('Padded'),
           ),
         ),
@@ -157,7 +157,7 @@ void main() {
           matching: find.byType(Container),
         ),
       );
-      expect(container.padding, const EdgeInsets.all(30));
+      expect(container.padding, const EdgeInsetsDirectional.all(30));
     });
 
     testWidgets('applies custom constraints', (tester) async {

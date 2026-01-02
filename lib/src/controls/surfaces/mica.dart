@@ -1,29 +1,38 @@
 import 'package:fluent_ui/fluent_ui.dart';
 
-/// Mica is an opaque, dynamic material that incorporates theme and desktop
-/// wallpaper to paint the background of long-lived windows such as apps and
-/// settings. You can apply Mica to your application backdrop to delight users
-/// and create visual hierarchy, aiding productivity, by increasing clarity
-/// about which window is in focus. Mica is specifically designed for app
-/// performance as it only samples the desktop wallpaper once to create its
-/// visualization.
+/// An opaque material that uses the desktop wallpaper as a subtle backdrop.
 ///
-/// ![Mica Header Preview](https://docs.microsoft.com/en-us/windows/apps/design/style/images/materials/mica-header.png)
+/// Mica is a Fluent Design material that creates visual hierarchy by
+/// incorporating the user's desktop wallpaper into the app background.
+/// It's optimized for performance, sampling the wallpaper only once.
 ///
-/// All windows widgets are developed to look good on a [Mica] surface, with
-/// support for all transparency effects.
+/// ![Mica Header Preview](https://learn.microsoft.com/en-us/windows/apps/design/style/images/materials/mica-header.png)
+///
+/// {@tool snippet}
+/// This example shows a mica background:
+///
+/// ```dart
+/// Mica(
+///   child: Column(
+///     children: [
+///       Text('Content on Mica'),
+///     ],
+///   ),
+/// )
+/// ```
+/// {@end-tool}
 ///
 /// See also:
 ///
-///  * [Acrylic], a type of Brush that creates a translucent texture
-///  * <https://docs.microsoft.com/en-us/windows/apps/design/style/mica>
+///  * [Acrylic], a translucent material with blur effect
+///  * <https://learn.microsoft.com/en-us/windows/apps/design/style/mica>
 class Mica extends StatelessWidget {
   /// Creates the Mica material.
   ///
   /// [elevation] must be non-negative.
   const Mica({
-    super.key,
     required this.child,
+    super.key,
     this.elevation = 0,
     this.backgroundColor,
     this.borderRadius,
