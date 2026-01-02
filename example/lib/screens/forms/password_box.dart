@@ -1,4 +1,4 @@
-import 'package:example/widgets/card_highlight.dart';
+import 'package:example/widgets/code_snippet_card.dart';
 import 'package:example/widgets/page.dart';
 import 'package:fluent_ui/fluent_ui.dart';
 
@@ -35,7 +35,7 @@ class _PasswordBoxPageState extends State<PasswordBoxPage> with PageMixin {
         subtitle(
           content: const Text('A simple PasswordBox in peek mode (default)'),
         ),
-        CardHighlight(
+        CodeSnippetCard(
           codeSnippet: '''PasswordBox()''',
           child: Row(
             children: [Expanded(child: PasswordBox(enabled: !disabled))],
@@ -44,7 +44,7 @@ class _PasswordBoxPageState extends State<PasswordBoxPage> with PageMixin {
         subtitle(
           content: const Text('A simple PasswordBox in peekAlways mode'),
         ),
-        CardHighlight(
+        CodeSnippetCard(
           codeSnippet: '''
 PasswordBox(
   revealMode: PasswordRevealMode.peekAlways,
@@ -65,7 +65,7 @@ PasswordBox(
             'A simple PasswordBox in visible (left) and hidden (right) mode',
           ),
         ),
-        CardHighlight(
+        CodeSnippetCard(
           codeSnippet: '''
 PasswordBox(
   revealMode: PasswordRevealMode.visible,
@@ -95,7 +95,7 @@ PasswordBox(
           ),
         ),
         subtitle(content: const Text('Update programmatically the visibility')),
-        CardHighlight(
+        CodeSnippetCard(
           codeSnippet: '''
 PasswordBox(
   revealMode: revealMode,
@@ -124,7 +124,7 @@ PasswordBox(
           ),
         ),
         subtitle(content: const Text('PasswordFormBox')),
-        CardHighlight(
+        CodeSnippetCard(
           codeSnippet: '''
 PasswordBox(
   autovalidateMode: AutovalidateMode.always,

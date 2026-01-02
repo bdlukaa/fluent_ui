@@ -1,4 +1,4 @@
-import 'package:example/widgets/card_highlight.dart';
+import 'package:example/widgets/code_snippet_card.dart';
 import 'package:example/widgets/page.dart';
 import 'package:fluent_ui/fluent_ui.dart';
 
@@ -48,7 +48,7 @@ class _ComboBoxPageState extends State<ComboBoxPage> with PageMixin {
             'A ComboBox with items defined inline and its width set',
           ),
         ),
-        CardHighlight(
+        CodeSnippetCard(
           codeSnippet: '''
 // Green by default
 Color selectedColor = 'Green';
@@ -88,7 +88,7 @@ ComboBox<String>(
           ),
         ),
         subtitle(content: const Text('A ComboBox with a long list of items')),
-        CardHighlight(
+        CodeSnippetCard(
           codeSnippet: '''
 List<String> cats= [...];
 
@@ -141,7 +141,7 @@ ComboBox<String>(
             ' combo box editable.',
           ),
         ),
-        CardHighlight(
+        CodeSnippetCard(
           codeSnippet: r'''
 static const fontSizes = <double>[
   8,
@@ -266,7 +266,7 @@ EditableComboBox<int>(
           ),
         ),
         subtitle(content: const Text('A ComboBox Form Field')),
-        CardHighlight(
+        CodeSnippetCard(
           codeSnippet: r'''
 Map<String, Color> colors = { ... };
 Color selectedColor = 'Green';
@@ -336,7 +336,7 @@ Form(
           ),
         ),
         subtitle(content: const Text('Open popup programatically')),
-        CardHighlight(
+        CodeSnippetCard(
           codeSnippet: '''
 // A GlobalKey<ComboboxState> is used to access the current
 // state of the combo box. With it, it's possible to call .openPopup() and .closePopup()

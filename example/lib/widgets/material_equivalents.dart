@@ -62,11 +62,11 @@ class _UIEquivalentsState extends State<UIEquivalents> {
       [
         const Text('IconButton'),
         IconButton(
-          icon: const WindowsIcon(FluentIcons.graph_symbol),
+          icon: const WindowsIcon(WindowsIcons.app_icon_default),
           onPressed: () {},
         ),
         m.IconButton(
-          icon: const WindowsIcon(FluentIcons.graph_symbol),
+          icon: const WindowsIcon(WindowsIcons.app_icon_default),
           onPressed: () {},
         ),
         // c.CupertinoNavigationBarBackButton(
@@ -352,17 +352,17 @@ class _UIEquivalentsState extends State<UIEquivalents> {
       [
         const Text('ListTile'),
         ListTile(
-          leading: const WindowsIcon(FluentIcons.graph_symbol),
+          leading: const WindowsIcon(WindowsIcons.app_icon_default),
           title: const Text('Content'),
           onPressed: () {},
         ),
         m.ListTile(
-          leading: const WindowsIcon(FluentIcons.graph_symbol),
+          leading: const WindowsIcon(WindowsIcons.app_icon_default),
           title: const Text('Content'),
           onTap: () {},
         ),
         c.CupertinoListTile(
-          leading: const WindowsIcon(FluentIcons.graph_symbol),
+          leading: const WindowsIcon(WindowsIcons.app_icon_default),
           title: const Text('Content'),
           onTap: () {},
         ),

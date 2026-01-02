@@ -1,4 +1,4 @@
-import 'package:example/widgets/card_highlight.dart';
+import 'package:example/widgets/code_snippet_card.dart';
 import 'package:example/widgets/page.dart';
 import 'package:fluent_ui/fluent_ui.dart';
 
@@ -24,7 +24,7 @@ class _ContentDialogPageState extends State<ContentDialogPage> with PageMixin {
           'user.',
         ),
         subtitle(content: const Text('A basic content dialog with content')),
-        CardHighlight(
+        CodeSnippetCard(
           codeSnippet: r'''
 Button(
   child: const Text('Show dialog'),

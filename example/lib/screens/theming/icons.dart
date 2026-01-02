@@ -4,7 +4,7 @@ import 'package:clipboard/clipboard.dart';
 import 'package:collection/collection.dart';
 import 'package:example/screens/settings.dart';
 import 'package:example/screens/theming/typography.dart';
-import 'package:example/widgets/card_highlight.dart';
+import 'package:example/widgets/code_snippet_card.dart';
 import 'package:fluent_ui/fluent_ui.dart';
 
 Future<void> showCopiedSnackbar(
@@ -136,7 +136,7 @@ class _IconsPageState extends State<IconsPage> {
             SliverToBoxAdapter(
               child: Padding(
                 padding: const EdgeInsetsDirectional.only(bottom: 8),
-                child: CardHighlight(
+                child: CodeSnippetCard(
                   initiallyOpen: true,
                   codeSnippet:
                       '''const WindowsIcon(

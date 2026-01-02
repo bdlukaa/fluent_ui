@@ -1,6 +1,6 @@
 import 'dart:math';
 
-import 'package:example/widgets/card_highlight.dart';
+import 'package:example/widgets/code_snippet_card.dart';
 import 'package:example/widgets/page.dart';
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter/foundation.dart';
@@ -25,7 +25,7 @@ class _TabViewPageState extends State<TabViewPage> with PageMixin {
   bool wheelScroll = false;
 
   Tab generateTab(final int index) {
-    final allIcons = FluentIcons.allIcons.values;
+    final allIcons = WindowsIcons.allIcons.values;
     late Tab tab;
     tab = Tab(
       text: Text('Document $index'),
@@ -184,7 +184,7 @@ class _TabViewPageState extends State<TabViewPage> with PageMixin {
             ],
           ),
         ),
-        CardHighlight(
+        CodeSnippetCard(
           codeSnippet:
               '''int currentIndex = 0;
 List<Tab> tabs = [];
@@ -281,7 +281,7 @@ TabView(
             ),
           ),
         ),
-        CardHighlight(
+        CodeSnippetCard(
           codeSnippet: '''
 class MyCustomTab extends Tab {
   MyCustomTab({

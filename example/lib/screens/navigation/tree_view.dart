@@ -1,4 +1,4 @@
-import 'package:example/widgets/card_highlight.dart';
+import 'package:example/widgets/code_snippet_card.dart';
 import 'package:example/widgets/page.dart';
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter/gestures.dart';
@@ -30,7 +30,7 @@ class _TreeViewPageState extends State<TreeViewPage> with PageMixin {
         subtitle(
           content: const Text('A TreeView with Multi-selection enabled'),
         ),
-        CardHighlight(
+        CodeSnippetCard(
           codeSnippet: r'''
 final items = [
   TreeViewItem(
@@ -108,7 +108,7 @@ TreeView(
           ),
         ),
         subtitle(content: const Text('A TreeView with lazy-loading items')),
-        CardHighlight(
+        CodeSnippetCard(
           codeSnippet: r'''
 final lazyItems = [
   TreeViewItem(
@@ -184,7 +184,7 @@ TreeView(
             'callback, whether it is built-in or custom.',
           ),
         ),
-        CardHighlight(
+        CodeSnippetCard(
           codeSnippet: r'''
 TreeView(
   ...,

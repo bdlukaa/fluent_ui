@@ -1,8 +1,7 @@
 import 'package:example/main.dart';
-import 'package:example/widgets/card_highlight.dart';
+import 'package:example/widgets/code_snippet_card.dart';
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter/foundation.dart';
-import 'package:go_router/go_router.dart';
 import 'package:window_manager/window_manager.dart';
 
 import '../../widgets/page.dart';
@@ -16,7 +15,7 @@ class NavigationViewPage extends StatefulWidget {
 
 class _NavigationViewPageState extends State<NavigationViewPage>
     with PageMixin {
-  static const double itemHeight = 500;
+  static const double itemHeight = 600;
 
   int topIndex = 0;
 
@@ -141,15 +140,6 @@ class _NavigationViewPageState extends State<NavigationViewPage>
           ),
           InfoLabel(
             label: '',
-            child: Button(
-              onPressed: () {
-                context.push('/navigation_view');
-              },
-              child: const Text('Open in a new shell route'),
-            ),
-          ),
-          InfoLabel(
-            label: '',
             child: Checkbox(
               checked: hasTopBar,
               onChanged: (final value) {
@@ -162,104 +152,103 @@ class _NavigationViewPageState extends State<NavigationViewPage>
       ),
       subtitle(content: Text(title)),
       description(content: Text(desc)),
-      CardHighlight(
-        codeSnippet: '''
-// Do not define the `items` inside the `Widget Build` function
-// otherwise on running `setstate`, new item can not be added.
-
-List<NavigationPaneItem> items = [
-  PaneItem(
-    icon: const WindowsIcon(WindowsIcons.home),
-    title: const Text('Home'),
-    body: const _NavigationBodyItem(),
-  ),
-  PaneItemSeparator(),
-  PaneItem(
-    icon: const WindowsIcon(WindowsIcons.issue_tracking),
-    title: const Text('Track orders'),
-    infoBadge: const InfoBadge(source: Text('8')),
-    body: const _NavigationBodyItem(
-      header: 'Badging',
-      content: Text(
-        'Badging is a non-intrusive and intuitive way to display '
-        'notifications or bring focus to an area within an app - '
-        'whether that be for notifications, indicating new content, '
-        'or showing an alert. An InfoBadge is a small piece of UI '
-        'that can be added into an app and customized to display a '
-        'number, icon, or a simple dot.',
-      ),
+      CodeSnippetCard(
+        codeSnippet: '''NavigationView(
+  titleBar: TitleBar(
+    icon: const FlutterLogo(),
+    title: const Text('Windows UI for Flutter'),
+    subtitle: const Text('Preview'),
+    content: Container(
+      margin: const EdgeInsetsDirectional.symmetric(vertical: 6),
+      constraints: const BoxConstraints(maxWidth: 380),
+      child: Builder(builder: (context) {
+        return AutoSuggestBox(items: []);
+      }),
     ),
-  ),
-  PaneItem(
-    icon: const WindowsIcon(WindowsIcons.disable_updates),
-    title: const Text('Disabled Item'),
-    body: const _NavigationBodyItem(),
-    enabled: false,
-  ),
-  PaneItemExpander(
-    icon: const WindowsIcon(WindowsIcons.account_management),
-    title: const Text('Account'),
-    // body is null - clicking only expands/collapses, doesn't navigate
-    // See: https://github.com/bdlukaa/fluent_ui/issues/1189
-    body: null,
-    items: [
-      PaneItemHeader(header: const Text('Apps')),
-      PaneItem(
-        icon: const WindowsIcon(WindowsIcons.mail),
-        title: const Text('Mail'),
-        body: const _NavigationBodyItem(),
-      ),
-      PaneItem(
-        icon: const WindowsIcon(WindowsIcons.calendar),
-        title: const Text('Calendar'),
-        body: const _NavigationBodyItem(),
-      ),
-    ],
-  ),
-  PaneItemWidgetAdapter(
-    child: Builder(builder: (context) {
-      // Build the widget depending on the current display mode.
-      //
-      // This already returns the resolved auto display mode.
-      if (NavigationView.of(context).displayMode == PaneDisplayMode.compact) {
-        return const FlutterLogo();
-      }
-      return ConstrainedBox(
-        // Constraints are required for top display mode, otherwise the Row will
-        // expand to the available space.
-        constraints: const BoxConstraints(maxWidth: 200.0),
-        child: const Row(children: [
-          FlutterLogo(),
-          SizedBox(width: 6.0),
-          Text('This is a custom widget'),
-        ]),
-      );
-    }),
-  ),
-];
-
-// Return the NavigationView from `Widegt Build` function
-
-NavigationView(
-  appBar: const NavigationAppBar(
-    title: Text('NavigationView'),
+    endHeader: const FlutterLogo(),
+    captionControls: const WindowButtons(),
   ),
   pane: NavigationPane(
     selected: topIndex,
-    onItemPressed: (index) {
-      // Do anything you want to do, such as:
-      if (index == topIndex) {
-        if (displayMode == PaneDisplayMode.expanded) {
-          setState(() => this.displayMode = PaneDisplayMode.compact);
-        } else if (displayMode == PaneDisplayMode.compact) {
-          setState(() => this.displayMode = PaneDisplayMode.expanded);
-        }
-      }
-    },
     onChanged: (index) => setState(() => topIndex = index),
     displayMode: displayMode,
-    items: items,
+    indicator: indicators[indicator],
+    header: const Text('Pane Header'),
+    items: [
+      PaneItem(
+        icon: const WindowsIcon(WindowsIcons.home),
+        title: const Text('Home'),
+        body: const _NavigationBodyItem(),
+      ),
+      PaneItemSeparator(),
+      PaneItem(
+        icon: const WindowsIcon(WindowsIcons.issue_tracking),
+        title: const Text('Track orders'),
+        infoBadge: const InfoBadge(source: Text('8')),
+        body: const _NavigationBodyItem(header: 'Badging', content: Text('...')),
+      ),
+      PaneItem(
+        icon: const WindowsIcon(WindowsIcons.disable_updates),
+        title: const Text('Disabled Item'),
+        body: const _NavigationBodyItem(),
+        enabled: false,
+      ),
+      PaneItemHeader(header: const Text('Apps')),
+      PaneItemExpander(
+        icon: const WindowsIcon(WindowsIcons.account_management),
+        title: const Text('Account'),
+        initiallyExpanded: true,
+        items: [
+          PaneItem(
+            icon: const WindowsIcon(WindowsIcons.mail),
+            title: const Text('Mail'),
+            body: const _NavigationBodyItem(),
+          ),
+          PaneItem(
+            icon: const WindowsIcon(WindowsIcons.calendar),
+            title: const Text('Calendar'),
+            body: const _NavigationBodyItem(),
+          ),
+          PaneItemHeader(header: const Text('Subscriptions')),
+          PaneItemExpander(
+            icon: const WindowsIcon(WindowsIcons.payment_card),
+            title: const Text('Cards'),
+            body: const _NavigationBodyItem(),
+            items: [
+              PaneItem(
+                icon: const WindowsIcon(WindowsIcons.payment_card),
+                title: const Text('Credit Card'),
+                body: const _NavigationBodyItem(),
+              ),
+              PaneItem(
+                icon: const WindowsIcon(WindowsIcons.payment_card),
+                title: const Text('Debit Card'),
+                body: const _NavigationBodyItem(),
+              ),
+            ],
+          ),
+        ],
+      ),
+      PaneItemWidgetAdapter(
+        child: Builder(builder: (context) {
+          if (NavigationView.of(context).displayMode == PaneDisplayMode.compact) {
+            return const FlutterLogo();
+          }
+          return ConstrainedBox(
+            constraints: const BoxConstraints(maxWidth: 200.0),
+            child: const Row(children: [
+              FlutterLogo(),
+              SizedBox(width: 6.0),
+              Flexible(child: Text('This is a custom widget')),
+            ]),
+          );
+        }),
+      ),
+      // Items added dynamically
+      ...items,
+    ],
     footerItems: [
+      PaneItemSeparator(),
       PaneItem(
         icon: const WindowsIcon(WindowsIcons.settings),
         title: const Text('Settings'),
@@ -269,19 +258,7 @@ NavigationView(
         icon: const WindowsIcon(WindowsIcons.add),
         title: const Text('Add New Item'),
         onTap: () {
-          // Your Logic to Add New `NavigationPaneItem`
-          items.add(
-            PaneItem(
-              icon: const WindowsIcon(WindowsIcons.new_folder),
-              title: const Text('New Item'),
-              body: const Center(
-                child: Text(
-                  'This is a newly added Item',
-                ),
-              ),
-            ),
-          );
-          setState(() {});
+          // Logic to add new items
         },
       ),
     ],
@@ -511,6 +488,9 @@ class NavigationViewShellRoute extends StatelessWidget {
     return NavigationView(
       titleBar: TitleBar(
         title: const Text('NavigationView'),
+        onBackRequested: () {
+          Navigator.of(context, rootNavigator: true).pop();
+        },
         onDragStarted: !kIsWeb ? windowManager.startDragging : null,
       ),
       content: const ScaffoldPage(
@@ -572,7 +552,7 @@ class _NavigationBodyItem extends StatelessWidget {
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           Icon(
-                            FluentIcons.circle_fill,
+                            WindowsIcons.circle_fill,
                             size: isLargeScreen ? 48 : 32,
                             color: Colors.white,
                           ),

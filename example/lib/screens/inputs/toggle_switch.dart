@@ -1,4 +1,4 @@
-import 'package:example/widgets/card_highlight.dart';
+import 'package:example/widgets/code_snippet_card.dart';
 import 'package:example/widgets/page.dart';
 import 'package:fluent_ui/fluent_ui.dart';
 
@@ -33,7 +33,7 @@ class _ToggleSwitchPageState extends State<ToggleSwitchPage> with PageMixin {
           'where choosing an option provides immediate results.',
         ),
         subtitle(content: const Text('A simple ToggleSwitch')),
-        CardHighlight(
+        CodeSnippetCard(
           codeSnippet: '''
 bool checked = false;
 
@@ -55,7 +55,7 @@ ToggleSwitch(
         subtitle(
           content: const Text('A ToggleSwitch with custom header and content'),
         ),
-        CardHighlight(
+        CodeSnippetCard(
           codeSnippet: '''
 bool checked = false;
 

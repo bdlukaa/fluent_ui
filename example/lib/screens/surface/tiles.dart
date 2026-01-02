@@ -1,4 +1,4 @@
-import 'package:example/widgets/card_highlight.dart';
+import 'package:example/widgets/code_snippet_card.dart';
 import 'package:example/widgets/page.dart';
 import 'package:fluent_ui/fluent_ui.dart';
 
@@ -10,7 +10,7 @@ class TilesPage extends StatefulWidget {
 }
 
 class _TilesPageState extends State<TilesPage> with PageMixin {
-  final shuffledIcons = FluentIcons.allIcons.values.toList()..shuffle();
+  final shuffledIcons = WindowsIcons.allIcons.values.toList()..shuffle();
 
   // first
   final firstController = ScrollController();
@@ -36,7 +36,7 @@ class _TilesPageState extends State<TilesPage> with PageMixin {
           ),
         ),
         subtitle(content: const Text('Basic ListView with selectable tiles')),
-        CardHighlight(
+        CodeSnippetCard(
           codeSnippet: '''
 String selectedContact = '';
 
@@ -81,7 +81,7 @@ ListView.builder(
         subtitle(
           content: const Text('ListViewItems with many properties applied'),
         ),
-        CardHighlight(
+        CodeSnippetCard(
           codeSnippet: '''
 List<String> selectedContacts = [];
 
@@ -148,7 +148,7 @@ ListView.builder(
           ),
         ),
         subtitle(content: const Text('ListViewItems with images')),
-        CardHighlight(
+        CodeSnippetCard(
           codeSnippet: '''
 String selectedContact = '';
 

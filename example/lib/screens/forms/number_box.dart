@@ -1,4 +1,4 @@
-import 'package:example/widgets/card_highlight.dart';
+import 'package:example/widgets/code_snippet_card.dart';
 import 'package:example/widgets/page.dart';
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:intl/intl.dart';
@@ -67,7 +67,7 @@ class _NumberBoxPageState extends State<NumberBoxPage> with PageMixin {
           'The selection can be applied in compact or in inline mode.',
         ),
         subtitle(content: const Text('A NumberBox in inline mode')),
-        CardHighlight(
+        CodeSnippetCard(
           codeSnippet: '''
 NumberBox(
   value: numberBoxValue,
@@ -87,7 +87,7 @@ NumberBox(
           ),
         ),
         subtitle(content: const Text('A NumberBox in compact mode')),
-        CardHighlight(
+        CodeSnippetCard(
           codeSnippet: '''
 NumberBox(
   value: numberBoxValue,
@@ -106,7 +106,7 @@ NumberBox(
           ),
         ),
         subtitle(content: const Text('A NumberBox in none mode')),
-        CardHighlight(
+        CodeSnippetCard(
           codeSnippet: '''
 NumberBox(
   value: numberBoxValue,
@@ -130,7 +130,7 @@ NumberBox(
             'A NumberBox with a min (0) and a max (20) value',
           ),
         ),
-        CardHighlight(
+        CodeSnippetCard(
           codeSnippet: '''
 NumberBox(
   value: numberBoxValueMinMax,
@@ -154,7 +154,7 @@ NumberBox(
           ),
         ),
         subtitle(content: const Text('A NumberBox mathematical expressions')),
-        CardHighlight(
+        CodeSnippetCard(
           codeSnippet: '''
 NumberBox(
   value: numberBoxValueMinMax,
@@ -176,7 +176,7 @@ NumberBox(
           ),
         ),
         subtitle(content: const Text('A NumberBox with double value')),
-        CardHighlight(
+        CodeSnippetCard(
           codeSnippet: '''
 NumberBox(
   value: numberBoxValueDouble,
@@ -206,7 +206,7 @@ NumberBox(
             'values with custom formatting, such as currency.',
           ),
         ),
-        CardHighlight(
+        CodeSnippetCard(
           codeSnippet: r'''
 import 'package:intl/intl.dart';
 
@@ -247,7 +247,7 @@ NumberBox<double>(
           ),
         ),
         subtitle(content: const Text('A NumberFormBox')),
-        CardHighlight(
+        CodeSnippetCard(
           codeSnippet: '''
 NumberFormBox(
   value: numberBoxValue,

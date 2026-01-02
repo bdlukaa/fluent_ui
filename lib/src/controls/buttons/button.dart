@@ -39,7 +39,7 @@ const kDefaultButtonPadding = EdgeInsetsDirectional.only(
 ///   child: Row(
 ///     mainAxisSize: MainAxisSize.min,
 ///     children: [
-///       Icon(FluentIcons.add),
+///       Icon(WindowsIcons.add),
 ///       SizedBox(width: 8),
 ///       Text('Add item'),
 ///     ],
