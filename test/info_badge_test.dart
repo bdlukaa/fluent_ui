@@ -10,12 +10,12 @@ void main() {
     await tester.pumpWidget(wrapApp(child: const InfoBadge()));
 
     final container = tester.widget<Container>(find.byType(Container));
-    expect(container.width, 6);
-    expect(container.height, 6);
-
     final decoration = container.decoration! as BoxDecoration;
     expect(decoration.borderRadius, BorderRadius.circular(100));
 
+    // Verify size through constraints on the Container
+    expect(container.width, 6);
+    expect(container.height, 6);
     expect(container.child, isNull);
   });
 

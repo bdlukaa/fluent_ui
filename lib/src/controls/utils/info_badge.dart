@@ -22,9 +22,9 @@ class InfoBadge extends StatelessWidget {
   /// Creates an info badge.
   const InfoBadge({super.key, this.source, this.color, this.foregroundColor});
 
-  /// Creates an informational info badge.
+  /// Creates an attention info badge.
   ///
-  /// Uses the default accent color to indicate informational content.
+  /// Uses the default accent color to draw attention to important content.
   const InfoBadge.attention({
     super.key,
     this.source,
