@@ -738,7 +738,8 @@ class PaneItemExpander extends PaneItem {
     final maybeBody = NavigationView.dataOf(context);
     final mode = displayMode ?? maybeBody.displayMode;
 
-    return RepaintBoundary(
+    return KeyedSubtree(
+      key: ValueKey(itemIndex),
       child: _PaneItemExpander(
         key: key,
         item: this,
@@ -810,9 +811,11 @@ class __PaneItemExpanderState extends State<_PaneItemExpander>
 
   /// Whether to use a flyout menu instead of inline expansion.
   ///
-  /// Flyouts are used in compact and minimal modes where there isn't
+  /// Flyouts are used in compact and top modes where there isn't
   /// enough space to show expanded children inline.
-  bool get useFlyout => widget.displayMode != PaneDisplayMode.expanded;
+  bool get useFlyout =>
+      widget.displayMode == PaneDisplayMode.compact ||
+      widget.displayMode == PaneDisplayMode.top;
 
   late bool _open;
 
@@ -838,8 +841,10 @@ class __PaneItemExpanderState extends State<_PaneItemExpander>
   }
 
   void _controllerListener() {
-    if (_open && !flyoutController.isOpen ||
-        !_open && flyoutController.isOpen) {
+    if (!useFlyout) return;
+
+    if (isExpanded && !flyoutController.isOpen ||
+        !isExpanded && flyoutController.isOpen) {
       toggleOpen(doFlyout: false);
     }
   }
@@ -886,7 +891,7 @@ class __PaneItemExpanderState extends State<_PaneItemExpander>
       view._updatePreviousItemIndex(-1);
     }
 
-    if (_open) {
+    if (isExpanded) {
       if (useFlyout && doFlyout && flyoutController.isAttached) {
         final body = NavigationViewContext.of(context);
         final displayMode = body.displayMode;
@@ -914,7 +919,15 @@ class __PaneItemExpanderState extends State<_PaneItemExpander>
                           viewData.pane?.changeTo(item);
                         }
                       },
-                      onItemPressed: widget.onItemPressed ?? (_) {},
+                      onItemPressed:
+                          widget.onItemPressed ??
+                          (item) {
+                            if (viewData.pane?.canChangeTo(item) ?? false) {
+                              Navigator.pop(context);
+                              item.onTap?.call();
+                              viewData.pane?.changeTo(item);
+                            }
+                          },
                     );
                   } else if (item is PaneItem) {
                     return _PaneItemExpanderMenuItem(
@@ -980,7 +993,7 @@ class __PaneItemExpanderState extends State<_PaneItemExpander>
     final isExpanderSelected = widget.selected;
 
     final expanderWidget = _ForceShowIndicator(
-      forceShow: !_open && hasSelectedChild,
+      forceShow: !isExpanded && hasSelectedChild,
       child: widget.item
           .copyWith(
             trailing: GestureDetector(
@@ -992,8 +1005,8 @@ class __PaneItemExpanderState extends State<_PaneItemExpander>
                   builder: (context, child) => RotationTransition(
                     turns: controller.drive(
                       Tween<double>(
-                        begin: _open ? 0 : 1.0,
-                        end: _open ? 0.5 : 0.5,
+                        begin: isExpanded ? 0 : 1.0,
+                        end: isExpanded ? 0.5 : 0.5,
                       ),
                     ),
                     child: child,
@@ -1034,7 +1047,7 @@ class __PaneItemExpanderState extends State<_PaneItemExpander>
             AnimatedSize(
               duration: theme.fastAnimationDuration,
               curve: Curves.easeIn,
-              child: !_open
+              child: !isExpanded
                   ? const SizedBox(width: double.infinity)
                   : ClipRect(
                       child: Column(

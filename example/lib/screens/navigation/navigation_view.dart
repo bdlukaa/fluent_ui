@@ -371,12 +371,6 @@ class _NavigationViewPageState extends State<NavigationViewPage>
                       body: const _NavigationBodyItem(),
                       onTap: () => debugPrint('Tapped mail'),
                     ),
-                    PaneItem(
-                      icon: const WindowsIcon(WindowsIcons.calendar),
-                      title: const Text('Calendar'),
-                      body: const _NavigationBodyItem(),
-                      onTap: () => debugPrint('Tapped calendar'),
-                    ),
                     PaneItemHeader(header: const Text('Subscriptions')),
                     PaneItemExpander(
                       icon: const WindowsIcon(WindowsIcons.payment_card),
@@ -397,6 +391,12 @@ class _NavigationViewPageState extends State<NavigationViewPage>
                           onTap: () => debugPrint('Tapped debit card'),
                         ),
                       ],
+                    ),
+                    PaneItem(
+                      icon: const WindowsIcon(WindowsIcons.calendar),
+                      title: const Text('Calendar'),
+                      body: const _NavigationBodyItem(),
+                      onTap: () => debugPrint('Tapped calendar'),
                     ),
                   ],
                 ),
