@@ -394,7 +394,7 @@ class _MyHomePageState extends State<MyHomePage> with WindowListener {
               ),
               PaneItem(
                 title: const Text('InfoBadge'),
-                // body: surfaces.InfoBadgePage(),
+                body: surfaces.InfoBadgePage(),
               ),
               PaneItem(
                 title: const Text('ProgressRing'),
