@@ -20,30 +20,27 @@ import 'package:flutter/rendering.dart';
 /// This example shows a group of radio buttons:
 ///
 /// ```dart
-/// int selectedOption = 0;
+/// int? selectedOption;
 ///
 /// Column(
 ///   children: [
-///     RadioButton(
-///       checked: selectedOption == 0,
+///     RadioButton<int>(
+///       value: 0,
+///       groupValue: selectedOption,
 ///       content: Text('Option 1'),
-///       onChanged: (checked) {
-///         if (checked) setState(() => selectedOption = 0);
-///       },
+///       onChanged: (value) => setState(() => selectedOption = value),
 ///     ),
-///     RadioButton(
-///       checked: selectedOption == 1,
+///     RadioButton<int>(
+///       value: 1,
+///       groupValue: selectedOption,
 ///       content: Text('Option 2'),
-///       onChanged: (checked) {
-///         if (checked) setState(() => selectedOption = 1);
-///       },
+///       onChanged: (value) => setState(() => selectedOption = value),
 ///     ),
-///     RadioButton(
-///       checked: selectedOption == 2,
+///     RadioButton<int>(
+///       value: 2,
+///       groupValue: selectedOption,
 ///       content: Text('Option 3'),
-///       onChanged: (checked) {
-///         if (checked) setState(() => selectedOption = 2);
-///       },
+///       onChanged: (value) => setState(() => selectedOption = value),
 ///     ),
 ///   ],
 /// )
@@ -57,10 +54,11 @@ import 'package:flutter/rendering.dart';
 ///  * [Checkbox], which lets the user select multiple options
 ///  * [ComboBox], which lets the user select from a dropdown list
 ///  * <https://learn.microsoft.com/en-us/windows/apps/design/controls/radio-button>
-class RadioButton extends StatelessWidget {
+class RadioButton<T> extends StatelessWidget {
   /// Creates a radio button.
   const RadioButton({
-    required this.checked,
+    required this.value,
+    required this.groupValue,
     required this.onChanged,
     super.key,
     this.style,
@@ -68,22 +66,81 @@ class RadioButton extends StatelessWidget {
     this.semanticLabel,
     this.focusNode,
     this.autofocus = false,
+    this.toggleable = false,
   });
 
-  /// Whether this radio button is checked.
-  final bool checked;
+  /// The value represented by this radio button.
+  final T value;
 
-  /// Called when the value of the radio button should change.
+  /// The currently selected value for the group of radio buttons.
   ///
-  /// The radio button passes the new value to the callback but does
-  /// not actually change state until the parent widget rebuilds the
-  /// radio button with the new value.
-  ///
-  /// If this callback is null, the radio button will be displayed as
-  /// disabled and will not respond to input gestures.
-  final ValueChanged<bool>? onChanged;
+  /// This radio button is considered selected if its [value] matches the
+  /// [groupValue].
+  final T? groupValue;
 
-  /// The style of the radio buttonbutton.
+  /// Called when the user selects this radio button.
+  ///
+  /// The radio button passes [value] as a parameter to this callback. The radio
+  /// button does not actually change state until the parent widget rebuilds the
+  /// radio button with the new [groupValue].
+  ///
+  /// If null, the radio button will be displayed as disabled.
+  ///
+  /// The provided callback will not be invoked if this radio button is already
+  /// selected.
+  ///
+  /// The callback provided to [onChanged] should update the state of the parent
+  /// [StatefulWidget] using the [State.setState] method, so that the parent
+  /// gets rebuilt; for example:
+  ///
+  /// ```dart
+  /// RadioButton<SingingCharacter>(
+  ///   value: SingingCharacter.lafayette,
+  ///   groupValue: _character,
+  ///   onChanged: (SingingCharacter? newValue) {
+  ///     setState(() {
+  ///       _character = newValue;
+  ///     });
+  ///   },
+  /// )
+  /// ```
+  final ValueChanged<T?>? onChanged;
+
+  /// Set to true if this radio button is allowed to be returned to an
+  /// indeterminate state by selecting it again when selected.
+  ///
+  /// To indicate that this radio button is part of a group, set [groupValue]
+  /// to the group's selected value.
+  ///
+  /// If this parameter is false, the radio button cannot be deselected,
+  /// although it can be changed to another value.
+  ///
+  /// If this parameter is true, tapping this radio button when it's already
+  /// selected will set [groupValue] to null. This is only relevant when
+  /// [groupValue] is already equal to [value].
+  ///
+  /// The default is false.
+  ///
+  /// {@tool snippet}
+  ///
+  /// ```dart
+  /// int? selectedOption;
+  ///
+  /// RadioButton<int>(
+  ///   value: 0,
+  ///   groupValue: selectedOption,
+  ///   onChanged: (int? newValue) {
+  ///     setState(() {
+  ///       selectedOption = newValue;
+  ///     });
+  ///   },
+  ///   toggleable: true,
+  /// )
+  /// ```
+  /// {@end-tool}
+  final bool toggleable;
+
+  /// The style of the radio button.
   ///
   /// If non-null, this is merged with the closest [RadioButtonTheme].
   /// If null, the closest [RadioButtonTheme] is used.
@@ -106,14 +163,18 @@ class RadioButton extends StatelessWidget {
   /// {@macro flutter.widgets.Focus.autofocus}
   final bool autofocus;
 
+  bool get _selected => value == groupValue;
+
   @override
   void debugFillProperties(DiagnosticPropertiesBuilder properties) {
     super.debugFillProperties(properties);
     properties
-      ..add(FlagProperty('checked', value: checked, ifFalse: 'unchecked'))
+      ..add(DiagnosticsProperty<T>('value', value))
+      ..add(DiagnosticsProperty<T>('groupValue', groupValue))
       ..add(
         FlagProperty('disabled', value: onChanged == null, ifFalse: 'enabled'),
       )
+      ..add(FlagProperty('toggleable', value: toggleable, defaultValue: false))
       ..add(ObjectFlagProperty.has('style', style))
       ..add(
         FlagProperty('autofocus', value: autofocus, ifFalse: 'manual focus'),
@@ -125,14 +186,25 @@ class RadioButton extends StatelessWidget {
   Widget build(BuildContext context) {
     assert(debugCheckHasFluentTheme(context));
     final style = RadioButtonTheme.of(context).merge(this.style);
+    
     return HoverButton(
       autofocus: autofocus,
       focusNode: focusNode,
-      onPressed: onChanged == null ? null : () => onChanged!(!checked),
+      onPressed: onChanged == null
+          ? null
+          : () {
+              if (toggleable && _selected) {
+                onChanged!(null);
+                return;
+              }
+              if (!_selected) {
+                onChanged!(value);
+              }
+            },
       semanticLabel: semanticLabel,
       builder: (context, state) {
         final decoration =
-            (checked
+            (_selected
                 ? style.checkedDecoration?.resolve(state)
                 : style.uncheckedDecoration?.resolve(state)) ??
             const BoxDecoration(shape: BoxShape.circle);
@@ -179,7 +251,8 @@ class RadioButton extends StatelessWidget {
           );
         }
         return Semantics(
-          checked: checked,
+          checked: _selected,
+          inMutuallyExclusiveGroup: true,
           child: FocusBorder(focused: state.isFocused, child: child),
         );
       },

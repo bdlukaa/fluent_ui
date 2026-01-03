@@ -64,22 +64,20 @@ class _ColorPickerPageState extends State<ColorPickerPage> with PageMixin {
             const SizedBox(height: 8),
             Row(
               children: [
-                RadioButton(
-                  checked: _spectrumShape == ColorSpectrumShape.box,
+                RadioButton<ColorSpectrumShape>(
+                  value: ColorSpectrumShape.box,
+                  groupValue: _spectrumShape,
                   onChanged: (final v) {
-                    if (v) {
-                      setState(() => _spectrumShape = ColorSpectrumShape.box);
-                    }
+                    setState(() => _spectrumShape = v!);
                   },
                   content: const Text('Box'),
                 ),
                 const SizedBox(width: 20),
-                RadioButton(
-                  checked: _spectrumShape == ColorSpectrumShape.ring,
+                RadioButton<ColorSpectrumShape>(
+                  value: ColorSpectrumShape.ring,
+                  groupValue: _spectrumShape,
                   onChanged: (final v) {
-                    if (v) {
-                      setState(() => _spectrumShape = ColorSpectrumShape.ring);
-                    }
+                    setState(() => _spectrumShape = v!);
                   },
                   content: const Text('Ring'),
                 ),
@@ -93,18 +91,20 @@ class _ColorPickerPageState extends State<ColorPickerPage> with PageMixin {
             const SizedBox(height: 8),
             Row(
               children: [
-                RadioButton(
-                  checked: _orientation == Axis.vertical,
+                RadioButton<Axis>(
+                  value: Axis.vertical,
+                  groupValue: _orientation,
                   onChanged: (final v) {
-                    if (v) setState(() => _orientation = Axis.vertical);
+                    setState(() => _orientation = v!);
                   },
                   content: const Text('Vertical'),
                 ),
                 const SizedBox(width: 20),
-                RadioButton(
-                  checked: _orientation == Axis.horizontal,
+                RadioButton<Axis>(
+                  value: Axis.horizontal,
+                  groupValue: _orientation,
                   onChanged: (final v) {
-                    if (v) setState(() => _orientation = Axis.horizontal);
+                    setState(() => _orientation = v!);
                   },
                   content: const Text('Horizontal'),
                 ),

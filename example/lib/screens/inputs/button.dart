@@ -27,7 +27,7 @@ class _ButtonPageState extends State<ButtonPage> with PageMixin {
   bool splitButtonDisabled = false;
   bool splitButtonState = false;
   bool radioButtonDisabled = false;
-  int radioButtonSelected = -1;
+  int? radioButtonSelected;
 
   AccentColor splitButtonColor = Colors.red;
 
@@ -471,13 +471,11 @@ int? selected;
 
 Column(
   children: List.generate(3, (index) {
-    return RadioButton(
-      checked: selected == index,
-      onChanged: (checked) {
-        if (checked) {
-          setState(() => selected = index);
-        }
-      }
+    return RadioButton<int>(
+      value: index,
+      groupValue: selected,
+      onChanged: (value) => setState(() => selected = value),
+      content: Text('RadioButton \${index + 1}'),
     );
   }),
 )''',
@@ -490,16 +488,15 @@ Column(
                     padding: EdgeInsetsDirectional.only(
                       bottom: index == 2 ? 0.0 : 14.0,
                     ),
-                    child: RadioButton(
-                      checked: radioButtonSelected == index,
+                    child: RadioButton<int>(
+                      value: index,
+                      groupValue: radioButtonSelected,
                       onChanged: radioButtonDisabled
                           ? null
-                          : (final v) {
-                              if (v) {
-                                setState(() {
-                                  radioButtonSelected = index;
-                                });
-                              }
+                          : (final value) {
+                              setState(() {
+                                radioButtonSelected = value;
+                              });
                             },
                       content: Text('RadioButton ${index + 1}'),
                     ),

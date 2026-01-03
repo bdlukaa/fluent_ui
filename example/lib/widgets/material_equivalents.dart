@@ -93,9 +93,10 @@ class _UIEquivalentsState extends State<UIEquivalents> {
       ],
       [
         const Text('RadioButton'),
-        RadioButton(
-          checked: radioChecked,
-          onChanged: (final v) => setState(() => radioChecked = v),
+        RadioButton<bool>(
+          value: true,
+          groupValue: radioChecked,
+          onChanged: (final v) => setState(() => radioChecked = v == true),
         ),
         RadioGroup<bool>(
           onChanged: (final v) => setState(() => radioChecked = !radioChecked),
