@@ -1,0 +1,16 @@
+{
+  "version": 3,
+  "engine": "v2",
+  "file": "main.dart.js_22.part.js",
+  "sourceRoot": "",
+  "sources": ["../../../../lib/src/controls/utils/info_badge.dart","../../../../lib/src/styles/theme.dart","/opt/hostedtoolcache/flutter/3.38.5-stable/x64/packages/flutter/lib/src/painting/box_decoration.dart","/opt/hostedtoolcache/flutter/3.38.5-stable/x64/packages/flutter/lib/src/widgets/icon_theme_data.dart"],
+  "names": ["InfoBadge.build","","of"],
+  "mappings": "A;;;;;;;;;CA4ESA,ICfEA,6BAA0DA;WDqBrDA,aACwBA,UACtBA;AADkCA;UAIlCA,GAAUA;;UACeA,GAAUA;;UACZA,GAAUA;;QAP3CA;GAU8BA,GAAUA;MAExCA;AAAJA,WACEA,OAAOA,iBEHLA,eFQ6BA,iBEA5BA,oBFyBPA;AAXiCA;AAIpBA;AAbXA,OAAOA,OAWmBA,KAGLA,OGxFjBA,uCHsFqBA,YAXJA,IEdjBA,wBAQCA,aFWYA,WAcnBA,C",
+  "x_org_dartlang_dart2js": {
+    "minified_names": {
+      "global": "",
+      "instance": ""
+    },
+    "frames": "iQA+E8BE+C;4KAmBVDe;iBAAAAoB;qGAsBJAuC;gBAREAwB;AAdEAa;"
+  }
+}

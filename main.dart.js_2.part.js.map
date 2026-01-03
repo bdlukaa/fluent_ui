@@ -1,0 +1,16 @@
+{
+  "version": 3,
+  "engine": "v2",
+  "file": "main.dart.js_2.part.js",
+  "sourceRoot": "",
+  "sources": ["../../../../lib/src/controls/utils/windows_icon.dart"],
+  "names": ["WindowsIcon"],
+  "mappings": "A;;EAqBQA,QAAWA;AAAXA,0CAeJA,C",
+  "x_org_dartlang_dart2js": {
+    "minified_names": {
+      "global": "",
+      "instance": ""
+    },
+    "frames": ""
+  }
+}

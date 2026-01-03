@@ -1,0 +1,16 @@
+{
+  "version": 3,
+  "engine": "v2",
+  "file": "main.dart.js_13.part.js",
+  "sourceRoot": "",
+  "sources": ["/opt/hostedtoolcache/flutter/3.38.5-stable/x64/packages/flutter/lib/src/widgets/basic.dart","/opt/hostedtoolcache/flutter/3.38.5-stable/x64/packages/flutter/lib/src/widgets/framework.dart"],
+  "names": ["StatefulBuilder.createState","_StatefulBuilderState.build","","widget"],
+  "mappings": "A;;;;;;AAisQMA;CAHmBA,GAAiBA,kBAAuBA,C;;AAKzBC;CAA/BA,IAA+BA,WCtyOtBA,QDsyO8CA,YAASA,C",
+  "x_org_dartlang_dart2js": {
+    "minified_names": {
+      "global": "",
+      "instance": ""
+    },
+    "frames": "8PA8rQ0CEkB;0FAKFCQ;"
+  }
+}
