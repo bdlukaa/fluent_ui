@@ -40,6 +40,7 @@
   - Expose `NavigationView` important data using `NavigationView.dataOf(context)`
   - Added `NavigationPane.acrylicDisabled`, which allows disabling acrylic material effect of the pane overlays
   - `InfoBadge` style variants (success, attention, critical), dot badges and adaptive sizing ([#1277](https://github.com/bdlukaa/fluent_ui/pull/1277))
+  - `NavigationView` holds a local history. Use `NavigationView.of(context).pop()` or `PaneBackButton` to navigate to the previous index ([#1266](https://github.com/bdlukaa/fluent_ui/issues/1266))
 - chore: Updated Russian translations ([#1253](https://github.com/bdlukaa/fluent_ui/pull/1253/))
 
 ## 4.13.0
