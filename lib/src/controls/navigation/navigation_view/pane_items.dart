@@ -486,6 +486,7 @@ class PaneItem extends NavigationPaneItem {
 
     return MenuFlyoutItem(
       selected: selected,
+      closeAfterClick: false,
       text: title != null
           ? Padding(
               padding: theme.labelPadding ?? EdgeInsetsDirectional.zero,
@@ -761,7 +762,7 @@ class PaneItemExpander extends PaneItem {
     return _MenuFlyoutPaneItemExpander(
       item: this,
       onPressed: () => onItemPressed?.call(this),
-      onItemPressed: onItemPressed ?? (item) {},
+      onItemPressed: onItemPressed ?? (_) {},
     );
   }
 }
@@ -809,9 +810,11 @@ class __PaneItemExpanderState extends State<_PaneItemExpander>
 
   /// Whether to use a flyout menu instead of inline expansion.
   ///
-  /// Flyouts are used in compact and minimal modes where there isn't
+  /// Flyouts are used in compact and top modes where there isn't
   /// enough space to show expanded children inline.
-  bool get useFlyout => widget.displayMode != PaneDisplayMode.expanded;
+  bool get useFlyout =>
+      widget.displayMode == PaneDisplayMode.compact ||
+      widget.displayMode == PaneDisplayMode.top;
 
   late bool _open;
 
@@ -837,8 +840,10 @@ class __PaneItemExpanderState extends State<_PaneItemExpander>
   }
 
   void _controllerListener() {
-    if (_open && !flyoutController.isOpen ||
-        !_open && flyoutController.isOpen) {
+    if (!useFlyout) return;
+
+    if (isExpanded && !flyoutController.isOpen ||
+        !isExpanded && flyoutController.isOpen) {
       toggleOpen(doFlyout: false);
     }
   }
@@ -876,14 +881,16 @@ class __PaneItemExpanderState extends State<_PaneItemExpander>
   void toggleOpen({bool doFlyout = true}) {
     if (!mounted) return;
     setState(() => _open = !_open);
+    final view = NavigationView.of(context);
+    final viewData = NavigationView.dataOf(context);
 
     if (hasSelectedChild) {
       // If the expander has a selected child, update the previous item index
-      //to -1 to prevent the sticky indicator from animating undulately.
-      NavigationView.of(context)._updatePreviousItemIndex(-1);
+      // to -1 to prevent the sticky indicator from animating undulately.
+      view._updatePreviousItemIndex(-1);
     }
 
-    if (_open) {
+    if (isExpanded) {
       if (useFlyout && doFlyout && flyoutController.isAttached) {
         final body = NavigationViewContext.of(context);
         final displayMode = body.displayMode;
@@ -896,45 +903,70 @@ class __PaneItemExpanderState extends State<_PaneItemExpander>
           forceAvailableSpace: true,
           barrierColor: Colors.transparent,
           builder: (context) {
-            return MenuFlyout(
-              items: widget.items.map<MenuFlyoutItemBase>((item) {
-                if (item is PaneItem) {
-                  return _PaneItemExpanderMenuItem(
-                    item: item,
-                    onPressed: () {
-                      widget.onItemPressed?.call(item);
-                      item.onTap?.call();
-                      Navigator.pop(context);
-                    },
-                    isSelected: body.pane!.isSelected(item),
-                  );
-                } else if (item is PaneItemSeparator) {
-                  return const MenuFlyoutSeparator();
-                } else if (item is PaneItemHeader) {
-                  return MenuFlyoutItemBuilder(
-                    builder: (context) {
-                      return Container(
-                        padding: const EdgeInsetsDirectional.symmetric(
-                          horizontal: 10,
-                          vertical: 8,
-                        ),
-                        margin: const EdgeInsetsDirectional.only(bottom: 4),
-                        child: DefaultTextStyle.merge(
-                          style: navigationTheme.itemHeaderTextStyle,
-                          softWrap: false,
-                          maxLines: 1,
-                          overflow: TextOverflow.fade,
-                          child: item.header,
-                        ),
-                      );
-                    },
-                  );
-                } else {
-                  throw UnsupportedError(
-                    '${item.runtimeType} is not a supported item type',
-                  );
-                }
-              }).toList(),
+            return NavigationViewContext.copy(
+              parent: body,
+              child: MenuFlyout(
+                items: widget.items.map<MenuFlyoutItemBase>((item) {
+                  if (item is PaneItemExpander) {
+                    return _MenuFlyoutPaneItemExpander(
+                      item: item,
+                      onPressed: () {
+                        if (viewData.pane?.canChangeTo(item) ?? false) {
+                          Navigator.pop(context);
+                          widget.onPressed?.call();
+                          item.onTap?.call();
+                          viewData.pane?.changeTo(item);
+                        }
+                      },
+                      onItemPressed:
+                          widget.onItemPressed ??
+                          (item) {
+                            if (viewData.pane?.canChangeTo(item) ?? false) {
+                              Navigator.pop(context);
+                              item.onTap?.call();
+                              viewData.pane?.changeTo(item);
+                            }
+                          },
+                    );
+                  } else if (item is PaneItem) {
+                    return _PaneItemExpanderMenuItem(
+                      item: item,
+                      onPressed: () {
+                        Navigator.pop(context);
+                        widget.onItemPressed?.call(item);
+                        item.onTap?.call();
+                        viewData.pane?.changeTo(item);
+                      },
+                      isSelected: body.pane!.isSelected(item),
+                    );
+                  } else if (item is PaneItemSeparator) {
+                    return const MenuFlyoutSeparator();
+                  } else if (item is PaneItemHeader) {
+                    return MenuFlyoutItemBuilder(
+                      builder: (context) {
+                        return Container(
+                          padding: const EdgeInsetsDirectional.symmetric(
+                            horizontal: 10,
+                            vertical: 8,
+                          ),
+                          margin: const EdgeInsetsDirectional.only(bottom: 4),
+                          child: DefaultTextStyle.merge(
+                            style: navigationTheme.itemHeaderTextStyle,
+                            softWrap: false,
+                            maxLines: 1,
+                            overflow: TextOverflow.fade,
+                            child: item.header,
+                          ),
+                        );
+                      },
+                    );
+                  } else {
+                    throw UnsupportedError(
+                      '${item.runtimeType} is not a supported item type',
+                    );
+                  }
+                }).toList(),
+              ),
             );
           },
         );
@@ -960,7 +992,7 @@ class __PaneItemExpanderState extends State<_PaneItemExpander>
     final isExpanderSelected = widget.selected;
 
     final expanderWidget = _ForceShowIndicator(
-      forceShow: !_open && hasSelectedChild,
+      forceShow: !isExpanded && hasSelectedChild,
       child: widget.item
           .copyWith(
             trailing: GestureDetector(
@@ -972,8 +1004,8 @@ class __PaneItemExpanderState extends State<_PaneItemExpander>
                   builder: (context, child) => RotationTransition(
                     turns: controller.drive(
                       Tween<double>(
-                        begin: _open ? 0 : 1.0,
-                        end: _open ? 0.5 : 0.5,
+                        begin: isExpanded ? 0 : 1.0,
+                        end: isExpanded ? 0.5 : 0.5,
                       ),
                     ),
                     child: child,
@@ -1014,7 +1046,7 @@ class __PaneItemExpanderState extends State<_PaneItemExpander>
             AnimatedSize(
               duration: theme.fastAnimationDuration,
               curve: Curves.easeIn,
-              child: !_open
+              child: !isExpanded
                   ? const SizedBox(width: double.infinity)
                   : ClipRect(
                       child: Column(

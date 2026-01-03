@@ -185,8 +185,26 @@ class NavigationViewContext extends InheritedWidget {
     required this.previousItemIndex,
     required this.isTransitioning,
     required this.toggleButtonPosition,
+    required this.canPop,
     super.key,
   });
+
+  factory NavigationViewContext.copy({
+    required NavigationViewContext parent,
+    required Widget child,
+  }) {
+    return NavigationViewContext(
+      displayMode: parent.displayMode,
+      isMinimalPaneOpen: parent.isMinimalPaneOpen,
+      isCompactOverlayOpen: parent.isCompactOverlayOpen,
+      pane: parent.pane,
+      previousItemIndex: parent.previousItemIndex,
+      isTransitioning: parent.isTransitioning,
+      toggleButtonPosition: parent.toggleButtonPosition,
+      canPop: parent.canPop,
+      child: child,
+    );
+  }
 
   /// The current pane display mode according to the current state.
   final PaneDisplayMode displayMode;
@@ -215,6 +233,9 @@ class NavigationViewContext extends InheritedWidget {
   /// The position of the toggle pane button.
   final PaneToggleButtonPosition toggleButtonPosition;
 
+  /// Whether the navigation view can pop the current item.
+  final bool canPop;
+
   /// Returns the closest [NavigationViewContext] ancestor, if any.
   static NavigationViewContext? maybeOf(BuildContext context) {
     return context.dependOnInheritedWidgetOfExactType<NavigationViewContext>();
@@ -235,6 +256,7 @@ class NavigationViewContext extends InheritedWidget {
         oldWidget.pane != pane ||
         oldWidget.previousItemIndex != previousItemIndex ||
         oldWidget.isTransitioning != isTransitioning ||
-        oldWidget.toggleButtonPosition != toggleButtonPosition;
+        oldWidget.toggleButtonPosition != toggleButtonPosition ||
+        oldWidget.canPop != canPop;
   }
 }

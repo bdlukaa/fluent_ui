@@ -151,7 +151,6 @@ class _EndNavigationIndicatorState
             color: isSelected || forceShow
                 ? (widget.color ?? theme.highlightColor)
                 : widget.unselectedColor,
-            borderRadius: BorderRadius.circular(100),
           ),
         ),
       ),

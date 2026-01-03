@@ -329,6 +329,19 @@ class NavigationViewState extends State<NavigationView> {
     _compactOverlayOpen = false;
   }
 
+  final List<int> _history = [];
+  bool _isBackNavigation = false;
+
+  /// Pops the current item from the history.
+  void pop() {
+    if (_history.isEmpty) return;
+    if (widget.pane?.onChanged == null) return;
+
+    final previous = _history.last;
+    _isBackNavigation = true;
+    widget.pane!.onChanged!(previous);
+  }
+
   int _previousItemIndex = -1;
 
   /// Updates the previous item index.
@@ -363,6 +376,12 @@ class NavigationViewState extends State<NavigationView> {
     }
 
     if (oldWidget.pane?.selected != widget.pane?.selected) {
+      if (_isBackNavigation) {
+        _history.removeLast();
+        _isBackNavigation = false;
+      } else if (oldWidget.pane?.selected != null) {
+        _history.add(oldWidget.pane!.selected!);
+      }
       _updatePreviousItemIndex(oldWidget.pane?.selected ?? -1);
 
       WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -713,6 +732,7 @@ class NavigationViewState extends State<NavigationView> {
             previousItemIndex: _previousItemIndex,
             isTransitioning: _isTransitioning,
             toggleButtonPosition: toggleButtonPosition,
+            canPop: _history.isNotEmpty,
             child: paneResult,
           ),
         );

@@ -97,6 +97,7 @@ class NavigationPane with Diagnosticable {
     this.leading,
     this.indicator = const StickyNavigationIndicator(),
     this.acrylicDisabled,
+    this.buildTopOverflowButton = defaultBuildTopOverflowButton,
   }) : assert(
          selected == null || !selected.isNegative,
          'The selected index must not be negative',
@@ -220,18 +221,29 @@ class NavigationPane with Diagnosticable {
   /// If null, [NavigationViewScrollBehavior] is used.
   final ScrollBehavior? scrollBehavior;
 
-  /// The leading Widget for the Pane
+  /// The leading Widget for the Pane.
   final Widget? leading;
 
-  /// A function called when building the navigation indicator
+  /// The navigation indicator.
+  ///
+  /// See also:
+  ///
+  ///  * [StickyNavigationIndicator], the default navigation indicator.
+  ///  * [EndNavigationIndicator], the Windows 10 indicator.
   final Widget? indicator;
 
   /// Whether the acrylic effect is disabled for the pane.
   ///
   /// See also:
   ///
-  ///   * [DisableAcrylic], which disables all the acrylic effects down the widget tree
+  ///   * [DisableAcrylic], which disables all the acrylic effects down the
+  ///      widget tree
   final bool? acrylicDisabled;
+
+  /// Builds the top overflow button.
+  ///
+  /// [defaultBuildTopOverflowButton] is used by default.
+  final Widget Function(VoidCallback openFlyout) buildTopOverflowButton;
 
   @override
   void debugFillProperties(DiagnosticPropertiesBuilder properties) {
@@ -269,8 +281,31 @@ class NavigationPane with Diagnosticable {
       ..add(ObjectFlagProperty<Widget>.has('autoSuggestBox', autoSuggestBox));
   }
 
+  static Widget defaultBuildTopOverflowButton(VoidCallback openFlyout) {
+    return Builder(
+      builder: (context) {
+        return PaneItem(icon: const WindowsIcon(WindowsIcons.more)).build(
+          context: context,
+          selected: false,
+          onPressed: openFlyout,
+          showTextOnTop: false,
+          displayMode: PaneDisplayMode.top,
+          itemIndex: -1,
+        );
+      },
+    );
+  }
+
+  bool canChangeTo(NavigationPaneItem item) {
+    final index = effectiveIndexOf(item);
+    if (index.isNegative) return false;
+
+    return index != selected;
+  }
+
   /// Changes the selected item to [item].
   void changeTo(NavigationPaneItem item) {
+    if (!canChangeTo(item)) return;
     final index = effectiveIndexOf(item);
     if (!index.isNegative) onItemPressed?.call(index);
     if (selected != index && !index.isNegative) onChanged?.call(index);
@@ -364,7 +399,7 @@ class NavigationPane with Diagnosticable {
           return FocusTraversalOrder(
             order: NumericFocusOrder(index.toDouble()),
             child: _SelectedItemKeyWrapper(
-              isSelected: selected,
+              isSelected: item is! PaneItemExpander && selected,
               child: item.build(
                 context: context,
                 selected: selected,
@@ -672,9 +707,11 @@ class _TopNavigationPaneState extends State<_TopNavigationPane> {
   }
 
   void _onPressed(PaneItem item) {
-    widget.pane.changeTo(item);
-    if (overflowController.isOpen) {
-      Navigator.of(context).pop();
+    if (widget.pane.canChangeTo(item)) {
+      widget.pane.changeTo(item);
+      if (overflowController.isOpen) {
+        Navigator.of(context).pop();
+      }
     }
   }
 
@@ -754,19 +791,17 @@ class _TopNavigationPaneState extends State<_TopNavigationPane> {
       placementMode: FlyoutPlacementMode.bottomCenter,
       forceAvailableSpace: true,
       builder: (context) {
-        return NavigationViewContext(
-          displayMode: view.displayMode,
-          isMinimalPaneOpen: view.isMinimalPaneOpen,
-          isCompactOverlayOpen: view.isCompactOverlayOpen,
-          previousItemIndex: view.previousItemIndex,
-          pane: view.pane,
-          isTransitioning: view.isTransitioning,
-          toggleButtonPosition: view.toggleButtonPosition,
-          child: MenuFlyout(
-            items: _localItemHold.sublist(hiddenPaneItems.first).map((i) {
-              final item = widget.pane.items[i];
-              return item.buildMenuFlyoutItem(context, _onPressed);
-            }).toList(),
+        return NavigationViewContext.copy(
+          parent: view,
+          child: Builder(
+            builder: (context) {
+              return MenuFlyout(
+                items: _localItemHold.sublist(hiddenPaneItems.first).map((i) {
+                  final item = widget.pane.items[i];
+                  return item.buildMenuFlyoutItem(context, _onPressed);
+                }).toList(),
+              );
+            },
           ),
         );
       },
@@ -806,16 +841,7 @@ class _TopNavigationPaneState extends State<_TopNavigationPane> {
                 overflowWidget: FlyoutTarget(
                   key: overflowKey,
                   controller: overflowController,
-                  // TODO(bdlukaa): Allow customizing the overflow widget
-                  child: PaneItem(icon: const WindowsIcon(WindowsIcons.more))
-                      .build(
-                        context: context,
-                        selected: false,
-                        onPressed: openOverflowFlyout,
-                        showTextOnTop: false,
-                        displayMode: PaneDisplayMode.top,
-                        itemIndex: -1,
-                      ),
+                  child: widget.pane.buildTopOverflowButton(openOverflowFlyout),
                 ),
                 overflowChangedCallback: (hiddenItems) {
                   setState(() {
@@ -932,15 +958,18 @@ class _MenuFlyoutPaneItemExpanderState
     assert(debugCheckHasFluentTheme(context));
     final theme = FluentTheme.of(context);
 
-    return SizedBox(
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Builder(
-            builder: (context) {
-              return widget.item
-                  .copyWith(
-                    trailing: AnimatedBuilder(
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        Builder(
+          builder: (context) {
+            return widget.item
+                .copyWith(
+                  trailing: GestureDetector(
+                    behavior: HitTestBehavior.opaque,
+                    onTap: toggleOpen,
+                    child: AnimatedBuilder(
                       animation: controller,
                       builder: (context, child) => RotationTransition(
                         turns: controller.drive(
@@ -956,40 +985,44 @@ class _MenuFlyoutPaneItemExpanderState
                         size: 10,
                       ),
                     ),
-                  )
-                  .buildMenuFlyoutItem(context, (item) {
-                    toggleOpen();
-                    widget.onPressed?.call();
-                  })
-                  .build(context);
-            },
-          ),
-          AnimatedSize(
-            duration: theme.fastAnimationDuration,
-            curve: Curves.easeIn,
-            child: !_open
-                ? const SizedBox()
-                : Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: widget.item.items.map((item) {
-                      return Builder(
-                        builder: (builder) {
+                  ),
+                )
+                .buildMenuFlyoutItem(context, (item) {
+                  toggleOpen();
+                  widget.onPressed?.call();
+                })
+                .build(context);
+          },
+        ),
+        AnimatedSize(
+          duration: theme.fastAnimationDuration,
+          curve: Curves.easeIn,
+          alignment: AlignmentDirectional.topStart,
+          child: !_open
+              ? const SizedBox()
+              : Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisSize: MainAxisSize.min,
+                  children: widget.item.items.map((item) {
+                    return NavigationPaneTheme.merge(
+                      data: const NavigationPaneThemeData(
+                        labelPadding: EdgeInsetsDirectional.only(start: 6),
+                      ),
+                      child: Builder(
+                        builder: (context) {
                           return item
                               .buildMenuFlyoutItem(
                                 context,
                                 widget.onItemPressed,
-                                // TODO(bdlukaa): See this
-                                // paneItemPadding:
-                                //     const EdgeInsetsDirectional.only(start: 24),
                               )
                               .build(context);
                         },
-                      );
-                    }).toList(),
-                  ),
-          ),
-        ],
-      ),
+                      ),
+                    );
+                  }).toList(),
+                ),
+        ),
+      ],
     );
   }
 }
