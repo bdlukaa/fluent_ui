@@ -12,6 +12,7 @@
 - refactor: Expose `TooltipState`
 - fix: `NumberBox` calls `onChanged()` when clicked on ([#1196](https://github.com/bdlukaa/fluent_ui/issues/1196))
 - feat: Add `NumberBox.parser`, which allows to use a custom parse function for the number box. ([#1166](https://github.com/bdlukaa/fluent_ui/issues/1166))
+- feat: Support long pressing on `NumberBox` increment and decrement buttons. Added `NumberBox.interval` ([#1267](https://github.com/bdlukaa/fluent_ui/issues/1267), [#843](https://github.com/bdlukaa/fluent_ui/issues/843), [#1285](https://github.com/bdlukaa/fluent_ui/pull/1285/changes))
 - fix: Correctly lerp between theme properties ([#953](https://github.com/bdlukaa/fluent_ui/issues/953))
 - fix: Correctly apply theme durations to animations ([#1231](https://github.com/bdlukaa/fluent_ui/issues/1231))
 - feat: Apply text height on `Typography`
