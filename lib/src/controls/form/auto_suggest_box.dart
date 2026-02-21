@@ -607,7 +607,7 @@ class AutoSuggestBoxState<T> extends State<AutoSuggestBox<T>> {
         );
 
         final screenHeight =
-            MediaQuery.sizeOf(context).height -
+            MediaQuery.heightOf(context) -
             MediaQuery.viewPaddingOf(context).bottom;
         final overlayY = globalOffset.dy + box.size.height;
         final maxHeight = (screenHeight - overlayY).clamp(

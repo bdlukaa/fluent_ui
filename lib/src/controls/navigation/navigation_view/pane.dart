@@ -472,7 +472,7 @@ class NavigationPane with Diagnosticable {
 /// NavigationView(
 ///   pane: NavigationPane(
 ///     size: NavigationPaneSize(
-///       openWidth: MediaQuery.sizeOf(context).width / 5,
+///       openWidth: MediaQuery.widthOf(context) / 5,
 ///       openMinWidth: 250,
 ///       openMaxWidth: 320,
 ///     ),

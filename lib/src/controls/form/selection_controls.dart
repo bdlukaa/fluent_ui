@@ -396,7 +396,7 @@ class _FluentTextSelectionControlsToolbarState
     final midpointAnchor = Offset(
       (widget.selectionMidpoint.dx - widget.globalEditableRegion.left).clamp(
         MediaQuery.paddingOf(context).left,
-        MediaQuery.sizeOf(context).width - MediaQuery.paddingOf(context).right,
+        MediaQuery.widthOf(context) - MediaQuery.paddingOf(context).right,
       ),
       widget.selectionMidpoint.dy - widget.globalEditableRegion.top,
     );

@@ -3,8 +3,8 @@
 
 // ignore_for_file: constant_identifier_names, public_member_api_docs
 
-import 'package:flutter/widgets.dart' show Color, ColorProperty;
 import 'package:flutter/foundation.dart';
+import 'package:flutter/widgets.dart' show Color, ColorProperty;
 
 /// A dictionary of colors used by all the components.
 ///
