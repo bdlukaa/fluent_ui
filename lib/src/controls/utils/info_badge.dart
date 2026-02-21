@@ -94,8 +94,8 @@ class InfoBadge extends StatelessWidget {
 
     if (source == null) {
       return Container(
-        width: 6,
-        height: 6,
+        width: MediaQuery.textScalerOf(context).scale(6),
+        height: MediaQuery.textScalerOf(context).scale(6),
         decoration: BoxDecoration(
           color: color,
           borderRadius: BorderRadius.circular(100),
@@ -104,10 +104,10 @@ class InfoBadge extends StatelessWidget {
     }
 
     return Container(
-      constraints: const BoxConstraints(
+      constraints: BoxConstraints(
         minWidth: 16,
         minHeight: 16,
-        maxHeight: 16,
+        maxHeight: MediaQuery.textScalerOf(context).scale(16),
       ),
       padding: const EdgeInsetsDirectional.only(start: 4, end: 4, bottom: 1),
       decoration: BoxDecoration(
