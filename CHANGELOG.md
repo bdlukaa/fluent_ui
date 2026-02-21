@@ -1,4 +1,4 @@
-## [next]
+## 4.14.0
 
 - refactor: Consistent theme classes
 - fix: `CalendarDatePicker` throws state error when selecting date ([#1251](https://github.com/bdlukaa/fluent_ui/issues/1251))
@@ -71,6 +71,7 @@
     ),
   )
   ```
+- fix: Flyout barrier color ([#1276](https://github.com/bdlukaa/fluent_ui/issues/1276))
 
 ## 4.13.0
 

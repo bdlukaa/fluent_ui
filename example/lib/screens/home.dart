@@ -46,7 +46,8 @@ class _HomePageState extends State<HomePage> with PageMixin {
       children: [
         CodeSnippetCard(
           initiallyOpen: true,
-          codeSnippet: '''
+          codeSnippet:
+              '''
 import 'package:fluent_ui/fluent_ui.dart';
 
 void main() => runApp(const MyApp());
@@ -59,7 +60,7 @@ class MyApp extends StatelessWidget {
     return FluentApp(
       title: 'Windows UI for Flutter',
       theme: FluentThemeData(
-        brightness: Brightness.light,
+        brightness: ${theme.brightness},
         accentColor: Colors.blue,
       ),
       home: const HomePage(),

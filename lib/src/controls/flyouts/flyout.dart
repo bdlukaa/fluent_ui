@@ -1024,9 +1024,7 @@ class _FlyoutPage extends StatelessWidget {
       builder: (context, rootSize, menus, keys) {
         assert(menus.length == keys.length);
 
-        final barrier = ColoredBox(
-          color: barrierColor ?? Colors.black.withValues(alpha: 0.3),
-        );
+        final barrier = ColoredBox(color: barrierColor ?? Colors.transparent);
 
         FlyoutPlacementMode getAutoPlacementMode(Size flyoutSize) {
           final defaultPreferred = (position == null
