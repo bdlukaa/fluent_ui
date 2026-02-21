@@ -637,4 +637,154 @@ void main() {
       },
     );
   });
+
+  group('NumberBox interval (hold-to-repeat) tests', () {
+    testWidgets(
+      'NumberBox auto-increments when spin button is held',
+      (tester) async {
+        int? newValue;
+        await tester.pumpWidget(
+          wrapApp(
+            child: NumberBox<int>(
+              value: 0,
+              onChanged: (value) {
+                newValue = value;
+              },
+              mode: SpinButtonPlacementMode.inline,
+              interval: const Duration(milliseconds: 100),
+            ),
+          ),
+        );
+
+        // Press and hold the increment button
+        final gesture = await tester.startGesture(
+          tester.getCenter(find.byIcon(FluentIcons.chevron_up)),
+        );
+
+        // First increment fires immediately on pointer down
+        await tester.pump();
+        expect(newValue, equals(1));
+
+        // After one interval, should auto-increment again
+        await tester.pump(const Duration(milliseconds: 100));
+        expect(newValue, equals(2));
+
+        // After another interval
+        await tester.pump(const Duration(milliseconds: 100));
+        expect(newValue, equals(3));
+
+        // Release the button
+        await gesture.up();
+        await tester.pumpAndSettle();
+      },
+    );
+
+    testWidgets(
+      'NumberBox auto-decrements when decrement spin button is held',
+      (tester) async {
+        int? newValue;
+        await tester.pumpWidget(
+          wrapApp(
+            child: NumberBox<int>(
+              value: 10,
+              onChanged: (value) {
+                newValue = value;
+              },
+              mode: SpinButtonPlacementMode.inline,
+              interval: const Duration(milliseconds: 100),
+            ),
+          ),
+        );
+
+        // Press and hold the decrement button
+        final gesture = await tester.startGesture(
+          tester.getCenter(find.byIcon(FluentIcons.chevron_down)),
+        );
+
+        // First decrement fires immediately on pointer down
+        await tester.pump();
+        expect(newValue, equals(9));
+
+        // After one interval, should auto-decrement again
+        await tester.pump(const Duration(milliseconds: 100));
+        expect(newValue, equals(8));
+
+        // Release the button
+        await gesture.up();
+        await tester.pumpAndSettle();
+      },
+    );
+
+    testWidgets(
+      'NumberBox stops auto-incrementing when spin button is released',
+      (tester) async {
+        int? newValue;
+        await tester.pumpWidget(
+          wrapApp(
+            child: NumberBox<int>(
+              value: 0,
+              onChanged: (value) {
+                newValue = value;
+              },
+              mode: SpinButtonPlacementMode.inline,
+              interval: const Duration(milliseconds: 100),
+            ),
+          ),
+        );
+
+        final gesture = await tester.startGesture(
+          tester.getCenter(find.byIcon(FluentIcons.chevron_up)),
+        );
+
+        await tester.pump();
+        expect(newValue, equals(1));
+
+        await tester.pump(const Duration(milliseconds: 100));
+        expect(newValue, equals(2));
+
+        // Release the button
+        await gesture.up();
+        await tester.pumpAndSettle();
+
+        // After release, value should not change further
+        final valueAfterRelease = newValue;
+        await tester.pump(const Duration(milliseconds: 300));
+        expect(newValue, equals(valueAfterRelease));
+      },
+    );
+
+    testWidgets(
+      'NumberBox uses smallChange step during auto-repeat',
+      (tester) async {
+        int? newValue;
+        await tester.pumpWidget(
+          wrapApp(
+            child: NumberBox<int>(
+              value: 0,
+              smallChange: 5,
+              onChanged: (value) {
+                newValue = value;
+              },
+              mode: SpinButtonPlacementMode.inline,
+              interval: const Duration(milliseconds: 100),
+            ),
+          ),
+        );
+
+        final gesture = await tester.startGesture(
+          tester.getCenter(find.byIcon(FluentIcons.chevron_up)),
+        );
+
+        // Each step should be 5 (smallChange)
+        await tester.pump();
+        expect(newValue, equals(5));
+
+        await tester.pump(const Duration(milliseconds: 100));
+        expect(newValue, equals(10));
+
+        await gesture.up();
+        await tester.pumpAndSettle();
+      },
+    );
+  });
 }

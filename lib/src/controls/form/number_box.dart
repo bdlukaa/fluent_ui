@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:ui' as ui;
 
 import 'package:fluent_ui/fluent_ui.dart';
@@ -118,6 +119,12 @@ class NumberBox<T extends num> extends StatefulWidget {
   /// [LogicalKeyboardKey.pageUp] and decremented when the user lick on the
   /// shortcut [LogicalKeyboardKey.pageDown].
   final num largeChange;
+
+  /// The interval between auto-increments or auto-decrements when the user
+  /// holds a spin button.
+  ///
+  /// Defaults to 100 milliseconds. One step is determined by [smallChange].
+  final Duration interval;
 
   /// The precision indicates the number of digits that's accepted for double
   /// value.
@@ -321,6 +328,7 @@ class NumberBox<T extends num> extends StatefulWidget {
     this.clearButton = true,
     this.smallChange = 1,
     this.largeChange = 10,
+    this.interval = const Duration(milliseconds: 100),
     this.precision,
     this.pattern,
     this.formatter,
@@ -552,6 +560,7 @@ class NumberBoxState<T extends num> extends State<NumberBox<T>> {
                   child: _NumberBoxCompactOverlay(
                     onIncrement: incrementSmall,
                     onDecrement: decrementSmall,
+                    interval: widget.interval,
                   ),
                 ),
               ),
@@ -600,15 +609,17 @@ class NumberBoxState<T extends num> extends State<NumberBox<T>> {
     switch (widget.mode) {
       case SpinButtonPlacementMode.inline:
         textFieldSuffix.addAll([
-          IconButton(
-            key: _incrementButtonKey,
+          _SpinButton(
+            buttonKey: _incrementButtonKey,
             icon: const WindowsIcon(WindowsIcons.chevron_up),
-            onPressed: widget.onChanged != null ? incrementSmall : null,
+            onAction: widget.onChanged != null ? incrementSmall : null,
+            interval: widget.interval,
           ),
-          IconButton(
-            key: _decrementButtonKey,
+          _SpinButton(
+            buttonKey: _decrementButtonKey,
             icon: const WindowsIcon(WindowsIcons.chevron_down),
-            onPressed: widget.onChanged != null ? decrementSmall : null,
+            onAction: widget.onChanged != null ? decrementSmall : null,
+            interval: widget.interval,
           ),
           const SizedBox(width: 4),
         ]);
@@ -814,13 +825,74 @@ class NumberBoxState<T extends num> extends State<NumberBox<T>> {
   }
 }
 
+class _SpinButton extends StatefulWidget {
+  final VoidCallback? onAction;
+  final Duration interval;
+  final Widget icon;
+  final Key? buttonKey;
+  final IconButtonMode? iconButtonMode;
+
+  const _SpinButton({
+    required this.onAction,
+    required this.interval,
+    required this.icon,
+    this.buttonKey,
+    this.iconButtonMode,
+  });
+
+  @override
+  State<_SpinButton> createState() => _SpinButtonState();
+}
+
+class _SpinButtonState extends State<_SpinButton> {
+  Timer? _timer;
+
+  void _startRepeating(PointerDownEvent event) {
+    if (widget.onAction == null) return;
+    widget.onAction!();
+    _timer = Timer.periodic(widget.interval, (_) {
+      widget.onAction?.call();
+    });
+  }
+
+  void _stopRepeating() {
+    _timer?.cancel();
+    _timer = null;
+  }
+
+  @override
+  void dispose() {
+    _stopRepeating();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Listener(
+      onPointerDown: _startRepeating,
+      onPointerUp: (_) => _stopRepeating(),
+      onPointerCancel: (_) => _stopRepeating(),
+      child: IconButton(
+        key: widget.buttonKey,
+        icon: widget.icon,
+        // Empty callback keeps the button in enabled visual state.
+        // The actual action is triggered by the Listener's pointer events.
+        onPressed: widget.onAction != null ? () {} : null,
+        iconButtonMode: widget.iconButtonMode,
+      ),
+    );
+  }
+}
+
 class _NumberBoxCompactOverlay extends StatelessWidget {
   final VoidCallback onIncrement;
   final VoidCallback onDecrement;
+  final Duration interval;
 
   const _NumberBoxCompactOverlay({
     required this.onIncrement,
     required this.onDecrement,
+    required this.interval,
   });
 
   @override
@@ -849,14 +921,16 @@ class _NumberBoxCompactOverlay extends StatelessWidget {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
-                IconButton(
+                _SpinButton(
                   icon: const WindowsIcon(WindowsIcons.chevron_up, size: 16),
-                  onPressed: onIncrement,
+                  onAction: onIncrement,
+                  interval: interval,
                   iconButtonMode: IconButtonMode.large,
                 ),
-                IconButton(
+                _SpinButton(
                   icon: const WindowsIcon(WindowsIcons.chevron_down, size: 16),
-                  onPressed: onDecrement,
+                  onAction: onDecrement,
+                  interval: interval,
                   iconButtonMode: IconButtonMode.large,
                 ),
               ],
@@ -935,6 +1009,7 @@ class NumberFormBox<T extends num> extends ControllableFormBox {
     bool clearButton = true,
     num largeChange = 10,
     num smallChange = 1,
+    Duration interval = const Duration(milliseconds: 100),
     num? max,
     num? min,
     int precision = 2,
@@ -978,6 +1053,7 @@ class NumberFormBox<T extends num> extends ControllableFormBox {
                  clearButton: clearButton,
                  largeChange: largeChange,
                  smallChange: smallChange,
+                 interval: interval,
                  precision: format != null ? null : precision,
                  format: format,
                  parse: parse,
