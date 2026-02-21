@@ -124,7 +124,10 @@ class NumberBox<T extends num> extends StatefulWidget {
   /// holds a spin button.
   ///
   /// Defaults to 100 milliseconds. One step is determined by [smallChange].
-  final Duration interval;
+  ///
+  /// Set to `null` to disable hold-to-repeat, so a single increment or
+  /// decrement is fired per press.
+  final Duration? interval;
 
   /// The precision indicates the number of digits that's accepted for double
   /// value.
@@ -827,7 +830,7 @@ class NumberBoxState<T extends num> extends State<NumberBox<T>> {
 
 class _SpinButton extends StatefulWidget {
   final VoidCallback? onAction;
-  final Duration interval;
+  final Duration? interval;
   final Widget icon;
   final Key? buttonKey;
   final IconButtonMode? iconButtonMode;
@@ -850,7 +853,9 @@ class _SpinButtonState extends State<_SpinButton> {
   void _startRepeating(PointerDownEvent event) {
     if (widget.onAction == null) return;
     widget.onAction!();
-    _timer = Timer.periodic(widget.interval, (_) {
+    final interval = widget.interval;
+    if (interval == null) return;
+    _timer = Timer.periodic(interval, (_) {
       widget.onAction?.call();
     });
   }
@@ -887,7 +892,7 @@ class _SpinButtonState extends State<_SpinButton> {
 class _NumberBoxCompactOverlay extends StatelessWidget {
   final VoidCallback onIncrement;
   final VoidCallback onDecrement;
-  final Duration interval;
+  final Duration? interval;
 
   const _NumberBoxCompactOverlay({
     required this.onIncrement,
@@ -1009,7 +1014,7 @@ class NumberFormBox<T extends num> extends ControllableFormBox {
     bool clearButton = true,
     num largeChange = 10,
     num smallChange = 1,
-    Duration interval = const Duration(milliseconds: 100),
+    Duration? interval = const Duration(milliseconds: 100),
     num? max,
     num? min,
     int precision = 2,

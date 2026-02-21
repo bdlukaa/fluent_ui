@@ -786,5 +786,40 @@ void main() {
         await tester.pumpAndSettle();
       },
     );
+
+    testWidgets(
+      'NumberBox does not auto-repeat when interval is null',
+      (tester) async {
+        int callCount = 0;
+        await tester.pumpWidget(
+          wrapApp(
+            child: NumberBox<int>(
+              value: 0,
+              onChanged: (value) {
+                callCount++;
+              },
+              mode: SpinButtonPlacementMode.inline,
+              interval: null,
+            ),
+          ),
+        );
+
+        // Press and hold the increment button
+        final gesture = await tester.startGesture(
+          tester.getCenter(find.byIcon(FluentIcons.chevron_up)),
+        );
+
+        // First press fires immediately
+        await tester.pump();
+        expect(callCount, equals(1));
+
+        // Waiting well past a typical interval should not trigger more calls
+        await tester.pump(const Duration(milliseconds: 300));
+        expect(callCount, equals(1));
+
+        await gesture.up();
+        await tester.pumpAndSettle();
+      },
+    );
   });
 }
