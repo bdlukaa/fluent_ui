@@ -1,6 +1,6 @@
 ## [next]
 
-- fix: Overflow on `TimePicker` and `DatePicker` popups when system text scaling is enabled ([#1321](https://github.com/bdlukaa/fluent_ui/issues/1321))
+- fix: Correctly handle system text scaling on `DatePicker`, `TimePicker`, `AutoSuggestBox` popups ([#1321](https://github.com/bdlukaa/fluent_ui/issues/1321), [#1286](https://github.com/bdlukaa/fluent_ui/pull/1286))
 
 ## 4.14.0
 
