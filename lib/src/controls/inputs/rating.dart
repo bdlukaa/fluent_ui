@@ -244,18 +244,33 @@ class _RatingControlState extends State<RatingControl> {
     }
   }
 
+  /// Returns the total physical width of the star row.
+  double get _totalWidth =>
+      widget.amount * widget.iconSize +
+      (widget.amount - 1) * widget.starSpacing;
+
+  /// Flips [x] to LTR space when the layout direction is RTL, so that all
+  /// downstream calculations can assume left-to-right ordering.
+  double _adjustX(double x) {
+    if (Directionality.of(context) == TextDirection.rtl) {
+      return (_totalWidth - x).clamp(0.0, _totalWidth);
+    }
+    return x;
+  }
+
   void _handleUpdate(double x) {
     final totalPerStar = widget.iconSize + widget.starSpacing;
-    final raw = (x / totalPerStar).clamp(0.0, widget.amount.toDouble());
-    // Match WinUI 3 behavior: interactive input always snaps to whole integers
-    // using ceil(), so the first fraction of a star counts as that full star.
+    final raw = (_adjustX(x) / totalPerStar).clamp(
+      0.0,
+      widget.amount.toDouble(),
+    );
     final snapped = raw.ceil().clamp(0, widget.amount).toDouble();
     widget.onChanged?.call(snapped);
   }
 
   void _handleHoverUpdate(double x) {
     final totalPerStar = widget.iconSize + widget.starSpacing;
-    final index = (x / totalPerStar).floor() + 1;
+    final index = (_adjustX(x) / totalPerStar).floor() + 1;
     final clamped = index.clamp(1, widget.amount);
     if (_hoveredStar != clamped) {
       setState(() => _hoveredStar = clamped);
@@ -296,13 +311,10 @@ class _RatingControlState extends State<RatingControl> {
           child: GestureDetector(
             dragStartBehavior: widget.dragStartBehavior,
             onTapDown: (d) {
-              // Clear hover preview so the press is shown via the normal
-              // rating display, not the stale hover-preview state.
               if (_hoveredStar != null) setState(() => _hoveredStar = null);
               _handleUpdate(d.localPosition.dx);
             },
             onHorizontalDragStart: (d) {
-              // Same as onTapDown: suppress hover preview during drag.
               if (_hoveredStar != null) setState(() => _hoveredStar = null);
               _handleUpdate(d.localPosition.dx);
             },
@@ -322,7 +334,6 @@ class _RatingControlState extends State<RatingControl> {
                       final double r;
 
                       if (!isEnabled) {
-                        // Disabled / read-only state
                         r = (value - index).clamp(0.0, 1.0);
                         starRatedColor =
                             widget.ratedIconColor ??
@@ -331,26 +342,21 @@ class _RatingControlState extends State<RatingControl> {
                             widget.unratedIconColor ??
                             resources.textFillColorSecondary;
                       } else if (_hoveredStar != null) {
-                        // Hover preview state
                         final hovered = _hoveredStar!;
                         if (index < hovered) {
-                          // Star is at or before the hover position — show preview
                           r = 1.0;
                           final alreadySelected = (index + 1) <= widget.rating;
                           starRatedColor =
                               widget.ratedIconColor ??
                               (alreadySelected
-                                  ? accentColor // PointerOverSelectedForeground
-                                  : resources
-                                        .textFillColorPrimary); // PlaceholderForeground
+                                  ? accentColor
+                                  : resources.textFillColorPrimary);
                           starUnratedColor = starRatedColor;
                         } else {
-                          // Star is after the hover position — show dimmed
                           r = 0.0;
                           starRatedColor =
                               widget.ratedIconColor ??
-                              resources
-                                  .controlAltFillColorTertiary; // PointerOverUnselectedForeground
+                              resources.controlAltFillColorTertiary;
                           starUnratedColor =
                               widget.unratedIconColor ??
                               resources.controlAltFillColorTertiary;
@@ -483,6 +489,7 @@ class RatingIcon extends StatelessWidget {
   Widget build(BuildContext context) {
     assert(debugCheckHasFluentTheme(context));
     final style = FluentTheme.of(context);
+    final isRtl = Directionality.of(context) == TextDirection.rtl;
     final size = this.size;
     final unratedColor =
         this.unratedColor ?? style.resources.textFillColorSecondary;
@@ -493,14 +500,16 @@ class RatingIcon extends StatelessWidget {
     } else if (rating == 0.0) {
       return Icon(unratedIcon, color: unratedColor, size: size);
     }
+    final splitPoint = isRtl ? 1.0 - rating : rating;
     return Stack(
       children: [
-        Icon(unratedIcon, color: unratedColor, size: size),
-        Positioned.fill(
-          child: ClipRect(
-            clipper: _StarClipper(rating),
-            child: Icon(icon, color: ratedColor, size: size),
-          ),
+        ClipRect(
+          clipper: _StarClipper(splitPoint, fromRight: !isRtl),
+          child: Icon(icon, color: unratedColor, size: size),
+        ),
+        ClipRect(
+          clipper: _StarClipper(splitPoint, fromRight: isRtl),
+          child: Icon(icon, color: ratedColor, size: size),
         ),
       ],
     );
@@ -510,14 +519,26 @@ class RatingIcon extends StatelessWidget {
 class _StarClipper extends CustomClipper<Rect> {
   final double value;
 
-  _StarClipper(this.value);
+  /// When true, clips to show the portion to the RIGHT of [value].
+  /// When false (default), clips to show the portion to the LEFT of [value].
+  final bool fromRight;
+
+  const _StarClipper(this.value, {this.fromRight = false});
 
   @override
   Rect getClip(Size size) {
-    final rect = Rect.fromLTWH(0, 0, size.width * value, size.height);
-    return rect;
+    if (fromRight) {
+      return Rect.fromLTWH(
+        size.width * value,
+        0,
+        size.width * (1.0 - value),
+        size.height,
+      );
+    }
+    return Rect.fromLTWH(0, 0, size.width * value, size.height);
   }
 
   @override
-  bool shouldReclip(_StarClipper oldClipper) => oldClipper.value != value;
+  bool shouldReclip(_StarClipper oldClipper) =>
+      oldClipper.value != value || oldClipper.fromRight != fromRight;
 }
