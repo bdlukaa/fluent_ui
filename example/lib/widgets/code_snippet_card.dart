@@ -73,8 +73,13 @@ class _CodeSnippetCardState extends State<CodeSnippetCard>
               },
               trailing: isOpen
                   ? Container(
-                      height: 31,
-                      constraints: const BoxConstraints(minWidth: 80),
+                      margin: const EdgeInsetsDirectional.symmetric(
+                        vertical: 4,
+                      ),
+                      constraints: const BoxConstraints(
+                        minWidth: 80,
+                        minHeight: 32,
+                      ),
                       child: Button(
                         style: ButtonStyle(
                           backgroundColor: isCopying

@@ -68,8 +68,8 @@ DatePicker(
                   showMonth: showMonth,
                   showYear: showYear,
                 ),
-                SizedBox(
-                  width: 150,
+                ConstrainedBox(
+                  constraints: const BoxConstraints(minWidth: 150),
                   child: Column(
                     mainAxisSize: MainAxisSize.min,
                     crossAxisAlignment: CrossAxisAlignment.start,

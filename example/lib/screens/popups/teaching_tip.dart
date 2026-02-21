@@ -150,8 +150,8 @@ showTeachingTip(
                 ),
               ),
               const SizedBox(width: 18),
-              SizedBox(
-                width: 150,
+              ConstrainedBox(
+                constraints: const BoxConstraints(minWidth: 150),
                 child: ComboBox<String>(
                   placeholder: const Text('Alignment'),
                   items: List.generate(alignments.length, (final index) {

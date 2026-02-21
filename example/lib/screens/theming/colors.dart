@@ -190,8 +190,8 @@ class ColorBlock extends StatelessWidget {
             focused: states.isFocused,
             renderOutside: false,
             child: Container(
-              height: 85,
-              width: 85,
+              height: MediaQuery.textScalerOf(context).scale(85),
+              width: MediaQuery.textScalerOf(context).scale(85),
               padding: const EdgeInsetsDirectional.all(6),
               color: color,
               child: Column(
