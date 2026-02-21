@@ -66,7 +66,7 @@ import 'package:flutter/rendering.dart';
 ///
 /// See also:
 ///
-///  * [RatingBar], that allows users to view and set ratings
+///  * [RatingControl], that allows users to view and set ratings
 ///  * [NumberBox], for precise numeric input
 ///  * <https://learn.microsoft.com/en-us/windows/apps/design/controls/slider>
 class Slider extends StatefulWidget {

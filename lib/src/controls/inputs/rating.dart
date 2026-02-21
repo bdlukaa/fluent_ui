@@ -3,21 +3,23 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/services.dart';
 
-/// The default icon data for the rating bar.
-const IconData kRatingBarIcon = FluentIcons.favorite_star_fill;
-
 /// A control for viewing and setting star ratings.
 ///
-/// The [RatingBar] allows users to rate content with a configurable number
+/// The [RatingControl] allows users to rate content with a configurable number
 /// of stars. Users can interact with touch, mouse, keyboard, or gamepad.
 ///
-/// ![RatingBar Preview](https://learn.microsoft.com/en-us/windows/apps/design/controls/images/rating_rs2_doc_ratings_intro.png)
+/// Interactive input (click/drag) always snaps to whole integers, matching
+/// WinUI 3. The [RatingControl.rating] property accepts arbitrary fractional
+/// doubles, which render as partial stars — useful for read-only average-rating
+/// displays (e.g. `rating: 3.7`).
+///
+/// ![RatingControl Preview](https://learn.microsoft.com/en-us/windows/apps/design/controls/images/rating_rs2_doc_ratings_intro.png)
 ///
 /// {@tool snippet}
-/// This example shows a basic rating bar:
+/// This example shows a basic rating control:
 ///
 /// ```dart
-/// RatingBar(
+/// RatingControl(
 ///   rating: currentRating,
 ///   onChanged: (rating) => setState(() => currentRating = rating),
 /// )
@@ -28,7 +30,7 @@ const IconData kRatingBarIcon = FluentIcons.favorite_star_fill;
 /// This example shows a read-only rating display:
 ///
 /// ```dart
-/// RatingBar(
+/// RatingControl(
 ///   rating: 4.5,
 ///   onChanged: null, // Read-only
 /// )
@@ -38,14 +40,14 @@ const IconData kRatingBarIcon = FluentIcons.favorite_star_fill;
 /// See also:
 ///
 ///  * [Slider], for selecting numeric values from a range
-///  * <https://learn.microsoft.com/en-us/windows/apps/design/controls/rating>
-class RatingBar extends StatefulWidget {
-  /// Creates a new rating bar.
+///  * <https://learn.microsoft.com/en-us/windows/apps/develop/ui/controls/rating>
+class RatingControl extends StatefulWidget {
+  /// Creates a new rating control.
   ///
-  /// [rating] must be greater than 0 and less than [amount]
+  /// [rating] must be greater than or equal to 0 and less than or equal to [amount].
   ///
-  /// [starSpacing] and [amount] must be greater than 0
-  const RatingBar({
+  /// [starSpacing] and [amount] must be greater than or equal to 0.
+  const RatingControl({
     required this.rating,
     super.key,
     this.onChanged,
@@ -53,57 +55,76 @@ class RatingBar extends StatefulWidget {
     this.animationDuration = Duration.zero,
     this.animationCurve,
     this.icon,
+    this.unratedIcon,
     this.iconSize = 20.0,
     this.ratedIconColor,
     this.unratedIconColor,
     this.semanticLabel,
     this.focusNode,
     this.autofocus = false,
-    this.starSpacing = 0,
+    this.starSpacing = 8.0,
     this.dragStartBehavior = DragStartBehavior.down,
-  }) : assert(rating >= 0 && rating <= amount),
-       assert(starSpacing >= 0),
-       assert(amount > 0);
+  }) : assert(
+         rating >= 0 && rating <= amount,
+         'Rating must be between 0 and the amount of stars.',
+       ),
+       assert(starSpacing >= 0, 'Star spacing must be non-negative.'),
+       assert(amount > 0, 'There must be at least one star in the control.'),
+       assert(iconSize > 0, 'Icon size must be greater than zero.');
 
-  /// The amount of stars in the bar. The default amount is 5
+  /// The number of stars in the control. Defaults to 5.
   final int amount;
 
-  /// The current rating of the bar.
-  /// It must be more or equal to 0 and less than [amount]
+  /// The current rating.
+  ///
+  /// Must be between 0 and [amount] (inclusive). Fractional values are
+  /// supported and render using a clipped partial star.
   final double rating;
 
-  /// Called when the [rating] is changed.
-  /// If this is `null`, the RatingBar will not detect touch inputs
+  /// Called when the [rating] changes.
+  ///
+  /// If this is `null`, the control is read-only and does not respond to input.
   final ValueChanged<double>? onChanged;
 
-  /// The duration of the animation
+  /// The duration of the rating change animation.
   final Duration animationDuration;
 
-  /// The curve of the animation. If `null`, uses [FluentThemeData.animationCurve]
+  /// The curve of the animation. If `null`, defaults to [Curves.linear].
   final Curve? animationCurve;
 
-  /// The icon used in the bar. If `null`, uses [kRatingBarIcon]
+  /// The icon used for the filled (rated) portion of a star.
+  ///
+  /// If `null`, defaults to [kRatingControlIcon].
   final IconData? icon;
 
-  /// The size of the icon. If `null`, uses [IconThemeData.size]
+  /// The icon used for the unfilled (unrated) portion of a star.
+  ///
+  /// If `null`, defaults to [kRatingControlUnratedIcon].
+  final IconData? unratedIcon;
+
+  /// The size of each star icon.
   final double iconSize;
 
-  /// The space between each icon
+  /// The spacing between stars. Defaults to 8.0 to match WinUI 3.
   final double starSpacing;
 
-  /// The color of the icons that are rated. If `null`, uses [FluentThemeData.accentColor]
+  /// The color of the filled (selected) portion of stars.
+  ///
+  /// If `null`, uses the theme's accent color.
   final Color? ratedIconColor;
 
-  /// The color of the icons that are not rated. If `null`, uses [FluentThemeData.disabled]
+  /// The color of the unfilled (unselected) portion of stars.
+  ///
+  /// If `null`, uses [ResourceDictionary.textFillColorSecondary].
   final Color? unratedIconColor;
 
-  /// Semantic label for the bar
+  /// Semantic label for the control.
   ///
-  /// Announced in accessibility modes (e.g TalkBack/VoiceOver). This
-  /// label does not show in the UI.
+  /// Announced in accessibility modes (e.g. TalkBack/VoiceOver). This label
+  /// does not appear in the UI.
   ///
-  ///   * [SemanticsProperties.label], which is set to [semanticLabel]
-  ///     in the underlying [Semantics] widget.
+  /// See also:
+  ///   * [SemanticsProperties.label], which is set to [semanticLabel].
   final String? semanticLabel;
 
   /// {@macro flutter.widgets.Focus.focusNode}
@@ -116,7 +137,7 @@ class RatingBar extends StatefulWidget {
   final DragStartBehavior dragStartBehavior;
 
   @override
-  State<RatingBar> createState() => _RatingBarState();
+  State<RatingControl> createState() => _RatingControlState();
 
   @override
   void debugFillProperties(DiagnosticPropertiesBuilder properties) {
@@ -130,13 +151,14 @@ class RatingBar extends StatefulWidget {
       ..add(DiagnosticsProperty<Curve>('animationCurve', animationCurve))
       ..add(DoubleProperty('iconSize', iconSize))
       ..add(IconDataProperty('icon', icon))
+      ..add(IconDataProperty('unratedIcon', unratedIcon))
       ..add(ColorProperty('ratedIconColor', ratedIconColor))
       ..add(ColorProperty('unratedIconColor', unratedIconColor))
       ..add(ObjectFlagProperty<FocusNode>.has('focusNode', focusNode))
       ..add(
         FlagProperty('autofocus', value: autofocus, ifFalse: 'manual focus'),
       )
-      ..add(DoubleProperty('starSpacing', starSpacing, defaultValue: 0))
+      ..add(DoubleProperty('starSpacing', starSpacing, defaultValue: 8.0))
       ..add(
         EnumProperty(
           'dragStartBehavior',
@@ -147,12 +169,16 @@ class RatingBar extends StatefulWidget {
   }
 }
 
-class _RatingBarState extends State<RatingBar> {
+class _RatingControlState extends State<RatingControl> {
   late FocusNode _focusNode;
   late Map<LogicalKeySet, Intent> _shortcutMap;
   late Map<Type, Action<Intent>> _actionMap;
 
   bool _showFocusHighlight = false;
+
+  /// The 1-based index of the star currently under the pointer, or null when
+  /// the pointer is outside the control.
+  int? _hoveredStar;
 
   @override
   void initState() {
@@ -183,18 +209,14 @@ class _RatingBarState extends State<RatingBar> {
   void _actionHandler(_AdjustSliderIntent intent) {
     final directionality = Directionality.of(context);
     void increase() {
-      if (widget.rating == widget.amount) {
-        return;
-      }
+      if (widget.rating == widget.amount) return;
       widget.onChanged?.call(
         (widget.rating + 1).clamp(0, widget.amount).toDouble(),
       );
     }
 
     void decrease() {
-      if (widget.rating == 0) {
-        return;
-      }
+      if (widget.rating == 0) return;
       widget.onChanged?.call(
         (widget.rating - 1).clamp(0, widget.amount).toDouble(),
       );
@@ -223,10 +245,20 @@ class _RatingBarState extends State<RatingBar> {
   }
 
   void _handleUpdate(double x) {
-    final iSize = widget.iconSize;
-    final value = (x / iSize) - (widget.starSpacing / widget.amount);
-    if (value <= widget.amount && !value.isNegative) {
-      widget.onChanged?.call(value);
+    final totalPerStar = widget.iconSize + widget.starSpacing;
+    final raw = (x / totalPerStar).clamp(0.0, widget.amount.toDouble());
+    // Match WinUI 3 behavior: interactive input always snaps to whole integers
+    // using ceil(), so the first fraction of a star counts as that full star.
+    final snapped = raw.ceil().clamp(0, widget.amount).toDouble();
+    widget.onChanged?.call(snapped);
+  }
+
+  void _handleHoverUpdate(double x) {
+    final totalPerStar = widget.iconSize + widget.starSpacing;
+    final index = (x / totalPerStar).floor() + 1;
+    final clamped = index.clamp(1, widget.amount);
+    if (_hoveredStar != clamped) {
+      setState(() => _hoveredStar = clamped);
     }
   }
 
@@ -234,10 +266,14 @@ class _RatingBarState extends State<RatingBar> {
   Widget build(BuildContext context) {
     assert(debugCheckHasFluentTheme(context));
     assert(debugCheckHasDirectionality(context));
+    final theme = FluentTheme.of(context);
+    final resources = theme.resources;
+    final accentColor = theme.accentColor.defaultBrushFor(theme.brightness);
+    final isEnabled = widget.onChanged != null;
+
     return Semantics(
       label: widget.semanticLabel,
-      // It's only a slider if its value can be changed
-      slider: widget.onChanged != null,
+      slider: isEnabled,
       maxValueLength: widget.amount,
       value: widget.rating.toStringAsFixed(2),
       focusable: true,
@@ -245,57 +281,115 @@ class _RatingBarState extends State<RatingBar> {
       child: FocusableActionDetector(
         focusNode: _focusNode,
         autofocus: widget.autofocus,
-        enabled: widget.onChanged != null,
+        enabled: isEnabled,
         actions: _actionMap,
         shortcuts: _shortcutMap,
         onShowFocusHighlight: (v) {
           setState(() => _showFocusHighlight = v);
         },
-        child: GestureDetector(
-          dragStartBehavior: widget.dragStartBehavior,
-          onTapDown: (d) => _handleUpdate(d.localPosition.dx),
-          onHorizontalDragStart: (d) => _handleUpdate(d.localPosition.dx),
-          onHorizontalDragUpdate: (d) => _handleUpdate(d.localPosition.dx),
-          child: FocusBorder(
-            focused: widget.onChanged != null && _showFocusHighlight,
-            child: TweenAnimationBuilder<double>(
-              builder: (context, value, child) {
-                var v = value + 1.0;
-                return Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: () {
-                    final items = List.generate(widget.amount, (index) {
-                      var r = v - 1.0;
-                      v -= 1;
-                      if (r > 1) {
-                        r = 1;
-                      } else if (r < 0) {
-                        r = 0;
+        child: MouseRegion(
+          cursor: isEnabled ? SystemMouseCursors.click : MouseCursor.defer,
+          onHover: isEnabled
+              ? (event) => _handleHoverUpdate(event.localPosition.dx)
+              : null,
+          onExit: isEnabled ? (_) => setState(() => _hoveredStar = null) : null,
+          child: GestureDetector(
+            dragStartBehavior: widget.dragStartBehavior,
+            onTapDown: (d) {
+              // Clear hover preview so the press is shown via the normal
+              // rating display, not the stale hover-preview state.
+              if (_hoveredStar != null) setState(() => _hoveredStar = null);
+              _handleUpdate(d.localPosition.dx);
+            },
+            onHorizontalDragStart: (d) {
+              // Same as onTapDown: suppress hover preview during drag.
+              if (_hoveredStar != null) setState(() => _hoveredStar = null);
+              _handleUpdate(d.localPosition.dx);
+            },
+            onHorizontalDragUpdate: (d) => _handleUpdate(d.localPosition.dx),
+            child: FocusBorder(
+              focused: isEnabled && _showFocusHighlight,
+              child: TweenAnimationBuilder<double>(
+                duration: widget.animationDuration,
+                curve: widget.animationCurve ?? Curves.linear,
+                tween: Tween<double>(begin: 0, end: widget.rating),
+                builder: (context, value, child) {
+                  return Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: List.generate(widget.amount, (index) {
+                      final Color starRatedColor;
+                      final Color starUnratedColor;
+                      final double r;
+
+                      if (!isEnabled) {
+                        // Disabled / read-only state
+                        r = (value - index).clamp(0.0, 1.0);
+                        starRatedColor =
+                            widget.ratedIconColor ??
+                            resources.textFillColorDisabled;
+                        starUnratedColor =
+                            widget.unratedIconColor ??
+                            resources.textFillColorSecondary;
+                      } else if (_hoveredStar != null) {
+                        // Hover preview state
+                        final hovered = _hoveredStar!;
+                        if (index < hovered) {
+                          // Star is at or before the hover position — show preview
+                          r = 1.0;
+                          final alreadySelected = (index + 1) <= widget.rating;
+                          starRatedColor =
+                              widget.ratedIconColor ??
+                              (alreadySelected
+                                  ? accentColor // PointerOverSelectedForeground
+                                  : resources
+                                        .textFillColorPrimary); // PlaceholderForeground
+                          starUnratedColor = starRatedColor;
+                        } else {
+                          // Star is after the hover position — show dimmed
+                          r = 0.0;
+                          starRatedColor =
+                              widget.ratedIconColor ??
+                              resources
+                                  .controlAltFillColorTertiary; // PointerOverUnselectedForeground
+                          starUnratedColor =
+                              widget.unratedIconColor ??
+                              resources.controlAltFillColorTertiary;
+                        }
+                      } else {
+                        // Normal (non-hover) state
+                        r = (value - index).clamp(0.0, 1.0);
+                        starRatedColor =
+                            widget.ratedIconColor ??
+                            accentColor; // SelectedForeground
+                        starUnratedColor =
+                            widget.unratedIconColor ??
+                            resources
+                                .textFillColorSecondary; // UnselectedForeground
                       }
-                      final Widget icon = RatingIcon(
+
+                      final Widget star = RatingIcon(
                         rating: r,
-                        icon: widget.icon ?? kRatingBarIcon,
-                        ratedColor: widget.ratedIconColor,
-                        unratedColor: widget.unratedIconColor,
+                        icon: widget.icon ?? kRatingControlIcon,
+                        unratedIcon:
+                            widget.unratedIcon ?? kRatingControlUnratedIcon,
+                        ratedColor: starRatedColor,
+                        unratedColor: starUnratedColor,
                         size: widget.iconSize,
                       );
+
                       if (index != widget.amount - 1) {
                         return Padding(
                           padding: EdgeInsetsDirectional.only(
                             end: widget.starSpacing,
                           ),
-                          child: icon,
+                          child: star,
                         );
                       }
-                      return icon;
-                    });
-                    return items;
-                  }(),
-                );
-              },
-              duration: widget.animationDuration,
-              curve: widget.animationCurve ?? Curves.linear,
-              tween: Tween<double>(begin: 0, end: widget.rating),
+                      return star;
+                    }),
+                  );
+                },
+              ),
             ),
           ),
         ),
@@ -319,3 +413,111 @@ class _AdjustSliderIntent extends Intent {
 }
 
 enum _SliderAdjustmentType { right, left, up, down }
+
+/// The default icon data for the rated (filled) state of the rating control.
+///
+/// This is [FluentIcons.favorite_star_fill] (U+E735).
+const IconData kRatingControlIcon = WindowsIcons.favorite_star_fill;
+
+/// The default icon data for the unrated (unfilled) state of the rating control.
+///
+/// This is [FluentIcons.favorite_star] (U+E734).
+const IconData kRatingControlUnratedIcon = WindowsIcons.favorite_star;
+
+/// Deprecated. Use [kRatingControlIcon] instead.
+@Deprecated('Use kRatingControlIcon instead.')
+const IconData kRatingBarIcon = kRatingControlIcon;
+
+/// Deprecated. Use [RatingControl] instead.
+@Deprecated('Use RatingControl instead.')
+typedef RatingBar = RatingControl;
+
+/// A windows-styled rating icon.
+///
+/// The rating icon displays a star that is filled from left to right based on
+/// [rating]. It uses two icons: [icon] (filled) for the rated portion and
+/// [unratedIcon] (unfilled) for the unrated portion.
+///
+/// See also:
+///
+///   * [RatingControl], a rating bar that uses this icon.
+class RatingIcon extends StatelessWidget {
+  /// Creates a rating icon.
+  const RatingIcon({
+    required this.rating,
+    super.key,
+    this.ratedColor,
+    this.unratedColor,
+    this.icon = kRatingControlIcon,
+    this.unratedIcon = kRatingControlUnratedIcon,
+    this.size,
+  }) : assert(rating >= 0.0 && rating <= 1.0);
+
+  /// The rating of the icon. Must be more or equal to 0 and less or equal than 1.0
+  final double rating;
+
+  /// The filled (rated) icon.
+  ///
+  /// Defaults to [kRatingControlIcon].
+  final IconData icon;
+
+  /// The unfilled (unrated) icon.
+  ///
+  /// Defaults to [kRatingControlUnratedIcon].
+  final IconData unratedIcon;
+
+  /// The color used by the rated part.
+  ///
+  /// If null, uses the accent color.
+  final Color? ratedColor;
+
+  /// The color used by the unrated part.
+  ///
+  /// If null, uses [ResourceDictionary.textFillColorSecondary].
+  final Color? unratedColor;
+
+  /// The size of the icon.
+  final double? size;
+
+  @override
+  Widget build(BuildContext context) {
+    assert(debugCheckHasFluentTheme(context));
+    final style = FluentTheme.of(context);
+    final size = this.size;
+    final unratedColor =
+        this.unratedColor ?? style.resources.textFillColorSecondary;
+    final ratedColor =
+        this.ratedColor ?? style.accentColor.defaultBrushFor(style.brightness);
+    if (rating == 1.0) {
+      return Icon(icon, color: ratedColor, size: size);
+    } else if (rating == 0.0) {
+      return Icon(unratedIcon, color: unratedColor, size: size);
+    }
+    return Stack(
+      children: [
+        Icon(unratedIcon, color: unratedColor, size: size),
+        Positioned.fill(
+          child: ClipRect(
+            clipper: _StarClipper(rating),
+            child: Icon(icon, color: ratedColor, size: size),
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+class _StarClipper extends CustomClipper<Rect> {
+  final double value;
+
+  _StarClipper(this.value);
+
+  @override
+  Rect getClip(Size size) {
+    final rect = Rect.fromLTWH(0, 0, size.width * value, size.height);
+    return rect;
+  }
+
+  @override
+  bool shouldReclip(_StarClipper oldClipper) => oldClipper.value != value;
+}

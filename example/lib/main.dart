@@ -281,6 +281,10 @@ class _MyHomePageState extends State<MyHomePage> with WindowListener {
                 title: const Text('ColorPicker'),
                 body: forms.ColorPickerPage(),
               ),
+              PaneItem(
+                title: const Text('Rating Control'),
+                body: inputs.RatingControlPage(),
+              ),
             ],
           ),
           PaneItemExpander(
@@ -415,10 +419,6 @@ class _MyHomePageState extends State<MyHomePage> with WindowListener {
               PaneItem(
                 title: const Text('ProgressBar'),
                 body: surfaces.ProgressBarPage(),
-              ),
-              PaneItem(
-                title: const Text('RatingBar'),
-                body: inputs.RatingBarPage(),
               ),
             ],
           ),
