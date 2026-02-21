@@ -1,3 +1,7 @@
+## [next]
+
+- fix: Overflow on `TimePicker` and `DatePicker` popups when system text scaling is enabled ([#1321](https://github.com/bdlukaa/fluent_ui/issues/1321))
+
 ## 4.14.0
 
 - refactor: Consistent theme classes

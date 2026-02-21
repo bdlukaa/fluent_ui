@@ -434,7 +434,9 @@ class PickerState extends State<Picker> {
                         ),
                       ),
                     ),
-                    child: widget.pickerContent(context),
+                    child: MediaQuery.withNoTextScaling(
+                      child: widget.pickerContent(context),
+                    ),
                   ),
                 ),
               ),
