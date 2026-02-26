@@ -1,5 +1,6 @@
 ## [next]
 
+- fix: Flyout's bottom shadow no longer clipped in bottom placement modes ([#1323](https://github.com/bdlukaa/fluent_ui/issues/1323))
 - fix: Correctly handle system text scaling on `DatePicker`, `TimePicker`, `AutoSuggestBox`, `CalendarDatePicker` popups ([#1321](https://github.com/bdlukaa/fluent_ui/issues/1321), [#1286](https://github.com/bdlukaa/fluent_ui/pull/1286))
 - **BREAKING** feat: Rename `RatingBar` to `RatingControl`, and updated its style ([#1274](https://github.com/bdlukaa/fluent_ui/issues/1274))
 
