@@ -35,6 +35,28 @@ typedef TreeViewItemOnExpandToggle =
 typedef TreeViewItemGesturesCallback =
     Map<Type, GestureRecognizerFactory> Function(TreeViewItem item);
 
+/// A callback that determines whether a [TreeViewItem] can be reordered
+/// to a new position.
+///
+/// [item] is the item being dragged, [newParent] is the new parent item
+/// (or null if moved to root level), and [index] is the new position in
+/// the parent's children list.
+///
+/// Used by [TreeView.canReorderItem]
+typedef TreeViewCanReorderCallback =
+    bool Function(TreeViewItem item, TreeViewItem? newParent, int index);
+
+/// A callback that is invoked when a [TreeViewItem] is reordered.
+///
+/// [item] is the item that was moved, [oldParent] is the previous parent
+/// (or null if it was at root), and [newParent] is the new parent (or null
+/// if moved to root level).
+///
+/// Used by [TreeView.onItemReordered]
+typedef TreeViewItemReorderedCallback =
+    void Function(TreeViewItem item, TreeViewItem? oldParent,
+        TreeViewItem? newParent, int newIndex);
+
 const double _whiteSpace = 8;
 
 /// Default loading indicator used by [TreeView]
@@ -563,6 +585,197 @@ extension TreeViewItemCollection on List<TreeViewItem> {
   }
 }
 
+/// A controller for a [TreeView].
+///
+/// A [TreeViewController] provides programmatic control over a [TreeView],
+/// including managing items, selection, and expansion state.
+///
+/// This is similar to [ScrollController] or [TextEditingController] in Flutter.
+///
+/// {@tool snippet}
+/// This example shows how to use a TreeViewController:
+///
+/// ```dart
+/// final controller = TreeViewController(
+///   items: [
+///     TreeViewItem(content: Text('Item 1'), value: 'item1'),
+///     TreeViewItem(content: Text('Item 2'), value: 'item2'),
+///   ],
+/// );
+///
+/// TreeView(controller: controller);
+///
+/// // Later, programmatically manipulate the tree:
+/// controller.expandAll();
+/// controller.selectItem(controller.items.first);
+/// ```
+/// {@end-tool}
+///
+/// See also:
+///
+///  * [TreeView], which this controller manages
+///  * [TreeViewItem], the data model for tree nodes
+class TreeViewController with ChangeNotifier, Diagnosticable {
+  /// Creates a [TreeViewController].
+  ///
+  /// If [items] is provided, the controller will manage those items.
+  TreeViewController({List<TreeViewItem>? items}) : _items = items ?? [];
+
+  List<TreeViewItem> _items;
+  TreeViewState? _state;
+
+  /// The items managed by this controller.
+  List<TreeViewItem> get items => _items;
+
+  /// Sets the items managed by this controller and rebuilds the tree.
+  set items(List<TreeViewItem> value) {
+    _items = value;
+    _rebuild();
+  }
+
+  /// Whether this controller is attached to a [TreeView].
+  bool get isAttached => _state != null;
+
+  /// Attaches this controller to a [TreeViewState].
+  void _attach(TreeViewState state) {
+    _state = state;
+  }
+
+  /// Detaches this controller from a [TreeViewState].
+  void _detach() {
+    _state = null;
+  }
+
+  /// Rebuilds the tree view.
+  void _rebuild() {
+    _state?.buildItems();
+    notifyListeners();
+  }
+
+  /// Finds a [TreeViewItem] by its [value].
+  ///
+  /// Returns the first item whose [TreeViewItem.value] equals [value],
+  /// or `null` if no such item exists. Searches recursively through all
+  /// children.
+  TreeViewItem? getItemFromValue(dynamic value) {
+    TreeViewItem? result;
+    _items.executeForAll((item) {
+      if (item.value == value) result = item;
+    });
+    return result;
+  }
+
+  /// Adds [item] as a child of [parent].
+  ///
+  /// If [parent] is null, the item is added to the root level.
+  /// If [index] is provided, the item is inserted at that position;
+  /// otherwise, it's appended to the end.
+  void addItem(TreeViewItem item, {TreeViewItem? parent, int? index}) {
+    final target = parent?.children ?? _items;
+    if (index != null) {
+      target.insert(index, item);
+    } else {
+      target.add(item);
+    }
+    _rebuild();
+  }
+
+  /// Removes [item] from the tree.
+  ///
+  /// Returns `true` if the item was found and removed, `false` otherwise.
+  bool removeItem(TreeViewItem item) {
+    final parent = item.parent;
+    final removed = parent != null
+        ? parent.children.remove(item)
+        : _items.remove(item);
+    if (removed) _rebuild();
+    return removed;
+  }
+
+  /// Expands [item] if it has children.
+  void expandItem(TreeViewItem item) {
+    if (item.children.isNotEmpty || item.lazy) {
+      item.expanded = true;
+      _rebuild();
+    }
+  }
+
+  /// Collapses [item].
+  void collapseItem(TreeViewItem item) {
+    item.expanded = false;
+    _rebuild();
+  }
+
+  /// Expands all items in the tree recursively.
+  void expandAll() {
+    _items.executeForAll((item) {
+      if (item.children.isNotEmpty || item.lazy) {
+        item.expanded = true;
+      }
+    });
+    _rebuild();
+  }
+
+  /// Collapses all items in the tree recursively.
+  void collapseAll() {
+    _items.executeForAll((item) {
+      item.expanded = false;
+    });
+    _rebuild();
+  }
+
+  /// Selects [item].
+  ///
+  /// In single selection mode, this deselects all other items first.
+  void selectItem(TreeViewItem item) {
+    item.selected = true;
+    _rebuild();
+  }
+
+  /// Deselects [item].
+  void deselectItem(TreeViewItem item) {
+    item.selected = false;
+    _rebuild();
+  }
+
+  /// Selects all items in the tree recursively.
+  void selectAll() {
+    _items.executeForAll((item) {
+      item.selected = true;
+    });
+    _rebuild();
+  }
+
+  /// Deselects all items in the tree recursively.
+  void deselectAll() {
+    _items.executeForAll((item) {
+      item.selected = false;
+    });
+    _rebuild();
+  }
+
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties
+      ..add(IntProperty('itemCount', _items.length))
+      ..add(
+        FlagProperty(
+          'isAttached',
+          value: isAttached,
+          ifTrue: 'attached',
+          ifFalse: 'detached',
+        ),
+      );
+  }
+
+  @override
+  void dispose() {
+    _detach();
+    super.dispose();
+  }
+}
+
 /// A hierarchical list with expanding and collapsing nodes.
 ///
 /// [TreeView] displays nested items in a tree structure, using indentation
@@ -606,9 +819,11 @@ extension TreeViewItemCollection on List<TreeViewItem> {
 class TreeView extends StatefulWidget {
   /// Creates a tree view.
   ///
-  /// [items] must not be empty
+  /// Either [items] or [controller] must be provided, but not both.
+  /// If [controller] is provided, items are managed by the controller.
   const TreeView({
-    required this.items,
+    this.items,
+    this.controller,
     super.key,
     this.selectionMode = TreeViewSelectionMode.none,
     this.onSelectionChanged,
@@ -627,12 +842,30 @@ class TreeView extends StatefulWidget {
     this.narrowSpacing = false,
     this.includePartiallySelectedItems = false,
     this.deselectParentWhenChildrenDeselected = true,
-  });
+    this.canDragItems = false,
+    this.canReorderItem,
+    this.onItemReordered,
+  }) : assert(
+         items != null || controller != null,
+         'Either items or controller must be provided',
+       );
 
   /// The items of the tree view.
   ///
-  /// Must not be empty
-  final List<TreeViewItem> items;
+  /// If [controller] is provided, this should be null and items will be
+  /// managed by the controller.
+  final List<TreeViewItem>? items;
+
+  /// An optional controller that manages the tree view's items and state.
+  ///
+  /// If provided, [items] should be null since items will be managed by the
+  /// controller. The controller provides programmatic access to add, remove,
+  /// expand, collapse, select, and deselect items.
+  ///
+  /// See also:
+  ///
+  ///  * [TreeViewController], which this parameter accepts
+  final TreeViewController? controller;
 
   /// The current selection mode.
   ///
@@ -736,6 +969,41 @@ class TreeView extends StatefulWidget {
   /// Defaults to `false`.
   final bool narrowSpacing;
 
+  /// Whether items can be dragged and dropped to reorder them.
+  ///
+  /// When enabled, users can drag items to reorganize the tree hierarchy.
+  /// Use [canReorderItem] to control which items can be moved and where,
+  /// and [onItemReordered] to be notified when an item is reordered.
+  ///
+  /// Defaults to `false`.
+  ///
+  /// See also:
+  ///
+  ///  * [canReorderItem], which controls where items can be dropped
+  ///  * [onItemReordered], which is called when reorder completes
+  ///  * <https://learn.microsoft.com/en-us/windows/apps/design/controls/tree-view#drag-and-drop-items-between-tree-views>
+  final bool canDragItems;
+
+  /// A callback that determines whether a dragged item can be dropped at
+  /// the given position.
+  ///
+  /// If null and [canDragItems] is true, all reorderings are allowed.
+  ///
+  /// The parameters are:
+  ///  * [item] - The item being dragged
+  ///  * [newParent] - The target parent (null for root level)
+  ///  * [index] - The new position within the parent's children
+  final TreeViewCanReorderCallback? canReorderItem;
+
+  /// Called when an item is reordered via drag and drop.
+  ///
+  /// The parameters are:
+  ///  * [item] - The item that was moved
+  ///  * [oldParent] - The previous parent (null if was at root)
+  ///  * [newParent] - The new parent (null if moved to root)
+  ///  * [newIndex] - The new position within the parent's children
+  final TreeViewItemReorderedCallback? onItemReordered;
+
   @override
   State<TreeView> createState() => TreeViewState();
 
@@ -766,6 +1034,21 @@ class TreeView extends StatefulWidget {
           defaultValue: false,
           ifTrue: 'narrow spacing',
         ),
+      )
+      ..add(
+        FlagProperty(
+          'canDragItems',
+          value: canDragItems,
+          defaultValue: false,
+          ifTrue: 'drag and drop enabled',
+        ),
+      )
+      ..add(
+        DiagnosticsProperty<TreeViewController>(
+          'controller',
+          controller,
+          defaultValue: null,
+        ),
       );
   }
 }
@@ -773,19 +1056,29 @@ class TreeView extends StatefulWidget {
 class TreeViewState extends State<TreeView> with AutomaticKeepAliveClientMixin {
   late List<TreeViewItem> _items;
 
+  /// The items currently managed by this tree view, either from [TreeView.items]
+  /// or from [TreeView.controller].
+  List<TreeViewItem> get _effectiveItems =>
+      widget.controller?.items ?? widget.items ?? [];
+
   /// Performs a build of all the items in the tree view.
   ///
   /// This is useful when an item needs to be updated outside of the built-in
   /// callbacks.
   ///
   /// This operation is expensive and should be used with caution.
-  void buildItems() => _buildItems();
+  void buildItems() {
+    if (mounted) {
+      setState(() => _buildItems());
+    }
+  }
 
   /// Builds all the items based on the items provided by the [widget]
   void _buildItems() {
+    final effectiveItems = _effectiveItems;
     if (widget.selectionMode != TreeViewSelectionMode.single) {
-      _items = widget.items.build();
-      widget.items.executeForAll(
+      _items = effectiveItems.build();
+      effectiveItems.executeForAll(
         (item) => item.executeForAllParents(
           (parent) => parent?.updateSelected(
             widget.deselectParentWhenChildrenDeselected,
@@ -795,7 +1088,7 @@ class TreeViewState extends State<TreeView> with AutomaticKeepAliveClientMixin {
     } else {
       // make sure that at most only a single item is selected
       var foundSelected = 0;
-      for (final item in widget.items) {
+      for (final item in effectiveItems) {
         final selected = item.selected;
         // the null "indeterminute" state is not allowed in single select mode
         if (selected == null) {
@@ -807,7 +1100,13 @@ class TreeViewState extends State<TreeView> with AutomaticKeepAliveClientMixin {
           }
         }
       }
-      _items = widget.items.build();
+      _items = effectiveItems.build();
+    }
+  }
+
+  void _onControllerChanged() {
+    if (mounted) {
+      setState(() => _buildItems());
     }
   }
 
@@ -815,18 +1114,93 @@ class TreeViewState extends State<TreeView> with AutomaticKeepAliveClientMixin {
   void initState() {
     super.initState();
     _buildItems();
+    widget.controller?._attach(this);
+    widget.controller?.addListener(_onControllerChanged);
   }
 
   @override
   void didUpdateWidget(TreeView oldWidget) {
     super.didUpdateWidget(oldWidget);
-    if (widget.items != oldWidget.items) _buildItems();
+    if (widget.controller != oldWidget.controller) {
+      oldWidget.controller?.removeListener(_onControllerChanged);
+      oldWidget.controller?._detach();
+      widget.controller?._attach(this);
+      widget.controller?.addListener(_onControllerChanged);
+    }
+    if (widget.items != oldWidget.items ||
+        widget.controller != oldWidget.controller) {
+      _buildItems();
+    }
   }
 
   @override
   void dispose() {
+    widget.controller?.removeListener(_onControllerChanged);
+    widget.controller?._detach();
     _items.clear();
     super.dispose();
+  }
+
+  /// The item currently being dragged, if any.
+  TreeViewItem? _draggedItem;
+
+  /// The current drop target position.
+  _DropPosition? _dropPosition;
+
+  void _onReorder(TreeViewItem draggedItem, TreeViewItem targetItem,
+      _DropPosition position) {
+    final effectiveItems = _effectiveItems;
+    final oldParent = draggedItem.parent;
+
+    // Remove from old position
+    if (oldParent != null) {
+      oldParent.children.remove(draggedItem);
+    } else {
+      effectiveItems.remove(draggedItem);
+    }
+
+    // Determine new position
+    TreeViewItem? newParent;
+    int newIndex;
+
+    switch (position) {
+      case _DropPosition.above:
+        newParent = targetItem.parent;
+        final targetList = newParent?.children ?? effectiveItems;
+        newIndex = targetList.indexOf(targetItem);
+        if (newIndex < 0) newIndex = targetList.length;
+      case _DropPosition.below:
+        newParent = targetItem.parent;
+        final targetList = newParent?.children ?? effectiveItems;
+        newIndex = targetList.indexOf(targetItem) + 1;
+        if (newIndex <= 0) newIndex = targetList.length;
+      case _DropPosition.inside:
+        newParent = targetItem;
+        newIndex = targetItem.children.length;
+    }
+
+    // Check if reorder is allowed
+    if (widget.canReorderItem != null &&
+        !widget.canReorderItem!(draggedItem, newParent, newIndex)) {
+      // Reorder not allowed, re-insert at old position
+      if (oldParent != null) {
+        oldParent.children.add(draggedItem);
+      } else {
+        effectiveItems.add(draggedItem);
+      }
+      return;
+    }
+
+    // Insert at new position
+    final targetList = newParent?.children ?? effectiveItems;
+    if (newIndex > targetList.length) newIndex = targetList.length;
+    targetList.insert(newIndex, draggedItem);
+
+    setState(() {
+      _buildItems();
+    });
+
+    widget.onItemReordered?.call(draggedItem, oldParent, newParent, newIndex);
   }
 
   @override
@@ -867,7 +1241,7 @@ class TreeViewState extends State<TreeView> with AutomaticKeepAliveClientMixin {
             itemBuilder: (context, index) {
               final item = _items[index];
 
-              return _TreeViewItem(
+              Widget child = _TreeViewItem(
                 key: item.key ?? ValueKey<TreeViewItem>(item),
                 item: item,
                 selectionMode: widget.selectionMode,
@@ -903,7 +1277,8 @@ class TreeViewState extends State<TreeView> with AutomaticKeepAliveClientMixin {
                         );
                       });
                       if (onSelectionChanged != null) {
-                        final selectedItems = widget.items.selectedItems(
+                        final selectedItems =
+                            _effectiveItems.selectedItems(
                           widget.includePartiallySelectedItems,
                         );
                         await onSelectionChanged(selectedItems);
@@ -944,6 +1319,30 @@ class TreeViewState extends State<TreeView> with AutomaticKeepAliveClientMixin {
                 onInvoked: (reason) => _invokeItem(item, reason),
                 loadingWidgetFallback: widget.loadingWidget,
               );
+
+              if (widget.canDragItems) {
+                child = _DraggableTreeViewItem(
+                  item: item,
+                  onReorder: _onReorder,
+                  draggedItem: _draggedItem,
+                  dropPosition: _dropPosition,
+                  onDragStarted: () {
+                    setState(() => _draggedItem = item);
+                  },
+                  onDragEnd: () {
+                    setState(() {
+                      _draggedItem = null;
+                      _dropPosition = null;
+                    });
+                  },
+                  onDropPositionChanged: (position) {
+                    setState(() => _dropPosition = position);
+                  },
+                  child: child,
+                );
+              }
+
+              return child;
             },
           ),
         ),
@@ -1245,6 +1644,180 @@ class _TreeViewItem extends StatelessWidget {
                   ),
               ],
             ),
+          );
+        },
+      ),
+    );
+  }
+}
+
+/// The position where an item can be dropped relative to a target item.
+enum _DropPosition {
+  /// Drop above the target item (as a sibling before it)
+  above,
+
+  /// Drop below the target item (as a sibling after it)
+  below,
+
+  /// Drop inside the target item (as a child)
+  inside,
+}
+
+/// A wrapper widget that adds drag-and-drop functionality to a tree view item.
+class _DraggableTreeViewItem extends StatefulWidget {
+  const _DraggableTreeViewItem({
+    required this.item,
+    required this.onReorder,
+    required this.draggedItem,
+    required this.dropPosition,
+    required this.onDragStarted,
+    required this.onDragEnd,
+    required this.onDropPositionChanged,
+    required this.child,
+  });
+
+  final TreeViewItem item;
+  final void Function(
+    TreeViewItem draggedItem,
+    TreeViewItem targetItem,
+    _DropPosition position,
+  ) onReorder;
+  final TreeViewItem? draggedItem;
+  final _DropPosition? dropPosition;
+  final VoidCallback onDragStarted;
+  final VoidCallback onDragEnd;
+  final ValueChanged<_DropPosition?> onDropPositionChanged;
+  final Widget child;
+
+  @override
+  State<_DraggableTreeViewItem> createState() => _DraggableTreeViewItemState();
+}
+
+class _DraggableTreeViewItemState extends State<_DraggableTreeViewItem> {
+  _DropPosition? _currentPosition;
+
+  bool _isDescendantOf(TreeViewItem item, TreeViewItem potentialAncestor) {
+    TreeViewItem? current = item.parent;
+    while (current != null) {
+      if (identical(current, potentialAncestor)) return true;
+      current = current.parent;
+    }
+    return false;
+  }
+
+  _DropPosition _calculateDropPosition(Offset localPosition, double height) {
+    final thirdHeight = height / 3;
+    if (localPosition.dy < thirdHeight) {
+      return _DropPosition.above;
+    } else if (localPosition.dy > thirdHeight * 2) {
+      return _DropPosition.below;
+    } else {
+      return _DropPosition.inside;
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final isDragging = identical(widget.draggedItem, widget.item);
+    final theme = FluentTheme.of(context);
+
+    return LongPressDraggable<TreeViewItem>(
+      data: widget.item,
+      feedback: Material(
+        color: Colors.transparent,
+        child: ConstrainedBox(
+          constraints: BoxConstraints(
+            maxWidth: MediaQuery.of(context).size.width * 0.5,
+          ),
+          child: Opacity(opacity: 0.8, child: widget.child),
+        ),
+      ),
+      childWhenDragging: Opacity(opacity: 0.3, child: widget.child),
+      onDragStarted: widget.onDragStarted,
+      onDragEnd: (_) => widget.onDragEnd(),
+      onDraggableCanceled: (_, __) => widget.onDragEnd(),
+      child: DragTarget<TreeViewItem>(
+        onWillAcceptWithDetails: (details) {
+          final draggedItem = details.data;
+          // Don't allow dropping on itself or its descendants
+          if (identical(draggedItem, widget.item)) return false;
+          if (_isDescendantOf(widget.item, draggedItem)) return false;
+          return true;
+        },
+        onMove: (details) {
+          final renderBox = context.findRenderObject() as RenderBox;
+          final localPosition = renderBox.globalToLocal(details.offset);
+          final position = _calculateDropPosition(
+            localPosition,
+            renderBox.size.height,
+          );
+          if (_currentPosition != position) {
+            _currentPosition = position;
+            widget.onDropPositionChanged(position);
+          }
+        },
+        onLeave: (_) {
+          _currentPosition = null;
+          widget.onDropPositionChanged(null);
+        },
+        onAcceptWithDetails: (details) {
+          if (_currentPosition != null) {
+            widget.onReorder(details.data, widget.item, _currentPosition!);
+          }
+          _currentPosition = null;
+          widget.onDropPositionChanged(null);
+        },
+        builder: (context, candidateData, rejectedData) {
+          final isDropTarget = candidateData.isNotEmpty;
+
+          return Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              // Drop indicator above
+              if (isDropTarget && _currentPosition == _DropPosition.above)
+                Container(
+                  height: 2,
+                  margin: EdgeInsetsDirectional.only(
+                    start: widget.item.depth * _whiteSpace * 2 + 4,
+                    end: 4,
+                  ),
+                  decoration: BoxDecoration(
+                    color: theme.accentColor.defaultBrushFor(theme.brightness),
+                    borderRadius: BorderRadius.circular(1),
+                  ),
+                ),
+              // The actual tree item with optional highlight
+              Container(
+                decoration: isDropTarget &&
+                        _currentPosition == _DropPosition.inside
+                    ? BoxDecoration(
+                        border: Border.all(
+                          color: theme.accentColor.defaultBrushFor(
+                            theme.brightness,
+                          ),
+                          width: 2,
+                        ),
+                        borderRadius: BorderRadius.circular(6),
+                      )
+                    : null,
+                child: isDragging
+                    ? Opacity(opacity: 0.3, child: widget.child)
+                    : widget.child,
+              ),
+              // Drop indicator below
+              if (isDropTarget && _currentPosition == _DropPosition.below)
+                Container(
+                  height: 2,
+                  margin: EdgeInsetsDirectional.only(
+                    start: widget.item.depth * _whiteSpace * 2 + 4,
+                    end: 4,
+                  ),
+                  decoration: BoxDecoration(
+                    color: theme.accentColor.defaultBrushFor(theme.brightness),
+                    borderRadius: BorderRadius.circular(1),
+                  ),
+                ),
+            ],
           );
         },
       ),
