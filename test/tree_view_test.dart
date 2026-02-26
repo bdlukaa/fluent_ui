@@ -540,6 +540,46 @@ void main() {
       expect(() => item.children.remove(child), throwsUnsupportedError);
     });
 
+    test('children list throws on clear', () {
+      final item = TreeViewItem(
+        content: const Text('Parent'),
+        value: 'parent',
+        children: [
+          TreeViewItem(content: const Text('Child'), value: 'child'),
+        ],
+      );
+
+      expect(() => item.children.clear(), throwsUnsupportedError);
+    });
+
+    test('children list throws on insert', () {
+      final item = TreeViewItem(
+        content: const Text('Parent'),
+        value: 'parent',
+        children: [],
+      );
+
+      expect(
+        () => item.children.insert(
+          0,
+          TreeViewItem(content: const Text('Child'), value: 'child'),
+        ),
+        throwsUnsupportedError,
+      );
+    });
+
+    test('children list throws on removeAt', () {
+      final item = TreeViewItem(
+        content: const Text('Parent'),
+        value: 'parent',
+        children: [
+          TreeViewItem(content: const Text('Child'), value: 'child'),
+        ],
+      );
+
+      expect(() => item.children.removeAt(0), throwsUnsupportedError);
+    });
+
     test('children list is readable', () {
       final child = TreeViewItem(
         content: const Text('Child'),
