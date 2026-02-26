@@ -594,6 +594,7 @@ class NumberBoxState<T extends num> extends State<NumberBox<T>> {
   Widget build(BuildContext context) {
     assert(debugCheckHasFluentTheme(context));
     assert(debugCheckHasOverlay(context));
+    assert(debugCheckHasDirectionality(context));
 
     final textFieldSuffix = <Widget>[
       // Ensure all modes have a suffix. This is necessary to ensure the text
