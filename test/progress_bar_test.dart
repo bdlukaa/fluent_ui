@@ -15,4 +15,48 @@ void main() {
     expect(semantics.label, 'Loading');
     expect(semantics.value, '66.00');
   });
+
+  testWidgets('ProgressBar renders in LTR directionality', (tester) async {
+    await tester.pumpWidget(
+      wrapApp(
+        child: const Directionality(
+          textDirection: TextDirection.ltr,
+          child: ProgressBar(value: 50),
+        ),
+      ),
+    );
+
+    expect(find.byType(ProgressBar), findsOneWidget);
+  });
+
+  testWidgets('ProgressBar renders in RTL directionality', (tester) async {
+    await tester.pumpWidget(
+      wrapApp(
+        child: const Directionality(
+          textDirection: TextDirection.rtl,
+          child: ProgressBar(value: 50),
+        ),
+      ),
+    );
+
+    expect(find.byType(ProgressBar), findsOneWidget);
+  });
+
+  testWidgets('Indeterminate ProgressBar renders in RTL directionality',
+      (tester) async {
+    await tester.pumpWidget(
+      wrapApp(
+        child: const Directionality(
+          textDirection: TextDirection.rtl,
+          child: ProgressBar(),
+        ),
+      ),
+    );
+
+    expect(find.byType(ProgressBar), findsOneWidget);
+    // Pump a few frames to verify the indeterminate animation runs without error
+    await tester.pump(const Duration(milliseconds: 500));
+    await tester.pump(const Duration(milliseconds: 500));
+    expect(find.byType(ProgressBar), findsOneWidget);
+  });
 }
