@@ -545,6 +545,7 @@ class NumberBoxState<T extends num> extends State<NumberBox<T>> {
         final boxContext = _textBoxKey.currentContext;
         if (boxContext == null) return const SizedBox.shrink();
         final box = boxContext.findRenderObject()! as RenderBox;
+        final isRtl = Directionality.of(context) == TextDirection.rtl;
 
         final Widget child = PositionedDirectional(
           width: kNumberBoxOverlayWidth,
@@ -552,7 +553,7 @@ class NumberBoxState<T extends num> extends State<NumberBox<T>> {
             link: _layerLink,
             showWhenUnlinked: false,
             offset: Offset(
-              box.size.width - kNumberBoxOverlayWidth,
+              isRtl ? 0 : box.size.width - kNumberBoxOverlayWidth,
               box.size.height / 2 - kNumberBoxOverlayHeight / 2,
             ),
             child: SizedBox(
