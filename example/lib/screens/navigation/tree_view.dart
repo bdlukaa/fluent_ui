@@ -37,8 +37,8 @@ class _TreeViewPageState extends State<TreeViewPage> with PageMixin {
                   value: 'paint_color_scheme',
                 ),
                 TreeViewItem(
-                  content: const Text('Flooring weedgrain type'),
-                  value: 'flooring_weedgrain_type',
+                  content: const Text('Flooring woodgrain type'),
+                  value: 'flooring_woodgrain_type',
                 ),
                 TreeViewItem(
                   content: const Text('Kitchen cabinet style'),
@@ -371,8 +371,8 @@ TreeView(
               value: 'paint_color_scheme',
             ),
             TreeViewItem(
-              content: const Text('Flooring weedgrain type'),
-              value: 'flooring_weedgrain_type',
+              content: const Text('Flooring woodgrain type'),
+              value: 'flooring_woodgrain_type',
             ),
             TreeViewItem(
               content: const Text('Kitchen cabinet style'),
