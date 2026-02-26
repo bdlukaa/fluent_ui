@@ -5,12 +5,9 @@
 - fix: Correctly handle system text scaling on `DatePicker`, `TimePicker`, `AutoSuggestBox`, `CalendarDatePicker` popups ([#1321](https://github.com/bdlukaa/fluent_ui/issues/1321), [#1286](https://github.com/bdlukaa/fluent_ui/pull/1286))
 - **BREAKING** feat: Rename `RatingBar` to `RatingControl`, and updated its style ([#1274](https://github.com/bdlukaa/fluent_ui/issues/1274))
 - fix: `NumberBox` compact overlay is now positioned correctly on right-to-left directionality ([#1326](https://github.com/bdlukaa/fluent_ui/issues/1326))
-- **BREAKING** feat: Add `TreeViewController` for programmatic control of `TreeView` ([#1140](https://github.com/bdlukaa/fluent_ui/issues/1140))
-  - `TreeView.items` is now optional when a `controller` is provided
-  - `TreeViewController` provides methods: `getItemFromValue()`, `addItem()`, `removeItem()`, `expandItem()`, `collapseItem()`, `expandAll()`, `collapseAll()`, `selectItem()`, `deselectItem()`, `selectAll()`, `deselectAll()`
-- feat: Add drag and drop support for `TreeView` ([#399](https://github.com/bdlukaa/fluent_ui/issues/399))
-  - Added `canDragItems`, `canReorderItem`, and `onItemReordered` properties
-  - Items can be dropped above, below, or inside other items to reorganize the tree hierarchy
+- feat: Add `TreeViewController` for programmatic control of `TreeView` ([#1140](https://github.com/bdlukaa/fluent_ui/issues/1140))
+  - `TreeViewController` provides methods: `getItemFromValue()`, `addItem()`, `removeItem()`, `moveItem()`, `expandItem()`, `collapseItem()`, `expandAll()`, `collapseAll()`, `selectItem()`, `deselectItem()`, `selectAll()`, `deselectAll()`
+  - Reordering items is supported via `controller.moveItem(item, newParent: target, index: 0)` ([#399](https://github.com/bdlukaa/fluent_ui/issues/399))
 
 ## 4.14.0
 

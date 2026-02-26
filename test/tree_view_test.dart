@@ -382,84 +382,111 @@ void main() {
     );
   });
 
-  group('TreeView drag and drop', () {
-    testWidgets('TreeView renders with canDragItems enabled', (tester) async {
-      final items = [
-        TreeViewItem(content: const Text('Item 1'), value: 'item1'),
-        TreeViewItem(content: const Text('Item 2'), value: 'item2'),
-      ];
-
-      await tester.pumpWidget(
-        wrapApp(
-          child: TreeView(
-            items: items,
-            canDragItems: true,
-          ),
-        ),
+  group('TreeView drag and drop via controller', () {
+    test('moveItem moves item to root level', () {
+      final child = TreeViewItem(
+        content: const Text('Child'),
+        value: 'child',
       );
+      final parent = TreeViewItem(
+        content: const Text('Parent'),
+        value: 'parent',
+        children: [child],
+      );
+      final controller = TreeViewController(items: [parent]);
 
-      expect(find.text('Item 1'), findsOneWidget);
-      expect(find.text('Item 2'), findsOneWidget);
+      // Build to establish parent linkage
+      controller.items.build();
+
+      expect(controller.moveItem(child), true);
+      expect(parent.children.length, 0);
+      expect(controller.items.length, 2);
+      expect(controller.items[1].value, 'child');
+
+      controller.dispose();
     });
 
-    testWidgets('canReorderItem callback is respected', (tester) async {
-      var reorderedCalled = false;
-      final items = [
-        TreeViewItem(content: const Text('Item 1'), value: 'item1'),
-        TreeViewItem(content: const Text('Item 2'), value: 'item2'),
-        TreeViewItem(content: const Text('Item 3'), value: 'item3'),
-      ];
-
-      await tester.pumpWidget(
-        wrapApp(
-          child: TreeView(
-            items: items,
-            canDragItems: true,
-            canReorderItem: (item, newParent, index) {
-              // Only allow reordering to root level
-              return newParent == null;
-            },
-            onItemReordered: (item, oldParent, newParent, newIndex) {
-              reorderedCalled = true;
-            },
-          ),
-        ),
+    test('moveItem moves item to a new parent', () {
+      final child = TreeViewItem(
+        content: const Text('Child'),
+        value: 'child',
       );
+      final parentA = TreeViewItem(
+        content: const Text('Parent A'),
+        value: 'parent_a',
+        children: [child],
+      );
+      final parentB = TreeViewItem(
+        content: const Text('Parent B'),
+        value: 'parent_b',
+        children: [],
+      );
+      final controller = TreeViewController(items: [parentA, parentB]);
 
-      expect(find.text('Item 1'), findsOneWidget);
-      expect(find.text('Item 2'), findsOneWidget);
-      expect(find.text('Item 3'), findsOneWidget);
-      // The canReorderItem callback and onItemReordered are tested
-      // at the integration level - verifying they can be provided
-      expect(reorderedCalled, false);
+      // Build to establish parent linkage
+      controller.items.build();
+
+      expect(controller.moveItem(child, newParent: parentB), true);
+      expect(parentA.children.length, 0);
+      expect(parentB.children.length, 1);
+      expect(parentB.children.first.value, 'child');
+
+      controller.dispose();
     });
 
-    testWidgets('TreeView with drag and drop and controller', (tester) async {
-      final controller = TreeViewController(
-        items: [
-          TreeViewItem(
-            content: const Text('Folder'),
-            value: 'folder',
-            children: [
-              TreeViewItem(content: const Text('File 1'), value: 'file1'),
-            ],
-          ),
-          TreeViewItem(content: const Text('File 2'), value: 'file2'),
-        ],
+    test('moveItem moves item to specific index', () {
+      final item1 = TreeViewItem(
+        content: const Text('Item 1'),
+        value: 'item1',
       );
+      final item2 = TreeViewItem(
+        content: const Text('Item 2'),
+        value: 'item2',
+      );
+      final item3 = TreeViewItem(
+        content: const Text('Item 3'),
+        value: 'item3',
+      );
+      final controller = TreeViewController(items: [item1, item2, item3]);
+
+      // Move item3 to index 0
+      expect(controller.moveItem(item3, index: 0), true);
+      expect(controller.items[0].value, 'item3');
+      expect(controller.items[1].value, 'item1');
+      expect(controller.items[2].value, 'item2');
+
+      controller.dispose();
+    });
+
+    testWidgets('TreeView with controller moveItem updates UI',
+        (tester) async {
+      final child = TreeViewItem(
+        content: const Text('Child'),
+        value: 'child',
+      );
+      final parent = TreeViewItem(
+        content: const Text('Parent'),
+        value: 'parent',
+        expanded: true,
+        children: [child],
+      );
+      final controller = TreeViewController(items: [parent]);
 
       await tester.pumpWidget(
-        wrapApp(
-          child: TreeView(
-            controller: controller,
-            canDragItems: true,
-          ),
-        ),
+        wrapApp(child: TreeView(controller: controller)),
       );
 
-      expect(find.text('Folder'), findsOneWidget);
-      expect(find.text('File 1'), findsOneWidget);
-      expect(find.text('File 2'), findsOneWidget);
+      expect(find.text('Parent'), findsOneWidget);
+      expect(find.text('Child'), findsOneWidget);
+
+      // Move child to root level
+      controller.moveItem(child);
+      await tester.pumpAndSettle();
+
+      // Both should still be visible, but Child is now at root level
+      expect(find.text('Parent'), findsOneWidget);
+      expect(find.text('Child'), findsOneWidget);
+      expect(controller.items.length, 2);
 
       controller.dispose();
     });

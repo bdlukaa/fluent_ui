@@ -147,6 +147,17 @@ class _TreeViewPageState extends State<TreeViewPage> with PageMixin {
                 onPressed: () => _controller.deselectAll(),
                 child: const Text('Deselect All'),
               ),
+              Button(
+                onPressed: () {
+                  // Move the first root item's first child to root level
+                  final items = _controller.items;
+                  if (items.isNotEmpty && items.first.children.isNotEmpty) {
+                    final child = items.first.children.first;
+                    _controller.moveItem(child);
+                  }
+                },
+                child: const Text('Move First Child to Root'),
+              ),
             ],
           ),
         ),
@@ -175,6 +186,7 @@ TreeView(
 controller.expandAll();
 controller.collapseAll();
 controller.addItem(TreeViewItem(content: Text('New'), value: 'new'));
+controller.moveItem(someItem, newParent: targetItem, index: 0);
 controller.selectAll();
 controller.deselectAll();
 ''',
@@ -261,44 +273,47 @@ TreeView(
           ),
         ),
         subtitle(
-          content: const Text('A TreeView with drag and drop support'),
+          content: const Text('A TreeView with items declared inline'),
         ),
         description(
           content: const Text(
-            'Long-press and drag items to reorder them in the tree. '
-            'Items can be moved above, below, or inside other items.',
+            'Items can be declared directly inline in the TreeView widget '
+            'without needing a controller or storing items in a variable.',
           ),
         ),
         CodeSnippetCard(
           codeSnippet: r'''
 TreeView(
-  items: dragItems,
-  canDragItems: true,
-  onItemReordered: (item, oldParent, newParent, newIndex) {
-    debugPrint(
-      'Moved "${(item.content as Text).data}" '
-      'from ${oldParent != null ? (oldParent.content as Text).data : "root"} '
-      'to ${newParent != null ? (newParent.content as Text).data : "root"} '
-      'at index $newIndex',
-    );
-  },
+  items: [
+    TreeViewItem(
+      content: const Text('Folder A'),
+      value: 'folder_a',
+      children: [
+        TreeViewItem(content: const Text('File A1'), value: 'file_a1'),
+        TreeViewItem(content: const Text('File A2'), value: 'file_a2'),
+      ],
+    ),
+    TreeViewItem(content: const Text('File B'), value: 'file_b'),
+  ],
 )''',
           child: TreeView(
-            items: dragItems,
-            canDragItems: true,
-            onItemReordered: (
-              final item,
-              final oldParent,
-              final newParent,
-              final newIndex,
-            ) {
-              debugPrint(
-                'Moved "${(item.content as Text).data}" '
-                'from ${oldParent != null ? (oldParent.content as Text).data : "root"} '
-                'to ${newParent != null ? (newParent.content as Text).data : "root"} '
-                'at index $newIndex',
-              );
-            },
+            items: [
+              TreeViewItem(
+                content: const Text('Folder A'),
+                value: 'folder_a',
+                children: [
+                  TreeViewItem(
+                    content: const Text('File A1'),
+                    value: 'file_a1',
+                  ),
+                  TreeViewItem(
+                    content: const Text('File A2'),
+                    value: 'file_a2',
+                  ),
+                ],
+              ),
+              TreeViewItem(content: const Text('File B'), value: 'file_b'),
+            ],
           ),
         ),
         subtitle(content: const Text('A TreeView with custom gestures')),
@@ -437,24 +452,5 @@ TreeView(
         ]);
       },
     ),
-  ];
-
-  late final dragItems = [
-    TreeViewItem(
-      content: const Text('Folder A'),
-      value: 'folder_a',
-      children: [
-        TreeViewItem(content: const Text('File A1'), value: 'file_a1'),
-        TreeViewItem(content: const Text('File A2'), value: 'file_a2'),
-      ],
-    ),
-    TreeViewItem(
-      content: const Text('Folder B'),
-      value: 'folder_b',
-      children: [
-        TreeViewItem(content: const Text('File B1'), value: 'file_b1'),
-      ],
-    ),
-    TreeViewItem(content: const Text('File C'), value: 'file_c'),
   ];
 }
