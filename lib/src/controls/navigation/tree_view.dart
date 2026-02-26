@@ -1016,7 +1016,7 @@ class TreeViewState extends State<TreeView> with AutomaticKeepAliveClientMixin {
   /// The items currently managed by this tree view, either from [TreeView.items]
   /// or from [TreeView.controller].
   List<TreeViewItem> get _effectiveItems =>
-      widget.controller != null ? widget.controller!.items : widget.items;
+      widget.controller?.items ?? widget.items;
 
   /// Performs a build of all the items in the tree view.
   ///

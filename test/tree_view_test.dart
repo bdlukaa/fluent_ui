@@ -164,7 +164,8 @@ void main() {
       );
       final controller = TreeViewController(items: [parent]);
 
-      // Build to establish parent linkage
+      // build() sets the parent reference on each item, which is needed
+      // for removeItem to find and remove the item from its parent's children.
       controller.items.build();
 
       expect(controller.removeItem(child), true);
@@ -395,7 +396,8 @@ void main() {
       );
       final controller = TreeViewController(items: [parent]);
 
-      // Build to establish parent linkage
+      // build() sets the parent reference on each item, which is needed
+      // for moveItem to find and remove the item from its parent's children.
       controller.items.build();
 
       expect(controller.moveItem(child), true);
@@ -423,7 +425,8 @@ void main() {
       );
       final controller = TreeViewController(items: [parentA, parentB]);
 
-      // Build to establish parent linkage
+      // build() sets the parent reference on each item, which is needed
+      // for moveItem to find and remove the item from its parent's children.
       controller.items.build();
 
       expect(controller.moveItem(child, newParent: parentB), true);
