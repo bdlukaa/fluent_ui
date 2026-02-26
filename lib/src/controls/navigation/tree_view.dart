@@ -143,7 +143,8 @@ class TreeViewItem with Diagnosticable {
   /// [TreeViewController.addItem], [TreeViewController.removeItem], or
   /// [TreeViewController.moveItem].
   List<TreeViewItem> get children => _unmodifiableChildren;
-  late final UnmodifiableListView<TreeViewItem> _unmodifiableChildren;
+  late final UnmodifiableListView<TreeViewItem> _unmodifiableChildren =
+      UnmodifiableListView(_children);
   final List<TreeViewItem> _children;
 
   /// Whether the item can be collapsable by user-input or not.
@@ -254,9 +255,7 @@ class TreeViewItem with Diagnosticable {
   }) : _children = List.of(children),
        expanded = expanded ?? children.isNotEmpty,
        _anyExpandableSiblings = false,
-       focusNode = focusNode ?? FocusNode() {
-    _unmodifiableChildren = UnmodifiableListView(_children);
-  }
+       focusNode = focusNode ?? FocusNode();
 
   /// Deep copy constructor that can be used to copy an item and all of
   /// its child items. Useful if you want to have multiple trees with the
