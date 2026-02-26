@@ -138,7 +138,9 @@ class _ProgressBarState extends State<ProgressBar>
   @override
   Widget build(BuildContext context) {
     assert(debugCheckHasFluentTheme(context));
+    assert(debugCheckHasDirectionality(context));
     final theme = FluentTheme.of(context);
+    final direction = Directionality.of(context);
     return Container(
       height: widget.strokeWidth,
       constraints: const BoxConstraints(minWidth: _kMinProgressBarWidth),
@@ -161,7 +163,7 @@ class _ProgressBarState extends State<ProgressBar>
                     theme.accentColor.defaultBrushFor(theme.brightness),
                 backgroundColor:
                     widget.backgroundColor ?? theme.inactiveBackgroundColor,
-                textDirection: Directionality.of(context),
+                textDirection: direction,
                 p1: p1,
                 p2: p2,
                 idleFrames: idleFrames,
