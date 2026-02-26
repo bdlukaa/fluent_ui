@@ -13,6 +13,82 @@ class TreeViewPage extends StatefulWidget {
 class _TreeViewPageState extends State<TreeViewPage> with PageMixin {
   final treeViewKey = GlobalKey<TreeViewState>(debugLabel: 'TreeView key');
 
+  late final TreeViewController _controller;
+
+  @override
+  void initState() {
+    super.initState();
+    _controller = TreeViewController(
+      items: [
+        TreeViewItem(
+          content: const Text('Personal Documents'),
+          value: 'personal_docs',
+          children: [
+            TreeViewItem(
+              content: const Text('Home Remodel'),
+              value: 'home_remodel',
+              children: [
+                TreeViewItem(
+                  content: const Text('Contractor Contact Info'),
+                  value: 'contr_cont_inf',
+                ),
+                TreeViewItem(
+                  content: const Text('Paint Color Scheme'),
+                  value: 'paint_color_scheme',
+                ),
+                TreeViewItem(
+                  content: const Text('Flooring weedgrain type'),
+                  value: 'flooring_weedgrain_type',
+                ),
+                TreeViewItem(
+                  content: const Text('Kitchen cabinet style'),
+                  value: 'kitch_cabinet_style',
+                ),
+              ],
+            ),
+            TreeViewItem(
+              content: const Text('Tax Documents'),
+              value: 'tax_docs',
+              children: [
+                TreeViewItem(content: const Text('2017'), value: 'tax_2017'),
+                TreeViewItem(
+                  content: const Text('Middle Years'),
+                  value: 'tax_middle_years',
+                  children: [
+                    TreeViewItem(
+                      content: const Text('2018'),
+                      value: 'tax_2018',
+                    ),
+                    TreeViewItem(
+                      content: const Text('2019'),
+                      value: 'tax_2019',
+                      selected: true,
+                    ),
+                    TreeViewItem(
+                      content: const Text('2020'),
+                      value: 'tax_2020',
+                    ),
+                  ],
+                ),
+                TreeViewItem(content: const Text('2021'), value: 'tax_2021'),
+                TreeViewItem(
+                  content: const Text('Current Year'),
+                  value: 'tax_cur',
+                ),
+              ],
+            ),
+          ],
+        ),
+      ],
+    );
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(final BuildContext context) {
     return ScaffoldPage.scrollable(
@@ -28,75 +104,84 @@ class _TreeViewPageState extends State<TreeViewPage> with PageMixin {
           'chevron pointing down.',
         ),
         subtitle(
-          content: const Text('A TreeView with Multi-selection enabled'),
+          content: const Text(
+            'A TreeView with Multi-selection and TreeViewController',
+          ),
+        ),
+        description(
+          content: const Text(
+            'TreeViewController provides programmatic control over the tree. '
+            'Use the buttons below to expand all, collapse all, or add items.',
+          ),
+        ),
+        Padding(
+          padding: const EdgeInsets.only(bottom: 8.0),
+          child: Wrap(
+            spacing: 8,
+            runSpacing: 8,
+            children: [
+              FilledButton(
+                onPressed: () => _controller.expandAll(),
+                child: const Text('Expand All'),
+              ),
+              FilledButton(
+                onPressed: () => _controller.collapseAll(),
+                child: const Text('Collapse All'),
+              ),
+              Button(
+                onPressed: () {
+                  _controller.addItem(
+                    TreeViewItem(
+                      content: Text('New Item ${DateTime.now().second}'),
+                      value: 'new_${DateTime.now().millisecondsSinceEpoch}',
+                    ),
+                  );
+                },
+                child: const Text('Add Root Item'),
+              ),
+              Button(
+                onPressed: () => _controller.selectAll(),
+                child: const Text('Select All'),
+              ),
+              Button(
+                onPressed: () => _controller.deselectAll(),
+                child: const Text('Deselect All'),
+              ),
+            ],
+          ),
         ),
         CodeSnippetCard(
           codeSnippet: r'''
-final items = [
-  TreeViewItem(
-    content: const Text('Personal Documents'),
-    value: 'personal_docs',
-    children: [
-      TreeViewItem(
-        content: const Text('Home Remodel'),
-        value: 'home_remodel',
-        children: [
-          TreeViewItem(
-            content: const Text('Contractor Contact Info'),
-            value: 'contr_cont_inf',
-          ),
-          TreeViewItem(
-            content: const Text('Paint Color Scheme'),
-            value: 'paint_color_scheme',
-          ),
-          TreeViewItem(
-            content: const Text('Flooring weedgrain type'),
-            value: 'flooring_weedgrain_type',
-          ),
-          TreeViewItem(
-            content: const Text('Kitchen cabinet style'),
-            value: 'kitch_cabinet_style',
-          ),
-        ],
-      ),
-      TreeViewItem(
-        content: const Text('Tax Documents'),
-        value: 'tax_docs',
-        children: [
-          TreeViewItem(content: const Text('2017'), value: "tax_2017"),
-          TreeViewItem(
-            content: const Text('Middle Years'),
-            value: 'tax_middle_years',
-            children: [
-              TreeViewItem(content: const Text('2018'), value: "tax_2018"),
-              TreeViewItem(content: const Text('2019'), value: "tax_2019"),
-              TreeViewItem(content: const Text('2020'), value: "tax_2020"),
-            ],
-          ),
-          TreeViewItem(content: const Text('2021'), value: "tax_2021"),
-          TreeViewItem(content: const Text('Current Year'), value: "tax_cur"),
-        ],
-      ),
-    ],
-  ),
-];
+final controller = TreeViewController(
+  items: [
+    TreeViewItem(
+      content: const Text('Personal Documents'),
+      value: 'personal_docs',
+      children: [...],
+    ),
+  ],
+);
 
 TreeView(
+  controller: controller,
   selectionMode: TreeViewSelectionMode.multiple,
-  shrinkWrap: true,
-  items: items,
-  onItemInvoked: (item) async => debugPrint('onItemInvoked: \$item'),
+  onItemInvoked: (item, reason) async =>
+      debugPrint('onItemInvoked(reason=$reason): $item'),
   onSelectionChanged: (selectedItems) async => debugPrint(
-              'onSelectionChanged: \${selectedItems.map((i) => i.value)}'),
-  onSecondaryTap: (item, details) async {
-    debugPrint('onSecondaryTap $item at ${details.globalPosition}');
-  },
+      'onSelectionChanged: ${selectedItems.map((i) => i.value)}'),
 )
+
+// Programmatic control:
+controller.expandAll();
+controller.collapseAll();
+controller.addItem(TreeViewItem(content: Text('New'), value: 'new'));
+controller.selectAll();
+controller.deselectAll();
 ''',
           child: TreeView(
             key: treeViewKey,
+            controller: _controller,
             selectionMode: TreeViewSelectionMode.multiple,
-            items: items,
             onItemInvoked: (final item, final reason) async =>
                 debugPrint('onItemInvoked(reason=$reason): $item'),
             onSelectionChanged: (final selectedItems) async => debugPrint(
@@ -172,6 +257,47 @@ TreeView(
             ),
             onSecondaryTap: (final item, final details) async {
               debugPrint('onSecondaryTap $item at ${details.globalPosition}');
+            },
+          ),
+        ),
+        subtitle(
+          content: const Text('A TreeView with drag and drop support'),
+        ),
+        description(
+          content: const Text(
+            'Long-press and drag items to reorder them in the tree. '
+            'Items can be moved above, below, or inside other items.',
+          ),
+        ),
+        CodeSnippetCard(
+          codeSnippet: r'''
+TreeView(
+  items: dragItems,
+  canDragItems: true,
+  onItemReordered: (item, oldParent, newParent, newIndex) {
+    debugPrint(
+      'Moved "${(item.content as Text).data}" '
+      'from ${oldParent != null ? (oldParent.content as Text).data : "root"} '
+      'to ${newParent != null ? (newParent.content as Text).data : "root"} '
+      'at index $newIndex',
+    );
+  },
+)''',
+          child: TreeView(
+            items: dragItems,
+            canDragItems: true,
+            onItemReordered: (
+              final item,
+              final oldParent,
+              final newParent,
+              final newIndex,
+            ) {
+              debugPrint(
+                'Moved "${(item.content as Text).data}" '
+                'from ${oldParent != null ? (oldParent.content as Text).data : "root"} '
+                'to ${newParent != null ? (newParent.content as Text).data : "root"} '
+                'at index $newIndex',
+              );
             },
           ),
         ),
@@ -311,5 +437,24 @@ TreeView(
         ]);
       },
     ),
+  ];
+
+  late final dragItems = [
+    TreeViewItem(
+      content: const Text('Folder A'),
+      value: 'folder_a',
+      children: [
+        TreeViewItem(content: const Text('File A1'), value: 'file_a1'),
+        TreeViewItem(content: const Text('File A2'), value: 'file_a2'),
+      ],
+    ),
+    TreeViewItem(
+      content: const Text('Folder B'),
+      value: 'folder_b',
+      children: [
+        TreeViewItem(content: const Text('File B1'), value: 'file_b1'),
+      ],
+    ),
+    TreeViewItem(content: const Text('File C'), value: 'file_c'),
   ];
 }
