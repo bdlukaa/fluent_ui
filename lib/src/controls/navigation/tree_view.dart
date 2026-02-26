@@ -142,7 +142,8 @@ class TreeViewItem with Diagnosticable {
   /// This list is unmodifiable. To add, remove, or reorder children, use
   /// [TreeViewController.addItem], [TreeViewController.removeItem], or
   /// [TreeViewController.moveItem].
-  List<TreeViewItem> get children => UnmodifiableListView(_children);
+  List<TreeViewItem> get children => _unmodifiableChildren;
+  late final UnmodifiableListView<TreeViewItem> _unmodifiableChildren;
   final List<TreeViewItem> _children;
 
   /// Whether the item can be collapsable by user-input or not.
@@ -253,7 +254,9 @@ class TreeViewItem with Diagnosticable {
   }) : _children = List.of(children),
        expanded = expanded ?? children.isNotEmpty,
        _anyExpandableSiblings = false,
-       focusNode = focusNode ?? FocusNode();
+       focusNode = focusNode ?? FocusNode() {
+    _unmodifiableChildren = UnmodifiableListView(_children);
+  }
 
   /// Deep copy constructor that can be used to copy an item and all of
   /// its child items. Useful if you want to have multiple trees with the
@@ -635,9 +638,11 @@ class TreeViewController with ChangeNotifier, Diagnosticable {
     _state = null;
   }
 
-  /// Rebuilds the tree view.
+  /// Rebuilds the tree view by notifying listeners.
+  ///
+  /// When attached to a [TreeViewState], the listener mechanism
+  /// triggers the state rebuild.
   void _rebuild() {
-    _state?.buildItems();
     notifyListeners();
   }
 
@@ -647,11 +652,19 @@ class TreeViewController with ChangeNotifier, Diagnosticable {
   /// or `null` if no such item exists. Searches recursively through all
   /// children.
   TreeViewItem? getItemFromValue(dynamic value) {
-    TreeViewItem? result;
-    _items.executeForAll((item) {
-      if (item.value == value) result = item;
-    });
-    return result;
+    return _findItemByValue(_items, value);
+  }
+
+  static TreeViewItem? _findItemByValue(
+    List<TreeViewItem> items,
+    dynamic value,
+  ) {
+    for (final item in items) {
+      if (item.value == value) return item;
+      final found = _findItemByValue(item._children, value);
+      if (found != null) return found;
+    }
+    return null;
   }
 
   /// Adds [item] as a child of [parent].
