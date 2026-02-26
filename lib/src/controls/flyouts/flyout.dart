@@ -848,14 +848,12 @@ class FlyoutController with ChangeNotifier, WidgetsBindingObserver {
             case FlyoutPlacementMode.bottomLeft:
             case FlyoutPlacementMode.bottomRight:
             default:
-              return ClipRect(
-                child: SlideTransition(
-                  position: Tween<Offset>(
-                    begin: const Offset(0, -0.15),
-                    end: Offset.zero,
-                  ).animate(animation),
-                  child: flyout,
-                ),
+              return SlideTransition(
+                position: Tween<Offset>(
+                  begin: const Offset(0, -0.15),
+                  end: Offset.zero,
+                ).animate(animation),
+                child: flyout,
               );
           }
         };
