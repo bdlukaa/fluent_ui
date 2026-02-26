@@ -1,3 +1,5 @@
+import 'dart:collection';
+
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
@@ -136,7 +138,12 @@ class TreeViewItem with Diagnosticable {
   final dynamic value;
 
   /// The children of this item.
-  final List<TreeViewItem> children;
+  ///
+  /// This list is unmodifiable. To add, remove, or reorder children, use
+  /// [TreeViewController.addItem], [TreeViewController.removeItem], or
+  /// [TreeViewController.moveItem].
+  List<TreeViewItem> get children => UnmodifiableListView(_children);
+  final List<TreeViewItem> _children;
 
   /// Whether the item can be collapsable by user-input or not.
   ///
@@ -230,7 +237,7 @@ class TreeViewItem with Diagnosticable {
     this.key,
     this.leading,
     this.value,
-    this.children = const [],
+    List<TreeViewItem> children = const [],
     this.collapsable = true,
     bool? expanded,
     this.selected = false,
@@ -243,7 +250,8 @@ class TreeViewItem with Diagnosticable {
     this.semanticLabel,
     this.loadingWidget,
     this.lazy = false,
-  }) : expanded = expanded ?? children.isNotEmpty,
+  }) : _children = List.of(children),
+       expanded = expanded ?? children.isNotEmpty,
        _anyExpandableSiblings = false,
        focusNode = focusNode ?? FocusNode();
 
@@ -453,7 +461,7 @@ class TreeViewItem with Diagnosticable {
         other.leading == leading &&
         other.content == content &&
         other.value == value &&
-        listEquals(other.children, children) &&
+        listEquals(other._children, _children) &&
         other.collapsable == collapsable &&
         other._anyExpandableSiblings == _anyExpandableSiblings &&
         other.selected == selected &&
@@ -475,7 +483,7 @@ class TreeViewItem with Diagnosticable {
         leading.hashCode ^
         content.hashCode ^
         value.hashCode ^
-        children.hashCode ^
+        _children.hashCode ^
         collapsable.hashCode ^
         _anyExpandableSiblings.hashCode ^
         selected.hashCode ^
@@ -585,6 +593,9 @@ extension TreeViewItemCollection on List<TreeViewItem> {
 ///
 /// // Later, programmatically manipulate the tree:
 /// controller.expandAll();
+/// controller.addItem(TreeViewItem(content: Text('New'), value: 'new'));
+/// controller.addItems([...], parent: someItem);
+/// controller.moveItem(someItem, newParent: targetItem);
 /// controller.selectItem(controller.items.first);
 /// ```
 /// {@end-tool}
@@ -649,12 +660,23 @@ class TreeViewController with ChangeNotifier, Diagnosticable {
   /// If [index] is provided, the item is inserted at that position;
   /// otherwise, it's appended to the end.
   void addItem(TreeViewItem item, {TreeViewItem? parent, int? index}) {
-    final target = parent?.children ?? _items;
+    final target = parent?._children ?? _items;
     if (index != null) {
       target.insert(index, item);
     } else {
       target.add(item);
     }
+    _rebuild();
+  }
+
+  /// Adds multiple [items] as children of [parent].
+  ///
+  /// If [parent] is null, items are added to the root level.
+  /// This is more efficient than calling [addItem] multiple times
+  /// because it only triggers a single rebuild.
+  void addItems(List<TreeViewItem> items, {TreeViewItem? parent}) {
+    final target = parent?._children ?? _items;
+    target.addAll(items);
     _rebuild();
   }
 
@@ -664,7 +686,7 @@ class TreeViewController with ChangeNotifier, Diagnosticable {
   bool removeItem(TreeViewItem item) {
     final parent = item.parent;
     final removed = parent != null
-        ? parent.children.remove(item)
+        ? parent._children.remove(item)
         : _items.remove(item);
     if (removed) _rebuild();
     return removed;
@@ -683,12 +705,12 @@ class TreeViewController with ChangeNotifier, Diagnosticable {
     // Remove from old position
     final oldParent = item.parent;
     final removed = oldParent != null
-        ? oldParent.children.remove(item)
+        ? oldParent._children.remove(item)
         : _items.remove(item);
     if (!removed) return false;
 
     // Insert at new position
-    final target = newParent?.children ?? _items;
+    final target = newParent?._children ?? _items;
     if (index != null && index <= target.length) {
       target.insert(index, item);
     } else {
@@ -788,13 +810,15 @@ class TreeViewController with ChangeNotifier, Diagnosticable {
 /// and icons to show parent-child relationships. It's ideal for displaying
 /// folder structures, organizational hierarchies, or any nested data.
 ///
+/// Use a [TreeViewController] to programmatically control the tree:
+///
 /// ![TreeView Simple](https://learn.microsoft.com/en-us/windows/apps/design/controls/images/treeview-simple.png)
 ///
 /// {@tool snippet}
-/// This example shows a basic tree view:
+/// This example shows a basic tree view with a controller:
 ///
 /// ```dart
-/// TreeView(
+/// final controller = TreeViewController(
 ///   items: [
 ///     TreeViewItem(
 ///       content: Text('Folder 1'),
@@ -805,7 +829,9 @@ class TreeViewController with ChangeNotifier, Diagnosticable {
 ///     ),
 ///     TreeViewItem(content: Text('Folder 2')),
 ///   ],
-/// )
+/// );
+///
+/// TreeView(controller: controller)
 /// ```
 /// {@end-tool}
 ///

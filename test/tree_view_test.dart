@@ -494,4 +494,160 @@ void main() {
       controller.dispose();
     });
   });
+
+  group('TreeViewItem.children is unmodifiable', () {
+    test('children list throws on add', () {
+      final item = TreeViewItem(
+        content: const Text('Parent'),
+        value: 'parent',
+        children: [],
+      );
+
+      expect(
+        () => item.children.add(
+          TreeViewItem(content: const Text('Child'), value: 'child'),
+        ),
+        throwsUnsupportedError,
+      );
+    });
+
+    test('children list throws on addAll', () {
+      final item = TreeViewItem(
+        content: const Text('Parent'),
+        value: 'parent',
+        children: [],
+      );
+
+      expect(
+        () => item.children.addAll([
+          TreeViewItem(content: const Text('Child'), value: 'child'),
+        ]),
+        throwsUnsupportedError,
+      );
+    });
+
+    test('children list throws on remove', () {
+      final child = TreeViewItem(
+        content: const Text('Child'),
+        value: 'child',
+      );
+      final item = TreeViewItem(
+        content: const Text('Parent'),
+        value: 'parent',
+        children: [child],
+      );
+
+      expect(() => item.children.remove(child), throwsUnsupportedError);
+    });
+
+    test('children list is readable', () {
+      final child = TreeViewItem(
+        content: const Text('Child'),
+        value: 'child',
+      );
+      final item = TreeViewItem(
+        content: const Text('Parent'),
+        value: 'parent',
+        children: [child],
+      );
+
+      expect(item.children.length, 1);
+      expect(item.children.first.value, 'child');
+      expect(item.children.isNotEmpty, true);
+    });
+  });
+
+  group('TreeViewController.addItems', () {
+    test('addItems adds multiple items at root', () {
+      final controller = TreeViewController();
+
+      controller.addItems([
+        TreeViewItem(content: const Text('Item 1'), value: 'item1'),
+        TreeViewItem(content: const Text('Item 2'), value: 'item2'),
+        TreeViewItem(content: const Text('Item 3'), value: 'item3'),
+      ]);
+
+      expect(controller.items.length, 3);
+      expect(controller.items[0].value, 'item1');
+      expect(controller.items[1].value, 'item2');
+      expect(controller.items[2].value, 'item3');
+
+      controller.dispose();
+    });
+
+    test('addItems adds multiple items as children of parent', () {
+      final parent = TreeViewItem(
+        content: const Text('Parent'),
+        value: 'parent',
+        children: [],
+      );
+      final controller = TreeViewController(items: [parent]);
+
+      controller.addItems(
+        [
+          TreeViewItem(content: const Text('Child 1'), value: 'child1'),
+          TreeViewItem(content: const Text('Child 2'), value: 'child2'),
+        ],
+        parent: parent,
+      );
+
+      expect(parent.children.length, 2);
+      expect(parent.children[0].value, 'child1');
+      expect(parent.children[1].value, 'child2');
+
+      controller.dispose();
+    });
+
+    test('addItems notifies listeners once', () {
+      final controller = TreeViewController();
+
+      var notifyCount = 0;
+      controller.addListener(() => notifyCount++);
+
+      controller.addItems([
+        TreeViewItem(content: const Text('Item 1'), value: 'item1'),
+        TreeViewItem(content: const Text('Item 2'), value: 'item2'),
+      ]);
+
+      // Only one notification for batch add
+      expect(notifyCount, 1);
+
+      controller.dispose();
+    });
+
+    testWidgets('TreeView with controller addItems updates UI',
+        (tester) async {
+      final parent = TreeViewItem(
+        content: const Text('Parent'),
+        value: 'parent',
+        expanded: true,
+        children: [],
+        lazy: true,
+      );
+      final controller = TreeViewController(items: [parent]);
+
+      await tester.pumpWidget(
+        wrapApp(child: TreeView(controller: controller)),
+      );
+
+      expect(find.text('Parent'), findsOneWidget);
+      expect(find.text('Child 1'), findsNothing);
+      expect(find.text('Child 2'), findsNothing);
+
+      controller.addItems(
+        [
+          TreeViewItem(content: const Text('Child 1'), value: 'child1'),
+          TreeViewItem(content: const Text('Child 2'), value: 'child2'),
+        ],
+        parent: parent,
+      );
+      await tester.pumpAndSettle();
+
+      expect(find.text('Parent'), findsOneWidget);
+      expect(find.text('Child 1'), findsOneWidget);
+      expect(find.text('Child 2'), findsOneWidget);
+
+      controller.dispose();
+    });
+  });
 }

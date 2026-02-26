@@ -6,8 +6,9 @@
 - **BREAKING** feat: Rename `RatingBar` to `RatingControl`, and updated its style ([#1274](https://github.com/bdlukaa/fluent_ui/issues/1274))
 - fix: `NumberBox` compact overlay is now positioned correctly on right-to-left directionality ([#1326](https://github.com/bdlukaa/fluent_ui/issues/1326))
 - feat: Add `TreeViewController` for programmatic control of `TreeView` ([#1140](https://github.com/bdlukaa/fluent_ui/issues/1140))
-  - `TreeViewController` provides methods: `getItemFromValue()`, `addItem()`, `removeItem()`, `moveItem()`, `expandItem()`, `collapseItem()`, `expandAll()`, `collapseAll()`, `selectItem()`, `deselectItem()`, `selectAll()`, `deselectAll()`
+  - `TreeViewController` provides methods: `getItemFromValue()`, `addItem()`, `addItems()`, `removeItem()`, `moveItem()`, `expandItem()`, `collapseItem()`, `expandAll()`, `collapseAll()`, `selectItem()`, `deselectItem()`, `selectAll()`, `deselectAll()`
   - Reordering items is supported via `controller.moveItem(item, newParent: target, index: 0)` ([#399](https://github.com/bdlukaa/fluent_ui/issues/399))
+- **BREAKING** feat: `TreeViewItem.children` is now unmodifiable. Use `TreeViewController` methods (`addItem()`, `addItems()`, `removeItem()`, `moveItem()`) to modify tree structure.
 
 ## 4.14.0
 
