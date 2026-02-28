@@ -135,7 +135,11 @@ class TitleBar extends StatelessWidget {
               child: Row(
                 children: [
                   if (isBackButtonVisible)
-                    backButton ?? PaneBackButton(onPressed: onBackRequested),
+                    backButton ??
+                        PaneBackButton(
+                          onPressed: onBackRequested,
+                          enabled: isBackButtonEnabled ?? true,
+                        ),
                   if (isPaneToggleButtonVisible) ?view.pane?.toggleButton,
                   if (leftHeader != null)
                     Padding(

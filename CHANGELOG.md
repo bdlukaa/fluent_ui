@@ -6,6 +6,7 @@
 - **BREAKING** feat: Rename `RatingBar` to `RatingControl`, and updated its style ([#1274](https://github.com/bdlukaa/fluent_ui/issues/1274))
 - fix: `NumberBox` compact overlay is now positioned correctly on right-to-left directionality ([#1326](https://github.com/bdlukaa/fluent_ui/issues/1326))
 - feat: `TitleBar` now supports double-click to maximize or restore the window ([#1298](https://github.com/bdlukaa/fluent_ui/issues/1298))
+- fix: `TitleBar`'s `isBackButtonEnabled` now works correctly ([#1298](https://github.com/bdlukaa/fluent_ui/issues/1298))
 
 ## 4.14.0
 
