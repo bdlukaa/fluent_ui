@@ -236,7 +236,6 @@ void main() {
       final item = TreeViewItem(
         content: const Text('Item'),
         value: 'item',
-        selected: false,
       );
       final controller = TreeViewController(items: [item]);
 
@@ -255,17 +254,14 @@ void main() {
           TreeViewItem(
             content: const Text('Item 1'),
             value: 'item1',
-            selected: false,
           ),
           TreeViewItem(
             content: const Text('Item 2'),
             value: 'item2',
-            selected: false,
             children: [
               TreeViewItem(
                 content: const Text('Child'),
                 value: 'child',
-                selected: false,
               ),
             ],
           ),

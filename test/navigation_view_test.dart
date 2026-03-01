@@ -1115,7 +1115,6 @@ void main() {
                 pane: NavigationPane(
                   displayMode: PaneDisplayMode.expanded,
                   toggleable: false,
-                  header: null,
                   items: [
                     PaneItem(
                       icon: const Icon(FluentIcons.home),

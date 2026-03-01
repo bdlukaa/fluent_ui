@@ -628,6 +628,7 @@ class TreeViewController with ChangeNotifier, Diagnosticable {
   bool get isAttached => _state != null;
 
   /// Attaches this controller to a [TreeViewState].
+  // ignore: use_setters_to_change_properties
   void _attach(TreeViewState state) {
     _state = state;
   }
@@ -1064,7 +1065,7 @@ class TreeViewState extends State<TreeView> with AutomaticKeepAliveClientMixin {
   /// This operation is expensive and should be used with caution.
   void buildItems() {
     if (mounted) {
-      setState(() => _buildItems());
+      setState(_buildItems);
     }
   }
 
@@ -1101,7 +1102,7 @@ class TreeViewState extends State<TreeView> with AutomaticKeepAliveClientMixin {
 
   void _onControllerChanged() {
     if (mounted) {
-      setState(() => _buildItems());
+      setState(_buildItems);
     }
   }
 
@@ -1210,8 +1211,7 @@ class TreeViewState extends State<TreeView> with AutomaticKeepAliveClientMixin {
                         );
                       });
                       if (onSelectionChanged != null) {
-                        final selectedItems =
-                            _effectiveItems.selectedItems(
+                        final selectedItems = _effectiveItems.selectedItems(
                           widget.includePartiallySelectedItems,
                         );
                         await onSelectionChanged(selectedItems);
