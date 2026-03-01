@@ -1101,5 +1101,39 @@ void main() {
       // matches WinUI3 specs through visual inspection)
       expect(find.byType(NavigationView), findsOneWidget);
     });
+
+    // Regression test for https://github.com/bdlukaa/fluent_ui/issues/1334
+    testWidgets(
+      'NavigationView does not throw when header and menu button are absent',
+      (tester) async {
+        await tester.pumpWidget(
+          FluentApp(
+            home: SizedBox(
+              width: 1200,
+              height: 800,
+              child: NavigationView(
+                pane: NavigationPane(
+                  displayMode: PaneDisplayMode.expanded,
+                  toggleable: false,
+                  header: null,
+                  items: [
+                    PaneItem(
+                      icon: const Icon(FluentIcons.home),
+                      title: const Text('Home'),
+                      body: const Center(child: Text('Home Page')),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ),
+        );
+
+        await tester.pumpAndSettle();
+
+        expect(find.byType(NavigationView), findsOneWidget);
+        expect(tester.takeException(), isNull);
+      },
+    );
   });
 }
