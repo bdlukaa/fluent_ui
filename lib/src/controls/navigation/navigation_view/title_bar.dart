@@ -36,6 +36,7 @@ class TitleBar extends StatelessWidget {
     this.onDragEnded,
     this.onDragCancelled,
     this.onDragUpdated,
+    this.onDoubleTap,
   });
 
   /// Whether the back button is enabled.
@@ -100,6 +101,9 @@ class TitleBar extends StatelessWidget {
   /// The callback to call when the drag is updated.
   final VoidCallback? onDragUpdated;
 
+  /// The callback that is called when the title bar is double-tapped.
+  final VoidCallback? onDoubleTap;
+  
   @override
   Widget build(BuildContext context) {
     assert(debugCheckHasFluentTheme(context));
@@ -115,6 +119,7 @@ class TitleBar extends StatelessWidget {
       onPanEnd: (_) => onDragEnded?.call(),
       onPanCancel: () => onDragCancelled?.call(),
       onPanUpdate: (_) => onDragUpdated?.call(),
+      onDoubleTap: () => onDoubleTap?.call(),
       child: ConstrainedBox(
         constraints: BoxConstraints(
           // according to documentation, increase the size of the title bar if
@@ -130,7 +135,11 @@ class TitleBar extends StatelessWidget {
               child: Row(
                 children: [
                   if (isBackButtonVisible)
-                    backButton ?? PaneBackButton(onPressed: onBackRequested),
+                    backButton ??
+                        PaneBackButton(
+                          onPressed: onBackRequested,
+                          enabled: isBackButtonEnabled ?? true,
+                        ),
                   if (isPaneToggleButtonVisible) ?view.pane?.toggleButton,
                   if (leftHeader != null)
                     Padding(
