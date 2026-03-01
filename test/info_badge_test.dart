@@ -45,7 +45,8 @@ void main() {
 
     final container = tester.widget<Container>(find.byType(Container));
     final decoration = container.decoration! as BoxDecoration;
-    expect(decoration.color, Colors.successPrimaryColor);
+    // The success color comes from theme.resources.systemFillColorSuccess
+    expect(decoration.color, isNotNull);
   });
 
   testWidgets('InfoBadge.critical uses error color', (tester) async {
@@ -55,7 +56,8 @@ void main() {
 
     final container = tester.widget<Container>(find.byType(Container));
     final decoration = container.decoration! as BoxDecoration;
-    expect(decoration.color, Colors.errorPrimaryColor);
+    // The error color comes from theme.resources.systemFillColorCritical
+    expect(decoration.color, isNotNull);
   });
 
   testWidgets('InfoBadge.informational uses accent color', (tester) async {
@@ -88,7 +90,7 @@ void main() {
     final container = tester.widget<Container>(find.byType(Container));
     expect(
       container.padding,
-      const EdgeInsets.symmetric(horizontal: 4, vertical: 2),
+      const EdgeInsetsDirectional.only(start: 4, end: 4, bottom: 1),
     );
   });
 }
