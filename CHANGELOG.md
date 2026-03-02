@@ -1,5 +1,7 @@
 ## [next]
 
+- fix: `NavigationView` no longer throws `BoxConstraints has a negative minimum height` when header and menu button are both absent ([#1334](https://github.com/bdlukaa/fluent_ui/issues/1334))
+
 - fix: `ProgressBar` chooses the correct direction when directionality is right-to-left ([#1291](https://github.com/bdlukaa/fluent_ui/issues/1291))
 - fix: Flyout's bottom shadow no longer clipped in bottom placement modes ([#1323](https://github.com/bdlukaa/fluent_ui/issues/1323))
 - fix: Correctly handle system text scaling on `DatePicker`, `TimePicker`, `AutoSuggestBox`, `CalendarDatePicker` popups ([#1321](https://github.com/bdlukaa/fluent_ui/issues/1321), [#1286](https://github.com/bdlukaa/fluent_ui/pull/1286))

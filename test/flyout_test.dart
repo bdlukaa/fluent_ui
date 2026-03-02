@@ -38,11 +38,11 @@ void main() {
       final controller = FlyoutController();
       await tester.pumpWidget(
         wrapApp(
-          child: Column(
-            children: [
-              const Text('Click outside to dismiss'),
-              FlyoutTarget(controller: controller, child: const Text('Target')),
-            ],
+          child: Center(
+            child: FlyoutTarget(
+              controller: controller,
+              child: const Text('Target'),
+            ),
           ),
         ),
       );
@@ -53,8 +53,8 @@ void main() {
       await tester.pumpAndSettle();
       expect(controller.isOpen, isTrue);
 
-      // Tap outside to dismiss
-      await tester.tap(find.text('Click outside to dismiss'));
+      // Tap outside the flyout to dismiss (top-left corner of the screen)
+      await tester.tapAt(const Offset(10, 10));
       await tester.pumpAndSettle();
       expect(controller.isOpen, isFalse);
       expect(find.text('Flyout'), findsNothing);

@@ -194,7 +194,7 @@ class _TreeViewPageState extends State<TreeViewPage> with PageMixin {
           ),
         ),
         Padding(
-          padding: const EdgeInsets.only(bottom: 8.0),
+          padding: const EdgeInsets.only(bottom: 8),
           child: Wrap(
             spacing: 8,
             runSpacing: 8,
@@ -287,12 +287,12 @@ controller.deselectAll();
         description(
           content: const Text(
             'Use the controller to add children when expanding a lazy-loaded '
-            'item. The controller\'s addItems method efficiently adds multiple '
+            "item. The controller's addItems method efficiently adds multiple "
             'children in a single rebuild.',
           ),
         ),
         CodeSnippetCard(
-          codeSnippet: r'''
+          codeSnippet: '''
 final lazyController = TreeViewController(
   items: [
     TreeViewItem(
