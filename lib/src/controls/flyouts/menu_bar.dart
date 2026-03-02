@@ -219,7 +219,9 @@ class MenuBarState extends State<MenuBar> {
       groupId: MenuBar,
       onTapOutside: (_) => closeFlyout(),
       child: Container(
-        constraints: const BoxConstraints(minHeight: 40),
+        constraints: BoxConstraints(
+          minHeight: (40 + theme.visualDensity.baseSizeAdjustment.dy).clamp(0.0, double.infinity),
+        ),
         padding: EdgeInsetsDirectional.only(
           top: barMargin.top,
           bottom: barMargin.bottom,

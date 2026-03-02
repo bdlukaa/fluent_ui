@@ -1608,7 +1608,9 @@ class _TextBoxState extends State<TextBox>
                   decoration: decoration,
                   child: Container(
                     foregroundDecoration: foregroundDecoration,
-                    constraints: const BoxConstraints(minHeight: 32),
+                    constraints: BoxConstraints(
+                      minHeight: (32 + themeData.visualDensity.baseSizeAdjustment.dy).clamp(0.0, double.infinity),
+                    ),
                     child: _selectionGestureDetectorBuilder
                         .buildGestureDetector(
                           behavior: HitTestBehavior.translucent,

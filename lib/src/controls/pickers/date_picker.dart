@@ -450,7 +450,9 @@ class DatePickerState extends State<DatePicker> {
             child: AnimatedContainer(
               duration: theme.fastAnimationDuration,
               curve: theme.animationCurve,
-              constraints: const BoxConstraints(minHeight: kPickerHeight),
+              constraints: BoxConstraints(
+                minHeight: (kPickerHeight + theme.visualDensity.baseSizeAdjustment.dy).clamp(0.0, double.infinity),
+              ),
               decoration: kPickerDecorationBuilder(context, states),
               child: DefaultTextStyle.merge(
                 style: TextStyle(

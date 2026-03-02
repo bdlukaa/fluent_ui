@@ -328,8 +328,8 @@ class ListTile extends StatelessWidget {
             renderOutside: false,
             child: Container(
               decoration: ShapeDecoration(shape: shape, color: tileColor),
-              constraints: const BoxConstraints(
-                minHeight: kOneLineTileHeight,
+              constraints: BoxConstraints(
+                minHeight: (kOneLineTileHeight + theme.visualDensity.baseSizeAdjustment.dy).clamp(0.0, double.infinity),
                 minWidth: 88,
               ),
               margin: margin,
