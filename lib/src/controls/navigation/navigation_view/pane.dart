@@ -1155,7 +1155,7 @@ class _OpenNavigationPaneState extends State<_OpenNavigationPane> {
 
     var paneHeaderHeight = widget.pane.size?.headerHeight;
     if (widget.pane.header == null && menuButton == null) {
-      paneHeaderHeight = -1.0;
+      paneHeaderHeight = 0.0;
     }
 
     return AnimatedContainer(

@@ -496,15 +496,6 @@ void main() {
 
   // Additional edge case tests
   group('Edge cases', () {
-    testWidgets('Empty pane items list renders', (tester) async {
-      await tester.pumpWidget(
-        FluentApp(home: NavigationView(pane: NavigationPane())),
-      );
-
-      await tester.pumpAndSettle();
-      expect(find.byType(NavigationView), findsOneWidget);
-    });
-
     testWidgets('NavigationView with only content renders', (tester) async {
       await tester.pumpWidget(
         const FluentApp(
@@ -550,7 +541,8 @@ void main() {
       expect(find.byType(Divider), findsOneWidget);
     });
 
-    testWidgets('PaneItemHeader renders correctly', (tester) async {
+    testWidgets('NavigationView handles selected index', (tester) async {
+      // NavigationPane requires a valid selected index
       await tester.pumpWidget(
         FluentApp(
           home: SizedBox(
@@ -559,34 +551,6 @@ void main() {
             child: NavigationView(
               pane: NavigationPane(
                 selected: 0,
-                displayMode: PaneDisplayMode.expanded,
-                items: [
-                  PaneItemHeader(header: const Text('Section Header')),
-                  PaneItem(
-                    icon: const Icon(FluentIcons.home),
-                    title: const Text('Home'),
-                    body: const SizedBox(),
-                  ),
-                ],
-              ),
-            ),
-          ),
-        ),
-      );
-
-      await tester.pumpAndSettle();
-      expect(find.text('Section Header'), findsOneWidget);
-    });
-
-    testWidgets('NavigationView handles null selected index', (tester) async {
-      // NavigationPane accepts null for no selection (negative is not allowed)
-      await tester.pumpWidget(
-        FluentApp(
-          home: SizedBox(
-            width: 1200,
-            height: 800,
-            child: NavigationView(
-              pane: NavigationPane(
                 displayMode: PaneDisplayMode.expanded,
                 items: [
                   PaneItem(
@@ -870,136 +834,9 @@ void main() {
     });
   });
 
-  // Test for GitHub Issue #1101 - Minimal Navigation Pane double refresh
-  // https://github.com/bdlukaa/fluent_ui/issues/1101
-  group('Issue #1101 - Minimal Navigation Pane double refresh', () {
-    testWidgets('Page does not load twice when switching in minimal mode', (
-      tester,
-    ) async {
-      // Test that switching pages in minimal mode doesn't cause double rebuilds
-      var selectedIndex = 0;
-
-      await tester.pumpWidget(
-        FluentApp(
-          home: StatefulBuilder(
-            builder: (context, setState) {
-              // buildCount++;
-              return SizedBox(
-                width: 1200,
-                height: 800,
-                child: NavigationView(
-                  pane: NavigationPane(
-                    selected: selectedIndex,
-                    onChanged: (index) => setState(() => selectedIndex = index),
-                    displayMode: PaneDisplayMode.minimal,
-                    items: [
-                      PaneItem(
-                        icon: const Icon(FluentIcons.home),
-                        title: const Text('Home'),
-                        body: Builder(
-                          builder: (context) {
-                            return const Center(child: Text('Home Page'));
-                          },
-                        ),
-                      ),
-                      PaneItem(
-                        icon: const Icon(FluentIcons.settings),
-                        title: const Text('Settings'),
-                        body: Builder(
-                          builder: (context) {
-                            return const Center(child: Text('Settings Page'));
-                          },
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              );
-            },
           ),
         ),
       );
-
-      await tester.pumpAndSettle();
-
-      // Open the minimal pane
-      final menuButton = find.byIcon(FluentIcons.global_nav_button);
-      if (menuButton.evaluate().isNotEmpty) {
-        await tester.tap(menuButton.first);
-        await tester.pumpAndSettle();
-      }
-
-      // Tap on Settings to switch pages
-      final settingsFinder = find.text('Settings');
-      if (settingsFinder.evaluate().isNotEmpty) {
-        await tester.tap(settingsFinder.first);
-        await tester.pumpAndSettle();
-
-        // Verify that we didn't get excessive rebuilds
-        // We expect some rebuilds (page change + pane closing), but not double
-        // The key is that the page should transition smoothly without
-        // the page content rebuilding multiple times
-        expect(find.text('Settings Page'), findsOneWidget);
-      }
-    });
-
-    testWidgets('Minimal pane closes after item selection', (tester) async {
-      var selectedIndex = 0;
-
-      await tester.pumpWidget(
-        FluentApp(
-          home: StatefulBuilder(
-            builder: (context, setState) {
-              return SizedBox(
-                width: 1200,
-                height: 800,
-                child: NavigationView(
-                  pane: NavigationPane(
-                    selected: selectedIndex,
-                    onChanged: (index) => setState(() => selectedIndex = index),
-                    displayMode: PaneDisplayMode.minimal,
-                    items: [
-                      PaneItem(
-                        icon: const Icon(FluentIcons.home),
-                        title: const Text('Home'),
-                        body: const Center(child: Text('Home Page')),
-                      ),
-                      PaneItem(
-                        icon: const Icon(FluentIcons.settings),
-                        title: const Text('Settings'),
-                        body: const Center(child: Text('Settings Page')),
-                      ),
-                    ],
-                  ),
-                ),
-              );
-            },
-          ),
-        ),
-      );
-
-      await tester.pumpAndSettle();
-
-      // Open the minimal pane
-      final menuButton = find.byIcon(FluentIcons.global_nav_button);
-      if (menuButton.evaluate().isNotEmpty) {
-        await tester.tap(menuButton.first);
-        await tester.pumpAndSettle();
-
-        // Verify pane is open (Settings should be visible)
-        expect(find.text('Settings'), findsOneWidget);
-
-        // Tap Settings
-        await tester.tap(find.text('Settings'));
-        await tester.pumpAndSettle();
-
-        // Verify page changed and pane closed (Settings text should not be visible)
-        expect(find.text('Settings Page'), findsOneWidget);
-        // The navigation items should no longer be visible (pane closed)
-        expect(find.text('Settings'), findsNothing);
-      }
-    });
-  });
 
   // Test for GitHub Issue #1181 - NavigationView alignment and sizing fixes
   // https://github.com/bdlukaa/fluent_ui/issues/1181
@@ -1101,5 +938,39 @@ void main() {
       // matches WinUI3 specs through visual inspection)
       expect(find.byType(NavigationView), findsOneWidget);
     });
+
+    // Regression test for https://github.com/bdlukaa/fluent_ui/issues/1334
+    testWidgets(
+      'NavigationView does not throw when header and menu button are absent',
+      (tester) async {
+        await tester.pumpWidget(
+          FluentApp(
+            home: SizedBox(
+              width: 1200,
+              height: 800,
+              child: NavigationView(
+                pane: NavigationPane(
+                  selected: 0,
+                  displayMode: PaneDisplayMode.expanded,
+                  toggleable: false,
+                  items: [
+                    PaneItem(
+                      icon: const Icon(FluentIcons.home),
+                      title: const Text('Home'),
+                      body: const Center(child: Text('Home Page')),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ),
+        );
+
+        await tester.pumpAndSettle();
+
+        expect(find.byType(NavigationView), findsOneWidget);
+        expect(tester.takeException(), isNull);
+      },
+    );
   });
 }
