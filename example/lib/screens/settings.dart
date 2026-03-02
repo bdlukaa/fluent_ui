@@ -174,6 +174,38 @@ class _SettingsState extends State<Settings> with PageMixin {
         ),
         biggerSpacer,
         Text(
+          'Visual Density',
+          style: FluentTheme.of(context).typography.subtitle,
+        ),
+        description(
+          content: const Text(
+            'Controls the compact sizing of UI elements. Compact mode reduces '
+            'the height and padding of controls.',
+          ),
+        ),
+        spacer,
+        RadioGroup<VisualDensity>(
+          groupValue: appTheme.visualDensity,
+          onChanged: (value) {
+            if (value != null) appTheme.visualDensity = value;
+          },
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            spacing: 8,
+            children: [
+              RadioButton<VisualDensity>(
+                value: VisualDensity.standard,
+                content: const Text('Standard'),
+              ),
+              RadioButton<VisualDensity>(
+                value: VisualDensity.compact,
+                content: const Text('Compact'),
+              ),
+            ],
+          ),
+        ),
+        biggerSpacer,
+        Text(
           'Accent Color',
           style: FluentTheme.of(context).typography.subtitle,
         ),

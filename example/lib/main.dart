@@ -92,7 +92,7 @@ class MyApp extends StatelessWidget {
           darkTheme: FluentThemeData(
             brightness: Brightness.dark,
             accentColor: appTheme.color,
-            visualDensity: VisualDensity.standard,
+            visualDensity: appTheme.visualDensity,
             focusTheme: FocusThemeData(
               glowFactor: is10footScreen(context) ? 2.0 : 0.0,
             ),
@@ -100,7 +100,7 @@ class MyApp extends StatelessWidget {
           ),
           theme: FluentThemeData(
             accentColor: appTheme.color,
-            visualDensity: VisualDensity.standard,
+            visualDensity: appTheme.visualDensity,
             focusTheme: FocusThemeData(
               glowFactor: is10footScreen(context) ? 2.0 : 0.0,
             ),
