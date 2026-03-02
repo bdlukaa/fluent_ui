@@ -926,7 +926,7 @@ class _AutoSuggestBoxOverlayState<T> extends State<_AutoSuggestBoxOverlay<T>> {
 
   /// Returns the tile height adjusted for the given visual density.
   static double adjustedTileHeight(VisualDensity density) {
-    return tileHeight + density.baseSizeAdjustment.dy;
+    return (tileHeight + density.baseSizeAdjustment.dy).clamp(0.0, double.infinity);
   }
 
   late List<AutoSuggestBoxItem<T>> items = widget.items;
