@@ -1,5 +1,6 @@
 ## [next]
 
+- feat: Improve developer experience for custom panes in `NavigationView`. Added an example demonstrating how to use the existing `NavigationPaneWidget` and `NavigationPaneWidgetData` APIs to create fully custom navigation panes. ([#1340](https://github.com/bdlukaa/fluent_ui/issues/1340))
 - fix: `NavigationView` no longer throws `BoxConstraints has a negative minimum height` when header and menu button are both absent ([#1334](https://github.com/bdlukaa/fluent_ui/issues/1334))
 
 - fix: `ProgressBar` chooses the correct direction when directionality is right-to-left ([#1291](https://github.com/bdlukaa/fluent_ui/issues/1291))

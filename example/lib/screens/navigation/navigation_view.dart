@@ -70,6 +70,74 @@ class _NavigationViewPageState extends State<NavigationViewPage>
           'Only the menu button is shown until the pane is opened. When opened, '
               'the pane overlays the left side of the content.',
         ),
+        subtitle(content: const Text('Custom pane')),
+        description(
+          content: const Text(
+            'Use NavigationPaneWidget to build a fully custom pane layout.',
+          ),
+        ),
+        CodeSnippetCard(
+          codeSnippet: '''class _CustomNavigationPane extends NavigationPaneWidget {
+  @override
+  Widget build(BuildContext context, NavigationPaneWidgetData data) {
+    return Row(
+      children: [
+        Container(
+          width: 200,
+          color: Colors.red.withValues(alpha: 0.2),
+          child: const Center(
+            child: Text('Custom pane'),
+          ),
+        ),
+        Expanded(child: data.content),
+      ],
+    );
+  }
+}
+
+NavigationView(
+  pane: NavigationPane(
+    customPane: _CustomNavigationPane(),
+    items: [...],
+  ),
+)''',
+          child: SizedBox(
+            height: itemHeight,
+            child: NavigationView(
+              pane: NavigationPane(
+                selected: topIndex,
+                onChanged: (final index) =>
+                    setState(() => topIndex = index),
+                customPane: _CustomNavigationPane(),
+                items: [
+                  PaneItem(
+                    icon: const WindowsIcon(WindowsIcons.home),
+                    title: const Text('Home'),
+                    body: const _NavigationBodyItem(),
+                  ),
+                  PaneItem(
+                    icon: const WindowsIcon(WindowsIcons.mail),
+                    title: const Text('Mail'),
+                    body: const _NavigationBodyItem(),
+                  ),
+                  PaneItem(
+                    icon: const WindowsIcon(WindowsIcons.settings),
+                    title: const Text('Settings'),
+                    body: const _NavigationBodyItem(),
+                  ),
+                ],
+                footerItems: [
+                  PaneItemSeparator(),
+                  PaneItem(
+                    icon: const WindowsIcon(WindowsIcons.info),
+                    title: const Text('About'),
+                    body: const _NavigationBodyItem(),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ),
       ],
     );
   }
@@ -584,6 +652,24 @@ class _NavigationBodyItem extends StatelessWidget {
               );
             },
           ),
+    );
+  }
+}
+
+class _CustomNavigationPane extends NavigationPaneWidget {
+  @override
+  Widget build(BuildContext context, NavigationPaneWidgetData data) {
+    return Row(
+      children: [
+        Container(
+          width: 200,
+          color: Colors.red.withValues(alpha: 0.2),
+          child: const Center(
+            child: Text('Custom pane'),
+          ),
+        ),
+        Expanded(child: data.content),
+      ],
     );
   }
 }
