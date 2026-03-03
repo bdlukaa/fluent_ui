@@ -546,6 +546,7 @@ class NumberBoxState<T extends num> extends State<NumberBox<T>> {
         if (boxContext == null) return const SizedBox.shrink();
         final box = boxContext.findRenderObject()! as RenderBox;
         final isRtl = Directionality.of(context) == TextDirection.rtl;
+        final overlayHeight = (kNumberBoxOverlayHeight + FluentTheme.of(context).visualDensity.baseSizeAdjustment.dy).clamp(0.0, double.infinity);
 
         final Widget child = PositionedDirectional(
           width: kNumberBoxOverlayWidth,
@@ -554,7 +555,7 @@ class NumberBoxState<T extends num> extends State<NumberBox<T>> {
             showWhenUnlinked: false,
             offset: Offset(
               isRtl ? 0 : box.size.width - kNumberBoxOverlayWidth,
-              box.size.height / 2 - kNumberBoxOverlayHeight / 2,
+              box.size.height / 2 - overlayHeight / 2,
             ),
             child: SizedBox(
               width: kNumberBoxOverlayWidth,
@@ -906,6 +907,7 @@ class _NumberBoxCompactOverlay extends StatelessWidget {
   Widget build(BuildContext context) {
     assert(debugCheckHasFluentTheme(context));
     final theme = FluentTheme.of(context);
+    final overlayHeight = (kNumberBoxOverlayHeight + theme.visualDensity.baseSizeAdjustment.dy).clamp(0.0, double.infinity);
 
     return Padding(
       padding: const EdgeInsetsDirectional.only(start: 10),
@@ -916,7 +918,7 @@ class _NumberBoxCompactOverlay extends StatelessWidget {
         child: ClipRRect(
           borderRadius: BorderRadius.circular(10),
           child: Container(
-            height: kNumberBoxOverlayHeight,
+            height: overlayHeight,
             width: kNumberBoxOverlayWidth,
             decoration: BoxDecoration(
               color: theme.menuColor,
