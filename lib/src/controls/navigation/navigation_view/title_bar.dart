@@ -579,6 +579,8 @@ class PaneToggleButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final view = NavigationView.dataOf(context);
+    final fluentTheme = FluentTheme.of(context);
+    final paneItemHeight = (kPaneItemMinHeight + fluentTheme.visualDensity.baseSizeAdjustment.dy).clamp(0.0, double.infinity);
 
     final width = view.pane?.size?.compactWidth ?? kCompactNavigationPaneWidth;
     return Container(
@@ -587,7 +589,7 @@ class PaneToggleButton extends StatelessWidget {
         minWidth: width,
         maxWidth: width,
         // minHeight: kPaneItemMinHeight,
-        maxHeight: kPaneItemMinHeight,
+        maxHeight: paneItemHeight,
       ),
       child: Tooltip(
         message: 'Toggle navigation',
@@ -634,6 +636,8 @@ class PaneBackButton extends StatelessWidget {
     final view = NavigationView.of(context);
     final viewData = NavigationView.dataOf(context);
     final canPop = viewData.canPop;
+    final fluentTheme = FluentTheme.of(context);
+    final paneItemHeight = (kPaneItemMinHeight + fluentTheme.visualDensity.baseSizeAdjustment.dy).clamp(0.0, double.infinity);
 
     final width =
         viewData.pane?.size?.compactWidth ?? kCompactNavigationPaneWidth;
@@ -643,7 +647,7 @@ class PaneBackButton extends StatelessWidget {
         minWidth: width,
         maxWidth: width,
         // minHeight: kPaneItemMinHeight,
-        maxHeight: kPaneItemMinHeight,
+        maxHeight: paneItemHeight,
       ),
       child: Tooltip(
         message: localizations.backButtonTooltip,

@@ -174,6 +174,38 @@ class _SettingsState extends State<Settings> with PageMixin {
         ),
         biggerSpacer,
         Text(
+          'Visual Density',
+          style: FluentTheme.of(context).typography.subtitle,
+        ),
+        description(
+          content: const Text(
+            'Controls the compact sizing of UI elements. Compact mode reduces '
+            'the height and padding of controls.',
+          ),
+        ),
+        spacer,
+        RadioGroup<VisualDensity>(
+          groupValue: appTheme.visualDensity,
+          onChanged: (value) {
+            if (value != null) appTheme.visualDensity = value;
+          },
+          child: const Wrap(
+            spacing: 8,
+            runSpacing: 8,
+            children: [
+              RadioButton<VisualDensity>(
+                value: VisualDensity.standard,
+                content: Text('Standard'),
+              ),
+              RadioButton<VisualDensity>(
+                value: VisualDensity.compact,
+                content: Text('Compact'),
+              ),
+            ],
+          ),
+        ),
+        biggerSpacer,
+        Text(
           'Accent Color',
           style: FluentTheme.of(context).typography.subtitle,
         ),
@@ -213,20 +245,52 @@ class _SettingsState extends State<Settings> with PageMixin {
                 appTheme.setEffect(value, context);
               }
             },
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
+            child: Row(
               spacing: 8,
-              children: List.generate(currentWindowEffects.length, (
-                final index,
-              ) {
-                final mode = currentWindowEffects[index];
-                return RadioButton<WindowEffect>(
-                  value: mode,
-                  content: Text(
-                    mode.toString().replaceAll('WindowEffect.', ''),
+              children: [
+                Flexible(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    spacing: 8,
+                    children: List.generate(
+                      currentWindowEffects
+                          .take(currentWindowEffects.length ~/ 2)
+                          .length,
+                      (final index) {
+                        final mode = currentWindowEffects[index];
+                        return RadioButton<WindowEffect>(
+                          value: mode,
+                          content: Text(
+                            mode.toString().replaceAll('WindowEffect.', ''),
+                          ),
+                        );
+                      },
+                    ),
                   ),
-                );
-              }),
+                ),
+                Flexible(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    spacing: 8,
+                    children: List.generate(
+                      currentWindowEffects
+                          .take(currentWindowEffects.length ~/ 2)
+                          .length,
+                      (final index) {
+                        final mode =
+                            currentWindowEffects[index +
+                                currentWindowEffects.length ~/ 2];
+                        return RadioButton<WindowEffect>(
+                          value: mode,
+                          content: Text(
+                            mode.toString().replaceAll('WindowEffect.', ''),
+                          ),
+                        );
+                      },
+                    ),
+                  ),
+                ),
+              ],
             ),
           ),
         ],

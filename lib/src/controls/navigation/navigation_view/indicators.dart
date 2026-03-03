@@ -378,6 +378,10 @@ class _StickyNavigationIndicatorState
       borderRadius: BorderRadius.circular(100),
     );
 
+    final fluentTheme = FluentTheme.of(context);
+    final densityAdjustment = fluentTheme.visualDensity.baseSizeAdjustment.dy;
+    final paneItemMinHeight = (kPaneItemMinHeight + densityAdjustment).clamp(0.0, double.infinity);
+
     return IgnorePointer(
       child: Align(
         alignment: switch (axis) {
@@ -386,7 +390,7 @@ class _StickyNavigationIndicatorState
         },
         child: SizedBox(
           width: isVertical ? kPaneItemTopMinWidth : null,
-          height: isHorizontal ? kPaneItemMinHeight : null,
+          height: isHorizontal ? paneItemMinHeight : null,
           child: LayoutBuilder(
             builder: (context, constraints) {
               return AnimatedBuilder(

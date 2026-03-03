@@ -788,10 +788,12 @@ class _ComboBoxItemContainer extends StatelessWidget {
         ? theme.resources.textFillColorSecondary
         : theme.resources.textFillColorPrimary;
 
+    final densityAdjustment = theme.visualDensity.baseSizeAdjustment.dy;
+    final adjustedItemHeight = (kComboBoxItemHeight + densityAdjustment).clamp(0.0, double.infinity);
     return Container(
       height: hasPadding
-          ? kComboBoxItemHeight
-          : kComboBoxItemHeight - _kMenuItemBottomPadding,
+          ? adjustedItemHeight
+          : (adjustedItemHeight - _kMenuItemBottomPadding).clamp(0.0, double.infinity),
       alignment: AlignmentDirectional.centerStart,
       child: DefaultTextStyle.merge(
         style: TextStyle(color: foregroundColor),

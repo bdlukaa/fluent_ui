@@ -1417,9 +1417,9 @@ class _TreeViewItem extends StatelessWidget {
                 // Indentation and selection indicator for single selection mode.
                 Container(
                   constraints: BoxConstraints(
-                    minHeight: selectionMode == TreeViewSelectionMode.multiple
+                    minHeight: ((selectionMode == TreeViewSelectionMode.multiple
                         ? 28.0
-                        : 26.0,
+                        : 26.0) + theme.visualDensity.baseSizeAdjustment.dy).clamp(0.0, double.infinity),
                   ),
                   padding: EdgeInsetsDirectional.only(
                     start: selectionMode == TreeViewSelectionMode.multiple

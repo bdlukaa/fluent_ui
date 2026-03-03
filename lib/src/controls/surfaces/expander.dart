@@ -318,7 +318,7 @@ class ExpanderState extends State<Expander>
         hitTestBehavior: HitTestBehavior.deferToChild,
         builder: (context, states) {
           return Container(
-            constraints: const BoxConstraints(minHeight: 42),
+            constraints: BoxConstraints(minHeight: (42 + theme.visualDensity.baseSizeAdjustment.dy).clamp(0.0, double.infinity)),
             decoration: ShapeDecoration(
               color:
                   widget.headerBackgroundColor?.resolve(states) ??
