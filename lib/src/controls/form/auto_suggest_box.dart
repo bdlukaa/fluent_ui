@@ -926,7 +926,10 @@ class _AutoSuggestBoxOverlayState<T> extends State<_AutoSuggestBoxOverlay<T>> {
 
   /// Returns the tile height adjusted for the given visual density.
   static double adjustedTileHeight(VisualDensity density) {
-    return (tileHeight + density.baseSizeAdjustment.dy).clamp(0.0, double.infinity);
+    return (tileHeight + density.baseSizeAdjustment.dy).clamp(
+      0.0,
+      double.infinity,
+    );
   }
 
   late List<AutoSuggestBoxItem<T>> items = widget.items;
@@ -939,7 +942,8 @@ class _AutoSuggestBoxOverlayState<T> extends State<_AutoSuggestBoxOverlay<T>> {
 
       final theme = FluentTheme.of(context);
 
-      final currentSelectedOffset = adjustedTileHeight(theme.visualDensity) * index;
+      final currentSelectedOffset =
+          adjustedTileHeight(theme.visualDensity) * index;
 
       scrollController.animateTo(
         currentSelectedOffset,
@@ -1104,6 +1108,7 @@ class __AutoSuggestBoxOverlayTileState extends State<_AutoSuggestBoxOverlayTile>
       ),
       selected: widget.selected,
       onPressed: widget.onSelected,
+      contentPadding: EdgeInsets.zero,
     );
   }
 }

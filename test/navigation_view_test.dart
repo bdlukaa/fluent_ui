@@ -834,10 +834,6 @@ void main() {
     });
   });
 
-          ),
-        ),
-      );
-
   // Test for GitHub Issue #1181 - NavigationView alignment and sizing fixes
   // https://github.com/bdlukaa/fluent_ui/issues/1181
   group('Issue #1181 - NavigationView alignment and sizing', () {
