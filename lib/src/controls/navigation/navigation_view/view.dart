@@ -549,6 +549,17 @@ class NavigationViewState extends State<NavigationView> {
 
       if (autoDisplayMode != _displayMode) {
         widget.onDisplayModeChanged?.call(autoDisplayMode);
+
+        // When switching between compact and expanded modes, the
+        // AnimatedContainer (shared via GlobalKey) animates between widths.
+        // Mark as transitioning to hide infoBadge and trailing widgets
+        // during the animation, preventing overflow.
+        if ((_displayMode == PaneDisplayMode.compact &&
+                autoDisplayMode == PaneDisplayMode.expanded) ||
+            (_displayMode == PaneDisplayMode.expanded &&
+                autoDisplayMode == PaneDisplayMode.compact)) {
+          _isTransitioning = true;
+        }
       }
 
       _displayMode = autoDisplayMode;

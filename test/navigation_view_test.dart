@@ -968,5 +968,79 @@ void main() {
         expect(tester.takeException(), isNull);
       },
     );
+
+    // Regression test for PaneItem overflow when transitioning from compact to open
+    testWidgets(
+      'PaneItem with infoBadge does not overflow when transitioning from compact to expanded',
+      (tester) async {
+        var selectedIndex = 0;
+
+        // Start at a width that resolves to compact mode (641-1007px)
+        var currentWidth = 800.0;
+
+        late StateSetter outerSetState;
+
+        await tester.pumpWidget(
+          FluentApp(
+            home: StatefulBuilder(
+              builder: (context, setState) {
+                outerSetState = setState;
+                return SizedBox(
+                  width: currentWidth,
+                  height: 800,
+                  child: NavigationView(
+                    pane: NavigationPane(
+                      selected: selectedIndex,
+                      onChanged: (index) =>
+                          setState(() => selectedIndex = index),
+                      displayMode: PaneDisplayMode.auto,
+                      items: [
+                        PaneItem(
+                          icon: const Icon(FluentIcons.home),
+                          title: const Text('Home'),
+                          body: const Center(child: Text('Home Page')),
+                          infoBadge: const InfoBadge(source: Text('5')),
+                        ),
+                        PaneItem(
+                          icon: const Icon(FluentIcons.settings),
+                          title: const Text('Settings'),
+                          body: const Center(child: Text('Settings Page')),
+                          infoBadge: const InfoBadge(source: Text('3')),
+                          trailing: const Icon(FluentIcons.open_pane),
+                        ),
+                      ],
+                    ),
+                  ),
+                );
+              },
+            ),
+          ),
+        );
+
+        await tester.pumpAndSettle();
+
+        // Should be in compact mode at 800px
+        expect(find.byType(NavigationView), findsOneWidget);
+        expect(tester.takeException(), isNull);
+
+        // Resize to expanded mode (>= 1008px)
+        outerSetState(() {
+          currentWidth = 1200.0;
+        });
+
+        // Pump a few frames to capture the transition period
+        await tester.pump();
+        await tester.pump(const Duration(milliseconds: 50));
+
+        // No overflow error should occur during the transition
+        expect(tester.takeException(), isNull);
+
+        await tester.pumpAndSettle();
+
+        // After settling, everything should be fine
+        expect(find.byType(NavigationView), findsOneWidget);
+        expect(tester.takeException(), isNull);
+      },
+    );
   });
 }
