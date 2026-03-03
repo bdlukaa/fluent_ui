@@ -969,7 +969,7 @@ void main() {
       },
     );
 
-    // Regression test for PaneItem overflow when transitioning from compact to open
+    // Regression test for PaneItem overflow when transitioning from compact to expanded
     testWidgets(
       'PaneItem with infoBadge does not overflow when transitioning from compact to expanded',
       (tester) async {
