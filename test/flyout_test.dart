@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:fluent_ui/fluent_ui.dart';
 
 import 'package:flutter_test/flutter_test.dart';
@@ -228,4 +230,63 @@ void main() {
 
     expect(find.text('Custom Item'), findsOneWidget);
   });
+
+  testWidgets(
+    'MenuFlyoutSubItem hover does not throw TypeError on findRenderObject',
+    (tester) async {
+      final controller = FlyoutController();
+
+      await tester.pumpWidget(
+        wrapApp(
+          child: Center(
+            child: FlyoutTarget(
+              controller: controller,
+              child: const Text('Target'),
+            ),
+          ),
+        ),
+      );
+
+      controller.showFlyout<void>(
+        builder: (context) => MenuFlyout(
+          items: [
+            MenuFlyoutSubItem(
+              text: const Text('Sub Menu'),
+              items: (context) => [
+                MenuFlyoutItem(
+                  text: const Text('Sub Item 1'),
+                  onPressed: () {},
+                ),
+              ],
+            ),
+            MenuFlyoutItem(text: const Text('Item 2'), onPressed: () {}),
+          ],
+        ),
+      );
+      await tester.pumpAndSettle();
+
+      expect(find.text('Sub Menu'), findsOneWidget);
+
+      // Hover over the sub-menu item to trigger its display
+      final subMenuFinder = find.text('Sub Menu');
+      final gesture = await tester.createGesture(
+        kind: PointerDeviceKind.mouse,
+      );
+      await gesture.addPointer(location: Offset.zero);
+      await gesture.moveTo(tester.getCenter(subMenuFinder));
+      await tester.pumpAndSettle(const Duration(milliseconds: 500));
+
+      // The sub-menu should now be showing
+      expect(find.text('Sub Item 1'), findsOneWidget);
+
+      // Move the mouse away from the sub-item to trigger the onHover code path
+      // that calls findRenderObject() on the parent. This is the code path that
+      // previously had a bug (missing parentheses on findRenderObject).
+      await gesture.moveTo(tester.getCenter(find.text('Item 2')));
+      await tester.pumpAndSettle();
+
+      // Should not have thrown a TypeError
+      await gesture.removePointer();
+    },
+  );
 }
