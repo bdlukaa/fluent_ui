@@ -216,6 +216,16 @@ class _MyHomePageState extends State<MyHomePage> with WindowListener {
         ),
         captionControls: const WindowButtons(),
         onDragStarted: !kIsWeb ? windowManager.startDragging : null,
+        onDoubleTap: !kIsWeb
+            ? () async {
+                final isMaximized = await windowManager.isMaximized();
+                if (isMaximized) {
+                  windowManager.restore();
+                } else {
+                  windowManager.maximize();
+                }
+              }
+            : null,
       ),
       pane: NavigationPane(
         selected: _index,
