@@ -153,7 +153,7 @@ class _MenuFlyoutState extends State<MenuFlyout> {
             final itemBox =
                 subItem.currentContext!.findRenderObject()! as RenderBox;
             final parentBox =
-                parent.widget.root!.context.findRenderObject as RenderBox;
+                parent.widget.root!.context.findRenderObject()! as RenderBox;
             final translation = parentBox.getTransformTo(null).getTranslation();
             final offset = Offset(translation[0], translation[1]);
             final itemRect =
