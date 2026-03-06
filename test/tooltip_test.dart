@@ -228,4 +228,79 @@ void main() {
 
     expect(find.text(''), findsNothing);
   });
+
+  testWidgets(
+    'Tooltip does not rebuild child when mouse tracker changes',
+    (tester) async {
+      // Regression test: when the mouse enters or leaves the window,
+      // _mouseIsConnected used to change via setState, which would add/remove
+      // the MouseRegion wrapper and cause the child widget to lose its state.
+      int initStateCount = 0;
+
+      await tester.pumpWidget(
+        wrapApp(
+          child: ScaffoldPage(
+            content: Center(
+              child: Tooltip(
+                message: 'tooltip message',
+                child: _InitStateCounter(
+                  onInitState: () => initStateCount++,
+                ),
+              ),
+            ),
+          ),
+        ),
+      );
+
+      expect(initStateCount, 1);
+
+      // Simulate a mouse being added (hover over the widget)
+      final gesture = await tester.createGesture(
+        kind: PointerDeviceKind.mouse,
+        pointer: 1,
+      );
+      await gesture.addPointer(location: Offset.zero);
+      await tester.pump();
+
+      // The child's initState should NOT be called again
+      expect(initStateCount, 1);
+
+      // Move the mouse over the tooltip child
+      await gesture.moveTo(
+        tester.getCenter(find.byType(_InitStateCounter)),
+      );
+      await tester.pump();
+      expect(initStateCount, 1);
+
+      // Remove the mouse pointer (simulate cursor leaving window)
+      await gesture.removePointer();
+      await tester.pump();
+
+      // The child should still preserve its state
+      expect(initStateCount, 1);
+    },
+  );
+}
+
+/// A helper widget that counts how many times initState is called.
+class _InitStateCounter extends StatefulWidget {
+  const _InitStateCounter({required this.onInitState});
+
+  final VoidCallback onInitState;
+
+  @override
+  State<_InitStateCounter> createState() => _InitStateCounterState();
+}
+
+class _InitStateCounterState extends State<_InitStateCounter> {
+  @override
+  void initState() {
+    super.initState();
+    widget.onInitState();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return const Text('Stateful child');
+  }
 }
