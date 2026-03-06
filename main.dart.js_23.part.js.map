@@ -1,0 +1,16 @@
+{
+  "version": 3,
+  "engine": "v2",
+  "file": "main.dart.js_23.part.js",
+  "sourceRoot": "",
+  "sources": ["../../../../lib/src/controls/utils/info_badge.dart","../../../../lib/src/styles/theme.dart","/opt/hostedtoolcache/flutter/3.41.4-stable/x64/packages/flutter/lib/src/widgets/media_query.dart","/opt/hostedtoolcache/flutter/3.41.4-stable/x64/packages/flutter/lib/src/painting/box_decoration.dart","/opt/hostedtoolcache/flutter/3.41.4-stable/x64/packages/flutter/lib/src/widgets/icon_theme_data.dart","/opt/hostedtoolcache/flutter/3.41.4-stable/x64/packages/flutter/lib/src/rendering/box.dart"],
+  "names": ["InfoBadge.build","MediaQuery.textScalerOf","","maybeTextScalerOf","of","textScalerOf"],
+  "mappings": "A;;;;;;;;;CA4ESA,ICfEA,+BAA0DA;WDqBrDA,aACwBA,UACtBA;AADkCA;UAIlCA,GAAUA;;UACeA,GAAUA;;UACZA,GAAUA;;QAP3CA;GAU8BA,GAAUA;MAExCA;AAAJA,YEohDEC,UAAoCA;AAAaA;YAXRD,OFvgDCA;AEkhD1CC,UAAoCA;AAAaA;YAXRD,OFtgDEA;AAF3CA,OAAOA,iBGHLA,eHQ6BA,iBGA5BA,oBHyBPA,CEq/CIC,UAAoCA;AAAaA;YAXRD,OF1/CKA;AAKjBA;AAIpBA;AAbXA,OAAOA,OAWmBA,KAGLA,OIxFjBA,uCJsFqBA,WKhBrBA,qBFTAA,wBAQCA,aHWYA,WAcnBA,C",
+  "x_org_dartlang_dart2js": {
+    "minified_names": {
+      "global": "",
+      "instance": ""
+    },
+    "frames": "iQA+E8BIiD;qJAiBJCAEugDpBF+C,O;MFtgDqBEAEsgDrBFU,A;AFvgDoBEAEugDpBFK,A;AFtgDqBEAEsgDrBFgC,A;AFvgDoBEO;8BAENHe;iBAAAAoB;CAWUGAE0/CxBFU,A;AFvgDoBEAEugDpBFK,A;AF1/CwBEAE0/CxBFgC,A;AFvgDoBEO;2GAwBVHuC;WAdGAqB;AAMDAwB;AAdEAa;"
+  }
+}

@@ -1,0 +1,16 @@
+{
+  "version": 3,
+  "engine": "v2",
+  "file": "main.dart.js_3.part.js",
+  "sourceRoot": "",
+  "sources": ["/opt/hostedtoolcache/flutter/3.41.4-stable/x64/packages/flutter/lib/src/rendering/proxy_box.dart","/opt/hostedtoolcache/flutter/3.41.4-stable/x64/packages/flutter/lib/src/rendering/object.dart","org-dartlang-sdk:///dart-sdk/lib/_internal/js_runtime/lib/js_number.dart","/opt/hostedtoolcache/flutter/3.41.4-stable/x64/packages/flutter/lib/src/rendering/box.dart","org-dartlang-sdk:///lib/ui/geometry.dart","/opt/hostedtoolcache/flutter/3.41.4-stable/x64/packages/flutter/lib/src/widgets/basic.dart"],
+  "names": ["RenderIntrinsicHeight.computeMinIntrinsicWidth","RenderIntrinsicHeight.computeMaxIntrinsicWidth","RenderIntrinsicHeight.computeMinIntrinsicHeight","RenderIntrinsicHeight._childConstraints","RenderIntrinsicHeight._computeSize","BoxConstraints.smallest","RenderIntrinsicHeight.computeDryLayout","RenderIntrinsicHeight.computeDryBaseline","RenderIntrinsicHeight.performLayout","IntrinsicHeight.createRenderObject","RenderBox._layoutCacheStorage","RenderObject","RenderIntrinsicHeight","RenderProxyBox","_RenderProxyBox&RenderBox&RenderObjectWithChildMixin&RenderProxyBoxMixin","_RenderProxyBox&RenderBox&RenderObjectWithChildMixin","RenderBox","","_layerHandle","_layoutCacheStorage","child","constrainHeight","constrainWidth","constraints","getMaxIntrinsicHeight","getMaxIntrinsicWidth","getMinIntrinsicWidth","hasTightHeight","isFinite","size","smallest"],
+  "mappings": "A;;;;;;;;;;;;;;;;;;;;;;;EAmxBSA,cCmtGiBA;ADltGtBA,WACEA,QAOJA;AExtBqBA,gBC+1DZA,QAAuCA,QAAkBA;AAvSzDA,MF02EeA;AD3sGtBA,aGi2B8CA,MAAkBA,QHh2BlEA,C;EAGOC,cCusGiBA;ADtsGtBA,WACEA,QAOJA;AEpuBqBA,gBC+1DZA,QAAuCA,QAAkBA;AAzJzDA,MF4tEeA;AD/rGtBA,aGm+B8CA,MAAkBA,QHl+BlEA,C;EAGOC,IACLA,OGunCOA,SAAuCA,MAAkBA,WHtnClEA,C;EAEeC,MACbA,QG5byBA,KAAaA,KH8bhCA,MGinCCA,MAAuCA,KHjnC4BA,GGinCVA,SHhnClEA,C;EAEKC,MI5tBCC,UH64HkBD;AD/qGtBA,uBG/iBOC,OAAmBA,IAAUA,IAO7BA,OAAoBA,IAAWA,KH0iBhCD,OAAmBA,aAC3BA,C;EAIKE,IACHA,OAAOA,UAA4CA,OACrDA,C;EAGQC,MAECA,UCiqGeA;ADjqGtBA,yBAA6BA,eAC/BA,C;EAGKC,GACIA,IG++CPA,YAoMkDA,MAAZA,8BHnrDaA,OACrDA,C;;EKi8FsBC,IL5/FtBA,oBG6VUC,WF81DuCC;AD3rEjDC;AA5tBOC;AKwtH2DJ,QAAuBA,C",
+  "x_org_dartlang_dart2js": {
+    "minified_names": {
+      "global": "",
+      "instance": ""
+    },
+    "frames": "8ZAoxBQoBI;oBAGQQgB;AACIJyB;AAGJEM;AAALNI;aAAKMc;mBAKRNI;oBAGQQgB;AACIJyB;AAGJCM;AAALLI;aAAKKc;gBAKLD0B;mBAIYGU;MAEeHW;GAAAAS;WAMhBMAG1cCbU,A;AHwcWGI;uBAEZUAG1cMRe,AAAqBDgB,A;0EHsdfDI;oDAM9BSY;AAA6ENoC;iCKk8FbNoBL5/FtBAAA7tB5CAAAPIAAAAAAAG+/C4CEAAAAFW,A,AARnCAAFw6CoCCQ,A,A,A,A,A,AAloCjDDO,ADtxDAAAA6tBAAY,A,A;"
+  }
+}
