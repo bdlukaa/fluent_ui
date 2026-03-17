@@ -736,7 +736,10 @@ class TooltipThemeData with Diagnosticable {
   /// Creates the standard [TooltipThemeData] based on the given [theme].
   factory TooltipThemeData.standard(FluentThemeData theme) {
     return TooltipThemeData(
-      height: (32 + theme.visualDensity.baseSizeAdjustment.dy).clamp(0.0, double.infinity),
+      height: (32 + theme.visualDensity.baseSizeAdjustment.dy).clamp(
+        0.0,
+        double.infinity,
+      ),
       verticalOffset: 24,
       preferBelow: false,
       margin: EdgeInsetsDirectional.zero,

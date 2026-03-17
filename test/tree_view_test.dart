@@ -114,9 +114,7 @@ void main() {
 
     test('addItem adds items at root and as children', () {
       final controller = TreeViewController(
-        items: [
-          TreeViewItem(content: const Text('Item 1'), value: 'item1'),
-        ],
+        items: [TreeViewItem(content: const Text('Item 1'), value: 'item1')],
       );
 
       controller.addItem(
@@ -153,10 +151,7 @@ void main() {
     });
 
     test('removeItem removes items', () {
-      final child = TreeViewItem(
-        content: const Text('Child'),
-        value: 'child',
-      );
+      final child = TreeViewItem(content: const Text('Child'), value: 'child');
       final parent = TreeViewItem(
         content: const Text('Parent'),
         value: 'parent',
@@ -217,9 +212,7 @@ void main() {
         content: const Text('Parent'),
         value: 'parent',
         expanded: false,
-        children: [
-          TreeViewItem(content: const Text('Child'), value: 'child'),
-        ],
+        children: [TreeViewItem(content: const Text('Child'), value: 'child')],
       );
       final controller = TreeViewController(items: [item]);
 
@@ -233,10 +226,7 @@ void main() {
     });
 
     test('selectItem and deselectItem work', () {
-      final item = TreeViewItem(
-        content: const Text('Item'),
-        value: 'item',
-      );
+      final item = TreeViewItem(content: const Text('Item'), value: 'item');
       final controller = TreeViewController(items: [item]);
 
       controller.selectItem(item);
@@ -251,18 +241,12 @@ void main() {
     test('selectAll and deselectAll work', () {
       final controller = TreeViewController(
         items: [
-          TreeViewItem(
-            content: const Text('Item 1'),
-            value: 'item1',
-          ),
+          TreeViewItem(content: const Text('Item 1'), value: 'item1'),
           TreeViewItem(
             content: const Text('Item 2'),
             value: 'item2',
             children: [
-              TreeViewItem(
-                content: const Text('Child'),
-                value: 'child',
-              ),
+              TreeViewItem(content: const Text('Child'), value: 'child'),
             ],
           ),
         ],
@@ -283,9 +267,7 @@ void main() {
 
     test('controller notifies listeners on changes', () {
       final controller = TreeViewController(
-        items: [
-          TreeViewItem(content: const Text('Item'), value: 'item'),
-        ],
+        items: [TreeViewItem(content: const Text('Item'), value: 'item')],
       );
 
       var notified = false;
@@ -311,9 +293,7 @@ void main() {
         ],
       );
 
-      await tester.pumpWidget(
-        wrapApp(child: TreeView(controller: controller)),
-      );
+      await tester.pumpWidget(wrapApp(child: TreeView(controller: controller)));
 
       expect(find.text('Parent'), findsOneWidget);
       expect(find.text('Child 1'), findsOneWidget);
@@ -322,69 +302,56 @@ void main() {
       controller.dispose();
     });
 
-    testWidgets(
-      'TreeView with controller rebuilds when items change',
-      (tester) async {
-        final controller = TreeViewController(
-          items: [
-            TreeViewItem(content: const Text('Item 1'), value: 'item1'),
-          ],
-        );
+    testWidgets('TreeView with controller rebuilds when items change', (
+      tester,
+    ) async {
+      final controller = TreeViewController(
+        items: [TreeViewItem(content: const Text('Item 1'), value: 'item1')],
+      );
 
-        await tester.pumpWidget(
-          wrapApp(child: TreeView(controller: controller)),
-        );
+      await tester.pumpWidget(wrapApp(child: TreeView(controller: controller)));
 
-        expect(find.text('Item 1'), findsOneWidget);
-        expect(find.text('Item 2'), findsNothing);
+      expect(find.text('Item 1'), findsOneWidget);
+      expect(find.text('Item 2'), findsNothing);
 
-        controller.addItem(
-          TreeViewItem(content: const Text('Item 2'), value: 'item2'),
-        );
-        await tester.pumpAndSettle();
+      controller.addItem(
+        TreeViewItem(content: const Text('Item 2'), value: 'item2'),
+      );
+      await tester.pumpAndSettle();
 
-        expect(find.text('Item 1'), findsOneWidget);
-        expect(find.text('Item 2'), findsOneWidget);
+      expect(find.text('Item 1'), findsOneWidget);
+      expect(find.text('Item 2'), findsOneWidget);
 
-        controller.dispose();
-      },
-    );
+      controller.dispose();
+    });
 
-    testWidgets(
-      'TreeView with controller collapses items programmatically',
-      (tester) async {
-        final parent = TreeViewItem(
-          content: const Text('Parent'),
-          value: 'parent',
-          expanded: true,
-          children: [
-            TreeViewItem(content: const Text('Child'), value: 'child'),
-          ],
-        );
-        final controller = TreeViewController(items: [parent]);
+    testWidgets('TreeView with controller collapses items programmatically', (
+      tester,
+    ) async {
+      final parent = TreeViewItem(
+        content: const Text('Parent'),
+        value: 'parent',
+        expanded: true,
+        children: [TreeViewItem(content: const Text('Child'), value: 'child')],
+      );
+      final controller = TreeViewController(items: [parent]);
 
-        await tester.pumpWidget(
-          wrapApp(child: TreeView(controller: controller)),
-        );
+      await tester.pumpWidget(wrapApp(child: TreeView(controller: controller)));
 
-        expect(find.text('Child'), findsOneWidget);
+      expect(find.text('Child'), findsOneWidget);
 
-        controller.collapseItem(parent);
-        await tester.pumpAndSettle();
+      controller.collapseItem(parent);
+      await tester.pumpAndSettle();
 
-        expect(find.text('Child'), findsNothing);
+      expect(find.text('Child'), findsNothing);
 
-        controller.dispose();
-      },
-    );
+      controller.dispose();
+    });
   });
 
   group('TreeView drag and drop via controller', () {
     test('moveItem moves item to root level', () {
-      final child = TreeViewItem(
-        content: const Text('Child'),
-        value: 'child',
-      );
+      final child = TreeViewItem(content: const Text('Child'), value: 'child');
       final parent = TreeViewItem(
         content: const Text('Parent'),
         value: 'parent',
@@ -405,10 +372,7 @@ void main() {
     });
 
     test('moveItem moves item to a new parent', () {
-      final child = TreeViewItem(
-        content: const Text('Child'),
-        value: 'child',
-      );
+      final child = TreeViewItem(content: const Text('Child'), value: 'child');
       final parentA = TreeViewItem(
         content: const Text('Parent A'),
         value: 'parent_a',
@@ -434,18 +398,9 @@ void main() {
     });
 
     test('moveItem moves item to specific index', () {
-      final item1 = TreeViewItem(
-        content: const Text('Item 1'),
-        value: 'item1',
-      );
-      final item2 = TreeViewItem(
-        content: const Text('Item 2'),
-        value: 'item2',
-      );
-      final item3 = TreeViewItem(
-        content: const Text('Item 3'),
-        value: 'item3',
-      );
+      final item1 = TreeViewItem(content: const Text('Item 1'), value: 'item1');
+      final item2 = TreeViewItem(content: const Text('Item 2'), value: 'item2');
+      final item3 = TreeViewItem(content: const Text('Item 3'), value: 'item3');
       final controller = TreeViewController(items: [item1, item2, item3]);
 
       // Move item3 to index 0
@@ -457,12 +412,8 @@ void main() {
       controller.dispose();
     });
 
-    testWidgets('TreeView with controller moveItem updates UI',
-        (tester) async {
-      final child = TreeViewItem(
-        content: const Text('Child'),
-        value: 'child',
-      );
+    testWidgets('TreeView with controller moveItem updates UI', (tester) async {
+      final child = TreeViewItem(content: const Text('Child'), value: 'child');
       final parent = TreeViewItem(
         content: const Text('Parent'),
         value: 'parent',
@@ -471,9 +422,7 @@ void main() {
       );
       final controller = TreeViewController(items: [parent]);
 
-      await tester.pumpWidget(
-        wrapApp(child: TreeView(controller: controller)),
-      );
+      await tester.pumpWidget(wrapApp(child: TreeView(controller: controller)));
 
       expect(find.text('Parent'), findsOneWidget);
       expect(find.text('Child'), findsOneWidget);
@@ -523,10 +472,7 @@ void main() {
     });
 
     test('children list throws on remove', () {
-      final child = TreeViewItem(
-        content: const Text('Child'),
-        value: 'child',
-      );
+      final child = TreeViewItem(content: const Text('Child'), value: 'child');
       final item = TreeViewItem(
         content: const Text('Parent'),
         value: 'parent',
@@ -540,9 +486,7 @@ void main() {
       final item = TreeViewItem(
         content: const Text('Parent'),
         value: 'parent',
-        children: [
-          TreeViewItem(content: const Text('Child'), value: 'child'),
-        ],
+        children: [TreeViewItem(content: const Text('Child'), value: 'child')],
       );
 
       expect(() => item.children.clear(), throwsUnsupportedError);
@@ -568,19 +512,14 @@ void main() {
       final item = TreeViewItem(
         content: const Text('Parent'),
         value: 'parent',
-        children: [
-          TreeViewItem(content: const Text('Child'), value: 'child'),
-        ],
+        children: [TreeViewItem(content: const Text('Child'), value: 'child')],
       );
 
       expect(() => item.children.removeAt(0), throwsUnsupportedError);
     });
 
     test('children list is readable', () {
-      final child = TreeViewItem(
-        content: const Text('Child'),
-        value: 'child',
-      );
+      final child = TreeViewItem(content: const Text('Child'), value: 'child');
       final item = TreeViewItem(
         content: const Text('Parent'),
         value: 'parent',
@@ -619,13 +558,10 @@ void main() {
       );
       final controller = TreeViewController(items: [parent]);
 
-      controller.addItems(
-        [
-          TreeViewItem(content: const Text('Child 1'), value: 'child1'),
-          TreeViewItem(content: const Text('Child 2'), value: 'child2'),
-        ],
-        parent: parent,
-      );
+      controller.addItems([
+        TreeViewItem(content: const Text('Child 1'), value: 'child1'),
+        TreeViewItem(content: const Text('Child 2'), value: 'child2'),
+      ], parent: parent);
 
       expect(parent.children.length, 2);
       expect(parent.children[0].value, 'child1');
@@ -651,8 +587,7 @@ void main() {
       controller.dispose();
     });
 
-    testWidgets('TreeView with controller addItems updates UI',
-        (tester) async {
+    testWidgets('TreeView with controller addItems updates UI', (tester) async {
       final parent = TreeViewItem(
         content: const Text('Parent'),
         value: 'parent',
@@ -662,21 +597,16 @@ void main() {
       );
       final controller = TreeViewController(items: [parent]);
 
-      await tester.pumpWidget(
-        wrapApp(child: TreeView(controller: controller)),
-      );
+      await tester.pumpWidget(wrapApp(child: TreeView(controller: controller)));
 
       expect(find.text('Parent'), findsOneWidget);
       expect(find.text('Child 1'), findsNothing);
       expect(find.text('Child 2'), findsNothing);
 
-      controller.addItems(
-        [
-          TreeViewItem(content: const Text('Child 1'), value: 'child1'),
-          TreeViewItem(content: const Text('Child 2'), value: 'child2'),
-        ],
-        parent: parent,
-      );
+      controller.addItems([
+        TreeViewItem(content: const Text('Child 1'), value: 'child1'),
+        TreeViewItem(content: const Text('Child 2'), value: 'child2'),
+      ], parent: parent);
       await tester.pumpAndSettle();
 
       expect(find.text('Parent'), findsOneWidget);

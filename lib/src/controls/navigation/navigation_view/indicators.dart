@@ -380,7 +380,10 @@ class _StickyNavigationIndicatorState
 
     final fluentTheme = FluentTheme.of(context);
     final densityAdjustment = fluentTheme.visualDensity.baseSizeAdjustment.dy;
-    final paneItemMinHeight = (kPaneItemMinHeight + densityAdjustment).clamp(0.0, double.infinity);
+    final paneItemMinHeight = (kPaneItemMinHeight + densityAdjustment).clamp(
+      0.0,
+      double.infinity,
+    );
 
     return IgnorePointer(
       child: Align(

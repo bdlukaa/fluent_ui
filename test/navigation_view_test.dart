@@ -969,4 +969,57 @@ void main() {
       },
     );
   });
+
+  // Regression test for https://github.com/bdlukaa/fluent_ui/issues/XXX -
+  // NavigationView compact pane flyout too small in RTL directionality
+  group('Issue - NavigationView compact pane flyout in RTL directionality', () {
+    testWidgets('PaneItemExpander flyout opens correctly in RTL compact mode', (
+      tester,
+    ) async {
+      await tester.pumpWidget(
+        FluentApp(
+          home: Directionality(
+            textDirection: TextDirection.rtl,
+            child: SizedBox(
+              width: 1200,
+              height: 800,
+              child: NavigationView(
+                pane: NavigationPane(
+                  selected: 0,
+                  displayMode: PaneDisplayMode.compact,
+                  items: [
+                    PaneItemExpander(
+                      icon: const Icon(FluentIcons.folder),
+                      title: const Text('Files'),
+                      body: const Center(child: Text('Files Page')),
+                      items: [
+                        PaneItem(
+                          icon: const Icon(FluentIcons.document),
+                          title: const Text('Documents'),
+                          body: const Center(child: Text('Documents Page')),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ),
+        ),
+      );
+
+      await tester.pumpAndSettle();
+
+      // Tap the PaneItemExpander icon to open the flyout
+      await tester.tap(find.byIcon(FluentIcons.folder));
+      await tester.pumpAndSettle();
+
+      // The flyout should be open and contain the child item
+      expect(find.byType(MenuFlyout), findsOneWidget);
+
+      // The flyout should have enough width (more than just the compact pane width)
+      final flyoutBox = tester.renderObject<RenderBox>(find.byType(MenuFlyout));
+      expect(flyoutBox.size.width, greaterThan(kCompactNavigationPaneWidth));
+    });
+  });
 }
