@@ -899,9 +899,10 @@ class __PaneItemExpanderState extends State<_PaneItemExpander>
         final displayMode = body.displayMode;
         final navigationTheme = NavigationPaneTheme.of(context);
 
+        final textDirection = Directionality.of(context);
         flyoutController.showFlyout<void>(
           placementMode: displayMode == PaneDisplayMode.compact
-              ? FlyoutPlacementMode.rightTop
+              ? FlyoutPlacementMode.rightTop.resolve(textDirection)
               : FlyoutPlacementMode.bottomCenter,
           forceAvailableSpace: true,
           barrierColor: Colors.transparent,
