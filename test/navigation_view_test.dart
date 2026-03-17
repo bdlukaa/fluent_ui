@@ -969,4 +969,190 @@ void main() {
       },
     );
   });
+
+  // Regression test for https://github.com/bdlukaa/fluent_ui/issues/1340
+  // TitleBar should not shrink in height when window is resized to smaller width
+  group('Issue #1340 - TitleBar height stability on window resize', () {
+    testWidgets(
+      'TitleBar with content maintains 48px height at large window width',
+      (tester) async {
+        await tester.pumpWidget(
+          FluentApp(
+            home: SizedBox(
+              width: 1200,
+              height: 800,
+              child: NavigationView(
+                titleBar: const TitleBar(
+                  title: Text('My App'),
+                  content: SizedBox(width: 200, height: 32),
+                ),
+                pane: NavigationPane(
+                  selected: 0,
+                  displayMode: PaneDisplayMode.compact,
+                  items: [
+                    PaneItem(
+                      icon: const Icon(FluentIcons.home),
+                      title: const Text('Home'),
+                      body: const Center(child: Text('Home Page')),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ),
+        );
+
+        await tester.pumpAndSettle();
+
+        final titleBar = find.byType(TitleBar);
+        expect(titleBar, findsOneWidget);
+        expect(tester.getSize(titleBar).height, 48.0);
+      },
+    );
+
+    testWidgets(
+      'TitleBar with content maintains 48px height at small window width',
+      (tester) async {
+        await tester.pumpWidget(
+          FluentApp(
+            home: SizedBox(
+              width: 300,
+              height: 800,
+              child: NavigationView(
+                titleBar: const TitleBar(
+                  title: Text('My App'),
+                  content: SizedBox(width: 200, height: 32),
+                ),
+                pane: NavigationPane(
+                  selected: 0,
+                  displayMode: PaneDisplayMode.compact,
+                  items: [
+                    PaneItem(
+                      icon: const Icon(FluentIcons.home),
+                      title: const Text('Home'),
+                      body: const Center(child: Text('Home Page')),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ),
+        );
+
+        await tester.pumpAndSettle();
+
+        final titleBar = find.byType(TitleBar);
+        expect(titleBar, findsOneWidget);
+        expect(tester.getSize(titleBar).height, 48.0);
+      },
+    );
+
+    testWidgets(
+      'TitleBar height does not change when window width is reduced',
+      (tester) async {
+        Widget buildWithWidth(double width) {
+          return FluentApp(
+            home: SizedBox(
+              width: width,
+              height: 800,
+              child: NavigationView(
+                titleBar: const TitleBar(
+                  title: Text('My App'),
+                  content: SizedBox(width: 200, height: 32),
+                ),
+                pane: NavigationPane(
+                  selected: 0,
+                  displayMode: PaneDisplayMode.compact,
+                  items: [
+                    PaneItem(
+                      icon: const Icon(FluentIcons.home),
+                      title: const Text('Home'),
+                      body: const Center(child: Text('Home Page')),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          );
+        }
+
+        await tester.pumpWidget(buildWithWidth(1200));
+        await tester.pumpAndSettle();
+
+        final titleBar = find.byType(TitleBar);
+        final heightAtLargeWidth = tester.getSize(titleBar).height;
+        expect(heightAtLargeWidth, 48.0);
+
+        // Simulate window resize to smaller width
+        await tester.pumpWidget(buildWithWidth(300));
+        await tester.pumpAndSettle();
+
+        final heightAtSmallWidth = tester.getSize(find.byType(TitleBar)).height;
+        expect(heightAtSmallWidth, 48.0);
+        expect(heightAtLargeWidth, equals(heightAtSmallWidth));
+      },
+    );
+
+    testWidgets(
+      'TitleBar without content maintains 32px height regardless of window width',
+      (tester) async {
+        // At large window width
+        await tester.pumpWidget(
+          FluentApp(
+            home: SizedBox(
+              width: 1200,
+              height: 800,
+              child: NavigationView(
+                titleBar: const TitleBar(title: Text('My App')),
+                pane: NavigationPane(
+                  selected: 0,
+                  displayMode: PaneDisplayMode.expanded,
+                  items: [
+                    PaneItem(
+                      icon: const Icon(FluentIcons.home),
+                      title: const Text('Home'),
+                      body: const Center(child: Text('Home Page')),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ),
+        );
+
+        await tester.pumpAndSettle();
+
+        final titleBar = find.byType(TitleBar);
+        expect(tester.getSize(titleBar).height, 32.0);
+
+        // At small window width
+        await tester.pumpWidget(
+          FluentApp(
+            home: SizedBox(
+              width: 400,
+              height: 800,
+              child: NavigationView(
+                titleBar: const TitleBar(title: Text('My App')),
+                pane: NavigationPane(
+                  selected: 0,
+                  displayMode: PaneDisplayMode.expanded,
+                  items: [
+                    PaneItem(
+                      icon: const Icon(FluentIcons.home),
+                      title: const Text('Home'),
+                      body: const Center(child: Text('Home Page')),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ),
+        );
+
+        await tester.pumpAndSettle();
+
+        expect(tester.getSize(find.byType(TitleBar)).height, 32.0);
+      },
+    );
+  });
 }

@@ -14,6 +14,7 @@
 - **BREAKING** feat: `TreeViewItem.children` is now unmodifiable. Use `TreeViewController` methods (`addItem()`, `addItems()`, `removeItem()`, `moveItem()`) to modify tree structure.
 - feat: `TitleBar` now supports double-click callback to maximize or restore the window ([#1298](https://github.com/bdlukaa/fluent_ui/issues/1298))
 - fix: Correctly apply `TitleBar`'s `isBackButtonEnabled` ([#1298](https://github.com/bdlukaa/fluent_ui/issues/1298))
+- fix: `TitleBar` height no longer shrinks when the window is resized to a smaller width ([#1340](https://github.com/bdlukaa/fluent_ui/issues/1340))
 
 ## 4.14.0
 
