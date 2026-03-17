@@ -330,13 +330,9 @@ class _RenderTitleSubtitleOverflow extends RenderBox
     var height = 0.0;
     var child = firstChild;
     while (child != null) {
-      final childParentData =
-          child.parentData! as _TitleSubtitleOverflowParentData;
-      if (!childParentData.isHidden) {
-        height = height > child.getMinIntrinsicHeight(width)
-            ? height
-            : child.getMinIntrinsicHeight(width);
-      }
+      height = height > child.getMinIntrinsicHeight(width)
+          ? height
+          : child.getMinIntrinsicHeight(width);
       child = childAfter(child);
     }
     return height;
@@ -347,13 +343,9 @@ class _RenderTitleSubtitleOverflow extends RenderBox
     var height = 0.0;
     var child = firstChild;
     while (child != null) {
-      final childParentData =
-          child.parentData! as _TitleSubtitleOverflowParentData;
-      if (!childParentData.isHidden) {
-        height = height > child.getMaxIntrinsicHeight(width)
-            ? height
-            : child.getMaxIntrinsicHeight(width);
-      }
+      height = height > child.getMaxIntrinsicHeight(width)
+          ? height
+          : child.getMaxIntrinsicHeight(width);
       child = childAfter(child);
     }
     return height;
