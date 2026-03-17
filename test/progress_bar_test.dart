@@ -42,8 +42,9 @@ void main() {
     expect(find.byType(ProgressBar), findsOneWidget);
   });
 
-  testWidgets('Indeterminate ProgressBar renders in RTL directionality',
-      (tester) async {
+  testWidgets('Indeterminate ProgressBar renders in RTL directionality', (
+    tester,
+  ) async {
     await tester.pumpWidget(
       wrapApp(
         child: const Directionality(

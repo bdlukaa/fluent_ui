@@ -205,7 +205,10 @@ class PaneItem extends NavigationPaneItem {
     final theme = NavigationPaneTheme.of(context);
     final fluentTheme = FluentTheme.of(context);
     final densityAdjustment = fluentTheme.visualDensity.baseSizeAdjustment.dy;
-    final paneItemMinHeight = (kPaneItemMinHeight + densityAdjustment).clamp(0.0, double.infinity);
+    final paneItemMinHeight = (kPaneItemMinHeight + densityAdjustment).clamp(
+      0.0,
+      double.infinity,
+    );
 
     final titleText = title?._getProperty<String>() ?? '';
     final baseStyle = title?._getProperty<TextStyle>() ?? const TextStyle();
@@ -273,9 +276,7 @@ class PaneItem extends NavigationPaneItem {
             case PaneDisplayMode.compact:
               return Container(
                 key: key,
-                constraints: BoxConstraints(
-                  minHeight: paneItemMinHeight,
-                ),
+                constraints: BoxConstraints(minHeight: paneItemMinHeight),
                 alignment: AlignmentDirectional.centerStart,
                 padding: theme.iconPadding ?? EdgeInsetsDirectional.zero,
                 child: infoBadge != null
@@ -299,9 +300,7 @@ class PaneItem extends NavigationPaneItem {
 
               return ConstrainedBox(
                 key: key,
-                constraints: BoxConstraints(
-                  minHeight: paneItemMinHeight,
-                ),
+                constraints: BoxConstraints(minHeight: paneItemMinHeight),
                 child: ClipRect(
                   child: Row(
                     children: [

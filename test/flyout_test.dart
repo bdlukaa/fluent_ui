@@ -269,9 +269,7 @@ void main() {
 
       // Hover over the sub-menu item to trigger its display
       final subMenuFinder = find.text('Sub Menu');
-      final gesture = await tester.createGesture(
-        kind: PointerDeviceKind.mouse,
-      );
+      final gesture = await tester.createGesture(kind: PointerDeviceKind.mouse);
       await gesture.addPointer(location: Offset.zero);
       await gesture.moveTo(tester.getCenter(subMenuFinder));
       await tester.pumpAndSettle(const Duration(milliseconds: 500));
