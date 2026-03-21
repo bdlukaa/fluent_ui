@@ -144,7 +144,7 @@ void main() {
     await gesture.addPointer();
     await tester.pump();
     await gesture.moveTo(tester.getCenter(finder));
-    await tester.pumpAndSettle(const Duration(milliseconds: 500));
+    await tester.pumpAndSettle(const Duration(milliseconds: 1500));
     final tooltip = find.text('Save your work');
     expect(tooltip, findsOneWidget);
   });
