@@ -720,13 +720,13 @@ class _MenuFlyoutSubItemState extends State<_MenuFlyoutSubItem>
 
   /// Closes this menu and its children
   Future<void> close(MenuInfoProviderState menuInfo) async {
-    await Future.wait([
-      if (menuKey.currentState != null)
-        ...menuKey.currentState!.keys
+    if (menuKey.currentState != null) {
+      await Future.wait(
+        menuKey.currentState!.keys
             .whereType<GlobalKey<_MenuFlyoutSubItemState>>()
             .map((child) => child.currentState!.close(menuInfo)),
-      transitionController.reverse(),
-    ]);
+      );
+    }
 
     menuInfo.remove(menuKey);
 
