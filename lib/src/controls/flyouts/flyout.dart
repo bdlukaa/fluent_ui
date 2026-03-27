@@ -521,7 +521,7 @@ class _FlyoutPositionDelegate extends SingleChildLayoutDelegate {
 
     final bottomY = clampVertical(targetOffset.dy);
 
-    final horizontalTopY = clampVertical(topY + flyoutSize.height);
+    final horizontalTopY = clampVertical(targetOffset.dy - targetSize.height);
     final horizontalY = clampVertical(
       targetOffset.dy - targetSize.height / 2 - flyoutSize.height / 2,
     );
@@ -789,7 +789,7 @@ class FlyoutController with ChangeNotifier, WidgetsBindingObserver {
     NavigatorState? navigatorKey,
     FlyoutTransitionBuilder? transitionBuilder,
     Duration? transitionDuration,
-    Duration? reverseTransitionDuration,
+    Duration? reverseTransitionDuration = Duration.zero,
     Curve transitionCurve = Curves.linear,
     Offset? position,
     RouteSettings? settings,

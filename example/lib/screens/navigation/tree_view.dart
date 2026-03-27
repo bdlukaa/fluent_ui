@@ -329,30 +329,27 @@ TreeView(
               await Future<void>.delayed(const Duration(seconds: 2));
 
               // ...and add the fetched nodes via the controller.
-              _lazyController.addItems(
-                [
-                  TreeViewItem(
-                    content: const Text('Lazy item 1'),
-                    value: 'lazy_1',
+              _lazyController.addItems([
+                TreeViewItem(
+                  content: const Text('Lazy item 1'),
+                  value: 'lazy_1',
+                ),
+                TreeViewItem(
+                  content: const Text('Lazy item 2'),
+                  value: 'lazy_2',
+                ),
+                TreeViewItem(
+                  content: const Text('Lazy item 3'),
+                  value: 'lazy_3',
+                ),
+                TreeViewItem(
+                  content: const Text(
+                    'Lazy item 4 (this text should not overflow)',
+                    overflow: TextOverflow.ellipsis,
                   ),
-                  TreeViewItem(
-                    content: const Text('Lazy item 2'),
-                    value: 'lazy_2',
-                  ),
-                  TreeViewItem(
-                    content: const Text('Lazy item 3'),
-                    value: 'lazy_3',
-                  ),
-                  TreeViewItem(
-                    content: const Text(
-                      'Lazy item 4 (this text should not overflow)',
-                      overflow: TextOverflow.ellipsis,
-                    ),
-                    value: 'lazy_4',
-                  ),
-                ],
-                parent: item,
-              );
+                  value: 'lazy_4',
+                ),
+              ], parent: item);
             },
             onItemInvoked: (final item, final reason) async =>
                 debugPrint('onItemInvoked(reason=$reason): $item'),

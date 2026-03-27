@@ -1,3 +1,10 @@
+## [next]
+
+- fix: `NavigationView` auto display mode no longer shows a brief overlay when resizing from minimal to compact mode ([#1316](https://github.com/bdlukaa/fluent_ui/pull/1316))
+- fix: `MenuFlyout` sub-item tree now correctly expands to the left and shows a `chevron_left` icon when right-to-left directionality is enabled ([#1342](https://github.com/bdlukaa/fluent_ui/issues/1342))
+- fix: `NavigationView` compact pane `PaneItemExpander` flyout is now correctly placed in right-to-left directionality; Flyout `leftTop` and `rightTop` placement modes now correctly align with the top of the target element when the flyout is taller than the available space above the target ([#1289](https://github.com/bdlukaa/fluent_ui/issues/1289))
+- fix: `Tab` in `TabView` is now draggable from its entire area, including the padding ([#1356](https://github.com/bdlukaa/fluent_ui/issues/1356))
+
 ## 4.15.0
 
 - fix: `MenuFlyout` no longer throws `TypeError` on sub-items ([#1337](https://github.com/bdlukaa/fluent_ui/issues/1337))

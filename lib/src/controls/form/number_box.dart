@@ -546,7 +546,10 @@ class NumberBoxState<T extends num> extends State<NumberBox<T>> {
         if (boxContext == null) return const SizedBox.shrink();
         final box = boxContext.findRenderObject()! as RenderBox;
         final isRtl = Directionality.of(context) == TextDirection.rtl;
-        final overlayHeight = (kNumberBoxOverlayHeight + FluentTheme.of(context).visualDensity.baseSizeAdjustment.dy).clamp(0.0, double.infinity);
+        final overlayHeight =
+            (kNumberBoxOverlayHeight +
+                    FluentTheme.of(context).visualDensity.baseSizeAdjustment.dy)
+                .clamp(0.0, double.infinity);
 
         final Widget child = PositionedDirectional(
           width: kNumberBoxOverlayWidth,
@@ -907,7 +910,9 @@ class _NumberBoxCompactOverlay extends StatelessWidget {
   Widget build(BuildContext context) {
     assert(debugCheckHasFluentTheme(context));
     final theme = FluentTheme.of(context);
-    final overlayHeight = (kNumberBoxOverlayHeight + theme.visualDensity.baseSizeAdjustment.dy).clamp(0.0, double.infinity);
+    final overlayHeight =
+        (kNumberBoxOverlayHeight + theme.visualDensity.baseSizeAdjustment.dy)
+            .clamp(0.0, double.infinity);
 
     return Padding(
       padding: const EdgeInsetsDirectional.only(start: 10),

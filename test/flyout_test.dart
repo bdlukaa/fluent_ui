@@ -269,9 +269,7 @@ void main() {
 
       // Hover over the sub-menu item to trigger its display
       final subMenuFinder = find.text('Sub Menu');
-      final gesture = await tester.createGesture(
-        kind: PointerDeviceKind.mouse,
-      );
+      final gesture = await tester.createGesture(kind: PointerDeviceKind.mouse);
       await gesture.addPointer(location: Offset.zero);
       await gesture.moveTo(tester.getCenter(subMenuFinder));
       await tester.pumpAndSettle(const Duration(milliseconds: 500));
@@ -286,6 +284,162 @@ void main() {
       await tester.pumpAndSettle();
 
       // Should not have thrown a TypeError
+      await gesture.removePointer();
+    },
+  );
+
+  testWidgets(
+    'MenuFlyoutSubItem shows chevron_right trailing icon in LTR context',
+    (tester) async {
+      final controller = FlyoutController();
+
+      await tester.pumpWidget(
+        wrapApp(
+          child: Center(
+            child: FlyoutTarget(
+              controller: controller,
+              child: const Text('Target'),
+            ),
+          ),
+        ),
+      );
+
+      controller.showFlyout<void>(
+        builder: (context) => MenuFlyout(
+          items: [
+            MenuFlyoutSubItem(
+              text: const Text('Sub Menu'),
+              items: (context) => [],
+            ),
+          ],
+        ),
+      );
+      await tester.pumpAndSettle();
+
+      // Find all WindowsIcon widgets in the tree and verify the sub-item
+      // trailing uses chevron_right in LTR mode.
+      final icons = tester.widgetList<WindowsIcon>(find.byType(WindowsIcon));
+      expect(
+        icons.any((icon) => icon.icon == WindowsIcons.chevron_right),
+        isTrue,
+        reason:
+            'MenuFlyoutSubItem should show chevron_right trailing icon in LTR',
+      );
+      expect(
+        icons.any((icon) => icon.icon == WindowsIcons.chevron_left),
+        isFalse,
+        reason:
+            'MenuFlyoutSubItem should not show chevron_left trailing icon in LTR',
+      );
+    },
+  );
+
+  testWidgets(
+    'MenuFlyoutSubItem shows chevron_left trailing icon in RTL context',
+    (tester) async {
+      final controller = FlyoutController();
+
+      await tester.pumpWidget(
+        FluentApp(
+          home: Directionality(
+            textDirection: TextDirection.rtl,
+            child: Center(
+              child: FlyoutTarget(
+                controller: controller,
+                child: const Text('Target'),
+              ),
+            ),
+          ),
+        ),
+      );
+
+      controller.showFlyout<void>(
+        builder: (context) => MenuFlyout(
+          items: [
+            MenuFlyoutSubItem(
+              text: const Text('Sub Menu'),
+              items: (context) => [],
+            ),
+          ],
+        ),
+      );
+      await tester.pumpAndSettle();
+
+      // Find all WindowsIcon widgets in the tree and verify the sub-item
+      // trailing uses chevron_left in RTL mode.
+      final icons = tester.widgetList<WindowsIcon>(find.byType(WindowsIcon));
+      expect(
+        icons.any((icon) => icon.icon == WindowsIcons.chevron_left),
+        isTrue,
+        reason:
+            'MenuFlyoutSubItem should show chevron_left trailing icon in RTL',
+      );
+      expect(
+        icons.any((icon) => icon.icon == WindowsIcons.chevron_right),
+        isFalse,
+        reason:
+            'MenuFlyoutSubItem should not show chevron_right trailing icon in RTL',
+      );
+    },
+  );
+
+  testWidgets(
+    'MenuFlyoutSubItem sub-menu opens to the left in RTL context',
+    (tester) async {
+      final controller = FlyoutController();
+
+      await tester.pumpWidget(
+        FluentApp(
+          home: Directionality(
+            textDirection: TextDirection.rtl,
+            child: Center(
+              child: FlyoutTarget(
+                controller: controller,
+                child: const Text('Target'),
+              ),
+            ),
+          ),
+        ),
+      );
+
+      controller.showFlyout<void>(
+        builder: (context) => MenuFlyout(
+          items: [
+            MenuFlyoutSubItem(
+              text: const Text('Sub Menu'),
+              items: (context) => [
+                MenuFlyoutItem(
+                  text: const Text('Sub Item 1'),
+                  onPressed: () {},
+                ),
+              ],
+            ),
+          ],
+        ),
+      );
+      await tester.pumpAndSettle();
+
+      expect(find.text('Sub Menu'), findsOneWidget);
+      final subMenuParentRect = tester.getRect(find.text('Sub Menu'));
+
+      // Hover over the sub-menu item to trigger its display
+      final gesture = await tester.createGesture(kind: PointerDeviceKind.mouse);
+      await gesture.addPointer(location: Offset.zero);
+      await gesture.moveTo(tester.getCenter(find.text('Sub Menu')));
+      await tester.pumpAndSettle(const Duration(milliseconds: 500));
+
+      // The sub-menu should now be showing
+      expect(find.text('Sub Item 1'), findsOneWidget);
+
+      // In RTL mode, the sub-menu should appear to the LEFT of the parent item.
+      final subItemRect = tester.getRect(find.text('Sub Item 1'));
+      expect(
+        subItemRect.left,
+        lessThan(subMenuParentRect.left),
+        reason:
+            'In RTL, sub-menu should open to the left of the parent item',
+      );
+
       await gesture.removePointer();
     },
   );

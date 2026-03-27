@@ -103,7 +103,7 @@ class TitleBar extends StatelessWidget {
 
   /// The callback that is called when the title bar is double-tapped.
   final VoidCallback? onDoubleTap;
-  
+
   @override
   Widget build(BuildContext context) {
     assert(debugCheckHasFluentTheme(context));
@@ -571,7 +571,9 @@ class PaneToggleButton extends StatelessWidget {
   Widget build(BuildContext context) {
     final view = NavigationView.dataOf(context);
     final fluentTheme = FluentTheme.of(context);
-    final paneItemHeight = (kPaneItemMinHeight + fluentTheme.visualDensity.baseSizeAdjustment.dy).clamp(0.0, double.infinity);
+    final paneItemHeight =
+        (kPaneItemMinHeight + fluentTheme.visualDensity.baseSizeAdjustment.dy)
+            .clamp(0.0, double.infinity);
 
     final width = view.pane?.size?.compactWidth ?? kCompactNavigationPaneWidth;
     return Container(
@@ -628,7 +630,9 @@ class PaneBackButton extends StatelessWidget {
     final viewData = NavigationView.dataOf(context);
     final canPop = viewData.canPop;
     final fluentTheme = FluentTheme.of(context);
-    final paneItemHeight = (kPaneItemMinHeight + fluentTheme.visualDensity.baseSizeAdjustment.dy).clamp(0.0, double.infinity);
+    final paneItemHeight =
+        (kPaneItemMinHeight + fluentTheme.visualDensity.baseSizeAdjustment.dy)
+            .clamp(0.0, double.infinity);
 
     final width =
         viewData.pane?.size?.compactWidth ?? kCompactNavigationPaneWidth;
