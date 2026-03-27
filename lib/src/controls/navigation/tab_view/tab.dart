@@ -367,131 +367,129 @@ class TabState extends State<Tab>
         }).resolve(states);
 
         const borderRadius = BorderRadius.vertical(top: Radius.circular(6));
+        Widget tabContainer = Container(
+          key: widget._tabKey,
+          height: _kTileHeight,
+          constraints: tab.tabWidthBehavior == TabWidthBehavior.sizeToContent
+              ? const BoxConstraints(minHeight: 28)
+              : const BoxConstraints(maxWidth: _kMaxTileWidth, minHeight: 28),
+          padding: tab.selected
+              ? const EdgeInsetsDirectional.only(
+                  start: 9,
+                  top: 3,
+                  end: 5,
+                  bottom: 4,
+                )
+              : const EdgeInsetsDirectional.only(
+                  start: 8,
+                  top: 3,
+                  end: 4,
+                  bottom: 3,
+                ),
+          decoration: BoxDecoration(
+            borderRadius: borderRadius,
+            // if selected, the background is painted by _TabPainter
+            color:
+                (tab.selected
+                        ? widget.selectedBackgroundColor
+                        : widget.backgroundColor)
+                    ?.resolve(states) ??
+                backgroundColor,
+          ),
+          child: ClipRect(
+            child: DefaultTextStyle.merge(
+              style: (theme.typography.body ?? const TextStyle()).copyWith(
+                fontSize: 12,
+                fontWeight: tab.selected ? FontWeight.w600 : null,
+                color:
+                    (tab.selected
+                            ? widget.selectedForegroundColor
+                            : widget.foregroundColor)
+                        ?.resolve(states) ??
+                    foregroundColor,
+              ),
+              child: IconTheme.merge(
+                data: IconThemeData(
+                  color:
+                      (tab.selected
+                              ? widget.selectedForegroundColor
+                              : widget.foregroundColor)
+                          ?.resolve(states) ??
+                      foregroundColor,
+                  size: 16,
+                ),
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    if (widget.icon != null)
+                      Padding(
+                        padding: const EdgeInsetsDirectional.only(end: 10),
+                        child: widget.icon,
+                      ),
+                    if (tab.tabWidthBehavior != TabWidthBehavior.compact ||
+                        (tab.tabWidthBehavior == TabWidthBehavior.compact &&
+                            tab.selected))
+                      Flexible(
+                        fit: tab.tabWidthBehavior == TabWidthBehavior.equal
+                            ? FlexFit.tight
+                            : FlexFit.loose,
+                        child: Padding(
+                          padding: const EdgeInsetsDirectional.only(end: 4),
+                          child: DefaultTextStyle.merge(
+                            softWrap: false,
+                            maxLines: 1,
+                            overflow: TextOverflow.clip,
+                            style: const TextStyle(fontSize: 12),
+                            child: widget.text,
+                          ),
+                        ),
+                      ),
+                    if (widget.onClosed != null &&
+                        widget.closeIcon != null &&
+                        (tab.visibilityMode ==
+                                CloseButtonVisibilityMode.always ||
+                            (tab.visibilityMode ==
+                                    CloseButtonVisibilityMode.onHover &&
+                                states.isHovered)))
+                      Padding(
+                        padding: const EdgeInsetsDirectional.only(start: 4),
+                        child: FocusTheme(
+                          data: const FocusThemeData(
+                            primaryBorder: BorderSide.none,
+                            secondaryBorder: BorderSide.none,
+                          ),
+                          child: Tooltip(
+                            message: localizations.closeTabLabel,
+                            child: SizedBox(
+                              height: 24,
+                              width: 32,
+                              child: IconButton(
+                                icon: widget.closeIcon!,
+                                onPressed: tab.onClose,
+                                focusable: false,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                  ],
+                ),
+              ),
+            ),
+          ),
+        );
+        if (tab.reorderIndex != null) {
+          tabContainer = ReorderableDragStartListener(
+            index: tab.reorderIndex!,
+            enabled: !widget.disabled,
+            child: tabContainer,
+          );
+        }
         Widget child = FocusBorder(
           focused: states.isFocused,
           renderOutside: false,
           style: const FocusThemeData(borderRadius: borderRadius),
-          child: Container(
-            key: widget._tabKey,
-            height: _kTileHeight,
-            constraints: tab.tabWidthBehavior == TabWidthBehavior.sizeToContent
-                ? const BoxConstraints(minHeight: 28)
-                : const BoxConstraints(maxWidth: _kMaxTileWidth, minHeight: 28),
-            padding: tab.selected
-                ? const EdgeInsetsDirectional.only(
-                    start: 9,
-                    top: 3,
-                    end: 5,
-                    bottom: 4,
-                  )
-                : const EdgeInsetsDirectional.only(
-                    start: 8,
-                    top: 3,
-                    end: 4,
-                    bottom: 3,
-                  ),
-            decoration: BoxDecoration(
-              borderRadius: borderRadius,
-              // if selected, the background is painted by _TabPainter
-              color:
-                  (tab.selected
-                          ? widget.selectedBackgroundColor
-                          : widget.backgroundColor)
-                      ?.resolve(states) ??
-                  backgroundColor,
-            ),
-            child: () {
-              final result = ClipRect(
-                child: DefaultTextStyle.merge(
-                  style: (theme.typography.body ?? const TextStyle()).copyWith(
-                    fontSize: 12,
-                    fontWeight: tab.selected ? FontWeight.w600 : null,
-                    color:
-                        (tab.selected
-                                ? widget.selectedForegroundColor
-                                : widget.foregroundColor)
-                            ?.resolve(states) ??
-                        foregroundColor,
-                  ),
-                  child: IconTheme.merge(
-                    data: IconThemeData(
-                      color:
-                          (tab.selected
-                                  ? widget.selectedForegroundColor
-                                  : widget.foregroundColor)
-                              ?.resolve(states) ??
-                          foregroundColor,
-                      size: 16,
-                    ),
-                    child: Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        if (widget.icon != null)
-                          Padding(
-                            padding: const EdgeInsetsDirectional.only(end: 10),
-                            child: widget.icon,
-                          ),
-                        if (tab.tabWidthBehavior != TabWidthBehavior.compact ||
-                            (tab.tabWidthBehavior == TabWidthBehavior.compact &&
-                                tab.selected))
-                          Flexible(
-                            fit: tab.tabWidthBehavior == TabWidthBehavior.equal
-                                ? FlexFit.tight
-                                : FlexFit.loose,
-                            child: Padding(
-                              padding: const EdgeInsetsDirectional.only(end: 4),
-                              child: DefaultTextStyle.merge(
-                                softWrap: false,
-                                maxLines: 1,
-                                overflow: TextOverflow.clip,
-                                style: const TextStyle(fontSize: 12),
-                                child: widget.text,
-                              ),
-                            ),
-                          ),
-                        if (widget.onClosed != null &&
-                            widget.closeIcon != null &&
-                            (tab.visibilityMode ==
-                                    CloseButtonVisibilityMode.always ||
-                                (tab.visibilityMode ==
-                                        CloseButtonVisibilityMode.onHover &&
-                                    states.isHovered)))
-                          Padding(
-                            padding: const EdgeInsetsDirectional.only(start: 4),
-                            child: FocusTheme(
-                              data: const FocusThemeData(
-                                primaryBorder: BorderSide.none,
-                                secondaryBorder: BorderSide.none,
-                              ),
-                              child: Tooltip(
-                                message: localizations.closeTabLabel,
-                                child: SizedBox(
-                                  height: 24,
-                                  width: 32,
-                                  child: IconButton(
-                                    icon: widget.closeIcon!,
-                                    onPressed: tab.onClose,
-                                    focusable: false,
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ),
-                      ],
-                    ),
-                  ),
-                ),
-              );
-              if (tab.reorderIndex != null) {
-                return ReorderableDragStartListener(
-                  index: tab.reorderIndex!,
-                  enabled: !widget.disabled,
-                  child: result,
-                );
-              }
-              return result;
-            }(),
-          ),
+          child: tabContainer,
         );
         if (text != null) {
           child = Tooltip(
