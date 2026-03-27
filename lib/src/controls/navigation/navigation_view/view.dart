@@ -549,6 +549,11 @@ class NavigationViewState extends State<NavigationView> {
 
       if (autoDisplayMode != _displayMode) {
         widget.onDisplayModeChanged?.call(autoDisplayMode);
+        // Reset minimal pane open state when leaving minimal mode so that
+        // re-entering minimal mode starts with the pane closed.
+        if (_displayMode == PaneDisplayMode.minimal) {
+          _minimalPaneOpen = false;
+        }
       }
 
       _displayMode = autoDisplayMode;
@@ -967,6 +972,7 @@ class NavigationViewState extends State<NavigationView> {
                   child: _OpenNavigationPane(
                     theme: theme,
                     pane: pane,
+                    usePanelKey: false,
                     onItemSelected: () {
                       if (_displayMode == PaneDisplayMode.minimal) {
                         isMinimalPaneOpen = false;

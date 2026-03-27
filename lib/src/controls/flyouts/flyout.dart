@@ -789,7 +789,7 @@ class FlyoutController with ChangeNotifier, WidgetsBindingObserver {
     NavigatorState? navigatorKey,
     FlyoutTransitionBuilder? transitionBuilder,
     Duration? transitionDuration,
-    Duration? reverseTransitionDuration,
+    Duration? reverseTransitionDuration = Duration.zero,
     Curve transitionCurve = Curves.linear,
     Offset? position,
     RouteSettings? settings,

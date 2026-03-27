@@ -1022,4 +1022,170 @@ void main() {
       expect(flyoutBox.size.width, greaterThan(kCompactNavigationPaneWidth));
     });
   });
+
+  // Tests for auto display mode transition
+  group('Auto display mode transition', () {
+    testWidgets(
+      'No overlay when resizing from minimal to compact',
+      (tester) async {
+        // Start in minimal mode (width <= 640)
+        double viewWidth = 300;
+
+        await tester.pumpWidget(
+          FluentApp(
+            home: StatefulBuilder(
+              builder: (context, setState) {
+                return SizedBox(
+                  width: viewWidth,
+                  height: 800,
+                  child: NavigationView(
+                    pane: NavigationPane(
+                      selected: 0,
+                      items: [
+                        PaneItem(
+                          icon: const Icon(FluentIcons.home),
+                          title: const Text('Home'),
+                          body: const SizedBox(),
+                        ),
+                      ],
+                    ),
+                  ),
+                );
+              },
+            ),
+          ),
+        );
+
+        await tester.pumpAndSettle();
+        expect(find.byType(NavigationView), findsOneWidget);
+
+        // Resize to compact mode (641–1007px)
+        viewWidth = 800;
+        await tester.pumpWidget(
+          FluentApp(
+            home: StatefulBuilder(
+              builder: (context, setState) {
+                return SizedBox(
+                  width: viewWidth,
+                  height: 800,
+                  child: NavigationView(
+                    pane: NavigationPane(
+                      selected: 0,
+                      items: [
+                        PaneItem(
+                          icon: const Icon(FluentIcons.home),
+                          title: const Text('Home'),
+                          body: const SizedBox(),
+                        ),
+                      ],
+                    ),
+                  ),
+                );
+              },
+            ),
+          ),
+        );
+
+        // After a single frame (not pumpAndSettle), verify the compact pane
+        // is at compact width – not at open-pane width as it would be if the
+        // AnimatedContainer state were incorrectly reused from minimal mode.
+        await tester.pump();
+
+        expect(find.byType(NavigationView), findsOneWidget);
+
+        // The render box of the NavigationView should not show the full-width
+        // open pane (320 px). The pane should appear at compact width (50 px)
+        // immediately, with no ongoing width animation.
+        final navViewBox = tester.renderObject<RenderBox>(
+          find.byType(NavigationView),
+        );
+        expect(navViewBox.size.width, 800);
+
+        // Settle any remaining animations and verify no errors occur.
+        await tester.pumpAndSettle();
+        expect(find.byType(NavigationView), findsOneWidget);
+      },
+    );
+
+    testWidgets(
+      'Minimal pane open state is reset when transitioning to compact',
+      (tester) async {
+        final navKey = GlobalKey<NavigationViewState>();
+        double viewWidth = 300;
+
+        await tester.pumpWidget(
+          FluentApp(
+            home: StatefulBuilder(
+              builder: (context, setState) {
+                return SizedBox(
+                  width: viewWidth,
+                  height: 800,
+                  child: NavigationView(
+                    key: navKey,
+                    pane: NavigationPane(
+                      selected: 0,
+                      items: [
+                        PaneItem(
+                          icon: const Icon(FluentIcons.home),
+                          title: const Text('Home'),
+                          body: const SizedBox(),
+                        ),
+                      ],
+                    ),
+                  ),
+                );
+              },
+            ),
+          ),
+        );
+
+        await tester.pumpAndSettle();
+
+        // Verify we are in minimal mode.
+        expect(navKey.currentState?.displayMode, PaneDisplayMode.minimal);
+
+        // Open the minimal pane.
+        navKey.currentState?.isMinimalPaneOpen = true;
+        await tester.pumpAndSettle();
+        expect(navKey.currentState?.isMinimalPaneOpen, true);
+
+        // Resize to compact mode.
+        viewWidth = 800;
+        await tester.pumpWidget(
+          FluentApp(
+            home: StatefulBuilder(
+              builder: (context, setState) {
+                return SizedBox(
+                  width: viewWidth,
+                  height: 800,
+                  child: NavigationView(
+                    key: navKey,
+                    pane: NavigationPane(
+                      selected: 0,
+                      items: [
+                        PaneItem(
+                          icon: const Icon(FluentIcons.home),
+                          title: const Text('Home'),
+                          body: const SizedBox(),
+                        ),
+                      ],
+                    ),
+                  ),
+                );
+              },
+            ),
+          ),
+        );
+
+        await tester.pumpAndSettle();
+
+        // Display mode should now be compact.
+        expect(navKey.currentState?.displayMode, PaneDisplayMode.compact);
+
+        // The minimal-pane-open flag must have been reset during the
+        // mode transition so it doesn't leak into the compact mode.
+        expect(navKey.currentState?.isMinimalPaneOpen, false);
+      },
+    );
+  });
 }

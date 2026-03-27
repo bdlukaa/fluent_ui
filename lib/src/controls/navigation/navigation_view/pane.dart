@@ -1117,6 +1117,7 @@ class _OpenNavigationPane extends StatefulWidget {
     this.onItemSelected,
     this.initiallyOpen = false,
     this.onAnimationEnd,
+    this.usePanelKey = true,
   }) : super(key: pane.key);
 
   final NavigationPane pane;
@@ -1124,6 +1125,16 @@ class _OpenNavigationPane extends StatefulWidget {
   final NavigationPaneThemeData theme;
   final bool initiallyOpen;
   final VoidCallback? onAnimationEnd;
+
+  /// Whether to use the shared [NavigationViewState._panelKey] for the
+  /// internal [AnimatedContainer].
+  ///
+  /// When `true` (the default), the [AnimatedContainer]'s state is shared
+  /// across compact and expanded modes, enabling the smooth width animation
+  /// between them. Set to `false` in minimal mode to prevent the
+  /// [AnimatedContainer] state from being reused when transitioning to compact
+  /// mode, which would otherwise cause a spurious width animation.
+  final bool usePanelKey;
 
   @override
   State<_OpenNavigationPane> createState() => _OpenNavigationPaneState();
@@ -1161,7 +1172,7 @@ class _OpenNavigationPaneState extends State<_OpenNavigationPane> {
     return AnimatedContainer(
       duration: theme.animationDuration ?? Duration.zero,
       curve: theme.animationCurve ?? Curves.linear,
-      key: view._panelKey,
+      key: widget.usePanelKey ? view._panelKey : null,
       width: paneWidth,
       onEnd: widget.onAnimationEnd,
       child: LayoutBuilder(

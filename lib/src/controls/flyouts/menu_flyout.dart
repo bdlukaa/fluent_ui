@@ -504,6 +504,23 @@ typedef MenuItemsBuilder =
 ///    change between two states, checked or unchecked
 ///  * [RadioMenuFlyoutItem], which represents a menu item that is mutually
 ///    exclusive with other radio menu items in its group
+
+/// The default trailing widget for [MenuFlyoutSubItem].
+///
+/// It shows a [WindowsIcons.chevron_right] icon in left-to-right mode and a
+/// [WindowsIcons.chevron_left] icon in right-to-left mode.
+class _MenuFlyoutSubItemChevron extends StatelessWidget {
+  const _MenuFlyoutSubItemChevron();
+
+  @override
+  Widget build(BuildContext context) {
+    final isRtl = Directionality.of(context) == TextDirection.rtl;
+    return WindowsIcon(
+      isRtl ? WindowsIcons.chevron_left : WindowsIcons.chevron_right,
+    );
+  }
+}
+
 class MenuFlyoutSubItem extends MenuFlyoutItem {
   /// Creates a menu flyout sub item
   MenuFlyoutSubItem({
@@ -511,7 +528,7 @@ class MenuFlyoutSubItem extends MenuFlyoutItem {
     required this.items,
     super.key,
     super.leading,
-    super.trailing = const WindowsIcon(WindowsIcons.chevron_right),
+    super.trailing = const _MenuFlyoutSubItemChevron(),
     this.showBehavior = SubItemShowAction.hover,
     this.showHoverDelay = const Duration(milliseconds: 450),
   }) : super(onPressed: null);
@@ -657,6 +674,7 @@ class _MenuFlyoutSubItemState extends State<_MenuFlyoutSubItem>
           parentRect: itemRect,
           parentSize: itemBox.size,
           margin: parent.margin,
+          textDirection: Directionality.of(context),
         ),
         child: Flyout(
           rootFlyout: parent.rootFlyout,
@@ -720,11 +738,13 @@ class _SubItemPositionDelegate extends SingleChildLayoutDelegate {
   final Rect parentRect;
   final Size parentSize;
   final double margin;
+  final TextDirection textDirection;
 
   const _SubItemPositionDelegate({
     required this.parentRect,
     required this.parentSize,
     required this.margin,
+    required this.textDirection,
   });
 
   @override
@@ -736,27 +756,51 @@ class _SubItemPositionDelegate extends SingleChildLayoutDelegate {
 
   @override
   Offset getPositionForChild(Size rootSize, Size flyoutSize) {
-    var x = parentRect.left + parentRect.size.width;
+    final isRtl = textDirection == TextDirection.rtl;
+    double x;
 
-    // if the flyout will overflow the screen on the right
-    final willOverflowX = x + flyoutSize.width + margin > rootSize.width;
+    if (isRtl) {
+      // In RTL, the sub-menu should open to the left of the parent item by
+      // default.
+      x = parentRect.left - flyoutSize.width;
 
-    // if overflow x on the right, we check for some cases
-    //
-    // if the space available on the right is greater than the space available on
-    // the left, use the right.
-    //
-    // otherwise, we position the flyout at the end of the screen
-    if (willOverflowX) {
-      final rightX = parentRect.left - flyoutSize.width;
-      if (rightX > margin) {
-        x = rightX;
-      } else {
-        x = clampDouble(
-          rootSize.width - flyoutSize.width - margin,
-          0,
-          rootSize.width,
-        );
+      // if the flyout will overflow the screen on the left
+      final willOverflowX = x < margin;
+
+      if (willOverflowX) {
+        // try to the right of the parent item
+        final rightX = parentRect.left + parentRect.size.width;
+        if (rightX + flyoutSize.width + margin <= rootSize.width) {
+          x = rightX;
+        } else {
+          x = clampDouble(margin, 0, rootSize.width);
+        }
+      }
+    } else {
+      // In LTR, the sub-menu should open to the right of the parent item by
+      // default.
+      x = parentRect.left + parentRect.size.width;
+
+      // if the flyout will overflow the screen on the right
+      final willOverflowX = x + flyoutSize.width + margin > rootSize.width;
+
+      // if overflow x on the right, we check for some cases
+      //
+      // if the space available on the right is greater than the space available
+      // on the left, use the right.
+      //
+      // otherwise, we position the flyout at the end of the screen
+      if (willOverflowX) {
+        final leftX = parentRect.left - flyoutSize.width;
+        if (leftX > margin) {
+          x = leftX;
+        } else {
+          x = clampDouble(
+            rootSize.width - flyoutSize.width - margin,
+            0,
+            rootSize.width,
+          );
+        }
       }
     }
 
@@ -775,6 +819,7 @@ class _SubItemPositionDelegate extends SingleChildLayoutDelegate {
   bool shouldRelayout(covariant _SubItemPositionDelegate oldDelegate) {
     return oldDelegate.parentRect != parentRect ||
         oldDelegate.parentSize != parentSize ||
-        oldDelegate.margin != margin;
+        oldDelegate.margin != margin ||
+        oldDelegate.textDirection != textDirection;
   }
 }
