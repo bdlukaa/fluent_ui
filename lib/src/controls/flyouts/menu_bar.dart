@@ -144,7 +144,6 @@ class MenuBarState extends State<MenuBar> {
       ),
       additionalOffset: 0,
       horizontalOffset: position.dx + resolvedBarMargin.left,
-      reverseTransitionDuration: Duration.zero,
       barrierColor: Colors.transparent,
       builder: (context) {
         return TapRegion(

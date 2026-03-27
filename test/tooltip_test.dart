@@ -235,7 +235,7 @@ void main() {
     // Regression test: when the mouse enters or leaves the window,
     // _mouseIsConnected used to change via setState, which would add/remove
     // the MouseRegion wrapper and cause the child widget to lose its state.
-    int initStateCount = 0;
+    var initStateCount = 0;
 
     await tester.pumpWidget(
       wrapApp(

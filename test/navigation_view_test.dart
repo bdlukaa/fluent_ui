@@ -1041,7 +1041,6 @@ void main() {
                   child: NavigationView(
                     pane: NavigationPane(
                       selected: 0,
-                      displayMode: PaneDisplayMode.auto,
                       items: [
                         PaneItem(
                           icon: const Icon(FluentIcons.home),
@@ -1072,7 +1071,6 @@ void main() {
                   child: NavigationView(
                     pane: NavigationPane(
                       selected: 0,
-                      displayMode: PaneDisplayMode.auto,
                       items: [
                         PaneItem(
                           icon: const Icon(FluentIcons.home),
@@ -1126,7 +1124,6 @@ void main() {
                     key: navKey,
                     pane: NavigationPane(
                       selected: 0,
-                      displayMode: PaneDisplayMode.auto,
                       items: [
                         PaneItem(
                           icon: const Icon(FluentIcons.home),
@@ -1165,7 +1162,6 @@ void main() {
                     key: navKey,
                     pane: NavigationPane(
                       selected: 0,
-                      displayMode: PaneDisplayMode.auto,
                       items: [
                         PaneItem(
                           icon: const Icon(FluentIcons.home),
