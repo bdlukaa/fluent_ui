@@ -230,7 +230,6 @@ class NavigationView extends StatefulWidget {
   void debugFillProperties(DiagnosticPropertiesBuilder properties) {
     super.debugFillProperties(properties);
     properties
-      ..add(DiagnosticsProperty('titleBar', titleBar))
       ..add(DiagnosticsProperty('pane', pane))
       ..add(
         DiagnosticsProperty(
@@ -825,7 +824,7 @@ class NavigationViewState extends State<NavigationView> {
         children: [
           Padding(
             padding: EdgeInsetsDirectional.only(
-              top: 38,
+              top: TitleBar.calculateHeight(widget.titleBar),
               start: pane.size?.compactWidth ?? kCompactNavigationPaneWidth,
             ),
             child: content,
