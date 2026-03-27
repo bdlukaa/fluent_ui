@@ -7,24 +7,15 @@
     <a title="GitHub License" href="https://github.com/bdlukaa/fluent_ui/blob/master/LICENSE">
       <img src="https://img.shields.io/github/license/bdlukaa/fluent_ui?style=flat-square&color=f12253" />
     </a>
-    <a title="Made with Windows Design" href="https://github.com/bdlukaa/fluent_ui">
-      <img src="https://img.shields.io/badge/fluent-design-blue?style=flat-square&color=gray&labelColor=0078D7">
-    </a>
-    <a title="Web Example" href="https://bdlukaa.github.io/fluent_ui">
-      <img src="https://img.shields.io/badge/documentation---?style=flat-square&color=e88d0c" />
-    </a>
   </div>
   <div>
     <a title="Discord" href="https://discord.gg/674gpDQUVq">
       <img src="https://img.shields.io/discord/809528329337962516?style=flat-square&label=discord&color=7289da&logo=discord&logoColor=white" />
     </a>
-    <a title="Patreon" href="https://www.patreon.com/bdlukaa">
-      <img src="https://img.shields.io/badge/sponsor-Patreon-FF424D?style=flat-square" />
-    </a>
   </div>
   <br/>
   <p>
-  Design beautiful native Windows apps using <a href="https://flutter.dev">Flutter</a>
+  Design beautiful native Windows apps using Flutter
   </p>
 
   <p>
@@ -35,25 +26,6 @@
   </h3>
 </div>
 
-<div align="center">
-  <a href="https://bdlukaa.github.io/fluent_ui">
-    <img src="https://raw.githubusercontent.com/bdlukaa/fluent_ui/master/images/example-showcase.png" />
-  </a>
-</div>
-
----
-
-### Content
-
-- [Motivation and maintenance](#motivation-and-maintenance)
-- [Installation](#installation)
-  - [Badge](#badge)
-  - [Accent color](#accent-color)
-- [Localization](#localization)
-- [Contribution](#contribution)
-  - [Contributing new localizations](#contributing-new-localizations)
-  - [Acknowledgements](#acknowledgements)
-
 ## Motivation and maintenance
 
 Since Flutter has stable Windows support, it's necessary to have support to its UI guidelines to build apps with fidelity, the same way it has support for Material and Cupertino.
@@ -61,19 +33,13 @@ See [this](https://github.com/flutter/flutter/issues/46481) for more info on the
 
 See also:
 
-- [Material UI for Flutter](https://flutter.dev/docs/development/ui/widgets/material)
-- [Cupertino UI for Flutter](https://flutter.dev/docs/development/ui/widgets/cupertino)
+- [Material UI for Flutter](hhttps://docs.flutter.dev/ui/widgets/material)
+- [Cupertino UI for Flutter](https://docs.flutter.dev/ui/widgets/cupertino)
 - [MacOS UI for Flutter](https://github.com/GroovinChip/macos_ui)
 
 ---
 
-This is an open-source package, which means that anyone can contribute to it. However, I, [bdlukaa](https://github.com/bdlukaa), am the only one actively maintaining it, so it may take some time to review and merge pull requests. If you want to support the project, you can [become a patron](https://www.patreon.com/bdlukaa):
-
-<div align="center">
-  <a title="Patreon" href="https://www.patreon.com/bdlukaa">
-    <img src="https://img.shields.io/badge/sponsor-Patreon-FF424D?style=flat-square" />
-  </a>
-</div>
+This is an open-source package, which means that anyone can contribute to it. However, I, [bdlukaa](https://github.com/bdlukaa), am the only one actively maintaining it, so it may take some time to review and merge pull requests. If you want to support the project, you can [sponsor me](https://github.com/sponsors/bdlukaa/).
 
 ## Installation
 
@@ -81,7 +47,7 @@ Add the package to your dependencies:
 
 ```yaml
 dependencies:
-  fluent_ui: ^4.4.0
+  fluent_ui: ^4.15.1
 ```
 
 <p align="center">OR</p>
@@ -95,26 +61,6 @@ dependencies:
 Finally, run `dart pub get` to download the package.
 
 Projects using this library should use the stable channel of Flutter
-
-### Badge
-
-Are you using this library on your app? You can use a badge to tell others:
-
-<a title="Made with Windows Design" href="https://github.com/bdlukaa/fluent_ui">
-  <img
-    src="https://img.shields.io/badge/fluent-design-blue?style=flat-square&color=gray&labelColor=0078D7"
-  >
-</a>
-
-Add the following code to your `README.md` or to your website:
-
-```html
-<a title="Made with Windows Design" href="https://github.com/bdlukaa/fluent_ui">
-  <img
-    src="https://img.shields.io/badge/fluent-design-blue?style=flat-square&color=gray&labelColor=0078D7"
-  />
-</a>
-```
 
 ---
 
@@ -130,13 +76,21 @@ FluentThemeData(
 )
 ```
 
-To use the system's accent color, you can use the plugin [system_theme](https://pub.dev/packages/system_theme) made by me :). It has support for (as of 21/01/2023) Android, Web, MacOS, Windows, Xbox and Linux (GTK 3+).
+To use the system's accent color, you can use the plugin [system_theme](https://pub.dev/packages/system_theme). It has support for the Android, iOS, Web, MacOS, Windows and Linux (GTK 3+) platforms.
 
 ```dart
 import 'package:system_theme/system_theme.dart';
 
 FluentThemeData(
-  accentColor: SystemTheme.accentColor.accent.toAccentColor(),
+  accentColor: AccentColor.swatch({
+    'darkest': SystemTheme.accentColor.darkest,
+    'darker': SystemTheme.accentColor.darker,
+    'dark': SystemTheme.accentColor.dark,
+    'normal': SystemTheme.accentColor.accent,
+    'light': SystemTheme.accentColor.light,
+    'lighter': SystemTheme.accentColor.lighter,
+    'lightest': SystemTheme.accentColor.lightest,
+  }),
 )
 ```
 
