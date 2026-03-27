@@ -1,4 +1,4 @@
-## [next]
+## 4.15.1
 
 - fix: `NavigationView` auto display mode no longer shows a brief overlay when resizing from minimal to compact mode ([#1316](https://github.com/bdlukaa/fluent_ui/pull/1316))
 - fix: `MenuFlyout` sub-item tree now correctly expands to the left and shows a `chevron_left` icon when right-to-left directionality is enabled ([#1342](https://github.com/bdlukaa/fluent_ui/issues/1342))
