@@ -31,6 +31,7 @@ class TitleBar extends StatelessWidget {
     this.subtitle,
     this.content,
     this.endHeader,
+    this.height,
     this.captionControls,
     this.onDragStarted,
     this.onDragEnded,
@@ -84,7 +85,19 @@ class TitleBar extends StatelessWidget {
   /// Usually an [AutoSuggestBox] widget.
   final Widget? content;
 
+  /// The right header widget.
+  ///
+  /// Usually an [Icon] widget.
   final Widget? endHeader;
+
+  /// The height of the title bar.
+  ///
+  /// If not provided, the height is calculated based on the [content].
+  ///
+  /// See also:
+  ///
+  ///  * [calculateHeight], which calculates the height based on the content.
+  final double? height;
 
   /// The controls of the window, if any.
   final Widget? captionControls;
@@ -104,6 +117,15 @@ class TitleBar extends StatelessWidget {
   /// The callback that is called when the title bar is double-tapped.
   final VoidCallback? onDoubleTap;
 
+  static double calculateHeight(Widget? titleBar) {
+    if (titleBar == null) return 0;
+    if (titleBar is TitleBar) {
+      if (titleBar.height != null) return titleBar.height!;
+      if (titleBar.content != null) return 48;
+    }
+    return 32;
+  }
+
   @override
   Widget build(BuildContext context) {
     assert(debugCheckHasFluentTheme(context));
@@ -121,11 +143,10 @@ class TitleBar extends StatelessWidget {
       onPanUpdate: (_) => onDragUpdated?.call(),
       onDoubleTap: () => onDoubleTap?.call(),
       child: ConstrainedBox(
-        constraints: BoxConstraints(
+        constraints: BoxConstraints.tightFor(
           // according to documentation, increase the size of the title bar if
           // there is content
-          minHeight: content != null ? 48 : 32,
-          maxHeight: 48,
+          height: TitleBar.calculateHeight(this),
         ),
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -331,13 +352,9 @@ class _RenderTitleSubtitleOverflow extends RenderBox
     var height = 0.0;
     var child = firstChild;
     while (child != null) {
-      final childParentData =
-          child.parentData! as _TitleSubtitleOverflowParentData;
-      if (!childParentData.isHidden) {
-        height = height > child.getMinIntrinsicHeight(width)
-            ? height
-            : child.getMinIntrinsicHeight(width);
-      }
+      height = height > child.getMinIntrinsicHeight(width)
+          ? height
+          : child.getMinIntrinsicHeight(width);
       child = childAfter(child);
     }
     return height;
@@ -348,13 +365,9 @@ class _RenderTitleSubtitleOverflow extends RenderBox
     var height = 0.0;
     var child = firstChild;
     while (child != null) {
-      final childParentData =
-          child.parentData! as _TitleSubtitleOverflowParentData;
-      if (!childParentData.isHidden) {
-        height = height > child.getMaxIntrinsicHeight(width)
-            ? height
-            : child.getMaxIntrinsicHeight(width);
-      }
+      height = height > child.getMaxIntrinsicHeight(width)
+          ? height
+          : child.getMaxIntrinsicHeight(width);
       child = childAfter(child);
     }
     return height;

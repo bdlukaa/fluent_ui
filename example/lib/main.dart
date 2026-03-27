@@ -211,7 +211,7 @@ class _MyHomePageState extends State<MyHomePage> with WindowListener {
                 appTheme.mode = ThemeMode.light;
               }
             },
-            child: const Icon(WindowsIcons.lightbulb),
+            child: const Icon(WindowsIcons.lightbulb, size: 16),
           ),
         ),
         captionControls: const WindowButtons(),
