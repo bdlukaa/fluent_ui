@@ -801,6 +801,7 @@ class FlyoutController with ChangeNotifier, WidgetsBindingObserver {
 
     final context = _attachState!.context;
     assert(debugCheckHasFluentTheme(context));
+    final textDirection = Directionality.of(context);
 
     final theme = FluentTheme.of(context);
     transitionDuration ??= theme.fastAnimationDuration;
@@ -884,6 +885,7 @@ class FlyoutController with ChangeNotifier, WidgetsBindingObserver {
           position: position,
           builder: builder,
           buildTarget: buildTarget,
+          textDirection: textDirection,
         );
       },
     );
@@ -988,6 +990,7 @@ class _FlyoutPage extends StatelessWidget {
     required this.position,
     required this.builder,
     required this.buildTarget,
+    required this.textDirection,
   }) : _attachState = attachState;
 
   final NavigatorState navigator;
@@ -1015,6 +1018,7 @@ class _FlyoutPage extends StatelessWidget {
   final Offset? position;
   final WidgetBuilder builder;
   final bool buildTarget;
+  final TextDirection textDirection;
 
   @override
   Widget build(BuildContext context) {
@@ -1190,9 +1194,12 @@ class _FlyoutPage extends StatelessWidget {
           );
         }
 
-        return FadeTransition(
-          opacity: CurvedAnimation(curve: Curves.ease, parent: animation),
-          child: box,
+        return Directionality(
+          textDirection: textDirection,
+          child: FadeTransition(
+            opacity: CurvedAnimation(curve: Curves.ease, parent: animation),
+            child: box,
+          ),
         );
       },
     );

@@ -28,7 +28,7 @@ dependencies:
       url: https://github.com/YehudaKremer/flutter_syntax_view.git
   go_router: ^17.0.1
   intl: ^0.20.2
-  google_fonts: ^6.3.3
+  google_fonts: ^8.0.2
   collection: ^1.19.1
 
 dev_dependencies:
@@ -36,7 +36,7 @@ dev_dependencies:
     sdk: flutter
   flutter_native_splash: ^2.1.6
   flutter_lints: ^6.0.0
-  flutter_launcher_icons: ^0.13.1
+  flutter_launcher_icons: ^0.14.4
 
 flutter:
   uses-material-design: true
