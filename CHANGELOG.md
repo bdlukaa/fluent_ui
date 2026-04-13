@@ -1,3 +1,7 @@
+## [next]
+
+- fix: `Tooltip` now correctly uses constructor-given style
+
 ## 4.15.1
 
 - fix: `NavigationView` auto display mode no longer shows a brief overlay when resizing from minimal to compact mode ([#1316](https://github.com/bdlukaa/fluent_ui/pull/1316))
