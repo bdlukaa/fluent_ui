@@ -67,6 +67,46 @@ void main() {
     expect(find.text('Test Tooltip'), findsNothing);
   });
 
+  testWidgets('Tooltip honors style waitDuration on hover', (tester) async {
+    await tester.pumpWidget(
+      wrapApp(
+        child: const ScaffoldPage(
+          content: Center(
+            child: Tooltip(
+              message: 'Styled delay tooltip',
+              style: TooltipThemeData(waitDuration: Duration(seconds: 10)),
+              child: Button(
+                key: Key('StyledDelayButton'),
+                onPressed: null,
+                child: Text('Hover Me'),
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+
+    expect(find.text('Styled delay tooltip'), findsNothing);
+
+    final gesture = await tester.createGesture(
+      kind: PointerDeviceKind.mouse,
+      pointer: 1,
+    );
+    await gesture.addPointer(location: Offset.zero);
+    await tester.pump();
+
+    await gesture.moveTo(
+      tester.getCenter(find.byKey(const Key('StyledDelayButton'))),
+    );
+    await tester.pump();
+
+    await tester.pump(const Duration(milliseconds: 9999));
+    expect(find.text('Styled delay tooltip'), findsNothing);
+
+    await tester.pump(const Duration(milliseconds: 1));
+    expect(find.text('Styled delay tooltip'), findsOneWidget);
+  });
+
   testWidgets('Tooltip dismisses when clicking outside', (tester) async {
     await tester.pumpWidget(
       wrapApp(
