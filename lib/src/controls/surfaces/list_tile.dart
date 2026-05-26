@@ -65,6 +65,10 @@ class ListTile extends StatelessWidget {
          !(subtitle != null) || title != null,
          'To have a subtitle, there must be a title',
        ),
+       assert(
+         tileColor == null || tileGradient == null,
+         'Cannot provide both tileColor and tileGradient.',
+       ),
        selected = false,
        selectionMode = ListTileSelectionMode.none,
        onSelectionChange = null;
