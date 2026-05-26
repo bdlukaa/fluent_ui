@@ -1,6 +1,7 @@
 ## [next]
 
-- fix: `Tooltip` now correctly uses constructor-given style ((#1321)[https://github.com/bdlukaa/fluent_ui/pull/1321))
+- feat: `ListTile` now supports `tileGradient` argument ([#1328](https://github.com/bdlukaa/fluent_ui/pull/1328))
+- fix: `Tooltip` now correctly uses constructor-given style ([#1321](https://github.com/bdlukaa/fluent_ui/pull/1321))
 
 ## 4.15.1
 
