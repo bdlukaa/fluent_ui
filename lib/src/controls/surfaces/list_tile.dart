@@ -288,8 +288,8 @@ class ListTile extends StatelessWidget {
       cursor: cursor,
       semanticLabel: semanticLabel,
       builder: (context, states) {
-        late final Color? tileColor;
-        late final Gradient? tileGradient;
+        final Color? tileColor;
+        final Gradient? tileGradient;
         if (this.tileColor != null) {
           tileGradient = null;
           tileColor = this.tileColor!.resolve(states);
