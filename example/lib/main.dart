@@ -509,14 +509,21 @@ class WindowButtons extends StatelessWidget {
   Widget build(final BuildContext context) {
     final theme = FluentTheme.of(context);
 
-    return SizedBox(
-      width: 138,
-      height: 50,
-      child: WindowCaption(
-        brightness: theme.brightness,
-        backgroundColor: Colors.transparent,
-      ),
-    );
+    switch (defaultTargetPlatform) {
+      case TargetPlatform.windows:
+      case TargetPlatform.macOS:
+      case TargetPlatform.linux:
+        return SizedBox(
+          width: 138,
+          height: 50,
+          child: WindowCaption(
+            brightness: theme.brightness,
+            backgroundColor: Colors.transparent,
+          ),
+        );
+      default:
+        return const SizedBox.shrink();
+    }
   }
 }
 

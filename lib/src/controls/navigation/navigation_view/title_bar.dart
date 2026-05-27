@@ -117,13 +117,20 @@ class TitleBar extends StatelessWidget {
   /// The callback that is called when the title bar is double-tapped.
   final VoidCallback? onDoubleTap;
 
-  static double calculateHeight(Widget? titleBar) {
-    if (titleBar == null) return 0;
+  static double calculateHeight(BuildContext context, Widget? titleBar) {
+    const defaultHeight = 32.0;
+    var calculatedHeight = defaultHeight;
+    if (titleBar == null) calculatedHeight = 0;
     if (titleBar is TitleBar) {
-      if (titleBar.height != null) return titleBar.height!;
-      if (titleBar.content != null) return 48;
+      if (titleBar.height != null) {
+        calculatedHeight = titleBar.height ?? defaultHeight;
+      } else if (titleBar.content != null) {
+        calculatedHeight = 48;
+      }
+      calculatedHeight += MediaQuery.of(context).padding.top;
     }
-    return 32;
+
+    return calculatedHeight;
   }
 
   @override
@@ -135,89 +142,93 @@ class TitleBar extends StatelessWidget {
     final isPaneToggleButtonVisible =
         view.toggleButtonPosition == PaneToggleButtonPosition.titleBar;
 
-    return GestureDetector(
-      behavior: HitTestBehavior.translucent,
-      onPanStart: (_) => onDragStarted?.call(),
-      onPanEnd: (_) => onDragEnded?.call(),
-      onPanCancel: () => onDragCancelled?.call(),
-      onPanUpdate: (_) => onDragUpdated?.call(),
-      onDoubleTap: () => onDoubleTap?.call(),
-      child: ConstrainedBox(
-        constraints: BoxConstraints.tightFor(
-          // according to documentation, increase the size of the title bar if
-          // there is content
-          height: TitleBar.calculateHeight(this),
-        ),
-        child: Row(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            Expanded(
-              flex: 2,
-              child: Row(
-                children: [
-                  if (isBackButtonVisible)
-                    backButton ??
-                        PaneBackButton(
-                          onPressed: onBackRequested,
-                          enabled: isBackButtonEnabled ?? true,
-                        ),
-                  if (isPaneToggleButtonVisible) ?view.pane?.toggleButton,
-                  if (leftHeader != null)
-                    Padding(
-                      padding: const EdgeInsetsDirectional.only(end: 16),
-                      child: leftHeader,
-                    ),
-                  if (icon != null)
-                    Padding(
-                      padding: const EdgeInsetsDirectional.only(end: 16),
-                      child: icon,
-                    ),
-                  if (title != null || subtitle != null)
-                    Flexible(
-                      child: _TitleSubtitleOverflow(
-                        title: title != null
-                            ? DefaultTextStyle.merge(
-                                style: theme.typography.body?.copyWith(
-                                  color: theme.resources.textFillColorPrimary,
-                                ),
-                                maxLines: 1,
-                                softWrap: false,
-                                child: title!,
-                              )
-                            : null,
-                        subtitle: subtitle != null
-                            ? DefaultTextStyle.merge(
-                                style: theme.typography.body?.copyWith(
-                                  color: theme.resources.textFillColorSecondary,
-                                ),
-                                maxLines: 1,
-                                softWrap: false,
-                                child: subtitle!,
-                              )
-                            : null,
+    return SafeArea(
+      bottom: false,
+      child: GestureDetector(
+        behavior: HitTestBehavior.translucent,
+        onPanStart: (_) => onDragStarted?.call(),
+        onPanEnd: (_) => onDragEnded?.call(),
+        onPanCancel: () => onDragCancelled?.call(),
+        onPanUpdate: (_) => onDragUpdated?.call(),
+        onDoubleTap: () => onDoubleTap?.call(),
+        child: ConstrainedBox(
+          constraints: BoxConstraints.tightFor(
+            // according to documentation, increase the size of the title bar if
+            // there is content
+            height: TitleBar.calculateHeight(context, this),
+          ),
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              Expanded(
+                flex: 2,
+                child: Row(
+                  children: [
+                    if (isBackButtonVisible)
+                      backButton ??
+                          PaneBackButton(
+                            onPressed: onBackRequested,
+                            enabled: isBackButtonEnabled ?? true,
+                          ),
+                    if (isPaneToggleButtonVisible) ?view.pane?.toggleButton,
+                    if (leftHeader != null)
+                      Padding(
+                        padding: const EdgeInsetsDirectional.only(end: 16),
+                        child: leftHeader,
                       ),
+                    if (icon != null)
+                      Padding(
+                        padding: const EdgeInsetsDirectional.only(end: 16),
+                        child: icon,
+                      ),
+                    if (title != null || subtitle != null)
+                      Flexible(
+                        child: _TitleSubtitleOverflow(
+                          title: title != null
+                              ? DefaultTextStyle.merge(
+                                  style: theme.typography.body?.copyWith(
+                                    color: theme.resources.textFillColorPrimary,
+                                  ),
+                                  maxLines: 1,
+                                  softWrap: false,
+                                  child: title!,
+                                )
+                              : null,
+                          subtitle: subtitle != null
+                              ? DefaultTextStyle.merge(
+                                  style: theme.typography.body?.copyWith(
+                                    color:
+                                        theme.resources.textFillColorSecondary,
+                                  ),
+                                  maxLines: 1,
+                                  softWrap: false,
+                                  child: subtitle!,
+                                )
+                              : null,
+                        ),
+                      ),
+                  ],
+                ),
+              ),
+              if (content != null) Expanded(child: content!),
+              Expanded(
+                flex: 2,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    ?endHeader,
+                    // min drag region
+                    ConstrainedBox(
+                      constraints: const BoxConstraints(minWidth: 48),
                     ),
-                ],
+                    if (captionControls != null)
+                      Flexible(child: captionControls!),
+                  ],
+                ),
               ),
-            ),
-            if (content != null) Expanded(child: content!),
-            Expanded(
-              flex: 2,
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.end,
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  ?endHeader,
-                  // min drag region
-                  ConstrainedBox(
-                    constraints: const BoxConstraints(minWidth: 48),
-                  ),
-                  if (captionControls != null)
-                    Flexible(child: captionControls!),
-                ],
-              ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );
