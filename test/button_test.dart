@@ -127,4 +127,43 @@ void main() {
       Colors.yellow,
     );
   });
+
+  testWidgets('Button style textStyle color overrides foreground color', (
+    tester,
+  ) async {
+    await tester.pumpWidget(
+      FluentApp(
+        theme: FluentThemeData(),
+        home: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Button(
+              style: const ButtonStyle(
+                textStyle: WidgetStatePropertyAll(
+                  TextStyle(color: Colors.black),
+                ),
+              ),
+              onPressed: () {},
+              child: const Text('Press me'),
+            ),
+            FilledButton(
+              style: const ButtonStyle(
+                textStyle: WidgetStatePropertyAll(
+                  TextStyle(color: Colors.black),
+                ),
+              ),
+              onPressed: () {},
+              child: const Text('Press Me'),
+            ),
+          ],
+        ),
+      ),
+    );
+
+    expect(_renderedTextStyle(tester, find.byType(Button)).color, Colors.black);
+    expect(
+      _renderedTextStyle(tester, find.byType(FilledButton)).color,
+      Colors.black,
+    );
+  });
 }
