@@ -540,7 +540,7 @@ class _TabViewState extends State<TabView> {
                             shrinkWrap: true,
                             scrollDirection: Axis.horizontal,
                             scrollController: scrollController,
-                            onReorder: (i, ii) {
+                            onReorderItem: (i, ii) {
                               widget.onReorder?.call(i, ii);
                             },
                             itemCount: widget.tabs.length,

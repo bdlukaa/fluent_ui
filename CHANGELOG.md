@@ -1,6 +1,7 @@
 ## [next]
 
-- fix: `Tooltip` now correctly uses constructor-given style ((#1321)[https://github.com/bdlukaa/fluent_ui/pull/1321))
+- refactor: Flutter 3.44.0 support
+- fix: `Tooltip` now correctly uses constructor-given style ((#1321)[https://github.com/bdlukaa/fluent_ui/pull/1321])
 
 ## 4.15.1
 
