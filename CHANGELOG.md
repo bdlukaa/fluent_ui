@@ -3,6 +3,7 @@
 - refactor: Flutter 3.44.0 support
 - fix: `Tooltip` now correctly uses constructor-given style ((#1321)[https://github.com/bdlukaa/fluent_ui/pull/1321])
 - fix: Correctly apply `ButtonStyle.textStyle` to `Button`s content ([#1318](https://github.com/bdlukaa/fluent_ui/issues/1318))
+- fix: Correctly forward navigation view theme to flyout items ([#1325](https://github.com/bdlukaa/fluent_ui/issues/1325))
 
 ## 4.15.1
 
