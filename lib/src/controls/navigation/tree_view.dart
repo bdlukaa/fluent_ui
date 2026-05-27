@@ -2,6 +2,7 @@ import 'dart:collection';
 
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter/foundation.dart';
+import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
 
 /// A callback that receives a notification that the selection state of
@@ -880,7 +881,12 @@ class TreeView extends StatefulWidget {
     this.shrinkWrap = true,
     this.scrollPrimary,
     this.scrollController,
+    @Deprecated(
+      'Use scrollCacheExtent instead. '
+      'This feature was deprecated after v4.16.0',
+    )
     this.cacheExtent,
+    this.scrollCacheExtent,
     this.itemExtent,
     this.addRepaintBoundaries = true,
     this.usePrototypeItem = false,
@@ -972,7 +978,14 @@ class TreeView extends StatefulWidget {
   final ScrollController? scrollController;
 
   /// {@macro flutter.rendering.RenderViewportBase.cacheExtent}
+  @Deprecated(
+    'Use scrollCacheExtent instead. '
+    'This feature was deprecated after v4.16.0',
+  )
   final double? cacheExtent;
+
+  /// {@macro flutter.rendering.RenderViewportBase.scrollCacheExtent}
+  final ScrollCacheExtent? scrollCacheExtent;
 
   /// {@macro flutter.widgets.list_view.itemExtent}
   final double? itemExtent;
@@ -1155,7 +1168,9 @@ class TreeViewState extends State<TreeView> with AutomaticKeepAliveClientMixin {
             primary: widget.scrollPrimary ?? (widget.shrinkWrap ? false : null),
             controller: widget.scrollController,
             shrinkWrap: widget.shrinkWrap,
+            // ignore: deprecated_member_use
             cacheExtent: widget.cacheExtent,
+            scrollCacheExtent: widget.scrollCacheExtent,
             itemExtent: widget.itemExtent,
             addRepaintBoundaries: widget.addRepaintBoundaries,
             prototypeItem: widget.usePrototypeItem && _items.isNotEmpty

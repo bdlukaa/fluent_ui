@@ -305,7 +305,15 @@ class TooltipState extends State<Tooltip> with SingleTickerProviderStateMixin {
   void didChangeDependencies() {
     super.didChangeDependencies();
     _visible = TooltipVisibility.of(context);
-    _tooltipTheme = TooltipTheme.of(context);
+    _cacheTooltipTheme(context);
+  }
+
+  @override
+  void didUpdateWidget(Tooltip oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (oldWidget.style != widget.style) {
+      _cacheTooltipTheme(context);
+    }
   }
 
   void _handleStatusChanged(AnimationStatus status) {
@@ -438,9 +446,6 @@ class TooltipState extends State<Tooltip> with SingleTickerProviderStateMixin {
       );
     }
 
-    // Merge widget style with cached theme
-    final tooltipTheme = _tooltipTheme.merge(widget.style);
-
     // Compute default decoration based on current theme
     final theme = FluentTheme.of(context);
     final defaultTextStyle = theme.typography.body!;
@@ -457,19 +462,19 @@ class TooltipState extends State<Tooltip> with SingleTickerProviderStateMixin {
       textDirection: Directionality.of(context),
       child: _TooltipOverlay(
         richMessage: widget.richMessage ?? TextSpan(text: widget.message),
-        padding: tooltipTheme.padding ?? EdgeInsetsDirectional.zero,
-        margin: tooltipTheme.margin ?? _defaultMargin,
-        decoration: tooltipTheme.decoration ?? defaultDecoration,
-        textStyle: tooltipTheme.textStyle ?? defaultTextStyle,
+        padding: _tooltipTheme.padding ?? EdgeInsetsDirectional.zero,
+        margin: _tooltipTheme.margin ?? _defaultMargin,
+        decoration: _tooltipTheme.decoration ?? defaultDecoration,
+        textStyle: _tooltipTheme.textStyle ?? defaultTextStyle,
         animation: CurvedAnimation(
           parent: _controller,
           curve: Curves.fastOutSlowIn,
         ),
         target: target,
-        verticalOffset: tooltipTheme.verticalOffset ?? _defaultVerticalOffset,
-        preferBelow: tooltipTheme.preferBelow ?? _defaultPreferBelow,
+        verticalOffset: _tooltipTheme.verticalOffset ?? _defaultVerticalOffset,
+        preferBelow: _tooltipTheme.preferBelow ?? _defaultPreferBelow,
         displayHorizontally: widget.displayHorizontally,
-        maxWidth: tooltipTheme.maxWidth,
+        maxWidth: _tooltipTheme.maxWidth,
       ),
     );
     _entry = OverlayEntry(builder: (_) => overlay);
@@ -543,6 +548,10 @@ class TooltipState extends State<Tooltip> with SingleTickerProviderStateMixin {
         Feedback.forTap(context);
       }
     }
+  }
+
+  void _cacheTooltipTheme(BuildContext context) {
+    _tooltipTheme = TooltipTheme.of(context).merge(widget.style);
   }
 
   @override
