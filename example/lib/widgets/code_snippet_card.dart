@@ -213,7 +213,7 @@ class _SyntaxViewState extends State<_SyntaxView> {
         style: TextStyle(fontFamily: 'monospace', fontSize: widget.fontSize),
         children: <TextSpan>[getSyntax(widget.syntaxTheme).format(widget.code)],
       ),
-      contextMenuBuilder: FluentTextSelectionToolbar.defaultContextMenuBuilder,
+      contextMenuBuilder: WindowsTextSelectionToolbar.defaultContextMenuBuilder,
     );
   }
 }

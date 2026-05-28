@@ -1119,7 +1119,7 @@ class ComboBox<T> extends StatefulWidget {
 
   /// The widget to use for the comobo box button's icon.
   ///
-  /// Defaults to an [Icon] with the [FluentIcons.chevron_down] glyph.
+  /// Defaults to an [Icon] with the [WindowsIcons.chevron_down] glyph.
   final Widget icon;
 
   /// The color of any [Icon] descendant of [icon] if this button is disabled,

@@ -171,7 +171,7 @@ class _CustomSelectionButtonsTextBoxState
   ) {
     final undoController = editableTextState.widget.undoController;
 
-    return FluentTextSelectionToolbar(
+    return WindowsTextSelectionToolbar(
       buttonItems: [
         ...editableTextState.contextMenuButtonItems,
         if (undoController != null)

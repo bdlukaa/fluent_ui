@@ -616,14 +616,14 @@ class TextBox extends StatefulWidget {
 
   /// The default context menu builder for [TextBox].
   ///
-  /// Builds a [FluentTextSelectionToolbar] with the standard context menu items
+  /// Builds a [WindowsTextSelectionToolbar] with the standard context menu items
   /// plus an undo action if an [UndoHistoryController] is available.
   static Widget defaultContextMenuBuilder(
     BuildContext context,
     EditableTextState editableTextState,
   ) {
     final undoController = editableTextState.widget.undoController;
-    return FluentTextSelectionToolbar(
+    return WindowsTextSelectionToolbar(
       buttonItems: [
         ...editableTextState.contextMenuButtonItems,
         if (undoController != null)
@@ -1276,13 +1276,13 @@ class _TextBoxState extends State<TextBox>
       case TargetPlatform.android:
       case TargetPlatform.fuchsia:
       case TargetPlatform.linux:
-        textSelectionControls ??= FluentTextSelectionHandleControls(
+        textSelectionControls ??= WindowsTextSelectionHandleControls(
           undoHistoryController: _effectiveUndoController,
         );
 
       case TargetPlatform.macOS:
       case TargetPlatform.windows:
-        textSelectionControls ??= FluentTextSelectionHandleControls(
+        textSelectionControls ??= WindowsTextSelectionHandleControls(
           undoHistoryController: _effectiveUndoController,
         );
         handleDidGainAccessibilityFocus = () {

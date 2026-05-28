@@ -9,7 +9,7 @@ void main() {
   ) async {
     await tester.pumpWidget(
       wrapApp(
-        child: FluentTextSelectionToolbar(
+        child: WindowsTextSelectionToolbar(
           buttonItems: [
             ContextMenuButtonItem(
               type: ContextMenuButtonType.lookUp,
