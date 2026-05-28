@@ -1,7 +1,3 @@
-// Copyright 2014 The Flutter Authors. All rights reserved.
-// Use of this source code is governed by a BSD-style license that can be
-// found in the LICENSE file.
-
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter/foundation.dart';
 
@@ -45,18 +41,27 @@ class FluentTextSelectionToolbar extends StatelessWidget {
   }) : buttonItems = editableTextState.contextMenuButtonItems,
        anchors = editableTextState.contextMenuAnchors;
 
+  /// The default context menu builder for [TextBox].
+  ///
+  /// Builds a [FluentTextSelectionToolbar] with the standard context menu items
+  /// plus an undo action if an [UndoHistoryController] is available.
+  static Widget defaultContextMenuBuilder(
+    BuildContext context,
+    EditableTextState editableTextState,
+  ) => TextBox.defaultContextMenuBuilder(context, editableTextState);
+
   /// Returns the icon for a context menu button type.
   IconData? contextMenuTypeToIcon(ContextMenuButtonType type) {
     return switch (type) {
-      ContextMenuButtonType.cut => FluentIcons.cut,
-      ContextMenuButtonType.copy => FluentIcons.copy,
-      ContextMenuButtonType.paste => FluentIcons.paste,
+      ContextMenuButtonType.cut => WindowsIcons.cut,
+      ContextMenuButtonType.copy => WindowsIcons.copy,
+      ContextMenuButtonType.paste => WindowsIcons.paste,
       ContextMenuButtonType.selectAll => null,
-      ContextMenuButtonType.delete => FluentIcons.delete,
-      ContextMenuButtonType.lookUp => FluentIcons.search,
-      ContextMenuButtonType.searchWeb => FluentIcons.search,
-      ContextMenuButtonType.share => FluentIcons.share,
-      ContextMenuButtonType.liveTextInput => FluentIcons.live_site,
+      ContextMenuButtonType.delete => WindowsIcons.delete,
+      ContextMenuButtonType.lookUp => WindowsIcons.search,
+      ContextMenuButtonType.searchWeb => WindowsIcons.search,
+      ContextMenuButtonType.share => WindowsIcons.share,
+      ContextMenuButtonType.liveTextInput => WindowsIcons.camera,
       ContextMenuButtonType.custom => null,
     };
   }
@@ -74,7 +79,7 @@ class FluentTextSelectionToolbar extends StatelessWidget {
       ContextMenuButtonType.selectAll => localizations.selectAllActionLabel,
       ContextMenuButtonType.delete => 'Delete',
       ContextMenuButtonType.lookUp => 'Lookup',
-      ContextMenuButtonType.searchWeb => 'Search Wep',
+      ContextMenuButtonType.searchWeb => 'Search Web',
       ContextMenuButtonType.share => 'Share',
       ContextMenuButtonType.liveTextInput => 'Live Text Input',
       ContextMenuButtonType.custom => null,
@@ -94,7 +99,7 @@ class FluentTextSelectionToolbar extends StatelessWidget {
       ContextMenuButtonType.selectAll => localizations.selectAllActionTooltip,
       ContextMenuButtonType.delete => 'Delete',
       ContextMenuButtonType.lookUp => 'Lookup',
-      ContextMenuButtonType.searchWeb => 'Search Wep',
+      ContextMenuButtonType.searchWeb => 'Search Web',
       ContextMenuButtonType.share => 'Share',
       ContextMenuButtonType.liveTextInput => 'Live Text Input',
       ContextMenuButtonType.custom => null,
@@ -158,6 +163,16 @@ class FluentTextSelectionToolbar extends StatelessWidget {
                 item.label != 'Undo',
           ),
         )
+        .followedBy(
+          buttonItems.where(
+            (item) =>
+                item.type != ContextMenuButtonType.cut &&
+                item.type != ContextMenuButtonType.copy &&
+                item.type != ContextMenuButtonType.paste &&
+                item.type != ContextMenuButtonType.selectAll &&
+                item.type != ContextMenuButtonType.custom,
+          ),
+        )
         .toList();
 
     return Padding(
@@ -205,9 +220,6 @@ class FluentTextSelectionToolbar extends StatelessWidget {
     );
   }
 }
-
-/// The default [FluentTextSelectionControls] instance.
-final fluentTextSelectionControls = FluentTextSelectionControls();
 
 /// Windows styled text selection handle controls.
 ///
