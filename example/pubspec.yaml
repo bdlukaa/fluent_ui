@@ -30,6 +30,7 @@ dependencies:
   intl: ^0.20.2
   google_fonts: ^8.1.0
   collection: ^1.19.1
+  share_plus: ^13.1.0
 
 dev_dependencies:
   flutter_test:
