@@ -112,7 +112,7 @@ SizedBox(
   ),
   maxLines: null,
   contextMenuBuilder: (context, editableTextState) {
-    return FluentTextSelectionToolbar(
+    return WindowsTextSelectionToolbar(
       buttonItems: [
         ...editableTextState.contextMenuButtonItems,
         ContextMenuButtonItem(

@@ -4,7 +4,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'app_test.dart';
 
 void main() {
-  testWidgets('FluentTextSelectionToolbar renders non-standard button types', (
+  testWidgets('WindowsTextSelectionToolbar renders non-standard button types', (
     tester,
   ) async {
     await tester.pumpWidget(

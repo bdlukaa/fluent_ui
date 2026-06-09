@@ -325,7 +325,7 @@ class WindowsTextSelectionControls extends TextSelectionControls {
 }
 
 // /// Text selection controls that loosely follows Windows design conventions.
-// Generates the child that's passed into FluentTextSelectionToolbar.
+// Generates the child that's passed into WindowsTextSelectionToolbar.
 class _WindowsTextSelectionControlsToolbar extends StatefulWidget {
   const _WindowsTextSelectionControlsToolbar({
     required this.clipboardStatus,

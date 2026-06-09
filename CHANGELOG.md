@@ -4,7 +4,7 @@
 - fix: `Tooltip` now correctly uses constructor-given style ((#1321)[https://github.com/bdlukaa/fluent_ui/pull/1321])
 - fix: Correctly apply `ButtonStyle.textStyle` to `Button`s content ([#1318](https://github.com/bdlukaa/fluent_ui/issues/1318))
 - fix: Correctly forward navigation view theme to flyout items ([#1325](https://github.com/bdlukaa/fluent_ui/issues/1325))
-- fix(mobile): `TitleBar` now accounts for view padding
+- fix(mobile): `TitleBar` now accounts for view padding ([05c122b](https://github.com/bdlukaa/fluent_ui/commit/05c122bccb8bbc513c07e8ef238ac17d0f17a6cb))
 - fix: `FluentTextSelectionToolbar` no longer ignores custom `ContextMenuButtonItem`s ([#1317](https://github.com/bdlukaa/fluent_ui/issues/1317))
 
 ## 4.15.1
