@@ -696,6 +696,7 @@ class NumberBoxState<T extends num> extends State<NumberBox<T>> {
     return CompositedTransformTarget(
       link: _layerLink,
       child: Focus(
+        skipTraversal: true,
         onKeyEvent: (node, event) {
           if (event is! KeyDownEvent && event is! KeyRepeatEvent) {
             return KeyEventResult.ignored;
@@ -886,6 +887,7 @@ class _SpinButtonState extends State<_SpinButton> {
       child: IconButton(
         key: widget.buttonKey,
         icon: widget.icon,
+        focusable: false,
         // Empty callback keeps the button in enabled visual state.
         // The actual action is triggered by the Listener's pointer events.
         onPressed: widget.onAction != null ? () {} : null,
