@@ -1,6 +1,6 @@
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_syntax_view/flutter_syntax_view.dart';
+import 'package:flutter_syntax_view/flutter_syntax_view.dart' hide SyntaxView;
 import 'package:google_fonts/google_fonts.dart';
 
 class CodeSnippetCard extends StatefulWidget {
@@ -153,7 +153,7 @@ class _CodeSnippetCardState extends State<CodeSnippetCard>
                         ),
                       ],
                     ),
-                    SyntaxView(
+                    _SyntaxView(
                       code: widget.codeSnippet.trim(),
                       syntaxTheme: getSyntaxTheme(theme),
                     ),
@@ -182,4 +182,38 @@ SyntaxTheme getSyntaxTheme(final FluentThemeData theme) {
   );
 
   return syntaxTheme;
+}
+
+class _SyntaxView extends StatefulWidget {
+  const _SyntaxView({
+    required this.code,
+    this.syntaxTheme,
+    // ignore: unused_element_parameter
+    this.fontSize = 14.0,
+  });
+
+  /// Code text
+  final String code;
+
+  /// Theme of syntax view example SyntaxTheme.dracula() (default: SyntaxTheme.dracula())
+  final SyntaxTheme? syntaxTheme;
+
+  /// Font Size with a default value of 12.0
+  final double fontSize;
+
+  @override
+  State<StatefulWidget> createState() => _SyntaxViewState();
+}
+
+class _SyntaxViewState extends State<_SyntaxView> {
+  @override
+  Widget build(BuildContext context) {
+    return SelectableText.rich(
+      TextSpan(
+        style: TextStyle(fontFamily: 'monospace', fontSize: widget.fontSize),
+        children: <TextSpan>[getSyntax(widget.syntaxTheme).format(widget.code)],
+      ),
+      contextMenuBuilder: WindowsTextSelectionToolbar.defaultContextMenuBuilder,
+    );
+  }
 }

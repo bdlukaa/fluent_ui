@@ -1,6 +1,8 @@
 import 'package:example/widgets/code_snippet_card.dart';
 import 'package:example/widgets/page.dart';
 import 'package:fluent_ui/fluent_ui.dart';
+import 'package:share_plus/share_plus.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class TextBoxPage extends StatelessWidget with PageMixin {
   TextBoxPage({super.key});
@@ -33,6 +35,7 @@ class TextBoxPage extends StatelessWidget with PageMixin {
             ],
           ),
         ),
+
         subtitle(
           content: const Text('A TextBox with a header and placeholder text'),
         ),
@@ -99,7 +102,114 @@ SizedBox(
 )''',
           child: SizedBox(height: 200, child: TextBox(maxLines: null)),
         ),
+        subtitle(
+          content: const Text('A TextBox with custom selection buttons'),
+        ),
+        const CodeSnippetCard(
+          codeSnippet: r'''TextBox(
+  controller: TextEditingController(
+    text: 'Select some text and open the menu.',
+  ),
+  maxLines: null,
+  contextMenuBuilder: (context, editableTextState) {
+    return WindowsTextSelectionToolbar(
+      buttonItems: [
+        ...editableTextState.contextMenuButtonItems,
+        ContextMenuButtonItem(
+          type: ContextMenuButtonType.searchWeb,
+          label: 'Search Web',
+          onPressed: () {
+            launchUrl(
+              Uri.parse('https://www.google.com/search?q=${editableTextState.textEditingValue.text}'),
+            );
+          },
+        ),
+        ContextMenuButtonItem(
+          type: ContextMenuButtonType.share,
+          label: 'Share',
+          onPressed: () {
+            SharePlus.instance.share(ShareParams(text: controller.text));
+          },
+        ),
       ],
+      anchors: editableTextState.contextMenuAnchors,
+    );
+  },
+)''',
+          child: SizedBox(height: 150, child: _CustomSelectionButtonsTextBox()),
+        ),
+      ],
+    );
+  }
+}
+
+class _CustomSelectionButtonsTextBox extends StatefulWidget {
+  const _CustomSelectionButtonsTextBox();
+
+  @override
+  State<_CustomSelectionButtonsTextBox> createState() =>
+      _CustomSelectionButtonsTextBoxState();
+}
+
+class _CustomSelectionButtonsTextBoxState
+    extends State<_CustomSelectionButtonsTextBox> {
+  late final TextEditingController controller = TextEditingController(
+    text:
+        'Select some text and open the menu to try Lookup, Search Web, '
+        'and Share.',
+  );
+
+  @override
+  void dispose() {
+    controller.dispose();
+    super.dispose();
+  }
+
+  Widget _buildContextMenu(
+    BuildContext context,
+    EditableTextState editableTextState,
+  ) {
+    final undoController = editableTextState.widget.undoController;
+
+    return WindowsTextSelectionToolbar(
+      buttonItems: [
+        ...editableTextState.contextMenuButtonItems,
+        if (undoController != null)
+          UndoContextMenuButtonItem(onPressed: undoController.undo),
+        ContextMenuButtonItem(
+          type: ContextMenuButtonType.searchWeb,
+          label: 'Search Web',
+          onPressed: () {
+            launchUrl(
+              Uri.parse('https://www.google.com/search?q=${controller.text}'),
+            );
+          },
+        ),
+        ContextMenuButtonItem(
+          type: ContextMenuButtonType.share,
+          label: 'Share',
+          onPressed: () {
+            SharePlus.instance.share(
+              ShareParams(
+                text: controller.text,
+                sharePositionOrigin:
+                    editableTextState.contextMenuAnchors.primaryAnchor &
+                    Size.zero,
+              ),
+            );
+          },
+        ),
+      ],
+      anchors: editableTextState.contextMenuAnchors,
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return TextBox(
+      controller: controller,
+      maxLines: null,
+      contextMenuBuilder: _buildContextMenu,
     );
   }
 }
