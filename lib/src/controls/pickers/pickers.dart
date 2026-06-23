@@ -72,8 +72,14 @@ class PickerHighlightTile extends StatelessWidget {
           horizontal: 2,
         ),
         child: ListTile(
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)),
-          tileColor: WidgetStateColor.resolveWith((_) => highlightTileColor),
+          decoration: WidgetStatePropertyAll(
+            ShapeDecoration(
+              color: highlightTileColor,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(4),
+              ),
+            ),
+          ),
         ),
       ),
     );

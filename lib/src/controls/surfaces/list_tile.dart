@@ -47,8 +47,7 @@ class ListTile extends StatelessWidget {
   const ListTile({
     super.key,
     this.tileColor,
-    this.tileGradient,
-    this.shape = kDefaultListTileShape,
+    this.decoration,
     this.leading,
     this.title,
     this.subtitle,
@@ -66,8 +65,10 @@ class ListTile extends StatelessWidget {
          'To have a subtitle, there must be a title',
        ),
        assert(
-         tileColor == null || tileGradient == null,
-         'Cannot provide both tileColor and tileGradient.',
+         tileColor == null || decoration == null,
+         'Cannot provide both tileColor and decoration.\n'
+         'The tileColor argument is just a shorthand for using a '
+         'decoration with its own color argument.',
        ),
        selected = false,
        selectionMode = ListTileSelectionMode.none,
@@ -77,8 +78,7 @@ class ListTile extends StatelessWidget {
   const ListTile.selectable({
     super.key,
     this.tileColor,
-    this.tileGradient,
-    this.shape = kDefaultListTileShape,
+    this.decoration,
     this.leading,
     this.title,
     this.subtitle,
@@ -99,25 +99,25 @@ class ListTile extends StatelessWidget {
          'To have a subtitle, there must be a title.',
        ),
        assert(
-         tileColor == null || tileGradient == null,
-         'Cannot provide both tileColor and tileGradient.',
+         tileColor == null || decoration == null,
+         'Cannot provide both tileColor and decoration.\n'
+         'The tileColor argument is just a shorthand for using a '
+         'decoration with its own color argument.',
        );
 
   /// The background color of the list tile.
   ///
-  /// If null, [ButtonThemeData.uncheckedInputColor] is used by default
+  /// If not null, [decoration] must be null.
+  ///
+  /// If null, [ButtonThemeData.uncheckedInputColor] is used by default.
   final WidgetStateColor? tileColor;
 
-  /// The gradient of the background of the list tile.
+  /// The decoration of the list tile.
   ///
-  /// If [tileColor] is not null, this must be null. If both are null, the
-  /// default [tileColor] behavior will be used.
-  final WidgetStateProperty<Gradient>? tileGradient;
-
-  /// The tile shape.
+  /// If not null, [tileColor] must be null.
   ///
-  /// [kDefaultListTileShape] is used by default
-  final ShapeBorder shape;
+  /// If null, [ShapeDecoration] with [kDefaultListTileShape] will be used.
+  final WidgetStateProperty<Decoration>? decoration;
 
   /// A widget to display before the title.
   ///
@@ -211,13 +211,6 @@ class ListTile extends StatelessWidget {
     super.debugFillProperties(properties);
     properties
       ..add(
-        DiagnosticsProperty<ShapeBorder>(
-          'shape',
-          shape,
-          defaultValue: kDefaultListTileShape,
-        ),
-      )
-      ..add(
         FlagProperty(
           'selected',
           value: selected,
@@ -288,21 +281,20 @@ class ListTile extends StatelessWidget {
       cursor: cursor,
       semanticLabel: semanticLabel,
       builder: (context, states) {
-        final Color? tileColor;
-        final Gradient? tileGradient;
-        if (this.tileColor != null) {
-          tileGradient = null;
-          tileColor = this.tileColor!.resolve(states);
-        } else if (this.tileGradient != null) {
-          tileColor = null;
-          tileGradient = this.tileGradient!.resolve(states);
+        final Decoration? decoration;
+        if (this.decoration != null) {
+          decoration = this.decoration!.resolve(states);
         } else {
-          tileGradient = null;
-          tileColor = ButtonThemeData.uncheckedInputColor(
-            theme,
-            selected ? {...states, WidgetState.hovered} : states,
-            transparentWhenNone: true,
-            transparentWhenDisabled: true,
+          decoration = ShapeDecoration(
+            shape: kDefaultListTileShape,
+            color:
+                tileColor?.resolve(states) ??
+                ButtonThemeData.uncheckedInputColor(
+                  theme,
+                  selected ? {...states, WidgetState.hovered} : states,
+                  transparentWhenNone: true,
+                  transparentWhenDisabled: true,
+                ),
           );
         }
 
@@ -348,11 +340,7 @@ class ListTile extends StatelessWidget {
             focused: states.isFocused,
             renderOutside: false,
             child: Container(
-              decoration: ShapeDecoration(
-                shape: shape,
-                color: tileColor,
-                gradient: tileGradient,
-              ),
+              decoration: decoration,
               constraints: BoxConstraints(
                 minHeight:
                     (kOneLineTileHeight +
