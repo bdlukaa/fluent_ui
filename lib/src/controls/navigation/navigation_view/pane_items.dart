@@ -484,22 +484,39 @@ class PaneItem extends NavigationPaneItem {
     final view = NavigationViewContext.of(context);
 
     final selected = view.pane?.isSelected(this) ?? false;
-    final baseStyle = title?._getProperty<TextStyle>() ?? const TextStyle();
 
     return MenuFlyoutItem(
       selected: selected,
       closeAfterClick: false,
       text: title != null
-          ? Padding(
-              padding: theme.labelPadding ?? EdgeInsetsDirectional.zero,
-              child: DefaultTextStyle(
-                style: baseStyle,
-                overflow: TextOverflow.fade,
-                softWrap: false,
-                textAlign: TextAlign.start,
-                maxLines: 1,
-                child: title!,
-              ),
+          ? Builder(
+              builder: (context) {
+                final isTop = view.displayMode == PaneDisplayMode.top;
+                final baseStyle =
+                    title?._getProperty<TextStyle>() ?? const TextStyle();
+                final states = HoverButton.of(context).states;
+                final textStyle = () {
+                  final style = !isTop
+                      ? (selected
+                            ? theme.selectedTextStyle?.resolve(states)
+                            : theme.unselectedTextStyle?.resolve(states))
+                      : (selected
+                            ? theme.selectedTopTextStyle?.resolve(states)
+                            : theme.unselectedTopTextStyle?.resolve(states));
+                  return style?.merge(baseStyle) ?? baseStyle;
+                }();
+                return Padding(
+                  padding: theme.labelPadding ?? EdgeInsetsDirectional.zero,
+                  child: DefaultTextStyle(
+                    style: textStyle,
+                    overflow: TextOverflow.fade,
+                    softWrap: false,
+                    textAlign: TextAlign.start,
+                    maxLines: 1,
+                    child: title!,
+                  ),
+                );
+              },
             )
           : const SizedBox.shrink(),
       onPressed: () => onItemPressed?.call(this),

@@ -184,6 +184,9 @@ class _BaseButtonState extends State<BaseButton> {
         final resolvedForegroundColor = resolve<Color?>(
           (style) => style?.foregroundColor,
         );
+        final resolvedTextColor =
+            resolve<TextStyle?>((style) => style?.textStyle)?.color ??
+            resolvedForegroundColor;
         final resolvedShadowColor = resolve<Color?>(
           (style) => style?.shadowColor,
         );
@@ -230,7 +233,7 @@ class _BaseButtonState extends State<BaseButton> {
                 curve: theme.animationCurve,
                 style: DefaultTextStyle.of(context).style.merge(
                   (resolvedTextStyle ?? const TextStyle()).copyWith(
-                    color: resolvedForegroundColor,
+                    color: resolvedTextColor,
                   ),
                 ),
                 textAlign: TextAlign.center,

@@ -606,7 +606,7 @@ class NavigationViewState extends State<NavigationView> {
               builder: (context) {
                 return _NavigationViewPaneScrollConfiguration(
                   controller: paneScrollController,
-                  hasTitleBar: widget.titleBar != null,
+                  hasTitleBar: hasTitleBar,
                   child: pane.customPane!.build(
                     context,
                     NavigationPaneWidgetData(
@@ -661,7 +661,7 @@ class NavigationViewState extends State<NavigationView> {
                     ?widget.titleBar,
                     _NavigationViewPaneScrollConfiguration(
                       controller: paneScrollController,
-                      hasTitleBar: widget.titleBar != null,
+                      hasTitleBar: hasTitleBar,
                       child: _TopNavigationPane(pane: pane),
                     ),
                     Expanded(child: content),
@@ -683,7 +683,7 @@ class NavigationViewState extends State<NavigationView> {
                         children: [
                           _NavigationViewPaneScrollConfiguration(
                             controller: paneScrollController,
-                            hasTitleBar: widget.titleBar != null,
+                            hasTitleBar: hasTitleBar,
                             child: _OpenNavigationPane(
                               theme: theme,
                               pane: pane,
@@ -824,7 +824,7 @@ class NavigationViewState extends State<NavigationView> {
         children: [
           Padding(
             padding: EdgeInsetsDirectional.only(
-              top: TitleBar.calculateHeight(widget.titleBar),
+              top: TitleBar.calculateHeight(context, widget.titleBar),
               start: pane.size?.compactWidth ?? kCompactNavigationPaneWidth,
             ),
             child: content,
@@ -843,7 +843,7 @@ class NavigationViewState extends State<NavigationView> {
             ),
           _NavigationViewPaneScrollConfiguration(
             controller: paneScrollController,
-            hasTitleBar: widget.titleBar != null,
+            hasTitleBar: hasTitleBar,
             child: () {
               if (_compactOverlayOpen) {
                 return ClipRect(
@@ -947,7 +947,7 @@ class NavigationViewState extends State<NavigationView> {
           },
           child: _NavigationViewPaneScrollConfiguration(
             controller: paneScrollController,
-            hasTitleBar: widget.titleBar != null,
+            hasTitleBar: hasTitleBar,
             child: Container(
               decoration: BoxDecoration(
                 border: Border.all(
