@@ -7,6 +7,7 @@
 - fix(mobile): `TitleBar` now accounts for view padding ([05c122b](https://github.com/bdlukaa/fluent_ui/commit/05c122bccb8bbc513c07e8ef238ac17d0f17a6cb))
 - fix: `FluentTextSelectionToolbar` no longer ignores custom `ContextMenuButtonItem`s ([#1317](https://github.com/bdlukaa/fluent_ui/issues/1317))
 - fix: `NumberBox` remove ghost focus and do not focus inline buttons anymore ([#1332](https://github.com/bdlukaa/fluent_ui/pull/1332))
+- feat: `ListTile` now supports `tileGradient` argument ([#1328](https://github.com/bdlukaa/fluent_ui/pull/1328))
 
 ## 4.15.1
 
