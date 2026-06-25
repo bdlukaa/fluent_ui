@@ -206,8 +206,6 @@ class MenuBarState extends State<MenuBar> {
     return showItem(widget.items[index], closeIfOpen);
   }
 
-  bool _hoveringClosed = false;
-
   @override
   Widget build(BuildContext context) {
     assert(debugCheckHasFluentTheme(context));
