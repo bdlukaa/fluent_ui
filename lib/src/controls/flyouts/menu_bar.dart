@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/scheduler.dart';
@@ -164,15 +166,12 @@ class MenuBarState extends State<MenuBar> {
   Future<void> closeFlyout() async {
     if (_controller.isOpen) {
       _controller.close<void>();
-      // Waits for the reverse transition duration.
-      //
-      // Even though the duration is zero, it is necessary to wait for the
-      // transition to finish before showing the next flyout. Otherwise, the
-      // flyout will fail to show due to [_locked]. Use SchedulerBinding for
-      // frame-aligned updates instead of arbitrary delay.
+      final completer = Completer<void>();
       SchedulerBinding.instance.addPostFrameCallback((_) {
         if (mounted) setState(() {});
+        completer.complete();
       });
+      await completer.future;
     }
   }
 
@@ -264,18 +263,11 @@ class MenuBarState extends State<MenuBar> {
                             },
                             onPointerEnter: _controller.isOpen
                                 ? (_) {
-                                    if (_currentOpenItem != item &&
-                                        !_hoveringClosed) {
-                                      closeFlyout();
-                                      _hoveringClosed = true;
+                                    if (_currentOpenItem != item) {
+                                      _showFlyout(context, item);
                                     }
                                   }
-                                : (_) {
-                                    if (_hoveringClosed) {
-                                      _showFlyout(context, item);
-                                      _hoveringClosed = false;
-                                    }
-                                  },
+                                : null,
                             onFocusChange: (focused) {
                               if (focused && _controller.isOpen) {
                                 _showFlyout(context, item);
