@@ -207,6 +207,9 @@ class MenuBarState extends State<MenuBar> {
     return showItem(widget.items[index], closeIfOpen);
   }
 
+
+  bool _hoveringClosed = false;
+
   @override
   Widget build(BuildContext context) {
     assert(debugCheckHasFluentTheme(context));
@@ -262,11 +265,17 @@ class MenuBarState extends State<MenuBar> {
                             },
                             onPointerEnter: _controller.isOpen
                                 ? (_) {
-                                    if (_currentOpenItem != item) {
-                                      _showFlyout(context, item);
+                                    if (_currentOpenItem != item && !_hoveringClosed) {
+                                      closeFlyout();
+                                      _hoveringClosed = true;
                                     }
                                   }
-                                : null,
+                                : (_) {
+                                    if (_hoveringClosed) {
+                                      _showFlyout(context, item);
+                                      _hoveringClosed = false;
+                                    }
+                                },
                             onFocusChange: (focused) {
                               if (focused && _controller.isOpen) {
                                 _showFlyout(context, item);
