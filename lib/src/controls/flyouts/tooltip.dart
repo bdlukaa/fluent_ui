@@ -669,19 +669,17 @@ class _TooltipContent extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return IgnorePointer(
-      child: DefaultTextStyle.merge(
-        style: FluentTheme.of(context).typography.body!,
-        child: Container(
-          decoration: decoration,
-          padding: padding,
-          margin: margin,
-          constraints: BoxConstraints(maxWidth: maxWidth ?? double.infinity),
-          child: Center(
-            widthFactor: 1,
-            heightFactor: 1,
-            child: Text.rich(richMessage, style: textStyle),
-          ),
+    return DefaultTextStyle.merge(
+      style: FluentTheme.of(context).typography.body!,
+      child: Container(
+        decoration: decoration,
+        padding: padding,
+        margin: margin,
+        constraints: BoxConstraints(maxWidth: maxWidth ?? double.infinity),
+        child: Center(
+          widthFactor: 1,
+          heightFactor: 1,
+          child: Text.rich(richMessage, style: textStyle),
         ),
       ),
     );
