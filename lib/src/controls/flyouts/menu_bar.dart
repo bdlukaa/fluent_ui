@@ -112,8 +112,9 @@ class MenuBarState extends State<MenuBar> {
   static const barMargin = EdgeInsetsDirectional.all(4);
 
   MenuBarItem? _currentOpenItem;
-  final Map<MenuBarItem, MenuController> _itemControllers = {};
-  final Map<MenuBarItem, GlobalKey<_MenuOverlayEntryState>> _overlayKeys = {};
+  final _itemControllers = <MenuBarItem, MenuController>{};
+  final _overlayKeys = <MenuBarItem, GlobalKey<_MenuOverlayEntryState>>{};
+  final _rootFlyoutKeys = <MenuBarItem, GlobalKey<State<StatefulWidget>>>{};
 
   /// The currently open item in the menu bar.
   ///
@@ -121,10 +122,18 @@ class MenuBarState extends State<MenuBar> {
   MenuBarItem? get currentOpenItem => _currentOpenItem;
 
   @override
+  void didUpdateWidget(MenuBar oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    _itemControllers.removeWhere((item, _) => !widget.items.contains(item));
+    _overlayKeys.removeWhere((item, _) => !widget.items.contains(item));
+  }
+
+  @override
   void dispose() {
     _menuController.close();
     _itemControllers.clear();
     _overlayKeys.clear();
+    _rootFlyoutKeys.clear();
     super.dispose();
   }
 
@@ -136,6 +145,13 @@ class MenuBarState extends State<MenuBar> {
     return _overlayKeys.putIfAbsent(
       item,
       GlobalKey<_MenuOverlayEntryState>.new,
+    );
+  }
+
+  GlobalKey<State<StatefulWidget>> _rootFlyoutKeyFor(MenuBarItem item) {
+    return _rootFlyoutKeys.putIfAbsent(
+      item,
+      () => GlobalKey<State<StatefulWidget>>(debugLabel: 'MenuBar root flyout'),
     );
   }
 
@@ -180,6 +196,7 @@ class MenuBarState extends State<MenuBar> {
   Future<void> closeFlyout() {
     if (_currentOpenItem case final item?) {
       _controllerFor(item).close();
+      _menuController.close();
       setState(() => _currentOpenItem = null);
     }
     return Future<void>.value();
@@ -240,19 +257,29 @@ class MenuBarState extends State<MenuBar> {
 
     return RawMenuAnchorGroup(
       controller: _menuController,
-      child: Container(
-        constraints: BoxConstraints(
-          minHeight: (40 + theme.visualDensity.baseSizeAdjustment.dy).clamp(
-            0.0,
-            double.infinity,
+      child: Actions(
+        actions: {
+          DismissIntent: CallbackAction<DismissIntent>(
+            onInvoke: (intent) {
+              primaryFocus?.unfocus();
+              return null;
+            },
           ),
+        },
+        child: Container(
+          constraints: BoxConstraints(
+            minHeight: (40 + theme.visualDensity.baseSizeAdjustment.dy).clamp(
+              0.0,
+              double.infinity,
+            ),
+          ),
+          padding: EdgeInsetsDirectional.only(
+            top: barMargin.top,
+            bottom: barMargin.bottom,
+          ),
+          alignment: AlignmentDirectional.centerStart,
+          child: _buildOverflowContainer(context),
         ),
-        padding: EdgeInsetsDirectional.only(
-          top: barMargin.top,
-          bottom: barMargin.bottom,
-        ),
-        alignment: AlignmentDirectional.centerStart,
-        child: _buildOverflowContainer(context),
       ),
     );
   }
@@ -307,6 +334,7 @@ class MenuBarState extends State<MenuBar> {
                   overlaySize: info.overlaySize,
                   child: _MenuBarOverlay(
                     tapRegionGroupId: info.tapRegionGroupId,
+                    rootFlyout: _rootFlyoutKeyFor(item),
                     child: MenuFlyout(
                       items: _adaptItems(item.items, controller),
                     ),
@@ -356,16 +384,21 @@ class MenuBarState extends State<MenuBar> {
 /// The [TapRegion] ensures the menu panel participates in the anchor's
 /// tap-region group, preventing taps on the menu from closing it.
 class _MenuBarOverlay extends StatelessWidget {
-  const _MenuBarOverlay({required this.tapRegionGroupId, required this.child});
+  const _MenuBarOverlay({
+    required this.tapRegionGroupId,
+    required this.rootFlyout,
+    required this.child,
+  });
 
   final Object tapRegionGroupId;
+  final GlobalKey<State<StatefulWidget>> rootFlyout;
   final Widget child;
 
   @override
   Widget build(BuildContext context) {
     final theme = FluentTheme.of(context);
     return Flyout(
-      rootFlyout: GlobalKey(debugLabel: 'MenuBar root flyout'),
+      rootFlyout: rootFlyout,
       additionalOffset: 0,
       margin: 8,
       transitionDuration: theme.fastAnimationDuration,

@@ -1,4 +1,5 @@
 import 'package:fluent_ui/fluent_ui.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'app_test.dart';
 
@@ -325,5 +326,59 @@ void main() {
     key.currentState!.closeFlyout();
     await tester.pumpAndSettle();
     expect(key.currentState!.currentOpenItem, isNull);
+  });
+
+  testWidgets('Arrow keys navigate between menu bar items', (tester) async {
+    await tester.pumpWidget(wrapApp(child: MenuBar(items: items)));
+
+    // Tab to focus the first item
+    await tester.sendKeyEvent(LogicalKeyboardKey.tab);
+    await tester.pump();
+
+    // First item should have focus
+    final fileButton = find.text('File');
+    expect(fileButton, findsOneWidget);
+
+    // Press Enter to open the menu
+    await tester.sendKeyEvent(LogicalKeyboardKey.enter);
+    await tester.pumpAndSettle();
+    expect(find.text('New'), findsOneWidget);
+  });
+
+  testWidgets('Escape unfocuses menu bar when no menu is open', (tester) async {
+    await tester.pumpWidget(wrapApp(child: MenuBar(items: items)));
+
+    // Focus the first item via Tab
+    await tester.sendKeyEvent(LogicalKeyboardKey.tab);
+    await tester.pump();
+
+    // Press Escape — should remove focus without crashing
+    await tester.sendKeyEvent(LogicalKeyboardKey.escape);
+    await tester.pump();
+
+    // Menu bar should still be functional after Escape
+    await tester.tap(find.text('File'));
+    await tester.pumpAndSettle();
+    expect(find.text('New'), findsOneWidget);
+  });
+
+  testWidgets('Right arrow moves focus to next item, opening it with Enter', (
+    tester,
+  ) async {
+    await tester.pumpWidget(wrapApp(child: MenuBar(items: items)));
+
+    // Focus first item
+    await tester.sendKeyEvent(LogicalKeyboardKey.tab);
+    await tester.pump();
+
+    // Right arrow to move to next item
+    await tester.sendKeyEvent(LogicalKeyboardKey.arrowRight);
+    await tester.pump();
+
+    // Press Enter to open second item's menu
+    await tester.sendKeyEvent(LogicalKeyboardKey.enter);
+    await tester.pumpAndSettle();
+    expect(find.text('Undo'), findsOneWidget);
+    expect(find.text('New'), findsNothing);
   });
 }
