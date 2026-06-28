@@ -296,38 +296,26 @@ class MenuBarState extends State<MenuBar> {
         hideOverlay();
       },
       overlayBuilder: (context, info) {
-        // If there is more space above the anchor than below, open upward
-        // so the menu isn't clipped by the bottom of the screen.
-        final spaceAbove = info.anchorRect.top;
-        final spaceBelow = info.overlaySize.height - info.anchorRect.bottom;
-        final openUpward = spaceAbove > spaceBelow;
-
-        return _MenuOverlayEntry(
-          key: overlayKey,
-          duration: FluentTheme.of(context).fastAnimationDuration,
-          openUpward: openUpward,
-          child: MenuInfoProvider(
-            builder: (context, rootSize, menus, keys) {
-              return Stack(
-                children: [
-                  Positioned(
-                    left: info.anchorRect.left,
-                    top: openUpward ? null : info.anchorRect.bottom,
-                    bottom: openUpward
-                        ? info.overlaySize.height - info.anchorRect.top
-                        : null,
-                    child: _MenuBarOverlay(
-                      tapRegionGroupId: info.tapRegionGroupId,
-                      child: MenuFlyout(
-                        items: _adaptItems(item.items, controller),
-                      ),
+        return MenuInfoProvider(
+          builder: (context, rootSize, menus, keys) {
+            return Stack(
+              children: [
+                _MenuOverlayEntry(
+                  key: overlayKey,
+                  duration: FluentTheme.of(context).fastAnimationDuration,
+                  anchorRect: info.anchorRect,
+                  overlaySize: info.overlaySize,
+                  child: _MenuBarOverlay(
+                    tapRegionGroupId: info.tapRegionGroupId,
+                    child: MenuFlyout(
+                      items: _adaptItems(item.items, controller),
                     ),
                   ),
-                  ...menus,
-                ],
-              );
-            },
-          ),
+                ),
+                ...menus,
+              ],
+            );
+          },
         );
       },
       builder: (context, menuController, child) {
@@ -412,18 +400,22 @@ Widget _bottomSlideTransition(
 
 /// Manages the open/close animation for a menu overlay entry.
 ///
+/// Positions the menu relative to the anchor using a [CustomSingleChildLayout]
+/// so the actual measured size determines whether it opens upward or downward.
 /// Coordinates with [RawMenuAnchor.onOpenRequested] and
 /// [RawMenuAnchor.onCloseRequested] to animate the menu entrance and exit.
 class _MenuOverlayEntry extends StatefulWidget {
   const _MenuOverlayEntry({
-    super.key,
     required this.duration,
-    required this.openUpward,
+    required this.anchorRect,
+    required this.overlaySize,
     required this.child,
+    super.key,
   });
 
   final Duration duration;
-  final bool openUpward;
+  final Rect anchorRect;
+  final Size overlaySize;
   final Widget child;
 
   @override
@@ -433,6 +425,7 @@ class _MenuOverlayEntry extends StatefulWidget {
 class _MenuOverlayEntryState extends State<_MenuOverlayEntry>
     with SingleTickerProviderStateMixin {
   late final AnimationController _controller;
+  bool _openUpward = false;
 
   @override
   void initState() {
@@ -446,17 +439,31 @@ class _MenuOverlayEntryState extends State<_MenuOverlayEntry>
     super.dispose();
   }
 
-  /// Starts the opening animation.
   void open() {
-    _controller.forward();
+    _controller
+      ..reset()
+      ..forward();
+  }
+
+  void _onDirectionComputed(bool openUpward) {
+    if (_openUpward != openUpward) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (mounted) setState(() => _openUpward = openUpward);
+      });
+    }
   }
 
   @override
   Widget build(BuildContext context) {
-    final slideBegin = widget.openUpward
-        ? const Offset(0, 0.03)
-        : const Offset(0, -0.03);
-    return ClipRect(
+    final slideBegin = _openUpward
+        ? const Offset(0, 0.1)
+        : const Offset(0, -0.15);
+    return CustomSingleChildLayout(
+      delegate: _MenuPositionDelegate(
+        anchorRect: widget.anchorRect,
+        overlaySize: widget.overlaySize,
+        onDirectionComputed: _onDirectionComputed,
+      ),
       child: FadeTransition(
         opacity: CurvedAnimation(parent: _controller, curve: Curves.easeIn),
         child: SlideTransition(
@@ -467,6 +474,50 @@ class _MenuOverlayEntryState extends State<_MenuOverlayEntry>
         ),
       ),
     );
+  }
+}
+
+/// Positions the menu relative to the anchor based on the actual measured
+/// child size.
+class _MenuPositionDelegate extends SingleChildLayoutDelegate {
+  _MenuPositionDelegate({
+    required this.anchorRect,
+    required this.overlaySize,
+    this.onDirectionComputed,
+  });
+
+  final Rect anchorRect;
+  final Size overlaySize;
+  final void Function(bool openUpward)? onDirectionComputed;
+
+  @override
+  BoxConstraints getConstraintsForChild(BoxConstraints constraints) {
+    return BoxConstraints.loose(overlaySize);
+  }
+
+  @override
+  Offset getPositionForChild(Size size, Size childSize) {
+    final spaceAbove = anchorRect.top;
+    final spaceBelow = overlaySize.height - anchorRect.bottom;
+
+    final fitsBelow = childSize.height <= spaceBelow;
+    final fitsAbove = childSize.height <= spaceAbove;
+
+    // Prefer opening downward if it fits; otherwise upward if it fits;
+    // if neither fits, pick the side with more room.
+    final openUpward = !fitsBelow && (fitsAbove || spaceAbove > spaceBelow);
+    onDirectionComputed?.call(openUpward);
+
+    if (openUpward) {
+      return Offset(anchorRect.left, anchorRect.top - childSize.height);
+    }
+    return Offset(anchorRect.left, anchorRect.bottom);
+  }
+
+  @override
+  bool shouldRelayout(_MenuPositionDelegate oldDelegate) {
+    return anchorRect != oldDelegate.anchorRect ||
+        overlaySize != oldDelegate.overlaySize;
   }
 }
 
