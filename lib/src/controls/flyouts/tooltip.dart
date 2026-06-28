@@ -97,8 +97,7 @@ class Tooltip extends StatefulWidget {
   /// Only one of [message] and [richMessage] may be non-null.
   final InlineSpan? richMessage;
 
-  /// The widget the tooltip will be displayed, either above or below,
-  /// when the mouse is hovering or whenever it gets long pressed.
+  /// {@macro flutter.widgets.ProxyWidget.child}
   final Widget? child;
 
   /// The style of the tooltip. If non-null, it's mescled with
@@ -127,38 +126,24 @@ class Tooltip extends StatefulWidget {
   /// "preferLeft"
   final bool displayHorizontally;
 
-  /// The [TooltipTriggerMode] that will show the tooltip.
+  /// {@macro flutter.widgets.RawTooltip.triggerMode}
   ///
-  /// If this property is null, then [TooltipTriggerMode.longPress] is used
+  /// If null, defaults to [TooltipTriggerMode.longPress].
   final TooltipTriggerMode? triggerMode;
 
-  /// Whether the tooltip should provide acoustic and/or haptic feedback.
+  /// {@macro flutter.widgets.RawTooltip.enableFeedback}
   ///
-  /// For example, on Android a tap will produce a clicking sound and a
-  /// long-press will produce a short vibration, when feedback is enabled.
-  ///
-  /// When null, the default value is true.
-  ///
-  /// See also:
-  ///
-  ///  * [Feedback], for providing platform-specific feedback to certain actions.
+  /// When null, defaults to true.
   final bool? enableFeedback;
 
-  /// Whether the tooltip can be dismissed by tap.
-  ///
-  /// Defaults to true.
+  /// {@macro flutter.widgets.RawTooltip.enableTapToDismiss}
   final bool enableTapToDismiss;
 
   /// {@macro flutter.widgets.RawTooltip.onTriggered}
   final TooltipTriggeredCallback? onTriggered;
 
-  /// Dismiss all of the tooltips that are currently shown on the screen.
-  ///
-  /// This method returns true if it successfully dismisses the tooltips. It
-  /// returns false if there is no tooltip shown on the screen.
-  static bool dismissAllToolTips() {
-    return RawTooltip.dismissAllToolTips();
-  }
+  /// {@macro flutter.widgets.RawTooltip.dismissAllToolTips}
+  static bool dismissAllToolTips() => RawTooltip.dismissAllToolTips();
 
   @override
   State<Tooltip> createState() => TooltipState();
@@ -263,10 +248,7 @@ class TooltipState extends State<Tooltip> with SingleTickerProviderStateMixin {
   String get _tooltipMessage =>
       widget.message ?? widget.richMessage!.toPlainText();
 
-  /// Shows the tooltip if it is not already visible.
-  ///
-  /// Returns `false` when the tooltip shouldn't be shown or when the tooltip
-  /// was already visible.
+  /// {@macro flutter.widgets.RawTooltipState.ensureTooltipVisible}
   bool ensureTooltipVisible() {
     if (!_visible) return false;
     return _tooltipKey.currentState?.ensureTooltipVisible() ?? false;
