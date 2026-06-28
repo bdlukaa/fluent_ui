@@ -2,8 +2,6 @@ import 'dart:async';
 
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter/foundation.dart';
-import 'package:flutter/scheduler.dart';
-import 'package:flutter/services.dart';
 
 /// Represents a top-level menu in a [MenuBar] control.
 @immutable
@@ -35,7 +33,8 @@ class MenuBarItem with Diagnosticable {
   }
 }
 
-/// Use a Menu Bar to show a set of multiple top-level menus in a horizontal row.
+/// Use a Menu Bar to show a set of multiple top-level menus in a horizontal
+/// row.
 ///
 /// ![MenuBar example](https://learn.microsoft.com/en-us/windows/apps/design/controls/images/menu-bar-submenu.png)
 ///
@@ -71,7 +70,7 @@ class MenuBar extends StatefulWidget with Diagnosticable {
 /// Provides methods to programmatically control the menu bar, such as
 /// [showItem], [showItemAt], and [closeFlyout].
 class MenuBarState extends State<MenuBar> {
-  final _controller = FlyoutController();
+  final MenuController _menuController = MenuController();
 
   /// The default padding for menu bar items.
   static const barPadding = EdgeInsetsDirectional.symmetric(
@@ -82,98 +81,26 @@ class MenuBarState extends State<MenuBar> {
   /// The default margin between menu bar items.
   static const barMargin = EdgeInsetsDirectional.all(4);
 
-  final Map<MenuBarItem, GlobalKey> _keys = {};
-  GlobalKey? _keyOf(MenuBarItem item) {
-    if (_controller.isOpen) {
-      final menuBar = _controller.attachState.context
-          .findAncestorStateOfType<MenuBarState>();
-      if (menuBar == null) return null;
-      return menuBar._keys[item] ??= GlobalKey();
-    } else {
-      return _keys[item] ??= GlobalKey();
-    }
-  }
-
-  @override
-  void dispose() {
-    _controller.dispose();
-    super.dispose();
-  }
-
-  bool _locked = false;
   MenuBarItem? _currentOpenItem;
+  final Map<MenuBarItem, MenuController> _itemControllers = {};
 
   /// The currently open item in the menu bar.
   ///
   /// If null, no item is open.
   MenuBarItem? get currentOpenItem => _currentOpenItem;
-  Future<void> _showFlyout(
-    BuildContext context, [
-    MenuBarItem? item,
-    bool closeIfOpen = true,
-  ]) async {
-    if (_locked) return;
-    _locked = true;
-    final textDirection = Directionality.of(context);
-    item ??= widget.items.first;
 
-    // Checks the position of the item itself. Context is the MenuBarItem button.
-    // Position needs to be checked before the flyout is closed, otherwise an
-    // error will be thrown.
-    final renderBox = context.findRenderObject()! as RenderBox;
-    final position = renderBox.localToGlobal(
-      Offset.zero,
-      ancestor: this.context.findRenderObject(),
-    );
-    if (_controller.isOpen) {
-      if (_currentOpenItem == item) {
-        if (closeIfOpen) closeFlyout();
-        _currentOpenItem = null;
-        _locked = false;
-        if (mounted) setState(() {});
-        return;
-      }
-      await closeFlyout();
-    }
-
-    _locked = false;
-    _currentOpenItem = item;
-    final resolvedBarMargin = barMargin.resolve(textDirection);
-    final future = _controller.showFlyout<void>(
-      buildTarget: true,
-      autoModeConfiguration: FlyoutAutoConfiguration(
-        preferredMode: FlyoutPlacementMode.bottomLeft.resolve(textDirection),
-      ),
-      additionalOffset: 0,
-      horizontalOffset: position.dx + resolvedBarMargin.left,
-      barrierColor: Colors.transparent,
-      builder: (context) {
-        return TapRegion(
-          groupId: MenuBar,
-          child: MenuFlyout(items: item!.items),
-        );
-      },
-    );
-    setState(() {});
-    await future;
-    _currentOpenItem = null;
-    if (mounted) setState(() {});
+  @override
+  void dispose() {
+    _menuController.close();
+    _itemControllers.clear();
+    super.dispose();
   }
 
-  /// Close the currently open flyout.
-  ///
-  /// If no flyout is open, this method does nothing.
-  Future<void> closeFlyout() async {
-    if (_controller.isOpen) {
-      _controller.close<void>();
-      final completer = Completer<void>();
-      SchedulerBinding.instance.addPostFrameCallback((_) {
-        if (mounted) setState(() {});
-        completer.complete();
-      });
-      await completer.future;
-    }
+  MenuController _controllerFor(MenuBarItem item) {
+    return _itemControllers.putIfAbsent(item, MenuController.new);
   }
+
+  // --- Public programmatic API ---
 
   /// Show the flyout of the given item.
   ///
@@ -182,15 +109,20 @@ class MenuBarState extends State<MenuBar> {
   /// [closeIfOpen] determines whether the flyout should be closed if it is
   /// already open. Defaults to `true`.
   Future<void> showItem(MenuBarItem item, [bool closeIfOpen = true]) {
-    final key = _keyOf(item);
-    if (key == null) {
+    if (!widget.items.contains(item)) {
       throw StateError('The item is not in the menu bar.');
     }
-    final context = key.currentContext;
-    if (context == null) {
-      throw StateError('The item is not in the widget tree.');
+    final controller = _controllerFor(item);
+    if (controller.isOpen && closeIfOpen) {
+      controller.close();
+      setState(() => _currentOpenItem = null);
+      return Future<void>.value();
     }
-    return _showFlyout(context, item);
+    if (!controller.isOpen) {
+      controller.open();
+    }
+    setState(() => _currentOpenItem = item);
+    return Future<void>.value();
   }
 
   /// Show the flyout of the item at the given index.
@@ -200,11 +132,65 @@ class MenuBarState extends State<MenuBar> {
   /// [closeIfOpen] determines whether the flyout should be closed if it is
   /// already open. Defaults to `true`.
   Future<void> showItemAt(int index, [bool closeIfOpen = true]) {
-    if (index < 0 || index >= widget.items.length) {
-      throw RangeError.range(index, 0, widget.items.length - 1);
-    }
     return showItem(widget.items[index], closeIfOpen);
   }
+
+  /// Close the currently open flyout.
+  ///
+  /// If no flyout is open, this method does nothing.
+  Future<void> closeFlyout() {
+    if (_currentOpenItem case final item?) {
+      _controllerFor(item).close();
+      setState(() => _currentOpenItem = null);
+    }
+    return Future<void>.value();
+  }
+
+  // --- Internal helpers ---
+
+  void _onItemPressed(MenuBarItem item, MenuController controller) {
+    if (_currentOpenItem == item) {
+      controller.close();
+      setState(() => _currentOpenItem = null);
+    } else {
+      // Close any previously open sibling.
+      if (_currentOpenItem case final prev?) {
+        _controllerFor(prev).close();
+      }
+      controller.open();
+      setState(() => _currentOpenItem = item);
+    }
+  }
+
+  void _onItemHovered(MenuBarItem item, MenuController controller) {
+    if (!_menuController.isOpen) return;
+    if (_currentOpenItem != item) {
+      if (_currentOpenItem case final prev?) {
+        _controllerFor(prev).close();
+      }
+      controller.open();
+      setState(() => _currentOpenItem = item);
+    }
+  }
+
+  /// Adapts [MenuFlyoutItemBase] items so that [MenuFlyoutItem.closeAfterClick]
+  /// closes the correct [MenuController] instead of calling
+  /// [Navigator.maybePop] (which is a no-op inside an [OverlayPortal]).
+  List<MenuFlyoutItemBase> _adaptItems(
+    List<MenuFlyoutItemBase> items,
+    MenuController controller,
+  ) {
+    return items.map((item) {
+      if (item is MenuFlyoutItem &&
+          item.closeAfterClick &&
+          item.onPressed != null) {
+        return _CloseableMenuItem(original: item, onClose: controller.close);
+      }
+      return item;
+    }).toList();
+  }
+
+  // --- Build ---
 
   @override
   Widget build(BuildContext context) {
@@ -213,9 +199,8 @@ class MenuBarState extends State<MenuBar> {
 
     final theme = FluentTheme.of(context);
 
-    return TapRegion(
-      groupId: MenuBar,
-      onTapOutside: (_) => closeFlyout(),
+    return RawMenuAnchorGroup(
+      controller: _menuController,
       child: Container(
         constraints: BoxConstraints(
           minHeight: (40 + theme.visualDensity.baseSizeAdjustment.dy).clamp(
@@ -227,78 +212,136 @@ class MenuBarState extends State<MenuBar> {
           top: barMargin.top,
           bottom: barMargin.bottom,
         ),
-        // align to the center so that the flyout is directly connected to the buttons
-        // not the bar.
         alignment: AlignmentDirectional.centerStart,
-        child: FlyoutTarget(
-          controller: _controller,
-          child: Builder(
-            builder: (context) {
-              // Do not use the [Flyout] object because it is only available for the
-              // flyout content. [MenuInfoProvider] is available for the entire Flyout
-              // popup. This is only available after [FlyoutTarget].
-              final flyout = MenuInfoProvider.maybeOf(context);
-
-              /// The flyout menu bar must be invisible because it has transparent
-              /// components, which can lead to visual inconsistencies.
-              return Visibility.maintain(
-                visible: flyout == null,
-                child: Row(
-                  children: [
-                    for (final item in widget.items)
-                      Builder(
-                        key: _controller.isOpen ? null : _keyOf(item),
-                        builder: (context) {
-                          final isSelected = _currentOpenItem == item;
-                          return HoverButton(
-                            margin: EdgeInsetsDirectional.only(
-                              start: barMargin.start,
-                              end: barMargin.end,
-                            ),
-                            onPressed: () {
-                              _locked = false;
-                              _showFlyout(context, item);
-                            },
-                            onPointerEnter: _controller.isOpen
-                                ? (_) {
-                                    if (_currentOpenItem != item) {
-                                      _showFlyout(context, item);
-                                    }
-                                  }
-                                : null,
-                            onFocusChange: (focused) {
-                              if (focused && _controller.isOpen) {
-                                _showFlyout(context, item);
-                              }
-                            },
-                            builder: (context, states) {
-                              if (isSelected) {
-                                states = {...states, WidgetState.hovered};
-                              }
-                              return FocusBorder(
-                                focused: states.isFocused,
-                                child: Container(
-                                  padding: barPadding,
-                                  decoration: BoxDecoration(
-                                    color: HyperlinkButton.backgroundColor(
-                                      theme,
-                                    ).resolve(states),
-                                    borderRadius: BorderRadius.circular(4),
-                                  ),
-                                  child: Text(item.title),
-                                ),
-                              );
-                            },
-                          );
-                        },
-                      ),
-                  ],
-                ),
-              );
-            },
-          ),
+        child: Row(
+          children: [
+            for (final item in widget.items) _buildMenuItem(context, item),
+          ],
         ),
       ),
     );
+  }
+
+  void _handleMenuClosed(MenuBarItem item) {
+    if (mounted && _currentOpenItem == item) {
+      setState(() => _currentOpenItem = null);
+    }
+  }
+
+  Widget _buildMenuItem(BuildContext context, MenuBarItem item) {
+    final controller = _controllerFor(item);
+    final isSelected = _currentOpenItem == item;
+
+    return RawMenuAnchor(
+      controller: controller,
+      onClose: () => _handleMenuClosed(item),
+      overlayBuilder: (context, info) {
+        return MenuInfoProvider(
+          builder: (context, rootSize, menus, keys) {
+            return Stack(
+              children: [
+                Positioned(
+                  left: info.anchorRect.left,
+                  top: info.anchorRect.bottom,
+                  child: _MenuBarOverlay(
+                    tapRegionGroupId: info.tapRegionGroupId,
+                    child: MenuFlyout(
+                      items: _adaptItems(item.items, controller),
+                    ),
+                  ),
+                ),
+                ...menus,
+              ],
+            );
+          },
+        );
+      },
+      builder: (context, menuController, child) {
+        return HoverButton(
+          margin: EdgeInsetsDirectional.only(
+            start: barMargin.start,
+            end: barMargin.end,
+          ),
+          onPressed: () => _onItemPressed(item, menuController),
+          onPointerEnter: (_) => _onItemHovered(item, menuController),
+          builder: (context, states) {
+            if (isSelected) {
+              states = {...states, WidgetState.hovered};
+            }
+            return FocusBorder(
+              focused: states.isFocused,
+              child: Container(
+                padding: barPadding,
+                decoration: BoxDecoration(
+                  color: HyperlinkButton.backgroundColor(
+                    FluentTheme.of(context),
+                  ).resolve(states),
+                  borderRadius: BorderRadius.circular(4),
+                ),
+                child: Text(item.title),
+              ),
+            );
+          },
+        );
+      },
+    );
+  }
+}
+
+/// Wraps the overlay content in a [Flyout] to provide the context that
+/// [MenuFlyoutSubItem] needs for sub-menu transitions and positioning.
+///
+/// The [TapRegion] ensures the menu panel participates in the anchor's
+/// tap-region group, preventing taps on the menu from closing it.
+class _MenuBarOverlay extends StatelessWidget {
+  const _MenuBarOverlay({required this.tapRegionGroupId, required this.child});
+
+  final Object tapRegionGroupId;
+  final Widget child;
+
+  @override
+  Widget build(BuildContext context) {
+    return Flyout(
+      rootFlyout: GlobalKey(debugLabel: 'MenuBar root flyout'),
+      additionalOffset: 0,
+      margin: 8,
+      transitionDuration: Duration.zero,
+      reverseTransitionDuration: Duration.zero,
+      root: Navigator.of(context),
+      menuKey: null,
+      transitionBuilder: (context, animation, mode, flyout) => flyout,
+      placementMode: FlyoutPlacementMode.bottomCenter,
+      builder: (context) {
+        return TapRegion(groupId: tapRegionGroupId, child: child);
+      },
+    );
+  }
+}
+
+/// A [MenuFlyoutItemBase] that wraps a [MenuFlyoutItem] and overrides its
+/// [closeAfterClick] behavior to use [MenuController.close] instead of
+/// [Navigator.maybePop].
+class _CloseableMenuItem extends MenuFlyoutItemBase {
+  _CloseableMenuItem({required this.original, required this.onClose})
+    : super(key: original.key);
+
+  final MenuFlyoutItem original;
+  final VoidCallback onClose;
+
+  @override
+  Widget build(BuildContext context) {
+    return MenuFlyoutItem(
+      text: original.text,
+      leading: original.leading,
+      trailing: original.trailing,
+      onPressed: () {
+        onClose();
+        original.onPressed?.call();
+      },
+      onLongPress: original.onLongPress,
+      focusNode: original.focusNode,
+      selected: original.selected,
+      closeAfterClick: false,
+    ).build(context);
   }
 }

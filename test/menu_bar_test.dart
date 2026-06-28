@@ -55,4 +55,33 @@ void main() {
     await tester.pumpAndSettle();
     expect(find.text('New'), findsNothing);
   });
+
+  testWidgets('MenuBar supports MenuFlyoutSubItem', (tester) async {
+    final subItems = [
+      MenuBarItem(
+        title: 'View',
+        items: [
+          MenuFlyoutSubItem(
+            text: const Text('Zoom'),
+            items: (context) => [
+              MenuFlyoutItem(text: const Text('Zoom In'), onPressed: () {}),
+              MenuFlyoutItem(text: const Text('Zoom Out'), onPressed: () {}),
+            ],
+          ),
+        ],
+      ),
+    ];
+    await tester.pumpWidget(wrapApp(child: MenuBar(items: subItems)));
+
+    // Open the top-level menu
+    await tester.tap(find.text('View'));
+    await tester.pumpAndSettle();
+    expect(find.text('Zoom'), findsOneWidget);
+
+    // Tap the sub-item to open its sub-menu
+    await tester.tap(find.text('Zoom'));
+    await tester.pumpAndSettle();
+    expect(find.text('Zoom In'), findsOneWidget);
+    expect(find.text('Zoom Out'), findsOneWidget);
+  });
 }
