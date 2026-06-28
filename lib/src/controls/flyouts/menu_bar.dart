@@ -255,16 +255,26 @@ class MenuBarState extends State<MenuBar> {
         hideOverlay();
       },
       overlayBuilder: (context, info) {
+        // If there is more space above the anchor than below, open upward
+        // so the menu isn't clipped by the bottom of the screen.
+        final spaceAbove = info.anchorRect.top;
+        final spaceBelow = info.overlaySize.height - info.anchorRect.bottom;
+        final openUpward = spaceAbove > spaceBelow;
+
         return _MenuOverlayEntry(
           key: overlayKey,
           duration: FluentTheme.of(context).fastAnimationDuration,
+          openUpward: openUpward,
           child: MenuInfoProvider(
             builder: (context, rootSize, menus, keys) {
               return Stack(
                 children: [
                   Positioned(
                     left: info.anchorRect.left,
-                    top: info.anchorRect.bottom,
+                    top: openUpward ? null : info.anchorRect.bottom,
+                    bottom: openUpward
+                        ? info.overlaySize.height - info.anchorRect.top
+                        : null,
                     child: _MenuBarOverlay(
                       tapRegionGroupId: info.tapRegionGroupId,
                       child: MenuFlyout(
@@ -348,12 +358,14 @@ Widget _bottomSlideTransition(
   FlyoutPlacementMode mode,
   Widget flyout,
 ) {
-  return SlideTransition(
-    position: Tween<Offset>(
-      begin: const Offset(0, -0.15),
-      end: Offset.zero,
-    ).animate(CurvedAnimation(parent: animation, curve: Curves.easeOut)),
-    child: flyout,
+  return ClipRect(
+    child: SlideTransition(
+      position: Tween<Offset>(
+        begin: const Offset(0, -0.03),
+        end: Offset.zero,
+      ).animate(CurvedAnimation(parent: animation, curve: Curves.easeOut)),
+      child: flyout,
+    ),
   );
 }
 
@@ -363,12 +375,14 @@ Widget _bottomSlideTransition(
 /// [RawMenuAnchor.onCloseRequested] to animate the menu entrance and exit.
 class _MenuOverlayEntry extends StatefulWidget {
   const _MenuOverlayEntry({
-    required this.duration,
-    required this.child,
     super.key,
+    required this.duration,
+    required this.openUpward,
+    required this.child,
   });
 
   final Duration duration;
+  final bool openUpward;
   final Widget child;
 
   @override
@@ -398,17 +412,16 @@ class _MenuOverlayEntryState extends State<_MenuOverlayEntry>
 
   @override
   Widget build(BuildContext context) {
+    final slideBegin = widget.openUpward
+        ? const Offset(0, 0.03)
+        : const Offset(0, -0.03);
     return ClipRect(
       child: FadeTransition(
         opacity: CurvedAnimation(parent: _controller, curve: Curves.easeIn),
         child: SlideTransition(
-          position:
-              Tween<Offset>(
-                begin: const Offset(0, -0.15),
-                end: Offset.zero,
-              ).animate(
-                CurvedAnimation(parent: _controller, curve: Curves.easeOut),
-              ),
+          position: Tween<Offset>(begin: slideBegin, end: Offset.zero).animate(
+            CurvedAnimation(parent: _controller, curve: Curves.easeOut),
+          ),
           child: widget.child,
         ),
       ),
