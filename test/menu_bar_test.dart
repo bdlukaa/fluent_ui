@@ -198,4 +198,132 @@ void main() {
     expect(find.text('New'), findsOneWidget);
     expect(find.text('Open'), findsOneWidget);
   });
+
+  testWidgets('closeAfterClick closes the menu', (tester) async {
+    var pressed = false;
+    final clickItems = [
+      MenuBarItem(
+        title: 'Actions',
+        items: [
+          MenuFlyoutItem(
+            text: const Text('Do Something'),
+            onPressed: () => pressed = true,
+            closeAfterClick: true,
+          ),
+        ],
+      ),
+    ];
+    await tester.pumpWidget(wrapApp(child: MenuBar(items: clickItems)));
+
+    await tester.tap(find.text('Actions'));
+    await tester.pumpAndSettle();
+    expect(find.text('Do Something'), findsOneWidget);
+
+    await tester.tap(find.text('Do Something'));
+    await tester.pumpAndSettle();
+    expect(pressed, isTrue);
+    // Menu should be closed after clicking the item
+    expect(find.text('Do Something'), findsNothing);
+  });
+
+  testWidgets('MenuBar supports ToggleMenuFlyoutItem', (tester) async {
+    var isToggled = false;
+    final toggleItems = [
+      MenuBarItem(
+        title: 'Options',
+        items: [
+          ToggleMenuFlyoutItem(
+            text: const Text('Toggle Me'),
+            value: isToggled,
+            onChanged: (v) => isToggled = v,
+          ),
+        ],
+      ),
+    ];
+    await tester.pumpWidget(wrapApp(child: MenuBar(items: toggleItems)));
+
+    await tester.tap(find.text('Options'));
+    await tester.pumpAndSettle();
+    expect(find.text('Toggle Me'), findsOneWidget);
+
+    await tester.tap(find.text('Toggle Me'));
+    await tester.pumpAndSettle();
+    expect(isToggled, isTrue);
+  });
+
+  testWidgets('MenuBar supports RadioMenuFlyoutItem', (tester) async {
+    var selected = 'a';
+    final radioItems = [
+      MenuBarItem(
+        title: 'View',
+        items: [
+          RadioMenuFlyoutItem<String>(
+            text: const Text('Option A'),
+            value: 'a',
+            groupValue: selected,
+            onChanged: (v) => selected = v,
+          ),
+          RadioMenuFlyoutItem<String>(
+            text: const Text('Option B'),
+            value: 'b',
+            groupValue: selected,
+            onChanged: (v) => selected = v,
+          ),
+        ],
+      ),
+    ];
+    await tester.pumpWidget(wrapApp(child: MenuBar(items: radioItems)));
+
+    await tester.tap(find.text('View'));
+    await tester.pumpAndSettle();
+    expect(find.text('Option A'), findsOneWidget);
+    expect(find.text('Option B'), findsOneWidget);
+
+    await tester.tap(find.text('Option B'));
+    await tester.pumpAndSettle();
+    expect(selected, 'b');
+  });
+
+  testWidgets('showItem can open and closeFlyout can close', (tester) async {
+    final key = GlobalKey<MenuBarState>();
+    await tester.pumpWidget(
+      wrapApp(
+        child: MenuBar(key: key, items: items),
+      ),
+    );
+
+    // Programmatically open the first item
+    key.currentState!.showItem(items[0]);
+    await tester.pumpAndSettle();
+    expect(find.text('New'), findsOneWidget);
+
+    // Programmatically close
+    key.currentState!.closeFlyout();
+    await tester.pumpAndSettle();
+    expect(find.text('New'), findsNothing);
+
+    // showItemAt should also work
+    key.currentState!.showItemAt(1);
+    await tester.pumpAndSettle();
+    expect(find.text('Undo'), findsOneWidget);
+  });
+
+  testWidgets('currentOpenItem reflects open state', (tester) async {
+    final key = GlobalKey<MenuBarState>();
+    await tester.pumpWidget(
+      wrapApp(
+        child: MenuBar(key: key, items: items),
+      ),
+    );
+
+    expect(key.currentState!.currentOpenItem, isNull);
+
+    key.currentState!.showItem(items[0]);
+    await tester.pumpAndSettle();
+    expect(key.currentState!.currentOpenItem, items[0]);
+
+    key.currentState!.closeFlyout();
+    await tester.pumpAndSettle();
+    expect(key.currentState!.currentOpenItem, isNull);
+  });
 }
