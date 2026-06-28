@@ -33,7 +33,7 @@ See [this](https://github.com/flutter/flutter/issues/46481) for more info on the
 
 See also:
 
-- [Material UI for Flutter](hhttps://docs.flutter.dev/ui/widgets/material)
+- [Material UI for Flutter](https://docs.flutter.dev/ui/widgets/material)
 - [Cupertino UI for Flutter](https://docs.flutter.dev/ui/widgets/cupertino)
 - [MacOS UI for Flutter](https://github.com/GroovinChip/macos_ui)
 
