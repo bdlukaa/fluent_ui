@@ -222,10 +222,13 @@ class MenuBarState extends State<MenuBar> {
           bottom: barMargin.bottom,
         ),
         alignment: AlignmentDirectional.centerStart,
-        child: Row(
-          children: [
-            for (final item in widget.items) _buildMenuItem(context, item),
-          ],
+        child: SingleChildScrollView(
+          scrollDirection: Axis.horizontal,
+          child: Row(
+            children: [
+              for (final item in widget.items) _buildMenuItem(context, item),
+            ],
+          ),
         ),
       ),
     );

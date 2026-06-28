@@ -120,4 +120,26 @@ void main() {
     await tester.pumpAndSettle();
     expect(find.text('Undo'), findsOneWidget);
   });
+
+  testWidgets('MenuBar handles many items without crashing', (tester) async {
+    final manyItems = List.generate(
+      15,
+      (i) => MenuBarItem(
+        title: 'Menu $i',
+        items: [MenuFlyoutItem(text: Text('Item $i'), onPressed: () {})],
+      ),
+    );
+
+    await tester.pumpWidget(wrapApp(child: MenuBar(items: manyItems)));
+
+    // All menu bar headers should render (even if some overflow)
+    for (int i = 0; i < 15; i++) {
+      expect(find.text('Menu $i'), findsOneWidget);
+    }
+
+    // Opening a menu should still work
+    await tester.tap(find.text('Menu 0'));
+    await tester.pumpAndSettle();
+    expect(find.text('Item 0'), findsOneWidget);
+  });
 }
