@@ -121,7 +121,9 @@ void main() {
     expect(find.text('Undo'), findsOneWidget);
   });
 
-  testWidgets('MenuBar handles many items without crashing', (tester) async {
+  testWidgets('MenuBar wraps items by default when overflowing', (
+    tester,
+  ) async {
     final manyItems = List.generate(
       15,
       (i) => MenuBarItem(
@@ -132,7 +134,7 @@ void main() {
 
     await tester.pumpWidget(wrapApp(child: MenuBar(items: manyItems)));
 
-    // All menu bar headers should render (even if some overflow)
+    // All items should render (wrapping to multiple lines)
     for (int i = 0; i < 15; i++) {
       expect(find.text('Menu $i'), findsOneWidget);
     }
@@ -141,5 +143,59 @@ void main() {
     await tester.tap(find.text('Menu 0'));
     await tester.pumpAndSettle();
     expect(find.text('Item 0'), findsOneWidget);
+  });
+
+  testWidgets('MenuBar scrolls when overflowBehavior is scroll', (
+    tester,
+  ) async {
+    final manyItems = List.generate(
+      15,
+      (i) => MenuBarItem(
+        title: 'Menu $i',
+        items: [MenuFlyoutItem(text: Text('Item $i'), onPressed: () {})],
+      ),
+    );
+
+    await tester.pumpWidget(
+      wrapApp(
+        child: MenuBar(
+          items: manyItems,
+          overflowBehavior: MenuBarOverflowBehavior.scroll,
+        ),
+      ),
+    );
+
+    // All items should render (scrollable)
+    for (int i = 0; i < 15; i++) {
+      expect(find.text('Menu $i'), findsOneWidget);
+    }
+
+    // Should find a scrollable
+    expect(find.byType(SingleChildScrollView), findsOneWidget);
+  });
+
+  testWidgets('MenuBar opens upward when near bottom edge', (tester) async {
+    // Position the menu bar at the bottom of a 600px-tall screen
+    await tester.pumpWidget(
+      wrapApp(
+        child: SizedBox(
+          height: 600,
+          child: Align(
+            alignment: Alignment.bottomCenter,
+            child: MenuBar(items: items),
+          ),
+        ),
+      ),
+    );
+
+    // Menu items should render
+    expect(find.text('File'), findsOneWidget);
+    expect(find.text('Edit'), findsOneWidget);
+
+    // Opening should not crash (menu opens upward because there's no space below)
+    await tester.tap(find.text('File'));
+    await tester.pumpAndSettle();
+    expect(find.text('New'), findsOneWidget);
+    expect(find.text('Open'), findsOneWidget);
   });
 }

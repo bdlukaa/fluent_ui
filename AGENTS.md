@@ -89,6 +89,7 @@ Provide concise, technical responses. Omit filler. Output complete, working code
 * **Unit Tests:** Use `package:test` for unit tests.
 * **Widget Tests:** Use `package:flutter_test` for widget tests.
 - **Testing:** Write widget tests for any new control. Ensure interactions like hover and focus are simulated and verified. Mock dependencies as needed.
+- **Example App:** For any control update, update the example app to demonstrate the new behavior.
 
 # Tooling & CI/CD Context
 - Assume GitHub Actions (`flutter_analysis.yml`, `build.yml`) will strictly check formatting, linting, and tests.

@@ -33,6 +33,20 @@ class MenuBarItem with Diagnosticable {
   }
 }
 
+/// Defines how a [MenuBar] handles items that exceed the available width.
+///
+/// Windows menu bars do not scroll; when items don't fit they wrap to the
+/// next row. This matches the default [wrap] behaviour.
+enum MenuBarOverflowBehavior {
+  /// Menu items that exceed the available width wrap to the next line.
+  ///
+  /// This is the default and matches the Windows menu bar behaviour.
+  wrap,
+
+  /// The menu bar scrolls horizontally when items exceed the available width.
+  scroll,
+}
+
 /// Use a Menu Bar to show a set of multiple top-level menus in a horizontal
 /// row.
 ///
@@ -51,9 +65,18 @@ class MenuBar extends StatefulWidget with Diagnosticable {
   /// Must not be empty.
   final List<MenuBarItem> items;
 
+  /// How the menu bar handles items that exceed the available width.
+  ///
+  /// Defaults to [MenuBarOverflowBehavior.wrap], which wraps items to the
+  /// next line.
+  final MenuBarOverflowBehavior overflowBehavior;
+
   /// Creates a windows-styled menu bar.
-  MenuBar({required this.items, super.key})
-    : assert(items.isNotEmpty, 'items must not be empty');
+  MenuBar({
+    required this.items,
+    this.overflowBehavior = MenuBarOverflowBehavior.wrap,
+    super.key,
+  }) : assert(items.isNotEmpty, 'items must not be empty');
 
   @override
   State<MenuBar> createState() => MenuBarState();
@@ -62,6 +85,13 @@ class MenuBar extends StatefulWidget with Diagnosticable {
   void debugFillProperties(DiagnosticPropertiesBuilder properties) {
     super.debugFillProperties(properties);
     properties.add(IterableProperty<MenuBarItem>('items', items));
+    properties.add(
+      EnumProperty<MenuBarOverflowBehavior>(
+        'overflowBehavior',
+        overflowBehavior,
+        defaultValue: MenuBarOverflowBehavior.wrap,
+      ),
+    );
   }
 }
 
@@ -222,16 +252,24 @@ class MenuBarState extends State<MenuBar> {
           bottom: barMargin.bottom,
         ),
         alignment: AlignmentDirectional.centerStart,
-        child: SingleChildScrollView(
-          scrollDirection: Axis.horizontal,
-          child: Row(
-            children: [
-              for (final item in widget.items) _buildMenuItem(context, item),
-            ],
-          ),
-        ),
+        child: _buildOverflowContainer(context),
       ),
     );
+  }
+
+  Widget _buildOverflowContainer(BuildContext context) {
+    final items = widget.items
+        .map((item) => _buildMenuItem(context, item))
+        .toList();
+    switch (widget.overflowBehavior) {
+      case MenuBarOverflowBehavior.scroll:
+        return SingleChildScrollView(
+          scrollDirection: Axis.horizontal,
+          child: Row(children: items),
+        );
+      case MenuBarOverflowBehavior.wrap:
+        return Wrap(children: items);
+    }
   }
 
   void _handleMenuClosed(MenuBarItem item) {
