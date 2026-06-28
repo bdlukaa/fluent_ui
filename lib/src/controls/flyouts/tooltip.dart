@@ -1,10 +1,9 @@
-import 'dart:async';
 import 'dart:ui' show lerpDouble;
 
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter/foundation.dart';
-import 'package:flutter/gestures.dart';
 import 'package:flutter/rendering.dart';
+import 'package:flutter/services.dart';
 
 /// A tooltip is a popup that contains additional information about another
 /// control or object.
@@ -81,6 +80,8 @@ class Tooltip extends StatefulWidget {
     this.displayHorizontally = false,
     this.triggerMode,
     this.enableFeedback,
+    this.enableTapToDismiss = true,
+    this.onTriggered,
   }) : assert(
          (message == null) != (richMessage == null),
          'Either `message` or `richMessage` must be specified',
@@ -143,45 +144,20 @@ class Tooltip extends StatefulWidget {
   ///  * [Feedback], for providing platform-specific feedback to certain actions.
   final bool? enableFeedback;
 
-  static final List<TooltipState> _openedTooltips = <TooltipState>[];
+  /// Whether the tooltip can be dismissed by tap.
+  ///
+  /// Defaults to true.
+  final bool enableTapToDismiss;
 
-  // Causes any current tooltips to be concealed. Only called for mouse hover enter
-  // detections. Won't conceal the supplied tooltip.
-  static void _concealOtherTooltips(TooltipState current) {
-    if (_openedTooltips.isNotEmpty) {
-      // Avoid concurrent modification.
-      final openedTooltips = _openedTooltips.toList();
-      for (final state in openedTooltips) {
-        if (state == current) {
-          continue;
-        }
-        state._concealTooltip();
-      }
-    }
-  }
-
-  // Causes the most recently concealed tooltip to be revealed. Only called for mouse
-  // hover exit detections.
-  static void _revealLastTooltip() {
-    if (_openedTooltips.isNotEmpty) {
-      _openedTooltips.last._revealTooltip();
-    }
-  }
+  /// {@macro flutter.widgets.RawTooltip.onTriggered}
+  final TooltipTriggeredCallback? onTriggered;
 
   /// Dismiss all of the tooltips that are currently shown on the screen.
   ///
   /// This method returns true if it successfully dismisses the tooltips. It
   /// returns false if there is no tooltip shown on the screen.
   static bool dismissAllToolTips() {
-    if (_openedTooltips.isNotEmpty) {
-      // Avoid concurrent modification.
-      final openedTooltips = _openedTooltips.toList();
-      for (final state in openedTooltips) {
-        state._dismissTooltip(immediately: true);
-      }
-      return true;
-    }
-    return false;
+    return RawTooltip.dismissAllToolTips();
   }
 
   @override
@@ -232,44 +208,47 @@ class Tooltip extends StatefulWidget {
           ifFalse: 'feedback disabled',
           defaultValue: true,
         ),
+      )
+      ..add(
+        DiagnosticsProperty<TooltipTriggeredCallback>(
+          'onTriggered',
+          onTriggered,
+          defaultValue: null,
+        ),
       );
   }
 }
 
-/// The state for a [Tooltip] widget.
+/// Contains the state for a [Tooltip].
 ///
-/// This class manages the tooltip's visibility, animations, and positioning.
-/// It handles both mouse hover and touch interactions.
+/// This class can be used to programmatically show the Tooltip, see the
+/// [ensureTooltipVisible] method.
 class TooltipState extends State<Tooltip> with SingleTickerProviderStateMixin {
   static const double _defaultVerticalOffset = 24;
   static const bool _defaultPreferBelow = true;
   static const EdgeInsetsGeometry _defaultMargin = EdgeInsetsDirectional.zero;
-  static const Duration _fadeInDuration = Duration(milliseconds: 150);
-  static const Duration _fadeOutDuration = Duration(milliseconds: 75);
   static const Duration _defaultShowDuration = Duration(milliseconds: 1500);
-  static const Duration _defaultHoverShowDuration = Duration.zero;
   static const Duration _defaultWaitDuration = Duration.zero;
   static const TooltipTriggerMode _defaultTriggerMode =
       TooltipTriggerMode.longPress;
   static const bool _defaultEnableFeedback = true;
 
+  static const AnimationStyle _animationStyle = AnimationStyle(
+    duration: Duration(milliseconds: 200),
+    curve: Curves.easeOut,
+    reverseDuration: Duration(milliseconds: 75),
+  );
+
+  final GlobalKey<RawTooltipState> _tooltipKey = GlobalKey<RawTooltipState>();
+
   // From InheritedWidgets - cached in didChangeDependencies
   late bool _visible;
   late TooltipThemeData _tooltipTheme;
 
-  late AnimationController _controller;
-  OverlayEntry? _entry;
-  Timer? _dismissTimer;
-  Timer? _showTimer;
-  bool _pressActivated = false;
-
   Offset? _mousePosition;
-  late bool _isConcealed;
-  late bool _forceRemoval;
 
   Duration get _showDuration =>
       _tooltipTheme.showDuration ?? _defaultShowDuration;
-  Duration get _hoverShowDuration => _defaultHoverShowDuration;
   Duration get _waitDuration =>
       _tooltipTheme.waitDuration ?? _defaultWaitDuration;
   TooltipTriggerMode get _triggerMode =>
@@ -284,21 +263,13 @@ class TooltipState extends State<Tooltip> with SingleTickerProviderStateMixin {
   String get _tooltipMessage =>
       widget.message ?? widget.richMessage!.toPlainText();
 
-  @override
-  void initState() {
-    super.initState();
-    _isConcealed = false;
-    _forceRemoval = false;
-    _controller = AnimationController(
-      duration: _fadeInDuration,
-      reverseDuration: _fadeOutDuration,
-      vsync: this,
-    )..addStatusListener(_handleStatusChanged);
-    // Listen to global pointer events so that we can hide a tooltip immediately
-    // if some other control is clicked on.
-    GestureBinding.instance.pointerRouter.addGlobalRoute(
-      _handleGlobalPointerEvent,
-    );
+  /// Shows the tooltip if it is not already visible.
+  ///
+  /// Returns `false` when the tooltip shouldn't be shown or when the tooltip
+  /// was already visible.
+  bool ensureTooltipVisible() {
+    if (!_visible) return false;
+    return _tooltipKey.currentState?.ensureTooltipVisible() ?? false;
   }
 
   @override
@@ -316,242 +287,47 @@ class TooltipState extends State<Tooltip> with SingleTickerProviderStateMixin {
     }
   }
 
-  void _handleStatusChanged(AnimationStatus status) {
-    // If this tip is concealed, don't remove it, even if it is dismissed, so that we can
-    // reveal it later, unless it has explicitly been hidden with _dismissTooltip.
-    if (status == AnimationStatus.dismissed &&
-        (_forceRemoval || !_isConcealed)) {
-      _removeEntry();
-    }
-  }
-
-  Future<void> _dismissTooltip({bool immediately = false}) async {
-    _showTimer?.cancel();
-    _showTimer = null;
-    if (immediately) {
-      _removeEntry();
-      return;
-    }
-    // So it will be removed when it's done reversing, regardless of whether it is
-    // still concealed or not.
-    _forceRemoval = true;
-    if (_pressActivated) {
-      _dismissTimer ??= Timer(_showDuration, _controller.reverse);
-    } else {
-      _dismissTimer ??= Timer(_hoverShowDuration, _controller.reverse);
-    }
-    _pressActivated = false;
-  }
-
-  void _showTooltip({bool immediately = false}) {
-    _dismissTimer?.cancel();
-    _dismissTimer = null;
-    if (immediately) {
-      ensureTooltipVisible();
-      return;
-    }
-    _showTimer ??= Timer(_waitDuration, ensureTooltipVisible);
-  }
-
-  void _concealTooltip() {
-    if (_isConcealed || _forceRemoval) {
-      // Already concealed, or it's being removed.
-      return;
-    }
-    _isConcealed = true;
-    _dismissTimer?.cancel();
-    _dismissTimer = null;
-    _showTimer?.cancel();
-    _showTimer = null;
-    if (_entry != null) {
-      _entry!.remove();
-    }
-    _controller.reverse();
-  }
-
-  void _revealTooltip() {
-    if (!_isConcealed) {
-      // Already uncovered.
-      return;
-    }
-    _isConcealed = false;
-    _dismissTimer?.cancel();
-    _dismissTimer = null;
-    _showTimer?.cancel();
-    _showTimer = null;
-    if (!_entry!.mounted) {
-      Overlay.of(context, debugRequiredFor: widget).insert(_entry!);
-    }
-    SemanticsService.tooltip(_tooltipMessage);
-    _controller.forward(from: 0);
-  }
-
-  /// Shows the tooltip if it is not already visible.
-  ///
-  /// Returns `false` when the tooltip shouldn't be shown or when the tooltip
-  /// was already visible.
-  bool ensureTooltipVisible() {
-    if (!_visible) return false;
-    _showTimer?.cancel();
-    _showTimer = null;
-    _forceRemoval = false;
-    if (_isConcealed) {
-      if (_mouseIsConnected) {
-        Tooltip._concealOtherTooltips(this);
-      }
-      _revealTooltip();
-      return true;
-    }
-    if (_entry != null) {
-      // Stop trying to hide, if we were.
-      _dismissTimer?.cancel();
-      _dismissTimer = null;
-      _controller.forward();
-      return false; // Already visible.
-    }
-    _createNewEntry();
-    _controller.forward(from: 0);
-    return true;
-  }
-
-  static final Set<TooltipState> _mouseIn = <TooltipState>{};
-
-  void _handleMouseEnter() {
-    _showTooltip();
-  }
-
-  void _handleMouseExit({bool immediately = false}) {
-    _mousePosition = null;
-    // If the tip is currently covered, we can just remove it without waiting.
-    _dismissTooltip(immediately: _isConcealed || immediately);
-  }
-
-  void _createNewEntry() {
-    final overlayState = Overlay.of(
-      context,
-      rootOverlay: true,
-      debugRequiredFor: widget,
-    );
-
-    final box = context.findRenderObject()! as RenderBox;
-    Offset target;
-    if (_mouseIsConnected &&
-        widget.useMousePosition &&
-        _mousePosition != null) {
-      target = _mousePosition!;
-    } else {
-      target = box.localToGlobal(
-        box.size.center(Offset.zero),
-        ancestor: overlayState.context.findRenderObject(),
-      );
-    }
-
-    // Compute default decoration based on current theme
-    final theme = FluentTheme.of(context);
-    final defaultTextStyle = theme.typography.body!;
-    final defaultDecoration = BoxDecoration(
-      color: theme.menuColor,
-      borderRadius: const BorderRadius.all(Radius.circular(8)),
-      border: Border.all(color: theme.resources.surfaceStrokeColorFlyout),
-    );
-
-    // We create this widget outside of the overlay entry's builder to prevent
-    // updated values from happening to leak into the overlay when the overlay
-    // rebuilds.
-    final Widget overlay = Directionality(
-      textDirection: Directionality.of(context),
-      child: _TooltipOverlay(
-        richMessage: widget.richMessage ?? TextSpan(text: widget.message),
-        padding: _tooltipTheme.padding ?? EdgeInsetsDirectional.zero,
-        margin: _tooltipTheme.margin ?? _defaultMargin,
-        decoration: _tooltipTheme.decoration ?? defaultDecoration,
-        textStyle: _tooltipTheme.textStyle ?? defaultTextStyle,
-        animation: CurvedAnimation(
-          parent: _controller,
-          curve: Curves.fastOutSlowIn,
-        ),
-        target: target,
-        verticalOffset: _tooltipTheme.verticalOffset ?? _defaultVerticalOffset,
-        preferBelow: _tooltipTheme.preferBelow ?? _defaultPreferBelow,
-        displayHorizontally: widget.displayHorizontally,
-        maxWidth: _tooltipTheme.maxWidth,
-      ),
-    );
-    _entry = OverlayEntry(builder: (_) => overlay);
-    _isConcealed = false;
-    overlayState.insert(_entry!);
-    SemanticsService.tooltip(_tooltipMessage);
-    if (_mouseIsConnected) {
-      // Hovered tooltips shouldn't show more than one at once. For example, a chip with
-      // a delete icon shouldn't show both the delete icon tooltip and the chip tooltip
-      // at the same time.
-      Tooltip._concealOtherTooltips(this);
-    }
-    assert(!Tooltip._openedTooltips.contains(this));
-    Tooltip._openedTooltips.add(this);
-  }
-
-  void _removeEntry() {
-    Tooltip._openedTooltips.remove(this);
-    _mouseIn.remove(this);
-    _dismissTimer?.cancel();
-    _dismissTimer = null;
-    _showTimer?.cancel();
-    _showTimer = null;
-    if (!_isConcealed) {
-      _entry?.remove();
-    }
-    _isConcealed = false;
-    _entry = null;
-    if (_mouseIsConnected) {
-      Tooltip._revealLastTooltip();
-    }
-  }
-
-  void _handleGlobalPointerEvent(PointerEvent event) {
-    if (_entry == null) {
-      return;
-    }
-    if (event is PointerUpEvent || event is PointerCancelEvent) {
-      _handleMouseExit();
-    } else if (event is PointerDownEvent) {
-      _handleMouseExit(immediately: true);
-    }
-  }
-
-  @override
-  void deactivate() {
-    if (_entry != null) {
-      _dismissTooltip(immediately: true);
-    }
-    _showTimer?.cancel();
-    super.deactivate();
-  }
-
-  @override
-  void dispose() {
-    _removeEntry();
-    GestureBinding.instance.pointerRouter.removeGlobalRoute(
-      _handleGlobalPointerEvent,
-    );
-    _controller.dispose();
-    super.dispose();
-  }
-
-  void _handlePress() {
-    _pressActivated = true;
-    final tooltipCreated = ensureTooltipVisible();
-    if (tooltipCreated && _enableFeedback) {
-      if (_triggerMode == TooltipTriggerMode.longPress) {
-        Feedback.forLongPress(context);
-      } else {
-        Feedback.forTap(context);
-      }
-    }
-  }
-
   void _cacheTooltipTheme(BuildContext context) {
     _tooltipTheme = TooltipTheme.of(context).merge(widget.style);
+  }
+
+  void _handleMouseHover(PointerHoverEvent event) {
+    _mousePosition = event.position;
+  }
+
+  void _handleMouseExit(PointerExitEvent event) {
+    _mousePosition = null;
+  }
+
+  Offset _computePosition(TooltipPositionContext context) {
+    final effectiveVerticalOffset =
+        _tooltipTheme.verticalOffset ?? _defaultVerticalOffset;
+    final effectivePreferBelow =
+        _tooltipTheme.preferBelow ?? _defaultPreferBelow;
+
+    // When useMousePosition is true and a mouse is connected, use the
+    // current mouse position instead of the widget's center.
+    final effectiveTarget =
+        (_mouseIsConnected && widget.useMousePosition && _mousePosition != null)
+        ? _mousePosition!
+        : context.target;
+
+    if (widget.displayHorizontally) {
+      return horizontalPositionDependentBox(
+        size: context.overlaySize,
+        childSize: context.tooltipSize,
+        target: effectiveTarget,
+        horizontalOffset: effectiveVerticalOffset,
+        preferLeft: effectivePreferBelow,
+      );
+    }
+    return positionDependentBox(
+      size: context.overlaySize,
+      childSize: context.tooltipSize,
+      target: effectiveTarget,
+      verticalOffset: effectiveVerticalOffset,
+      preferBelow: effectivePreferBelow,
+    );
   }
 
   @override
@@ -565,33 +341,60 @@ class TooltipState extends State<Tooltip> with SingleTickerProviderStateMixin {
     assert(debugCheckHasFluentTheme(context));
     assert(debugCheckHasDirectionality(context));
 
+    final theme = FluentTheme.of(context);
+    final defaultTextStyle = theme.typography.body!;
+    final defaultDecoration = BoxDecoration(
+      color: theme.menuColor,
+      borderRadius: const BorderRadius.all(Radius.circular(8)),
+      border: Border.all(color: theme.resources.surfaceStrokeColorFlyout),
+    );
+
     final excludeFromSemantics = widget.excludeFromSemantics;
-    Widget result = Semantics(
+    Widget child = Semantics(
       label: excludeFromSemantics ? null : _tooltipMessage,
       child: widget.child,
     );
 
     // Only check for gestures if tooltip should be visible.
     if (_visible) {
-      result = MouseRegion(
-        onEnter: (_) => _handleMouseEnter(),
-        onHover: (event) {
-          _mousePosition = event.position;
+      // Track mouse position for useMousePosition feature.
+      child = MouseRegion(
+        onHover: _handleMouseHover,
+        onExit: _handleMouseExit,
+        child: child,
+      );
+
+      child = RawTooltip(
+        key: _tooltipKey,
+        semanticsTooltip: excludeFromSemantics ? null : _tooltipMessage,
+        tooltipBuilder: (context, animation) {
+          return FadeTransition(
+            opacity: animation,
+            child: _TooltipContent(
+              richMessage: widget.richMessage ?? TextSpan(text: widget.message),
+              padding: _tooltipTheme.padding ?? EdgeInsetsDirectional.zero,
+              margin: _tooltipTheme.margin ?? _defaultMargin,
+              decoration: _tooltipTheme.decoration ?? defaultDecoration,
+              textStyle: _tooltipTheme.textStyle ?? defaultTextStyle,
+              maxWidth: _tooltipTheme.maxWidth,
+            ),
+          );
         },
-        onExit: (_) => _handleMouseExit(),
-        child: GestureDetector(
-          behavior: HitTestBehavior.opaque,
-          onLongPress: (_triggerMode == TooltipTriggerMode.longPress)
-              ? _handlePress
-              : null,
-          onTap: (_triggerMode == TooltipTriggerMode.tap) ? _handlePress : null,
-          excludeFromSemantics: true,
-          child: result,
-        ),
+        hoverDelay: _waitDuration,
+        touchDelay: _showDuration,
+        dismissDelay: Duration.zero,
+        triggerMode: _triggerMode,
+        enableFeedback: _enableFeedback,
+        enableTapToDismiss: widget.enableTapToDismiss,
+        onTriggered: widget.onTriggered,
+        animationStyle: _animationStyle,
+        positionDelegate: _computePosition,
+        ignorePointer: true,
+        child: child,
       );
     }
 
-    return result;
+    return child;
   }
 }
 
@@ -864,81 +667,14 @@ class TooltipThemeData with Diagnosticable {
   }
 }
 
-/// A delegate for computing the layout of a tooltip to be displayed above or
-/// bellow a target specified in the global coordinate system.
-class _TooltipPositionDelegate extends SingleChildLayoutDelegate {
-  /// Creates a delegate for computing the layout of a tooltip.
-  ///
-  /// The arguments must not be null.
-  const _TooltipPositionDelegate({
-    required this.target,
-    required this.verticalOffset,
-    required this.preferBelow,
-    required this.horizontal,
-  });
-
-  /// The offset of the target the tooltip is positioned near in the global
-  /// coordinate system.
-  final Offset target;
-
-  /// The amount of vertical distance between the target and the displayed
-  /// tooltip.
-  final double verticalOffset;
-
-  /// Whether the tooltip is displayed below its widget by default.
-  ///
-  /// If there is insufficient space to display the tooltip in the preferred
-  /// direction, the tooltip will be displayed in the opposite direction.
-  final bool preferBelow;
-
-  /// Whether the tooltip is in horizontal mode
-  final bool horizontal;
-
-  @override
-  BoxConstraints getConstraintsForChild(BoxConstraints constraints) =>
-      constraints.loosen();
-
-  @override
-  Offset getPositionForChild(Size size, Size childSize) {
-    if (horizontal) {
-      return horizontalPositionDependentBox(
-        size: size,
-        childSize: childSize,
-        target: target,
-        horizontalOffset: verticalOffset,
-        preferLeft: preferBelow,
-      );
-    } else {
-      return positionDependentBox(
-        size: size,
-        childSize: childSize,
-        target: target,
-        verticalOffset: verticalOffset,
-        preferBelow: preferBelow,
-      );
-    }
-  }
-
-  @override
-  bool shouldRelayout(_TooltipPositionDelegate oldDelegate) {
-    return target != oldDelegate.target ||
-        verticalOffset != oldDelegate.verticalOffset ||
-        preferBelow != oldDelegate.preferBelow;
-  }
-}
-
-class _TooltipOverlay extends StatelessWidget {
-  const _TooltipOverlay({
+/// The content widget for a [Tooltip]'s overlay.
+class _TooltipContent extends StatelessWidget {
+  const _TooltipContent({
     required this.richMessage,
-    required this.animation,
-    required this.target,
-    required this.verticalOffset,
-    required this.preferBelow,
     this.padding,
     this.margin,
     this.decoration,
     this.textStyle,
-    this.displayHorizontally = false,
     this.maxWidth,
   });
 
@@ -947,46 +683,24 @@ class _TooltipOverlay extends StatelessWidget {
   final EdgeInsetsGeometry? margin;
   final Decoration? decoration;
   final TextStyle? textStyle;
-  final Animation<double> animation;
-  final Offset target;
-  final double verticalOffset;
-  final bool preferBelow;
-  final bool displayHorizontally;
   final double? maxWidth;
 
   @override
   Widget build(BuildContext context) {
-    assert(debugCheckHasFluentTheme(context));
-    final theme = FluentTheme.of(context);
-
-    final Widget result = IgnorePointer(
-      child: FadeTransition(
-        opacity: animation,
-        child: DefaultTextStyle.merge(
-          style: theme.typography.body,
-          child: Container(
-            decoration: decoration,
-            padding: padding,
-            margin: margin,
-            constraints: BoxConstraints(maxWidth: maxWidth ?? double.infinity),
-            child: Center(
-              widthFactor: 1,
-              heightFactor: 1,
-              child: Text.rich(richMessage, style: textStyle),
-            ),
+    return IgnorePointer(
+      child: DefaultTextStyle.merge(
+        style: FluentTheme.of(context).typography.body!,
+        child: Container(
+          decoration: decoration,
+          padding: padding,
+          margin: margin,
+          constraints: BoxConstraints(maxWidth: maxWidth ?? double.infinity),
+          child: Center(
+            widthFactor: 1,
+            heightFactor: 1,
+            child: Text.rich(richMessage, style: textStyle),
           ),
         ),
-      ),
-    );
-    return Positioned.fill(
-      child: CustomSingleChildLayout(
-        delegate: _TooltipPositionDelegate(
-          target: target,
-          verticalOffset: verticalOffset,
-          preferBelow: preferBelow,
-          horizontal: displayHorizontally,
-        ),
-        child: result,
       ),
     );
   }

@@ -1,3 +1,7 @@
+## [next]
+
+- feat: `MenuBar.overflowBehavior` ([#1337](https://github.com/bdlukaa/fluent_ui/pull/1337))
+
 ## 4.16.0
 
 - refactor: Flutter 3.44.0 support
