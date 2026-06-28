@@ -1,5 +1,5 @@
-import 'package:clipboard/clipboard.dart';
 import 'package:fluent_ui/fluent_ui.dart';
+import 'package:flutter/services.dart';
 
 import 'icons.dart';
 
@@ -180,7 +180,7 @@ class ColorBlock extends StatelessWidget {
       message: '\n$clipboard\n(tap to copy to clipboard)\n',
       child: HoverButton(
         onPressed: () async {
-          await FlutterClipboard.copy(clipboard);
+          await Clipboard.setData(ClipboardData(text: clipboard));
           // ignore: use_build_context_synchronously
           showCopiedSnackbar(context, clipboard);
         },

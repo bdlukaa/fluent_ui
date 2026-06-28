@@ -1,11 +1,11 @@
 import 'dart:math';
 
-import 'package:clipboard/clipboard.dart';
 import 'package:collection/collection.dart';
 import 'package:example/screens/settings.dart';
 import 'package:example/screens/theming/typography.dart';
 import 'package:example/widgets/code_snippet_card.dart';
 import 'package:fluent_ui/fluent_ui.dart';
+import 'package:flutter/services.dart';
 
 Future<void> showCopiedSnackbar(
   final BuildContext context,
@@ -236,7 +236,8 @@ class _IconsPageState extends State<IconsPage> {
                 return HoverButton(
                   onPressed: () async {
                     final copyText = '$prefix.${e.key}';
-                    await FlutterClipboard.copy(copyText);
+                    await Clipboard.setData(ClipboardData(text: copyText));
+
                     if (context.mounted) showCopiedSnackbar(context, copyText);
                   },
                   cursor: SystemMouseCursors.copy,
