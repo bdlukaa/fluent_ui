@@ -12,6 +12,7 @@ class MenuBarPage extends StatefulWidget {
 class _MenuBarPageState extends State<MenuBarPage> with PageMixin {
   var _orientation = 'landscape';
   var _iconSize = 'medium_icons';
+  var _overflowBehavior = MenuBarOverflowBehavior.wrap;
   final _programaticallyKey = GlobalKey<MenuBarState>();
 
   @override
@@ -347,6 +348,143 @@ key.currentState?.showItemAt(items1);
                   _programaticallyKey.currentState?.showItemAt(1);
                 },
                 child: const Text('Open MenuBar'),
+              ),
+            ],
+          ),
+        ),
+        subtitle(content: const Text('Overflow behavior')),
+        description(
+          content: const Text(
+            'When menu bar items exceed the available width you can choose '
+            'whether they wrap to the next line (Windows default) or scroll '
+            'horizontally.',
+          ),
+        ),
+        CodeSnippetCard(
+          codeSnippet: '''
+MenuBar(
+  overflowBehavior: MenuBarOverflowBehavior.wrap, // or .scroll
+  items: [ /* many items */ ],
+)
+''',
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              InfoLabel(
+                label: 'Overflow Behavior',
+                child: ComboBox<MenuBarOverflowBehavior>(
+                  value: _overflowBehavior,
+                  items: MenuBarOverflowBehavior.values
+                      .map(
+                        (b) => ComboBoxItem<MenuBarOverflowBehavior>(
+                          value: b,
+                          child: Text(b.name),
+                        ),
+                      )
+                      .toList(),
+                  onChanged: (v) => setState(() => _overflowBehavior = v!),
+                ),
+              ),
+              const SizedBox(height: 8),
+              SizedBox(
+                width: 350,
+                child: MenuBar(
+                  overflowBehavior: _overflowBehavior,
+                  items: [
+                    MenuBarItem(
+                      title: 'File',
+                      items: [
+                        MenuFlyoutItem(
+                          text: const Text('New'),
+                          onPressed: () {},
+                        ),
+                        MenuFlyoutItem(
+                          text: const Text('Open'),
+                          onPressed: () {},
+                        ),
+                      ],
+                    ),
+                    MenuBarItem(
+                      title: 'Edit',
+                      items: [
+                        MenuFlyoutItem(
+                          text: const Text('Cut'),
+                          onPressed: () {},
+                        ),
+                      ],
+                    ),
+                    MenuBarItem(
+                      title: 'View',
+                      items: [
+                        MenuFlyoutItem(
+                          text: const Text('Zoom'),
+                          onPressed: () {},
+                        ),
+                      ],
+                    ),
+                    MenuBarItem(
+                      title: 'Format',
+                      items: [
+                        MenuFlyoutItem(
+                          text: const Text('Font'),
+                          onPressed: () {},
+                        ),
+                      ],
+                    ),
+                    MenuBarItem(
+                      title: 'Tools',
+                      items: [
+                        MenuFlyoutItem(
+                          text: const Text('Options'),
+                          onPressed: () {},
+                        ),
+                      ],
+                    ),
+                    MenuBarItem(
+                      title: 'Window',
+                      items: [
+                        MenuFlyoutItem(
+                          text: const Text('Minimize'),
+                          onPressed: () {},
+                        ),
+                      ],
+                    ),
+                    MenuBarItem(
+                      title: 'Help',
+                      items: [
+                        MenuFlyoutItem(
+                          text: const Text('About'),
+                          onPressed: () {},
+                        ),
+                      ],
+                    ),
+                    MenuBarItem(
+                      title: 'Edit',
+                      items: [
+                        MenuFlyoutItem(
+                          text: const Text('Undo'),
+                          onPressed: () {},
+                        ),
+                        MenuFlyoutItem(
+                          text: const Text('Redo'),
+                          onPressed: () {},
+                        ),
+                        MenuFlyoutItem(
+                          text: const Text('Cut'),
+                          onPressed: () {},
+                        ),
+                        MenuFlyoutItem(
+                          text: const Text('Copy'),
+                          onPressed: () {},
+                        ),
+                        MenuFlyoutItem(
+                          text: const Text('Paste'),
+                          onPressed: () {},
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
               ),
             ],
           ),
