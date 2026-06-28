@@ -84,4 +84,40 @@ void main() {
     expect(find.text('Zoom In'), findsOneWidget);
     expect(find.text('Zoom Out'), findsOneWidget);
   });
+
+  testWidgets('MenuBar animates open and closes on hover switch', (
+    tester,
+  ) async {
+    const Duration animDuration = Duration(milliseconds: 80);
+    await tester.pumpWidget(
+      wrapApp(
+        child: FluentTheme(
+          data: FluentThemeData(fastAnimationDuration: animDuration),
+          child: MenuBar(items: items),
+        ),
+      ),
+    );
+
+    // Open first menu
+    await tester.tap(find.text('File'));
+    await tester.pump();
+    // After one frame, animation is in progress — menu may not be fully visible
+    // After animDuration, animation completes and menu is fully visible
+    await tester.pump(animDuration);
+    await tester.pumpAndSettle();
+    expect(find.text('New'), findsOneWidget);
+    expect(find.text('Open'), findsOneWidget);
+
+    // Close by tapping outside
+    await tester.tapAt(const Offset(0, 100));
+    await tester.pumpAndSettle();
+    expect(find.text('New'), findsNothing);
+
+    // Open second menu — should also animate
+    await tester.tap(find.text('Edit'));
+    await tester.pump();
+    await tester.pump(animDuration);
+    await tester.pumpAndSettle();
+    expect(find.text('Undo'), findsOneWidget);
+  });
 }

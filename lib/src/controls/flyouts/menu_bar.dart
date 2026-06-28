@@ -83,6 +83,7 @@ class MenuBarState extends State<MenuBar> {
 
   MenuBarItem? _currentOpenItem;
   final Map<MenuBarItem, MenuController> _itemControllers = {};
+  final Map<MenuBarItem, GlobalKey<_MenuOverlayEntryState>> _overlayKeys = {};
 
   /// The currently open item in the menu bar.
   ///
@@ -93,11 +94,19 @@ class MenuBarState extends State<MenuBar> {
   void dispose() {
     _menuController.close();
     _itemControllers.clear();
+    _overlayKeys.clear();
     super.dispose();
   }
 
   MenuController _controllerFor(MenuBarItem item) {
     return _itemControllers.putIfAbsent(item, MenuController.new);
+  }
+
+  GlobalKey<_MenuOverlayEntryState> _overlayKeyFor(MenuBarItem item) {
+    return _overlayKeys.putIfAbsent(
+      item,
+      GlobalKey<_MenuOverlayEntryState>.new,
+    );
   }
 
   // --- Public programmatic API ---
@@ -231,29 +240,43 @@ class MenuBarState extends State<MenuBar> {
   Widget _buildMenuItem(BuildContext context, MenuBarItem item) {
     final controller = _controllerFor(item);
     final isSelected = _currentOpenItem == item;
+    final overlayKey = _overlayKeyFor(item);
 
     return RawMenuAnchor(
       controller: controller,
       onClose: () => _handleMenuClosed(item),
+      onOpenRequested: (position, showOverlay) {
+        showOverlay();
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          overlayKey.currentState?.open();
+        });
+      },
+      onCloseRequested: (hideOverlay) {
+        hideOverlay();
+      },
       overlayBuilder: (context, info) {
-        return MenuInfoProvider(
-          builder: (context, rootSize, menus, keys) {
-            return Stack(
-              children: [
-                Positioned(
-                  left: info.anchorRect.left,
-                  top: info.anchorRect.bottom,
-                  child: _MenuBarOverlay(
-                    tapRegionGroupId: info.tapRegionGroupId,
-                    child: MenuFlyout(
-                      items: _adaptItems(item.items, controller),
+        return _MenuOverlayEntry(
+          key: overlayKey,
+          duration: FluentTheme.of(context).fastAnimationDuration,
+          child: MenuInfoProvider(
+            builder: (context, rootSize, menus, keys) {
+              return Stack(
+                children: [
+                  Positioned(
+                    left: info.anchorRect.left,
+                    top: info.anchorRect.bottom,
+                    child: _MenuBarOverlay(
+                      tapRegionGroupId: info.tapRegionGroupId,
+                      child: MenuFlyout(
+                        items: _adaptItems(item.items, controller),
+                      ),
                     ),
                   ),
-                ),
-                ...menus,
-              ],
-            );
-          },
+                  ...menus,
+                ],
+              );
+            },
+          ),
         );
       },
       builder: (context, menuController, child) {
@@ -301,19 +324,94 @@ class _MenuBarOverlay extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = FluentTheme.of(context);
     return Flyout(
       rootFlyout: GlobalKey(debugLabel: 'MenuBar root flyout'),
       additionalOffset: 0,
       margin: 8,
-      transitionDuration: Duration.zero,
-      reverseTransitionDuration: Duration.zero,
+      transitionDuration: theme.fastAnimationDuration,
+      reverseTransitionDuration: theme.fastAnimationDuration,
       root: Navigator.of(context),
       menuKey: null,
-      transitionBuilder: (context, animation, mode, flyout) => flyout,
+      transitionBuilder: _bottomSlideTransition,
       placementMode: FlyoutPlacementMode.bottomCenter,
       builder: (context) {
         return TapRegion(groupId: tapRegionGroupId, child: child);
       },
+    );
+  }
+}
+
+Widget _bottomSlideTransition(
+  BuildContext context,
+  Animation<double> animation,
+  FlyoutPlacementMode mode,
+  Widget flyout,
+) {
+  return SlideTransition(
+    position: Tween<Offset>(
+      begin: const Offset(0, -0.15),
+      end: Offset.zero,
+    ).animate(CurvedAnimation(parent: animation, curve: Curves.easeOut)),
+    child: flyout,
+  );
+}
+
+/// Manages the open/close animation for a menu overlay entry.
+///
+/// Coordinates with [RawMenuAnchor.onOpenRequested] and
+/// [RawMenuAnchor.onCloseRequested] to animate the menu entrance and exit.
+class _MenuOverlayEntry extends StatefulWidget {
+  const _MenuOverlayEntry({
+    required this.duration,
+    required this.child,
+    super.key,
+  });
+
+  final Duration duration;
+  final Widget child;
+
+  @override
+  State<_MenuOverlayEntry> createState() => _MenuOverlayEntryState();
+}
+
+class _MenuOverlayEntryState extends State<_MenuOverlayEntry>
+    with SingleTickerProviderStateMixin {
+  late final AnimationController _controller;
+
+  @override
+  void initState() {
+    super.initState();
+    _controller = AnimationController(vsync: this, duration: widget.duration);
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  /// Starts the opening animation.
+  void open() {
+    _controller.forward();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return ClipRect(
+      child: FadeTransition(
+        opacity: CurvedAnimation(parent: _controller, curve: Curves.easeIn),
+        child: SlideTransition(
+          position:
+              Tween<Offset>(
+                begin: const Offset(0, -0.15),
+                end: Offset.zero,
+              ).animate(
+                CurvedAnimation(parent: _controller, curve: Curves.easeOut),
+              ),
+          child: widget.child,
+        ),
+      ),
     );
   }
 }
