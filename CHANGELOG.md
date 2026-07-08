@@ -4,6 +4,7 @@
   `MenuBar` now uses `RawMenuBar` under the hood.
 - feat: `Tooltip.enableTapToDismiss` and `Tooltip.onTriggered` ([#1338](https://github.com/bdlukaa/fluent_ui/pull/1338))
   `Tooltip` now uses `RawTooltip` under the hood.
+- fix: `NumberBox` fix focus (using tab) when `clearButton` is true ([#1341](https://github.com/bdlukaa/fluent_ui/pull/1341))
 
 ## 4.16.0
 
