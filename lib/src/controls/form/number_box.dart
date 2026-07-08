@@ -610,6 +610,7 @@ class NumberBoxState<T extends num> extends State<NumberBox<T>> {
           key: _clearButtonKey,
           icon: const WindowsIcon(WindowsIcons.clear),
           onPressed: _clearValue,
+          focusable: false,
         ),
         const SizedBox(width: 4),
       ],
