@@ -34,6 +34,23 @@ enum TextChangedReason {
   cleared,
 }
 
+/// Controls where the suggestion popup appears relative to the text input.
+///
+/// See also:
+///
+///  * [AutoSuggestBox.popupDirection]
+enum PopupDirection {
+  /// The popup appears below the text input. This is the default.
+  below,
+
+  /// The popup appears above the text input.
+  above,
+
+  /// The popup appears below by default, but switches to above when there
+  /// is insufficient space below and more room above.
+  auto,
+}
+
 /// The default max height the auto suggest box popup can have
 const kAutoSuggestBoxPopupMaxHeight = 380.0;
 
@@ -189,6 +206,7 @@ class AutoSuggestBox<T> extends StatefulWidget {
     this.enabled = true,
     this.inputFormatters,
     this.maxPopupHeight = kAutoSuggestBoxPopupMaxHeight,
+    this.popupDirection = PopupDirection.below,
   }) : autovalidateMode = AutovalidateMode.disabled,
        validator = null;
 
@@ -231,6 +249,7 @@ class AutoSuggestBox<T> extends StatefulWidget {
     this.enabled = true,
     this.inputFormatters,
     this.maxPopupHeight = kAutoSuggestBoxPopupMaxHeight,
+    this.popupDirection = PopupDirection.below,
   });
 
   /// The list of items to display to the user to pick
@@ -404,6 +423,11 @@ class AutoSuggestBox<T> extends StatefulWidget {
   /// by default, it's limited to a 380px height. If the value provided is greater
   /// than the available space, the box is limited to the available space.
   final double maxPopupHeight;
+
+  /// Controls where the suggestion popup appears relative to the text input.
+  ///
+  /// Defaults to [PopupDirection.below].
+  final PopupDirection popupDirection;
 
   @override
   State<AutoSuggestBox<T>> createState() => AutoSuggestBoxState<T>();
@@ -609,25 +633,58 @@ class AutoSuggestBoxState<T> extends State<AutoSuggestBox<T>> {
         final screenHeight =
             MediaQuery.heightOf(context) -
             MediaQuery.viewPaddingOf(context).bottom;
-        final overlayY = globalOffset.dy + box.size.height;
-        final maxHeight = (screenHeight - overlayY).clamp(
-          0.0,
-          widget.maxPopupHeight,
-        );
+
+        // Compute available space above and below the text box
+        final spaceBelow = screenHeight - (globalOffset.dy + box.size.height);
+        final spaceAbove = globalOffset.dy;
+        const minRequiredSpace =
+            _AutoSuggestBoxOverlayState.tileHeight * 2; // at least 2 items visible
+
+        var resolvedDirection = widget.popupDirection;
+        if (resolvedDirection == PopupDirection.auto) {
+          if (spaceBelow < minRequiredSpace && spaceAbove > spaceBelow) {
+            resolvedDirection = PopupDirection.above;
+          } else {
+            resolvedDirection = PopupDirection.below;
+          }
+        }
+
+        final showAbove = resolvedDirection == PopupDirection.above;
+
+        final double overlayOffsetY;
+        final double maxHeight;
+        if (showAbove) {
+          maxHeight = spaceAbove.clamp(0.0, widget.maxPopupHeight);
+          overlayOffsetY = -(maxHeight + 0.8);
+        } else {
+          overlayOffsetY = box.size.height + 0.8;
+          final overlayY = globalOffset.dy + box.size.height;
+          maxHeight = (screenHeight - overlayY).clamp(
+            0.0,
+            widget.maxPopupHeight,
+          );
+        }
 
         Widget child = PositionedDirectional(
           width: box.size.width,
           child: CompositedTransformFollower(
             link: _layerLink,
             showWhenUnlinked: false,
-            offset: Offset(0, box.size.height + 0.8),
+            offset: Offset(0, overlayOffsetY),
             child: SizedBox(
               width: box.size.width,
-              child: FluentTheme(
-                data: FluentTheme.of(context),
-                child: _AutoSuggestBoxOverlay<T>(
-                  maxHeight: maxHeight,
-                  node: _overlayNode,
+              height: showAbove ? maxHeight : null,
+              child: Align(
+                alignment:
+                    showAbove ? Alignment.bottomCenter : Alignment.topCenter,
+                widthFactor: 1.0,
+                heightFactor: showAbove ? 1.0 : null,
+                child: FluentTheme(
+                  data: FluentTheme.of(context),
+                  child: _AutoSuggestBoxOverlay<T>(
+                    maxHeight: maxHeight,
+                    showAbove: showAbove,
+                    node: _overlayNode,
                   controller: _controller,
                   items: widget.items,
                   itemBuilder: widget.itemBuilder,
@@ -659,7 +716,7 @@ class AutoSuggestBoxState<T> extends State<AutoSuggestBox<T>> {
               ),
             ),
           ),
-        );
+        ));
 
         if (DisableAcrylic.of(context) != null) {
           child = DisableAcrylic(child: child);
@@ -896,6 +953,7 @@ class _AutoSuggestBoxOverlay<T> extends StatefulWidget {
     required this.itemsStream,
     required this.sorter,
     required this.maxHeight,
+    required this.showAbove,
     required this.noResultsFoundBuilder,
     super.key,
   });
@@ -909,6 +967,7 @@ class _AutoSuggestBoxOverlay<T> extends StatefulWidget {
   final Stream<List<AutoSuggestBoxItem<T>>> itemsStream;
   final AutoSuggestBoxSorter<T> sorter;
   final double maxHeight;
+  final bool showAbove;
   final WidgetBuilder? noResultsFoundBuilder;
 
   @override
@@ -980,8 +1039,10 @@ class _AutoSuggestBoxOverlayState<T> extends State<_AutoSuggestBoxOverlay<T>> {
           child: Container(
             constraints: BoxConstraints(maxHeight: widget.maxHeight),
             decoration: ShapeDecoration(
-              shape: const RoundedRectangleBorder(
-                borderRadius: BorderRadius.vertical(bottom: Radius.circular(4)),
+              shape: RoundedRectangleBorder(
+                borderRadius: widget.showAbove
+                    ? const BorderRadius.vertical(top: Radius.circular(4))
+                    : const BorderRadius.vertical(bottom: Radius.circular(4)),
               ),
               color: theme.resources.cardBackgroundFillColorDefault,
               shadows: [
