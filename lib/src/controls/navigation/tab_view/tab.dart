@@ -139,12 +139,25 @@ class __TabBodyState extends State<_TabBody> {
       physics: const NeverScrollableScrollPhysics(),
       controller: pageController,
       itemCount: widget.tabs.length,
+      // Reorders move a tab to a new index. Report the new index for each
+      // tab-keyed page so the lazy viewport relocates the existing element
+      // (and its state) instead of tearing it down — a plain ValueKey only
+      // guards in-place reuse, so without this a stateful body stayed parked
+      // at its old slot while the header moved, desyncing content from its
+      // tab.
+      findChildIndexCallback: (key) {
+        final tab = (key as ValueKey<Tab>).value;
+        final index = widget.tabs.indexOf(tab);
+        return index == -1 ? null : index;
+      },
       itemBuilder: (context, index) {
         final isSelected = widget.index == index;
         final item = widget.tabs[index];
 
+        // Key the body by tab identity, matching the tab strip
+        // (KeyedSubtree(key: ValueKey<Tab>(tab)) in TabView).
         return ExcludeFocus(
-          key: ValueKey(index),
+          key: ValueKey<Tab>(item),
           excluding: !isSelected,
           child: FocusTraversalGroup(child: item.body),
         );
