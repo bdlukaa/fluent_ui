@@ -146,8 +146,10 @@ class __TabBodyState extends State<_TabBody> {
       // at its old slot while the header moved, desyncing content from its
       // tab.
       findChildIndexCallback: (key) {
-        final tab = (key as ValueKey<Tab>).value;
-        final index = widget.tabs.indexOf(tab);
+        // Pages are keyed by ValueKey<Tab>; guard the type rather than cast so
+        // an unexpected key can never throw from this framework callback.
+        if (key is! ValueKey<Tab>) return null;
+        final index = widget.tabs.indexOf(key.value);
         return index == -1 ? null : index;
       },
       itemBuilder: (context, index) {
