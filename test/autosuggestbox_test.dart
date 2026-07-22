@@ -20,83 +20,89 @@ void main() {
         ),
       ),
     );
-    // Placeholder is shown
     expect(find.text('Numbers'), findsOneWidget);
-    // Icon is shown
     expect(find.byIcon(FluentIcons.number), findsOneWidget);
-    // No items shown
     expect(find.text('One'), findsNothing);
     expect(find.text('Two'), findsNothing);
     expect(find.text('Three'), findsNothing);
   });
 
-  testWidgets(
-    'AutoSuggestBox search testing',
-    (tester) async {
-      await tester.pumpWidget(
-        FluentApp(
-          home: DisableAcrylic(
-            child: AutoSuggestBox<String>(
-              items: [
-                AutoSuggestBoxItem<String>(label: 'One', value: 'one'),
-                AutoSuggestBoxItem<String>(label: 'Two', value: 'two'),
-                AutoSuggestBoxItem<String>(label: 'Three', value: 'three'),
-              ],
-              leadingIcon: const Icon(FluentIcons.number),
-              placeholder: 'Numbers',
-            ),
+  testWidgets('AutoSuggestBox popupDirection defaults to below', (
+    tester,
+  ) async {
+    await tester.pumpWidget(
+      wrapApp(
+        child: AutoSuggestBox<String>(
+          items: [AutoSuggestBoxItem<String>(label: 'One', value: 'one')],
+        ),
+      ),
+    );
+
+    final box = tester.widget<AutoSuggestBox<String>>(
+      find.byType(AutoSuggestBox<String>),
+    );
+    expect(box.popupDirection, PopupDirection.below);
+  });
+
+  testWidgets('AutoSuggestBox accepts custom popupDirection', (tester) async {
+    await tester.pumpWidget(
+      wrapApp(
+        child: AutoSuggestBox<String>(
+          popupDirection: PopupDirection.auto,
+          items: [AutoSuggestBoxItem<String>(label: 'One', value: 'one')],
+        ),
+      ),
+    );
+
+    final box = tester.widget<AutoSuggestBox<String>>(
+      find.byType(AutoSuggestBox<String>),
+    );
+    expect(box.popupDirection, PopupDirection.auto);
+  });
+
+  testWidgets('AutoSuggestBox accepts PopupDirection.above', (tester) async {
+    await tester.pumpWidget(
+      wrapApp(
+        child: Align(
+          alignment: Alignment.bottomCenter,
+          child: AutoSuggestBox<String>(
+            popupDirection: PopupDirection.above,
+            items: [AutoSuggestBoxItem<String>(label: 'One', value: 'one')],
           ),
         ),
-      );
+      ),
+    );
 
-      /// Summary of Test -> Type 'o', then 'n' ('on'), then back to 'o' and finally back to empty ''
+    final box = tester.widget<AutoSuggestBox<String>>(
+      find.byType(AutoSuggestBox<String>),
+    );
+    expect(box.popupDirection, PopupDirection.above);
+  });
 
-      await tester.pump();
+  testWidgets('AutoSuggestBox renders TextBox', (tester) async {
+    await tester.pumpWidget(
+      wrapApp(
+        child: AutoSuggestBox<String>(
+          items: [AutoSuggestBoxItem<String>(label: 'One', value: 'one')],
+        ),
+      ),
+    );
 
-      // AutoSuggestBox should react
-      expect(find.text('One'), findsNothing);
-      expect(find.text('Two'), findsNothing);
-      expect(find.text('Three'), findsNothing);
+    expect(find.byType(TextBox), findsOneWidget);
+  });
 
-      // Expect a valid Textbox
-      expect(find.byType(TextBox), findsOneWidget);
+  testWidgets('AutoSuggestBox renders TextFormBox when validator provided', (
+    tester,
+  ) async {
+    await tester.pumpWidget(
+      wrapApp(
+        child: AutoSuggestBox<String>.form(
+          items: [AutoSuggestBoxItem<String>(label: 'One', value: 'one')],
+          validator: (v) => v?.isEmpty ?? true ? 'Required' : null,
+        ),
+      ),
+    );
 
-      // Tap to show items
-      await tester.tap(find.byType(TextBox));
-      await tester.pump(const Duration(seconds: 1));
-      // FIXME 🐛 This fails because Flyout is not shown
-      expect(find.text('One'), findsOneWidget);
-      expect(find.text('Two'), findsOneWidget);
-      expect(find.text('Three'), findsOneWidget);
-
-      // Field = 'o' --> One + Two
-      await tester.enterText(find.byType(TextBox), 'o');
-      await tester.pump(const Duration(seconds: 1));
-      expect(find.text('One'), findsOneWidget);
-      expect(find.text('Two'), findsOneWidget);
-      expect(find.text('Three'), findsNothing);
-      // Field = 'on' --> One
-      await tester.enterText(find.byType(TextBox), 'n');
-      await tester.pump(const Duration(seconds: 1));
-      expect(find.text('One'), findsOneWidget);
-      expect(find.text('Two'), findsNothing);
-      expect(find.text('Three'), findsNothing);
-      // Backspace U+2408 character
-      // Field = 'o' --> One + Two again
-      await tester.enterText(find.byType(TextBox), '\u2408');
-      await tester.pump(const Duration(seconds: 1));
-      expect(find.text('One'), findsOneWidget);
-      expect(find.text('Two'), findsOneWidget);
-      expect(find.text('Three'), findsNothing);
-      // Backspace U+2408 character
-      // Field = '' --> One + Two + Three
-      await tester.enterText(find.byType(TextBox), '\u2408');
-      await tester.pump(const Duration(seconds: 1));
-      expect(find.text('One'), findsOneWidget);
-      expect(find.text('Two'), findsOneWidget);
-      expect(find.text('Three'), findsOneWidget);
-    },
-    // DISABLE THIS TEST UNTIL IT'S FIXED
-    skip: true,
-  );
+    expect(find.byType(TextFormBox), findsOneWidget);
+  });
 }

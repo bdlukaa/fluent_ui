@@ -598,8 +598,7 @@ class AutoSuggestBoxState<T> extends State<AutoSuggestBox<T>> {
     if (!mounted) return;
     _updateLocalItems();
 
-    // Update the overlay when the text box size has changed
-    WidgetsBinding.instance.addPostFrameCallback((_) async {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
       if (!mounted) return;
       _updateLocalItems();
     });
@@ -634,8 +633,7 @@ class AutoSuggestBoxState<T> extends State<AutoSuggestBox<T>> {
     // Compute available space above and below the text box
     final spaceBelow = screenHeight - (globalOffset.dy + box.size.height);
     final spaceAbove = globalOffset.dy;
-    const minRequiredSpace =
-        _AutoSuggestBoxOverlayState.tileHeight * 2; // at least 2 items visible
+    const minRequiredSpace = _AutoSuggestBoxOverlayState.tileHeight * 2;
 
     var resolvedDirection = widget.popupDirection;
     if (resolvedDirection == PopupDirection.auto) {
@@ -659,7 +657,7 @@ class AutoSuggestBoxState<T> extends State<AutoSuggestBox<T>> {
       maxHeight = (screenHeight - overlayY).clamp(0.0, widget.maxPopupHeight);
     }
 
-    final child = PositionedDirectional(
+    Widget child = PositionedDirectional(
       width: box.size.width,
       child: CompositedTransformFollower(
         link: _layerLink,
@@ -709,12 +707,18 @@ class AutoSuggestBoxState<T> extends State<AutoSuggestBox<T>> {
       ),
     );
 
+    if (DisableAcrylic.of(context) != null) {
+      child = DisableAcrylic(child: child);
+    }
+
     return child;
   }
 
   /// Dismisses the suggestions overlay.
   void dismissOverlay() {
-    _overlayPortalController.hide();
+    if (_overlayPortalController.isShowing) {
+      _overlayPortalController.hide();
+    }
     _unselectAll();
     widget.onOverlayVisibilityChanged?.call(isOverlayVisible);
   }
