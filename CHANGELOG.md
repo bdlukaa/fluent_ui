@@ -1,5 +1,6 @@
 ## [next]
 
+- fix: `ComboBox` no longer throws when opening a dropdown with a single item ([#1346](https://github.com/bdlukaa/fluent_ui/issues/1346))
 - fix: `TabView` now keeps each tab's body (and its state) attached to its tab when tabs are reordered, instead of leaving a stateful body parked at its old slot while the header moves
 - feat: `MenuBar.overflowBehavior` ([#1337](https://github.com/bdlukaa/fluent_ui/pull/1337))
   `MenuBar` now uses `RawMenuBar` under the hood.

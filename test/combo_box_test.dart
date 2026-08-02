@@ -278,4 +278,36 @@ void main() {
     final comboBoxItem1Finder = find.byKey(const Key('combo-box-item-1'));
     expect(comboBoxItem1Finder, findsOneWidget);
   });
+
+  testWidgets('ComboBox with one item should open without throwing', (
+    tester,
+  ) async {
+    String? selectedValue = 'something';
+
+    await tester.pumpWidget(
+      StatefulBuilder(
+        builder: (context, setState) {
+          return wrapApp(
+            child: ComboBox<String>(
+              value: selectedValue,
+              items: const [
+                ComboBoxItem<String>(
+                  key: Key('single-combo-box-item'),
+                  value: 'something',
+                  child: Text('something'),
+                ),
+              ],
+              onChanged: (value) => setState(() => selectedValue = value),
+            ),
+          );
+        },
+      ),
+    );
+
+    await tester.tap(find.byType(ComboBox<String>));
+    await tester.pumpAndSettle();
+
+    expect(tester.takeException(), isNull);
+    expect(find.byKey(const Key('single-combo-box-item')), findsOneWidget);
+  });
 }

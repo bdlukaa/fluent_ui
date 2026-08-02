@@ -58,14 +58,16 @@ class _ComboBoxMenuPainter extends CustomPainter {
   @override
   void paint(Canvas canvas, Size size) {
     final selectedItemOffset = getSelectedItemOffset();
+    final maxTopOffset = math.max(0.0, size.height - kComboBoxItemHeight);
+    final minBottomOffset = math.min(kComboBoxItemHeight, size.height);
     final top = Tween<double>(
-      begin: selectedItemOffset.clamp(0.0, size.height - kComboBoxItemHeight),
+      begin: selectedItemOffset.clamp(0.0, maxTopOffset),
       end: 0,
     );
 
     final bottom = Tween<double>(
       begin: (top.begin! + kComboBoxItemHeight).clamp(
-        kComboBoxItemHeight,
+        minBottomOffset,
         size.height,
       ),
       end: size.height,
@@ -396,14 +398,16 @@ class _ComboBoxResizeClipper extends CustomClipper<RRect> {
   @override
   RRect getClip(Size size) {
     final selectedItemOffset = getSelectedItemOffset();
+    final maxTopOffset = math.max(0.0, size.height - kComboBoxItemHeight);
+    final minBottomOffset = math.min(kComboBoxItemHeight, size.height);
     final top = Tween<double>(
-      begin: selectedItemOffset.clamp(0.0, size.height - kComboBoxItemHeight),
+      begin: selectedItemOffset.clamp(0.0, maxTopOffset),
       end: 0,
     );
 
     final bottom = Tween<double>(
       begin: (top.begin! + kComboBoxItemHeight).clamp(
-        kComboBoxItemHeight,
+        minBottomOffset,
         size.height,
       ),
       end: size.height,
