@@ -278,4 +278,40 @@ void main() {
     final comboBoxItem1Finder = find.byKey(const Key('combo-box-item-1'));
     expect(comboBoxItem1Finder, findsOneWidget);
   });
+
+  testWidgets('ComboBox grows to fit larger text scales', (tester) async {
+    Future<double> pumpAndGetHeight(double textScaleFactor) async {
+      await tester.pumpWidget(
+        StatefulBuilder(
+          builder: (context, setState) {
+            return wrapApp(
+              child: MediaQuery(
+                data: MediaQuery.of(
+                  context,
+                ).copyWith(textScaler: TextScaler.linear(textScaleFactor)),
+                child: Align(
+                  alignment: AlignmentDirectional.topStart,
+                  child: ComboBox<String>(
+                    value: 'initial',
+                    items: const [
+                      ComboBoxItem(value: 'initial', child: Text('initial')),
+                    ],
+                    onChanged: (value) {},
+                  ),
+                ),
+              ),
+            );
+          },
+        ),
+      );
+      await tester.pump();
+
+      return tester.getSize(find.byType(ComboBox<String>)).height;
+    }
+
+    final normalHeight = await pumpAndGetHeight(1);
+    final scaledHeight = await pumpAndGetHeight(2);
+
+    expect(scaledHeight, greaterThan(normalHeight));
+  });
 }

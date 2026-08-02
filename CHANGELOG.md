@@ -7,6 +7,7 @@
   `Tooltip` now uses `RawTooltip` under the hood.
 - refactor(perf): `TitleBar` now doesn't listen for `onDoubleTap` if the caller doesn't provide a callback. Listening for `onDoubleTap` causes a 300ms delay on single taps (see flutter/flutter#110300)
 - fix: `NumberBox` fix focus (using tab) when `clearButton` is true ([#1341](https://github.com/bdlukaa/fluent_ui/pull/1341))
+- fix: `ComboBox` now expands vertically for larger text scaling, preventing clipped text ([#1342](https://github.com/bdlukaa/fluent_ui/issues/1342))
 
 ## 4.16.0
 

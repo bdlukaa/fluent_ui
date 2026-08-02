@@ -794,12 +794,14 @@ class _ComboBoxItemContainer extends StatelessWidget {
       double.infinity,
     );
     return Container(
-      height: hasPadding
-          ? adjustedItemHeight
-          : (adjustedItemHeight - _kMenuItemBottomPadding).clamp(
-              0.0,
-              double.infinity,
-            ),
+      constraints: BoxConstraints(
+        minHeight: hasPadding
+            ? adjustedItemHeight
+            : (adjustedItemHeight - _kMenuItemBottomPadding).clamp(
+                0.0,
+                double.infinity,
+              ),
+      ),
       alignment: AlignmentDirectional.centerStart,
       child: DefaultTextStyle.merge(
         style: TextStyle(color: foregroundColor),
