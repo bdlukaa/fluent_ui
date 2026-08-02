@@ -633,7 +633,11 @@ class AutoSuggestBoxState<T> extends State<AutoSuggestBox<T>> {
     // Compute available space above and below the text box
     final spaceBelow = screenHeight - (globalOffset.dy + box.size.height);
     final spaceAbove = globalOffset.dy;
-    const minRequiredSpace = _AutoSuggestBoxOverlayState.tileHeight * 2;
+    final minRequiredSpace =
+        _AutoSuggestBoxOverlayState.adjustedTileHeight(
+          FluentTheme.of(context).visualDensity,
+        ) *
+        2;
 
     var resolvedDirection = widget.popupDirection;
     if (resolvedDirection == PopupDirection.auto) {
@@ -968,11 +972,12 @@ class _AutoSuggestBoxOverlayState<T> extends State<_AutoSuggestBoxOverlay<T>> {
   final ScrollController scrollController = ScrollController();
 
   /// Tile height + padding
-  static const tileHeight = kOneLineTileHeight + 2.0;
+  static const _tileHeight = kOneLineTileHeight + 2.0;
 
   /// Returns the tile height adjusted for the given visual density.
+  @visibleForTesting
   static double adjustedTileHeight(VisualDensity density) {
-    return (tileHeight + density.baseSizeAdjustment.dy).clamp(
+    return (_tileHeight + density.baseSizeAdjustment.dy).clamp(
       0.0,
       double.infinity,
     );

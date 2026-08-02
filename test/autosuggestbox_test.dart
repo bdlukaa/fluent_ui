@@ -60,24 +60,35 @@ void main() {
     expect(box.popupDirection, PopupDirection.auto);
   });
 
-  testWidgets('AutoSuggestBox accepts PopupDirection.above', (tester) async {
-    await tester.pumpWidget(
-      wrapApp(
-        child: Align(
-          alignment: Alignment.bottomCenter,
-          child: AutoSuggestBox<String>(
-            popupDirection: PopupDirection.above,
-            items: [AutoSuggestBoxItem<String>(label: 'One', value: 'one')],
+  testWidgets(
+    'AutoSuggestBox positions overlay above when PopupDirection.above',
+    (tester) async {
+      await tester.pumpWidget(
+        wrapApp(
+          child: Align(
+            alignment: Alignment.bottomCenter,
+            child: AutoSuggestBox<String>(
+              popupDirection: PopupDirection.above,
+              items: [AutoSuggestBoxItem<String>(label: 'One', value: 'one')],
+            ),
           ),
         ),
-      ),
-    );
+      );
 
-    final box = tester.widget<AutoSuggestBox<String>>(
-      find.byType(AutoSuggestBox<String>),
-    );
-    expect(box.popupDirection, PopupDirection.above);
-  });
+      final box = tester.widget<AutoSuggestBox<String>>(
+        find.byType(AutoSuggestBox<String>),
+      );
+      expect(box.popupDirection, PopupDirection.above);
+
+      await tester.enterText(find.byType(TextBox), 'o');
+      await tester.pumpAndSettle();
+      expect(find.byType(CompositedTransformFollower), findsOneWidget);
+      final follower = tester.widget<CompositedTransformFollower>(
+        find.byType(CompositedTransformFollower),
+      );
+      expect(follower.offset.dy, lessThan(0));
+    },
+  );
 
   testWidgets('AutoSuggestBox renders TextBox', (tester) async {
     await tester.pumpWidget(

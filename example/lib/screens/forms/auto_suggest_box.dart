@@ -25,34 +25,37 @@ class _AutoSuggestBoxPageState extends State<AutoSuggestBoxPage>
     return ScaffoldPage.scrollable(
       header: PageHeader(
         title: const Text('AutoSuggestBox'),
-        commandBar: Row(mainAxisSize: MainAxisSize.min, children: [
-          Padding(
-            padding: const EdgeInsetsDirectional.only(end: 12),
-            child: ToggleSwitch(
-              content: const Text('Disabled'),
-              checked: !enabled,
-              onChanged: (final v) => setState(() => enabled = !v),
+        commandBar: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Padding(
+              padding: const EdgeInsetsDirectional.only(end: 12),
+              child: ToggleSwitch(
+                content: const Text('Disabled'),
+                checked: !enabled,
+                onChanged: (final v) => setState(() => enabled = !v),
+              ),
             ),
-          ),
-          ComboBox<PopupDirection>(
-            value: popupDirection,
-            items: PopupDirection.values
-                .map(
-                  (d) => ComboBoxItem<PopupDirection>(
-                    value: d,
-                    child: Text(switch (d) {
-                      PopupDirection.below => 'Below',
-                      PopupDirection.above => 'Above',
-                      PopupDirection.auto => 'Auto',
-                    }),
-                  ),
-                )
-                .toList(),
-            onChanged: (d) {
-              if (d != null) setState(() => popupDirection = d);
-            },
-          ),
-        ]),
+            ComboBox<PopupDirection>(
+              value: popupDirection,
+              items: PopupDirection.values
+                  .map(
+                    (d) => ComboBoxItem<PopupDirection>(
+                      value: d,
+                      child: Text(switch (d) {
+                        PopupDirection.below => 'Below',
+                        PopupDirection.above => 'Above',
+                        PopupDirection.auto => 'Auto',
+                      }),
+                    ),
+                  )
+                  .toList(),
+              onChanged: (d) {
+                if (d != null) setState(() => popupDirection = d);
+              },
+            ),
+          ],
+        ),
       ),
       children: [
         const Text(
