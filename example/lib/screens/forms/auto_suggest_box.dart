@@ -14,6 +14,7 @@ class _AutoSuggestBoxPageState extends State<AutoSuggestBoxPage>
   String? selectedCat;
   Cat? selectedObjectCat;
   bool enabled = true;
+  PopupDirection popupDirection = PopupDirection.below;
 
   final asgbKey = GlobalKey<AutoSuggestBoxState>(
     debugLabel: 'Manually controlled AutoSuggestBox',
@@ -24,10 +25,36 @@ class _AutoSuggestBoxPageState extends State<AutoSuggestBoxPage>
     return ScaffoldPage.scrollable(
       header: PageHeader(
         title: const Text('AutoSuggestBox'),
-        commandBar: ToggleSwitch(
-          content: const Text('Disabled'),
-          checked: !enabled,
-          onChanged: (final v) => setState(() => enabled = !v),
+        commandBar: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Padding(
+              padding: const EdgeInsetsDirectional.only(end: 12),
+              child: ToggleSwitch(
+                content: const Text('Disabled'),
+                checked: !enabled,
+                onChanged: (final v) => setState(() => enabled = !v),
+              ),
+            ),
+            ComboBox<PopupDirection>(
+              value: popupDirection,
+              items: PopupDirection.values
+                  .map(
+                    (d) => ComboBoxItem<PopupDirection>(
+                      value: d,
+                      child: Text(switch (d) {
+                        PopupDirection.below => 'Below',
+                        PopupDirection.above => 'Above',
+                        PopupDirection.auto => 'Auto',
+                      }),
+                    ),
+                  )
+                  .toList(),
+              onChanged: (d) {
+                if (d != null) setState(() => popupDirection = d);
+              },
+            ),
+          ],
         ),
       ),
       children: [
@@ -73,6 +100,7 @@ const cats = <String>[
                 child: AutoSuggestBox<String>(
                   placeholder: 'Type a cat name',
                   enabled: enabled,
+                  popupDirection: popupDirection,
                   items: cats
                       .map<AutoSuggestBoxItem<String>>(
                         (final cat) => AutoSuggestBoxItem<String>(
@@ -153,6 +181,7 @@ const objectCats = [
                 width: 350,
                 child: AutoSuggestBox<Cat>(
                   enabled: enabled,
+                  popupDirection: popupDirection,
                   items: objectCats
                       .map<AutoSuggestBoxItem<Cat>>(
                         (final cat) => AutoSuggestBoxItem<Cat>(
@@ -232,6 +261,7 @@ if (isOverlayVisible) {
                     child: AutoSuggestBox<String>(
                       key: asgbKey,
                       enabled: enabled,
+                      popupDirection: popupDirection,
                       items: cats
                           .map<AutoSuggestBoxItem<String>>(
                             (final cat) => AutoSuggestBoxItem<String>(

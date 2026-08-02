@@ -1,13 +1,15 @@
 ## [next]
 
+- fix: `ComboBox` no longer throws when opening a dropdown with a single item ([#1347](https://github.com/bdlukaa/fluent_ui/pull/1347))
 - fix: `TabView` now keeps each tab's body (and its state) attached to its tab when tabs are reordered, instead of leaving a stateful body parked at its old slot while the header moves
 - feat: `MenuBar.overflowBehavior` ([#1337](https://github.com/bdlukaa/fluent_ui/pull/1337))
   `MenuBar` now uses `RawMenuBar` under the hood.
 - feat: `Tooltip.enableTapToDismiss` and `Tooltip.onTriggered` ([#1338](https://github.com/bdlukaa/fluent_ui/pull/1338))
   `Tooltip` now uses `RawTooltip` under the hood.
-- refactor(perf): `TitleBar` now doesn't listen for `onDoubleTap` if the caller doesn't provide a callback. Listening for `onDoubleTap` causes a 300ms delay on single taps (see flutter/flutter#110300)
+- refactor(perf): `TitleBar` now doesn't listen for `onDoubleTap` if the caller doesn't provide a callback. Listening for `onDoubleTap` causes a 300ms delay on single taps ([#1340](https://github.com/bdlukaa/fluent_ui/pull/1340))
 - fix: `NumberBox` fix focus (using tab) when `clearButton` is true ([#1341](https://github.com/bdlukaa/fluent_ui/pull/1341))
 - fix: `ComboBox` now expands vertically for larger text scaling, preventing clipped text ([#1342](https://github.com/bdlukaa/fluent_ui/issues/1342))
+- feat: `AutoSuggestBox.popupDirection` ([#1345](https://github.com/bdlukaa/fluent_ui/pull/1345))
 
 ## 4.16.0
 
