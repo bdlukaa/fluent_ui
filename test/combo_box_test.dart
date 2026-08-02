@@ -312,7 +312,7 @@ void main() {
     final normalHeight = await pumpAndGetHeight(1);
     final scaledHeight = await pumpAndGetHeight(2);
 
-    expect(scaledHeight, greaterThan(normalHeight));
+    expect(scaledHeight, closeTo(normalHeight * 2, 0.01));
   });
 
   testWidgets('ComboBox with one item should open without throwing', (

@@ -797,15 +797,16 @@ class _ComboBoxItemContainer extends StatelessWidget {
       0.0,
       double.infinity,
     );
-    return Container(
-      constraints: BoxConstraints(
-        minHeight: hasPadding
-            ? adjustedItemHeight
-            : (adjustedItemHeight - _kMenuItemBottomPadding).clamp(
-                0.0,
-                double.infinity,
-              ),
+    final textScaler = MediaQuery.textScalerOf(context);
+    final itemHeight = textScaler.scale(adjustedItemHeight);
+    final buttonHeight = textScaler.scale(
+      (adjustedItemHeight - _kMenuItemBottomPadding).clamp(
+        0.0,
+        double.infinity,
       ),
+    );
+    return Container(
+      height: hasPadding ? itemHeight : buttonHeight,
       alignment: AlignmentDirectional.centerStart,
       child: DefaultTextStyle.merge(
         style: TextStyle(color: foregroundColor),
