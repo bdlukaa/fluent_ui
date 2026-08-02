@@ -282,7 +282,7 @@ void main() {
   testWidgets('ComboBox with one item should open without throwing', (
     tester,
   ) async {
-    String? selectedValue = 'something';
+    String? selectedValue;
 
     await tester.pumpWidget(
       StatefulBuilder(
@@ -309,5 +309,10 @@ void main() {
 
     expect(tester.takeException(), isNull);
     expect(find.byKey(const Key('single-combo-box-item')), findsOneWidget);
+
+    await tester.tap(find.byKey(const Key('single-combo-box-item')));
+    await tester.pumpAndSettle();
+
+    expect(selectedValue, 'something');
   });
 }
