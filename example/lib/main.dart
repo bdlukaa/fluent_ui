@@ -108,7 +108,8 @@ class MyApp extends StatelessWidget {
           ),
           locale: appTheme.locale,
           builder: (final context, final child) {
-            return Directionality(
+            final scaleFactor = appTheme.textScaleFactor;
+            Widget result = Directionality(
               textDirection: appTheme.textDirection,
               child: NavigationPaneTheme(
                 data: NavigationPaneThemeData(
@@ -121,6 +122,15 @@ class MyApp extends StatelessWidget {
                 child: child!,
               ),
             );
+            if (scaleFactor != null) {
+              result = MediaQuery(
+                data: MediaQuery.of(
+                  context,
+                ).copyWith(textScaler: TextScaler.linear(scaleFactor)),
+                child: result,
+              );
+            }
+            return result;
           },
           home: const MyHomePage(),
         );

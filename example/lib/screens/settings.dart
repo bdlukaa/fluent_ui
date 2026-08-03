@@ -206,6 +206,38 @@ class _SettingsState extends State<Settings> with PageMixin {
         ),
         biggerSpacer,
         Text(
+          'Text Scale Factor',
+          style: FluentTheme.of(context).typography.subtitle,
+        ),
+        description(
+          content: const Text(
+            'Overrides the system text scale. Clear to use system default.',
+          ),
+        ),
+        spacer,
+        Row(
+          spacing: 8,
+          children: [
+            SizedBox(
+              width: 120,
+              child: NumberBox<double>(
+                value: appTheme.textScaleFactor,
+                onChanged: (final value) {
+                  appTheme.textScaleFactor = value;
+                },
+                smallChange: 0.25,
+                min: 0.5,
+                max: 3.0,
+              ),
+            ),
+            Button(
+              child: const Text('Reset'),
+              onPressed: () => appTheme.textScaleFactor = null,
+            ),
+          ],
+        ),
+        biggerSpacer,
+        Text(
           'Accent Color',
           style: FluentTheme.of(context).typography.subtitle,
         ),

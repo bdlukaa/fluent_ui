@@ -72,6 +72,13 @@ class AppTheme extends ChangeNotifier {
     _visualDensity = density;
     notifyListeners();
   }
+
+  double? _textScaleFactor;
+  double? get textScaleFactor => _textScaleFactor;
+  set textScaleFactor(final double? factor) {
+    _textScaleFactor = factor;
+    notifyListeners();
+  }
 }
 
 AccentColor get systemAccentColor {
