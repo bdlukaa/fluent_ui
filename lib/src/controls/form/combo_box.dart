@@ -472,6 +472,10 @@ class _ComboBoxMenuRouteLayout<T> extends SingleChildLayoutDelegate {
       size.height,
       route.selectedIndex ?? 0,
     );
+    final top = menuLimits.top.clamp(
+      0.0,
+      math.max(0.0, size.height - childSize.height),
+    );
 
     assert(() {
       final container = Offset.zero & size;
@@ -479,8 +483,8 @@ class _ComboBoxMenuRouteLayout<T> extends SingleChildLayoutDelegate {
         // If the button was entirely on-screen, then verify
         // that the menu is also on-screen.
         // If the button was a bit off-screen, then, oh well.
-        assert(menuLimits.top >= 0.0);
-        assert(menuLimits.top + menuLimits.height <= size.height);
+        assert(top >= 0.0);
+        assert(top + childSize.height <= size.height);
       }
       return true;
     }());
@@ -493,7 +497,7 @@ class _ComboBoxMenuRouteLayout<T> extends SingleChildLayoutDelegate {
         left = buttonRect.left.clamp(0.0, size.width - childSize.width);
     }
 
-    return Offset(left, menuLimits.top);
+    return Offset(left, top);
   }
 
   @override
