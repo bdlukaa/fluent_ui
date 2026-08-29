@@ -60,15 +60,16 @@ class _ComboBoxMenuPainter extends CustomPainter {
   @override
   void paint(Canvas canvas, Size size) {
     final selectedItemOffset = getSelectedItemOffset();
-    final maxTopOffset = math.max(0.0, size.height - scaledItemHeight);
+    final maxTopOffset = math.max<double>(0, size.height - scaledItemHeight);
     final minBottomOffset = math.min(scaledItemHeight, size.height);
     final top = Tween<double>(
-      begin: selectedItemOffset.clamp(0.0, maxTopOffset),
+      begin: clampDouble(selectedItemOffset, 0, maxTopOffset),
       end: 0,
     );
 
     final bottom = Tween<double>(
-      begin: (top.begin! + scaledItemHeight).clamp(
+      begin: clampDouble(
+        top.begin! + scaledItemHeight,
         minBottomOffset,
         size.height,
       ),
@@ -404,15 +405,16 @@ class _ComboBoxResizeClipper extends CustomClipper<RRect> {
   @override
   RRect getClip(Size size) {
     final selectedItemOffset = getSelectedItemOffset();
-    final maxTopOffset = math.max(0.0, size.height - scaledItemHeight);
+    final maxTopOffset = math.max<double>(0, size.height - scaledItemHeight);
     final minBottomOffset = math.min(scaledItemHeight, size.height);
     final top = Tween<double>(
-      begin: selectedItemOffset.clamp(0.0, maxTopOffset),
+      begin: clampDouble(selectedItemOffset, 0, maxTopOffset),
       end: 0,
     );
 
     final bottom = Tween<double>(
-      begin: (top.begin! + scaledItemHeight).clamp(
+      begin: clampDouble(
+        top.begin! + scaledItemHeight,
         minBottomOffset,
         size.height,
       ),
@@ -472,6 +474,11 @@ class _ComboBoxMenuRouteLayout<T> extends SingleChildLayoutDelegate {
       size.height,
       route.selectedIndex ?? 0,
     );
+    final top = clampDouble(
+      menuLimits.top,
+      0,
+      math.max(0, size.height - childSize.height),
+    );
 
     assert(() {
       final container = Offset.zero & size;
@@ -479,8 +486,8 @@ class _ComboBoxMenuRouteLayout<T> extends SingleChildLayoutDelegate {
         // If the button was entirely on-screen, then verify
         // that the menu is also on-screen.
         // If the button was a bit off-screen, then, oh well.
-        assert(menuLimits.top >= 0.0);
-        assert(menuLimits.top + menuLimits.height <= size.height);
+        assert(top >= 0.0);
+        assert(top + childSize.height <= size.height);
       }
       return true;
     }());
@@ -488,12 +495,12 @@ class _ComboBoxMenuRouteLayout<T> extends SingleChildLayoutDelegate {
     final double left;
     switch (textDirection!) {
       case TextDirection.rtl:
-        left = buttonRect.right.clamp(0.0, size.width) - childSize.width;
+        left = clampDouble(buttonRect.right, 0, size.width) - childSize.width;
       case TextDirection.ltr:
-        left = buttonRect.left.clamp(0.0, size.width - childSize.width);
+        left = clampDouble(buttonRect.left, 0, size.width - childSize.width);
     }
 
-    return Offset(left, menuLimits.top);
+    return Offset(left, top);
   }
 
   @override
@@ -806,14 +813,15 @@ class _ComboBoxItemContainer extends StatelessWidget {
 
     final textScaler = MediaQuery.textScalerOf(context);
     final densityAdjustment = theme.visualDensity.baseSizeAdjustment.dy;
-    final adjustedItemHeight =
-        (textScaler.scale(kComboBoxItemHeight) + densityAdjustment).clamp(
-          0.0,
-          double.infinity,
-        );
+    final adjustedItemHeight = clampDouble(
+      textScaler.scale(kComboBoxItemHeight) + densityAdjustment,
+      0,
+      double.infinity,
+    );
     final itemHeight = adjustedItemHeight;
-    final buttonHeight = (adjustedItemHeight - _kMenuItemBottomPadding).clamp(
-      0.0,
+    final buttonHeight = clampDouble(
+      adjustedItemHeight - _kMenuItemBottomPadding,
+      0,
       double.infinity,
     );
     return Container(

@@ -1,4 +1,5 @@
 import 'package:fluent_ui/fluent_ui.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/rendering.dart';
 
 /// The default height of a one-line list tile.
@@ -329,10 +330,12 @@ class ListTile extends StatelessWidget {
             child: Container(
               decoration: ShapeDecoration(shape: shape, color: tileColor),
               constraints: BoxConstraints(
-                minHeight:
-                    (kOneLineTileHeight +
-                            theme.visualDensity.baseSizeAdjustment.dy)
-                        .clamp(0.0, double.infinity),
+                minHeight: clampDouble(
+                  kOneLineTileHeight +
+                      theme.visualDensity.baseSizeAdjustment.dy,
+                  0,
+                  double.infinity,
+                ),
                 minWidth: 88,
               ),
               margin: margin,

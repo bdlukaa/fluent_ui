@@ -1,4 +1,5 @@
 import 'package:fluent_ui/fluent_ui.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/rendering.dart';
 
 /// The alignment of the chevron icon in the breadcrumb bar.
@@ -541,7 +542,7 @@ class RenderBreadcrumbBar<T> extends RenderBox
     onIndexOverflow(overflowedIndexes);
 
     size = Size(
-      maxExtent.clamp(constraints.maxWidth, constraints.maxWidth),
+      clampDouble(maxExtent, constraints.maxWidth, constraints.maxWidth),
       height,
     );
   }

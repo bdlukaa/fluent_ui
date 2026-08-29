@@ -1,4 +1,5 @@
 import 'package:fluent_ui/fluent_ui.dart';
+import 'package:flutter/foundation.dart';
 
 /// The chevron down icon.
 ///
@@ -41,7 +42,7 @@ class ChevronDown extends StatelessWidget {
       child: Icon(icon, size: iconSize, color: iconColor),
       builder: (context, value, child) {
         return Opacity(
-          opacity: value.clamp(0.0, 1.0),
+          opacity: clampDouble(value, 0.0, 1.0),
           child: Transform.translate(
             filterQuality: FilterQuality.high,
             offset: Offset(0, value == 1 ? 0 : value * 1),

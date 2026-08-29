@@ -315,4 +315,50 @@ void main() {
 
     expect(selectedValue, 'something');
   });
+
+  testWidgets('ComboBox positioned at bottom opens without layout assertions', (
+    tester,
+  ) async {
+    const selectedValue = 'Two';
+
+    await tester.pumpWidget(
+      wrapApp(
+        child: SizedBox(
+          height: 602,
+          child: Align(
+            alignment: Alignment.bottomCenter,
+            child: ComboBox<String>(
+              value: selectedValue,
+              items: const [
+                ComboBoxItem<String>(
+                  key: Key('bottom-combo-item-one'),
+                  value: 'One',
+                  child: Text('One'),
+                ),
+                ComboBoxItem<String>(
+                  key: Key('bottom-combo-item-two'),
+                  value: 'Two',
+                  child: Text('Two'),
+                ),
+                ComboBoxItem<String>(
+                  key: Key('bottom-combo-item-three'),
+                  value: 'Three',
+                  child: Text('Three'),
+                ),
+              ],
+              onChanged: (_) {},
+            ),
+          ),
+        ),
+      ),
+    );
+
+    await tester.tap(find.byType(ComboBox<String>));
+    await tester.pumpAndSettle();
+
+    expect(tester.takeException(), isNull);
+    expect(find.byKey(const Key('bottom-combo-item-one')), findsWidgets);
+    expect(find.byKey(const Key('bottom-combo-item-two')), findsWidgets);
+    expect(find.byKey(const Key('bottom-combo-item-three')), findsWidgets);
+  });
 }

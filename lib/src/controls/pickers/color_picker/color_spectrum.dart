@@ -2,6 +2,7 @@ import 'dart:math' as math;
 import 'dart:ui' as dart;
 
 import 'package:fluent_ui/fluent_ui.dart';
+import 'package:flutter/foundation.dart';
 
 import 'color_state.dart';
 
@@ -273,8 +274,8 @@ class _ColorBoxSpectrumState extends State<ColorBoxSpectrum> {
     final height = size.height;
 
     // Clamp position within bounds
-    final x = position.dx.clamp(0, width);
-    final y = position.dy.clamp(0, height);
+    final x = clampDouble(position.dx, 0, width);
+    final y = clampDouble(position.dy, 0, height);
 
     // Calculate HSV values
     // Hue from left to right (minHue to maxHue)
@@ -461,12 +462,16 @@ class _RingSpectrumPainter extends CustomPainter {
 
     final labelWidth = textPainter.width + labelPadding.horizontal;
     final labelHeight = textPainter.height + labelPadding.vertical;
-    final labelX = (position.dx - labelWidth / 2)
-        .clamp(0, size.width - labelWidth)
-        .toDouble();
-    var labelY = (position.dy - labelHeight - 30)
-        .clamp(0, size.height - labelHeight)
-        .toDouble();
+    final labelX = clampDouble(
+      position.dx - labelWidth / 2,
+      0,
+      size.width - labelWidth,
+    );
+    var labelY = clampDouble(
+      position.dy - labelHeight - 30,
+      0,
+      size.height - labelHeight,
+    );
 
     // Check if label would overlap the indicator and adjust position
     final labelBottomY = labelY + labelHeight;
@@ -676,12 +681,16 @@ class _BoxSpectrumPainter extends CustomPainter {
 
     final labelWidth = textPainter.width + labelPadding.horizontal;
     final labelHeight = textPainter.height + labelPadding.vertical;
-    final labelX = (position.dx - labelWidth / 2)
-        .clamp(0, size.width - labelWidth)
-        .toDouble();
-    var labelY = (position.dy - labelHeight - 30)
-        .clamp(0, size.height - labelHeight)
-        .toDouble();
+    final labelX = clampDouble(
+      position.dx - labelWidth / 2,
+      0,
+      size.width - labelWidth,
+    );
+    var labelY = clampDouble(
+      position.dy - labelHeight - 30,
+      0,
+      size.height - labelHeight,
+    );
 
     // Check if label would overlap the indicator and adjust position
     final labelBottomY = labelY + labelHeight;

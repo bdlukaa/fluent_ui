@@ -260,7 +260,7 @@ class _ProgressBarPainter extends CustomPainter {
     if (value != null) {
       drawLine(
         Offset(0, size.height),
-        Offset(value!.clamp(0.0, 1.0) * size.width, size.height),
+        Offset(clampDouble(value!, 0, 1) * size.width, size.height),
         activeColor,
       );
       return;
@@ -559,7 +559,7 @@ class _RingPainter extends CustomPainter {
       canvas.drawArc(
         offset & size,
         _startAngle,
-        (value! / 100).clamp(0, 1) * _sweep,
+        clampDouble(value! / 100, 0, 1) * _sweep,
         false,
         paint,
       );

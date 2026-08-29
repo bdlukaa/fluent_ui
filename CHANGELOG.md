@@ -1,3 +1,7 @@
+## 4.16.2
+
+- fix: `ComboBox` no longer throws a layout assertion when opened while fully aligned to the bottom edge of the viewport ([#1350](https://github.com/bdlukaa/fluent_ui/issues/1350))
+
 ## 4.16.1
 
 - fix: `ComboBox` no longer throws when opening a dropdown with a single item ([#1347](https://github.com/bdlukaa/fluent_ui/pull/1347))
