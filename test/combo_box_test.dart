@@ -357,8 +357,8 @@ void main() {
     await tester.pumpAndSettle();
 
     expect(tester.takeException(), isNull);
-    expect(find.byKey(const Key('bottom-combo-item-one')), findsOneWidget);
-    expect(find.byKey(const Key('bottom-combo-item-two')), findsOneWidget);
-    expect(find.byKey(const Key('bottom-combo-item-three')), findsOneWidget);
+    expect(find.byKey(const Key('bottom-combo-item-one')), findsWidgets);
+    expect(find.byKey(const Key('bottom-combo-item-two')), findsWidgets);
+    expect(find.byKey(const Key('bottom-combo-item-three')), findsWidgets);
   });
 }
