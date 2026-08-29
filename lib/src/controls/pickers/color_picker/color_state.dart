@@ -1,6 +1,7 @@
 import 'dart:math' as math;
 
 import 'package:fluent_ui/fluent_ui.dart';
+import 'package:flutter/foundation.dart';
 
 part 'color_names.dart';
 
@@ -120,14 +121,14 @@ class ColorState extends ChangeNotifier {
 
   /// Sets the saturation and updates the RGB values accordingly.
   void setSaturation(double newValue) {
-    _saturation = newValue.clamp(0, 1);
+    _saturation = clampDouble(newValue, 0, 1);
     _recalculateRGBFromHSV();
     notifyListeners();
   }
 
   /// Sets the value and updates the RGB values accordingly.
   void setValue(double newValue) {
-    _value = newValue.clamp(0, 1);
+    _value = clampDouble(newValue, 0, 1);
 
     if (_value == 0) {
       _red = 0;
@@ -145,28 +146,28 @@ class ColorState extends ChangeNotifier {
 
   /// Sets the red component and updates the HSV values accordingly.
   void setRed(double newValue) {
-    _red = newValue.clamp(0, 1);
+    _red = clampDouble(newValue, 0, 1);
     _recalculateHSVFromRGB();
     notifyListeners();
   }
 
   /// Sets the green component and updates the HSV values accordingly.
   void setGreen(double newValue) {
-    _green = newValue.clamp(0, 1);
+    _green = clampDouble(newValue, 0, 1);
     _recalculateHSVFromRGB();
     notifyListeners();
   }
 
   /// Sets the blue component and updates the HSV values accordingly.
   void setBlue(double newValue) {
-    _blue = newValue.clamp(0, 1);
+    _blue = clampDouble(newValue, 0, 1);
     _recalculateHSVFromRGB();
     notifyListeners();
   }
 
   /// Sets the alpha component (0–1).
   void setAlpha(double newValue) {
-    _alpha = newValue.clamp(0, 1);
+    _alpha = clampDouble(newValue, 0, 1);
     notifyListeners();
   }
 
@@ -286,12 +287,13 @@ class ColorState extends ChangeNotifier {
     );
 
     // Clamp values to allowed ranges
-    final clampedHue = _hue.clamp(minHue.toDouble(), maxHue.toDouble());
-    final clampedSaturation = _saturation.clamp(
+    final clampedHue = clampDouble(_hue, minHue.toDouble(), maxHue.toDouble());
+    final clampedSaturation = clampDouble(
+      _saturation,
       minSaturation / 100,
       maxSaturation / 100,
     );
-    final clampedValue = _value.clamp(minValue / 100, maxValue / 100);
+    final clampedValue = clampDouble(_value, minValue / 100, maxValue / 100);
 
     // Only update and recalculate if values actually changed
     if (clampedHue != _hue ||

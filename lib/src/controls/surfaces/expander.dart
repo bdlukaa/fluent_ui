@@ -319,8 +319,9 @@ class ExpanderState extends State<Expander>
         builder: (context, states) {
           return Container(
             constraints: BoxConstraints(
-              minHeight: (42 + theme.visualDensity.baseSizeAdjustment.dy).clamp(
-                0.0,
+              minHeight: clampDouble(
+                42 + theme.visualDensity.baseSizeAdjustment.dy,
+                0,
                 double.infinity,
               ),
             ),

@@ -508,7 +508,8 @@ class _FlyoutPositionDelegate extends SingleChildLayoutDelegate {
       return clampDouble(
         y,
         margin,
-        (rootSize.height - flyoutSize.height - margin).clamp(
+        clampDouble(
+          rootSize.height - flyoutSize.height - margin,
           margin,
           rootSize.height - margin,
         ),

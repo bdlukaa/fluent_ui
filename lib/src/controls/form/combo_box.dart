@@ -68,7 +68,8 @@ class _ComboBoxMenuPainter extends CustomPainter {
     );
 
     final bottom = Tween<double>(
-      begin: (top.begin! + scaledItemHeight).clamp(
+      begin: clampDouble(
+        top.begin! + scaledItemHeight,
         minBottomOffset,
         size.height,
       ),
@@ -407,12 +408,13 @@ class _ComboBoxResizeClipper extends CustomClipper<RRect> {
     final maxTopOffset = math.max<double>(0, size.height - scaledItemHeight);
     final minBottomOffset = math.min(scaledItemHeight, size.height);
     final top = Tween<double>(
-      begin: selectedItemOffset.clamp(0.0, maxTopOffset),
+      begin: clampDouble(selectedItemOffset, 0, maxTopOffset),
       end: 0,
     );
 
     final bottom = Tween<double>(
-      begin: (top.begin! + scaledItemHeight).clamp(
+      begin: clampDouble(
+        top.begin! + scaledItemHeight,
         minBottomOffset,
         size.height,
       ),
@@ -493,9 +495,9 @@ class _ComboBoxMenuRouteLayout<T> extends SingleChildLayoutDelegate {
     final double left;
     switch (textDirection!) {
       case TextDirection.rtl:
-        left = buttonRect.right.clamp(0.0, size.width) - childSize.width;
+        left = clampDouble(buttonRect.right, 0, size.width) - childSize.width;
       case TextDirection.ltr:
-        left = buttonRect.left.clamp(0.0, size.width - childSize.width);
+        left = clampDouble(buttonRect.left, 0, size.width - childSize.width);
     }
 
     return Offset(left, top);
@@ -811,14 +813,15 @@ class _ComboBoxItemContainer extends StatelessWidget {
 
     final textScaler = MediaQuery.textScalerOf(context);
     final densityAdjustment = theme.visualDensity.baseSizeAdjustment.dy;
-    final adjustedItemHeight =
-        (textScaler.scale(kComboBoxItemHeight) + densityAdjustment).clamp(
-          0.0,
-          double.infinity,
-        );
+    final adjustedItemHeight = clampDouble(
+      textScaler.scale(kComboBoxItemHeight) + densityAdjustment,
+      0,
+      double.infinity,
+    );
     final itemHeight = adjustedItemHeight;
-    final buttonHeight = (adjustedItemHeight - _kMenuItemBottomPadding).clamp(
-      0.0,
+    final buttonHeight = clampDouble(
+      adjustedItemHeight - _kMenuItemBottomPadding,
+      0,
       double.infinity,
     );
     return Container(

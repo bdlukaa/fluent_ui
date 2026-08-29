@@ -501,14 +501,14 @@ class _TabViewState extends State<TabView> {
                         'You can only create a TabView in a box with defined width',
                       );
 
-                      preferredTabWidth =
-                          ((width -
-                                      (widget.showNewButton
-                                          ? _kButtonWidth
-                                          : 0) -
-                                      (widget.reservedStripWidth ?? 0)) /
-                                  widget.tabs.length)
-                              .clamp(widget.minTabWidth, widget.maxTabWidth);
+                      preferredTabWidth = clampDouble(
+                        (width -
+                                (widget.showNewButton ? _kButtonWidth : 0) -
+                                (widget.reservedStripWidth ?? 0)) /
+                            widget.tabs.length,
+                        widget.minTabWidth,
+                        widget.maxTabWidth,
+                      );
 
                       final Widget listView = Listener(
                         onPointerSignal: (e) {

@@ -205,8 +205,9 @@ class PaneItem extends NavigationPaneItem {
     final theme = NavigationPaneTheme.of(context);
     final fluentTheme = FluentTheme.of(context);
     final densityAdjustment = fluentTheme.visualDensity.baseSizeAdjustment.dy;
-    final paneItemMinHeight = (kPaneItemMinHeight + densityAdjustment).clamp(
-      0.0,
+    final paneItemMinHeight = clampDouble(
+      kPaneItemMinHeight + densityAdjustment,
+      0,
       double.infinity,
     );
 

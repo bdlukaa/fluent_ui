@@ -541,7 +541,7 @@ class RenderBreadcrumbBar<T> extends RenderBox
     onIndexOverflow(overflowedIndexes);
 
     size = Size(
-      maxExtent.clamp(constraints.maxWidth, constraints.maxWidth),
+      clampDouble(maxExtent, constraints.maxWidth, constraints.maxWidth),
       height,
     );
   }

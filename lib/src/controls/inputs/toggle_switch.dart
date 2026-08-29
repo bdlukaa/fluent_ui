@@ -182,7 +182,7 @@ class _ToggleSwitchState extends State<ToggleSwitch> {
   ) {
     setState(() {
       _alignment = Alignment(
-        (localPosition.dx / sliderGestureWidth).clamp(-1, 1),
+        clampDouble(localPosition.dx / sliderGestureWidth, -1, 1),
         0,
       );
     });
