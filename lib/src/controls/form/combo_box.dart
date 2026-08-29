@@ -60,10 +60,10 @@ class _ComboBoxMenuPainter extends CustomPainter {
   @override
   void paint(Canvas canvas, Size size) {
     final selectedItemOffset = getSelectedItemOffset();
-    final maxTopOffset = math.max(0.0, size.height - scaledItemHeight);
+    final maxTopOffset = math.max<double>(0, size.height - scaledItemHeight);
     final minBottomOffset = math.min(scaledItemHeight, size.height);
     final top = Tween<double>(
-      begin: selectedItemOffset.clamp(0.0, maxTopOffset),
+      begin: clampDouble(selectedItemOffset, 0, maxTopOffset),
       end: 0,
     );
 
@@ -404,7 +404,7 @@ class _ComboBoxResizeClipper extends CustomClipper<RRect> {
   @override
   RRect getClip(Size size) {
     final selectedItemOffset = getSelectedItemOffset();
-    final maxTopOffset = math.max(0.0, size.height - scaledItemHeight);
+    final maxTopOffset = math.max<double>(0, size.height - scaledItemHeight);
     final minBottomOffset = math.min(scaledItemHeight, size.height);
     final top = Tween<double>(
       begin: selectedItemOffset.clamp(0.0, maxTopOffset),
@@ -472,9 +472,10 @@ class _ComboBoxMenuRouteLayout<T> extends SingleChildLayoutDelegate {
       size.height,
       route.selectedIndex ?? 0,
     );
-    final top = menuLimits.top.clamp(
-      0.0,
-      math.max(0.0, size.height - childSize.height),
+    final top = clampDouble(
+      menuLimits.top,
+      0,
+      math.max(0, size.height - childSize.height),
     );
 
     assert(() {
