@@ -1,4 +1,5 @@
 import 'package:fluent_ui/fluent_ui.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/rendering.dart';
 
 /// The alignment of the chevron icon in the breadcrumb bar.
