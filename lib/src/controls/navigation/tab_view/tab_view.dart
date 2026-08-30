@@ -395,11 +395,14 @@ class _TabViewState extends State<TabView> {
           return lockedTabWidth ?? preferredTabWidth;
       }
     }();
+    // Match the body page keying (_pageKeyOf in _TabBody): prefer the
+    // caller-provided tab key so the tab element survives rebuilds that
+    // construct fresh Tab widgets.
     if (minWidth == null) {
-      return KeyedSubtree(key: ValueKey<Tab>(tab), child: child);
+      return KeyedSubtree(key: ValueKey<Object?>(tab.key ?? tab), child: child);
     }
     return AnimatedContainer(
-      key: ValueKey<Tab>(tab),
+      key: ValueKey<Object?>(tab.key ?? tab),
       constraints: BoxConstraints(maxWidth: minWidth, minWidth: minWidth),
       duration: FluentTheme.of(context).fastAnimationDuration,
       curve: FluentTheme.of(context).animationCurve,

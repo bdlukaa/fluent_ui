@@ -115,6 +115,19 @@ class __TabBodyState extends State<_TabBody> {
 
   PageController get pageController => _pageController!;
 
+  // A tab's page identity: the caller-provided key when set (stable across
+  // rebuilds that recreate the Tab widget), otherwise the Tab instance itself.
+  static ValueKey<Object?> _pageKeyOf(Tab tab) =>
+      ValueKey<Object?>(tab.key ?? tab);
+
+  int? _indexOfPageKey(Key key) {
+    if (key is! ValueKey<Object?>) return null;
+    for (var i = 0; i < widget.tabs.length; i++) {
+      if (_pageKeyOf(widget.tabs[i]).value == key.value) return i;
+    }
+    return null;
+  }
+
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
@@ -145,21 +158,17 @@ class __TabBodyState extends State<_TabBody> {
       // guards in-place reuse, so without this a stateful body stayed parked
       // at its old slot while the header moved, desyncing content from its
       // tab.
-      findChildIndexCallback: (key) {
-        // Pages are keyed by ValueKey<Tab>; guard the type rather than cast so
-        // an unexpected key can never throw from this framework callback.
-        if (key is! ValueKey<Tab>) return null;
-        final index = widget.tabs.indexOf(key.value);
-        return index == -1 ? null : index;
-      },
+      findChildIndexCallback: _indexOfPageKey,
       itemBuilder: (context, index) {
         final isSelected = widget.index == index;
         final item = widget.tabs[index];
 
-        // Key the body by tab identity, matching the tab strip
-        // (KeyedSubtree(key: ValueKey<Tab>(tab)) in TabView).
+        // Key the body by the caller-provided tab key when available so the
+        // page element survives rebuilds that construct fresh Tab widgets
+        // (the normal Flutter pattern); fall back to tab identity otherwise,
+        // matching the tab strip (KeyedSubtree(key: ...) in TabView).
         return ExcludeFocus(
-          key: ValueKey<Tab>(item),
+          key: _pageKeyOf(item),
           excluding: !isSelected,
           child: FocusTraversalGroup(child: item.body),
         );

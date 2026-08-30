@@ -1,3 +1,7 @@
+## [next]
+
+- fix: `TabView` now keys each body page (and strip entry) on the caller-provided `Tab.key` when available, falling back to tab identity. This keeps each tab's body (and its state) attached to its tab both across reorders and across rebuilds that construct fresh `Tab` widgets — the standard Flutter pattern — instead of tearing the visible body down on every rebuild
+
 ## 4.16.1
 
 - fix: `ComboBox` no longer throws when opening a dropdown with a single item ([#1347](https://github.com/bdlukaa/fluent_ui/pull/1347))
