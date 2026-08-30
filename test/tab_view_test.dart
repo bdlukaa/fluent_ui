@@ -152,6 +152,54 @@ void main() {
     expect(body('B:0'), findsNothing);
   });
 
+  testWidgets(
+    'TabView keeps body state across rebuilds that construct fresh Tab widgets',
+    (tester) async {
+      // PageView parks non-visible pages offstage, so search offstage too.
+      Finder body(String text) => find.text(text, skipOffstage: false);
+
+      await tester.pumpWidget(wrapApp(child: const _FreshInstanceHarness()));
+      await tester.pumpAndSettle();
+      expect(body('A:0'), findsOneWidget);
+
+      // Give tab "A" some state the plain widget config can't carry.
+      await tester.tap(find.widgetWithText(Button, 'inc A'));
+      await tester.pumpAndSettle();
+      expect(body('A:1'), findsOneWidget);
+
+      // The harness rebuilds with brand-new Tab widgets carrying the same
+      // keys — the standard Flutter pattern. A's state must survive.
+      await tester.tap(find.widgetWithText(Button, 'rebuild'));
+      await tester.pumpAndSettle();
+
+      expect(body('A:1'), findsOneWidget);
+      expect(body('A:0'), findsNothing);
+    },
+  );
+
+  testWidgets(
+    'TabView keeps body glued to its tab across a reorder of fresh Tab widgets',
+    (tester) async {
+      Finder body(String text) => find.text(text, skipOffstage: false);
+
+      await tester.pumpWidget(wrapApp(child: const _FreshInstanceHarness()));
+      await tester.pumpAndSettle();
+      expect(body('A:0'), findsOneWidget);
+
+      await tester.tap(find.widgetWithText(Button, 'inc A'));
+      await tester.pumpAndSettle();
+      expect(body('A:1'), findsOneWidget);
+
+      // Move A behind B. The harness constructs fresh Tab widgets (same keys)
+      // on every build, so only the caller-provided keys can identify A.
+      await tester.tap(find.widgetWithText(Button, 'reorder'));
+      await tester.pumpAndSettle();
+
+      expect(body('A:1'), findsOneWidget);
+      expect(body('A:0'), findsNothing);
+    },
+  );
+
   testWidgets('TabView supports custom stripBuilder', (tester) async {
     final tabs = [Tab(text: const Text('Tab 1'), body: const Text('Body 1'))];
     await tester.pumpWidget(
@@ -201,6 +249,57 @@ class _ReorderHarnessState extends State<_ReorderHarness> {
                 final b = tabs.removeAt(1);
                 tabs.insert(0, b);
                 currentIndex = 0;
+              }),
+              child: const Text('reorder'),
+            ),
+          ],
+        ),
+        Expanded(
+          child: TabView(
+            currentIndex: currentIndex,
+            tabs: tabs,
+            onChanged: (i) => setState(() => currentIndex = i),
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+/// Drives a two-tab [TabView] whose bodies hold state (a counter) and whose
+/// [Tab] widgets are constructed fresh on every build with stable caller keys
+/// — the standard Flutter pattern. Buttons bump A's counter and reorder the
+/// tabs. Used to prove the body element is reconciled by caller key, not by
+/// Tab widget identity.
+class _FreshInstanceHarness extends StatefulWidget {
+  const _FreshInstanceHarness();
+
+  @override
+  State<_FreshInstanceHarness> createState() => _FreshInstanceHarnessState();
+}
+
+class _FreshInstanceHarnessState extends State<_FreshInstanceHarness> {
+  List<String> tabIds = ['A', 'B'];
+  int currentIndex = 0;
+
+  @override
+  Widget build(BuildContext context) {
+    final tabs = [
+      for (final id in tabIds)
+        Tab(key: ValueKey<String>(id), text: Text(id), body: _CounterBody(id)),
+    ];
+    return Column(
+      children: [
+        Row(
+          children: [
+            Button(
+              onPressed: () => setState(() {}),
+              child: const Text('rebuild'),
+            ),
+            Button(
+              onPressed: () => setState(() {
+                tabIds = tabIds.reversed.toList();
+                currentIndex = tabIds.indexOf('A');
               }),
               child: const Text('reorder'),
             ),
