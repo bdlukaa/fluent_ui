@@ -1,4 +1,5 @@
-export 'package:flutter/material.dart'
+export 'package:flutter/widgets.dart' hide TextBox;
+export 'package:material_ui/material_ui.dart'
     show
         AdaptiveTextSelectionToolbar,
         AnimatedIcon,
@@ -30,7 +31,6 @@ export 'package:flutter/material.dart'
         VisualDensity,
         kElevationToShadow,
         kThemeAnimationDuration;
-export 'package:flutter/widgets.dart' hide TextBox;
 export 'package:scroll_pos/scroll_pos.dart';
 
 export 'l10n/extension/fluent_localizations_extension.dart';

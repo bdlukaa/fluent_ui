@@ -89,7 +89,7 @@ void main() {
   testWidgets('MenuBar animates open and closes on hover switch', (
     tester,
   ) async {
-    const Duration animDuration = Duration(milliseconds: 80);
+    const animDuration = Duration(milliseconds: 80);
     await tester.pumpWidget(
       wrapApp(
         child: FluentTheme(
@@ -136,7 +136,7 @@ void main() {
     await tester.pumpWidget(wrapApp(child: MenuBar(items: manyItems)));
 
     // All items should render (wrapping to multiple lines)
-    for (int i = 0; i < 15; i++) {
+    for (var i = 0; i < 15; i++) {
       expect(find.text('Menu $i'), findsOneWidget);
     }
 
@@ -167,7 +167,7 @@ void main() {
     );
 
     // All items should render (scrollable)
-    for (int i = 0; i < 15; i++) {
+    for (var i = 0; i < 15; i++) {
       expect(find.text('Menu $i'), findsOneWidget);
     }
 
@@ -209,7 +209,6 @@ void main() {
           MenuFlyoutItem(
             text: const Text('Do Something'),
             onPressed: () => pressed = true,
-            closeAfterClick: true,
           ),
         ],
       ),

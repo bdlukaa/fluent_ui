@@ -670,7 +670,7 @@ class _TooltipContent extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return DefaultTextStyle.merge(
-      style: FluentTheme.of(context).typography.body!,
+      style: FluentTheme.of(context).typography.body,
       child: Container(
         decoration: decoration,
         padding: padding,

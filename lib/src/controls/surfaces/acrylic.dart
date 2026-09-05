@@ -4,7 +4,7 @@ import 'dart:ui' show ImageFilter;
 
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter/foundation.dart';
-import 'package:flutter/material.dart' as m;
+import 'package:material_ui/material_ui.dart' as m;
 
 /// The default blur amount applied to [Acrylic] widgets.
 const double kBlurAmount = 30;
