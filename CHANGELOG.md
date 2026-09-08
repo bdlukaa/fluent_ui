@@ -1,4 +1,5 @@
 ## [next]
+
 - fix(title_bar): skip hidden children when collecting semantics ([#1354](https://github.com/bdlukaa/fluent_ui/pull/1354))
 
 ## 4.16.1
