@@ -1,8 +1,8 @@
 import 'dart:math';
 
+import 'package:cupertino_ui/cupertino_ui.dart' as c;
 import 'package:fluent_ui/fluent_ui.dart';
-import 'package:flutter/cupertino.dart' as c;
-import 'package:flutter/material.dart' as m;
+import 'package:material_ui/material_ui.dart' as m;
 
 class UIEquivalents extends StatefulWidget {
   const UIEquivalents({super.key});

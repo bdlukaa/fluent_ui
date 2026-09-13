@@ -1,11 +1,6 @@
+import 'package:cupertino_ui/cupertino_ui.dart' show CupertinoScrollbar;
 import 'package:fluent_ui/fluent_ui.dart';
-import 'package:flutter/cupertino.dart' show CupertinoScrollbar;
-import 'package:flutter/material.dart' as m;
-import 'package:flutter_localizations/flutter_localizations.dart'
-    show
-        GlobalCupertinoLocalizations,
-        GlobalMaterialLocalizations,
-        GlobalWidgetsLocalizations;
+import 'package:material_ui/material_ui.dart' as m;
 
 /// An application that uses Windows design.
 ///
@@ -394,9 +389,7 @@ class _FluentAppState extends State<FluentApp> {
       yield* localizationsDelegates;
     }
     yield FluentLocalizations.delegate;
-    yield GlobalMaterialLocalizations.delegate;
-    yield GlobalCupertinoLocalizations.delegate;
-    yield GlobalWidgetsLocalizations.delegate;
+    yield* m.GlobalMaterialLocalizations.delegates;
   }
 
   bool get _usesRouter =>

@@ -709,9 +709,10 @@ class _ColorSliders extends StatelessWidget {
       if (isColorSliderVisible)
         _buildValueSlider(theme, localizations, isVertical),
       if (isColorSliderVisible && isAlphaSliderVisible && isAlphaEnabled)
-        orientation == Axis.vertical
-            ? SizedBox(height: _ColorPickerSpacing.large.size)
-            : SizedBox(width: _ColorPickerSpacing.large.size),
+        if (orientation == Axis.vertical)
+          SizedBox(height: _ColorPickerSpacing.large.size)
+        else
+          SizedBox(width: _ColorPickerSpacing.large.size),
       if (isAlphaSliderVisible && isAlphaEnabled)
         _buildAlphaSlider(theme, localizations, isVertical),
     ];
