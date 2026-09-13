@@ -653,12 +653,16 @@ class AutoSuggestBoxState<T> extends State<AutoSuggestBox<T>> {
     final double overlayOffsetY;
     final double maxHeight;
     if (showAbove) {
-      maxHeight = spaceAbove.clamp(0.0, widget.maxPopupHeight);
+      maxHeight = clampDouble(spaceAbove, 0, widget.maxPopupHeight);
       overlayOffsetY = -(maxHeight + 0.8);
     } else {
       overlayOffsetY = box.size.height + 0.8;
       final overlayY = globalOffset.dy + box.size.height;
-      maxHeight = (screenHeight - overlayY).clamp(0.0, widget.maxPopupHeight);
+      maxHeight = clampDouble(
+        screenHeight - overlayY,
+        0,
+        widget.maxPopupHeight,
+      );
     }
 
     Widget child = PositionedDirectional(
@@ -977,8 +981,9 @@ class _AutoSuggestBoxOverlayState<T> extends State<_AutoSuggestBoxOverlay<T>> {
   /// Returns the tile height adjusted for the given visual density.
   @visibleForTesting
   static double adjustedTileHeight(VisualDensity density) {
-    return (_tileHeight + density.baseSizeAdjustment.dy).clamp(
-      0.0,
+    return clampDouble(
+      _tileHeight + density.baseSizeAdjustment.dy,
+      0,
       double.infinity,
     );
   }

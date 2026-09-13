@@ -211,14 +211,14 @@ class _RatingControlState extends State<RatingControl> {
     void increase() {
       if (widget.rating == widget.amount) return;
       widget.onChanged?.call(
-        (widget.rating + 1).clamp(0, widget.amount).toDouble(),
+        clampDouble(widget.rating + 1, 0, widget.amount.toDouble()),
       );
     }
 
     void decrease() {
       if (widget.rating == 0) return;
       widget.onChanged?.call(
-        (widget.rating - 1).clamp(0, widget.amount).toDouble(),
+        clampDouble(widget.rating - 1, 0, widget.amount.toDouble()),
       );
     }
 
@@ -253,19 +253,20 @@ class _RatingControlState extends State<RatingControl> {
   /// downstream calculations can assume left-to-right ordering.
   double _adjustX(double x) {
     if (Directionality.of(context) == TextDirection.rtl) {
-      return (_totalWidth - x).clamp(0.0, _totalWidth);
+      return clampDouble(_totalWidth - x, 0, _totalWidth);
     }
     return x;
   }
 
   void _handleUpdate(double x) {
     final totalPerStar = widget.iconSize + widget.starSpacing;
-    final raw = (_adjustX(x) / totalPerStar).clamp(
-      0.0,
+    final raw = clampDouble(
+      _adjustX(x) / totalPerStar,
+      0,
       widget.amount.toDouble(),
     );
-    final snapped = raw.ceil().clamp(0, widget.amount).toDouble();
-    widget.onChanged?.call(snapped);
+    final snapped = raw.ceil().clamp(0, widget.amount);
+    widget.onChanged?.call(snapped.toDouble());
   }
 
   void _handleHoverUpdate(double x) {
@@ -334,7 +335,7 @@ class _RatingControlState extends State<RatingControl> {
                       final double r;
 
                       if (!isEnabled) {
-                        r = (value - index).clamp(0.0, 1.0);
+                        r = clampDouble(value - index, 0, 1);
                         starRatedColor =
                             widget.ratedIconColor ??
                             resources.textFillColorDisabled;
@@ -363,7 +364,7 @@ class _RatingControlState extends State<RatingControl> {
                         }
                       } else {
                         // Normal (non-hover) state
-                        r = (value - index).clamp(0.0, 1.0);
+                        r = clampDouble(value - index, 0, 1);
                         starRatedColor =
                             widget.ratedIconColor ??
                             accentColor; // SelectedForeground

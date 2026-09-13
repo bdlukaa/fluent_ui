@@ -397,8 +397,9 @@ class InfoBar extends StatelessWidget {
     }();
     return Container(
       constraints: BoxConstraints(
-        minHeight: (48 + theme.visualDensity.baseSizeAdjustment.dy).clamp(
-          0.0,
+        minHeight: clampDouble(
+          48 + theme.visualDensity.baseSizeAdjustment.dy,
+          0,
           double.infinity,
         ),
       ),

@@ -547,7 +547,11 @@ class NavigationPaneSize with Diagnosticable {
 
   /// Gets the width of the open pane with the constraints applied.
   double get openPaneWidth {
-    return openWidth.clamp(openMinWidth ?? 0, openMaxWidth ?? double.infinity);
+    return clampDouble(
+      openWidth,
+      openMinWidth ?? 0,
+      openMaxWidth ?? double.infinity,
+    );
   }
 
   @override

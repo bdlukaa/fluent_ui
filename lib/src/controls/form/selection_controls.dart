@@ -411,7 +411,8 @@ class _WindowsTextSelectionControlsToolbarState
 
     assert(debugCheckHasMediaQuery(context));
     final midpointAnchor = Offset(
-      (widget.selectionMidpoint.dx - widget.globalEditableRegion.left).clamp(
+      clampDouble(
+        widget.selectionMidpoint.dx - widget.globalEditableRegion.left,
         MediaQuery.paddingOf(context).left,
         MediaQuery.widthOf(context) - MediaQuery.paddingOf(context).right,
       ),

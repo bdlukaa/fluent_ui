@@ -318,9 +318,11 @@ class TimePickerState extends State<TimePicker>
               duration: theme.fastAnimationDuration,
               curve: theme.animationCurve,
               constraints: BoxConstraints(
-                minHeight:
-                    (kPickerHeight + theme.visualDensity.baseSizeAdjustment.dy)
-                        .clamp(0.0, double.infinity),
+                minHeight: clampDouble(
+                  kPickerHeight + theme.visualDensity.baseSizeAdjustment.dy,
+                  0,
+                  double.infinity,
+                ),
               ),
               decoration: kPickerDecorationBuilder(context, states),
               child: DefaultTextStyle.merge(

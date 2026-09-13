@@ -380,8 +380,9 @@ class _StickyNavigationIndicatorState
 
     final fluentTheme = FluentTheme.of(context);
     final densityAdjustment = fluentTheme.visualDensity.baseSizeAdjustment.dy;
-    final paneItemMinHeight = (kPaneItemMinHeight + densityAdjustment).clamp(
-      0.0,
+    final paneItemMinHeight = clampDouble(
+      kPaneItemMinHeight + densityAdjustment,
+      0,
       double.infinity,
     );
 
@@ -455,8 +456,11 @@ class _StickyNavigationIndicatorState
                     final expandProgress = expandAnimation.value;
                     final tileHeight = constraints.maxHeight;
                     final distanceToBottom = tileHeight - widget.leftPadding;
-                    topPadding = (distanceToBottom * (1.0 - expandProgress))
-                        .clamp(widget.leftPadding, distanceToBottom);
+                    topPadding = clampDouble(
+                      distanceToBottom * (1.0 - expandProgress),
+                      widget.leftPadding,
+                      distanceToBottom,
+                    );
                   }
 
                   return Padding(

@@ -1,4 +1,5 @@
 import 'package:fluent_ui/fluent_ui.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/rendering.dart';
 
 /// The title bar sits at the top of an app on the base layer. Its main purpose
@@ -623,9 +624,11 @@ class PaneToggleButton extends StatelessWidget {
   Widget build(BuildContext context) {
     final view = NavigationView.dataOf(context);
     final fluentTheme = FluentTheme.of(context);
-    final paneItemHeight =
-        (kPaneItemMinHeight + fluentTheme.visualDensity.baseSizeAdjustment.dy)
-            .clamp(0.0, double.infinity);
+    final paneItemHeight = clampDouble(
+      kPaneItemMinHeight + fluentTheme.visualDensity.baseSizeAdjustment.dy,
+      0,
+      double.infinity,
+    );
 
     final width = view.pane?.size?.compactWidth ?? kCompactNavigationPaneWidth;
     return Container(
@@ -682,9 +685,11 @@ class PaneBackButton extends StatelessWidget {
     final viewData = NavigationView.dataOf(context);
     final canPop = viewData.canPop;
     final fluentTheme = FluentTheme.of(context);
-    final paneItemHeight =
-        (kPaneItemMinHeight + fluentTheme.visualDensity.baseSizeAdjustment.dy)
-            .clamp(0.0, double.infinity);
+    final paneItemHeight = clampDouble(
+      kPaneItemMinHeight + fluentTheme.visualDensity.baseSizeAdjustment.dy,
+      0,
+      double.infinity,
+    );
 
     final width =
         viewData.pane?.size?.compactWidth ?? kCompactNavigationPaneWidth;

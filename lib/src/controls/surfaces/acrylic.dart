@@ -573,7 +573,7 @@ class AcrylicHelper {
   static Color getLuminosityColor(Color tintColor, double? luminosityOpacity) {
     // If luminosity opacity is specified, just use the values as is
     if (luminosityOpacity != null) {
-      return tintColor.withValues(alpha: luminosityOpacity.clamp(0.0, 1.0));
+      return tintColor.withValues(alpha: clampDouble(luminosityOpacity, 0, 1));
     } else {
       // To create the Luminosity blend input color without luminosity opacity,
       // we're taking the TintColor input, converting to HSV, and clamping the V between these values
@@ -582,7 +582,7 @@ class AcrylicHelper {
 
       final hsvTintColor = HSVColor.fromColor(tintColor);
 
-      final clampedHsvV = hsvTintColor.value.clamp(minHsvV, maxHsvV);
+      final clampedHsvV = clampDouble(hsvTintColor.value, minHsvV, maxHsvV);
 
       final hsvLuminosityColor = hsvTintColor.withValue(clampedHsvV);
       final rgbLuminosityColor = hsvLuminosityColor.toColor();

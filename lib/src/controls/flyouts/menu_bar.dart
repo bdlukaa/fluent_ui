@@ -268,8 +268,9 @@ class MenuBarState extends State<MenuBar> {
         },
         child: Container(
           constraints: BoxConstraints(
-            minHeight: (40 + theme.visualDensity.baseSizeAdjustment.dy).clamp(
-              0.0,
+            minHeight: clampDouble(
+              40 + theme.visualDensity.baseSizeAdjustment.dy,
+              0,
               double.infinity,
             ),
           ),
