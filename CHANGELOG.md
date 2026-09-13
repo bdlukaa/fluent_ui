@@ -1,6 +1,11 @@
 ## [next]
 
-- fix(title_bar): skip hidden children when collecting semantics ([#1354](https://github.com/bdlukaa/fluent_ui/pull/1354))
+
+- refactor: Flutter 3.47.1 support
+- refactor: migrate Material UI imports to the standalone `material_ui` package
+- refactor: migrate Cupertino UI imports to the standalone `cupertino_ui` package
+- refactor: update localization delegates to use `GlobalMaterialLocalizations.delegates` with the new standalone UI packages
+- fix: skip hidden `TitleBar` children when collecting semantics ([#1354](https://github.com/bdlukaa/fluent_ui/pull/1354))
 
 ## 4.16.1
 
