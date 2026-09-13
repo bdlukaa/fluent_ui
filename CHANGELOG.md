@@ -1,5 +1,10 @@
-## 4.16.2
+## [next]
 
+- refactor: Flutter 3.47.1 support
+- refactor: migrate Material UI imports to the standalone `material_ui` package
+- refactor: migrate Cupertino UI imports to the standalone `cupertino_ui` package
+- refactor: update localization delegates to use `GlobalMaterialLocalizations.delegates` with the new standalone UI packages
+- fix: skip hidden `TitleBar` children when collecting semantics ([#1354](https://github.com/bdlukaa/fluent_ui/pull/1354))
 - fix: `ComboBox` no longer throws a layout assertion when opened while fully aligned to the bottom edge of the viewport ([#1350](https://github.com/bdlukaa/fluent_ui/issues/1350))
 
 ## 4.16.1

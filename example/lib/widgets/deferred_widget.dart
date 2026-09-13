@@ -4,7 +4,7 @@
 // Copied from https://github.com/flutter/gallery/blob/d030f1e5316310c48fc725f619eb980a0597366d/lib/deferred_widget.dart
 
 import 'dart:async';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 
 typedef LibraryLoader = Future<void> Function();
 typedef DeferredWidgetBuilder = Widget Function();

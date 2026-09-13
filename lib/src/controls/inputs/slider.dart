@@ -4,8 +4,8 @@ import 'dart:ui';
 
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter/foundation.dart';
-import 'package:flutter/material.dart' as m;
 import 'package:flutter/rendering.dart';
+import 'package:material_ui/material_ui.dart' as m;
 
 /// A slider lets the user select from a range of values by moving a thumb
 /// control along a track.

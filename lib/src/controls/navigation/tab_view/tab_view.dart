@@ -5,8 +5,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_localizations/flutter_localizations.dart';
-
+import 'package:material_ui/material_ui.dart' as m;
 part 'tab.dart';
 
 const double _kMinTileWidth = 80;
@@ -532,9 +531,7 @@ class _TabViewState extends State<TabView> {
                         },
                         child: Localizations.override(
                           context: context,
-                          delegates: const [
-                            GlobalMaterialLocalizations.delegate,
-                          ],
+                          delegates: m.GlobalMaterialLocalizations.delegates,
                           child: ReorderableListView.builder(
                             buildDefaultDragHandles: false,
                             shrinkWrap: true,
@@ -627,9 +624,10 @@ class _TabViewState extends State<TabView> {
                         children: [
                           // scroll buttons if needed
                           if (showScrollButtons)
-                            direction == TextDirection.ltr
-                                ? backwardButton()
-                                : forwardButton(),
+                            if (direction == TextDirection.ltr)
+                              backwardButton()
+                            else
+                              forwardButton(),
                           // tabs area (flexible/expanded)
                           if (scrollable)
                             Expanded(child: listView)
@@ -637,9 +635,10 @@ class _TabViewState extends State<TabView> {
                             Flexible(child: listView),
                           // scroll buttons if needed
                           if (showScrollButtons)
-                            direction == TextDirection.ltr
-                                ? forwardButton()
-                                : backwardButton(),
+                            if (direction == TextDirection.ltr)
+                              forwardButton()
+                            else
+                              backwardButton(),
                           // new tab button
                           if (widget.showNewButton)
                             Padding(
