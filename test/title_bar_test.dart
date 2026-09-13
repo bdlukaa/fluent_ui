@@ -91,4 +91,86 @@ void main() {
     // Null titleBar should return 0
     expect(TitleBar.calculateHeight(ctx2, null), 0);
   });
+
+  testWidgets('an initially hidden title has no semantics until it fits', (
+    tester,
+  ) async {
+    final handle = tester.ensureSemantics();
+    tester.view.devicePixelRatio = 1;
+    tester.view.physicalSize = const Size(200, 600);
+    addTearDown(tester.view.reset);
+    const searchLabel = 'Search settings';
+
+    try {
+      await tester.pumpWidget(
+        FluentApp(
+          home: NavigationView(
+            titleBar: TitleBar(
+              isBackButtonVisible: false,
+              title: Semantics(
+                label: searchLabel,
+                button: true,
+                child: const SizedBox(
+                  width: searchLabel.length * 16,
+                  height: 32,
+                ),
+              ),
+            ),
+            content: const SizedBox.shrink(),
+          ),
+        ),
+      );
+      expect(tester.takeException(), isNull);
+      expect(find.bySemanticsLabel(searchLabel), findsNothing);
+
+      tester.view.physicalSize = const Size(800, 600);
+      await tester.pump();
+      expect(tester.takeException(), isNull);
+      expect(find.bySemanticsLabel(searchLabel), findsOneWidget);
+    } finally {
+      handle.dispose();
+    }
+  });
+
+  testWidgets(
+    'a dirty title can be hidden and restored with semantics enabled',
+    (tester) async {
+      final handle = tester.ensureSemantics();
+      tester.view.devicePixelRatio = 1;
+      tester.view.physicalSize = const Size(800, 600);
+      addTearDown(tester.view.reset);
+
+      FluentApp buildApp(String title) => FluentApp(
+        home: NavigationView(
+          titleBar: TitleBar(
+            isBackButtonVisible: false,
+            title: Semantics(
+              label: title,
+              button: true,
+              child: SizedBox(width: title.length * 16, height: 32),
+            ),
+          ),
+          content: const SizedBox.shrink(),
+        ),
+      );
+
+      try {
+        await tester.pumpWidget(buildApp('Search'));
+        expect(tester.takeException(), isNull);
+        expect(find.bySemanticsLabel('Search'), findsOneWidget);
+
+        tester.view.physicalSize = const Size(200, 600);
+        await tester.pumpWidget(buildApp('Search settings'));
+        expect(tester.takeException(), isNull);
+        expect(find.bySemanticsLabel('Search settings'), findsNothing);
+
+        tester.view.physicalSize = const Size(800, 600);
+        await tester.pump();
+        expect(tester.takeException(), isNull);
+        expect(find.bySemanticsLabel('Search settings'), findsOneWidget);
+      } finally {
+        handle.dispose();
+      }
+    },
+  );
 }
