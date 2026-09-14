@@ -532,7 +532,7 @@ class _TabViewState extends State<TabView> {
                         child: Localizations.override(
                           context: context,
                           delegates: m.GlobalMaterialLocalizations.delegates,
-                          child: ReorderableListView.builder(
+                          child: m.ReorderableListView.builder(
                             buildDefaultDragHandles: false,
                             shrinkWrap: true,
                             scrollDirection: Axis.horizontal,

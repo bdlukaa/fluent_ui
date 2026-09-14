@@ -1,6 +1,7 @@
 import 'package:example/widgets/code_snippet_card.dart';
 import 'package:example/widgets/page.dart';
 import 'package:fluent_ui/fluent_ui.dart';
+import 'package:material_ui/material_ui.dart' as m;
 
 class TilesPage extends StatefulWidget {
   const TilesPage({super.key});
@@ -51,7 +52,7 @@ ListView.builder(
       selected: selectedContact == contact,
       onSelectionChange: (v) => setState(() => selectedContact = contact),
     );
-  } 
+  }
 ),''',
           child: Container(
             height: 400,
@@ -105,7 +106,7 @@ ListView.builder(
         });
       },
     );
-  } 
+  }
 ),''',
           child: Row(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -125,7 +126,7 @@ ListView.builder(
                   itemBuilder: (final context, final index) {
                     final contact = contacts[index];
                     return ListTile.selectable(
-                      leading: const CircleAvatar(radius: 15),
+                      leading: const m.CircleAvatar(radius: 15),
                       title: Text(contact),
                       subtitle: const Text('With a custom subtitle'),
                       trailing: Icon(shuffledIcons[index]),
@@ -175,7 +176,7 @@ ListView.builder(
       selected: selectedContact == contact,
       onSelectionChange: (v) => setState(() => selectedContact = contact),
     );
-  } 
+  }
 ),''',
           child: Row(
             crossAxisAlignment: CrossAxisAlignment.start,

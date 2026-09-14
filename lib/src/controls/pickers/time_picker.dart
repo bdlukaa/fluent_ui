@@ -6,6 +6,20 @@ import 'package:flutter/rendering.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:intl/intl.dart';
 
+/// Describes how hours are formatted.
+enum HourFormat {
+  /// Zero-padded two-digit 24-hour format ranging from "00" to "23".
+  // ignore: constant_identifier_names
+  HH,
+
+  /// Non-padded variable-length 24-hour format ranging from "0" to "23".
+  H,
+
+  /// Non-padded variable-length hour in day period format ranging from "1" to
+  /// "12".
+  h,
+}
+
 String _formatHour(int hour, String locale) {
   return DateFormat.H(locale).format(
     DateTime(

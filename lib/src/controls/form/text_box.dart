@@ -930,9 +930,6 @@ class TextBox extends StatefulWidget {
         ),
       );
   }
-
-  static final TextMagnifierConfiguration _fluentMagnifierConfiguration =
-      TextMagnifier.adaptiveMagnifierConfiguration;
 }
 
 class _TextBoxState extends State<TextBox>
@@ -1376,7 +1373,7 @@ class _TextBoxState extends State<TextBox>
             expands: widget.expands,
             magnifierConfiguration:
                 widget.magnifierConfiguration ??
-                TextBox._fluentMagnifierConfiguration,
+                TextMagnifierConfiguration.disabled,
             // Only show the selection highlight when the text field is focused.
             selectionColor: _effectiveFocusNode.hasFocus
                 ? selectionColor

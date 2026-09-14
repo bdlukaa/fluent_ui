@@ -253,11 +253,6 @@ class FluentThemeData with Diagnosticable {
   /// [Typography.body], [Typography.caption], etc.
   final Typography typography;
 
-  /// Theme extensions that allow third-party packages to extend the theme.
-  ///
-  /// Use [extension] to retrieve a specific extension by type.
-  final Map<Object, ThemeExtension<dynamic>> extensions;
-
   /// The primary accent color used throughout the application.
   ///
   /// This color is used for interactive elements like buttons, checkboxes,
@@ -393,7 +388,6 @@ class FluentThemeData with Diagnosticable {
 
   /// Creates a new instance of [FluentThemeData].
   factory FluentThemeData({
-    Iterable<ThemeExtension<dynamic>>? extensions,
     Brightness? brightness,
     VisualDensity? visualDensity,
     Typography? typography,
@@ -432,7 +426,6 @@ class FluentThemeData with Diagnosticable {
     ResourceDictionary? resources,
   }) {
     brightness ??= Brightness.light;
-    extensions ??= [];
 
     final isLight = brightness == Brightness.light;
 
@@ -490,7 +483,6 @@ class FluentThemeData with Diagnosticable {
 
     return FluentThemeData.raw(
       brightness: brightness,
-      extensions: _themeExtensionIterableToMap(extensions),
       visualDensity: visualDensity,
       fasterAnimationDuration: fasterAnimationDuration,
       fastAnimationDuration: fastAnimationDuration,
@@ -531,7 +523,6 @@ class FluentThemeData with Diagnosticable {
   /// Creates a new instance of [FluentThemeData].
   const FluentThemeData.raw({
     required this.typography,
-    required this.extensions,
     required this.accentColor,
     required this.activeColor,
     required this.inactiveColor,
@@ -598,7 +589,6 @@ class FluentThemeData with Diagnosticable {
   static FluentThemeData lerp(FluentThemeData a, FluentThemeData b, double t) {
     return FluentThemeData.raw(
       brightness: t < 0.5 ? a.brightness : b.brightness,
-      extensions: t < 0.5 ? a.extensions : b.extensions,
       visualDensity: t < 0.5 ? a.visualDensity : b.visualDensity,
       resources: ResourceDictionary.lerp(a.resources, b.resources, t),
       accentColor: AccentColor.lerp(a.accentColor, b.accentColor, t),
@@ -694,32 +684,10 @@ class FluentThemeData with Diagnosticable {
     );
   }
 
-  /// Used to obtain a particular [ThemeExtension] from [extensions].
-  ///
-  /// Obtain with `FluentTheme.of(context).extension<MyThemeExtension>()`.
-  ///
-  /// See [extensions] for an interactive example.
-  T? extension<T>() => extensions[T] as T?;
-
-  /// Convert the [extensionsIterable] passed to [FluentThemeData.new] or [copyWith]
-  /// to the stored [extensions] map, where each entry's key consists of the extension's type.
-  static Map<Object, ThemeExtension<dynamic>> _themeExtensionIterableToMap(
-    Iterable<ThemeExtension<dynamic>> extensionsIterable,
-  ) {
-    return Map<Object, ThemeExtension<dynamic>>.unmodifiable(
-      <Object, ThemeExtension<dynamic>>{
-        // Strangely, the cast is necessary for tests to run.
-        for (final ThemeExtension<dynamic> extension in extensionsIterable)
-          extension.type: extension as ThemeExtension<ThemeExtension<dynamic>>,
-      },
-    );
-  }
-
   /// Creates a copy of this [FluentThemeData] with the given fields replaced
   /// with new values.
   FluentThemeData copyWith({
     Brightness? brightness,
-    Iterable<ThemeExtension<dynamic>>? extensions,
     VisualDensity? visualDensity,
     Typography? typography,
     AccentColor? accentColor,
@@ -759,9 +727,6 @@ class FluentThemeData with Diagnosticable {
       brightness: brightness ?? this.brightness,
       visualDensity: visualDensity ?? this.visualDensity,
       typography: this.typography.merge(typography),
-      extensions: extensions != null
-          ? _themeExtensionIterableToMap(extensions)
-          : this.extensions,
       accentColor: accentColor ?? this.accentColor,
       activeColor: activeColor ?? this.activeColor,
       inactiveColor: inactiveColor ?? this.inactiveColor,

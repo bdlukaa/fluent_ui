@@ -608,6 +608,7 @@ class InfoBarThemeData with Diagnosticable {
             return FluentIcons.info_solid;
           case InfoBarSeverity.warning:
             return FluentIcons.critical_error_solid;
+          // TODO(fluent): Do not use Material Icons
           case InfoBarSeverity.success:
             return Icons.check_circle;
           case InfoBarSeverity.error:

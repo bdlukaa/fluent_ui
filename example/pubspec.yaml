@@ -25,14 +25,15 @@ dependencies:
   flutter_syntax_view:
     git:
       url: https://github.com/YehudaKremer/flutter_syntax_view.git
-  go_router: ^17.3.0
+  go_router: ^18.0.1
   intl: ^0.20.2
   google_fonts: ^8.1.0
   collection: ^1.19.1
   share_plus: ^13.2.0
 
-  material_ui: ^1.1.1
+  material_ui: ^1.2.0
   cupertino_ui: ^1.0.2
+
 dev_dependencies:
   flutter_test:
     sdk: flutter

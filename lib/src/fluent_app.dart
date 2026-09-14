@@ -1,4 +1,3 @@
-import 'package:cupertino_ui/cupertino_ui.dart' show CupertinoScrollbar;
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:material_ui/material_ui.dart' as m;
 
@@ -447,7 +446,6 @@ class _FluentAppState extends State<FluentApp> {
               brightness: themeData.brightness,
             ),
             primaryColorDark: themeData.accentColor.darker,
-            extensions: themeData.extensions.values,
             brightness: themeData.brightness,
             canvasColor: themeData.cardColor,
             shadowColor: themeData.shadowColor,
@@ -552,9 +550,6 @@ class _FluentAppState extends State<FluentApp> {
 /// See also:
 ///
 ///  * [ScrollBehavior], the default scrolling behavior extended by this class.
-/// By default we will use [CupertinoScrollbar] for iOS and macOS platforms
-/// for windows and Linux [Scrollbar]
-/// for Android and Fuchsia we will return the child
 class FluentScrollBehavior extends ScrollBehavior {
   /// Creates a FluentScrollBehavior that decorates [Scrollable]s with
   /// [Scrollbar]s based on the current platform and provided [ScrollableDetails].
@@ -574,14 +569,10 @@ class FluentScrollBehavior extends ScrollBehavior {
       case Axis.vertical:
         switch (getPlatform(context)) {
           case TargetPlatform.macOS:
-          case TargetPlatform.iOS:
-            return CupertinoScrollbar(
-              controller: details.controller,
-              child: child,
-            );
           case TargetPlatform.linux:
           case TargetPlatform.windows:
             return Scrollbar(controller: details.controller, child: child);
+          case TargetPlatform.iOS:
           case TargetPlatform.android:
           case TargetPlatform.fuchsia:
             return child;
