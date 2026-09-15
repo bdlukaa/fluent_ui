@@ -48,7 +48,7 @@ class ListTile extends StatelessWidget {
   const ListTile({
     super.key,
     this.tileColor,
-    this.shape = kDefaultListTileShape,
+    this.decoration,
     this.leading,
     this.title,
     this.subtitle,
@@ -65,6 +65,12 @@ class ListTile extends StatelessWidget {
          !(subtitle != null) || title != null,
          'To have a subtitle, there must be a title',
        ),
+       assert(
+         tileColor == null || decoration == null,
+         'Cannot provide both tileColor and decoration.\n'
+         'The tileColor argument is just a shorthand for using a '
+         'decoration with its own color argument.',
+       ),
        selected = false,
        selectionMode = ListTileSelectionMode.none,
        onSelectionChange = null;
@@ -73,7 +79,7 @@ class ListTile extends StatelessWidget {
   const ListTile.selectable({
     super.key,
     this.tileColor,
-    this.shape = kDefaultListTileShape,
+    this.decoration,
     this.leading,
     this.title,
     this.subtitle,
@@ -91,18 +97,28 @@ class ListTile extends StatelessWidget {
     this.margin = kDefaultListTileMargin,
   }) : assert(
          !(subtitle != null) || title != null,
-         'To have a subtitle, there must be a title',
+         'To have a subtitle, there must be a title.',
+       ),
+       assert(
+         tileColor == null || decoration == null,
+         'Cannot provide both tileColor and decoration.\n'
+         'The tileColor argument is just a shorthand for using a '
+         'decoration with its own color argument.',
        );
 
-  /// The background color of the button.
+  /// The background color of the list tile.
   ///
-  /// If null, [ButtonThemeData.uncheckedInputColor] is used by default
+  /// If not null, [decoration] must be null.
+  ///
+  /// If null, [ButtonThemeData.uncheckedInputColor] is used by default.
   final WidgetStateColor? tileColor;
 
-  /// The tile shape.
+  /// The decoration of the list tile.
   ///
-  /// [kDefaultListTileShape] is used by default
-  final ShapeBorder shape;
+  /// If not null, [tileColor] must be null.
+  ///
+  /// If null, [ShapeDecoration] with [kDefaultListTileShape] will be used.
+  final WidgetStateProperty<Decoration>? decoration;
 
   /// A widget to display before the title.
   ///
@@ -196,13 +212,6 @@ class ListTile extends StatelessWidget {
     super.debugFillProperties(properties);
     properties
       ..add(
-        DiagnosticsProperty<ShapeBorder>(
-          'shape',
-          shape,
-          defaultValue: kDefaultListTileShape,
-        ),
-      )
-      ..add(
         FlagProperty(
           'selected',
           value: selected,
@@ -273,18 +282,22 @@ class ListTile extends StatelessWidget {
       cursor: cursor,
       semanticLabel: semanticLabel,
       builder: (context, states) {
-        final tileColor = () {
-          if (this.tileColor != null) {
-            return this.tileColor!.resolve(states);
-          }
-
-          return ButtonThemeData.uncheckedInputColor(
-            theme,
-            selected ? {...states, WidgetState.hovered} : states,
-            transparentWhenNone: true,
-            transparentWhenDisabled: true,
+        final Decoration? decoration;
+        if (this.decoration != null) {
+          decoration = this.decoration!.resolve(states);
+        } else {
+          decoration = ShapeDecoration(
+            shape: kDefaultListTileShape,
+            color:
+                tileColor?.resolve(states) ??
+                ButtonThemeData.uncheckedInputColor(
+                  theme,
+                  selected ? {...states, WidgetState.hovered} : states,
+                  transparentWhenNone: true,
+                  transparentWhenDisabled: true,
+                ),
           );
-        }();
+        }
 
         const placeholder = SizedBox(width: 12);
 
@@ -328,7 +341,7 @@ class ListTile extends StatelessWidget {
             focused: states.isFocused,
             renderOutside: false,
             child: Container(
-              decoration: ShapeDecoration(shape: shape, color: tileColor),
+              decoration: decoration,
               constraints: BoxConstraints(
                 minHeight: clampDouble(
                   kOneLineTileHeight +
