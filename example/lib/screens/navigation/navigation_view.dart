@@ -509,7 +509,7 @@ class _NavigationBodyItem extends StatelessWidget {
 
   @override
   Widget build(final BuildContext context) {
-    return ScaffoldPage.withPadding(
+    return ScaffoldPage(
       header: PageHeader(title: Text(header ?? 'This is a header text')),
       content:
           content ??

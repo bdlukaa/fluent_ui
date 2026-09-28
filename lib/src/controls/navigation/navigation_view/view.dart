@@ -904,6 +904,7 @@ class NavigationViewState extends State<NavigationView> {
     final localizations = FluentLocalizations.of(context);
 
     final openSize = pane.size?.openPaneWidth ?? kOpenNavigationPaneWidth;
+    final titleBarHeight = TitleBar.calculateHeight(context, widget.titleBar);
 
     return Stack(
       children: [
@@ -911,11 +912,11 @@ class NavigationViewState extends State<NavigationView> {
           top: 0,
           start: 0,
           end: 0,
-          height: 38,
+          height: titleBarHeight,
           child: ColoredBox(color: fluentTheme.scaffoldBackgroundColor),
         ),
         PositionedDirectional(
-          top: 38,
+          top: titleBarHeight,
           start: 0,
           end: 0,
           bottom: 0,
@@ -967,7 +968,7 @@ class NavigationViewState extends State<NavigationView> {
                   ),
                 ),
                 child: Padding(
-                  padding: const EdgeInsetsDirectional.only(top: 38 + 6),
+                  padding: EdgeInsetsDirectional.only(top: titleBarHeight + 6),
                   child: _OpenNavigationPane(
                     theme: theme,
                     pane: pane,
