@@ -346,7 +346,6 @@ class _ComboBoxMenuState<T> extends State<_ComboBoxMenu<T>> {
         );
       },
       child: Acrylic(
-        tintAlpha: 1,
         shape: const RoundedRectangleBorder(
           borderRadius: BorderRadius.all(kComboBoxRadius),
         ),

@@ -1,10 +1,16 @@
 import 'package:fluent_ui/fluent_ui.dart';
 
-/// An opaque material that uses the desktop wallpaper as a subtle backdrop.
+/// An opaque Mica foundation surface.
 ///
-/// Mica is a Fluent Design material that creates visual hierarchy by
-/// incorporating the user's desktop wallpaper into the app background.
-/// It's optimized for performance, sampling the wallpaper only once.
+/// This widget is the cross-platform Flutter representation and fallback for
+/// WinUI Mica. Native WinUI Mica uses an OS system-backdrop controller to
+/// incorporate desktop wallpaper and active/inactive window state; a pure
+/// Flutter widget cannot sample that wallpaper. This implementation therefore
+/// paints the theme-resolved opaque Mica color without a backdrop blur.
+///
+/// Mica is intended for long-lived app foundation surfaces. Use [Acrylic] for
+/// transient or supporting surfaces that need to reveal Flutter content behind
+/// them.
 ///
 /// ![Mica Header Preview](https://learn.microsoft.com/en-us/windows/apps/design/style/images/materials/mica-header.png)
 ///
@@ -50,9 +56,10 @@ class Mica extends StatelessWidget {
   /// The value is non-negative.
   final double elevation;
 
-  /// The color to paint the background area with.
+  /// The opaque color to paint the background area with.
   ///
-  /// If null, [FluentThemeData.micaBackgroundColor] is used.
+  /// If null, [FluentThemeData.micaBackgroundColor] is used. This is a
+  /// Flutter fallback color, not a wallpaper sample.
   final Color? backgroundColor;
 
   /// The border radius applied to the area.

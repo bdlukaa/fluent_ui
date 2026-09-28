@@ -1005,7 +1005,7 @@ class NavigationViewState extends State<NavigationView> {
           child: Acrylic(
             tint: tint ?? theme.overlayBackgroundColor,
             tintAlpha: tintAlpha ?? 0.9,
-            luminosityAlpha: luminosityAlpha ?? 0.9,
+            luminosityAlpha: luminosityAlpha,
             blurAmount: blurAmount ?? 50,
             shape: shape,
             child: child,
