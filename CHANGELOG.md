@@ -4,6 +4,9 @@
   - migrate Material UI imports to the standalone `material_ui` package. [learn more](https://flutter.dev/blog/decoupling-material-cupertino)
 - fix: skip hidden `TitleBar` children when collecting semantics ([#1354](https://github.com/bdlukaa/fluent_ui/pull/1354))
 - fix: `ComboBox` no longer throws a layout assertion when opened while fully aligned to the bottom edge of the viewport ([#1350](https://github.com/bdlukaa/fluent_ui/issues/1350))
+- refactor: Progress Widgets Update
+  - fix: `ProgressBar` and `ProgressRing` do not consume excessive CPU ([#1270](https://github.com/bdlukaa/fluent_ui/issues/1270))
+  - fix: `ProgressBar` correctly handle small parents ([#1270](https://github.com/bdlukaa/fluent_ui/issues/969))
 
 ## 4.16.1
 
