@@ -3,6 +3,7 @@
 - refactor: Flutter 3.47.1 support ([#1353](https://github.com/bdlukaa/fluent_ui/pull/1353))
   - migrate Material UI imports to the standalone `material_ui` package. [learn more](https://flutter.dev/blog/decoupling-material-cupertino)
 - fix: skip hidden `TitleBar` children when collecting semantics ([#1354](https://github.com/bdlukaa/fluent_ui/pull/1354))
+- fix: `TitleBar` sizing on minimal pane ([#1308](https://github.com/bdlukaa/fluent_ui/issues/1308))
 - refactor: Rework `ScaffoldPage` ([#1358](https://github.com/bdlukaa/fluent_ui/pull/1358))
   - `ScaffoldPage` is now a stateless page-content shell. Its `padding` applies consistently to the page's header, content, and footer, while the default horizontal padding follows Fluent adaptive margins (12 px in compact layouts and 24 px otherwise).
   - `bottomBar` is now `footer`.
