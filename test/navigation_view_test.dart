@@ -1,4 +1,5 @@
 import 'package:fluent_ui/fluent_ui.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:material_ui/material_ui.dart' as material;
 
@@ -1155,4 +1156,606 @@ void main() {
       },
     );
   });
+
+  testWidgets('auto mode honors default and custom threshold boundaries', (
+    tester,
+  ) async {
+    final key = GlobalKey<NavigationViewState>();
+    tester.view.devicePixelRatio = 1;
+    tester.view.physicalSize = const Size(1400, 700);
+    addTearDown(tester.view.reset);
+
+    Future<void> pumpAt(
+      double width, {
+      double compact = kCompactModeThresholdWidth,
+      double expanded = kExpandedModeThresholdWidth,
+    }) async {
+      await tester.pumpWidget(
+        FluentApp(
+          home: Align(
+            alignment: Alignment.topLeft,
+            child: SizedBox(
+              width: width,
+              height: 600,
+              child: NavigationView(
+                key: key,
+                pane: NavigationPane(
+                  selected: 0,
+                  compactModeThresholdWidth: compact,
+                  expandedModeThresholdWidth: expanded,
+                  items: [
+                    PaneItem(
+                      icon: const Icon(FluentIcons.home),
+                      title: const Text('Home'),
+                      body: const SizedBox(),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ),
+        ),
+      );
+      await tester.pump();
+    }
+
+    for (final (width, mode) in [
+      (640.0, PaneDisplayMode.minimal),
+      (641.0, PaneDisplayMode.compact),
+      (1007.0, PaneDisplayMode.compact),
+      (1008.0, PaneDisplayMode.expanded),
+    ]) {
+      await pumpAt(width);
+      expect(key.currentState!.displayMode, mode);
+    }
+
+    await pumpAt(700, compact: 700, expanded: 900);
+    expect(key.currentState!.displayMode, PaneDisplayMode.minimal);
+    await pumpAt(701, compact: 700, expanded: 900);
+    expect(key.currentState!.displayMode, PaneDisplayMode.compact);
+    await pumpAt(900, compact: 700, expanded: 900);
+    expect(key.currentState!.displayMode, PaneDisplayMode.expanded);
+  });
+
+  testWidgets(
+    'invocation precedes selection and supports non-selecting items',
+    (tester) async {
+      var selected = 0;
+      final events = <String>[];
+      final actionFocusNode = FocusNode();
+      addTearDown(actionFocusNode.dispose);
+
+      await tester.pumpWidget(
+        FluentApp(
+          home: StatefulBuilder(
+            builder: (context, setState) => NavigationView(
+              pane: NavigationPane(
+                selected: selected,
+                displayMode: PaneDisplayMode.expanded,
+                onItemInvoked: (args) => events.add(
+                  'invoke:${(args.item.title! as Text).data}:${args.index}',
+                ),
+                onChanged: (index) {
+                  events.add('select:$index');
+                  setState(() => selected = index);
+                },
+                items: [
+                  PaneItem(
+                    icon: const Icon(FluentIcons.home),
+                    title: const Text('Home'),
+                    body: const SizedBox(),
+                  ),
+                  PaneItem(
+                    icon: const Icon(FluentIcons.settings),
+                    title: const Text('Settings'),
+                    body: const SizedBox(),
+                  ),
+                  PaneItem(
+                    icon: const Icon(FluentIcons.open_in_new_window),
+                    title: const Text('External'),
+                    body: const SizedBox(),
+                    focusNode: actionFocusNode,
+                    selectsOnInvoked: false,
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ),
+      );
+      await tester.pumpAndSettle();
+
+      await tester.tap(find.text('Settings'));
+      await tester.pumpAndSettle();
+      expect(events, ['invoke:Settings:1', 'select:1']);
+
+      events.clear();
+      await tester.tap(find.text('Settings'));
+      await tester.pump();
+      expect(events, ['invoke:Settings:1']);
+
+      events.clear();
+      actionFocusNode.requestFocus();
+      await tester.pump();
+      await tester.sendKeyEvent(LogicalKeyboardKey.enter);
+      await tester.pump();
+      expect(events, ['invoke:External:2']);
+      expect(selected, 1);
+      await tester.pump(const Duration(milliseconds: 200));
+    },
+  );
+
+  testWidgets('local history survives nested, footer, and dynamic items', (
+    tester,
+  ) async {
+    final key = GlobalKey<NavigationViewState>();
+    var selected = 0;
+    late StateSetter rebuild;
+    var includeNested = true;
+
+    Widget buildApp() => FluentApp(
+      home: StatefulBuilder(
+        builder: (context, setState) {
+          rebuild = setState;
+          return NavigationView(
+            key: key,
+            pane: NavigationPane(
+              selected: selected,
+              displayMode: PaneDisplayMode.expanded,
+              onChanged: (index) => setState(() => selected = index),
+              items: [
+                PaneItem(
+                  key: const ValueKey('a'),
+                  icon: const Icon(FluentIcons.home),
+                  title: const Text('A'),
+                  body: const Text('Page A'),
+                ),
+                PaneItemExpander(
+                  key: const ValueKey('group'),
+                  icon: const Icon(FluentIcons.folder),
+                  title: const Text('Group'),
+                  initiallyExpanded: true,
+                  items: [
+                    if (includeNested)
+                      PaneItem(
+                        key: const ValueKey('b'),
+                        icon: const Icon(FluentIcons.document),
+                        title: const Text('B'),
+                        body: const Text('Page B'),
+                      ),
+                  ],
+                ),
+              ],
+              footerItems: [
+                PaneItem(
+                  key: const ValueKey('c'),
+                  icon: const Icon(FluentIcons.settings),
+                  title: const Text('C'),
+                  body: const Text('Page C'),
+                ),
+              ],
+            ),
+          );
+        },
+      ),
+    );
+
+    await tester.pumpWidget(buildApp());
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('B'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('C'));
+    await tester.pumpAndSettle();
+
+    key.currentState!.pop();
+    await tester.pumpAndSettle();
+    expect(selected, 1);
+    key.currentState!.pop();
+    await tester.pumpAndSettle();
+    expect(selected, 0);
+
+    await tester.tap(find.text('B'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('C'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('C'));
+    await tester.pump(const Duration(milliseconds: 200));
+    rebuild(() {
+      includeNested = false;
+      selected = 1;
+    });
+    await tester.pumpAndSettle();
+
+    key.currentState!.pop();
+    await tester.pumpAndSettle();
+    expect(selected, 0);
+  });
+
+  testWidgets('toggleable false removes and disables the pane toggle', (
+    tester,
+  ) async {
+    final key = GlobalKey<NavigationViewState>();
+    await tester.pumpWidget(
+      FluentApp(
+        home: NavigationView(
+          key: key,
+          titleBar: const TitleBar(isBackButtonVisible: false),
+          pane: NavigationPane(
+            selected: 0,
+            displayMode: PaneDisplayMode.compact,
+            toggleable: false,
+            items: [
+              PaneItem(
+                icon: const Icon(FluentIcons.home),
+                title: const Text('Home'),
+                body: const SizedBox(),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+    await tester.pumpAndSettle();
+
+    expect(find.byType(PaneToggleButton), findsNothing);
+    expect(key.currentState!.isPaneOpen, isFalse);
+    key.currentState!.openPane();
+    await tester.pumpAndSettle();
+    expect(key.currentState!.isPaneOpen, isFalse);
+
+    await tester.pumpWidget(
+      FluentApp(
+        home: NavigationView(
+          key: key,
+          pane: NavigationPane(
+            selected: 0,
+            displayMode: PaneDisplayMode.minimal,
+            toggleable: false,
+            items: [
+              PaneItem(
+                icon: const Icon(FluentIcons.home),
+                title: const Text('Home'),
+                body: const SizedBox.expand(key: ValueKey('minimal-body')),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+    await tester.pumpAndSettle();
+    expect(tester.getTopLeft(find.byKey(const ValueKey('minimal-body'))).dy, 0);
+  });
+
+  testWidgets('a null toggle button only hides the control', (tester) async {
+    final key = GlobalKey<NavigationViewState>();
+    await tester.pumpWidget(
+      FluentApp(
+        home: NavigationView(
+          key: key,
+          pane: NavigationPane(
+            selected: 0,
+            displayMode: PaneDisplayMode.compact,
+            toggleButton: null,
+            items: [
+              PaneItem(
+                icon: const Icon(FluentIcons.home),
+                title: const Text('Home'),
+                body: const SizedBox(),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+    await tester.pumpAndSettle();
+
+    expect(find.byType(PaneToggleButton), findsNothing);
+    key.currentState!.openPane();
+    await tester.pumpAndSettle();
+    expect(key.currentState!.isPaneOpen, isTrue);
+  });
+
+  testWidgets('Escape closes an open overlay before navigation', (
+    tester,
+  ) async {
+    final key = GlobalKey<NavigationViewState>();
+    final focusNode = FocusNode();
+    addTearDown(focusNode.dispose);
+    await tester.pumpWidget(
+      FluentApp(
+        home: NavigationView(
+          key: key,
+          pane: NavigationPane(
+            selected: 0,
+            displayMode: PaneDisplayMode.compact,
+            items: [
+              PaneItem(
+                icon: const Icon(FluentIcons.home),
+                title: const Text('Home'),
+                body: const SizedBox(),
+                focusNode: focusNode,
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+    await tester.pumpAndSettle();
+    key.currentState!.openPane();
+    await tester.pumpAndSettle();
+    expect(key.currentState!.isPaneOpen, isTrue);
+
+    focusNode.requestFocus();
+    await tester.pump();
+    await tester.sendKeyEvent(LogicalKeyboardKey.escape);
+    await tester.pumpAndSettle();
+    expect(key.currentState!.isPaneOpen, isFalse);
+  });
+
+  testWidgets('only pages requesting keep alive retain state', (tester) async {
+    final keepAliveLifecycle = _PageLifecycle();
+    final disposableLifecycle = _PageLifecycle();
+    var selected = 0;
+
+    await tester.pumpWidget(
+      FluentApp(
+        home: StatefulBuilder(
+          builder: (context, setState) => NavigationView(
+            pane: NavigationPane(
+              selected: selected,
+              onChanged: (index) => setState(() => selected = index),
+              displayMode: PaneDisplayMode.expanded,
+              items: [
+                PaneItem(
+                  key: const ValueKey('kept'),
+                  icon: const Icon(FluentIcons.home),
+                  title: const Text('Kept'),
+                  body: _LifecyclePage(
+                    lifecycle: keepAliveLifecycle,
+                    keepAlive: true,
+                  ),
+                ),
+                PaneItem(
+                  key: const ValueKey('disposable'),
+                  icon: const Icon(FluentIcons.settings),
+                  title: const Text('Disposable'),
+                  body: _LifecyclePage(lifecycle: disposableLifecycle),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+    await tester.pumpAndSettle();
+    expect(keepAliveLifecycle.initCount, 1);
+
+    await tester.tap(find.text('Kept state: 0'));
+    await tester.tap(find.text('Disposable'));
+    await tester.pumpAndSettle();
+    expect(keepAliveLifecycle.disposeCount, 0);
+    expect(disposableLifecycle.initCount, 1);
+
+    await tester.tap(find.text('Kept'));
+    await tester.pumpAndSettle();
+    expect(find.text('Kept state: 1'), findsOneWidget);
+    expect(disposableLifecycle.disposeCount, 1);
+
+    await tester.tap(find.text('Disposable'));
+    await tester.pumpAndSettle();
+    expect(disposableLifecycle.initCount, 2);
+  });
+
+  testWidgets('tooltip policy and semantic labels are independent', (
+    tester,
+  ) async {
+    final semantics = tester.ensureSemantics();
+    await tester.pumpWidget(
+      FluentApp(
+        home: NavigationView(
+          pane: NavigationPane(
+            selected: 0,
+            displayMode: PaneDisplayMode.compact,
+            items: [
+              PaneItem(
+                icon: const Icon(FluentIcons.home),
+                title: const Text('Short'),
+                semanticLabel: 'Descriptive home destination',
+                tooltip: 'Custom home tooltip',
+                body: const SizedBox(),
+              ),
+              PaneItem(
+                icon: const Icon(FluentIcons.settings),
+                title: const Text('No tooltip'),
+                automaticTooltip: false,
+                body: const SizedBox(),
+              ),
+              PaneItem(
+                icon: const Icon(FluentIcons.info),
+                title: const Text('Automatic tooltip'),
+                body: const SizedBox(),
+              ),
+              PaneItem(
+                icon: const Icon(FluentIcons.blocked),
+                title: const Text('Disabled tooltip'),
+                body: const SizedBox(),
+                enabled: false,
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+    await tester.pumpAndSettle();
+
+    expect(
+      find.bySemanticsLabel('Descriptive home destination'),
+      findsOneWidget,
+    );
+    final tooltips = tester.widgetList<Tooltip>(find.byType(Tooltip)).toList();
+    expect(
+      tooltips.any((tooltip) => tooltip.message == 'Custom home tooltip'),
+      isTrue,
+    );
+    expect(
+      tooltips.any(
+        (tooltip) => tooltip.richMessage?.toPlainText() == 'Automatic tooltip',
+      ),
+      isTrue,
+    );
+    expect(
+      tooltips.any(
+        (tooltip) => tooltip.richMessage?.toPlainText() == 'No tooltip',
+      ),
+      isFalse,
+    );
+    expect(
+      tooltips.any(
+        (tooltip) => tooltip.richMessage?.toPlainText() == 'Disabled tooltip',
+      ),
+      isFalse,
+    );
+    semantics.dispose();
+  });
+
+  testWidgets('custom item content keeps standard invocation behavior', (
+    tester,
+  ) async {
+    var selected = 0;
+    var invocations = 0;
+    await tester.pumpWidget(
+      FluentApp(
+        home: StatefulBuilder(
+          builder: (context, setState) => NavigationView(
+            pane: NavigationPane(
+              selected: selected,
+              onItemInvoked: (_) => invocations++,
+              onChanged: (index) => setState(() => selected = index),
+              displayMode: PaneDisplayMode.expanded,
+              items: [
+                PaneItem(
+                  icon: const Icon(FluentIcons.home),
+                  title: const Text('Home'),
+                  body: const SizedBox(),
+                ),
+                PaneItem(
+                  icon: const Icon(FluentIcons.people),
+                  title: const Text('Teams'),
+                  body: const SizedBox(),
+                  contentBuilder: (context, data) => Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [?data.icon, ?data.title],
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+    await tester.pumpAndSettle();
+
+    await tester.tap(find.text('Teams'));
+    await tester.pumpAndSettle();
+    expect(selected, 1);
+    expect(invocations, 1);
+  });
+
+  testWidgets('auto resize transitions never overflow complex pane items', (
+    tester,
+  ) async {
+    tester.view.devicePixelRatio = 1;
+    addTearDown(tester.view.reset);
+    tester.view.physicalSize = const Size(1100, 700);
+
+    await tester.pumpWidget(
+      FluentApp(
+        home: NavigationView(
+          pane: NavigationPane(
+            selected: 0,
+            items: [
+              PaneItem(
+                icon: const Icon(FluentIcons.home),
+                title: const Text(
+                  'A very long navigation destination that must remain valid',
+                ),
+                infoBadge: const InfoBadge(source: Text('99')),
+                trailing: const Icon(FluentIcons.chevron_right),
+                body: const SizedBox(),
+              ),
+              PaneItemExpander(
+                icon: const Icon(FluentIcons.folder),
+                title: const Text('A deeply nested destination'),
+                initiallyExpanded: true,
+                items: [
+                  PaneItem(
+                    icon: const Icon(FluentIcons.document),
+                    title: const Text('A long nested destination'),
+                    infoBadge: const InfoBadge(source: Text('4')),
+                    trailing: const Icon(FluentIcons.chevron_right),
+                    body: const SizedBox(),
+                  ),
+                ],
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+
+    for (final width in [1007.0, 900.0, 641.0, 640.0, 700.0, 1008.0]) {
+      tester.view.physicalSize = Size(width, 700);
+      for (var frame = 0; frame < 8; frame++) {
+        await tester.pump(const Duration(milliseconds: 20));
+        expect(tester.takeException(), isNull);
+      }
+    }
+  });
+}
+
+class _PageLifecycle {
+  int initCount = 0;
+  int disposeCount = 0;
+}
+
+class _LifecyclePage extends StatefulWidget {
+  const _LifecyclePage({required this.lifecycle, this.keepAlive = false});
+
+  final _PageLifecycle lifecycle;
+  final bool keepAlive;
+
+  @override
+  State<_LifecyclePage> createState() => _LifecyclePageState();
+}
+
+class _LifecyclePageState extends State<_LifecyclePage>
+    with AutomaticKeepAliveClientMixin {
+  int value = 0;
+
+  @override
+  void initState() {
+    super.initState();
+    widget.lifecycle.initCount++;
+  }
+
+  @override
+  void dispose() {
+    widget.lifecycle.disposeCount++;
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    super.build(context);
+    final label = widget.keepAlive ? 'Kept' : 'Disposable';
+    return Center(
+      child: Button(
+        onPressed: () => setState(() => value++),
+        child: Text('$label state: $value'),
+      ),
+    );
+  }
+
+  @override
+  bool get wantKeepAlive => widget.keepAlive;
 }

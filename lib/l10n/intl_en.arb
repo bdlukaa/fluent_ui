@@ -2,7 +2,7 @@
   "@@locale": "en",
   "backButtonTooltip": "Back",
   "@backButtonTooltip": {
-    "description": "The tooltip for the back button on [NavigationAppBar]."
+    "description": "The tooltip for navigation back buttons."
   },
   "closeButtonLabel": "Close",
   "@closeButtonLabel": {
@@ -18,7 +18,7 @@
   },
   "openNavigationTooltip": "Open Navigation",
   "@openNavigationTooltip": {
-    "description": "The tooltip for the toogle navigation button."
+    "description": "The tooltip for the toggle navigation button."
   },
   "clickToSearch": "Click to search",
   "@clickToSearch": {

@@ -349,6 +349,24 @@ class _NavigationViewPageState extends State<NavigationViewPage>
                   onTap: () => debugPrint('Tapped track orders'),
                 ),
                 PaneItem(
+                  icon: const WindowsIcon(WindowsIcons.people),
+                  title: const Text('Teams layout'),
+                  tooltip: 'Teams-style custom item content',
+                  body: const _NavigationBodyItem(
+                    header: 'Custom item content',
+                    content: Text(
+                      'The contentBuilder changes visual layout without replacing navigation behavior.',
+                    ),
+                  ),
+                  contentBuilder: (context, data) => Padding(
+                    padding: const EdgeInsetsDirectional.symmetric(vertical: 6),
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [?data.icon, ?data.title],
+                    ),
+                  ),
+                ),
+                PaneItem(
                   icon: const WindowsIcon(WindowsIcons.disable_updates),
                   title: const Text('Disabled Item'),
                   body: const _NavigationBodyItem(),
