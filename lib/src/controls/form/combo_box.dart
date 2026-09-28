@@ -785,14 +785,16 @@ class ComboBoxState<T> extends State<ComboBox<T>>
       preferredHeight,
       math.min<double>(maxHeight, bounds.height),
     );
-    final selectedStart = _kListPadding.top + selectedIndex * estimate;
-    final idealTop = clampDouble(
-      anchor.center.dy - selectedStart - estimate / 2,
+    final maximumTop = math.max(bounds.top, bounds.bottom - height);
+    final popupTop = clampDouble(
+      anchor.center.dy - height / 2,
       bounds.top,
-      math.max(bounds.top, bounds.bottom - height),
+      maximumTop,
     );
-    final desiredLocalCenter = anchor.center.dy - idealTop;
-    final offset = selectedStart + estimate / 2 - desiredLocalCenter;
+    final selectedStart = _kListPadding.top + selectedIndex * estimate;
+    final selectedCenter = selectedStart + estimate / 2;
+    final desiredSelectedCenter = anchor.center.dy - popupTop;
+    final offset = selectedCenter - desiredSelectedCenter;
     final maximumOffset = math.max<double>(0, preferredHeight - height);
     return clampDouble(offset, 0, maximumOffset);
   }

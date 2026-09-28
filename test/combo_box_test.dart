@@ -420,12 +420,14 @@ void main() {
 
     await tester.tap(find.byType(ComboBox<String>));
     await tester.pumpAndSettle();
+    final control = tester.getRect(find.text('Option 8').first);
     final selected = tester.getRect(find.byKey(const Key('item-8')).last);
     final popup = tester.getRect(find.byType(ListView));
     expect(popup.top, greaterThanOrEqualTo(0));
     expect(popup.bottom, lessThanOrEqualTo(tester.view.physicalSize.height));
     expect(selected.top, greaterThanOrEqualTo(popup.top));
     expect(selected.bottom, lessThanOrEqualTo(popup.bottom));
+    expect((selected.center.dy - control.center.dy).abs(), lessThan(24));
     expect(tester.takeException(), isNull);
   });
 
