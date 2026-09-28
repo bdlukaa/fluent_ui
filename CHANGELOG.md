@@ -1,5 +1,10 @@
 ## [next]
 
+- feat: add logical start/end overflow direction support to `DynamicOverflow` ([#1359](https://github.com/bdlukaa/fluent_ui/pull/1359))
+- refactor: `CommandBar` now uses an anchored, CommandBar-owned overflow popup with stable layout, end alignment, outside-tap dismissal, keyboard/touch-friendly interaction, and WinUI-inspired presenter styling ([#1359](https://github.com/bdlukaa/fluent_ui/pull/1359))
+  - dynamically overflowed primary commands remain in the primary command collection and retain their labels, shortcut/help text, enabled state, and semantics when shown in the overflow menu
+  - overflow presenter sizing, acrylic backgrounds, borders, and CommandBar colors now follow the native WinUI CommandBar theme resources
+  - fix: secondary CommandBar menus open correctly on touch platforms, including iOS, and tapping outside the menu no longer activates controls behind it
 - refactor: Flutter 3.47.1 support ([#1353](https://github.com/bdlukaa/fluent_ui/pull/1353))
   - migrate Material UI imports to the standalone `material_ui` package. [learn more](https://flutter.dev/blog/decoupling-material-cupertino)
 - fix: skip hidden `TitleBar` children when collecting semantics ([#1354](https://github.com/bdlukaa/fluent_ui/pull/1354))
