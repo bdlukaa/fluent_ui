@@ -5,9 +5,41 @@
   - dynamically overflowed primary commands remain in the primary command collection and retain their labels, shortcut/help text, enabled state, and semantics when shown in the overflow menu
   - overflow presenter sizing, acrylic backgrounds, borders, and CommandBar colors now follow the native WinUI CommandBar theme resources
   - fix: secondary CommandBar menus open correctly on touch platforms, including iOS, and tapping outside the menu no longer activates controls behind it
+- refactor: Rework `ComboBox`. Rebuilt the popup using Flutter overlay infrastructure with viewport-aware positioning, configurable popup constraints, variable-height items, text scaling support, keyboard navigation, type-ahead search, and open/close callbacks. ([#1360](https://github.com/bdlukaa/fluent_ui/pull/1360), [#485](https://github.com/bdlukaa/fluent_ui/issues/485), [#1007](https://github.com/bdlukaa/fluent_ui/issues/1007), [#1230](https://github.com/bdlukaa/fluent_ui/issues/1230), and [#1256](https://github.com/bdlukaa/fluent_ui/issues/1256))
 - refactor: Flutter 3.47.1 support ([#1353](https://github.com/bdlukaa/fluent_ui/pull/1353))
   - migrate Material UI imports to the standalone `material_ui` package. [learn more](https://flutter.dev/blog/decoupling-material-cupertino)
 - fix: skip hidden `TitleBar` children when collecting semantics ([#1354](https://github.com/bdlukaa/fluent_ui/pull/1354))
+- fix: `TitleBar` sizing on minimal pane ([#1308](https://github.com/bdlukaa/fluent_ui/issues/1308))
+- refactor: Rework `ScaffoldPage` ([#1358](https://github.com/bdlukaa/fluent_ui/pull/1358))
+  - `ScaffoldPage` is now a stateless page-content shell. Its `padding` applies consistently to the page's header, content, and footer, while the default horizontal padding follows Fluent adaptive margins (12 px in compact layouts and 24 px otherwise).
+  - `bottomBar` is now `footer`.
+  - `ScaffoldPage.withPadding` was removed. Use `ScaffoldPage(padding: ..., content: ...)` instead.
+  - `PageHeader.padding` and `PageHeader.horizontalPadding` were removed. Page-level spacing belongs to `ScaffoldPage`; remove calls to `PageHeader.horizontalPadding(context)` and configure `ScaffoldPage.padding` when custom spacing is needed.
+  - `PageHeader` no longer controls page geometry. At compact widths, its command bar moves below the title so long titles and large text scales can wrap without overflowing.
+
+  Migration:
+
+  ```dart
+  // Before
+  ScaffoldPage(
+    header: PageHeader(
+      title: const Text('Settings'),
+      padding: const EdgeInsets.symmetric(horizontal: 32),
+    ),
+    bottomBar: const CommandBar(items: []),
+    content: const SettingsView(),
+  );
+
+  // After
+  ScaffoldPage(
+    header: const PageHeader(title: Text('Settings')),
+    footer: const CommandBar(items: []),
+    padding: const EdgeInsets.symmetric(horizontal: 32),
+    content: const SettingsView(),
+  );
+  ```
+
+  For scrollable pages, continue to use `ScaffoldPage.scrollable`; it now follows the same page-level padding semantics as the regular constructor.
 - fix: `ComboBox` no longer throws a layout assertion when opened while fully aligned to the bottom edge of the viewport ([#1350](https://github.com/bdlukaa/fluent_ui/issues/1350))
 - refactor: Progress Widgets Update
   - fix: `ProgressBar` and `ProgressRing` do not consume excessive CPU ([#1270](https://github.com/bdlukaa/fluent_ui/issues/1270))

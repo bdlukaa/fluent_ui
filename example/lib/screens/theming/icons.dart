@@ -117,7 +117,7 @@ class _IconsPageState extends State<IconsPage> {
           ),
         ),
       ),
-      bottomBar: const SizedBox(
+      footer: const SizedBox(
         width: double.infinity,
         child: InfoBar(
           title: Text('Tip:'),
@@ -126,167 +126,160 @@ class _IconsPageState extends State<IconsPage> {
           ),
         ),
       ),
-      content: Padding(
-        padding: EdgeInsetsDirectional.only(
-          start: PageHeader.horizontalPadding(context),
-          end: PageHeader.horizontalPadding(context),
-        ),
-        child: CustomScrollView(
-          slivers: [
-            SliverToBoxAdapter(
-              child: Padding(
-                padding: const EdgeInsetsDirectional.only(bottom: 8),
-                child: CodeSnippetCard(
-                  initiallyOpen: true,
-                  codeSnippet:
-                      '''const WindowsIcon(
+      content: CustomScrollView(
+        slivers: [
+          SliverToBoxAdapter(
+            child: Padding(
+              padding: const EdgeInsetsDirectional.only(bottom: 8),
+              child: CodeSnippetCard(
+                initiallyOpen: true,
+                codeSnippet:
+                    '''const WindowsIcon(
   $prefix.$iconName,
   size: ${size!.toInt()},
   color: Color(0x${color!.toARGB32().toRadixString(16).padLeft(8, '0')}),
 ),''',
-                  child: Row(
-                    spacing: 8,
-                    children: [
-                      WindowsIcon(icon, size: size, color: color),
-                      const Spacer(),
-                      IntrinsicWidth(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.end,
-                          children: [
-                            InfoLabel(
-                              label: 'Icon Color',
-                              child: ComboBox<Color>(
-                                placeholder: const Text('Icon Color'),
-                                onChanged: (final c) =>
-                                    setState(() => color = c),
-                                value: color,
-                                isExpanded: true,
-                                items: [
-                                  ComboBoxItem(
-                                    value: Colors.white,
+                child: Row(
+                  spacing: 8,
+                  children: [
+                    WindowsIcon(icon, size: size, color: color),
+                    const Spacer(),
+                    IntrinsicWidth(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.end,
+                        children: [
+                          InfoLabel(
+                            label: 'Icon Color',
+                            child: ComboBox<Color>(
+                              placeholder: const Text('Icon Color'),
+                              onChanged: (final c) => setState(() => color = c),
+                              value: color,
+                              isExpanded: true,
+                              items: [
+                                ComboBoxItem(
+                                  value: Colors.white,
+                                  child: Row(
+                                    children: [
+                                      buildColorBox(Colors.white),
+                                      const SizedBox(width: 10),
+                                      const Text('White'),
+                                    ],
+                                  ),
+                                ),
+                                ComboBoxItem(
+                                  value: const Color(0xE4000000),
+                                  child: Row(
+                                    children: [
+                                      buildColorBox(const Color(0xE4000000)),
+                                      const SizedBox(width: 10),
+                                      const Text('Black'),
+                                    ],
+                                  ),
+                                ),
+                                ...List.generate(Colors.accentColors.length, (
+                                  final index,
+                                ) {
+                                  final color = Colors.accentColors[index];
+                                  return ComboBoxItem(
+                                    value: color,
                                     child: Row(
                                       children: [
-                                        buildColorBox(Colors.white),
+                                        buildColorBox(color),
                                         const SizedBox(width: 10),
-                                        const Text('White'),
+                                        Text(accentColorNames[index + 1]),
                                       ],
                                     ),
-                                  ),
-                                  ComboBoxItem(
-                                    value: const Color(0xE4000000),
-                                    child: Row(
-                                      children: [
-                                        buildColorBox(const Color(0xE4000000)),
-                                        const SizedBox(width: 10),
-                                        const Text('Black'),
-                                      ],
-                                    ),
-                                  ),
-                                  ...List.generate(Colors.accentColors.length, (
-                                    final index,
-                                  ) {
-                                    final color = Colors.accentColors[index];
-                                    return ComboBoxItem(
-                                      value: color,
-                                      child: Row(
-                                        children: [
-                                          buildColorBox(color),
-                                          const SizedBox(width: 10),
-                                          Text(accentColorNames[index + 1]),
-                                        ],
-                                      ),
-                                    );
-                                  }),
-                                ],
-                              ),
-                            ),
-                            const SizedBox(height: 8),
-                            InfoLabel(
-                              label: 'Icon Size',
-                              child: Slider(
-                                value: size!,
-                                onChanged: (final v) => setState(() {
-                                  size = v;
+                                  );
                                 }),
-                                min: 8,
-                                max: 56,
-                                label: '${size!.toInt()}',
-                                style: const SliderThemeData(
-                                  margin: EdgeInsetsDirectional.zero,
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-            ),
-            SliverGrid.builder(
-              gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
-                maxCrossAxisExtent: 150,
-                mainAxisSpacing: 10,
-                crossAxisSpacing: 10,
-              ),
-              itemCount: entries.length,
-              itemBuilder: (final context, final index) {
-                final e = entries.elementAt(index);
-                return HoverButton(
-                  onPressed: () async {
-                    final copyText = '$prefix.${e.key}';
-                    await Clipboard.setData(ClipboardData(text: copyText));
-
-                    if (context.mounted) showCopiedSnackbar(context, copyText);
-                  },
-                  cursor: SystemMouseCursors.copy,
-                  builder: (final context, final states) {
-                    return FocusBorder(
-                      focused: states.isFocused,
-                      renderOutside: false,
-                      child: Tooltip(
-                        useMousePosition: false,
-                        message:
-                            '\nWindowsIcons.${e.key}\n(tap to copy to clipboard)\n',
-                        child: RepaintBoundary(
-                          child: AnimatedContainer(
-                            duration: theme.fasterAnimationDuration,
-                            decoration: BoxDecoration(
-                              color: ButtonThemeData.uncheckedInputColor(
-                                theme,
-                                states,
-                                transparentWhenNone: true,
-                              ),
-                              borderRadius: BorderRadius.circular(20),
-                            ),
-                            padding: const EdgeInsetsDirectional.all(6),
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Icon(e.value, size: 40),
-                                Padding(
-                                  padding: const EdgeInsetsDirectional.only(
-                                    top: 8,
-                                  ),
-                                  child: Text(
-                                    snakeCasetoSentenceCase(e.key),
-                                    textAlign: TextAlign.center,
-                                    overflow: TextOverflow.fade,
-                                  ),
-                                ),
                               ],
                             ),
                           ),
+                          const SizedBox(height: 8),
+                          InfoLabel(
+                            label: 'Icon Size',
+                            child: Slider(
+                              value: size!,
+                              onChanged: (final v) => setState(() {
+                                size = v;
+                              }),
+                              min: 8,
+                              max: 56,
+                              label: '${size!.toInt()}',
+                              style: const SliderThemeData(
+                                margin: EdgeInsetsDirectional.zero,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ),
+          SliverGrid.builder(
+            gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
+              maxCrossAxisExtent: 150,
+              mainAxisSpacing: 10,
+              crossAxisSpacing: 10,
+            ),
+            itemCount: entries.length,
+            itemBuilder: (final context, final index) {
+              final e = entries.elementAt(index);
+              return HoverButton(
+                onPressed: () async {
+                  final copyText = '$prefix.${e.key}';
+                  await Clipboard.setData(ClipboardData(text: copyText));
+
+                  if (context.mounted) showCopiedSnackbar(context, copyText);
+                },
+                cursor: SystemMouseCursors.copy,
+                builder: (final context, final states) {
+                  return FocusBorder(
+                    focused: states.isFocused,
+                    renderOutside: false,
+                    child: Tooltip(
+                      useMousePosition: false,
+                      message:
+                          '\nWindowsIcons.${e.key}\n(tap to copy to clipboard)\n',
+                      child: RepaintBoundary(
+                        child: AnimatedContainer(
+                          duration: theme.fasterAnimationDuration,
+                          decoration: BoxDecoration(
+                            color: ButtonThemeData.uncheckedInputColor(
+                              theme,
+                              states,
+                              transparentWhenNone: true,
+                            ),
+                            borderRadius: BorderRadius.circular(20),
+                          ),
+                          padding: const EdgeInsetsDirectional.all(6),
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Icon(e.value, size: 40),
+                              Padding(
+                                padding: const EdgeInsetsDirectional.only(
+                                  top: 8,
+                                ),
+                                child: Text(
+                                  snakeCasetoSentenceCase(e.key),
+                                  textAlign: TextAlign.center,
+                                  overflow: TextOverflow.fade,
+                                ),
+                              ),
+                            ],
+                          ),
                         ),
                       ),
-                    );
-                  },
-                );
-              },
-            ),
-          ],
-        ),
+                    ),
+                  );
+                },
+              );
+            },
+          ),
+        ],
       ),
     );
   }
