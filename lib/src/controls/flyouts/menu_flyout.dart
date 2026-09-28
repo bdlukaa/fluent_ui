@@ -109,7 +109,7 @@ class _MenuFlyoutState extends State<MenuFlyout> {
         shadowColor: widget.shadowColor,
         shape: widget.shape,
         padding: kDefaultMenuPadding,
-        useAcrylic: DisableAcrylic.of(context) != null,
+        useAcrylic: DisableAcrylic.of(context) == null,
         child: ScrollConfiguration(
           behavior: const _MenuScrollBehavior(),
           child: SingleChildScrollView(

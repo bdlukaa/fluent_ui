@@ -34,4 +34,20 @@ jobs:
         run: flutter pub publish --dry-run
 
       - name: Run tests
-        run: flutter test
+        run: flutter test --exclude-tags=golden
+
+  acrylic-goldens:
+    runs-on: macos-latest
+
+    steps:
+      - uses: actions/checkout@v2
+      - name: Install Flutter
+        uses: subosito/flutter-action@main
+        with:
+          channel: stable
+
+      - name: Install dependencies
+        run: flutter pub get
+
+      - name: Run Acrylic golden tests
+        run: flutter test --tags=golden

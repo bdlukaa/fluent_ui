@@ -87,7 +87,6 @@ class FlyoutContent extends StatelessWidget {
     }();
 
     final content = Acrylic(
-      tintAlpha: !useAcrylic ? 1.0 : null,
       shape: resolvedShape,
       child: Container(
         constraints: constraints,
@@ -103,17 +102,19 @@ class FlyoutContent extends StatelessWidget {
       ),
     );
 
+    final result = useAcrylic ? content : DisableAcrylic(child: content);
+
     if (elevation > 0.0) {
       return PhysicalModel(
         elevation: elevation,
         color: Colors.transparent,
         borderRadius: resolvedBorderRadius?.resolve(textDirection),
         shadowColor: shadowColor,
-        child: content,
+        child: result,
       );
     }
 
-    return content;
+    return result;
   }
 }
 

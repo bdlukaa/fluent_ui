@@ -280,8 +280,28 @@ class FluentThemeData with Diagnosticable {
   /// The background color for [ScaffoldPage] and similar scaffolding widgets.
   final Color scaffoldBackgroundColor;
 
-  /// The default background color for [Acrylic] widgets.
+  /// The default Acrylic tint color.
+  ///
+  /// This property is retained as the public background-color name for source
+  /// compatibility. It corresponds to WinUI `AcrylicBrush.TintColor`.
   final Color acrylicBackgroundColor;
+
+  /// The default Acrylic tint opacity.
+  ///
+  /// This corresponds to WinUI `AcrylicBrush.TintOpacity`.
+  final double acrylicTintOpacity;
+
+  /// The default Acrylic luminosity opacity resource.
+  ///
+  /// This corresponds to WinUI `AcrylicBrush.TintLuminosityOpacity` for
+  /// theme-provided Acrylic surfaces. A widget-level null
+  /// [Acrylic.luminosityAlpha] still means automatic luminosity behavior.
+  final double acrylicLuminosityOpacity;
+
+  /// The default opaque Acrylic fallback color.
+  ///
+  /// This corresponds to WinUI `AcrylicBrush.FallbackColor`.
+  final Color acrylicFallbackColor;
 
   /// The default background color for [Mica] widgets.
   final Color micaBackgroundColor;
@@ -398,6 +418,9 @@ class FluentThemeData with Diagnosticable {
     Color? inactiveBackgroundColor,
     Color? scaffoldBackgroundColor,
     Color? acrylicBackgroundColor,
+    double? acrylicTintOpacity,
+    double? acrylicLuminosityOpacity,
+    Color? acrylicFallbackColor,
     Color? micaBackgroundColor,
     Color? shadowColor,
     Color? menuColor,
@@ -448,8 +471,13 @@ class FluentThemeData with Diagnosticable {
     shadowColor ??= isLight ? Colors.black : Colors.grey[130];
     scaffoldBackgroundColor ??= resources.layerOnAcrylicFillColorDefault;
     acrylicBackgroundColor ??= isLight
-        ? resources.layerOnAcrylicFillColorDefault
-        : const Color(0xFF2c2c2c);
+        ? const Color(0xFFFCFCFC)
+        : const Color(0xFF2C2C2C);
+    acrylicTintOpacity ??= isLight ? 0.0 : 0.15;
+    acrylicLuminosityOpacity ??= isLight ? 0.85 : 0.96;
+    acrylicFallbackColor ??= isLight
+        ? const Color(0xFFF9F9F9)
+        : const Color(0xFF2C2C2C);
     micaBackgroundColor ??= resources.solidBackgroundFillColorBase;
     menuColor ??= isLight ? const Color(0xFFf9f9f9) : const Color(0xFF2c2c2c);
     cardColor ??= resources.cardBackgroundFillColorDefault;
@@ -496,6 +524,9 @@ class FluentThemeData with Diagnosticable {
       inactiveBackgroundColor: inactiveBackgroundColor,
       scaffoldBackgroundColor: scaffoldBackgroundColor,
       acrylicBackgroundColor: acrylicBackgroundColor,
+      acrylicTintOpacity: acrylicTintOpacity,
+      acrylicLuminosityOpacity: acrylicLuminosityOpacity,
+      acrylicFallbackColor: acrylicFallbackColor,
       micaBackgroundColor: micaBackgroundColor,
       shadowColor: shadowColor,
       buttonTheme: buttonTheme,
@@ -557,6 +588,9 @@ class FluentThemeData with Diagnosticable {
     required this.cardColor,
     required this.resources,
     required this.selectionColor,
+    this.acrylicTintOpacity = 0.15,
+    this.acrylicLuminosityOpacity = 0.96,
+    this.acrylicFallbackColor = const Color(0xFF2C2C2C),
   });
 
   /// Creates a default light theme.
@@ -608,6 +642,17 @@ class FluentThemeData with Diagnosticable {
       acrylicBackgroundColor: Color.lerp(
         a.acrylicBackgroundColor,
         b.acrylicBackgroundColor,
+        t,
+      )!,
+      acrylicTintOpacity:
+          a.acrylicTintOpacity +
+          (b.acrylicTintOpacity - a.acrylicTintOpacity) * t,
+      acrylicLuminosityOpacity:
+          a.acrylicLuminosityOpacity +
+          (b.acrylicLuminosityOpacity - a.acrylicLuminosityOpacity) * t,
+      acrylicFallbackColor: Color.lerp(
+        a.acrylicFallbackColor,
+        b.acrylicFallbackColor,
         t,
       )!,
       micaBackgroundColor: Color.lerp(
@@ -696,6 +741,9 @@ class FluentThemeData with Diagnosticable {
     Color? inactiveBackgroundColor,
     Color? scaffoldBackgroundColor,
     Color? acrylicBackgroundColor,
+    double? acrylicTintOpacity,
+    double? acrylicLuminosityOpacity,
+    Color? acrylicFallbackColor,
     Color? micaBackgroundColor,
     Color? shadowColor,
     Color? menuColor,
@@ -737,6 +785,10 @@ class FluentThemeData with Diagnosticable {
           scaffoldBackgroundColor ?? this.scaffoldBackgroundColor,
       acrylicBackgroundColor:
           acrylicBackgroundColor ?? this.acrylicBackgroundColor,
+      acrylicTintOpacity: acrylicTintOpacity ?? this.acrylicTintOpacity,
+      acrylicLuminosityOpacity:
+          acrylicLuminosityOpacity ?? this.acrylicLuminosityOpacity,
+      acrylicFallbackColor: acrylicFallbackColor ?? this.acrylicFallbackColor,
       micaBackgroundColor: micaBackgroundColor ?? this.micaBackgroundColor,
       menuColor: menuColor ?? this.menuColor,
       cardColor: cardColor ?? this.cardColor,
@@ -781,6 +833,11 @@ class FluentThemeData with Diagnosticable {
       ..add(ColorProperty('shadowColor', shadowColor))
       ..add(ColorProperty('scaffoldBackgroundColor', scaffoldBackgroundColor))
       ..add(ColorProperty('acrylicBackgroundColor', acrylicBackgroundColor))
+      ..add(DoubleProperty('acrylicTintOpacity', acrylicTintOpacity))
+      ..add(
+        DoubleProperty('acrylicLuminosityOpacity', acrylicLuminosityOpacity),
+      )
+      ..add(ColorProperty('acrylicFallbackColor', acrylicFallbackColor))
       ..add(ColorProperty('micaBackgroundColor', micaBackgroundColor))
       ..add(ColorProperty('menuColor', menuColor))
       ..add(ColorProperty('cardColor', cardColor))

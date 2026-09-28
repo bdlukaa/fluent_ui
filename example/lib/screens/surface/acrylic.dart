@@ -3,26 +3,6 @@ import 'package:fluent_ui/fluent_ui.dart';
 
 import '../settings.dart';
 
-const questionMark = Padding(
-  padding: EdgeInsetsDirectional.only(start: 4),
-  child: WindowsIcon(WindowsIcons.status_circle_question_mark, size: 14),
-);
-
-InlineSpan _buildLabel(final String label, final String description) {
-  return TextSpan(
-    text: label,
-    children: [
-      WidgetSpan(
-        child: Tooltip(
-          useMousePosition: false,
-          message: description,
-          child: questionMark,
-        ),
-      ),
-    ],
-  );
-}
-
 class AcrylicPage extends StatefulWidget {
   const AcrylicPage({super.key});
 
@@ -33,208 +13,349 @@ class AcrylicPage extends StatefulWidget {
 class _AcrylicPageState extends State<AcrylicPage> with PageMixin {
   double tintOpacity = 0.8;
   double luminosityOpacity = 0.8;
-  double blurAmout = 30;
+  double blurAmount = kBlurAmount;
   double elevation = 0;
   Color? color;
+  bool automaticLuminosity = true;
+  bool acrylicDisabled = false;
+  bool animateMaterial = false;
 
   @override
-  Widget build(final BuildContext context) {
-    final menuColor = FluentTheme.of(
-      context,
-    ).menuColor.withValues(alpha: kMenuColorOpacity);
+  Widget build(BuildContext context) {
+    final theme = FluentTheme.of(context);
+    final customTint = color ?? theme.acrylicBackgroundColor;
+    final luminosity = automaticLuminosity ? null : luminosityOpacity;
 
     return ScaffoldPage.scrollable(
       header: const PageHeader(title: Text('Acrylic')),
       children: [
         const Text(
-          'A translucent material recommended for panel backgrounds. Acrylic is a '
-          'type of Brush that creates a translucent texture. You can apply acrylic '
-          'to app surfaces to add depth and help establish a visual hierarchy.',
+          'In-app Acrylic blurs Flutter content behind a clipped surface. This '
+          'lab keeps the same high-contrast backdrop under every sample so the '
+          'blur, luminosity, tint, noise, and solid fallback are easy to compare.',
         ),
-        subtitle(content: const Text('Default background acrylic brush.')),
-        const Card(
-          child: SizedBox(
-            height: 300,
-            width: 500,
-            child: Stack(
-              children: [
-                _AcrylicChildren(),
-                Positioned.fill(
-                  child: Padding(
-                    padding: EdgeInsetsDirectional.all(12),
-                    child: Acrylic(),
-                  ),
-                ),
-              ],
+        subtitle(content: const Text('Default materials')),
+        const _MaterialComparison(
+          children: [
+            _MaterialSample(
+              title: 'Acrylic',
+              child: Stack(
+                children: [
+                  _AcrylicBackdropContent(),
+                  Positioned.fill(child: Acrylic(child: SizedBox.expand())),
+                ],
+              ),
             ),
+            _MaterialSample(
+              title: 'Mica fallback',
+              child: Stack(
+                children: [
+                  _AcrylicBackdropContent(),
+                  Positioned.fill(child: Mica(child: SizedBox.expand())),
+                ],
+              ),
+            ),
+          ],
+        ),
+        subtitle(content: const Text('Acrylic rendering laboratory')),
+        Card(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              _MaterialSample(
+                title: 'Configured Acrylic',
+                child: Stack(
+                  children: [
+                    const _AcrylicBackdropContent(),
+                    Positioned.fill(
+                      child: Padding(
+                        padding: const EdgeInsetsDirectional.all(12),
+                        child: acrylicDisabled
+                            ? DisableAcrylic(
+                                child: Acrylic(
+                                  fallbackColor: theme.acrylicFallbackColor,
+                                  shape: const RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.all(
+                                      Radius.circular(8),
+                                    ),
+                                  ),
+                                  child: const SizedBox.expand(),
+                                ),
+                              )
+                            : Acrylic(
+                                tint: customTint,
+                                tintAlpha: tintOpacity,
+                                luminosityAlpha: luminosity,
+                                blurAmount: blurAmount,
+                                elevation: elevation,
+                                fallbackColor: theme.acrylicFallbackColor,
+                                shape: const RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.all(
+                                    Radius.circular(8),
+                                  ),
+                                ),
+                                child: const SizedBox.expand(),
+                              ),
+                      ),
+                    ),
+                    const Positioned.fill(
+                      child: IgnorePointer(
+                        child: Padding(
+                          padding: EdgeInsetsDirectional.all(28),
+                          child: Align(
+                            alignment: AlignmentDirectional.topStart,
+                            child: Text(
+                              'Foreground content remains above the material',
+                              style: TextStyle(fontWeight: FontWeight.w600),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              const SizedBox(height: 12),
+              Wrap(
+                spacing: 24,
+                runSpacing: 12,
+                children: [
+                  InfoLabel(
+                    label: 'Tint color',
+                    child: ComboBox<Color>(
+                      value: color,
+                      placeholder: const Text('Theme tint'),
+                      onChanged: (value) => setState(() => color = value),
+                      items: [
+                        ...Colors.accentColors.map(
+                          (accent) => ComboBoxItem(
+                            value: accent,
+                            child: Text(
+                              accentColorNames[Colors.accentColors.indexOf(
+                                    accent,
+                                  ) +
+                                  1],
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  InfoLabel(
+                    label: 'Tint opacity: ${tintOpacity.toStringAsFixed(2)}',
+                    child: SizedBox(
+                      width: 180,
+                      child: Slider(
+                        value: tintOpacity,
+                        max: 1,
+                        onChanged: (value) =>
+                            setState(() => tintOpacity = value),
+                      ),
+                    ),
+                  ),
+                  InfoLabel(
+                    label:
+                        'Luminosity opacity: ${luminosityOpacity.toStringAsFixed(2)}',
+                    child: SizedBox(
+                      width: 180,
+                      child: Slider(
+                        value: luminosityOpacity,
+                        max: 1,
+                        onChanged: automaticLuminosity
+                            ? null
+                            : (value) =>
+                                  setState(() => luminosityOpacity = value),
+                      ),
+                    ),
+                  ),
+                  InfoLabel(
+                    label: 'Blur: ${blurAmount.toStringAsFixed(0)}',
+                    child: SizedBox(
+                      width: 180,
+                      child: Slider(
+                        value: blurAmount,
+                        max: 60,
+                        onChanged: (value) =>
+                            setState(() => blurAmount = value),
+                      ),
+                    ),
+                  ),
+                  InfoLabel(
+                    label: 'Elevation: ${elevation.toStringAsFixed(0)}',
+                    child: SizedBox(
+                      width: 180,
+                      child: Slider(
+                        value: elevation,
+                        max: 20,
+                        onChanged: (value) => setState(() => elevation = value),
+                      ),
+                    ),
+                  ),
+                  Checkbox(
+                    checked: automaticLuminosity,
+                    onChanged: (value) =>
+                        setState(() => automaticLuminosity = value ?? true),
+                    content: const Text('Automatic luminosity'),
+                  ),
+                  Checkbox(
+                    checked: acrylicDisabled,
+                    onChanged: (value) =>
+                        setState(() => acrylicDisabled = value ?? false),
+                    content: const Text('Disable Acrylic / fallback'),
+                  ),
+                ],
+              ),
+            ],
           ),
         ),
-        subtitle(content: const Text('Custom acrylic brush.')),
+        subtitle(content: const Text('Animated Acrylic')),
         Card(
-          child: SizedBox(
-            height: 300,
-            width: 500,
-            child: Row(
-              children: [
-                Expanded(
+          child: Row(
+            children: [
+              Expanded(
+                child: _MaterialSample(
+                  title: 'Animation keeps the same material pipeline',
                   child: Stack(
                     children: [
-                      const _AcrylicChildren(),
+                      const _AcrylicBackdropContent(),
                       Positioned.fill(
-                        child: Padding(
-                          padding: const EdgeInsetsDirectional.all(12),
-                          child: Acrylic(
-                            tintAlpha: tintOpacity,
-                            luminosityAlpha: luminosityOpacity,
-                            blurAmount: blurAmout,
-                            elevation: elevation,
-                            tint: color,
-                          ),
+                        child: AnimatedAcrylic(
+                          duration: const Duration(milliseconds: 500),
+                          tint: animateMaterial ? Colors.blue : Colors.magenta,
+                          tintAlpha: animateMaterial ? 0.1 : 0.8,
+
+                          blurAmount: animateMaterial ? 45 : 20,
+                          child: const SizedBox.expand(),
                         ),
                       ),
                     ],
                   ),
                 ),
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    InfoLabel.rich(
-                      label: _buildLabel(
-                        'Tint color',
-                        'the color/tint overlay layer.',
-                      ),
-                      child: ComboBox<Color>(
-                        placeholder: const Text('Tint color               '),
-                        onChanged: (final c) => setState(() => color = c),
-                        value: color,
-                        items: [
-                          ComboBoxItem(
-                            value: menuColor,
-                            child: Row(
-                              children: [
-                                buildColorBox(menuColor),
-                                const SizedBox(width: 10),
-                                const Text('Acrylic background'),
-                              ],
-                            ),
-                          ),
-                          ComboBoxItem(
-                            value: Colors.white,
-                            child: Row(
-                              children: [
-                                buildColorBox(Colors.white),
-                                const SizedBox(width: 10),
-                                const Text('White'),
-                              ],
-                            ),
-                          ),
-                          ComboBoxItem(
-                            value: const Color(0xE4000000),
-                            child: Row(
-                              children: [
-                                buildColorBox(const Color(0xE4000000)),
-                                const SizedBox(width: 10),
-                                const Text('Black'),
-                              ],
-                            ),
-                          ),
-                          ...List.generate(Colors.accentColors.length, (
-                            final index,
-                          ) {
-                            final color = Colors.accentColors[index];
-                            return ComboBoxItem(
-                              value: color,
-                              child: Row(
-                                children: [
-                                  buildColorBox(color),
-                                  const SizedBox(width: 10),
-                                  Text(accentColorNames[index + 1]),
-                                ],
-                              ),
-                            );
-                          }),
-                        ],
-                      ),
-                    ),
-                    InfoLabel.rich(
-                      label: _buildLabel(
-                        'Tint opacity',
-                        'the opacity of the tint layer.',
-                      ),
-                      child: Slider(
-                        value: tintOpacity,
-                        max: 1,
-                        onChanged: (final v) => setState(() => tintOpacity = v),
-                      ),
-                    ),
-                    InfoLabel.rich(
-                      label: _buildLabel(
-                        'Tint luminosity opacity',
-                        'controls the amount of saturation that is allowed through '
-                            'the acrylic surface from the background.',
-                      ),
-                      child: Slider(
-                        value: luminosityOpacity,
-                        max: 1,
-                        onChanged: (final v) =>
-                            setState(() => luminosityOpacity = v),
-                      ),
-                    ),
-                    InfoLabel(
-                      label: 'Blur amount',
-                      child: Slider(
-                        value: blurAmout,
-                        onChanged: (final v) => setState(() => blurAmout = v),
-                      ),
-                    ),
-                    InfoLabel(
-                      label: 'Elevation',
-                      child: Slider(
-                        value: elevation,
-                        max: 20,
-                        onChanged: (final v) => setState(() => elevation = v),
-                      ),
-                    ),
-                  ],
-                ),
-              ],
-            ),
+              ),
+              const SizedBox(width: 16),
+              Button(
+                onPressed: () =>
+                    setState(() => animateMaterial = !animateMaterial),
+                child: Text(animateMaterial ? 'Reverse' : 'Animate'),
+              ),
+            ],
           ),
         ),
       ],
     );
   }
+}
 
-  Widget buildColorBox(final Color color) {
-    const boxSize = 16.0;
-    return Container(
-      height: boxSize,
-      width: boxSize,
-      decoration: BoxDecoration(
-        color: color,
-        borderRadius: BorderRadius.circular(4),
+class _MaterialComparison extends StatelessWidget {
+  const _MaterialComparison({required this.children});
+
+  final List<Widget> children;
+
+  @override
+  Widget build(BuildContext context) {
+    return Wrap(spacing: 16, runSpacing: 16, children: children);
+  }
+}
+
+class _MaterialSample extends StatelessWidget {
+  const _MaterialSample({required this.title, required this.child});
+
+  final String title;
+  final Widget child;
+
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox(
+      width: 420,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Padding(
+            padding: const EdgeInsetsDirectional.only(bottom: 8),
+            child: Text(
+              title,
+              style: FluentTheme.of(context).typography.bodyStrong,
+            ),
+          ),
+          SizedBox(height: 220, child: child),
+        ],
       ),
     );
   }
 }
 
-class _AcrylicChildren extends StatelessWidget {
-  const _AcrylicChildren();
+class _AcrylicBackdropContent extends StatelessWidget {
+  const _AcrylicBackdropContent();
 
   @override
-  Widget build(final BuildContext context) {
-    return Stack(
-      children: [
-        Container(height: 200, width: 100, color: Colors.blue.lightest),
-        Align(
-          alignment: AlignmentDirectional.center,
-          child: Container(height: 152, width: 152, color: Colors.magenta),
+  Widget build(BuildContext context) {
+    return DecoratedBox(
+      decoration: const BoxDecoration(
+        gradient: LinearGradient(
+          begin: AlignmentDirectional.topStart,
+          end: AlignmentDirectional.bottomEnd,
+          colors: [
+            Color(0xFF080808),
+            Color(0xFFEEEEEE),
+            Color(0xFF0078D4),
+            Color(0xFFE81123),
+          ],
+          stops: [0, 0.32, 0.66, 1],
         ),
-        Align(
-          alignment: AlignmentDirectional.bottomEnd,
-          child: Container(height: 100, width: 80, color: Colors.yellow),
-        ),
-      ],
+      ),
+      child: Stack(
+        fit: StackFit.expand,
+        children: [
+          CustomPaint(painter: _ContrastStripePainter()),
+          Align(
+            alignment: AlignmentDirectional.center,
+            child: DecoratedBox(
+              decoration: BoxDecoration(
+                color: Colors.yellow,
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black.withValues(alpha: 0.8),
+                    blurRadius: 18,
+                    offset: const Offset(8, 8),
+                  ),
+                ],
+              ),
+              child: const Padding(
+                padding: EdgeInsetsDirectional.all(12),
+                child: Text(
+                  'Readable text\nsharp contrast + shadow',
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    color: Colors.black,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+              ),
+            ),
+          ),
+          const PositionedDirectional(
+            start: 12,
+            bottom: 12,
+            child: Text(
+              'colorful backdrop',
+              style: TextStyle(color: Colors.white, fontSize: 16),
+            ),
+          ),
+        ],
+      ),
     );
   }
+}
+
+class _ContrastStripePainter extends CustomPainter {
+  @override
+  void paint(Canvas canvas, Size size) {
+    final paint = Paint()..color = Colors.white.withValues(alpha: 0.24);
+    for (var x = -size.height; x < size.width; x += 24) {
+      canvas.drawRect(Rect.fromLTWH(x, 0, 10, size.height), paint);
+    }
+  }
+
+  @override
+  bool shouldRepaint(covariant _ContrastStripePainter oldDelegate) => false;
 }

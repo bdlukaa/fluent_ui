@@ -259,7 +259,7 @@ class TeachingTip extends StatelessWidget {
             arrowMainAxisWidth: verticalPadding,
           ),
           child: Container(
-            color: theme.menuColor,
+            color: theme.menuColor.withValues(alpha: kMenuColorOpacity),
             padding: EdgeInsets.only(
               top: switch (flyout.placementMode) {
                 FlyoutPlacementMode.bottomLeft ||
