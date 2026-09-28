@@ -123,6 +123,107 @@ void main() {
     },
   );
 
+  testWidgets('overflow menu uses WinUI presenter dimensions and resources', (
+    tester,
+  ) async {
+    await tester.pumpWidget(
+      wrapApp(
+        child: const SizedBox(
+          width: 320,
+          child: CommandBar(
+            primaryItems: [],
+            secondaryItems: [
+              CommandBarButton(label: Text('More actions'), onPressed: null),
+            ],
+          ),
+        ),
+      ),
+    );
+
+    await tester.tap(find.widgetWithIcon(IconButton, FluentIcons.more));
+    await tester.pumpAndSettle();
+
+    final presenter = tester.widget<FlyoutContent>(find.byType(FlyoutContent));
+    final theme = FluentTheme.of(tester.element(find.byType(CommandBar)));
+    expect(
+      presenter.constraints,
+      const BoxConstraints(minWidth: 160, maxWidth: 480, maxHeight: 198),
+    );
+    expect(presenter.color, theme.resources.layerOnAcrylicFillColorDefault);
+    final shape = presenter.shape! as RoundedRectangleBorder;
+    expect(shape.side.color, theme.resources.surfaceStrokeColorFlyout);
+    expect(shape.side.width, 1);
+  });
+
+  testWidgets('overflow menu aligns to the command bar end', (tester) async {
+    await tester.pumpWidget(
+      wrapApp(
+        child: const SizedBox(
+          width: 320,
+          child: CommandBar(
+            primaryItems: [],
+            secondaryItems: [
+              CommandBarButton(label: Text('More actions'), onPressed: null),
+            ],
+          ),
+        ),
+      ),
+    );
+
+    final button = find.widgetWithIcon(IconButton, FluentIcons.more);
+    await tester.tap(button);
+    await tester.pumpAndSettle();
+
+    final menu = find.byType(FlyoutContent);
+    expect(menu, findsOneWidget);
+    expect(
+      tester.getTopRight(menu).dx,
+      closeTo(tester.getTopRight(find.byType(CommandBar)).dx, 0.1),
+    );
+  });
+
+  testWidgets('outside taps dismiss the overflow without activating the page', (
+    tester,
+  ) async {
+    var pressed = false;
+    const outsideKey = Key('outside-command');
+    await tester.pumpWidget(
+      wrapApp(
+        child: Column(
+          children: [
+            CommandBar(
+              primaryItems: const [],
+              secondaryItems: [
+                CommandBarButton(
+                  label: const Text('Secondary action'),
+                  onPressed: () {},
+                ),
+              ],
+            ),
+            Button(
+              key: outsideKey,
+              onPressed: () => pressed = true,
+              child: const Text('Outside'),
+            ),
+          ],
+        ),
+      ),
+    );
+
+    await tester.tap(find.widgetWithIcon(IconButton, FluentIcons.more));
+    await tester.pumpAndSettle();
+    expect(find.text('Secondary action'), findsOneWidget);
+
+    await tester.tap(find.byKey(outsideKey), warnIfMissed: false);
+    await tester.pumpAndSettle();
+    expect(find.text('Secondary action'), findsNothing);
+    expect(pressed, isFalse);
+
+    await tester.tap(find.byKey(outsideKey), warnIfMissed: false);
+    await tester.pumpAndSettle();
+    expect(pressed, isTrue);
+  });
+
   testWidgets('CommandBarButton displays tooltip', (tester) async {
     await tester.pumpWidget(
       wrapApp(
@@ -148,6 +249,81 @@ void main() {
     final tooltip = find.text('Save your work');
     expect(tooltip, findsOneWidget);
   });
+  testWidgets(
+    'secondary CommandBarButton retains tooltip in the overflow menu',
+    (tester) async {
+      await tester.pumpWidget(
+        wrapApp(
+          child: const SizedBox(
+            width: 180,
+            child: CommandBar(
+              primaryItems: [],
+              secondaryItems: [
+                CommandBarButton(
+                  icon: Icon(FluentIcons.save),
+                  label: Text('Export'),
+                  tooltip: 'Export all operations',
+                  onPressed: null,
+                ),
+              ],
+            ),
+          ),
+        ),
+      );
+
+      await tester.tap(find.widgetWithIcon(IconButton, FluentIcons.more));
+      await tester.pumpAndSettle();
+      final item = find.text('Export');
+      expect(item, findsOneWidget);
+
+      final gesture = await tester.createGesture(kind: PointerDeviceKind.mouse);
+      await gesture.addPointer();
+      await gesture.moveTo(tester.getCenter(item));
+      await tester.pumpAndSettle(const Duration(milliseconds: 1200));
+      expect(find.text('Export all operations'), findsNWidgets(2));
+    },
+  );
+
+  testWidgets('dynamically overflowed primary item retains tooltip', (
+    tester,
+  ) async {
+    await tester.pumpWidget(
+      wrapApp(
+        child: ScaffoldPage(
+          header: SizedBox(
+            width: 100,
+            child: CommandBar(
+              primaryItems: [
+                CommandBarButton(
+                  icon: const Icon(FluentIcons.save),
+                  label: const Text('Save'),
+                  tooltip: 'Save your work',
+                  onPressed: () {},
+                ),
+                CommandBarButton(
+                  icon: const Icon(FluentIcons.edit),
+                  label: const Text('Edit'),
+                  tooltip: 'Edit your work',
+                  onPressed: () {},
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+
+    await tester.tap(find.widgetWithIcon(IconButton, FluentIcons.more));
+    await tester.pumpAndSettle();
+    expect(find.text('Edit'), findsNWidgets(2));
+
+    final gesture = await tester.createGesture(kind: PointerDeviceKind.mouse);
+    await gesture.addPointer();
+    await gesture.moveTo(tester.getCenter(find.text('Edit').last));
+    await tester.pumpAndSettle(const Duration(milliseconds: 1200));
+    expect(find.text('Edit your work'), findsNWidgets(2));
+  });
+
   testWidgets('CommandBarButton hides label and shows icon in compact mode', (
     tester,
   ) async {
