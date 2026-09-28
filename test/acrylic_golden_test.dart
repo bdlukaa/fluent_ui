@@ -1,3 +1,5 @@
+import 'dart:io' show Platform;
+
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter_test/flutter_test.dart';
 
@@ -31,28 +33,33 @@ void main() {
     );
   });
 
-  testWidgets('high contrast content through Acrylic', (tester) async {
-    await _pumpAcrylic(
-      tester,
-      theme: FluentThemeData.dark(),
-      backdrop: const Stack(
-        fit: StackFit.expand,
-        children: [
-          ColoredBox(color: Colors.white),
-          Align(
-            child: Text(
-              'black and white',
-              style: TextStyle(color: Colors.black, fontSize: 24),
+  testWidgets(
+    'high contrast content through Acrylic',
+    (tester) async {
+      await _pumpAcrylic(
+        tester,
+        theme: FluentThemeData.dark(),
+        backdrop: const Stack(
+          fit: StackFit.expand,
+          children: [
+            ColoredBox(color: Colors.white),
+            Align(
+              child: Text(
+                'black and white',
+                style: TextStyle(color: Colors.black, fontSize: 24),
+              ),
             ),
-          ),
-        ],
-      ),
-    );
-    await expectLater(
-      find.byKey(_acrylicKey),
-      matchesGoldenFile('goldens/acrylic/high_contrast.png'),
-    );
-  });
+          ],
+        ),
+      );
+      await expectLater(
+        find.byKey(_acrylicKey),
+        matchesGoldenFile('goldens/acrylic/high_contrast.png'),
+      );
+    },
+    // BackdropFilter output differs between Linux CI and macOS.
+    skip: Platform.isLinux,
+  );
 
   testWidgets('disabled Acrylic fallback', (tester) async {
     await _pumpAcrylic(tester, theme: FluentThemeData.dark(), disabled: true);
@@ -76,7 +83,7 @@ Future<void> _pumpAcrylic(
   final material = Acrylic(
     tint: tint,
     tintAlpha: tintAlpha,
-    child: const Center(child: Text('Acrylic', style: TextStyle(fontSize: 20))),
+    child: const SizedBox.expand(),
   );
 
   await tester.pumpWidget(
