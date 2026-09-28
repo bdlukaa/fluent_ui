@@ -623,7 +623,9 @@ class PaneToggleButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final view = NavigationView.dataOf(context);
+    final navigationView = NavigationView.of(context);
     final fluentTheme = FluentTheme.of(context);
+    final localizations = FluentLocalizations.of(context);
     final paneItemHeight = clampDouble(
       kPaneItemMinHeight + fluentTheme.visualDensity.baseSizeAdjustment.dy,
       0,
@@ -640,7 +642,9 @@ class PaneToggleButton extends StatelessWidget {
         maxHeight: paneItemHeight,
       ),
       child: Tooltip(
-        message: 'Toggle navigation',
+        message: navigationView.isPaneOpen
+            ? localizations.closeNavigationTooltip
+            : localizations.openNavigationTooltip,
         child: IconButton(
           icon: const Icon(WindowsIcons.global_nav_button),
           onPressed:

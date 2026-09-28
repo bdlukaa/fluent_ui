@@ -172,7 +172,7 @@ abstract class FluentLocalizations {
     Locale.fromSubtags(languageCode: 'zh', scriptCode: 'Hant'),
   ];
 
-  /// The tooltip for the back button on [NavigationAppBar].
+  /// The tooltip for navigation back buttons.
   ///
   /// In en, this message translates to:
   /// **'Back'**

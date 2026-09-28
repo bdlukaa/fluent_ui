@@ -63,9 +63,51 @@ class _PaneItemContext extends InheritedWidget {
 
   @override
   bool updateShouldNotify(_PaneItemContext oldWidget) {
-    // Update children if item or depth changes.
-    return item != oldWidget.item || depth != oldWidget.depth;
+    return item != oldWidget.item ||
+        index != oldWidget.index ||
+        isSelected != oldWidget.isSelected ||
+        depth != oldWidget.depth;
   }
+}
+
+/// Builds the visual content of a [PaneItem].
+typedef PaneItemContentBuilder =
+    Widget Function(BuildContext context, PaneItemContentData data);
+
+/// Data supplied to a [PaneItemContentBuilder].
+@immutable
+class PaneItemContentData {
+  /// Creates pane item content data.
+  const PaneItemContentData({
+    required this.displayMode,
+    required this.selected,
+    required this.depth,
+    required this.icon,
+    required this.title,
+    required this.infoBadge,
+    required this.trailing,
+  });
+
+  /// The effective visual display mode for this layout frame.
+  final PaneDisplayMode displayMode;
+
+  /// Whether the item is selected.
+  final bool selected;
+
+  /// The hierarchy depth, where zero is a root item.
+  final int depth;
+
+  /// The configured icon.
+  final Widget? icon;
+
+  /// The configured visual title.
+  final Widget? title;
+
+  /// The configured information badge.
+  final Widget? infoBadge;
+
+  /// The configured trailing content.
+  final Widget? trailing;
 }
 
 /// The item used by [NavigationView] to display the tiles.
@@ -98,6 +140,11 @@ class PaneItem extends NavigationPaneItem {
     this.selectedTileColor,
     this.onTap,
     this.enabled = true,
+    this.selectsOnInvoked = true,
+    this.tooltip,
+    this.automaticTooltip = true,
+    this.semanticLabel,
+    this.contentBuilder,
   });
 
   /// The title used by this item. If the display mode is top
@@ -170,6 +217,34 @@ class PaneItem extends NavigationPaneItem {
   ///  * [HoverButton.forceEnabled]
   final bool enabled;
 
+  /// Whether invoking this item requests selection.
+  ///
+  /// Set this to false for commands or external destinations that should not
+  /// replace the current navigation destination. [PaneItemAction] is a
+  /// convenience for an action-only item.
+  final bool selectsOnInvoked;
+
+  /// Overrides the compact and top-overflow tooltip text.
+  ///
+  /// When null and [automaticTooltip] is true, text is derived from [title].
+  final String? tooltip;
+
+  /// Whether to derive a tooltip from [title] when [tooltip] is null.
+  ///
+  /// Set this to false with a null [tooltip] to suppress the tooltip.
+  final bool automaticTooltip;
+
+  /// The accessibility label for this item.
+  ///
+  /// When null, text is derived from [title].
+  final String? semanticLabel;
+
+  /// Builds the visual arrangement inside the standard item interaction shell.
+  ///
+  /// Selection, focus, semantics, indicator, hover, press, keyboard invocation,
+  /// hierarchy, and history behavior remain managed by [NavigationView].
+  final PaneItemContentBuilder? contentBuilder;
+
   /// Builds the pane item widget for display in the navigation pane.
   ///
   /// This method handles all display modes ([PaneDisplayMode.compact],
@@ -212,6 +287,7 @@ class PaneItem extends NavigationPaneItem {
     );
 
     final titleText = title?._getProperty<String>() ?? '';
+    final effectiveTooltip = tooltip ?? (automaticTooltip ? titleText : null);
     final baseStyle = title?._getProperty<TextStyle>() ?? const TextStyle();
 
     final isTop = mode == PaneDisplayMode.top;
@@ -245,7 +321,8 @@ class PaneItem extends NavigationPaneItem {
       builder: (context, states) {
         final shouldShowTooltip =
             ((isTop && !showTextOnTop) || isCompact) &&
-            titleText.isNotEmpty &&
+            effectiveTooltip != null &&
+            effectiveTooltip.isNotEmpty &&
             !states.isDisabled;
         final textStyle = () {
           final style = !isTop
@@ -272,8 +349,24 @@ class PaneItem extends NavigationPaneItem {
               )
             : null;
 
-        Widget result() {
-          switch (mode) {
+        Widget buildContent(PaneDisplayMode contentMode) {
+          final customContent = contentBuilder;
+          if (customContent != null) {
+            return customContent(
+              context,
+              PaneItemContentData(
+                displayMode: contentMode,
+                selected: selected,
+                depth: depth,
+                icon: icon,
+                title: title,
+                infoBadge: infoBadge,
+                trailing: trailing,
+              ),
+            );
+          }
+
+          switch (contentMode) {
             case PaneDisplayMode.compact:
               return Container(
                 key: key,
@@ -297,36 +390,28 @@ class PaneItem extends NavigationPaneItem {
               );
             case PaneDisplayMode.minimal:
             case PaneDisplayMode.expanded:
-              final shouldShowTrailing = !maybeView.isTransitioning;
-
               return ConstrainedBox(
                 key: key,
                 constraints: BoxConstraints(minHeight: paneItemMinHeight),
-                child: ClipRect(
-                  child: Row(
-                    children: [
-                      SizedBox(width: depth * 28),
+                child: Row(
+                  children: [
+                    SizedBox(width: depth * 28),
+                    Padding(
+                      padding: theme.iconPadding ?? EdgeInsetsDirectional.zero,
+                      child: Center(child: icon),
+                    ),
+                    Expanded(child: textResult ?? const SizedBox.shrink()),
+                    if (infoBadge != null)
                       Padding(
-                        padding:
-                            theme.iconPadding ?? EdgeInsetsDirectional.zero,
-                        child: Center(child: icon),
+                        padding: const EdgeInsetsDirectional.only(end: 8),
+                        child: infoBadge,
                       ),
-
-                      Expanded(child: textResult ?? const SizedBox.shrink()),
-                      if (shouldShowTrailing) ...[
-                        if (infoBadge != null)
-                          Padding(
-                            padding: const EdgeInsetsDirectional.only(end: 8),
-                            child: infoBadge,
-                          ),
-                        if (trailing != null)
-                          IconTheme.merge(
-                            data: const IconThemeData(size: 16),
-                            child: trailing!,
-                          ),
-                      ],
-                    ],
-                  ),
+                    if (trailing != null)
+                      IconTheme.merge(
+                        data: const IconThemeData(size: 16),
+                        child: trailing!,
+                      ),
+                  ],
                 ),
               );
             case PaneDisplayMode.top:
@@ -366,8 +451,33 @@ class PaneItem extends NavigationPaneItem {
           }
         }
 
+        Widget result() {
+          if (mode != PaneDisplayMode.expanded) return buildContent(mode);
+
+          return LayoutBuilder(
+            builder: (context, constraints) {
+              final minimumExpandedWidth = depth * 28 + 130;
+              const threshold = kOpenNavigationPaneWidth / 1.5;
+              final showsExpandedContent =
+                  constraints.maxWidth >=
+                  (minimumExpandedWidth > threshold
+                      ? minimumExpandedWidth
+                      : threshold);
+              return buildContent(
+                showsExpandedContent
+                    ? PaneDisplayMode.expanded
+                    : PaneDisplayMode.compact,
+              );
+            },
+          );
+        }
+
+        final effectiveSemanticLabel =
+            semanticLabel ?? (titleText.isEmpty ? null : titleText);
         return Semantics(
-          label: titleText.isEmpty ? null : titleText,
+          container: effectiveSemanticLabel != null,
+          excludeSemantics: effectiveSemanticLabel != null,
+          label: effectiveSemanticLabel,
           selected: selected,
           child: Container(
             // TODO(bdlukaa): Put this into the theme
@@ -409,7 +519,10 @@ class PaneItem extends NavigationPaneItem {
                 renderOutside: false,
                 child: shouldShowTooltip
                     ? Tooltip(
-                        richMessage: title?._getProperty<InlineSpan>(),
+                        message: tooltip,
+                        richMessage: tooltip == null
+                            ? title?._getProperty<InlineSpan>()
+                            : null,
                         style: TooltipThemeData(textStyle: baseStyle),
                         child: result(),
                       )
@@ -458,6 +571,11 @@ class PaneItem extends NavigationPaneItem {
     WidgetStateProperty<Color?>? selectedTileColor,
     VoidCallback? onTap,
     bool? enabled,
+    bool? selectsOnInvoked,
+    String? tooltip,
+    bool? automaticTooltip,
+    String? semanticLabel,
+    PaneItemContentBuilder? contentBuilder,
   }) {
     return PaneItem(
       title: title ?? this.title,
@@ -472,6 +590,11 @@ class PaneItem extends NavigationPaneItem {
       selectedTileColor: selectedTileColor ?? this.selectedTileColor,
       onTap: onTap ?? this.onTap,
       enabled: enabled ?? this.enabled,
+      selectsOnInvoked: selectsOnInvoked ?? this.selectsOnInvoked,
+      tooltip: tooltip ?? this.tooltip,
+      automaticTooltip: automaticTooltip ?? this.automaticTooltip,
+      semanticLabel: semanticLabel ?? this.semanticLabel,
+      contentBuilder: contentBuilder ?? this.contentBuilder,
     );
   }
 
@@ -520,7 +643,7 @@ class PaneItem extends NavigationPaneItem {
               },
             )
           : const SizedBox.shrink(),
-      onPressed: () => onItemPressed?.call(this),
+      onPressed: enabled ? () => onItemPressed?.call(this) : null,
       trailing: () {
         if (infoBadge != null && trailing == null) {
           return infoBadge;
@@ -685,6 +808,11 @@ class PaneItemAction extends PaneItem {
     super.tileColor,
     super.trailing,
     super.enabled = true,
+    super.tooltip,
+    super.automaticTooltip = true,
+    super.semanticLabel,
+    super.contentBuilder,
+    super.selectsOnInvoked = false,
   });
 }
 
@@ -932,21 +1060,16 @@ class __PaneItemExpanderState extends State<_PaneItemExpander>
                     return _MenuFlyoutPaneItemExpander(
                       item: item,
                       onPressed: () {
-                        if (viewData.pane?.canChangeTo(item) ?? false) {
-                          Navigator.pop(context);
-                          widget.onPressed?.call();
-                          item.onTap?.call();
-                          viewData.pane?.changeTo(item);
-                        }
+                        Navigator.pop(context);
+                        viewData.pane?.changeTo(item);
+                        item.onTap?.call();
                       },
                       onItemPressed:
                           widget.onItemPressed ??
                           (item) {
-                            if (viewData.pane?.canChangeTo(item) ?? false) {
-                              Navigator.pop(context);
-                              item.onTap?.call();
-                              viewData.pane?.changeTo(item);
-                            }
+                            Navigator.pop(context);
+                            viewData.pane?.changeTo(item);
+                            item.onTap?.call();
                           },
                     );
                   } else if (item is PaneItem) {
@@ -955,8 +1078,8 @@ class __PaneItemExpanderState extends State<_PaneItemExpander>
                       onPressed: () {
                         Navigator.pop(context);
                         widget.onItemPressed?.call(item);
-                        item.onTap?.call();
                         viewData.pane?.changeTo(item);
+                        item.onTap?.call();
                       },
                       isSelected: body.pane!.isSelected(item),
                     );
