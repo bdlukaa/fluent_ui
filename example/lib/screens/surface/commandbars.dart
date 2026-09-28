@@ -13,99 +13,102 @@ class CommandBarsPage extends StatefulWidget {
 class _CommandBarsPageState extends State<CommandBarsPage> with PageMixin {
   final key = GlobalKey<CommandBarState>();
 
-  final simpleCommandBarItems = <CommandBarItem>[
+  List<CommandBarItem> get simpleCommandBarItems => [
     CommandBarButton(
       icon: const WindowsIcon(WindowsIcons.add),
       label: const Text('New'),
-      tooltip: 'Create something new!',
-      onPressed: () {},
+      tooltip: 'Ctrl+N',
+      onPressed: () => _runAction('New playlist'),
     ),
     CommandBarButton(
       icon: const WindowsIcon(WindowsIcons.delete),
       label: const Text('Delete'),
-      tooltip: 'Delete what is currently selected!',
-      onPressed: () {},
+      tooltip: 'Delete',
+      onPressed: () => _runAction('Removed selected track'),
     ),
     CommandBarButton(
       icon: const WindowsIcon(WindowsIcons.file_explorer),
-      label: const Text('Archive'),
-      onPressed: () {},
+      label: const Text('Add to playlist'),
+      tooltip: 'Ctrl+L',
+      onPressed: () => _runAction('Added to playlist'),
     ),
     CommandBarButton(
       icon: const WindowsIcon(WindowsIcons.move),
       label: const Text('Move'),
-      onPressed: () {},
+      tooltip: 'Ctrl+Shift+M',
+      onPressed: () => _runAction('Move requested'),
     ),
     const CommandBarButton(
       icon: WindowsIcon(WindowsIcons.cancel),
-      label: Text('Disabled'),
+      label: Text('Unavailable'),
+      tooltip: 'Unavailable',
       onPressed: null,
     ),
-  ];
-
-  final moreCommandBarItems = <CommandBarItem>[
     CommandBarButton(
       icon: const WindowsIcon(WindowsIcons.mail_reply),
-      label: const Text('Reply'),
-      onPressed: () {},
+      label: const Text('Play next'),
+      tooltip: 'Alt+N',
+      onPressed: () => _runAction('Queued next'),
     ),
     CommandBarButton(
       icon: const WindowsIcon(WindowsIcons.mail_reply_all),
-      label: const Text('Reply All'),
-      onPressed: () {},
-    ),
-    CommandBarButton(
-      icon: const WindowsIcon(WindowsIcons.forward),
-      label: const Text('Forward'),
-      onPressed: () {},
-    ),
-    CommandBarButton(
-      icon: const WindowsIcon(WindowsIcons.search),
-      label: const Text('Search'),
-      onPressed: () {},
-    ),
-    CommandBarButton(
-      icon: const WindowsIcon(WindowsIcons.pin),
-      label: const Text('Pin'),
-      onPressed: () {},
-    ),
-    CommandBarButton(
-      icon: const WindowsIcon(WindowsIcons.unpin),
-      label: const Text('Unpin'),
-      onPressed: () {},
+      label: const Text('Add to queue'),
+      tooltip: 'Q',
+      onPressed: () => _runAction('Added to queue'),
     ),
   ];
 
-  final evenMoreCommandBarItems = <CommandBarItem>[
+  List<CommandBarItem> get moreCommandBarItems => [
+    CommandBarButton(
+      icon: const WindowsIcon(WindowsIcons.forward),
+      label: const Text('Share'),
+      tooltip: 'Ctrl+S',
+      onPressed: () => _runAction('Share requested'),
+    ),
+    CommandBarButton(
+      icon: const WindowsIcon(WindowsIcons.search),
+      label: const Text('Search library'),
+      tooltip: 'Ctrl+F',
+      onPressed: () => _runAction('Search requested'),
+    ),
+    CommandBarButton(
+      icon: const WindowsIcon(WindowsIcons.pin),
+      label: const Text('Pin playlist'),
+      tooltip: 'Ctrl+P',
+      onPressed: () => _runAction('Playlist pinned'),
+    ),
+    CommandBarButton(
+      icon: const WindowsIcon(WindowsIcons.unpin),
+      label: const Text('Remove pin'),
+      tooltip: 'Ctrl+Shift+P',
+      onPressed: () => _runAction('Playlist unpinned'),
+    ),
+  ];
+
+  List<CommandBarItem> get evenMoreCommandBarItems => [
     CommandBarButton(
       icon: const WindowsIcon(WindowsIcons.accept),
-      label: const Text('Accept'),
-      onPressed: () {},
+      label: const Text('Mark played'),
+      tooltip: 'M',
+      onPressed: () => _runAction('Marked as played'),
     ),
     CommandBarButton(
       icon: const WindowsIcon(WindowsIcons.calculator_multiply),
-      label: const Text('Reject'),
-      onPressed: () {},
-    ),
-    CommandBarButton(
-      icon: const WindowsIcon(WindowsIcons.share),
-      label: const Text('Share'),
-      onPressed: () {},
-    ),
-    CommandBarButton(
-      icon: const WindowsIcon(WindowsIcons.favorite_star),
-      label: const Text('Add Favorite'),
-      onPressed: () {},
+      label: const Text('Remove from queue'),
+      tooltip: 'Delete',
+      onPressed: () => _runAction('Removed from queue'),
     ),
     CommandBarButton(
       icon: const WindowsIcon(WindowsIcons.back),
-      label: const Text('Backward'),
-      onPressed: () {},
+      label: const Text('Previous'),
+      tooltip: 'Left Arrow',
+      onPressed: () => _runAction('Previous track'),
     ),
     CommandBarButton(
       icon: const WindowsIcon(WindowsIcons.forward),
-      label: const Text('Forward'),
-      onPressed: () {},
+      label: const Text('Next'),
+      tooltip: 'Right Arrow',
+      onPressed: () => _runAction('Next track'),
     ),
   ];
 
@@ -114,6 +117,11 @@ class _CommandBarsPageState extends State<CommandBarsPage> with PageMixin {
   bool _compact = false;
   CommandBarOverflowBehavior overflowBehavior =
       CommandBarOverflowBehavior.dynamicOverflow;
+  String _lastAction = 'Ready to play';
+
+  void _runAction(String action) {
+    setState(() => _lastAction = action);
+  }
 
   @override
   Widget build(final BuildContext context) {
@@ -121,9 +129,28 @@ class _CommandBarsPageState extends State<CommandBarsPage> with PageMixin {
       header: const PageHeader(title: Text('CommandBar')),
       children: [
         const Text(
-          "Command bars provide users with easy access to your app's most "
-          'common tasks. Command bars can provide access to app-level or '
-          'page-specific commands and can be used with any navigation pattern.',
+          'This sample mirrors the WinUI Gallery media command bar. '
+          'Primary commands stay visible when possible; secondary commands '
+          'and dynamically overflowed commands appear in the More menu.',
+        ),
+        const SizedBox(height: 8),
+        Card(
+          child: Row(
+            children: [
+              const Icon(FluentIcons.music_note, size: 32),
+              const SizedBox(width: 12),
+              const Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text('Now playing', style: TextStyle(fontSize: 16)),
+                    Text('The track selected in the WinUI Gallery sample'),
+                  ],
+                ),
+              ),
+              Text(_lastAction),
+            ],
+          ),
         ),
         const SizedBox(height: 8),
         Card(
@@ -200,9 +227,7 @@ class _CommandBarsPageState extends State<CommandBarsPage> with PageMixin {
             ],
           ),
         ),
-        subtitle(
-          content: const Text('Command bar with many items (dynamic overflow)'),
-        ),
+        subtitle(content: const Text('Media player command bar')),
         CodeSnippetCard(
           codeSnippet:
               '''final commandBarKey = GlobalKey<CommandBarState>();
@@ -213,20 +238,24 @@ CommandBar(
   primaryItems: [
     CommandBarButton(
       icon: const WindowsIcon(WindowsIcons.add),
-      label: const Text('New'),
-      tooltip: 'Create something new!',
-      onPressed: () {
-        // Create something new!
-      },
+      label: const Text('New playlist'),
+      tooltip: 'Ctrl+N',
+      onPressed: () {},
     ),
     const CommandBarSeparator(),
     CommandBarButton(
       icon: const WindowsIcon(WindowsIcons.delete),
-      label: const Text('Delete'),
-      tooltip: 'Delete what is currently selected!',
-      onPressed: () {
-        // Delete what is currently selected!
-      },
+      label: const Text('Remove'),
+      tooltip: 'Delete',
+      onPressed: () {},
+    ),
+  ],
+  secondaryItems: [
+    CommandBarButton(
+      icon: const WindowsIcon(WindowsIcons.share),
+      label: const Text('Share'),
+      tooltip: 'Ctrl+S',
+      onPressed: () {},
     ),
   ],
 );
@@ -247,10 +276,9 @@ commandBarKey.currentState?.toggleSecondaryMenu();
                 primaryItems: [
                   ...simpleCommandBarItems,
                   const CommandBarSeparator(),
-                  ...moreCommandBarItems,
-                  const CommandBarSeparator(),
                   ...evenMoreCommandBarItems,
                 ],
+                secondaryItems: moreCommandBarItems,
               ),
             ),
           ),

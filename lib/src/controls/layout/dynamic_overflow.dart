@@ -17,6 +17,19 @@ import 'package:flutter/scheduler.dart';
 typedef DynamicOverflowChangedCallback =
     void Function(List<int> hiddenChildren);
 
+/// The logical side from which children are removed when space runs out.
+///
+/// The direction is resolved against [TextDirection] for horizontal layouts
+/// and [VerticalDirection] for vertical layouts. It describes overflow
+/// priority, not the alignment of the children or the overflow affordance.
+enum DynamicOverflowDirection {
+  /// Remove children from the logical start first.
+  start,
+
+  /// Remove children from the logical end first.
+  end,
+}
+
 /// Lays out children widgets in a single run, and if there is not
 /// room to display them all, it will hide widgets that don't fit,
 /// and display the "overflow widget" at the end. Optionally, the
@@ -39,6 +52,9 @@ class DynamicOverflow extends MultiChildRenderObjectWidget {
 
   /// {@macro flutter.widgets.wrap.verticalDirection}
   final VerticalDirection verticalDirection;
+
+  /// The logical side from which children are removed when they overflow.
+  final DynamicOverflowDirection overflowDirection;
 
   /// {@macro flutter.material.Material.clipBehavior}
   ///
@@ -67,6 +83,7 @@ class DynamicOverflow extends MultiChildRenderObjectWidget {
     this.crossAxisAlignment = CrossAxisAlignment.center,
     this.textDirection,
     this.verticalDirection = VerticalDirection.down,
+    this.overflowDirection = DynamicOverflowDirection.end,
     this.clipBehavior = Clip.none,
     this.alwaysDisplayOverflowWidget = false,
     this.overflowWidgetAlignment = MainAxisAlignment.end,
@@ -81,6 +98,7 @@ class DynamicOverflow extends MultiChildRenderObjectWidget {
       crossAxisAlignment: crossAxisAlignment,
       textDirection: textDirection ?? Directionality.maybeOf(context),
       verticalDirection: verticalDirection,
+      overflowDirection: overflowDirection,
       clipBehavior: clipBehavior,
       overflowWidgetAlignment: overflowWidgetAlignment,
       alwaysDisplayOverflowWidget: alwaysDisplayOverflowWidget,
@@ -99,6 +117,7 @@ class DynamicOverflow extends MultiChildRenderObjectWidget {
       ..crossAxisAlignment = crossAxisAlignment
       ..textDirection = textDirection ?? Directionality.maybeOf(context)
       ..verticalDirection = verticalDirection
+      ..overflowDirection = overflowDirection
       ..clipBehavior = clipBehavior
       ..overflowWidgetAlignment = overflowWidgetAlignment
       ..alwaysDisplayOverflowWidget = alwaysDisplayOverflowWidget
@@ -163,6 +182,7 @@ class RenderDynamicOverflow extends RenderBox
     required CrossAxisAlignment crossAxisAlignment,
     required TextDirection? textDirection,
     required VerticalDirection verticalDirection,
+    required DynamicOverflowDirection overflowDirection,
     required Clip clipBehavior,
     required MainAxisAlignment overflowWidgetAlignment,
     required bool alwaysDisplayOverflowWidget,
@@ -172,6 +192,7 @@ class RenderDynamicOverflow extends RenderBox
        _crossAxisAlignment = crossAxisAlignment,
        _textDirection = textDirection,
        _verticalDirection = verticalDirection,
+       _overflowDirection = overflowDirection,
        _clipBehavior = clipBehavior,
        _overflowWidgetAlignment = overflowWidgetAlignment,
        _alwaysDisplayOverflowWidget = alwaysDisplayOverflowWidget;
@@ -223,6 +244,17 @@ class RenderDynamicOverflow extends RenderBox
   set verticalDirection(VerticalDirection? value) {
     if (_verticalDirection != value) {
       _verticalDirection = value;
+      markNeedsLayout();
+    }
+  }
+
+  DynamicOverflowDirection _overflowDirection;
+
+  /// The logical side from which children are removed.
+  DynamicOverflowDirection get overflowDirection => _overflowDirection;
+  set overflowDirection(DynamicOverflowDirection value) {
+    if (_overflowDirection != value) {
+      _overflowDirection = value;
       markNeedsLayout();
     }
   }
@@ -529,8 +561,111 @@ class RenderDynamicOverflow extends RenderBox
     }
   }
 
+  void _performStartLayout() {
+    final constraints = this.constraints;
+    final childConstraints = direction == Axis.horizontal
+        ? BoxConstraints(maxWidth: constraints.maxWidth)
+        : BoxConstraints(maxHeight: constraints.maxHeight);
+    final regularChildren = <RenderBox>[];
+    var child = firstChild;
+    while (child != null && child != lastChild) {
+      child.layout(childConstraints, parentUsesSize: true);
+      regularChildren.add(child);
+      child = (child.parentData! as DynamicOverflowParentData).nextSibling;
+    }
+    lastChild?.layout(childConstraints, parentUsesSize: true);
+
+    final overflowExtent = lastChild == null
+        ? 0.0
+        : _getMainAxisExtent(lastChild!.size);
+    final limit = direction == Axis.horizontal
+        ? constraints.maxWidth
+        : constraints.maxHeight;
+    final visible = <RenderBox>[];
+    var used = overflowExtent;
+    for (final item in regularChildren.reversed) {
+      final extent = _getMainAxisExtent(item.size);
+      if (used + extent <= limit) {
+        visible.insert(0, item);
+        used += extent;
+      }
+    }
+    if (visible.length == regularChildren.length &&
+        !_alwaysDisplayOverflowWidget) {
+      used -= overflowExtent;
+    }
+    final hidden = <int>[];
+    for (var i = 0; i < regularChildren.length; i++) {
+      if (!visible.contains(regularChildren[i])) hidden.add(i);
+    }
+    final hasOverflow = hidden.isNotEmpty;
+    final showOverflow = hasOverflow || _alwaysDisplayOverflowWidget;
+    var cross = 0.0;
+    for (final item in visible) {
+      cross = math.max(cross, _getCrossAxisExtent(item.size));
+    }
+    if (showOverflow && lastChild != null) {
+      cross = math.max(cross, _getCrossAxisExtent(lastChild!.size));
+    }
+    size = direction == Axis.horizontal
+        ? constraints.constrain(Size(used, cross))
+        : constraints.constrain(Size(cross, used));
+
+    final flipMain = direction == Axis.horizontal
+        ? textDirection == TextDirection.rtl
+        : verticalDirection == VerticalDirection.up;
+    final crossExtent = cross;
+    double crossOffset(RenderBox item) {
+      final free = crossExtent - _getCrossAxisExtent(item.size);
+      return switch (crossAxisAlignment) {
+        CrossAxisAlignment.end => free,
+        CrossAxisAlignment.center => free / 2,
+        _ => 0,
+      };
+    }
+
+    void place(RenderBox item, double logicalPosition) {
+      final extent = _getMainAxisExtent(item.size);
+      final main = flipMain ? used - logicalPosition - extent : logicalPosition;
+      final offset = _getOffset(main, crossOffset(item));
+      (item.parentData! as DynamicOverflowParentData).offset = offset;
+    }
+
+    var position = 0.0;
+    if (showOverflow && lastChild != null) {
+      place(lastChild!, position);
+      position += overflowExtent;
+    }
+    for (final item in regularChildren) {
+      final data = item.parentData! as DynamicOverflowParentData;
+      data._isHidden = !visible.contains(item);
+      if (!data._isHidden) {
+        place(item, position);
+        position += _getMainAxisExtent(item.size);
+      } else {
+        data.offset = _getOffset(size.width + 100, size.height + 100);
+      }
+    }
+    if (lastChild != null) {
+      (lastChild!.parentData! as DynamicOverflowParentData)._isHidden =
+          !showOverflow;
+    }
+    _hasVisualOverflow = false;
+    if (!listEquals(_hiddenChildren, hidden)) {
+      _hiddenChildren = hidden;
+      final callback = overflowChangedCallback;
+      if (callback != null) {
+        SchedulerBinding.instance.addPostFrameCallback((_) => callback(hidden));
+      }
+    }
+  }
+
   @override
   void performLayout() {
+    if (_overflowDirection == DynamicOverflowDirection.start) {
+      _performStartLayout();
+      return;
+    }
     final constraints = this.constraints;
     assert(_debugHasNecessaryDirections);
     var child = firstChild;
