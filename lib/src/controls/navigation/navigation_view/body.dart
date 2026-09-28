@@ -5,7 +5,6 @@ part of 'view.dart';
 ///
 /// See also:
 ///   * [NavigationView], used alongside this to navigate through pages
-///   * [NavigationAppBar], the app top bar
 class _NavigationBody extends StatefulWidget {
   /// Creates a navigation body.
   ///
@@ -18,7 +17,7 @@ class _NavigationBody extends StatefulWidget {
     this.animationDuration,
   });
 
-  final ValueKey<int>? itemKey;
+  final ValueKey<Object> itemKey;
 
   final NavigationContentBuilder? paneBodyBuilder;
 
@@ -73,91 +72,193 @@ class _NavigationBody extends StatefulWidget {
 }
 
 class _NavigationBodyState extends State<_NavigationBody> {
+  final Map<Object, Widget> _pages = {};
+  final Set<Object> _keptAlive = {};
+  Object? _currentKey;
+
+  void _keepAlive(Object key) => _keptAlive.add(key);
+
+  void _releaseKeepAlive(Object key) {
+    if (!_keptAlive.remove(key) || key == _currentKey) return;
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (mounted && key != _currentKey && !_keptAlive.contains(key)) {
+        setState(() => _pages.remove(key));
+      }
+    });
+  }
+
+  Widget _buildPage(BuildContext context, NavigationViewContext view) {
+    final paneBodyBuilder = widget.paneBodyBuilder;
+    if (paneBodyBuilder != null) {
+      return paneBodyBuilder.call(
+        view.pane?.selected != null ? view.pane!.selectedItem : null,
+        view.pane?.selected != null
+            ? FocusTraversalGroup(child: view.pane!.selectedItem.body!)
+            : null,
+      );
+    }
+    return FocusTraversalGroup(
+      policy: WidgetOrderTraversalPolicy(),
+      child: view.pane!.selectedItem.body!,
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     assert(debugCheckHasFluentTheme(context));
     final view = NavigationViewContext.of(context);
     final theme = FluentTheme.of(context);
 
-    return AnimatedSwitcher(
-      switchInCurve: widget.animationCurve ?? theme.animationCurve,
-      switchOutCurve: widget.animationCurve ?? theme.animationCurve,
-      duration: widget.animationDuration ?? theme.fastAnimationDuration,
-      reverseDuration:
-          (widget.animationDuration ?? theme.fastAnimationDuration) ~/ 2,
-      layoutBuilder: (child, children) {
-        return SizedBox(child: child);
-      },
-      transitionBuilder: (child, animation) {
-        if (widget.transitionBuilder != null) {
-          return widget.transitionBuilder!(child, animation);
-        }
+    if (widget.paneBodyBuilder != null) {
+      return ColoredBox(
+        color: theme.scaffoldBackgroundColor,
+        child: _buildPage(context, view),
+      );
+    }
 
-        final isTop = view.displayMode == PaneDisplayMode.top;
+    final pane = view.pane!;
+    final validPageKeys = <Object>{};
+    for (final (index, item) in pane.effectiveItems.indexed) {
+      final itemKey = item.key ?? index;
+      validPageKeys.add(itemKey);
+      if (_pages.containsKey(itemKey)) {
+        _pages[itemKey] = FocusTraversalGroup(
+          policy: WidgetOrderTraversalPolicy(),
+          child: item.body!,
+        );
+      }
+    }
+    _pages.removeWhere((pageKey, _) => !validPageKeys.contains(pageKey));
+    _keptAlive.removeWhere((pageKey) => !validPageKeys.contains(pageKey));
 
-        if (isTop) {
-          return HorizontalSlidePageTransition(
-            animation: animation,
-            fromLeft: view.previousItemIndex > (view.pane?.selected ?? 0),
-            child: child,
-          );
-        }
+    final key = widget.itemKey.value;
+    final previous = _currentKey;
+    if (previous != null && previous != key && !_keptAlive.contains(previous)) {
+      _pages.remove(previous);
+    }
+    _currentKey = key;
+    _pages[key] = _buildPage(context, view);
 
-        return EntrancePageTransition(animation: animation, child: child);
-      },
-      child: () {
-        final paneBodyBuilder = widget.paneBodyBuilder;
-        if (paneBodyBuilder != null) {
-          return paneBodyBuilder.call(
-            view.pane?.selected != null ? view.pane!.selectedItem : null,
-            view.pane?.selected != null
-                ? FocusTraversalGroup(child: view.pane!.selectedItem.body!)
-                : null,
-          );
-        } else {
-          return _KeepAlivePage(
-            key: ValueKey('nav_page_${view.pane?.selected}'),
-            child: FocusTraversalGroup(
-              policy: WidgetOrderTraversalPolicy(),
-              child: view.pane!.selectedItem.body!,
+    final duration = widget.animationDuration ?? theme.fastAnimationDuration;
+    final curve = widget.animationCurve ?? theme.animationCurve;
+
+    return ColoredBox(
+      color: theme.scaffoldBackgroundColor,
+      child: Stack(
+        fit: StackFit.expand,
+        children: [
+          for (final entry in _pages.entries)
+            _NavigationPageEntry(
+              key: ValueKey(entry.key),
+              active: entry.key == key,
+              duration: duration,
+              curve: curve,
+              transitionBuilder: widget.transitionBuilder,
+              isTop: view.displayMode == PaneDisplayMode.top,
+              fromLeft: view.previousItemIndex > (view.pane?.selected ?? 0),
+              onKeepAlive: () => _keepAlive(entry.key),
+              onReleaseKeepAlive: () => _releaseKeepAlive(entry.key),
+              child: entry.value,
             ),
-          );
-        }
-      }(),
+        ],
+      ),
     );
   }
 }
 
-/// A wrapper widget that enables keep-alive functionality for navigation pages
-/// and isolates repaints.
-///
-/// This widget:
-/// - Uses [AutomaticKeepAliveClientMixin] to help preserve the state
-///   of navigation pages when switching between them
-/// - Wraps content in [RepaintBoundary] to prevent deeply nested child
-///   repaints from causing the entire navigation body to repaint
-///   (fixes https://github.com/bdlukaa/fluent_ui/issues/1180)
-///
-/// For full state preservation, the page widget itself should also implement
-/// [AutomaticKeepAliveClientMixin].
-class _KeepAlivePage extends StatefulWidget {
-  const _KeepAlivePage({required this.child, super.key});
+class _NavigationPageEntry extends StatefulWidget {
+  const _NavigationPageEntry({
+    required this.active,
+    required this.duration,
+    required this.curve,
+    required this.transitionBuilder,
+    required this.isTop,
+    required this.fromLeft,
+    required this.onKeepAlive,
+    required this.onReleaseKeepAlive,
+    required this.child,
+    super.key,
+  });
 
+  final bool active;
+  final Duration duration;
+  final Curve curve;
+  final AnimatedSwitcherTransitionBuilder? transitionBuilder;
+  final bool isTop;
+  final bool fromLeft;
+  final VoidCallback onKeepAlive;
+  final VoidCallback onReleaseKeepAlive;
   final Widget child;
 
   @override
-  State<_KeepAlivePage> createState() => _KeepAlivePageState();
+  State<_NavigationPageEntry> createState() => _NavigationPageEntryState();
 }
 
-class _KeepAlivePageState extends State<_KeepAlivePage>
-    with AutomaticKeepAliveClientMixin {
+class _NavigationPageEntryState extends State<_NavigationPageEntry>
+    with SingleTickerProviderStateMixin {
+  late final AnimationController _controller = AnimationController(
+    vsync: this,
+    duration: widget.duration,
+    value: widget.active ? 1 : 0,
+  );
+  Listenable? _keepAliveHandle;
+
   @override
-  bool get wantKeepAlive => true;
+  void didUpdateWidget(_NavigationPageEntry oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    _controller.duration = widget.duration;
+    if (widget.active && !oldWidget.active) _controller.forward(from: 0);
+  }
+
+  @override
+  void dispose() {
+    _keepAliveHandle?.removeListener(widget.onReleaseKeepAlive);
+    _controller.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
-    super.build(context);
-    return RepaintBoundary(child: widget.child);
+    final child = NotificationListener<KeepAliveNotification>(
+      onNotification: (notification) {
+        if (!identical(_keepAliveHandle, notification.handle)) {
+          _keepAliveHandle?.removeListener(widget.onReleaseKeepAlive);
+          _keepAliveHandle = notification.handle
+            ..addListener(widget.onReleaseKeepAlive);
+          widget.onKeepAlive();
+        }
+        return true;
+      },
+      child: RepaintBoundary(child: widget.child),
+    );
+
+    return Offstage(
+      offstage: !widget.active,
+      child: TickerMode(
+        enabled: widget.active,
+        child: AnimatedBuilder(
+          animation: _controller,
+          child: child,
+          builder: (context, child) {
+            final animation = CurvedAnimation(
+              parent: _controller,
+              curve: widget.curve,
+            );
+            if (widget.transitionBuilder case final builder?) {
+              return builder(child!, animation);
+            }
+            if (widget.isTop) {
+              return HorizontalSlidePageTransition(
+                animation: animation,
+                fromLeft: widget.fromLeft,
+                child: child!,
+              );
+            }
+            return EntrancePageTransition(animation: animation, child: child!);
+          },
+        ),
+      ),
+    );
   }
 }
 
