@@ -550,7 +550,9 @@ class TooltipThemeData with Diagnosticable {
       }(),
       showDuration: const Duration(milliseconds: 1500),
       waitDuration: const Duration(seconds: 1),
-      textStyle: theme.typography.caption,
+      textStyle: theme.typography.caption?.copyWith(
+        color: theme.resources.textFillColorPrimary,
+      ),
       decoration: () {
         final radius = BorderRadius.circular(4);
         final shadow = [
@@ -562,13 +564,13 @@ class TooltipThemeData with Diagnosticable {
         ];
         if (theme.brightness == Brightness.light) {
           return BoxDecoration(
-            color: Colors.white,
+            color: theme.resources.systemFillColorSolidNeutralBackground,
             borderRadius: radius,
             boxShadow: shadow,
           );
         } else {
           return BoxDecoration(
-            color: Colors.grey,
+            color: theme.resources.systemFillColorSolidNeutralBackground,
             borderRadius: radius,
             boxShadow: shadow,
           );
