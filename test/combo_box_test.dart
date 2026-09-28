@@ -344,6 +344,35 @@ void main() {
     expect(find.text('A caption below the option'), findsOneWidget);
   });
 
+  testWidgets('constrained popup anchors correctly with large text scaling', (
+    tester,
+  ) async {
+    await tester.pumpWidget(
+      wrapApp(
+        child: MediaQuery(
+          data: const MediaQueryData(textScaler: TextScaler.linear(2)),
+          child: ComboBox<String>(
+            value: '8',
+            popupConstraints: const BoxConstraints(maxHeight: 220),
+            items: _items(count: 30),
+            onChanged: (_) {},
+          ),
+        ),
+      ),
+    );
+
+    await tester.tap(find.byType(ComboBox<String>));
+    await tester.pumpAndSettle();
+
+    final control = tester.getRect(find.text('Option 8').first);
+    final selected = tester.getRect(find.byKey(const Key('item-8')).last);
+    final popup = tester.getRect(find.byType(ListView));
+    expect(selected.top, greaterThanOrEqualTo(popup.top));
+    expect(selected.bottom, lessThanOrEqualTo(popup.bottom));
+    expect((selected.center.dy - control.center.dy).abs(), lessThan(24));
+    expect(tester.takeException(), isNull);
+  });
+
   testWidgets('selected item remains visible near the lower viewport edge', (
     tester,
   ) async {

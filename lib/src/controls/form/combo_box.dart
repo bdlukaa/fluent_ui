@@ -22,6 +22,15 @@ const EdgeInsetsDirectional _kListPadding = EdgeInsetsDirectional.only(
   bottom: _kMenuItemBottomPadding,
 );
 
+double _comboBoxEstimatedItemHeight(BuildContext context, TextStyle style) {
+  final painter = TextPainter(
+    text: TextSpan(text: 'M', style: style),
+    textDirection: Directionality.of(context),
+    textScaler: MediaQuery.textScalerOf(context),
+  )..layout();
+  return math.max<double>(kComboBoxItemHeight, painter.height);
+}
+
 /// The default height of a combo box item.
 const double kComboBoxItemHeight = kPickerHeight + _kMenuItemBottomPadding;
 
@@ -492,12 +501,9 @@ class _ComboBoxPopupState<T> extends State<_ComboBoxPopup<T>> {
           animation: _resize,
           selectedIndex: widget.animationIndex,
           scrollController: widget.scrollController,
-          estimatedItemHeight: math.max<double>(
-            kComboBoxItemHeight,
-            MediaQuery.textScalerOf(
-                  context,
-                ).scale(widget.style.fontSize ?? 14) +
-                20,
+          estimatedItemHeight: _comboBoxEstimatedItemHeight(
+            context,
+            widget.style,
           ),
         ),
         child: decorated,
@@ -749,11 +755,7 @@ class ComboBoxState<T> extends State<ComboBox<T>>
 
   double _estimatedItemHeight(BuildContext context) {
     final style = widget.style ?? FluentTheme.of(context).typography.body!;
-    final scaler = MediaQuery.textScalerOf(context);
-    return math.max<double>(
-      kComboBoxItemHeight,
-      scaler.scale(style.fontSize ?? 14) + 20,
-    );
+    return _comboBoxEstimatedItemHeight(context, style);
   }
 
   double _initialScrollOffset(BuildContext context, int? selectedIndex) {
