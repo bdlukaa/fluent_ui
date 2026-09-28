@@ -87,6 +87,10 @@ void main() {
         find.byType(CompositedTransformFollower),
       );
       expect(follower.offset.dy, lessThan(0));
+      expect(
+        tester.widget<Acrylic>(find.byType(Acrylic)).luminosityAlpha,
+        0.85,
+      );
     },
   );
 

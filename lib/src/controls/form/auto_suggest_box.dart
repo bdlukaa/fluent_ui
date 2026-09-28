@@ -1028,6 +1028,11 @@ class _AutoSuggestBoxOverlayState<T> extends State<_AutoSuggestBoxOverlay<T>> {
 
     final theme = FluentTheme.of(context);
     final localizations = FluentLocalizations.of(context);
+    final shape = RoundedRectangleBorder(
+      borderRadius: widget.showAbove
+          ? const BorderRadius.vertical(top: Radius.circular(4))
+          : const BorderRadius.vertical(bottom: Radius.circular(4)),
+    );
 
     return MediaQuery.withNoTextScaling(
       child: TextFieldTapRegion(
@@ -1036,12 +1041,7 @@ class _AutoSuggestBoxOverlayState<T> extends State<_AutoSuggestBoxOverlay<T>> {
           child: Container(
             constraints: BoxConstraints(maxHeight: widget.maxHeight),
             decoration: ShapeDecoration(
-              shape: RoundedRectangleBorder(
-                borderRadius: widget.showAbove
-                    ? const BorderRadius.vertical(top: Radius.circular(4))
-                    : const BorderRadius.vertical(bottom: Radius.circular(4)),
-              ),
-              color: theme.resources.cardBackgroundFillColorDefault,
+              shape: shape,
               shadows: [
                 BoxShadow(
                   color: Colors.black.withValues(alpha: 0.05),
@@ -1058,6 +1058,10 @@ class _AutoSuggestBoxOverlayState<T> extends State<_AutoSuggestBoxOverlay<T>> {
               ],
             ),
             child: Acrylic(
+              shape: shape,
+              luminosityAlpha: theme.brightness == Brightness.light
+                  ? 0.85
+                  : 0.96,
               child: ValueListenableBuilder<TextEditingValue>(
                 valueListenable: widget.controller,
                 builder: (context, value, _) {

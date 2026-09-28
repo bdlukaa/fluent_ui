@@ -422,21 +422,32 @@ class PickerState extends State<Picker> {
                 width: width.toDouble(),
                 child: FadeTransition(
                   opacity: primary,
-                  child: Container(
-                    height: widget.pickerHeight,
-                    width: box.size.width,
-                    decoration: ShapeDecoration(
-                      color: theme.menuColor,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(4),
-                        side: BorderSide(
-                          color: theme.resources.surfaceStrokeColorFlyout,
-                          width: 0.6,
-                        ),
+                  child: Acrylic(
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(4),
+                      side: BorderSide(
+                        color: theme.resources.surfaceStrokeColorFlyout,
+                        width: 0.6,
                       ),
                     ),
-                    child: MediaQuery.withNoTextScaling(
-                      child: widget.pickerContent(context),
+                    child: Container(
+                      height: widget.pickerHeight,
+                      width: box.size.width,
+                      decoration: ShapeDecoration(
+                        color: theme.menuColor.withValues(
+                          alpha: kMenuColorOpacity,
+                        ),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(4),
+                          side: BorderSide(
+                            color: theme.resources.surfaceStrokeColorFlyout,
+                            width: 0.6,
+                          ),
+                        ),
+                      ),
+                      child: MediaQuery.withNoTextScaling(
+                        child: widget.pickerContent(context),
+                      ),
                     ),
                   ),
                 ),
