@@ -204,6 +204,11 @@ class ScaffoldPage extends StatelessWidget {
   }
 }
 
+const _pageHeaderCompactBreakpoint = 640.0;
+const _pageHeaderHorizontalSpacing = 12.0;
+const _pageHeaderCompactSpacing = 8.0;
+const _pageHeaderBottomSpacing = 18.0;
+
 /// The header of a Fluent page.
 ///
 /// [PageHeader] describes the title and page-level commands. It does not
@@ -211,9 +216,10 @@ class ScaffoldPage extends StatelessWidget {
 /// custom headers and page content share one geometry contract.
 ///
 /// The [commandBar] may be any widget, although [CommandBar] is the usual
-/// choice. At narrow widths the title and commands receive flexible
-/// constraints rather than a fixed minimum command width, allowing controls
-/// such as [CommandBar] to apply their own overflow behavior.
+/// choice. At regular widths, the title and actions share a row. At compact
+/// widths, actions move below the title and align to the logical end of the
+/// page. This gives the title room to wrap without making assumptions about
+/// the width or implementation of the action widget.
 ///
 /// See also:
 ///
@@ -235,32 +241,95 @@ class PageHeader extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     assert(debugCheckHasFluentTheme(context));
-    final theme = FluentTheme.of(context);
-    final row = Row(
-      children: [
-        if (leading != null) ...[leading!, const SizedBox(width: 12)],
-        Expanded(
-          child: DefaultTextStyle.merge(
-            style: theme.typography.title,
-            maxLines: 2,
-            child: title ?? const SizedBox(),
+    assert(debugCheckHasMediaQuery(context));
+
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        final width = constraints.hasBoundedWidth
+            ? constraints.maxWidth
+            : MediaQuery.widthOf(context);
+        return Padding(
+          padding: const EdgeInsetsDirectional.only(
+            bottom: _pageHeaderBottomSpacing,
           ),
-        ),
-        if (commandBar != null) ...[
-          const SizedBox(width: 12),
+          child: _PageHeaderLayout(
+            leading: leading,
+            title: title,
+            commandBar: commandBar,
+            compact: width <= _pageHeaderCompactBreakpoint,
+          ),
+        );
+      },
+    );
+  }
+}
+
+class _PageHeaderLayout extends StatelessWidget {
+  const _PageHeaderLayout({
+    required this.leading,
+    required this.title,
+    required this.commandBar,
+    required this.compact,
+  });
+
+  final Widget? leading;
+  final Widget? title;
+  final Widget? commandBar;
+  final bool compact;
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = FluentTheme.of(context);
+    final titleWidget = DefaultTextStyle.merge(
+      style: theme.typography.title,
+      child: title ?? const SizedBox(),
+    );
+
+    if (compact) {
+      return Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        spacing: _pageHeaderCompactSpacing,
+        children: [
+          _TitleRow(leading: leading, title: titleWidget),
+          if (commandBar != null)
+            Align(alignment: AlignmentDirectional.centerEnd, child: commandBar),
+        ],
+      );
+    }
+
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      spacing: _pageHeaderHorizontalSpacing,
+      children: [
+        ?leading,
+        Expanded(child: titleWidget),
+        if (commandBar != null)
           Flexible(
             child: Align(
-              alignment: AlignmentDirectional.centerEnd,
+              alignment: AlignmentDirectional.topEnd,
               child: commandBar,
             ),
           ),
-        ],
       ],
     );
+  }
+}
 
-    return Padding(
-      padding: const EdgeInsetsDirectional.only(bottom: 18),
-      child: row,
+class _TitleRow extends StatelessWidget {
+  const _TitleRow({required this.leading, required this.title});
+
+  final Widget? leading;
+  final Widget title;
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      spacing: _pageHeaderHorizontalSpacing,
+      children: [
+        ?leading,
+        Expanded(child: title),
+      ],
     );
   }
 }
