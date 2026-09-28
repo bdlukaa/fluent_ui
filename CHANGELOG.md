@@ -1,5 +1,6 @@
 ## [next]
 
+- refactor: Rework `ComboBox`. Rebuilt the popup using Flutter overlay infrastructure with viewport-aware positioning, configurable popup constraints, variable-height items, text scaling support, keyboard navigation, type-ahead search, and open/close callbacks. ([#1360](https://github.com/bdlukaa/fluent_ui/pull/1360), [#485](https://github.com/bdlukaa/fluent_ui/issues/485), [#1007](https://github.com/bdlukaa/fluent_ui/issues/1007), [#1230](https://github.com/bdlukaa/fluent_ui/issues/1230), and [#1256](https://github.com/bdlukaa/fluent_ui/issues/1256))
 - refactor: Flutter 3.47.1 support ([#1353](https://github.com/bdlukaa/fluent_ui/pull/1353))
   - migrate Material UI imports to the standalone `material_ui` package. [learn more](https://flutter.dev/blog/decoupling-material-cupertino)
 - fix: skip hidden `TitleBar` children when collecting semantics ([#1354](https://github.com/bdlukaa/fluent_ui/pull/1354))
