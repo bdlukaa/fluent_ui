@@ -565,17 +565,17 @@ class _RenderTitleSubtitleOverflow extends RenderBox
 
   /// Skips hidden children when collecting semantics.
   ///
-  /// Hidden children are never laid out (see [performLayout]). If a semantics
-  /// walk visits a hidden child before it is laid out, Flutter asserts on
-  /// `_needsLayout`. Minimizing a maximized window with a screen reader
-  /// running triggers the assert.
+  /// Hidden children are never laid out (see [performLayout]). During a window
+  /// resize, a semantics walk can also run while a visible child is waiting for
+  /// its new constraints. Skipping both cases prevents Flutter from asserting
+  /// on `_needsLayout`.
   @override
   void visitChildrenForSemantics(RenderObjectVisitor visitor) {
     var child = firstChild;
     while (child != null) {
       final childParentData =
           child.parentData! as _TitleSubtitleOverflowParentData;
-      if (!childParentData.isHidden) {
+      if (!childParentData.isHidden && !child.debugNeedsLayout) {
         visitor(child);
       }
       child = childAfter(child);
