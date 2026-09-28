@@ -27,7 +27,7 @@ class ColorsPage extends StatelessWidget {
     );
     return ScaffoldPage.scrollable(
       header: const PageHeader(title: Text('Colors Showcase')),
-      bottomBar: const SizedBox(
+      footer: const SizedBox(
         width: double.infinity,
         child: InfoBar(
           title: Text('Tip:'),

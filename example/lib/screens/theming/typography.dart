@@ -32,7 +32,7 @@ class _TypographyPageState extends State<TypographyPage> {
     color ??= typography.display!.color;
     typography = typography.apply(displayColor: color);
     const Widget spacer = SizedBox(height: 4);
-    return ScaffoldPage.withPadding(
+    return ScaffoldPage(
       header: PageHeader(
         title: const Text('Typography showcase'),
         commandBar: SizedBox(

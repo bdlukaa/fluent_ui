@@ -79,54 +79,51 @@ class _NavigationBodyState extends State<_NavigationBody> {
     final view = NavigationViewContext.of(context);
     final theme = FluentTheme.of(context);
 
-    return ColoredBox(
-      color: theme.scaffoldBackgroundColor,
-      child: AnimatedSwitcher(
-        switchInCurve: widget.animationCurve ?? theme.animationCurve,
-        switchOutCurve: widget.animationCurve ?? theme.animationCurve,
-        duration: widget.animationDuration ?? theme.fastAnimationDuration,
-        reverseDuration:
-            (widget.animationDuration ?? theme.fastAnimationDuration) ~/ 2,
-        layoutBuilder: (child, children) {
-          return SizedBox(child: child);
-        },
-        transitionBuilder: (child, animation) {
-          if (widget.transitionBuilder != null) {
-            return widget.transitionBuilder!(child, animation);
-          }
+    return AnimatedSwitcher(
+      switchInCurve: widget.animationCurve ?? theme.animationCurve,
+      switchOutCurve: widget.animationCurve ?? theme.animationCurve,
+      duration: widget.animationDuration ?? theme.fastAnimationDuration,
+      reverseDuration:
+          (widget.animationDuration ?? theme.fastAnimationDuration) ~/ 2,
+      layoutBuilder: (child, children) {
+        return SizedBox(child: child);
+      },
+      transitionBuilder: (child, animation) {
+        if (widget.transitionBuilder != null) {
+          return widget.transitionBuilder!(child, animation);
+        }
 
-          final isTop = view.displayMode == PaneDisplayMode.top;
+        final isTop = view.displayMode == PaneDisplayMode.top;
 
-          if (isTop) {
-            return HorizontalSlidePageTransition(
-              animation: animation,
-              fromLeft: view.previousItemIndex > (view.pane?.selected ?? 0),
-              child: child,
-            );
-          }
+        if (isTop) {
+          return HorizontalSlidePageTransition(
+            animation: animation,
+            fromLeft: view.previousItemIndex > (view.pane?.selected ?? 0),
+            child: child,
+          );
+        }
 
-          return EntrancePageTransition(animation: animation, child: child);
-        },
-        child: () {
-          final paneBodyBuilder = widget.paneBodyBuilder;
-          if (paneBodyBuilder != null) {
-            return paneBodyBuilder.call(
-              view.pane?.selected != null ? view.pane!.selectedItem : null,
-              view.pane?.selected != null
-                  ? FocusTraversalGroup(child: view.pane!.selectedItem.body!)
-                  : null,
-            );
-          } else {
-            return _KeepAlivePage(
-              key: ValueKey('nav_page_${view.pane?.selected}'),
-              child: FocusTraversalGroup(
-                policy: WidgetOrderTraversalPolicy(),
-                child: view.pane!.selectedItem.body!,
-              ),
-            );
-          }
-        }(),
-      ),
+        return EntrancePageTransition(animation: animation, child: child);
+      },
+      child: () {
+        final paneBodyBuilder = widget.paneBodyBuilder;
+        if (paneBodyBuilder != null) {
+          return paneBodyBuilder.call(
+            view.pane?.selected != null ? view.pane!.selectedItem : null,
+            view.pane?.selected != null
+                ? FocusTraversalGroup(child: view.pane!.selectedItem.body!)
+                : null,
+          );
+        } else {
+          return _KeepAlivePage(
+            key: ValueKey('nav_page_${view.pane?.selected}'),
+            child: FocusTraversalGroup(
+              policy: WidgetOrderTraversalPolicy(),
+              child: view.pane!.selectedItem.body!,
+            ),
+          );
+        }
+      }(),
     );
   }
 }

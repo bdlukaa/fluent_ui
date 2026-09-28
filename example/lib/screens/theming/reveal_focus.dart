@@ -13,7 +13,7 @@ class RevealFocusPage extends StatelessWidget with PageMixin {
   @override
   Widget build(final BuildContext context) {
     final theme = FluentTheme.of(context);
-    return ScaffoldPage.withPadding(
+    return ScaffoldPage(
       header: PageHeader(
         title: const Text('Reveal Focus'),
         commandBar: Button(
