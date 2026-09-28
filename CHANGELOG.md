@@ -3,6 +3,36 @@
 - refactor: Flutter 3.47.1 support ([#1353](https://github.com/bdlukaa/fluent_ui/pull/1353))
   - migrate Material UI imports to the standalone `material_ui` package. [learn more](https://flutter.dev/blog/decoupling-material-cupertino)
 - fix: skip hidden `TitleBar` children when collecting semantics ([#1354](https://github.com/bdlukaa/fluent_ui/pull/1354))
+- refactor: Rework `ScaffoldPage` ([#1358](https://github.com/bdlukaa/fluent_ui/pull/1358))
+  - `ScaffoldPage` is now a stateless page-content shell. Its `padding` applies consistently to the page's header, content, and footer, while the default horizontal padding follows Fluent adaptive margins (12 px in compact layouts and 24 px otherwise).
+  - `bottomBar` is now `footer`.
+  - `ScaffoldPage.withPadding` was removed. Use `ScaffoldPage(padding: ..., content: ...)` instead.
+  - `PageHeader.padding` and `PageHeader.horizontalPadding` were removed. Page-level spacing belongs to `ScaffoldPage`; remove calls to `PageHeader.horizontalPadding(context)` and configure `ScaffoldPage.padding` when custom spacing is needed.
+  - `PageHeader` no longer controls page geometry. At compact widths, its command bar moves below the title so long titles and large text scales can wrap without overflowing.
+
+  Migration:
+
+  ```dart
+  // Before
+  ScaffoldPage(
+    header: PageHeader(
+      title: const Text('Settings'),
+      padding: const EdgeInsets.symmetric(horizontal: 32),
+    ),
+    bottomBar: const CommandBar(items: []),
+    content: const SettingsView(),
+  );
+
+  // After
+  ScaffoldPage(
+    header: const PageHeader(title: Text('Settings')),
+    footer: const CommandBar(items: []),
+    padding: const EdgeInsets.symmetric(horizontal: 32),
+    content: const SettingsView(),
+  );
+  ```
+
+  For scrollable pages, continue to use `ScaffoldPage.scrollable`; it now follows the same page-level padding semantics as the regular constructor.
 - fix: `ComboBox` no longer throws a layout assertion when opened while fully aligned to the bottom edge of the viewport ([#1350](https://github.com/bdlukaa/fluent_ui/issues/1350))
 
 ## 4.16.1
