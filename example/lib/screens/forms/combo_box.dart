@@ -12,7 +12,7 @@ class ComboBoxPage extends StatefulWidget {
 }
 
 class _ComboBoxPageState extends State<ComboBoxPage> with PageMixin {
-  String? selectedColor = 'Green';
+  String? selectedColor;
   String? selectedCat;
   double fontSize = 20;
   bool disabled = false;
@@ -67,6 +67,7 @@ ComboBox<String>(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               ComboBox<String>(
+                placeholder: const Text('Select a color'),
                 popupColor: colors[selectedColor],
                 value: selectedColor,
                 items: colors.entries.map((final e) {
@@ -127,6 +128,58 @@ ComboBox<String>(
                 margin: const EdgeInsetsDirectional.only(top: 8),
                 height: 30,
                 child: Text(selectedCat ?? ''),
+              ),
+            ],
+          ),
+        ),
+        subtitle(content: const Text('Constrained and complex popup content')),
+        CodeSnippetCard(
+          codeSnippet: '''
+ComboBox<String>(
+  popupConstraints: const BoxConstraints(maxHeight: 220),
+  items: options,
+  onChanged: onChanged,
+),''',
+          child: Wrap(
+            spacing: 12,
+            runSpacing: 12,
+            children: [
+              ComboBox<String>(
+                value: 'Item 8',
+                popupConstraints: const BoxConstraints(
+                  minWidth: 180,
+                  maxHeight: 220,
+                ),
+                items: [
+                  for (var index = 0; index < 30; index++)
+                    ComboBoxItem(
+                      value: 'Item $index',
+                      enabled: index != 4,
+                      child: Text('Item $index'),
+                    ),
+                ],
+                onChanged: (_) {},
+              ),
+              MediaQuery(
+                data: MediaQuery.of(
+                  context,
+                ).copyWith(textScaler: const TextScaler.linear(1.5)),
+                child: ComboBox<String>(
+                  placeholder: const Text('Complex item'),
+                  items: const [
+                    ComboBoxItem(
+                      value: 'Complex item',
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text('Complex item'),
+                          Text('A caption that can wrap'),
+                        ],
+                      ),
+                    ),
+                  ],
+                  onChanged: (_) {},
+                ),
               ),
             ],
           ),
