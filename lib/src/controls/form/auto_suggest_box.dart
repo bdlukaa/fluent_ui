@@ -1059,9 +1059,7 @@ class _AutoSuggestBoxOverlayState<T> extends State<_AutoSuggestBoxOverlay<T>> {
             ),
             child: Acrylic(
               shape: shape,
-              luminosityAlpha: theme.brightness == Brightness.light
-                  ? 0.85
-                  : 0.96,
+              luminosityAlpha: theme.acrylicLuminosityOpacity,
               child: ValueListenableBuilder<TextEditingValue>(
                 valueListenable: widget.controller,
                 builder: (context, value, _) {
