@@ -72,7 +72,7 @@ class ScaffoldPage extends StatelessWidget {
     this.padding,
     this.backgroundColor,
     this.resizeToAvoidBottomInset = true,
-  });
+  }) : _contentHasOwnHorizontalPadding = false;
 
   /// Creates a page whose content is a scrollable [ListView].
   ///
@@ -89,10 +89,27 @@ class ScaffoldPage extends StatelessWidget {
     this.backgroundColor,
     ScrollController? scrollController,
     this.resizeToAvoidBottomInset = true,
-  }) : content = ListView(
-         controller: scrollController,
-         padding: EdgeInsets.zero,
-         children: children,
+  }) : _contentHasOwnHorizontalPadding = true,
+       content = Builder(
+         builder: (context) {
+           return LayoutBuilder(
+             builder: (context, constraints) {
+               final pagePadding =
+                   padding ?? _defaultPagePadding(context, constraints);
+               final resolvedPadding = pagePadding.resolve(
+                 Directionality.of(context),
+               );
+               return ListView(
+                 controller: scrollController,
+                 padding: EdgeInsets.only(
+                   left: resolvedPadding.left,
+                   right: resolvedPadding.right,
+                 ),
+                 children: children,
+               );
+             },
+           );
+         },
        );
 
   /// The primary content of the page.
@@ -134,6 +151,8 @@ class ScaffoldPage extends StatelessWidget {
   /// The ambient [MediaQuery] is otherwise left unchanged. Defaults to true.
   final bool resizeToAvoidBottomInset;
 
+  final bool _contentHasOwnHorizontalPadding;
+
   @override
   Widget build(BuildContext context) {
     assert(debugCheckHasFluentTheme(context));
@@ -152,18 +171,32 @@ class ScaffoldPage extends StatelessWidget {
               ? MediaQuery.viewInsetsOf(context)
               : EdgeInsets.zero;
 
+          final resolvedPadding = pagePadding.resolve(
+            Directionality.of(context),
+          );
+          final horizontalPadding = EdgeInsets.only(
+            left: resolvedPadding.left,
+            right: resolvedPadding.right,
+          );
+
           return Padding(
-            padding: pagePadding,
-            child: Padding(
-              padding: EdgeInsetsDirectional.only(bottom: viewInsets.bottom),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: [
-                  ?header,
-                  Expanded(child: content),
-                  ?footer,
-                ],
-              ),
+            padding: EdgeInsets.only(
+              top: resolvedPadding.top,
+              bottom: resolvedPadding.bottom + viewInsets.bottom,
+            ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                if (header != null)
+                  Padding(padding: horizontalPadding, child: header),
+                Expanded(
+                  child: _contentHasOwnHorizontalPadding
+                      ? content
+                      : Padding(padding: horizontalPadding, child: content),
+                ),
+                if (footer != null)
+                  Padding(padding: horizontalPadding, child: footer),
+              ],
             ),
           );
         },

@@ -124,7 +124,7 @@ void main() {
     );
 
     final list = tester.getRect(find.byType(ListView));
-    expect(list, const Rect.fromLTWH(24, 64, 752, 472));
+    expect(list, const Rect.fromLTWH(0, 64, 800, 472));
     expect(
       tester.getRect(find.byKey(const Key('footer'))),
       const Rect.fromLTWH(24, 536, 752, 40),
@@ -188,7 +188,7 @@ void main() {
             alignment: Alignment.topLeft,
             child: SizedBox(
               width: 320,
-              height: 240,
+              height: 600,
               child: ScaffoldPage(
                 header: PageHeader(
                   title: Text('A long page title'),
