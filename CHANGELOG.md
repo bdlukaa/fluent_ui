@@ -1,5 +1,6 @@
 ## [next]
 
+- refactor: Align `Acrylic` with WinUI behavior, including theme-driven tint and luminosity resources, corrected fallback rendering, and improved material composition ([#1362](https://github.com/bdlukaa/fluent_ui/pull/1362))
 - feat: add logical start/end overflow direction support to `DynamicOverflow` ([#1359](https://github.com/bdlukaa/fluent_ui/pull/1359))
 - refactor: `CommandBar` now uses an anchored, CommandBar-owned overflow popup with stable layout, end alignment, outside-tap dismissal, keyboard/touch-friendly interaction, and WinUI-inspired presenter styling ([#1359](https://github.com/bdlukaa/fluent_ui/pull/1359))
   - dynamically overflowed primary commands remain in the primary command collection and retain their labels, shortcut/help text, enabled state, and semantics when shown in the overflow menu
