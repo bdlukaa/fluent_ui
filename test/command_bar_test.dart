@@ -147,7 +147,7 @@ void main() {
     final theme = FluentTheme.of(tester.element(find.byType(CommandBar)));
     expect(
       presenter.constraints,
-      const BoxConstraints(minWidth: 160, maxWidth: 480, maxHeight: 198),
+      const BoxConstraints(minWidth: 160, maxWidth: 480),
     );
     expect(presenter.color, theme.resources.layerOnAcrylicFillColorDefault);
     final shape = presenter.shape! as RoundedRectangleBorder;

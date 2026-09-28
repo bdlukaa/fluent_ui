@@ -460,7 +460,6 @@ class CommandBarState extends State<CommandBar> {
                           color: theme.resources.surfaceStrokeColorFlyout,
                         ),
                       ),
-
                       constraints: const BoxConstraints(
                         minWidth: 160,
                         maxWidth: 480,
