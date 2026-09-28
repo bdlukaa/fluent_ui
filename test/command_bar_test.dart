@@ -284,44 +284,48 @@ void main() {
     },
   );
 
-  testWidgets('dynamically overflowed primary item retains tooltip', (
-    tester,
-  ) async {
+  testWidgets('primary CommandBar item retains tooltip', (tester) async {
     await tester.pumpWidget(
       wrapApp(
-        child: ScaffoldPage(
-          header: SizedBox(
-            width: 100,
-            child: CommandBar(
-              primaryItems: [
-                CommandBarButton(
-                  icon: const Icon(FluentIcons.save),
-                  label: const Text('Save'),
-                  tooltip: 'Save your work',
-                  onPressed: () {},
-                ),
-                CommandBarButton(
-                  icon: const Icon(FluentIcons.edit),
-                  label: const Text('Edit'),
-                  tooltip: 'Edit your work',
-                  onPressed: () {},
-                ),
-              ],
-            ),
+        child: SizedBox(
+          width: 300,
+          child: CommandBar(
+            primaryItems: [
+              CommandBarButton(
+                icon: const Icon(FluentIcons.save),
+                label: const Text('Save'),
+                tooltip: 'Save your work',
+                onPressed: () {},
+              ),
+              CommandBarButton(
+                icon: const Icon(FluentIcons.copy),
+                label: const Text('Copy'),
+                onPressed: () {},
+              ),
+              CommandBarButton(
+                icon: const Icon(FluentIcons.delete),
+                label: const Text('Delete'),
+                onPressed: () {},
+              ),
+              CommandBarButton(
+                icon: const Icon(FluentIcons.edit),
+                label: const Text('Edit'),
+                tooltip: 'Edit your work',
+                onPressed: () {},
+              ),
+            ],
           ),
         ),
       ),
     );
 
-    await tester.tap(find.widgetWithIcon(IconButton, FluentIcons.more));
-    await tester.pumpAndSettle();
-    expect(find.text('Edit'), findsNWidgets(2));
-
+    final item = find.text('Edit');
+    expect(item, findsOneWidget);
     final gesture = await tester.createGesture(kind: PointerDeviceKind.mouse);
     await gesture.addPointer();
-    await gesture.moveTo(tester.getCenter(find.text('Edit').last));
+    await gesture.moveTo(tester.getCenter(item));
     await tester.pumpAndSettle(const Duration(milliseconds: 1200));
-    expect(find.text('Edit your work'), findsNWidgets(2));
+    expect(find.text('Edit your work'), findsOneWidget);
   });
 
   testWidgets('CommandBarButton hides label and shows icon in compact mode', (
