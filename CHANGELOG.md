@@ -7,7 +7,7 @@
 - refactor: Progress Widgets Update
   - fix: `ProgressBar` and `ProgressRing` do not consume excessive CPU ([#1270](https://github.com/bdlukaa/fluent_ui/issues/1270))
   - fix: `ProgressBar` correctly handle small parents ([#1270](https://github.com/bdlukaa/fluent_ui/issues/969))
-- refactor: `NavigationView`
+- refactor: `NavigationView` ([https://github.com/bdlukaa/fluent_ui/pull/1361](#1361))
   - feat: configurable adaptive thresholds, coherent pane open/close APIs, item invocation events, non-selecting items, custom item content builders, and independent tooltip and semantics labels
   - fix: preserve pages that opt into `AutomaticKeepAliveClientMixin` without retaining every navigation page
   - fix: prevent pane item overflow throughout compact, expanded, and minimal resize transitions
