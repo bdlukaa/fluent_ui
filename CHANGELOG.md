@@ -1,5 +1,6 @@
 ## [next]
 
+- feat: Improved Flyout, with smoother animations, animations for when the flyout comes out from the right or left side and adjusted padding to better align with WinUI3.
 - refactor: Align `Acrylic` with WinUI behavior, including theme-driven tint and luminosity resources, corrected fallback rendering, and improved material composition ([#1362](https://github.com/bdlukaa/fluent_ui/pull/1362))
 - feat: add logical start/end overflow direction support to `DynamicOverflow` ([#1359](https://github.com/bdlukaa/fluent_ui/pull/1359))
 - refactor: `CommandBar` now uses an anchored, CommandBar-owned overflow popup with stable layout, end alignment, outside-tap dismissal, keyboard/touch-friendly interaction, and WinUI-inspired presenter styling ([#1359](https://github.com/bdlukaa/fluent_ui/pull/1359))
