@@ -62,6 +62,15 @@ Finally, run `dart pub get` to download the package.
 
 Projects using this library should use the stable channel of Flutter
 
+## DevTools icon browser
+
+`fluent_ui` includes a **Fluent UI** DevTools extension for browsing the
+`FluentIcons` and `WindowsIcons` catalogs. Open DevTools from a project that
+depends on `fluent_ui`, select the **Fluent UI** tab, and enable the extension
+when DevTools prompts you. Search supports partial names and ignores spaces,
+hyphens, and underscores. Select an icon to inspect it, then click it to copy
+its Dart identifier or copy the usage snippet from the preview.
+
 ---
 
 ### Accent color
