@@ -2,7 +2,6 @@ import 'dart:ui';
 
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter/foundation.dart';
-import 'package:material_ui/material_ui.dart' show Icons;
 
 /// A builder function for creating an [InfoBar] within a popup.
 ///
@@ -414,7 +413,7 @@ class InfoBar extends StatelessWidget {
           if (icon != null)
             Padding(
               padding: const EdgeInsetsDirectional.only(end: 14),
-              child: Icon(icon, color: style.iconColor?.call(severity)),
+              child: WindowsIcon(icon, color: style.iconColor?.call(severity)),
             ),
           if (isLong)
             Flexible(
@@ -605,14 +604,13 @@ class InfoBarThemeData with Diagnosticable {
       icon: (severity) {
         switch (severity) {
           case InfoBarSeverity.info:
-            return FluentIcons.info_solid;
+            return WindowsIcons.info_solid;
           case InfoBarSeverity.warning:
             return FluentIcons.critical_error_solid;
-          // TODO(fluent): Do not use Material Icons
           case InfoBarSeverity.success:
-            return Icons.check_circle;
+            return WindowsIcons.completed_solid;
           case InfoBarSeverity.error:
-            return Icons.cancel;
+            return WindowsIcons.status_error_full;
         }
       },
       iconColor: (severity) {
