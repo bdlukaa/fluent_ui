@@ -14,7 +14,7 @@ class IconBrowser extends StatefulWidget {
 
 class _IconBrowserState extends State<IconBrowser> {
   final _searchController = TextEditingController();
-  IconCollection _collection = IconCollection.fluent;
+  IconCollection _collection = IconCollection.windows;
   IconEntry? _selected;
 
   @override
