@@ -94,6 +94,31 @@ class TabData extends InheritedWidget {
   }
 
   @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties
+      ..add(FlagProperty('selected', value: selected, ifFalse: 'not selected'))
+      ..add(ObjectFlagProperty('onPressed', onPressed, ifNull: 'disabled'))
+      ..add(ObjectFlagProperty('onClose', onClose, ifNull: 'not closeable'))
+      ..add(
+        IntProperty('reorderIndex', reorderIndex, ifNull: 'not reorderable'),
+      )
+      ..add(
+        DiagnosticsProperty<Duration>('animationDuration', animationDuration),
+      )
+      ..add(DiagnosticsProperty<Curve>('animationCurve', animationCurve))
+      ..add(
+        EnumProperty<CloseButtonVisibilityMode>(
+          'visibilityMode',
+          visibilityMode,
+        ),
+      )
+      ..add(
+        EnumProperty<TabWidthBehavior>('tabWidthBehavior', tabWidthBehavior),
+      );
+  }
+
+  @override
   bool updateShouldNotify(TabData oldWidget) {
     return true;
   }

@@ -1,4 +1,5 @@
 import 'package:fluent_ui/fluent_ui.dart';
+import 'package:flutter/foundation.dart';
 
 /// The default constraints for a [TeachingTip].
 ///
@@ -234,6 +235,16 @@ class TeachingTip extends StatelessWidget {
       scale: CurvedAnimation(curve: Curves.ease, parent: animation),
       child: flyout,
     );
+  }
+
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties
+      ..add(ObjectFlagProperty.has('leading', leading))
+      ..add(IntProperty('buttons', buttons?.length))
+      ..add(ObjectFlagProperty.has('mediaContent', mediaContent))
+      ..add(ObjectFlagProperty.has('onClose', onClose));
   }
 
   @override

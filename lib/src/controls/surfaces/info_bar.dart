@@ -526,6 +526,12 @@ class InfoBarTheme extends InheritedTheme {
   }
 
   @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties.add(DiagnosticsProperty<InfoBarThemeData>('data', data));
+  }
+
+  @override
   bool updateShouldNotify(InfoBarTheme oldWidget) => data != oldWidget.data;
 }
 

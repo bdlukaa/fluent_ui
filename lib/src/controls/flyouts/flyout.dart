@@ -1247,6 +1247,12 @@ class FlyoutTarget extends StatefulWidget {
 
   @override
   State<FlyoutTarget> createState() => _FlyoutTargetState();
+
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties.add(ObjectFlagProperty.has('controller', controller));
+  }
 }
 
 class _FlyoutTargetState extends State<FlyoutTarget> {

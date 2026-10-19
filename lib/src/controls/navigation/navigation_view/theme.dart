@@ -75,6 +75,12 @@ class NavigationPaneTheme extends InheritedTheme {
   }
 
   @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties.add(DiagnosticsProperty<NavigationPaneThemeData>('data', data));
+  }
+
+  @override
   Widget wrap(BuildContext context, Widget child) {
     return NavigationPaneTheme(data: data, child: child);
   }

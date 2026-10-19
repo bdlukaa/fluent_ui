@@ -59,6 +59,17 @@ class ColorRingSpectrum extends StatefulWidget {
 
   @override
   State<ColorRingSpectrum> createState() => _ColorRingSpectrumState();
+
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties
+      ..add(ObjectFlagProperty.has('onColorChanged', onColorChanged))
+      ..add(IntProperty('minHue', minHue, defaultValue: 0))
+      ..add(IntProperty('maxHue', maxHue, defaultValue: 360))
+      ..add(IntProperty('minSaturation', minSaturation, defaultValue: 0))
+      ..add(IntProperty('maxSaturation', maxSaturation, defaultValue: 100));
+  }
 }
 
 class _ColorRingSpectrumState extends State<ColorRingSpectrum> {
@@ -207,6 +218,17 @@ class ColorBoxSpectrum extends StatefulWidget {
 
   @override
   State<ColorBoxSpectrum> createState() => _ColorBoxSpectrumState();
+
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties
+      ..add(ObjectFlagProperty.has('onColorChanged', onColorChanged))
+      ..add(IntProperty('minHue', minHue, defaultValue: 0))
+      ..add(IntProperty('maxHue', maxHue, defaultValue: 360))
+      ..add(IntProperty('minSaturation', minSaturation, defaultValue: 0))
+      ..add(IntProperty('maxSaturation', maxSaturation, defaultValue: 100));
+  }
 }
 
 class _ColorBoxSpectrumState extends State<ColorBoxSpectrum> {

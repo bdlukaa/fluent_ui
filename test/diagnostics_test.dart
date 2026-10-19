@@ -44,6 +44,31 @@ void main() {
     );
   });
 
+  test('BreadcrumbBar reports its item and chevron configuration', () {
+    const breadcrumbBar = BreadcrumbBar<String>(
+      items: [
+        BreadcrumbItem(label: Text('Home'), value: 'home'),
+        BreadcrumbItem(label: Text('Library'), value: 'library'),
+      ],
+      chevronIconSize: 12,
+      chevronAlignment: ChevronAlignment.bottom,
+    );
+
+    expect(_property(breadcrumbBar, 'itemCount').value, 2);
+    expect(_property(breadcrumbBar, 'chevronIconSize').value, 12.0);
+    expect(
+      _property(breadcrumbBar, 'chevronAlignment').value,
+      ChevronAlignment.bottom,
+    );
+  });
+
+  test('theme wrappers report their data', () {
+    const data = ButtonThemeData();
+    const theme = ButtonTheme(data: data, child: SizedBox());
+
+    expect(_property(theme, 'data').value, same(data));
+  });
+
   test('text input and suggestions avoid user-provided diagnostic values', () {
     final textBox = TextBox(
       controller: TextEditingController(text: 'private value'),
@@ -62,6 +87,33 @@ void main() {
       isA<ObjectFlagProperty<String?>>(),
     );
     expect(_property(suggestions, 'itemCount').value, 1);
+  });
+
+  testWidgets('BreadcrumbBarState exposes runtime diagnostics', (tester) async {
+    await tester.pumpWidget(
+      wrapApp(
+        child: const Align(
+          alignment: Alignment.topLeft,
+          child: SizedBox(
+            height: 20,
+            child: BreadcrumbBar<String>(
+              items: [
+                BreadcrumbItem(label: Text('Home'), value: 'home'),
+                BreadcrumbItem(label: Text('Library'), value: 'library'),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+
+    final state = tester.state<BreadcrumbBarState<String>>(
+      find.byType(BreadcrumbBar<String>),
+    );
+
+    expect(_property(state, 'overflowedItemCount').value, 0);
+    expect(_property(state, 'isFlyoutControllerAttached').value, isTrue);
+    expect(_property(state, 'isOverflowFlyoutOpen').value, isFalse);
   });
 
   testWidgets('NavigationViewState exposes safe runtime diagnostics', (

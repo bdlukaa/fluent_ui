@@ -297,6 +297,12 @@ class CheckboxTheme extends InheritedTheme {
   }
 
   @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties.add(DiagnosticsProperty<CheckboxThemeData>('data', data));
+  }
+
+  @override
   bool updateShouldNotify(CheckboxTheme oldWidget) => data != oldWidget.data;
 }
 

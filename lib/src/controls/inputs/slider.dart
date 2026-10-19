@@ -667,6 +667,12 @@ class SliderTheme extends InheritedTheme {
   }
 
   @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties.add(DiagnosticsProperty<SliderThemeData>('data', data));
+  }
+
+  @override
   bool updateShouldNotify(SliderTheme oldWidget) => data != oldWidget.data;
 }
 

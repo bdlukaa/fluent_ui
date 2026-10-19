@@ -298,6 +298,15 @@ class DefaultToggleSwitchKnob extends StatelessWidget {
   final Set<WidgetState> states;
 
   @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties
+      ..add(FlagProperty('checked', value: checked, ifFalse: 'unchecked'))
+      ..add(DiagnosticsProperty<ToggleSwitchThemeData>('style', style))
+      ..add(IterableProperty<WidgetState>('states', states));
+  }
+
+  @override
   Widget build(BuildContext context) {
     const checkedFactor = 1;
     return AnimatedContainer(
@@ -379,6 +388,12 @@ class ToggleSwitchTheme extends InheritedTheme {
   @override
   Widget wrap(BuildContext context, Widget child) {
     return ToggleSwitchTheme(data: data, child: child);
+  }
+
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties.add(DiagnosticsProperty<ToggleSwitchThemeData>('data', data));
   }
 
   @override

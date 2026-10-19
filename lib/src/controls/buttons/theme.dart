@@ -205,6 +205,12 @@ class ButtonTheme extends InheritedTheme {
   }
 
   @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties.add(DiagnosticsProperty<ButtonThemeData>('data', data));
+  }
+
+  @override
   bool updateShouldNotify(ButtonTheme oldWidget) => data != oldWidget.data;
 }
 

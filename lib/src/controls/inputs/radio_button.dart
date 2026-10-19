@@ -293,6 +293,12 @@ class RadioButtonTheme extends InheritedTheme {
   }
 
   @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties.add(DiagnosticsProperty<RadioButtonThemeData>('data', data));
+  }
+
+  @override
   bool updateShouldNotify(RadioButtonTheme oldWidget) => data != oldWidget.data;
 }
 

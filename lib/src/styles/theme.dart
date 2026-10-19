@@ -71,6 +71,12 @@ class FluentTheme extends StatelessWidget {
   }
 
   @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties.add(DiagnosticsProperty<FluentThemeData>('data', data));
+  }
+
+  @override
   Widget build(BuildContext context) {
     return _FluentTheme(
       data: data,
@@ -150,6 +156,12 @@ class AnimatedFluentTheme extends ImplicitlyAnimatedWidget {
   ///
   /// {@macro flutter.widgets.ProxyWidget.child}
   final Widget child;
+
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties.add(DiagnosticsProperty<FluentThemeData>('data', data));
+  }
 
   @override
   AnimatedWidgetBaseState<AnimatedFluentTheme> createState() =>

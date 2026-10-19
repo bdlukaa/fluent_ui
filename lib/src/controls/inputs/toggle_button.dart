@@ -134,6 +134,12 @@ class ToggleButtonTheme extends InheritedTheme {
   }
 
   @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties.add(DiagnosticsProperty<ToggleButtonThemeData>('data', data));
+  }
+
+  @override
   bool updateShouldNotify(ToggleButtonTheme oldWidget) =>
       data != oldWidget.data;
 }

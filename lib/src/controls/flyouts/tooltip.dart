@@ -432,6 +432,12 @@ class TooltipTheme extends InheritedTheme {
   }
 
   @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties.add(DiagnosticsProperty<TooltipThemeData>('data', data));
+  }
+
+  @override
   Widget wrap(BuildContext context, Widget child) {
     return TooltipTheme(data: data, child: child);
   }

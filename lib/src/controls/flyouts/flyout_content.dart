@@ -1,4 +1,5 @@
 import 'package:fluent_ui/fluent_ui.dart';
+import 'package:flutter/foundation.dart';
 
 /// Eyeballed value from Windows Home 11.
 const kFlyoutMinConstraints = BoxConstraints(minWidth: 118);
@@ -59,6 +60,28 @@ class FlyoutContent extends StatelessWidget {
 
   /// Whether the background will be an [Acrylic].
   final bool useAcrylic;
+
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties
+      ..add(ColorProperty('color', color))
+      ..add(DiagnosticsProperty<ShapeBorder>('shape', shape))
+      ..add(DiagnosticsProperty<EdgeInsetsGeometry>('padding', padding))
+      ..add(
+        ColorProperty('shadowColor', shadowColor, defaultValue: Colors.black),
+      )
+      ..add(DoubleProperty('elevation', elevation, defaultValue: 8.0))
+      ..add(DiagnosticsProperty<BoxConstraints>('constraints', constraints))
+      ..add(
+        FlagProperty(
+          'useAcrylic',
+          value: useAcrylic,
+          defaultValue: true,
+          ifFalse: 'acrylic disabled',
+        ),
+      );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -184,6 +207,41 @@ class FlyoutListTile extends StatelessWidget {
 
   /// Whether this tile is enabled.
   bool get isEnabled => onPressed != null;
+
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties
+      ..add(ObjectFlagProperty.has('onPressed', onPressed))
+      ..add(ObjectFlagProperty.has('onLongPress', onLongPress))
+      ..add(ObjectFlagProperty.has('icon', icon))
+      ..add(ObjectFlagProperty.has('trailing', trailing))
+      ..add(ObjectFlagProperty.has('focusNode', focusNode))
+      ..add(
+        FlagProperty(
+          'autofocus',
+          value: autofocus,
+          defaultValue: false,
+          ifTrue: 'autofocus',
+        ),
+      )
+      ..add(
+        FlagProperty(
+          'selected',
+          value: selected,
+          defaultValue: false,
+          ifTrue: 'selected',
+        ),
+      )
+      ..add(
+        FlagProperty(
+          'showSelectedIndicator',
+          value: showSelectedIndicator,
+          defaultValue: true,
+          ifFalse: 'selection indicator hidden',
+        ),
+      );
+  }
 
   @override
   Widget build(BuildContext context) {
