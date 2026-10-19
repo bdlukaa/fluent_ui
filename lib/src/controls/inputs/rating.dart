@@ -144,7 +144,13 @@ class RatingControl extends StatefulWidget {
     super.debugFillProperties(properties);
     properties
       ..add(IntProperty('amount', amount, defaultValue: 5))
-      ..add(DoubleProperty('rating', rating))
+      ..add(
+        FlagProperty(
+          'interactive',
+          value: onChanged != null,
+          ifFalse: 'read-only',
+        ),
+      )
       ..add(
         DiagnosticsProperty<Duration>('animationDuration', animationDuration),
       )

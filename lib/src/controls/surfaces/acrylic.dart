@@ -134,7 +134,7 @@ class Acrylic extends StatefulWidget {
       ..add(DiagnosticsProperty<ShapeBorder>('shape', shape))
       ..add(ColorProperty('shadowColor', shadowColor))
       ..add(ColorProperty('fallbackColor', fallbackColor))
-      ..add(DoubleProperty('elevation', elevation));
+      ..add(DoubleProperty('elevation', elevation, defaultValue: 0.0));
   }
 
   @override

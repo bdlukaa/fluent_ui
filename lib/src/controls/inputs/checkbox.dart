@@ -521,18 +521,6 @@ class CheckboxThemeData with Diagnosticable {
         ),
       )
       ..add(IconDataProperty('icon', icon))
-      ..add(
-        ObjectFlagProperty<WidgetStateProperty<Decoration?>?>.has(
-          'checkedDecoration',
-          checkedDecoration,
-        ),
-      )
-      ..add(
-        ObjectFlagProperty<WidgetStateProperty<Decoration?>?>.has(
-          'uncheckedDecoration',
-          uncheckedDecoration,
-        ),
-      )
       ..add(DiagnosticsProperty<EdgeInsetsGeometry?>('padding', padding))
       ..add(DiagnosticsProperty<EdgeInsetsGeometry?>('margin', margin))
       ..add(DiagnosticsProperty('foregroundColor', foregroundColor));

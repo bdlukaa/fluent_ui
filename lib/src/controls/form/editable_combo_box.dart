@@ -97,6 +97,19 @@ class EditableComboBox<T> extends ComboBox<T> {
   final List<TextInputFormatter>? inputFormatters;
 
   @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties
+      ..add(
+        ObjectFlagProperty<TextEditingController?>.has(
+          'textController',
+          textController,
+        ),
+      )
+      ..add(IntProperty('inputFormatterCount', inputFormatters?.length ?? 0));
+  }
+
+  @override
   State<ComboBox<T>> createState() => _EditableComboboxState<T>();
 }
 

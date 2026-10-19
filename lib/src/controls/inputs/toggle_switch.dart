@@ -157,12 +157,13 @@ class ToggleSwitch extends StatefulWidget {
           ifFalse: 'trailingContent',
         ),
       )
-      ..add(ObjectFlagProperty('onChanged', onChanged, ifNull: 'disabled'))
+      ..add(
+        FlagProperty('enabled', value: onChanged != null, ifFalse: 'disabled'),
+      )
       ..add(
         FlagProperty('autofocus', value: autofocus, ifFalse: 'manual focus'),
       )
       ..add(DiagnosticsProperty<ToggleSwitchThemeData>('style', style))
-      ..add(StringProperty('semanticLabel', semanticLabel))
       ..add(ObjectFlagProperty<FocusNode>.has('focusNode', focusNode));
   }
 
@@ -589,6 +590,6 @@ class ToggleSwitchThemeData with Diagnosticable {
           uncheckedKnobDecoration,
         ),
       )
-      ..add(DiagnosticsProperty('foregroundColor', foregroundColor));
+      ..add(ObjectFlagProperty.has('foregroundColor', foregroundColor));
   }
 }

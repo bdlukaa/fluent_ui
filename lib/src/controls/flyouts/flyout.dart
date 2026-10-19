@@ -646,7 +646,8 @@ typedef FlyoutTransitionBuilder =
 ///  * [FlyoutTarget], the widget that flyouts attach to
 ///  * [Flyout], for displaying contextual UI
 ///  * <https://learn.microsoft.com/en-us/windows/apps/design/controls/dialogs-and-flyouts/flyouts>
-class FlyoutController with ChangeNotifier, WidgetsBindingObserver {
+class FlyoutController
+    with ChangeNotifier, WidgetsBindingObserver, Diagnosticable {
   /// Creates a flyout controller.
   FlyoutController() {
     WidgetsBinding.instance.addObserver(this);
@@ -700,6 +701,14 @@ class FlyoutController with ChangeNotifier, WidgetsBindingObserver {
   }
 
   NavigatorState? _currentNavigator;
+
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties
+      ..add(FlagProperty('isAttached', value: isAttached, ifFalse: 'detached'))
+      ..add(FlagProperty('isOpen', value: isOpen, ifFalse: 'closed'));
+  }
 
   /// Shows a flyout.
   ///

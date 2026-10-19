@@ -341,6 +341,12 @@ class Picker extends StatefulWidget {
 
   @override
   State<Picker> createState() => PickerState();
+
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties.add(DoubleProperty('pickerHeight', pickerHeight));
+  }
 }
 
 /// The state for a [Picker] widget.

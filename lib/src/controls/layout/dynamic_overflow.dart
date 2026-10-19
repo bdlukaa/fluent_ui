@@ -146,6 +146,13 @@ class DynamicOverflow extends MultiChildRenderObjectWidget {
       ..add(
         EnumProperty<VerticalDirection>('verticalDirection', verticalDirection),
       )
+      ..add(
+        EnumProperty<DynamicOverflowDirection>(
+          'overflowDirection',
+          overflowDirection,
+          defaultValue: DynamicOverflowDirection.end,
+        ),
+      )
       ..add(EnumProperty<Clip>('clipBehavior', clipBehavior))
       ..add(
         EnumProperty<MainAxisAlignment>(

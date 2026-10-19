@@ -535,12 +535,12 @@ class ScrollbarThemeData with Diagnosticable {
         ),
       )
       ..add(
-        DoubleProperty('crossAxisMargin', mainAxisMargin, defaultValue: 2.0),
+        DoubleProperty('crossAxisMargin', crossAxisMargin, defaultValue: 2.0),
       )
       ..add(
         DoubleProperty(
           'hoveringCrossAxisMargin',
-          hoveringMainAxisMargin,
+          hoveringCrossAxisMargin,
           defaultValue: 0.0,
         ),
       )

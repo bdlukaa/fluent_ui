@@ -76,6 +76,23 @@ class CalendarDatePicker extends CalendarView {
 
   @override
   State<CalendarView> createState() => CalendarDatePickerState();
+
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties
+      ..add(DiagnosticsProperty<DateFormat>('dateFormatter', dateFormatter))
+      ..add(EnumProperty<FlyoutPlacementMode>('placement', placement))
+      ..add(DoubleProperty('verticalOffset', verticalOffset))
+      ..add(
+        FlagProperty(
+          'closeOnSelection',
+          value: closeOnSelection,
+          ifFalse: 'flyout remains open after selection',
+          defaultValue: true,
+        ),
+      );
+  }
 }
 
 class CalendarDatePickerState extends CalendarViewState {

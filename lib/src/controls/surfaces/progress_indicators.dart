@@ -92,7 +92,8 @@ class ProgressBar extends StatefulWidget {
     super.debugFillProperties(properties);
     properties
       ..add(DoubleProperty('value', value, ifNull: 'indeterminate'))
-      ..add(DoubleProperty('strokeWidth', strokeWidth))
+      ..add(DoubleProperty('strokeWidth', strokeWidth, defaultValue: 4.5))
+      ..add(StringProperty('semanticLabel', semanticLabel))
       ..add(ColorProperty('backgroundColor', backgroundColor))
       ..add(ColorProperty('activeColor', activeColor));
   }
@@ -414,6 +415,7 @@ class ProgressRing extends StatefulWidget {
     properties
       ..add(DoubleProperty('value', value, ifNull: 'indeterminate'))
       ..add(DoubleProperty('strokeWidth', strokeWidth, defaultValue: 4.5))
+      ..add(StringProperty('semanticLabel', semanticLabel))
       ..add(ColorProperty('backgroundColor', backgroundColor))
       ..add(ColorProperty('activeColor', activeColor))
       ..add(

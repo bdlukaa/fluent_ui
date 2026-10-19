@@ -47,9 +47,10 @@ class ToggleButton extends StatelessWidget {
     super.debugFillProperties(properties);
     properties
       ..add(FlagProperty('checked', value: checked, ifFalse: 'unchecked'))
-      ..add(ObjectFlagProperty('onChanged', onChanged, ifNull: 'disabled'))
+      ..add(
+        FlagProperty('enabled', value: onChanged != null, ifFalse: 'disabled'),
+      )
       ..add(DiagnosticsProperty<ToggleButtonThemeData>('style', style))
-      ..add(StringProperty('semanticLabel', semanticLabel))
       ..add(ObjectFlagProperty<FocusNode>.has('focusNode', focusNode))
       ..add(
         FlagProperty('autofocus', value: autofocus, ifFalse: 'manual focus'),

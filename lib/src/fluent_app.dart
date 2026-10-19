@@ -1,4 +1,5 @@
 import 'package:fluent_ui/fluent_ui.dart';
+import 'package:flutter/foundation.dart';
 import 'package:material_ui/material_ui.dart' as m;
 
 /// An application that uses Windows design.
@@ -355,6 +356,47 @@ class FluentApp extends StatefulWidget {
   ///  * [ScrollConfiguration], which controls how [Scrollable] widgets behave
   ///    in a subtree.
   final ScrollBehavior scrollBehavior;
+
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties
+      ..add(DiagnosticsProperty<FluentThemeData>('theme', theme))
+      ..add(DiagnosticsProperty<FluentThemeData>('darkTheme', darkTheme))
+      ..add(
+        EnumProperty<ThemeMode>(
+          'themeMode',
+          themeMode,
+          defaultValue: ThemeMode.system,
+        ),
+      )
+      ..add(DiagnosticsProperty<Locale>('locale', locale))
+      ..add(IterableProperty<Locale>('supportedLocales', supportedLocales))
+      ..add(
+        FlagProperty(
+          'showPerformanceOverlay',
+          value: showPerformanceOverlay,
+          ifTrue: 'show performance overlay',
+        ),
+      )
+      ..add(
+        FlagProperty(
+          'showSemanticsDebugger',
+          value: showSemanticsDebugger,
+          ifTrue: 'show semantics debugger',
+        ),
+      )
+      ..add(
+        FlagProperty(
+          'debugShowCheckedModeBanner',
+          value: debugShowCheckedModeBanner,
+          ifTrue: 'show debug banner',
+        ),
+      )
+      ..add(
+        DiagnosticsProperty<ScrollBehavior>('scrollBehavior', scrollBehavior),
+      );
+  }
 
   @override
   State<FluentApp> createState() => _FluentAppState();

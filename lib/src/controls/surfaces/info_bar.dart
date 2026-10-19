@@ -715,6 +715,7 @@ class InfoBarThemeData with Diagnosticable {
       )
       ..add(ObjectFlagProperty.has('decoration', decoration))
       ..add(ObjectFlagProperty.has('iconColor', iconColor))
+      ..add(DiagnosticsProperty<EdgeInsetsGeometry?>('padding', padding))
       ..add(
         DiagnosticsProperty<ButtonStyle>(
           'actionStyle',
