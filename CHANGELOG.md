@@ -1,3 +1,7 @@
+## [next]
+
+* feat: Display Icons in DevTools ([1365](https://github.com/bdlukaa/fluent_ui/pull/1365))
+
 ## 4.17.0
 
 - refactor: Align `Acrylic` with WinUI behavior, including theme-driven tint and luminosity resources, corrected fallback rendering, and improved material composition ([#1362](https://github.com/bdlukaa/fluent_ui/pull/1362))
