@@ -29,6 +29,10 @@
 .pub-cache/
 .pub/
 build/
+!extension/
+!extension/devtools/
+!extension/devtools/build/
+!extension/devtools/build/**
 
 # Android related
 **/android/**/gradle-wrapper.jar
