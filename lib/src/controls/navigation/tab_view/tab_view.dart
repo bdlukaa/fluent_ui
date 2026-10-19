@@ -5,7 +5,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
-import 'package:material_ui/material_ui.dart' as m;
+
 part 'tab.dart';
 
 const double _kMinTileWidth = 80;
@@ -529,30 +529,25 @@ class _TabViewState extends State<TabView> {
                                 });
                           }
                         },
-                        child: Localizations.override(
-                          context: context,
-                          delegates: m.GlobalMaterialLocalizations.delegates,
-                          child: m.ReorderableListView.builder(
-                            buildDefaultDragHandles: false,
-                            shrinkWrap: true,
-                            scrollDirection: Axis.horizontal,
-                            scrollController: scrollController,
-                            onReorderItem: (i, ii) {
-                              widget.onReorder?.call(i, ii);
-                            },
-                            itemCount: widget.tabs.length,
-                            proxyDecorator: (child, index, animation) {
-                              return child;
-                            },
-                            itemBuilder: (context, index) {
-                              return _tabBuilder(
-                                context,
-                                index,
-                                preferredTabWidth,
-                              );
-                            },
-                            dragStartBehavior: DragStartBehavior.down,
-                          ),
+                        child: ReorderableList(
+                          shrinkWrap: true,
+                          scrollDirection: Axis.horizontal,
+                          controller: scrollController,
+                          onReorderItem: (i, ii) {
+                            widget.onReorder?.call(i, ii);
+                          },
+                          itemCount: widget.tabs.length,
+                          proxyDecorator: (child, index, animation) {
+                            return child;
+                          },
+                          itemBuilder: (context, index) {
+                            return _tabBuilder(
+                              context,
+                              index,
+                              preferredTabWidth,
+                            );
+                          },
+                          dragStartBehavior: DragStartBehavior.down,
                         ),
                       );
 
