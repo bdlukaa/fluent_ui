@@ -1,3 +1,7 @@
+## [next]
+
+* fix: Do not use Material icons on `InfoBar` ([#1366](https://github.com/bdlukaa/fluent_ui/pull/1366))
+
 ## 4.17.0
 
 - refactor: Align `Acrylic` with WinUI behavior, including theme-driven tint and luminosity resources, corrected fallback rendering, and improved material composition ([#1362](https://github.com/bdlukaa/fluent_ui/pull/1362))
