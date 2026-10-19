@@ -42,7 +42,7 @@ class ChevronDown extends StatelessWidget {
       child: Icon(icon, size: iconSize, color: iconColor),
       builder: (context, value, child) {
         return Opacity(
-          opacity: clampDouble(value, 0.0, 1.0),
+          opacity: clampDouble(value, 0, 1),
           child: Transform.translate(
             filterQuality: FilterQuality.high,
             offset: Offset(0, value == 1 ? 0 : value * 1),

@@ -324,7 +324,7 @@ class TooltipState extends State<Tooltip> with SingleTickerProviderStateMixin {
     assert(debugCheckHasDirectionality(context));
 
     final theme = FluentTheme.of(context);
-    final defaultTextStyle = theme.typography.body!;
+    final defaultTextStyle = theme.typography.body;
     final defaultDecoration = BoxDecoration(
       color: theme.menuColor,
       borderRadius: const BorderRadius.all(Radius.circular(8)),

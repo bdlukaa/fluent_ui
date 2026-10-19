@@ -396,7 +396,7 @@ class PickerState extends State<Picker> {
             y = 0;
           }
 
-          y = clampDouble(y, 0.0, rootHeight);
+          y = clampDouble(y, 0, rootHeight);
 
           final theme = FluentTheme.of(context);
 
