@@ -16,7 +16,7 @@ class FlyoutContent extends StatelessWidget {
     super.key,
     this.color,
     this.shape,
-    this.padding = const EdgeInsetsDirectional.all(8),
+    this.padding = const EdgeInsetsDirectional.all(16),
     this.shadowColor = Colors.black,
     this.elevation = 8.0,
     this.constraints = kFlyoutMinConstraints,
