@@ -1,4 +1,4 @@
-## [next]
+## 4.17.0
 
 - refactor: Align `Acrylic` with WinUI behavior, including theme-driven tint and luminosity resources, corrected fallback rendering, and improved material composition ([#1362](https://github.com/bdlukaa/fluent_ui/pull/1362))
 - feat: add logical start/end overflow direction support to `DynamicOverflow` ([#1359](https://github.com/bdlukaa/fluent_ui/pull/1359))

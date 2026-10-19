@@ -47,7 +47,7 @@ Add the package to your dependencies:
 
 ```yaml
 dependencies:
-  fluent_ui: ^4.15.1
+  fluent_ui: ^4.17.0
 ```
 
 <p align="center">OR</p>
