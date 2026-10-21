@@ -60,7 +60,7 @@ void main() {
         ),
         (WindowsIcons.completed_solid, theme.resources.systemFillColorSuccess),
         (
-          WindowsIcons.status_circle_error_x,
+          WindowsIcons.status_error_full,
           theme.resources.systemFillColorCritical,
         ),
       ];
@@ -144,9 +144,7 @@ void main() {
       );
 
       expect(
-        tester
-            .widget<Icon>(find.byIcon(FluentIcons.status_circle_error_x))
-            .color,
+        tester.widget<WindowsIcon>(find.byType(WindowsIcon)).color,
         Colors.purple,
       );
       await tester.tap(find.text('Retry'));

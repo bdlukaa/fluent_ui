@@ -297,6 +297,12 @@ class CheckboxTheme extends InheritedTheme {
   }
 
   @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties.add(DiagnosticsProperty<CheckboxThemeData>('data', data));
+  }
+
+  @override
   bool updateShouldNotify(CheckboxTheme oldWidget) => data != oldWidget.data;
 }
 
@@ -521,18 +527,6 @@ class CheckboxThemeData with Diagnosticable {
         ),
       )
       ..add(IconDataProperty('icon', icon))
-      ..add(
-        ObjectFlagProperty<WidgetStateProperty<Decoration?>?>.has(
-          'checkedDecoration',
-          checkedDecoration,
-        ),
-      )
-      ..add(
-        ObjectFlagProperty<WidgetStateProperty<Decoration?>?>.has(
-          'uncheckedDecoration',
-          uncheckedDecoration,
-        ),
-      )
       ..add(DiagnosticsProperty<EdgeInsetsGeometry?>('padding', padding))
       ..add(DiagnosticsProperty<EdgeInsetsGeometry?>('margin', margin))
       ..add(DiagnosticsProperty('foregroundColor', foregroundColor));

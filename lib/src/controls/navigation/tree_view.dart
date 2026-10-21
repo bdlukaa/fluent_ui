@@ -808,6 +808,14 @@ class TreeViewController with ChangeNotifier, Diagnosticable {
           ifTrue: 'attached',
           ifFalse: 'detached',
         ),
+      )
+      ..add(
+        FlagProperty(
+          'isAttachedStateMounted',
+          value: _state?.mounted ?? false,
+          ifTrue: 'attached state mounted',
+          ifFalse: 'no mounted attached state',
+        ),
       );
   }
 
@@ -1148,6 +1156,12 @@ class TreeViewState extends State<TreeView> with AutomaticKeepAliveClientMixin {
     widget.controller?._detach();
     _items.clear();
     super.dispose();
+  }
+
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties.add(IntProperty('visibleItemCount', _items.length));
   }
 
   @override

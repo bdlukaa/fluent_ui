@@ -252,7 +252,7 @@ class NavigationView extends StatefulWidget {
         DiagnosticsProperty(
           'clipBehavior',
           clipBehavior,
-          defaultValue: Clip.hardEdge,
+          defaultValue: Clip.antiAlias,
         ),
       )
       ..add(DiagnosticsProperty('contentShape', contentShape));
@@ -648,6 +648,30 @@ class NavigationViewState extends State<NavigationView> {
   /// If the pane display mode is automatic, it will adapt to the available
   /// space.
   PaneDisplayMode get displayMode => _displayMode;
+
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    final paneOpen = switch (_displayMode) {
+      PaneDisplayMode.expanded => true,
+      PaneDisplayMode.compact => _compactOverlayOpen,
+      PaneDisplayMode.minimal => _minimalPaneOpen,
+      PaneDisplayMode.top || PaneDisplayMode.auto => false,
+    };
+    properties
+      ..add(EnumProperty('requestedDisplayMode', widget.pane?.displayMode))
+      ..add(EnumProperty('displayMode', displayMode))
+      ..add(FlagProperty('isPaneOpen', value: paneOpen, ifTrue: 'pane open'))
+      ..add(
+        FlagProperty(
+          'isTransitioning',
+          value: _isTransitioning,
+          ifTrue: 'transitioning',
+        ),
+      )
+      ..add(IntProperty('selectedIndex', widget.pane?.selected))
+      ..add(IntProperty('historyDepth', _history.length));
+  }
 
   /// The layout adapts based on available width:
   /// - Width >= 1008px: Open mode (expanded pane)

@@ -51,7 +51,7 @@ final class RgbComponents {
 }
 
 /// A stateful representation of a color in both RGB and HSV color spaces.
-class ColorState extends ChangeNotifier {
+class ColorState extends ChangeNotifier with Diagnosticable {
   // RGB components (0-1)
   late double _red; // 0–1
   late double _green; // 0–1
@@ -83,6 +83,19 @@ class ColorState extends ChangeNotifier {
 
   /// Gets the value/brightness (0–1).
   double get value => _value;
+
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties
+      ..add(DoubleProperty('red', red))
+      ..add(DoubleProperty('green', green))
+      ..add(DoubleProperty('blue', blue))
+      ..add(DoubleProperty('alpha', alpha))
+      ..add(DoubleProperty('hue', hue))
+      ..add(DoubleProperty('saturation', saturation))
+      ..add(DoubleProperty('value', value));
+  }
 
   /// Constructs a [ColorState] with the given components.
   ///

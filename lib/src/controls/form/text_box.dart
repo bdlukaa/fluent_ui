@@ -719,19 +719,12 @@ class TextBox extends StatefulWidget {
     super.debugFillProperties(properties);
     properties
       ..add(
-        DiagnosticsProperty<TextEditingController>(
+        ObjectFlagProperty<TextEditingController?>.has(
           'controller',
           controller,
-          defaultValue: null,
         ),
       )
-      ..add(
-        DiagnosticsProperty<FocusNode>(
-          'focusNode',
-          focusNode,
-          defaultValue: null,
-        ),
-      )
+      ..add(ObjectFlagProperty<FocusNode?>.has('focusNode', focusNode))
       ..add(
         DiagnosticsProperty<WidgetStateProperty<BoxDecoration>>(
           'decoration',
@@ -751,7 +744,7 @@ class TextBox extends StatefulWidget {
           defaultValue: kTextBoxPadding,
         ),
       )
-      ..add(StringProperty('placeholder', placeholder))
+      ..add(ObjectFlagProperty<String?>.has('placeholder', placeholder))
       ..add(
         DiagnosticsProperty<TextStyle>('placeholderStyle', placeholderStyle),
       )
@@ -835,7 +828,7 @@ class TextBox extends StatefulWidget {
           defaultValue: null,
         ),
       )
-      ..add(DoubleProperty('cursorWidth', cursorWidth, defaultValue: 1.0))
+      ..add(DoubleProperty('cursorWidth', cursorWidth, defaultValue: 2.0))
       ..add(DoubleProperty('cursorHeight', cursorHeight, defaultValue: null))
       ..add(
         DiagnosticsProperty<Radius>(

@@ -151,6 +151,12 @@ class DividerTheme extends InheritedTheme {
   }
 
   @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties.add(DiagnosticsProperty<DividerThemeData>('data', data));
+  }
+
+  @override
   bool updateShouldNotify(DividerTheme oldWidget) => data != oldWidget.data;
 }
 

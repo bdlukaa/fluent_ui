@@ -270,6 +270,65 @@ class CalendarView extends StatefulWidget {
 
   @override
   State<CalendarView> createState() => CalendarViewState();
+
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties
+      ..add(DiagnosticsProperty<DateTime>('minDate', minDate))
+      ..add(DiagnosticsProperty<DateTime>('maxDate', maxDate))
+      ..add(DiagnosticsProperty<DateTime>('displayDateEnd', displayDateEnd))
+      ..add(DiagnosticsProperty<DateTime>('displayDateStart', displayDateStart))
+      ..add(ColorProperty('selectionColor', selectionColor))
+      ..add(DiagnosticsProperty<Decoration>('decoration', decoration))
+      ..add(DiagnosticsProperty<ShapeBorder>('dayItemShape', dayItemShape))
+      ..add(
+        EnumProperty<CalendarViewDisplayMode>(
+          'initialDisplayMode',
+          initialDisplayMode,
+          defaultValue: CalendarViewDisplayMode.month,
+        ),
+      )
+      ..add(
+        EnumProperty<CalendarViewSelectionMode>(
+          'selectionMode',
+          selectionMode,
+          defaultValue: CalendarViewSelectionMode.single,
+        ),
+      )
+      ..add(
+        FlagProperty(
+          'isTodayHighlighted',
+          value: isTodayHighlighted,
+          ifFalse: 'today not highlighted',
+          defaultValue: true,
+        ),
+      )
+      ..add(IntProperty('weeksPerView', weeksPerView, defaultValue: 6))
+      ..add(IntProperty('yearsPerView', yearsPerView, defaultValue: 16))
+      ..add(IntProperty('firstDayOfWeek', firstDayOfWeek))
+      ..add(
+        FlagProperty(
+          'isOutOfScopeEnabled',
+          value: isOutOfScopeEnabled,
+          ifTrue: 'out-of-scope dates enabled',
+          defaultValue: false,
+        ),
+      )
+      ..add(
+        FlagProperty(
+          'isGroupLabelVisible',
+          value: isGroupLabelVisible,
+          ifFalse: 'group labels hidden',
+          defaultValue: true,
+        ),
+      )
+      ..add(DiagnosticsProperty<TextStyle>('headerStyle', headerStyle))
+      ..add(DiagnosticsProperty<Locale>('locale', locale))
+      ..add(
+        DiagnosticsProperty<ScrollBehavior>('scrollBehavior', scrollBehavior),
+      );
+  }
 }
 
 class CalendarViewState extends State<CalendarView> {

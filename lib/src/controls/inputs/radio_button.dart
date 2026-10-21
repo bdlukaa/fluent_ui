@@ -138,6 +138,18 @@ class RadioButton<T> extends StatefulWidget {
   final RadioGroupRegistry<T>? groupRegistry;
 
   @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties
+      ..add(FlagProperty('enabled', value: enabled, ifFalse: 'disabled'))
+      ..add(DiagnosticsProperty<RadioButtonThemeData>('style', style))
+      ..add(ObjectFlagProperty<FocusNode>.has('focusNode', focusNode))
+      ..add(
+        FlagProperty('autofocus', value: autofocus, ifFalse: 'manual focus'),
+      );
+  }
+
+  @override
   State<RadioButton<T>> createState() => _RadioButtonState<T>();
 }
 
@@ -281,6 +293,12 @@ class RadioButtonTheme extends InheritedTheme {
   }
 
   @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties.add(DiagnosticsProperty<RadioButtonThemeData>('data', data));
+  }
+
+  @override
   bool updateShouldNotify(RadioButtonTheme oldWidget) => data != oldWidget.data;
 }
 
@@ -411,6 +429,6 @@ class RadioButtonThemeData with Diagnosticable {
           uncheckedDecoration,
         ),
       )
-      ..add(DiagnosticsProperty('foregroundDecoration', foregroundColor));
+      ..add(ObjectFlagProperty.has('foregroundColor', foregroundColor));
   }
 }

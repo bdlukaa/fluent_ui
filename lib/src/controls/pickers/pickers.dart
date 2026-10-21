@@ -108,6 +108,12 @@ class YesNoPickerControl extends StatelessWidget {
   final VoidCallback? onCancel;
 
   @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties.add(ObjectFlagProperty.has('onCancel', onCancel));
+  }
+
+  @override
   Widget build(BuildContext context) {
     assert(debugCheckHasFluentTheme(context));
 
@@ -183,6 +189,14 @@ class PickerNavigatorIndicator extends StatelessWidget {
   ///
   /// If null, no backward button is shown
   final VoidCallback onBackward;
+
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties
+      ..add(ObjectFlagProperty.has('onBackward', onBackward))
+      ..add(ObjectFlagProperty.has('onForward', onForward));
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -341,6 +355,12 @@ class Picker extends StatefulWidget {
 
   @override
   State<Picker> createState() => PickerState();
+
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties.add(DoubleProperty('pickerHeight', pickerHeight));
+  }
 }
 
 /// The state for a [Picker] widget.
@@ -491,6 +511,14 @@ class PickerDialog extends StatelessWidget {
 
   /// Called when the user dismisses the dialog.
   final VoidCallback onDismiss;
+
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties
+      ..add(ObjectFlagProperty.has('onSelect', onSelect))
+      ..add(ObjectFlagProperty.has('onDismiss', onDismiss));
+  }
 
   /// Creates a picker dialog.
   const PickerDialog({

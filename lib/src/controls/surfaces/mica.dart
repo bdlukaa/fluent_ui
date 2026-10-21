@@ -1,4 +1,5 @@
 import 'package:fluent_ui/fluent_ui.dart';
+import 'package:flutter/foundation.dart';
 
 /// An opaque Mica foundation surface.
 ///
@@ -69,6 +70,16 @@ class Mica extends StatelessWidget {
   ///
   /// Defaults to [BoxShape.rectangle].
   final BoxShape shape;
+
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties
+      ..add(DoubleProperty('elevation', elevation, defaultValue: 0.0))
+      ..add(ColorProperty('backgroundColor', backgroundColor))
+      ..add(DiagnosticsProperty<BorderRadius>('borderRadius', borderRadius))
+      ..add(EnumProperty<BoxShape>('shape', shape));
+  }
 
   @override
   Widget build(BuildContext context) {

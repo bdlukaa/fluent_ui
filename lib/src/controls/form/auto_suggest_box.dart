@@ -436,7 +436,7 @@ class AutoSuggestBox<T> extends StatefulWidget {
   void debugFillProperties(DiagnosticPropertiesBuilder properties) {
     super.debugFillProperties(properties);
     properties
-      ..add(IterableProperty<AutoSuggestBoxItem<T>>('items', items))
+      ..add(IntProperty('itemCount', items.length))
       ..add(
         ObjectFlagProperty<ValueChanged<AutoSuggestBoxItem<T>>?>(
           'onSelected',

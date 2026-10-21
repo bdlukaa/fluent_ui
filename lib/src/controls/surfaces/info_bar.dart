@@ -526,6 +526,12 @@ class InfoBarTheme extends InheritedTheme {
   }
 
   @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties.add(DiagnosticsProperty<InfoBarThemeData>('data', data));
+  }
+
+  @override
   bool updateShouldNotify(InfoBarTheme oldWidget) => data != oldWidget.data;
 }
 
@@ -715,6 +721,7 @@ class InfoBarThemeData with Diagnosticable {
       )
       ..add(ObjectFlagProperty.has('decoration', decoration))
       ..add(ObjectFlagProperty.has('iconColor', iconColor))
+      ..add(DiagnosticsProperty<EdgeInsetsGeometry?>('padding', padding))
       ..add(
         DiagnosticsProperty<ButtonStyle>(
           'actionStyle',

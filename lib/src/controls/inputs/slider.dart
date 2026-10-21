@@ -667,6 +667,12 @@ class SliderTheme extends InheritedTheme {
   }
 
   @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties.add(DiagnosticsProperty<SliderThemeData>('data', data));
+  }
+
+  @override
   bool updateShouldNotify(SliderTheme oldWidget) => data != oldWidget.data;
 }
 
@@ -836,8 +842,31 @@ class SliderThemeData with Diagnosticable {
       ..add(DiagnosticsProperty('inactiveColor', inactiveColor))
       ..add(ColorProperty('labelBackgroundColor', labelBackgroundColor))
       ..add(ColorProperty('labelForegroundColor', labelForegroundColor))
-      ..add(DiagnosticsProperty('useThumbBall', useThumbBall))
-      ..add(DiagnosticsProperty('thumbBallInnerFactor', thumbBallInnerFactor));
+      ..add(
+        FlagProperty(
+          'useThumbBall',
+          value: useThumbBall,
+          ifTrue: 'thumb ball enabled',
+        ),
+      )
+      ..add(
+        ObjectFlagProperty<WidgetStateProperty<double?>?>.has(
+          'thumbRadius',
+          thumbRadius,
+        ),
+      )
+      ..add(
+        ObjectFlagProperty<WidgetStateProperty<double?>?>.has(
+          'trackHeight',
+          trackHeight,
+        ),
+      )
+      ..add(
+        ObjectFlagProperty<WidgetStateProperty<double?>?>.has(
+          'thumbBallInnerFactor',
+          thumbBallInnerFactor,
+        ),
+      );
   }
 }
 
