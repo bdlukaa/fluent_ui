@@ -138,7 +138,27 @@ class __TabBodyState extends State<_TabBody> {
   final _pageKey = GlobalKey<State<PageView>>();
   PageController? _pageController;
 
+  /// The tabs as of the last build.
+  ///
+  /// This is a copy because callers may reorder their tab list in place, which
+  /// would leave [_TabBody.tabs] of the old widget already in the new order.
+  late List<Tab> _tabs;
+
+  /// The key of each tab's page, parallel to [_tabs].
+  ///
+  /// Pages are not keyed by the [Tab] widgets themselves because many callers
+  /// create new [Tab] instances on every build, which would tear down and
+  /// recreate every page, and its state, on every rebuild.
+  late List<Key> _pageKeys;
+
   PageController get pageController => _pageController!;
+
+  @override
+  void initState() {
+    super.initState();
+    _tabs = List.of(widget.tabs);
+    _pageKeys = [for (final _ in _tabs) UniqueKey()];
+  }
 
   @override
   void didChangeDependencies() {
@@ -149,12 +169,59 @@ class __TabBodyState extends State<_TabBody> {
   @override
   void didUpdateWidget(_TabBody oldWidget) {
     super.didUpdateWidget(oldWidget);
+    _updatePageKeys();
     if (pageController.hasClients) {
       if (oldWidget.index != widget.index ||
           pageController.page != widget.index) {
         pageController.jumpToPage(widget.index);
       }
     }
+  }
+
+  /// Gives each new tab the page key of the previous tab it replaces, so that
+  /// page, and its state, survives the rebuild.
+  ///
+  /// A new tab replaces the previous tab that is the same [Tab] instance or has
+  /// the same non-null [Widget.key], wherever that tab was, so pages follow
+  /// their tabs when the tabs are reordered. A new tab that replaces none of
+  /// them takes the page at its own index, if no other tab took it, so tabs
+  /// recreated on every build keep their pages. Otherwise it gets a new page.
+  void _updatePageKeys() {
+    final newTabs = widget.tabs;
+
+    // The indexes in [_tabs] whose page no new tab has taken yet.
+    final untakenIndexes = {for (var i = 0; i < _tabs.length; i++) i};
+
+    int? takeIndexOfSameTab(Tab newTab) {
+      final index = untakenIndexes
+          .where((index) => _isSameTab(_tabs[index], newTab))
+          .firstOrNull;
+      if (index != null) untakenIndexes.remove(index);
+      return index;
+    }
+
+    // Every tab is matched by sameness before any tab is matched by position.
+    // Otherwise a tab inserted in front of the others would take the page of
+    // the tab that used to be at its index.
+    final previousIndexes = [
+      for (final newTab in newTabs) takeIndexOfSameTab(newTab),
+    ];
+    for (var i = 0; i < newTabs.length; i++) {
+      previousIndexes[i] ??= untakenIndexes.remove(i) ? i : null;
+    }
+
+    _pageKeys = [
+      for (final previousIndex in previousIndexes)
+        if (previousIndex == null) UniqueKey() else _pageKeys[previousIndex],
+    ];
+    _tabs = List.of(newTabs);
+  }
+
+  /// Whether [newTab] replaces [previousTab]: it is the same instance, or both
+  /// have the same non-null key.
+  static bool _isSameTab(Tab previousTab, Tab newTab) {
+    return identical(previousTab, newTab) ||
+        (newTab.key != null && newTab.key == previousTab.key);
   }
 
   @override
@@ -164,27 +231,18 @@ class __TabBodyState extends State<_TabBody> {
       physics: const NeverScrollableScrollPhysics(),
       controller: pageController,
       itemCount: widget.tabs.length,
-      // Reorders move a tab to a new index. Report the new index for each
-      // tab-keyed page so the lazy viewport relocates the existing element
-      // (and its state) instead of tearing it down — a plain ValueKey only
-      // guards in-place reuse, so without this a stateful body stayed parked
-      // at its old slot while the header moved, desyncing content from its
-      // tab.
+      // Report each page's new index so the lazy viewport moves an existing
+      // page, and its state, when its tab moves, instead of tearing it down.
       findChildIndexCallback: (key) {
-        // Pages are keyed by ValueKey<Tab>; guard the type rather than cast so
-        // an unexpected key can never throw from this framework callback.
-        if (key is! ValueKey<Tab>) return null;
-        final index = widget.tabs.indexOf(key.value);
+        final index = _pageKeys.indexOf(key);
         return index == -1 ? null : index;
       },
       itemBuilder: (context, index) {
         final isSelected = widget.index == index;
         final item = widget.tabs[index];
 
-        // Key the body by tab identity, matching the tab strip
-        // (KeyedSubtree(key: ValueKey<Tab>(tab)) in TabView).
         return ExcludeFocus(
-          key: ValueKey<Tab>(item),
+          key: _pageKeys[index],
           excluding: !isSelected,
           child: FocusTraversalGroup(child: item.body),
         );

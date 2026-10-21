@@ -4,6 +4,7 @@
 * fix: Do not use Material icons on `InfoBar` ([#1366](https://github.com/bdlukaa/fluent_ui/pull/1366))
 * fix: `PaneItem` titles are no longer hidden in open panes narrower than ~226px ([#1370](https://github.com/bdlukaa/fluent_ui/pull/1370))
 * fix: Do not use Material Localizations on `TabView` ([#1367](https://github.com/bdlukaa/fluent_ui/pull/1367))
+* fix: `TabView` no longer recreates tab bodies on every rebuild when `Tab`s are created in `build` ([#1371](https://github.com/bdlukaa/fluent_ui/pull/1371))
 
 ## 4.17.0
 
