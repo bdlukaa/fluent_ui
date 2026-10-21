@@ -1711,6 +1711,71 @@ void main() {
       }
     }
   });
+
+  testWidgets('a narrow open pane still shows item titles', (tester) async {
+    await tester.pumpWidget(
+      FluentApp(
+        home: NavigationView(
+          pane: NavigationPane(
+            selected: 0,
+            displayMode: PaneDisplayMode.expanded,
+            size: const NavigationPaneSize(openMaxWidth: 200),
+            items: [
+              PaneItem(
+                icon: const Icon(FluentIcons.home),
+                title: const Text('Home'),
+                body: const SizedBox(),
+              ),
+              PaneItemExpander(
+                icon: const Icon(FluentIcons.folder),
+                title: const Text('Folder'),
+                initiallyExpanded: true,
+                items: [
+                  PaneItem(
+                    icon: const Icon(FluentIcons.document),
+                    title: const Text('Nested'),
+                    body: const SizedBox(),
+                  ),
+                ],
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+    await tester.pumpAndSettle();
+
+    expect(find.text('Home'), findsOneWidget);
+    expect(find.text('Folder'), findsOneWidget);
+    expect(find.text('Nested'), findsOneWidget);
+  });
+
+  testWidgets('an open pane too narrow for item content shows only icons', (
+    tester,
+  ) async {
+    await tester.pumpWidget(
+      FluentApp(
+        home: NavigationView(
+          pane: NavigationPane(
+            selected: 0,
+            displayMode: PaneDisplayMode.expanded,
+            size: const NavigationPaneSize(openMaxWidth: 120),
+            items: [
+              PaneItem(
+                icon: const Icon(FluentIcons.home),
+                title: const Text('Home'),
+                body: const SizedBox(),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+    await tester.pumpAndSettle();
+
+    expect(find.byIcon(FluentIcons.home), findsOneWidget);
+    expect(find.text('Home'), findsNothing);
+  });
 }
 
 class _PageLifecycle {
