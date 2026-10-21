@@ -44,6 +44,20 @@ class ButtonStyle with Diagnosticable {
   /// The size of icons within the button.
   final WidgetStateProperty<double?>? iconSize;
 
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties
+      ..add(ObjectFlagProperty.has('textStyle', textStyle))
+      ..add(ObjectFlagProperty.has('backgroundColor', backgroundColor))
+      ..add(ObjectFlagProperty.has('foregroundColor', foregroundColor))
+      ..add(ObjectFlagProperty.has('shadowColor', shadowColor))
+      ..add(ObjectFlagProperty.has('elevation', elevation))
+      ..add(ObjectFlagProperty.has('padding', padding))
+      ..add(ObjectFlagProperty.has('shape', shape))
+      ..add(ObjectFlagProperty.has('iconSize', iconSize));
+  }
+
   /// Merges this [ButtonStyle] with another, with the other taking precedence.
   ButtonStyle? merge(ButtonStyle? other) {
     if (other == null) return this;
@@ -188,6 +202,12 @@ class ButtonTheme extends InheritedTheme {
   @override
   Widget wrap(BuildContext context, Widget child) {
     return ButtonTheme(data: data, child: child);
+  }
+
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties.add(DiagnosticsProperty<ButtonThemeData>('data', data));
   }
 
   @override

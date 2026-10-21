@@ -296,7 +296,7 @@ class Typography with Diagnosticable {
   void debugFillProperties(DiagnosticPropertiesBuilder properties) {
     super.debugFillProperties(properties);
     properties
-      ..add(DiagnosticsProperty<TextStyle>('header', display))
+      ..add(DiagnosticsProperty<TextStyle>('display', display))
       ..add(DiagnosticsProperty<TextStyle>('titleLarge', titleLarge))
       ..add(DiagnosticsProperty<TextStyle>('title', title))
       ..add(DiagnosticsProperty<TextStyle>('subtitle', subtitle))

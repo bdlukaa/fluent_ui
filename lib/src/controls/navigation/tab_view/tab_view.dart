@@ -62,8 +62,6 @@ const double _kButtonWidth = 32;
 class TabView extends StatefulWidget {
   /// Creates a tab view.
   ///
-  /// [tabs] must have the same length as [bodies]
-  ///
   /// [maxTabWidth] must be non-negative
   const TabView({
     required this.currentIndex,
@@ -104,7 +102,7 @@ class TabView extends StatefulWidget {
 
   /// The icon of the "Add new tab" button.
   ///
-  /// Defaults to an [Icon] with [FluentIcons.add].
+  /// Defaults to a [WindowsIcon] with [WindowsIcons.add].
   final Widget newTabIcon;
 
   /// Whether the following shortcuts are enabled:
@@ -138,7 +136,7 @@ class TabView extends StatefulWidget {
   /// Defaults to `true`.
   final bool showScrollButtons;
 
-  /// The [ScrollPosController] used to move tabview to right and left when the
+  /// The [ScrollPosController] used to move TabView to right and left when the
   /// tabs don't fit the available horizontal space.
   ///
   /// If null, a [ScrollPosController] is created internally.
@@ -183,7 +181,7 @@ class TabView extends StatefulWidget {
   /// The delay duration to animate the tab after it's closed. Only applied when
   /// [tabWidthBehavior] is [TabWidthBehavior.equal].
   ///
-  /// Defaults to 400 milliseconds.
+  /// Defaults to one second.
   final Duration closeDelayDuration;
 
   /// Whenever the new button should be displayed.
@@ -262,7 +260,7 @@ class TabView extends StatefulWidget {
       )
       ..add(DoubleProperty('minTabWidth', minTabWidth, defaultValue: 80.0))
       ..add(DoubleProperty('maxTabWidth', maxTabWidth, defaultValue: 240.0))
-      ..add(DoubleProperty('minFooterWidth', reservedStripWidth));
+      ..add(DoubleProperty('reservedStripWidth', reservedStripWidth));
   }
 }
 
@@ -302,6 +300,22 @@ class _TabViewState extends State<TabView> {
     super.didChangeDependencies();
     final theme = FluentTheme.of(context);
     scrollController.animationDuration = theme.fastAnimationDuration;
+  }
+
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties
+      ..add(
+        FlagProperty(
+          'isClosePending',
+          value: closeTimer?.isActive ?? false,
+          ifTrue: 'close pending',
+        ),
+      )
+      ..add(DoubleProperty('lockedTabWidth', lockedTabWidth))
+      ..add(DoubleProperty('preferredTabWidth', preferredTabWidth))
+      ..add(DiagnosticsProperty('scrollController', scrollController));
   }
 
   @override

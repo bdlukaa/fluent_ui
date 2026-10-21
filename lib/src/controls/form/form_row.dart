@@ -1,4 +1,5 @@
 import 'package:fluent_ui/fluent_ui.dart';
+import 'package:flutter/foundation.dart';
 
 const EdgeInsetsGeometry _kDefaultPadding = EdgeInsetsDirectional.fromSTEB(
   20,
@@ -38,6 +39,22 @@ class FormRow extends StatelessWidget {
 
   /// The main content of the form row.
   final Widget child;
+
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties
+      ..add(
+        DiagnosticsProperty<EdgeInsetsGeometry>(
+          'padding',
+          padding,
+          defaultValue: _kDefaultPadding,
+        ),
+      )
+      ..add(ObjectFlagProperty<TextStyle?>.has('textStyle', textStyle))
+      ..add(ObjectFlagProperty<Widget?>.has('helper', helper))
+      ..add(ObjectFlagProperty<Widget?>.has('error', error));
+  }
 
   @override
   Widget build(BuildContext context) {

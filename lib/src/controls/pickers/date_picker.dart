@@ -210,7 +210,6 @@ class DatePicker extends StatefulWidget {
   void debugFillProperties(DiagnosticPropertiesBuilder properties) {
     super.debugFillProperties(properties);
     properties
-      ..add(DiagnosticsProperty<DateTime>('selected', selected, ifNull: 'now'))
       ..add(
         FlagProperty(
           'showMonth',
@@ -230,7 +229,13 @@ class DatePicker extends StatefulWidget {
       )
       ..add(DiagnosticsProperty<DateTime>('startDate', startDate))
       ..add(DiagnosticsProperty<DateTime>('endDate', endDate))
-      ..add(DiagnosticsProperty('contentPadding', contentPadding))
+      ..add(
+        DiagnosticsProperty<EdgeInsetsGeometry>(
+          'contentPadding',
+          contentPadding,
+          defaultValue: kPickerContentPadding,
+        ),
+      )
       ..add(ObjectFlagProperty.has('focusNode', focusNode))
       ..add(
         FlagProperty('autofocus', value: autofocus, ifFalse: 'manual focus'),
@@ -242,8 +247,10 @@ class DatePicker extends StatefulWidget {
           defaultValue: kPickerPopupHeight,
         ),
       )
+      ..add(DiagnosticsProperty<TextStyle>('headerStyle', headerStyle))
       ..add(DiagnosticsProperty<Locale>('locale', locale))
-      ..add(IterableProperty<DatePickerField>('fieldOrder', fieldOrder));
+      ..add(IterableProperty<DatePickerField>('fieldOrder', fieldOrder))
+      ..add(IterableProperty<int>('fieldFlex', fieldFlex));
   }
 }
 

@@ -3,6 +3,7 @@ import 'dart:ui' as ui;
 import 'dart:ui';
 
 import 'package:fluent_ui/fluent_ui.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/services.dart';
 import 'package:intl/intl.dart' hide TextDirection;
@@ -396,6 +397,116 @@ class NumberBox<T extends num> extends StatefulWidget {
   /// The default parse function for the number box. It uses [num.tryParse] to
   /// parse the text back to a number.
   static num? defaultParse(String text) => num.tryParse(text);
+
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties
+      ..add(ObjectFlagProperty<FocusNode?>.has('focusNode', focusNode))
+      ..add(
+        EnumProperty<SpinButtonPlacementMode>(
+          'mode',
+          mode,
+          defaultValue: SpinButtonPlacementMode.compact,
+        ),
+      )
+      ..add(
+        FlagProperty(
+          'clearButton',
+          value: clearButton,
+          defaultValue: true,
+          ifFalse: 'clear button disabled',
+        ),
+      )
+      ..add(
+        DiagnosticsProperty<num>('smallChange', smallChange, defaultValue: 1),
+      )
+      ..add(
+        DiagnosticsProperty<num>('largeChange', largeChange, defaultValue: 10),
+      )
+      ..add(
+        DiagnosticsProperty<Duration?>(
+          'interval',
+          interval,
+          defaultValue: const Duration(milliseconds: 100),
+        ),
+      )
+      ..add(IntProperty('precision', precision))
+      ..add(
+        FlagProperty('hasPattern', value: pattern != null, ifTrue: 'pattern'),
+      )
+      ..add(
+        FlagProperty(
+          'hasFormatter',
+          value: formatter != null,
+          ifTrue: 'formatter',
+        ),
+      )
+      ..add(
+        FlagProperty(
+          'hasCustomFormat',
+          value: format != null,
+          ifTrue: 'format',
+        ),
+      )
+      ..add(
+        FlagProperty(
+          'hasCustomParse',
+          value: parse != defaultParse,
+          ifTrue: 'parse',
+        ),
+      )
+      ..add(ObjectFlagProperty<num?>.has('min', min))
+      ..add(ObjectFlagProperty<num?>.has('max', max))
+      ..add(
+        FlagProperty(
+          'allowExpressions',
+          value: allowExpressions,
+          defaultValue: false,
+          ifTrue: 'expressions enabled',
+        ),
+      )
+      ..add(ObjectFlagProperty<Widget?>.has('leadingIcon', leadingIcon))
+      ..add(
+        FlagProperty(
+          'autofocus',
+          value: autofocus,
+          defaultValue: false,
+          ifTrue: 'autofocus',
+        ),
+      )
+      ..add(IntProperty('inputFormatterCount', inputFormatters?.length ?? 0))
+      ..add(
+        FlagProperty(
+          'enabled',
+          value: onChanged != null,
+          defaultValue: true,
+          ifFalse: 'disabled',
+        ),
+      )
+      ..add(
+        EnumProperty<TextAlign?>(
+          'textAlign',
+          textAlign,
+          defaultValue: TextAlign.start,
+        ),
+      )
+      ..add(
+        FlagProperty(
+          'enableInteractiveSelection',
+          value: enableInteractiveSelection,
+          defaultValue: true,
+          ifFalse: 'interactive selection disabled',
+        ),
+      )
+      ..add(
+        EnumProperty<DragStartBehavior>(
+          'dragStartBehavior',
+          dragStartBehavior,
+          defaultValue: DragStartBehavior.start,
+        ),
+      );
+  }
 
   @override
   State<NumberBox<T>> createState() => NumberBoxState<T>();

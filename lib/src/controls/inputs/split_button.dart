@@ -1,4 +1,5 @@
 import 'package:fluent_ui/fluent_ui.dart';
+import 'package:flutter/foundation.dart';
 
 /// A builder for the secondary part of a split button.
 ///
@@ -132,6 +133,22 @@ class SplitButton extends StatefulWidget {
     this.onInvoked,
     this.enabled = true,
   }) : _type = _SplitButtonType.toggle;
+
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties
+      ..add(EnumProperty('_type', _type))
+      ..add(FlagProperty('enabled', value: enabled, ifFalse: 'disabled'))
+      ..add(FlagProperty('checked', value: checked, ifFalse: 'unchecked'))
+      ..add(
+        FlagProperty(
+          'hasCustomSecondary',
+          value: secondaryBuilder != null,
+          ifFalse: 'default secondary',
+        ),
+      );
+  }
 
   @override
   State<SplitButton> createState() => SplitButtonState();

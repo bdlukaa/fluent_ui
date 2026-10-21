@@ -656,6 +656,59 @@ class ComboBox<T> extends StatefulWidget {
   final ComboBoxBuilder? selectedItemBuilder;
 
   @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties
+      ..add(IntProperty('itemCount', items?.length ?? 0))
+      ..add(
+        ObjectFlagProperty<ComboBoxBuilder?>.has(
+          'selectedItemBuilder',
+          selectedItemBuilder,
+        ),
+      )
+      ..add(ObjectFlagProperty<Widget?>.has('placeholder', placeholder))
+      ..add(
+        ObjectFlagProperty<Widget?>.has(
+          'disabledPlaceholder',
+          disabledPlaceholder,
+        ),
+      )
+      ..add(
+        FlagProperty(
+          'enabled',
+          value: onChanged != null,
+          defaultValue: true,
+          ifFalse: 'disabled',
+        ),
+      )
+      ..add(IntProperty('elevation', elevation, defaultValue: 8))
+      ..add(DoubleProperty('iconSize', iconSize, defaultValue: 8))
+      ..add(
+        FlagProperty(
+          'isExpanded',
+          value: isExpanded,
+          defaultValue: false,
+          ifTrue: 'expanded',
+        ),
+      )
+      ..add(ObjectFlagProperty<FocusNode?>.has('focusNode', focusNode))
+      ..add(
+        FlagProperty(
+          'autofocus',
+          value: autofocus,
+          defaultValue: false,
+          ifTrue: 'autofocus',
+        ),
+      )
+      ..add(
+        ObjectFlagProperty<BoxConstraints?>.has(
+          'popupConstraints',
+          popupConstraints,
+        ),
+      );
+  }
+
+  @override
   State<ComboBox<T>> createState() => ComboBoxState<T>();
 }
 

@@ -50,6 +50,19 @@ class CommandBarCard extends StatelessWidget {
   final Color? backgroundColor;
 
   @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties
+      ..add(DiagnosticsProperty<EdgeInsetsGeometry>('margin', margin))
+      ..add(DiagnosticsProperty<EdgeInsetsGeometry>('padding', padding))
+      ..add(
+        DiagnosticsProperty<BorderRadiusGeometry>('borderRadius', borderRadius),
+      )
+      ..add(ColorProperty('borderColor', borderColor))
+      ..add(ColorProperty('backgroundColor', backgroundColor));
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Card(
       margin: margin,
@@ -212,6 +225,56 @@ class CommandBar extends StatefulWidget {
            (direction == Axis.vertical
                ? CrossAxisAlignment.start
                : CrossAxisAlignment.center);
+
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties
+      ..add(IterableProperty<CommandBarItem>('primaryItems', primaryItems))
+      ..add(
+        IterableProperty<CommandBarItem>(
+          'secondaryItems',
+          secondaryItems,
+          defaultValue: const [],
+        ),
+      )
+      ..add(
+        EnumProperty<CommandBarOverflowBehavior>(
+          'overflowBehavior',
+          overflowBehavior,
+          defaultValue: CommandBarOverflowBehavior.dynamicOverflow,
+        ),
+      )
+      ..add(DoubleProperty('compactBreakpointWidth', compactBreakpointWidth))
+      ..add(DiagnosticsProperty<bool>('isCompact', isCompact))
+      ..add(
+        EnumProperty<MainAxisAlignment>(
+          'mainAxisAlignment',
+          mainAxisAlignment,
+          defaultValue: MainAxisAlignment.start,
+        ),
+      )
+      ..add(
+        EnumProperty<CrossAxisAlignment>(
+          'crossAxisAlignment',
+          crossAxisAlignment,
+        ),
+      )
+      ..add(
+        EnumProperty<MainAxisAlignment>(
+          'overflowItemAlignment',
+          overflowItemAlignment,
+          defaultValue: MainAxisAlignment.end,
+        ),
+      )
+      ..add(
+        EnumProperty<Axis>(
+          'direction',
+          direction,
+          defaultValue: Axis.horizontal,
+        ),
+      );
+  }
 
   @override
   State<CommandBar> createState() => CommandBarState();

@@ -71,6 +71,12 @@ class FluentTheme extends StatelessWidget {
   }
 
   @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties.add(DiagnosticsProperty<FluentThemeData>('data', data));
+  }
+
+  @override
   Widget build(BuildContext context) {
     return _FluentTheme(
       data: data,
@@ -150,6 +156,12 @@ class AnimatedFluentTheme extends ImplicitlyAnimatedWidget {
   ///
   /// {@macro flutter.widgets.ProxyWidget.child}
   final Widget child;
+
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties.add(DiagnosticsProperty<FluentThemeData>('data', data));
+  }
 
   @override
   AnimatedWidgetBaseState<AnimatedFluentTheme> createState() =>
@@ -843,6 +855,23 @@ class FluentThemeData with Diagnosticable {
       ..add(ColorProperty('cardColor', cardColor))
       ..add(ColorProperty('selectionColor', selectionColor))
       ..add(EnumProperty('brightness', brightness))
+      ..add(DiagnosticsProperty('visualDensity', visualDensity))
+      ..add(DiagnosticsProperty('typography', typography))
+      ..add(DiagnosticsProperty('iconTheme', iconTheme))
+      ..add(DiagnosticsProperty('resources', resources))
+      ..add(DiagnosticsProperty('buttonTheme', buttonTheme))
+      ..add(DiagnosticsProperty('checkboxTheme', checkboxTheme))
+      ..add(DiagnosticsProperty('dialogTheme', dialogTheme))
+      ..add(DiagnosticsProperty('dividerTheme', dividerTheme))
+      ..add(DiagnosticsProperty('focusTheme', focusTheme))
+      ..add(DiagnosticsProperty('infoBarTheme', infoBarTheme))
+      ..add(DiagnosticsProperty('navigationPaneTheme', navigationPaneTheme))
+      ..add(DiagnosticsProperty('radioButtonTheme', radioButtonTheme))
+      ..add(DiagnosticsProperty('scrollbarTheme', scrollbarTheme))
+      ..add(DiagnosticsProperty('sliderTheme', sliderTheme))
+      ..add(DiagnosticsProperty('toggleButtonTheme', toggleButtonTheme))
+      ..add(DiagnosticsProperty('toggleSwitchTheme', toggleSwitchTheme))
+      ..add(DiagnosticsProperty('tooltipTheme', tooltipTheme))
       ..add(
         DiagnosticsProperty<Duration>(
           'slowAnimationDuration',
