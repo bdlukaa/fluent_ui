@@ -154,6 +154,89 @@ void main() {
     expect(body('B:0'), findsNothing);
   });
 
+  testWidgets(
+    'TabView keeps each body glued to its tab when a tab is inserted in front',
+    (tester) async {
+      Finder body(String text) => find.text(text, skipOffstage: false);
+
+      await tester.pumpWidget(wrapApp(child: const _ReorderHarness()));
+      await tester.tap(find.widgetWithText(Button, 'inc B'));
+      await tester.pumpAndSettle();
+      expect(body('B:1'), findsOneWidget);
+
+      await tester.tap(find.widgetWithText(Button, 'insert'));
+      await tester.pumpAndSettle();
+
+      expect(body('B:1'), findsOneWidget);
+      expect(body('A:1'), findsNothing);
+      expect(body('B:0'), findsNothing);
+    },
+  );
+
+  testWidgets('TabView keeps bodies when tabs are rebuilt as new instances', (
+    tester,
+  ) async {
+    Finder body(String text) => find.text(text, skipOffstage: false);
+
+    await tester.pumpWidget(wrapApp(child: const _RebuiltTabsHarness()));
+    await tester.tap(find.widgetWithText(Button, 'inc A'));
+    await tester.pumpAndSettle();
+    expect(body('A:1'), findsOneWidget);
+
+    await tester.tap(find.widgetWithText(Button, 'rebuild'));
+    await tester.pumpAndSettle();
+    expect(body('A:1'), findsOneWidget);
+
+    await tester.tap(find.text('B'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('A'));
+    await tester.pumpAndSettle();
+    expect(body('A:1'), findsOneWidget);
+  });
+
+  testWidgets(
+    'TabView does not recreate the body it switches away from when tabs are '
+    'rebuilt as new instances',
+    (tester) async {
+      final initializedBodies = <String>[];
+      await tester.pumpWidget(
+        wrapApp(
+          child: _RebuiltTabsHarness(
+            buildBody: (name) => _LifecycleBody(name, initializedBodies),
+          ),
+        ),
+      );
+
+      await tester.tap(find.text('B'));
+      await tester.pumpAndSettle();
+
+      expect(initializedBodies, ['A', 'B']);
+    },
+  );
+
+  testWidgets(
+    'TabView keeps keyed bodies glued to their tabs when rebuilt tabs are '
+    'reordered',
+    (tester) async {
+      Finder body(String text) => find.text(text, skipOffstage: false);
+
+      await tester.pumpWidget(
+        wrapApp(child: const _RebuiltTabsHarness(keyed: true)),
+      );
+      await tester.tap(find.text('B'));
+      await tester.pumpAndSettle();
+      await tester.tap(find.widgetWithText(Button, 'inc B'));
+      await tester.pumpAndSettle();
+      expect(body('B:1'), findsOneWidget);
+
+      await tester.tap(find.widgetWithText(Button, 'reorder'));
+      await tester.pumpAndSettle();
+
+      expect(body('B:1'), findsOneWidget);
+      expect(body('B:0'), findsNothing);
+    },
+  );
+
   testWidgets('TabView reorders tabs in both directions with a mouse drag', (
     tester,
   ) async {
@@ -275,8 +358,9 @@ void main() {
 }
 
 /// Drives a two-tab [TabView] whose bodies hold state (a counter) that no
-/// widget config carries, plus buttons to bump B's counter and to move B in
-/// front of A. Used to prove the body element follows its tab across reorders.
+/// widget config carries, plus buttons to bump B's counter, to move B in
+/// front of A, and to insert a new tab X in front of both. Used to prove the
+/// body element follows its tab across reorders and insertions.
 class _ReorderHarness extends StatefulWidget {
   const _ReorderHarness();
 
@@ -305,6 +389,17 @@ class _ReorderHarnessState extends State<_ReorderHarness> {
               }),
               child: const Text('reorder'),
             ),
+            Button(
+              onPressed: () => setState(() {
+                final selectedTab = tabs[currentIndex];
+                tabs.insert(
+                  0,
+                  Tab(text: const Text('X'), body: const _CounterBody('X')),
+                );
+                currentIndex = tabs.indexOf(selectedTab);
+              }),
+              child: const Text('insert'),
+            ),
           ],
         ),
         Expanded(
@@ -317,6 +412,88 @@ class _ReorderHarnessState extends State<_ReorderHarness> {
       ],
     );
   }
+}
+
+/// Drives a two-tab [TabView] that creates new [Tab] instances on every build,
+/// as most apps do, plus buttons to rebuild and to move the last tab in front
+/// of the first.
+class _RebuiltTabsHarness extends StatefulWidget {
+  const _RebuiltTabsHarness({
+    this.keyed = false,
+    this.buildBody = _CounterBody.new,
+  });
+
+  /// Whether each [Tab] is given a key derived from its name.
+  final bool keyed;
+
+  final Widget Function(String name) buildBody;
+
+  @override
+  State<_RebuiltTabsHarness> createState() => _RebuiltTabsHarnessState();
+}
+
+class _RebuiltTabsHarnessState extends State<_RebuiltTabsHarness> {
+  final names = ['A', 'B'];
+  int currentIndex = 0;
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        Row(
+          children: [
+            Button(
+              onPressed: () => setState(() {}),
+              child: const Text('rebuild'),
+            ),
+            Button(
+              onPressed: () => setState(() {
+                names.insert(0, names.removeLast());
+                currentIndex = 0;
+              }),
+              child: const Text('reorder'),
+            ),
+          ],
+        ),
+        Expanded(
+          child: TabView(
+            currentIndex: currentIndex,
+            tabs: [
+              for (final name in names)
+                Tab(
+                  key: widget.keyed ? ValueKey(name) : null,
+                  text: Text(name),
+                  body: widget.buildBody(name),
+                ),
+            ],
+            onChanged: (i) => setState(() => currentIndex = i),
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+/// A body that records its name each time its [State] is created.
+class _LifecycleBody extends StatefulWidget {
+  const _LifecycleBody(this.name, this.initializedBodies);
+
+  final String name;
+  final List<String> initializedBodies;
+
+  @override
+  State<_LifecycleBody> createState() => _LifecycleBodyState();
+}
+
+class _LifecycleBodyState extends State<_LifecycleBody> {
+  @override
+  void initState() {
+    super.initState();
+    widget.initializedBodies.add(widget.name);
+  }
+
+  @override
+  Widget build(BuildContext context) => Text('Body ${widget.name}');
 }
 
 /// A body whose displayed count lives only in [State] — reused-by-position
