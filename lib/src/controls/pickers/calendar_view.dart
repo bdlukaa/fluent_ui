@@ -602,10 +602,7 @@ class CalendarViewState extends State<CalendarView> {
   }
 
   DateTime _daysFromAnchor(int days) {
-    return DateTime(
-      _anchorMonth.year,
-      _anchorMonth.month,
-    ).add(Duration(days: days));
+    return m.DateUtils.addDaysToDate(_anchorMonth, days);
   }
 
   DateTime _yearForPage(int page) {
@@ -919,7 +916,8 @@ class CalendarViewState extends State<CalendarView> {
                 gridDelegate: gridDelegate,
                 delegate: SliverChildBuilderDelegate((context, index) {
                   final negativeIndex = _getNegativeIndex(index, 7) - offset;
-                  final day = _anchorMonth.add(Duration(days: negativeIndex));
+                  final day =
+                      m.DateUtils.addDaysToDate(_anchorMonth, negativeIndex);
 
                   if (day.isAfter(
                         widget.displayDateEnd ?? DateTime(_maxDisplayedYear),
@@ -945,7 +943,8 @@ class CalendarViewState extends State<CalendarView> {
                 key: forwardListKey,
                 gridDelegate: gridDelegate,
                 delegate: SliverChildBuilderDelegate((context, index) {
-                  final day = _anchorMonth.add(Duration(days: index - offset));
+                  final day =
+                      m.DateUtils.addDaysToDate(_anchorMonth, index - offset);
                   if (day.isAfter(
                         widget.displayDateEnd ?? DateTime(_maxDisplayedYear),
                       ) ||
