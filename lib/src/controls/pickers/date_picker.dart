@@ -3,7 +3,6 @@ import 'package:fluent_ui/src/controls/pickers/pickers.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/rendering.dart';
 import 'package:intl/intl.dart';
-import 'package:material_ui/material_ui.dart' as m;
 
 /// The duration of a complete year
 const kYearDuration = Duration(days: 365);
@@ -546,10 +545,7 @@ class __DatePickerContentPopUpState extends State<_DatePickerContentPopUp> {
   int _getDaysInMonth([int? month, int? year]) {
     year ??= DateTime.now().year;
     month ??= DateTime.now().month;
-    return m.DateTimeRange(
-      start: DateTime.utc(year, month),
-      end: DateTime.utc(year, month + 1),
-    ).duration.inDays;
+    return DateTime(year, month).daysInMonth;
   }
 
   late DateTime localDate = widget.date;

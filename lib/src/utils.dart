@@ -160,6 +160,38 @@ Offset horizontalPositionDependentBox({
   return Offset(x, y);
 }
 
+/// Extension methods for [DateTime] objects used internally by date-related
+/// controls such as [CalendarView] and [DatePicker].
+extension DateTimeExtension on DateTime {
+  /// Returns `true` if this date falls on the same calendar day as [other].
+  ///
+  /// Both objects are compared by (year, month, day) only — the time-of-day
+  /// and timezone are ignored.
+  bool isSameDay(DateTime? other) {
+    if (other == null) return false;
+    return year == other.year && month == other.month && day == other.day;
+  }
+
+  /// Returns `true` if this date falls in the same calendar month as [other].
+  bool isSameMonth(DateTime? other) {
+    if (other == null) return false;
+    return year == other.year && month == other.month;
+  }
+
+  /// Returns a new [DateTime] that is [days] days after this date, preserving
+  /// whether the date is UTC or local.
+  DateTime addDays(int days) => isUtc
+      ? DateTime.utc(year, month, day + days)
+      : DateTime(year, month, day + days);
+
+  /// Returns the number of days in this date's month.
+  ///
+  /// Dart normalises `DateTime(year, month + 1, 0)` to the last day of
+  /// the current month, giving the correct day count without any external
+  /// dependency.
+  int get daysInMonth => DateTime(year, month + 1, 0).day;
+}
+
 /// Extension methods for [Decoration] objects.
 extension DecorationExtension on Decoration {
   /// Gets the border radius of this decoration.
