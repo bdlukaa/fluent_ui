@@ -2,6 +2,7 @@
 
 * feat: Display Icons in DevTools ([1365](https://github.com/bdlukaa/fluent_ui/pull/1365))
 * feat: Add `CommandBarThemeData`, set through `FluentThemeData.commandBarTheme` or `CommandBarTheme`, to configure the padding and the closed and open decorations of the frame around `CommandBar` items
+* feat: Add `ButtonThemeData.smallIconButtonStyle`, used by small and tiny `IconButton`s (including those under a `SmallIconButton`, such as `TextBox` and `PasswordBox` buttons). It falls back to `iconButtonStyle`
 * fix: Do not use Material icons on `InfoBar` ([#1366](https://github.com/bdlukaa/fluent_ui/pull/1366))
 * fix: `PaneItem` titles are no longer hidden in open panes narrower than ~226px ([#1370](https://github.com/bdlukaa/fluent_ui/pull/1370))
 * fix: Do not use Material Localizations on `TabView` ([#1367](https://github.com/bdlukaa/fluent_ui/pull/1367))
