@@ -11,6 +11,7 @@
 * fix: The `CommandBar` overflow menu is no longer limited to 320px wide, so long items can widen it up to the 480px maximum
 * fix: `Tooltip.useMousePosition` places the tooltip at the mouse pointer when the nearest `Overlay` is not at the window origin, such as inside a nested `Navigator`
 * fix: Opening a compact `NavigationPane` no longer moves the pane toggle and footer items by about 1px
+* fix: The open `NavigationPane` no longer adds a second 6px gap below the pane toggle, so the first item stays in place when a compact pane opens
 
 ## 4.17.0
 
