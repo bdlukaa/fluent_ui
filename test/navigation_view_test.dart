@@ -1776,6 +1776,54 @@ void main() {
     expect(find.byIcon(FluentIcons.home), findsOneWidget);
     expect(find.text('Home'), findsNothing);
   });
+
+  for (final (width, layout) in [(1400.0, 'beside'), (700.0, 'over')]) {
+    testWidgets(
+      'opening a compact pane $layout the content keeps its icons in place',
+      (tester) async {
+        tester.view.devicePixelRatio = 1;
+        addTearDown(tester.view.reset);
+        tester.view.physicalSize = Size(width, 700);
+
+        await tester.pumpWidget(
+          FluentApp(
+            home: NavigationView(
+              pane: NavigationPane(
+                selected: 0,
+                displayMode: PaneDisplayMode.compact,
+                items: [
+                  PaneItem(
+                    icon: const Icon(FluentIcons.home),
+                    title: const Text('Home'),
+                    body: const SizedBox(),
+                  ),
+                ],
+                footerItems: [
+                  PaneItem(
+                    icon: const Icon(FluentIcons.settings),
+                    title: const Text('Settings'),
+                    body: const SizedBox(),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        );
+
+        double iconTop(IconData icon) =>
+            tester.getTopLeft(find.byIcon(icon)).dy;
+        final compactToggle = iconTop(WindowsIcons.global_nav_button);
+        final compactFooterItem = iconTop(FluentIcons.settings);
+
+        await tester.tap(find.byType(PaneToggleButton));
+        await tester.pumpAndSettle();
+        expect(find.text('Home'), findsOneWidget);
+
+        expect(iconTop(WindowsIcons.global_nav_button), compactToggle);
+        expect(iconTop(FluentIcons.settings), compactFooterItem);
+      },
+    );
+  }
 }
 
 class _PageLifecycle {
