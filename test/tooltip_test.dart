@@ -315,6 +315,66 @@ void main() {
     // The child should still preserve its state
     expect(initStateCount, 1);
   });
+
+  for (final scale in [1.0, 2.0]) {
+    testWidgets(
+      'Tooltip follows the mouse inside an Overlay away from the window '
+      'origin (scale $scale)',
+      (tester) async {
+        const childKey = Key('child');
+        await tester.pumpWidget(
+          FluentApp(
+            builder: (context, child) => Padding(
+              padding: const EdgeInsetsDirectional.only(start: 150, top: 100),
+              child: Overlay(
+                initialEntries: [
+                  OverlayEntry(
+                    builder: (context) => Align(
+                      alignment: AlignmentDirectional.topStart,
+                      child: Transform.scale(
+                        scale: scale,
+                        alignment: AlignmentDirectional.topStart,
+                        child: const Tooltip(
+                          message: 'Tip',
+                          child: SizedBox(
+                            key: childKey,
+                            width: 200,
+                            height: 40,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        );
+
+        final pointer =
+            tester.getTopLeft(find.byKey(childKey)) + const Offset(100, 10);
+        final gesture = await tester.createGesture(
+          kind: PointerDeviceKind.mouse,
+        );
+        addTearDown(gesture.removePointer);
+        await gesture.addPointer(location: Offset.zero);
+        await gesture.moveTo(pointer);
+        await tester.pumpAndSettle(const Duration(milliseconds: 1500));
+
+        final tooltip = tester.getRect(find.text('Tip'));
+        final verticalOffset = TooltipTheme.of(
+          tester.element(find.byKey(childKey)),
+        ).verticalOffset!;
+        expect(tooltip.center.dx, moreOrLessEquals(pointer.dx, epsilon: 1));
+        // The tooltip is placed verticalOffset below the pointer; its text is
+        // inset by the tooltip padding.
+        expect(
+          tooltip.top - pointer.dy,
+          inInclusiveRange(verticalOffset, verticalOffset + 16),
+        );
+      },
+    );
+  }
 }
 
 /// A helper widget that counts how many times initState is called.

@@ -8,6 +8,7 @@
 * fix: `TextBox` no longer creates new default selection controls on every build. A new instance made `EditableText` dispose its visible selection handles, which threw when this happened while their `Overlay` was building. This also fixes `AutoSuggestBox`, `EditableComboBox`, `NumberBox`, `PasswordBox` and `TextFormBox`, which build a `TextBox`
 * fix: The `CommandBar` overflow menu uses the same padding and item margin as `MenuFlyout`, and sizes to its content between 160px and 480px wide. It stacked the default `FlyoutContent` padding, an extra scroll view padding and the menu item margin, so it had more padding than every other menu, and its items stretched it to the widest size the position allowed
 * fix: The `CommandBar` overflow menu is no longer limited to 320px wide, so long items can widen it up to the 480px maximum
+* fix: `Tooltip.useMousePosition` places the tooltip at the mouse pointer when the nearest `Overlay` is not at the window origin, such as inside a nested `Navigator`
 
 ## 4.17.0
 
