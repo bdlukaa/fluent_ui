@@ -515,9 +515,10 @@ class CommandBarState extends State<CommandBar> {
                   groupId: info.tapRegionGroupId,
                   child: _CommandBarOverflowScope(
                     close: _closeSecondaryMenu,
-                    // Uses the same padding, item margin and width rules as
-                    // [MenuFlyout], so the overflow menu is spaced like every
-                    // other menu.
+                    // Uses the same padding and item margin as [MenuFlyout],
+                    // so the overflow menu is spaced like every other menu,
+                    // and sizes to its content within the WinUI overflow
+                    // presenter width bounds.
                     child: IntrinsicWidth(
                       child: FlyoutContent(
                         color: theme.resources.layerOnAcrylicFillColorDefault,
@@ -526,6 +527,10 @@ class CommandBarState extends State<CommandBar> {
                           side: BorderSide(
                             color: theme.resources.surfaceStrokeColorFlyout,
                           ),
+                        ),
+                        constraints: const BoxConstraints(
+                          minWidth: 160,
+                          maxWidth: 480,
                         ),
                         padding: kDefaultMenuPadding,
                         child: SingleChildScrollView(
