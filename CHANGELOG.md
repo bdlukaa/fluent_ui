@@ -4,6 +4,7 @@
 * fix: Do not use Material icons on `InfoBar` ([#1366](https://github.com/bdlukaa/fluent_ui/pull/1366))
 * fix: `PaneItem` titles are no longer hidden in open panes narrower than ~226px ([#1370](https://github.com/bdlukaa/fluent_ui/pull/1370))
 * fix: Do not use Material Localizations on `TabView` ([#1367](https://github.com/bdlukaa/fluent_ui/pull/1367))
+* fix: `TextBox` no longer creates new default selection controls on every build. A new instance made `EditableText` dispose its visible selection handles, which threw when this happened while their `Overlay` was building. This also fixes `AutoSuggestBox`, `EditableComboBox`, `NumberBox`, `PasswordBox` and `TextFormBox`, which build a `TextBox`
 
 ## 4.17.0
 
