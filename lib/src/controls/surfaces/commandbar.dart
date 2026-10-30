@@ -515,34 +515,33 @@ class CommandBarState extends State<CommandBar> {
                   groupId: info.tapRegionGroupId,
                   child: _CommandBarOverflowScope(
                     close: _closeSecondaryMenu,
-                    child: FlyoutContent(
-                      color: theme.resources.layerOnAcrylicFillColorDefault,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(8),
-                        side: BorderSide(
-                          color: theme.resources.surfaceStrokeColorFlyout,
+                    // Uses the same padding, item margin and width rules as
+                    // [MenuFlyout], so the overflow menu is spaced like every
+                    // other menu.
+                    child: IntrinsicWidth(
+                      child: FlyoutContent(
+                        color: theme.resources.layerOnAcrylicFillColorDefault,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(8),
+                          side: BorderSide(
+                            color: theme.resources.surfaceStrokeColorFlyout,
+                          ),
                         ),
-                      ),
-                      constraints: const BoxConstraints(
-                        minWidth: 160,
-                        maxWidth: 480,
-                      ),
-                      child: SingleChildScrollView(
-                        padding: const EdgeInsetsDirectional.symmetric(
-                          vertical: 4,
-                          horizontal: 8,
-                        ),
-                        child: Column(
-                          mainAxisSize: MainAxisSize.min,
-                          children: allSecondaryItems.map((item) {
-                            return Padding(
-                              padding: kDefaultMenuItemMargin,
-                              child: item.build(
-                                context,
-                                CommandBarItemDisplayMode.inSecondary,
-                              ),
-                            );
-                          }).toList(),
+                        padding: kDefaultMenuPadding,
+                        child: SingleChildScrollView(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            mainAxisSize: MainAxisSize.min,
+                            children: allSecondaryItems.map((item) {
+                              return Padding(
+                                padding: kDefaultMenuItemMargin,
+                                child: item.build(
+                                  context,
+                                  CommandBarItemDisplayMode.inSecondary,
+                                ),
+                              );
+                            }).toList(),
+                          ),
                         ),
                       ),
                     ),

@@ -5,6 +5,7 @@
 * fix: `PaneItem` titles are no longer hidden in open panes narrower than ~226px ([#1370](https://github.com/bdlukaa/fluent_ui/pull/1370))
 * fix: Do not use Material Localizations on `TabView` ([#1367](https://github.com/bdlukaa/fluent_ui/pull/1367))
 * fix: `TextBox` no longer creates new default selection controls on every build. A new instance made `EditableText` dispose its visible selection handles, which threw when this happened while their `Overlay` was building. This also fixes `AutoSuggestBox`, `EditableComboBox`, `NumberBox`, `PasswordBox` and `TextFormBox`, which build a `TextBox`
+* fix: The `CommandBar` overflow menu uses the same padding, item margin and width as `MenuFlyout`. It stacked the default `FlyoutContent` padding, an extra scroll view padding and the menu item margin, so it had more padding than every other menu
 
 ## 4.17.0
 

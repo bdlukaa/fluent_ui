@@ -123,9 +123,7 @@ void main() {
     },
   );
 
-  testWidgets('overflow menu uses WinUI presenter dimensions and resources', (
-    tester,
-  ) async {
+  testWidgets('overflow menu uses WinUI presenter resources', (tester) async {
     await tester.pumpWidget(
       wrapApp(
         child: const SizedBox(
@@ -145,14 +143,67 @@ void main() {
 
     final presenter = tester.widget<FlyoutContent>(find.byType(FlyoutContent));
     final theme = FluentTheme.of(tester.element(find.byType(CommandBar)));
-    expect(
-      presenter.constraints,
-      const BoxConstraints(minWidth: 160, maxWidth: 480),
-    );
     expect(presenter.color, theme.resources.layerOnAcrylicFillColorDefault);
     final shape = presenter.shape! as RoundedRectangleBorder;
     expect(shape.side.color, theme.resources.surfaceStrokeColorFlyout);
     expect(shape.side.width, 1);
+  });
+
+  testWidgets('overflow menu has the same spacing and width as a MenuFlyout', (
+    tester,
+  ) async {
+    const label = 'Overflow action';
+    // The distance from each edge of the menu to the item, and the menu size.
+    (EdgeInsets, Size) measureMenu() {
+      final menu = tester.getRect(find.byType(FlyoutContent));
+      final item = tester.getRect(find.byType(FlyoutListTile));
+      return (
+        EdgeInsets.fromLTRB(
+          item.left - menu.left,
+          item.top - menu.top,
+          menu.right - item.right,
+          menu.bottom - item.bottom,
+        ),
+        menu.size,
+      );
+    }
+
+    final controller = FlyoutController();
+    addTearDown(controller.dispose);
+    await tester.pumpWidget(
+      wrapApp(
+        child: FlyoutTarget(
+          controller: controller,
+          child: const Text('Target'),
+        ),
+      ),
+    );
+    controller.showFlyout<void>(
+      builder: (context) => MenuFlyout(
+        items: [MenuFlyoutItem(text: const Text(label), onPressed: () {})],
+      ),
+    );
+    await tester.pumpAndSettle();
+    final menuFlyout = measureMenu();
+    controller.close<void>();
+    await tester.pumpAndSettle();
+
+    await tester.pumpWidget(
+      wrapApp(
+        child: CommandBar(
+          primaryItems: const [],
+          secondaryItems: [
+            CommandBarButton(label: const Text(label), onPressed: () {}),
+          ],
+        ),
+      ),
+    );
+    await tester.tap(find.widgetWithIcon(IconButton, FluentIcons.more));
+    await tester.pumpAndSettle();
+    final overflowMenu = measureMenu();
+
+    expect(overflowMenu.$1, menuFlyout.$1);
+    expect(overflowMenu.$2, menuFlyout.$2);
   });
 
   testWidgets('overflow menu aligns to the command bar end', (tester) async {
