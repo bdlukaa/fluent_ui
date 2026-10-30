@@ -466,23 +466,12 @@ class CommandBarState extends State<CommandBar> {
     if (widget._isExpanded) {
       w = listBuilder.call(children: [Expanded(child: w)]);
     }
+    final commandBarTheme = CommandBarTheme.of(context);
     w = Container(
-      padding: const EdgeInsetsDirectional.all(4),
-      decoration: ShapeDecoration(
-        color: _secondaryMenuController.isOpen
-            ? theme.resources.layerOnAcrylicFillColorDefault
-            : theme.resources.controlFillColorTransparent,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(6),
-          side: BorderSide(
-            color: _secondaryMenuController.isOpen
-                ? theme.resources.cardStrokeColorDefaultSolid
-                : theme.resources.controlFillColorTransparent,
-            // Reserve the open-state border so opening the menu does not move
-            // neighboring controls.
-          ),
-        ),
-      ),
+      padding: commandBarTheme.padding,
+      decoration: _secondaryMenuController.isOpen
+          ? commandBarTheme.openDecoration
+          : commandBarTheme.decoration,
       child: w,
     );
 
@@ -702,6 +691,168 @@ class CommandBarItemInPrimary extends StatelessWidget {
       margin: const EdgeInsetsDirectional.symmetric(vertical: 6, horizontal: 3),
       child: child,
     );
+  }
+}
+
+/// An inherited widget that defines the configuration for [CommandBar]s in
+/// this widget's subtree.
+class CommandBarTheme extends InheritedTheme {
+  /// Creates a theme that controls how descendant [CommandBar]s should look
+  /// like.
+  const CommandBarTheme({required this.data, required super.child, super.key});
+
+  /// The properties for descendant [CommandBar] widgets.
+  final CommandBarThemeData data;
+
+  /// Creates a theme that merges the nearest [CommandBarTheme] with [data].
+  static Widget merge({
+    required CommandBarThemeData data,
+    required Widget child,
+    Key? key,
+  }) {
+    return Builder(
+      builder: (context) {
+        return CommandBarTheme(
+          key: key,
+          data: CommandBarTheme.of(context).merge(data),
+          child: child,
+        );
+      },
+    );
+  }
+
+  /// Returns the closest [CommandBarThemeData] which encloses the given
+  /// context.
+  ///
+  /// Resolution order:
+  /// 1. Defaults from [CommandBarThemeData.standard]
+  /// 2. Global theme from [FluentThemeData.commandBarTheme]
+  /// 3. Local [CommandBarTheme] ancestor
+  ///
+  /// Typical usage is as follows:
+  ///
+  /// ```dart
+  /// CommandBarThemeData theme = CommandBarTheme.of(context);
+  /// ```
+  static CommandBarThemeData of(BuildContext context) {
+    assert(debugCheckHasFluentTheme(context));
+    final theme = FluentTheme.of(context);
+    final inheritedTheme = context
+        .dependOnInheritedWidgetOfExactType<CommandBarTheme>();
+    return CommandBarThemeData.standard(
+      theme,
+    ).merge(theme.commandBarTheme).merge(inheritedTheme?.data);
+  }
+
+  @override
+  Widget wrap(BuildContext context, Widget child) {
+    return CommandBarTheme(data: data, child: child);
+  }
+
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties.add(DiagnosticsProperty<CommandBarThemeData>('data', data));
+  }
+
+  @override
+  bool updateShouldNotify(CommandBarTheme oldWidget) => data != oldWidget.data;
+}
+
+/// Theme data for [CommandBar] widgets.
+///
+/// Describes the frame drawn around the command bar items. By default, the
+/// frame is transparent while the overflow menu is closed and filled while it
+/// is open.
+@immutable
+class CommandBarThemeData with Diagnosticable {
+  /// The padding between the frame and the command bar items.
+  ///
+  /// Defaults to 4 pixels on every side.
+  final EdgeInsetsGeometry? padding;
+
+  /// The decoration of the frame while the overflow menu is closed.
+  ///
+  /// The space the decoration reserves for its border, if any, is added to
+  /// [padding]. Give [decoration] and [openDecoration] borders of the same
+  /// width so that opening the overflow menu does not resize the command bar.
+  final Decoration? decoration;
+
+  /// The decoration of the frame while the overflow menu is open.
+  ///
+  /// See also:
+  ///
+  ///  * [decoration], the decoration used while the overflow menu is closed.
+  final Decoration? openDecoration;
+
+  /// Creates a command bar theme data.
+  const CommandBarThemeData({
+    this.padding,
+    this.decoration,
+    this.openDecoration,
+  });
+
+  /// Creates the standard [CommandBarThemeData] based on the given [theme].
+  factory CommandBarThemeData.standard(FluentThemeData theme) {
+    final res = theme.resources;
+    ShapeDecoration frame({required Color color, required Color borderColor}) {
+      return ShapeDecoration(
+        color: color,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(6),
+          side: BorderSide(color: borderColor),
+        ),
+      );
+    }
+
+    return CommandBarThemeData(
+      padding: const EdgeInsetsDirectional.all(4),
+      // The closed frame reserves the open-state border so opening the menu
+      // does not move neighboring controls.
+      decoration: frame(
+        color: res.controlFillColorTransparent,
+        borderColor: res.controlFillColorTransparent,
+      ),
+      openDecoration: frame(
+        color: res.layerOnAcrylicFillColorDefault,
+        borderColor: res.cardStrokeColorDefaultSolid,
+      ),
+    );
+  }
+
+  /// Linearly interpolates between two [CommandBarThemeData] objects.
+  ///
+  /// {@macro fluent_ui.lerp.t}
+  static CommandBarThemeData lerp(
+    CommandBarThemeData? a,
+    CommandBarThemeData? b,
+    double t,
+  ) {
+    return CommandBarThemeData(
+      padding: EdgeInsetsGeometry.lerp(a?.padding, b?.padding, t),
+      decoration: Decoration.lerp(a?.decoration, b?.decoration, t),
+      openDecoration: Decoration.lerp(a?.openDecoration, b?.openDecoration, t),
+    );
+  }
+
+  /// Merges this [CommandBarThemeData] with another, with the other taking
+  /// precedence.
+  CommandBarThemeData merge(CommandBarThemeData? style) {
+    if (style == null) return this;
+    return CommandBarThemeData(
+      padding: style.padding ?? padding,
+      decoration: style.decoration ?? decoration,
+      openDecoration: style.openDecoration ?? openDecoration,
+    );
+  }
+
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties
+      ..add(DiagnosticsProperty<EdgeInsetsGeometry>('padding', padding))
+      ..add(DiagnosticsProperty<Decoration>('decoration', decoration))
+      ..add(DiagnosticsProperty<Decoration>('openDecoration', openDecoration));
   }
 }
 

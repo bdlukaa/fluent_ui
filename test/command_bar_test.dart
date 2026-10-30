@@ -237,6 +237,98 @@ void main() {
     expect(withShortcutWidth, allOf(greaterThan(160), lessThan(320)));
   });
 
+  group('CommandBarThemeData', () {
+    Widget commandBar({FluentThemeData? theme}) {
+      return FluentApp(
+        theme: theme,
+        home: Align(
+          alignment: AlignmentDirectional.topStart,
+          child: CommandBar(
+            primaryItems: [
+              CommandBarButton(
+                icon: const WindowsIcon(WindowsIcons.add),
+                label: const Text('Add'),
+                onPressed: () {},
+              ),
+            ],
+            secondaryItems: [
+              CommandBarButton(label: const Text('More'), onPressed: () {}),
+            ],
+          ),
+        ),
+      );
+    }
+
+    // The command bar rect and its first item's rect, with the overflow menu
+    // closed and then open.
+    Future<List<(Rect, Rect)>> measure(WidgetTester tester) async {
+      (Rect, Rect) rects() => (
+        tester.getRect(find.byType(CommandBar)),
+        tester.getRect(find.byType(IconButton).first),
+      );
+      final closed = rects();
+      await tester.tap(find.widgetWithIcon(IconButton, FluentIcons.more));
+      await tester.pumpAndSettle();
+      return [closed, rects()];
+    }
+
+    testWidgets('frames the items by default', (tester) async {
+      await tester.pumpWidget(commandBar());
+
+      final [closed, open] = await measure(tester);
+      // 4px padding plus the reserved 1px border on every side.
+      expect(closed.$1.height, 46);
+      expect(closed.$2.topLeft, const Offset(5, 5));
+      expect(closed.$2.height, 36);
+      expect(open, closed);
+    });
+
+    testWidgets('can remove the frame', (tester) async {
+      await tester.pumpWidget(
+        commandBar(
+          theme: FluentThemeData(
+            commandBarTheme: const CommandBarThemeData(
+              padding: EdgeInsetsDirectional.zero,
+              decoration: BoxDecoration(),
+              openDecoration: BoxDecoration(),
+            ),
+          ),
+        ),
+      );
+
+      final [closed, open] = await measure(tester);
+      expect(closed.$1.height, 36);
+      expect(closed.$2.topLeft, Offset.zero);
+      expect(open, closed);
+    });
+
+    testWidgets('a local CommandBarTheme overrides the global theme', (
+      tester,
+    ) async {
+      await tester.pumpWidget(
+        FluentApp(
+          theme: FluentThemeData(
+            commandBarTheme: const CommandBarThemeData(
+              padding: EdgeInsetsDirectional.all(2),
+            ),
+          ),
+          home: const CommandBarTheme(
+            data: CommandBarThemeData(padding: EdgeInsetsDirectional.all(8)),
+            child: CommandBar(primaryItems: []),
+          ),
+        ),
+      );
+
+      final context = tester.element(find.byType(CommandBar));
+      final theme = CommandBarTheme.of(context);
+      expect(theme.padding, const EdgeInsetsDirectional.all(8));
+      expect(
+        theme.decoration,
+        CommandBarThemeData.standard(FluentTheme.of(context)).decoration,
+      );
+    });
+  });
+
   testWidgets('overflow menu aligns to the command bar end', (tester) async {
     await tester.pumpWidget(
       wrapApp(
