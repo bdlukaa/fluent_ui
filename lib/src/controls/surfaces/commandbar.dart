@@ -869,9 +869,7 @@ class _CommandBarOverflowPositionDelegate extends SingleChildLayoutDelegate {
 
   @override
   BoxConstraints getConstraintsForChild(BoxConstraints constraints) {
-    return BoxConstraints.loose(
-      Size(clampDouble(overlaySize.width, 0, 320), overlaySize.height),
-    );
+    return BoxConstraints.loose(overlaySize);
   }
 
   @override

@@ -233,8 +233,17 @@ void main() {
         onPressed: () {},
       ),
     );
-    // Wider than the minimum, but not stretched to the 320px position limit.
+    // Wider than the minimum, but not stretched to the maximum.
     expect(withShortcutWidth, allOf(greaterThan(160), lessThan(320)));
+
+    final longLabelWidth = await overflowMenuWidth(
+      CommandBarButton(
+        label: const Text('Export the selected items to a new spreadsheet'),
+        tooltip: 'Ctrl+Shift+Alt+E',
+        onPressed: () {},
+      ),
+    );
+    expect(longLabelWidth, allOf(greaterThan(320), lessThanOrEqualTo(480)));
   });
 
   group('CommandBarThemeData', () {
