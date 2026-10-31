@@ -2,54 +2,6 @@ import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/rendering.dart';
 
-// class RadioButton<T> extends RawRadio<T> {
-//   const RadioButton({
-//     required super.value,
-//     super.key,
-//     super.mouseCursor = const WidgetStatePropertyAll(MouseCursor.defer),
-//     super.toggleable = true,
-//     super.focusNode = null,
-//     super.autofocus = false,
-//     super.groupRegistry,
-//     super.enabled = true,
-//     required super.builder,
-//   });
-
-//   static Widget _defaultBuilder(
-//     BuildContext context,
-//     ToggleableStateMixin state,
-//   ) {
-//     final theme = RadioButtonTheme.of(context);
-
-//     final isChecked = state.states.contains(WidgetState.selected);
-//     final decoration =
-//         (isChecked
-//             ? theme.checkedDecoration?.resolve(state.states)
-//             : theme.uncheckedDecoration?.resolve(state.states)) ??
-//         const BoxDecoration(shape: BoxShape.circle);
-//     return AnimatedContainer(
-//       duration: FluentTheme.of(context).fastAnimationDuration,
-//       curve: FluentTheme.of(context).animationCurve,
-//       height: 20,
-//       width: 20,
-//       decoration: decoration.copyWith(color: Colors.transparent),
-
-//       /// We need two boxes here because flutter draws the color
-//       /// behind the border, and it results in an weird effect. This
-//       /// way, the inner color will only be rendered within the
-//       /// bounds of the border.
-//       child: AnimatedContainer(
-//         duration: FluentTheme.of(context).fastAnimationDuration,
-//         curve: FluentTheme.of(context).animationCurve,
-//         decoration: BoxDecoration(
-//           color: decoration.color ?? Colors.transparent,
-//           shape: decoration.shape,
-//         ),
-//       ),
-//     );
-//   }
-// }
-
 /// Radio buttons, also called option buttons, let users select one option from
 /// a collection of two or more mutually exclusive, but related, options.
 ///
@@ -57,7 +9,8 @@ import 'package:flutter/rendering.dart';
 /// one radio button in the group. In the default state, no radio button in a
 /// group is selected. However, once a user has selected a radio button, the user
 /// can't deselect it to restore the group to its initial cleared state—they can
-/// only select a different option.
+/// only select a different option. Set [toggleable] to let the user clear the
+/// selected radio button by selecting it again.
 ///
 /// The singular behavior of a radio button group distinguishes it from checkboxes,
 /// which support multi-selection and deselection.
@@ -103,6 +56,7 @@ class RadioButton<T> extends StatefulWidget {
     this.autofocus = false,
     this.enabled = true,
     this.groupRegistry,
+    this.toggleable = false,
   });
 
   /// Whether this radio button is checked.
@@ -137,6 +91,9 @@ class RadioButton<T> extends StatefulWidget {
   /// {@macro flutter.widget.RawRadio.groupRegistry}
   final RadioGroupRegistry<T>? groupRegistry;
 
+  /// {@macro flutter.widget.RawRadio.toggleable}
+  final bool toggleable;
+
   @override
   void debugFillProperties(DiagnosticPropertiesBuilder properties) {
     super.debugFillProperties(properties);
@@ -146,6 +103,9 @@ class RadioButton<T> extends StatefulWidget {
       ..add(ObjectFlagProperty<FocusNode>.has('focusNode', focusNode))
       ..add(
         FlagProperty('autofocus', value: autofocus, ifFalse: 'manual focus'),
+      )
+      ..add(
+        FlagProperty('toggleable', value: toggleable, ifTrue: 'toggleable'),
       );
   }
 
@@ -168,7 +128,7 @@ class _RadioButtonState<T> extends State<RadioButton<T>> {
     return RawRadio<T>(
       value: widget.value,
       mouseCursor: const WidgetStatePropertyAll(MouseCursor.defer),
-      toggleable: false,
+      toggleable: widget.toggleable,
       focusNode: _focusNode,
       autofocus: widget.autofocus,
       groupRegistry: widget.groupRegistry ?? RadioGroup.maybeOf<T>(context),
