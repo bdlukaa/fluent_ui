@@ -1011,38 +1011,23 @@ class NavigationViewState extends State<NavigationView> {
                     key: _overlayKey,
                     backgroundColor: theme.overlayBackgroundColor,
                     elevation: 10,
-                    // The border is drawn behind the pane rather than around
-                    // it, so the pane items stay where the compact pane had
-                    // them.
-                    child: Stack(
-                      fit: StackFit.passthrough,
-                      children: [
-                        Positioned.fill(
-                          child: Container(
-                            decoration: BoxDecoration(
-                              border: Border.all(
-                                color: const Color(0xFF6c6c6c),
-                                width: 0.15,
-                              ),
-                              borderRadius: BorderRadius.circular(8),
-                            ),
-                            margin: const EdgeInsetsDirectional.symmetric(
-                              vertical: 1,
-                            ),
-                          ),
+                    // A foreground border takes no layout space, so the pane
+                    // items stay where the compact pane had them.
+                    child: Container(
+                      foregroundDecoration: BoxDecoration(
+                        border: Border.all(
+                          color: const Color(0xFF6c6c6c),
+                          width: 0.15,
                         ),
-                        Padding(
-                          padding: EdgeInsetsDirectional.only(
-                            top: paneTopPadding,
-                          ),
-                          child: _OpenNavigationPane(
-                            theme: theme,
-                            pane: pane,
-                            onItemSelected: toggleCompactOpenMode,
-                            onAnimationEnd: _animationEndCallback,
-                          ),
-                        ),
-                      ],
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                      padding: EdgeInsetsDirectional.only(top: paneTopPadding),
+                      child: _OpenNavigationPane(
+                        theme: theme,
+                        pane: pane,
+                        onItemSelected: toggleCompactOpenMode,
+                        onAnimationEnd: _animationEndCallback,
+                      ),
                     ),
                   ),
                 );
