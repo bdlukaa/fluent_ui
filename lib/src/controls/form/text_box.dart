@@ -940,6 +940,18 @@ class _TextBoxState extends State<TextBox>
   UndoHistoryController get _effectiveUndoController =>
       widget.undoController ?? (_undoController ??= UndoHistoryController());
 
+  // The selection controls used when [TextBox.selectionControls] is null.
+  //
+  // Kept for as long as the undo controller does not change: [EditableText]
+  // recreates its selection overlay whenever it receives a different controls
+  // instance, which disposes any visible selection handles, possibly while
+  // their [Overlay] is building.
+  WindowsTextSelectionHandleControls? _defaultSelectionControls;
+  WindowsTextSelectionHandleControls get _effectiveDefaultSelectionControls =>
+      _defaultSelectionControls ??= WindowsTextSelectionHandleControls(
+        undoHistoryController: _effectiveUndoController,
+      );
+
   MaxLengthEnforcement get _effectiveMaxLengthEnforcement =>
       widget.maxLengthEnforcement ??
       LengthLimitingTextInputFormatter.getDefaultMaxLengthEnforcement();
@@ -994,6 +1006,7 @@ class _TextBoxState extends State<TextBox>
     if (widget.undoController != oldWidget.undoController) {
       _undoController?.dispose();
       _undoController = null;
+      _defaultSelectionControls = null;
     }
   }
 
@@ -1259,22 +1272,18 @@ class _TextBoxState extends State<TextBox>
     assert(debugCheckHasFluentTheme(context));
     final controller = _effectiveController;
 
-    var textSelectionControls = widget.selectionControls;
+    final textSelectionControls =
+        widget.selectionControls ?? _effectiveDefaultSelectionControls;
     VoidCallback? handleDidGainAccessibilityFocus;
     switch (defaultTargetPlatform) {
       case TargetPlatform.iOS:
       case TargetPlatform.android:
       case TargetPlatform.fuchsia:
       case TargetPlatform.linux:
-        textSelectionControls ??= WindowsTextSelectionHandleControls(
-          undoHistoryController: _effectiveUndoController,
-        );
+        break;
 
       case TargetPlatform.macOS:
       case TargetPlatform.windows:
-        textSelectionControls ??= WindowsTextSelectionHandleControls(
-          undoHistoryController: _effectiveUndoController,
-        );
         handleDidGainAccessibilityFocus = () {
           // Automatically activate the TextField when it receives accessibility focus.
           if (!_effectiveFocusNode.hasFocus &&

@@ -1,9 +1,18 @@
 ## [next]
 
 * feat: Display Icons in DevTools ([1365](https://github.com/bdlukaa/fluent_ui/pull/1365))
+* feat: Add `CommandBarThemeData`, set through `FluentThemeData.commandBarTheme` or `CommandBarTheme`, to configure the padding and the closed and open decorations of the frame around `CommandBar` items
+* feat: Add `ButtonThemeData.smallIconButtonStyle`, used by small and tiny `IconButton`s (including those under a `SmallIconButton`, such as `TextBox` and `PasswordBox` buttons). It falls back to `iconButtonStyle`
+* feat: Add `RadioButton.toggleable`. When true, selecting the selected radio button again calls `RadioGroup.onChanged` with null. Defaults to false
 * fix: Do not use Material icons on `InfoBar` ([#1366](https://github.com/bdlukaa/fluent_ui/pull/1366))
 * fix: `PaneItem` titles are no longer hidden in open panes narrower than ~226px ([#1370](https://github.com/bdlukaa/fluent_ui/pull/1370))
 * fix: Do not use Material Localizations on `TabView` ([#1367](https://github.com/bdlukaa/fluent_ui/pull/1367))
+* fix: `TextBox` no longer creates new default selection controls on every build. A new instance made `EditableText` dispose its visible selection handles, which threw when this happened while their `Overlay` was building. This also fixes `AutoSuggestBox`, `EditableComboBox`, `NumberBox`, `PasswordBox` and `TextFormBox`, which build a `TextBox`
+* fix: The `CommandBar` overflow menu uses the same padding and item margin as `MenuFlyout`, and sizes to its content between 160px and 480px wide. It stacked the default `FlyoutContent` padding, an extra scroll view padding and the menu item margin, so it had more padding than every other menu, and its items stretched it to the widest size the position allowed
+* fix: The `CommandBar` overflow menu is no longer limited to 320px wide, so long items can widen it up to the 480px maximum
+* fix: `Tooltip.useMousePosition` places the tooltip at the mouse pointer when the nearest `Overlay` is not at the window origin, such as inside a nested `Navigator`
+* fix: Opening a compact `NavigationPane` no longer moves the pane toggle and footer items by about 1px
+* fix: The open `NavigationPane` no longer adds a second 6px gap below the pane toggle, so the first item stays in place when a compact pane opens
 
 ## 4.17.0
 

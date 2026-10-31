@@ -175,4 +175,97 @@ void main() {
     expect(focusNode1.hasFocus, false);
     expect(focusNode2.hasFocus, true);
   });
+
+  testWidgets(
+    'TextBox showing selection handles survives a rebuild of its Overlay',
+    (tester) async {
+      final controller = TextEditingController(text: 'fluent_ui');
+      addTearDown(controller.dispose);
+      // The TextBox is built directly by an OverlayEntry, so it rebuilds
+      // whenever the Overlay does, including the build triggered by inserting
+      // its own selection handle entries.
+      await tester.pumpWidget(
+        FluentApp(
+          builder: (context, child) => Overlay(
+            initialEntries: [
+              OverlayEntry(
+                builder: (context) => TextBox(controller: controller),
+              ),
+            ],
+          ),
+        ),
+      );
+
+      // Double tapping the word selects it and shows the selection handles.
+      final textStart =
+          tester.getTopLeft(find.byType(EditableText)) + const Offset(4, 8);
+      await tester.tapAt(textStart);
+      await tester.pump(const Duration(milliseconds: 50));
+      await tester.tapAt(textStart);
+      await tester.pumpAndSettle();
+
+      expect(tester.takeException(), isNull);
+      final editableText = tester.state<EditableTextState>(
+        find.byType(EditableText),
+      );
+      expect(editableText.selectionOverlay?.handlesAreVisible, isTrue);
+    },
+  );
+
+  testWidgets(
+    'TextBox keeps its default selection controls until the undo controller '
+    'changes',
+    (tester) async {
+      final firstUndoController = UndoHistoryController();
+      final secondUndoController = UndoHistoryController();
+      addTearDown(firstUndoController.dispose);
+      addTearDown(secondUndoController.dispose);
+      var undoController = firstUndoController;
+      TextSelectionControls? selectionControls;
+      late StateSetter setState;
+      await tester.pumpWidget(
+        StatefulBuilder(
+          builder: (context, stateSetter) {
+            setState = stateSetter;
+            return wrapApp(
+              child: TextBox(
+                undoController: undoController,
+                selectionControls: selectionControls,
+              ),
+            );
+          },
+        ),
+      );
+      TextSelectionControls? currentControls() => tester
+          .widget<EditableText>(find.byType(EditableText))
+          .selectionControls;
+
+      final defaultControls = currentControls()!;
+      expect(defaultControls, isA<WindowsTextSelectionHandleControls>());
+      expect(
+        (defaultControls as WindowsTextSelectionHandleControls)
+            .undoHistoryController,
+        same(firstUndoController),
+      );
+
+      setState(() {});
+      await tester.pump();
+      expect(currentControls(), same(defaultControls));
+
+      setState(() => undoController = secondUndoController);
+      await tester.pump();
+      final refreshedControls =
+          currentControls()! as WindowsTextSelectionHandleControls;
+      expect(refreshedControls, isNot(same(defaultControls)));
+      expect(
+        refreshedControls.undoHistoryController,
+        same(secondUndoController),
+      );
+
+      final customControls = WindowsTextSelectionHandleControls();
+      setState(() => selectionControls = customControls);
+      await tester.pump();
+      expect(currentControls(), same(customControls));
+    },
+  );
 }
