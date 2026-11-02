@@ -192,6 +192,7 @@ class BreadcrumbBar<T> extends StatefulWidget {
 
           return WindowsIcon(
             WindowsIcons.more,
+            fallbackIcon: FluentIcons.more,
             color: foregroundColor,
             size: 12,
           );

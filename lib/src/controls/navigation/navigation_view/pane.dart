@@ -343,7 +343,12 @@ class NavigationPane with Diagnosticable {
   static Widget defaultBuildTopOverflowButton(VoidCallback openFlyout) {
     return Builder(
       builder: (context) {
-        return PaneItem(icon: const WindowsIcon(WindowsIcons.more)).build(
+        return PaneItem(
+          icon: const WindowsIcon(
+            WindowsIcons.more,
+            fallbackIcon: FluentIcons.more,
+          ),
+        ).build(
           context: context,
           selected: false,
           onPressed: openFlyout,
@@ -1085,6 +1090,7 @@ class _MenuFlyoutPaneItemExpanderState
                       ),
                       child: const WindowsIcon(
                         WindowsIcons.chevron_down,
+                        fallbackIcon: FluentIcons.chevron_down,
                         size: 10,
                       ),
                     ),

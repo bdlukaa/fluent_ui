@@ -530,9 +530,15 @@ class _MenuFlyoutSubItemChevron extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final isRtl = Directionality.of(context) == TextDirection.rtl;
-    return WindowsIcon(
-      isRtl ? WindowsIcons.chevron_left : WindowsIcons.chevron_right,
-    );
+    return isRtl
+        ? const WindowsIcon(
+            WindowsIcons.chevron_left,
+            fallbackIcon: FluentIcons.chevron_left,
+          )
+        : const WindowsIcon(
+            WindowsIcons.chevron_right,
+            fallbackIcon: FluentIcons.chevron_right,
+          );
   }
 }
 

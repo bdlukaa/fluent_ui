@@ -441,6 +441,7 @@ class _ComboBoxPopupState<T> extends State<_ComboBoxPopup<T>> {
                     child: Center(
                       child: WindowsIcon(
                         WindowsIcons.check_mark,
+                        fallbackIcon: FluentIcons.check_mark,
                         size: 10,
                         color: theme.resources.textFillColorPrimary,
                       ),
@@ -577,7 +578,10 @@ class ComboBox<T> extends StatefulWidget {
     this.onClose,
     this.elevation = 8,
     this.style,
-    this.icon = const WindowsIcon(WindowsIcons.chevron_down),
+    this.icon = const WindowsIcon(
+      WindowsIcons.chevron_down,
+      fallbackIcon: FluentIcons.chevron_down,
+    ),
     this.iconDisabledColor,
     this.iconEnabledColor,
     this.iconSize = 8.0,

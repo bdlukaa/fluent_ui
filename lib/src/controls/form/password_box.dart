@@ -420,7 +420,10 @@ class _PasswordBoxState extends State<PasswordBox> {
       suffix: _canPeek
           ? SmallIconButton(
               child: IconButton(
-                icon: const WindowsIcon(WindowsIcons.red_eye),
+                icon: const WindowsIcon(
+                  WindowsIcons.red_eye,
+                  fallbackIcon: FluentIcons.red_eye,
+                ),
                 // todo: half eye icon, like WinUI3 ?
                 onPressed: null,
                 onTapDown: widget.enabled

@@ -69,7 +69,10 @@ class TabView extends StatefulWidget {
     super.key,
     this.onChanged,
     this.onNewPressed,
-    this.newTabIcon = const WindowsIcon(WindowsIcons.add),
+    this.newTabIcon = const WindowsIcon(
+      WindowsIcons.add,
+      fallbackIcon: FluentIcons.add,
+    ),
     this.shortcutsEnabled = true,
     this.onReorder,
     this.showScrollButtons = true,
@@ -211,7 +214,10 @@ class TabView extends StatefulWidget {
         DiagnosticsProperty<Widget>(
           'newTabIcon',
           newTabIcon,
-          defaultValue: const WindowsIcon(WindowsIcons.add),
+          defaultValue: const WindowsIcon(
+            WindowsIcons.add,
+            fallbackIcon: FluentIcons.add,
+          ),
         ),
       )
       ..add(ObjectFlagProperty('onChanged', onChanged, ifNull: 'disabled'))
@@ -586,6 +592,7 @@ class _TabViewState extends State<TabView> {
                             context,
                             const WindowsIcon(
                               WindowsIcons.caret_left_solid8,
+                              fallbackIcon: FluentIcons.caret_left_solid8,
                               size: 8,
                             ),
                             scrollController.canBackward
@@ -613,6 +620,7 @@ class _TabViewState extends State<TabView> {
                             context,
                             const WindowsIcon(
                               WindowsIcons.caret_right_solid8,
+                              fallbackIcon: FluentIcons.caret_right_solid8,
                               size: 8,
                             ),
                             scrollController.canForward

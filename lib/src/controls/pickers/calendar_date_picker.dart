@@ -209,7 +209,10 @@ class CalendarDatePickerState extends CalendarViewState {
 
               return widget.placeholderText ?? localizations.pickADate;
             }()),
-            const WindowsIcon(WindowsIcons.calendar),
+            const WindowsIcon(
+              WindowsIcons.calendar,
+              fallbackIcon: FluentIcons.calendar,
+            ),
           ],
         ),
       ),
