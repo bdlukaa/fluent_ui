@@ -13,31 +13,69 @@ class TabViewPage extends StatefulWidget {
 
 class _TabViewPageState extends State<TabViewPage> with PageMixin {
   late final TabViewController _controller;
+  late final TabViewController _compactController;
   late final TabViewController _keepAliveController;
   late final TabViewController _secondaryController;
-  var _nextControllerTab = 3;
+  var _nextDocument = 4;
 
-  Tab _createControllerTab(final int index) {
+  Tab _createDocumentTab(int index, {String? title}) {
     late final Tab tab;
+    final documentTitle = title ?? 'Document $index';
     tab = Tab(
-      key: ValueKey('controller-document-$index'),
-      text: Text('Controller document $index'),
-      body: Center(child: Text('Content for controller document $index')),
+      key: ValueKey('document-$index'),
+      icon: const WindowsIcon(
+        WindowsIcons.document,
+        fallbackIcon: FluentIcons.document,
+      ),
+      text: Text(documentTitle),
+      body: _DocumentTabBody(title: documentTitle),
       onClosed: () => _controller.removeAt(_controller.tabs.indexOf(tab)),
     );
     return tab;
   }
 
-  void _addControllerTab() {
-    _controller.add(_createControllerTab(_nextControllerTab++));
+  void _addDocument() {
+    _controller.add(_createDocumentTab(_nextDocument++));
   }
 
   @override
   void initState() {
     super.initState();
     _controller = TabViewController(
-      tabs: List.generate(3, _createControllerTab),
+      tabs: [
+        _createDocumentTab(1, title: 'Project brief'),
+        _createDocumentTab(2, title: 'Meeting notes'),
+        _createDocumentTab(3, title: 'Release checklist'),
+      ],
       initialIndex: 1,
+    );
+    _compactController = TabViewController(
+      tabs: [
+        Tab(
+          icon: const WindowsIcon(
+            WindowsIcons.document,
+            fallbackIcon: FluentIcons.document,
+          ),
+          text: const Text('Notes'),
+          body: const _CompactTabBody(title: 'Notes'),
+        ),
+        Tab(
+          icon: const WindowsIcon(
+            WindowsIcons.folder_open,
+            fallbackIcon: FluentIcons.folder_open,
+          ),
+          text: const Text('Files'),
+          body: const _CompactTabBody(title: 'Files'),
+        ),
+        Tab(
+          icon: const WindowsIcon(
+            WindowsIcons.settings,
+            fallbackIcon: FluentIcons.settings,
+          ),
+          text: const Text('Settings'),
+          body: const _CompactTabBody(title: 'Settings'),
+        ),
+      ],
     );
     _keepAliveController = TabViewController(
       tabs: [
@@ -57,19 +95,25 @@ class _TabViewPageState extends State<TabViewPage> with PageMixin {
       tabs: [
         Tab(
           key: const ValueKey('secondary-tap'),
-          text: const Text('Tab that recognizes secondary tap'),
-          body: Container(color: Colors.red),
+          icon: const WindowsIcon(
+            WindowsIcons.document,
+            fallbackIcon: FluentIcons.document,
+          ),
+          text: const Text('Recognizes secondary tap'),
+          body: const _SecondaryTapBody(
+            title: 'Use the secondary mouse button on this tab.',
+          ),
           gestures: {
             TapGestureRecognizer:
                 GestureRecognizerFactoryWithHandlers<TapGestureRecognizer>(
                   TapGestureRecognizer.new,
-                  (final instance) {
+                  (instance) {
                     instance.onSecondaryTap = () {
                       if (!mounted) return;
                       debugPrint('Secondary tap recognized');
                       displayInfoBar(
                         context,
-                        builder: (final context, final close) {
+                        builder: (context, close) {
                           return const InfoBar(
                             title: Text('Secondary tap recognized'),
                             severity: InfoBarSeverity.success,
@@ -83,8 +127,14 @@ class _TabViewPageState extends State<TabViewPage> with PageMixin {
         ),
         MyCustomTab(
           key: const ValueKey('custom-secondary-tap'),
-          text: const Text('Custom tab that opens menu on secondary tap'),
-          body: Container(color: Colors.blue),
+          icon: const WindowsIcon(
+            WindowsIcons.settings,
+            fallbackIcon: FluentIcons.settings,
+          ),
+          text: const Text('Custom context menu'),
+          body: const _SecondaryTapBody(
+            title: 'Use the secondary mouse button to open a menu.',
+          ),
         ),
       ],
     );
@@ -93,34 +143,143 @@ class _TabViewPageState extends State<TabViewPage> with PageMixin {
   @override
   void dispose() {
     _controller.dispose();
+    _compactController.dispose();
     _keepAliveController.dispose();
     _secondaryController.dispose();
     super.dispose();
   }
 
   @override
-  Widget build(final BuildContext context) {
+  Widget build(BuildContext context) {
     final theme = FluentTheme.of(context);
     return ScaffoldPage.scrollable(
       header: const PageHeader(title: Text('TabView')),
       children: [
-        const Text(
-          'The TabView control is a way to display a set of tabs and their '
-          'respective content. TabViews are useful for displaying several pages '
-          '(or documents) of content while giving a user the capability to '
-          'rearrange, open, or close new tabs.',
+        description(
+          content: const Text(
+            'Use document tabs to keep related work in one window. Tabs support '
+            'icons, closing, reordering, keyboard shortcuts, and custom content.',
+          ),
         ),
-        subtitle(content: const Text('Keyboarding support')),
+        subtitle(content: const Text('Document tabs')),
+        const Text(
+          'This sample mirrors a desktop document workspace. Add a document, close '
+          'a tab, or drag a tab to change its order.',
+        ),
+        CodeSnippetCard(
+          header: const Text('Document workspace'),
+          initiallyOpen: true,
+          codeSnippet: r'''late final TabViewController controller;
+int nextDocument = 4;
+
+@override
+void initState() {
+  super.initState();
+  controller = TabViewController(
+    tabs: [
+      createDocumentTab(1),
+      createDocumentTab(2),
+      createDocumentTab(3),
+    ],
+  );
+}
+
+@override
+void dispose() {
+  controller.dispose();
+  super.dispose();
+}
+
+Tab createDocumentTab(int index) {
+  late final Tab tab;
+  tab = Tab(
+    key: ValueKey('document-$index'),
+    icon: const WindowsIcon(
+      WindowsIcons.document,
+      fallbackIcon: FluentIcons.document,
+    ),
+    text: Text('Document $index'),
+    body: const Center(child: Text('Document content')),
+    onClosed: () => controller.removeAt(controller.tabs.indexOf(tab)),
+  );
+  return tab;
+}
+
+TabView(
+  controller: controller,
+  onNewPressed: () => controller.add(createDocumentTab(nextDocument++)),
+)''',
+          child: LayoutBuilder(
+            builder: (context, constraints) {
+              final height = constraints.maxWidth < 520 ? 360.0 : 300.0;
+              return SizedBox(
+                height: height,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    ListenableBuilder(
+                      listenable: _controller,
+                      builder: (context, child) {
+                        final canManageTabs = _controller.tabs.length > 1;
+                        return Wrap(
+                          spacing: 8,
+                          runSpacing: 8,
+                          children: [
+                            FilledButton(
+                              onPressed: _addDocument,
+                              child: const Row(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  WindowsIcon(
+                                    WindowsIcons.add,
+                                    fallbackIcon: FluentIcons.add,
+                                  ),
+                                  SizedBox(width: 8),
+                                  Text('New document'),
+                                ],
+                              ),
+                            ),
+                            Button(
+                              onPressed: canManageTabs
+                                  ? () => _controller.select(1)
+                                  : null,
+                              child: const Text('Select second tab'),
+                            ),
+                            Button(
+                              onPressed: canManageTabs
+                                  ? () => _controller.move(
+                                      0,
+                                      _controller.tabs.length - 1,
+                                    )
+                                  : null,
+                              child: const Text('Move first to end'),
+                            ),
+                          ],
+                        );
+                      },
+                    ),
+                    const SizedBox(height: 12),
+                    Expanded(
+                      child: TabView(
+                        controller: _controller,
+                        onNewPressed: _addDocument,
+                        onReorder: (oldIndex, newIndex) {
+                          debugPrint('Moved tab $oldIndex to $newIndex');
+                        },
+                      ),
+                    ),
+                  ],
+                ),
+              );
+            },
+          ),
+        ),
+        subtitle(content: const Text('Keyboard shortcuts')),
         RichText(
           text: () {
-            const lineBreakSpan = TextSpan(text: '\n');
-            const topicSpan = TextSpan(
-              text: '  •  ',
-              style: TextStyle(fontWeight: FontWeight.bold),
-            );
-            TextSpan shortcutSpan(final String text) {
+            TextSpan shortcut(String text) {
               return TextSpan(
-                text: text,
+                text: '•  $text',
                 style: TextStyle(
                   color: theme.accentColor.defaultBrushFor(theme.brightness),
                   fontWeight: FontWeight.w600,
@@ -129,141 +288,44 @@ class _TabViewPageState extends State<TabViewPage> with PageMixin {
             }
 
             return TextSpan(
-              children: [
-                TextSpan(
-                  children: [
-                    topicSpan,
-                    shortcutSpan('Ctrl + T'),
-                    const TextSpan(text: ' opens a new tab'),
-                    lineBreakSpan,
-                  ],
-                ),
-                TextSpan(
-                  children: [
-                    topicSpan,
-                    shortcutSpan('Ctrl + W'),
-                    const TextSpan(text: ' or '),
-                    shortcutSpan('Ctrl + F4'),
-                    const TextSpan(text: ' closes the selected tab'),
-                    lineBreakSpan,
-                  ],
-                ),
-                TextSpan(
-                  children: [
-                    topicSpan,
-                    shortcutSpan('Ctrl + 1'),
-                    const TextSpan(text: ' + '),
-                    shortcutSpan('Ctrl + 8'),
-                    const TextSpan(text: ' selects that number tab'),
-                    lineBreakSpan,
-                  ],
-                ),
-                TextSpan(
-                  children: [
-                    topicSpan,
-                    shortcutSpan('Ctrl + 9'),
-                    const TextSpan(text: ' selects the last tab'),
-                  ],
-                ),
-              ],
               style: theme.typography.body,
+              children: [
+                shortcut('Ctrl + T'),
+                const TextSpan(text: ' opens a new tab\n'),
+                shortcut('Ctrl + W or Ctrl + F4'),
+                const TextSpan(text: ' closes the selected tab\n'),
+                shortcut('Ctrl + 1 through Ctrl + 8'),
+                const TextSpan(text: ' selects a numbered tab\n'),
+                shortcut('Ctrl + 9'),
+                const TextSpan(text: ' selects the last tab'),
+              ],
             );
           }(),
         ),
-        subtitle(content: const Text('Managing tabs')),
+        subtitle(content: const Text('Compact tab sizing')),
         const Text(
-          'TabViewController owns the tabs and selection state. Give each tab '
-          'a stable key so its body stays associated with that tab when the '
-          'list changes.',
+          'Use compact tabs when the document name is secondary to its icon and '
+          'the tab strip needs to stay dense.',
         ),
         CodeSnippetCard(
-          codeSnippet: r'''late final TabViewController controller;
-int nextTab = 3;
-
-@override
-void initState() {
-  super.initState();
-  controller = TabViewController(
-    tabs: List.generate(3, createTab),
-    initialIndex: 1,
-  );
-}
-
-Tab createTab(int index) {
-  late final Tab tab;
-  tab = Tab(
-    key: ValueKey('document-$index'),
-    text: Text('Document $index'),
-    body: Center(child: Text('Content $index')),
-    onClosed: () => controller.removeAt(controller.tabs.indexOf(tab)),
-  );
-  return tab;
-}
-
-void addTab() {
-  controller.add(createTab(nextTab++));
-}
-
-TabView(
+          codeSnippet: '''TabView(
   controller: controller,
-  onNewPressed: addTab,
-)
-
-// Select a tab programmatically.
-controller.select(1);
-
-// Move a tab programmatically. Users can also drag tabs to reorder them.
-controller.move(0, controller.tabs.length - 1);''',
+  tabWidthBehavior: TabWidthBehavior.compact,
+  closeButtonVisibility: CloseButtonVisibilityMode.never,
+)''',
           child: SizedBox(
-            height: 280,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Wrap(
-                  spacing: 8,
-                  runSpacing: 8,
-                  children: [
-                    Button(
-                      onPressed: _addControllerTab,
-                      child: const Text('Add tab'),
-                    ),
-                    Button(
-                      onPressed: () {
-                        if (_controller.tabs.length > 1) {
-                          _controller.select(1);
-                        }
-                      },
-                      child: const Text('Select second tab'),
-                    ),
-                    Button(
-                      onPressed: () {
-                        if (_controller.tabs.length > 1) {
-                          _controller.move(0, _controller.tabs.length - 1);
-                        }
-                      },
-                      child: const Text('Move first tab to end'),
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 8),
-                const Text(
-                  'Close a tab with its close button or drag tabs to reorder them.',
-                ),
-                const SizedBox(height: 8),
-                Expanded(
-                  child: TabView(
-                    controller: _controller,
-                    onNewPressed: _addControllerTab,
-                  ),
-                ),
-              ],
+            height: 170,
+            child: TabView(
+              controller: _compactController,
+              tabWidthBehavior: TabWidthBehavior.compact,
+              closeButtonVisibility: CloseButtonVisibilityMode.never,
             ),
           ),
         ),
         subtitle(content: const Text('Controlling body lifetime')),
         const Text(
-          'Tab bodies are kept alive by default. Set automaticallyKeepAlive to false '
-          'when each body should decide whether it remains alive.',
+          'Tab bodies are kept alive by default. Set automaticallyKeepAlive to '
+          'false when each body should decide whether it remains alive.',
         ),
         CodeSnippetCard(
           codeSnippet: '''class KeptAliveTabBody extends StatefulWidget {
@@ -299,6 +361,10 @@ TabView(
           ),
         ),
         subtitle(content: const Text('Custom tabs and secondary tap gestures')),
+        const Text(
+          'Tabs can recognize secondary clicks directly or supply their own tab '
+          'implementation for a context menu.',
+        ),
         CodeSnippetCard(
           codeSnippet: '''class MyCustomTab extends Tab {
   MyCustomTab({
@@ -314,25 +380,28 @@ TabView(
 final controller = TabViewController(
   tabs: <Tab>[
     Tab(
-      key: const ValueKey('secondary-tap'),
-      text: const Text('Tab that recognizes secondary tap'),
-      body: Container(color: Colors.red),
+      text: const Text('Recognizes secondary tap'),
+      body: const Center(child: Text('Secondary tap body')),
+      gestures: <Type, GestureRecognizerFactory>{
+        TapGestureRecognizer:
+            GestureRecognizerFactoryWithHandlers<TapGestureRecognizer>(
+              TapGestureRecognizer.new,
+              (instance) {
+                instance.onSecondaryTap = () {
+                  debugPrint('Secondary tap recognized');
+                };
+              },
+            ),
+      },
     ),
     MyCustomTab(
-      key: const ValueKey('custom-secondary-tap'),
-      text: const Text('Custom tab that opens menu on secondary tap'),
-      body: Container(color: Colors.blue),
+      text: const Text('Custom context menu'),
+      body: const Center(child: Text('Custom tab body')),
     ),
   ],
-);
-
-TabView(
-  controller: controller,
-  tabWidthBehavior: TabWidthBehavior.sizeToContent,
-  closeButtonVisibility: CloseButtonVisibilityMode.never,
-)''',
+);''',
           child: SizedBox(
-            height: 200,
+            height: 190,
             child: TabView(
               controller: _secondaryController,
               tabWidthBehavior: TabWidthBehavior.sizeToContent,
@@ -343,6 +412,65 @@ TabView(
       ],
     );
   }
+}
+
+class _DocumentTabBody extends StatelessWidget {
+  const _DocumentTabBody({required this.title});
+
+  final String title;
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = FluentTheme.of(context);
+    return Center(
+      child: ConstrainedBox(
+        constraints: const BoxConstraints(maxWidth: 440),
+        child: Padding(
+          padding: const EdgeInsets.all(24),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Icon(
+                FluentIcons.document,
+                color: theme.accentColor.defaultBrushFor(theme.brightness),
+                size: 28,
+              ),
+              const SizedBox(height: 12),
+              Text(title, style: theme.typography.subtitle),
+              const SizedBox(height: 4),
+              const Text(
+                'Select another tab to continue working, or use the plus button '
+                'to create a new document.',
+              ),
+              const SizedBox(height: 16),
+              Button(onPressed: () {}, child: const Text('Open document')),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class _CompactTabBody extends StatelessWidget {
+  const _CompactTabBody({required this.title});
+
+  final String title;
+
+  @override
+  Widget build(BuildContext context) {
+    return Center(child: Text('$title content'));
+  }
+}
+
+class _SecondaryTapBody extends StatelessWidget {
+  const _SecondaryTapBody({required this.title});
+
+  final String title;
+
+  @override
+  Widget build(BuildContext context) => Center(child: Text(title));
 }
 
 class _CounterTabBody extends StatefulWidget {
@@ -362,7 +490,7 @@ class _CounterTabBodyState extends State<_CounterTabBody>
   bool get wantKeepAlive => widget.keepAlive;
 
   @override
-  Widget build(final BuildContext context) {
+  Widget build(BuildContext context) {
     super.build(context);
     return Center(
       child: Column(
@@ -387,7 +515,12 @@ class _CounterTabBodyState extends State<_CounterTabBody>
 }
 
 class MyCustomTab extends Tab {
-  MyCustomTab({required super.body, required super.text, super.key});
+  MyCustomTab({
+    required super.body,
+    required super.text,
+    super.icon,
+    super.key,
+  });
 
   @override
   State<Tab> createState() => MyCustomTabState();
@@ -403,10 +536,10 @@ class MyCustomTabState extends TabState {
     _flyoutController = FlyoutController();
   }
 
-  void _showMenu(final Offset position) {
+  void _showMenu(Offset position) {
     _flyoutController.showFlyout<void>(
       position: position,
-      builder: (final context) {
+      builder: (context) {
         return MenuFlyout(
           items: [
             MenuFlyoutItem(
@@ -432,9 +565,9 @@ class MyCustomTabState extends TabState {
   }
 
   @override
-  Widget build(final BuildContext context) {
+  Widget build(BuildContext context) {
     return GestureDetector(
-      onSecondaryTapUp: (final details) {
+      onSecondaryTapUp: (details) {
         final targetContext = _targetKey.currentContext;
         if (targetContext == null) return;
         final box = targetContext.findRenderObject()! as RenderBox;
