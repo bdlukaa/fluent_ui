@@ -82,9 +82,15 @@ void main() {
 
       await tester.enterText(find.byType(TextBox), 'o');
       await tester.pumpAndSettle();
-      expect(find.byType(CompositedTransformFollower), findsOneWidget);
+      // The text box's selection handles are followers too, so only look
+      // inside the AutoSuggestBox.
+      final followerFinder = find.descendant(
+        of: find.byType(AutoSuggestBox<String>),
+        matching: find.byType(CompositedTransformFollower),
+      );
+      expect(followerFinder, findsOneWidget);
       final follower = tester.widget<CompositedTransformFollower>(
-        find.byType(CompositedTransformFollower),
+        followerFinder,
       );
       expect(follower.offset.dy, lessThan(0));
       expect(

@@ -376,6 +376,9 @@ class FluentThemeData with Diagnosticable {
   /// Theme data for [Checkbox] widgets.
   final CheckboxThemeData checkboxTheme;
 
+  /// Theme data for [CommandBar] widgets.
+  final CommandBarThemeData commandBarTheme;
+
   /// Theme data for [ContentDialog] widgets.
   final ContentDialogThemeData dialogTheme;
 
@@ -446,6 +449,7 @@ class FluentThemeData with Diagnosticable {
     bool? cursorOpacityAnimates,
     ButtonThemeData? buttonTheme,
     CheckboxThemeData? checkboxTheme,
+    CommandBarThemeData? commandBarTheme,
     ToggleSwitchThemeData? toggleSwitchTheme,
     IconThemeData? iconTheme,
     ContentDialogThemeData? dialogTheme,
@@ -501,6 +505,7 @@ class FluentThemeData with Diagnosticable {
     focusTheme ??= const FocusThemeData();
     buttonTheme ??= const ButtonThemeData();
     checkboxTheme ??= const CheckboxThemeData();
+    commandBarTheme ??= const CommandBarThemeData();
     toggleButtonTheme ??= const ToggleButtonThemeData();
     toggleSwitchTheme ??= const ToggleSwitchThemeData();
     iconTheme ??= isLight
@@ -543,6 +548,7 @@ class FluentThemeData with Diagnosticable {
       shadowColor: shadowColor,
       buttonTheme: buttonTheme,
       checkboxTheme: checkboxTheme,
+      commandBarTheme: commandBarTheme,
       dialogTheme: dialogTheme,
       dividerTheme: dividerTheme,
       focusTheme: focusTheme,
@@ -603,6 +609,7 @@ class FluentThemeData with Diagnosticable {
     this.acrylicTintOpacity = 0.15,
     this.acrylicLuminosityOpacity = 0.96,
     this.acrylicFallbackColor = const Color(0xFF2C2C2C),
+    this.commandBarTheme = const CommandBarThemeData(),
   });
 
   /// Creates a default light theme.
@@ -704,6 +711,11 @@ class FluentThemeData with Diagnosticable {
         b.checkboxTheme,
         t,
       ),
+      commandBarTheme: CommandBarThemeData.lerp(
+        a.commandBarTheme,
+        b.commandBarTheme,
+        t,
+      ),
       toggleSwitchTheme: ToggleSwitchThemeData.lerp(
         a.toggleSwitchTheme,
         b.toggleSwitchTheme,
@@ -769,6 +781,7 @@ class FluentThemeData with Diagnosticable {
     bool? cursorOpacityAnimates,
     ButtonThemeData? buttonTheme,
     CheckboxThemeData? checkboxTheme,
+    CommandBarThemeData? commandBarTheme,
     ToggleSwitchThemeData? toggleSwitchTheme,
     IconThemeData? iconTheme,
     ContentDialogThemeData? dialogTheme,
@@ -818,6 +831,7 @@ class FluentThemeData with Diagnosticable {
           cursorOpacityAnimates ?? this.cursorOpacityAnimates,
       buttonTheme: this.buttonTheme.merge(buttonTheme),
       checkboxTheme: this.checkboxTheme.merge(checkboxTheme),
+      commandBarTheme: this.commandBarTheme.merge(commandBarTheme),
       dialogTheme: this.dialogTheme.merge(dialogTheme),
       dividerTheme: this.dividerTheme.merge(dividerTheme),
       focusTheme: this.focusTheme.merge(focusTheme),
@@ -861,6 +875,7 @@ class FluentThemeData with Diagnosticable {
       ..add(DiagnosticsProperty('resources', resources))
       ..add(DiagnosticsProperty('buttonTheme', buttonTheme))
       ..add(DiagnosticsProperty('checkboxTheme', checkboxTheme))
+      ..add(DiagnosticsProperty('commandBarTheme', commandBarTheme))
       ..add(DiagnosticsProperty('dialogTheme', dialogTheme))
       ..add(DiagnosticsProperty('dividerTheme', dividerTheme))
       ..add(DiagnosticsProperty('focusTheme', focusTheme))

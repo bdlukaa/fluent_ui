@@ -1285,9 +1285,13 @@ class _OpenNavigationPaneState extends State<_OpenNavigationPane> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Container(
+                // The menu button already has the gap below it, as in the
+                // compact pane, so only a header without it gets one.
                 margin: widget.pane.autoSuggestBox != null
                     ? (menuButton == null ? theme.iconPadding : null)
-                    : topPadding,
+                    : (menuButton == null && widget.pane.header != null
+                          ? topPadding
+                          : null),
                 height: paneHeaderHeight,
                 child: widget.pane.header != null
                     ? Row(

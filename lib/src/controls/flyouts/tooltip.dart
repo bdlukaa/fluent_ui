@@ -274,7 +274,12 @@ class TooltipState extends State<Tooltip> with SingleTickerProviderStateMixin {
   }
 
   void _handleMouseHover(PointerHoverEvent event) {
-    _mousePosition = event.position;
+    // The tooltip is laid out in the coordinates of the nearest overlay, which
+    // is not necessarily at the window origin.
+    final overlay = Overlay.maybeOf(context)?.context.findRenderObject();
+    _mousePosition = overlay is RenderBox
+        ? overlay.globalToLocal(event.position)
+        : event.position;
   }
 
   void _handleMouseExit(PointerExitEvent event) {

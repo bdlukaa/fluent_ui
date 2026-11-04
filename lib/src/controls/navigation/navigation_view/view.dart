@@ -954,16 +954,11 @@ class NavigationViewState extends State<NavigationView> {
                       return Mica(
                         key: _overlayKey,
                         backgroundColor: theme.backgroundColor,
-                        child: Container(
-                          margin: const EdgeInsetsDirectional.symmetric(
-                            vertical: 1,
-                          ),
-                          child: _OpenNavigationPane(
-                            theme: theme,
-                            pane: pane,
-                            initiallyOpen: true,
-                            onAnimationEnd: _animationEndCallback,
-                          ),
+                        child: _OpenNavigationPane(
+                          theme: theme,
+                          pane: pane,
+                          initiallyOpen: true,
+                          onAnimationEnd: _animationEndCallback,
                         ),
                       );
                     } else {
@@ -1016,16 +1011,15 @@ class NavigationViewState extends State<NavigationView> {
                     key: _overlayKey,
                     backgroundColor: theme.overlayBackgroundColor,
                     elevation: 10,
+                    // A foreground border takes no layout space, so the pane
+                    // items stay where the compact pane had them.
                     child: Container(
-                      decoration: BoxDecoration(
+                      foregroundDecoration: BoxDecoration(
                         border: Border.all(
                           color: const Color(0xFF6c6c6c),
                           width: 0.15,
                         ),
                         borderRadius: BorderRadius.circular(8),
-                      ),
-                      margin: const EdgeInsetsDirectional.symmetric(
-                        vertical: 1,
                       ),
                       padding: EdgeInsetsDirectional.only(top: paneTopPadding),
                       child: _OpenNavigationPane(
