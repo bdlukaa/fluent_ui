@@ -127,8 +127,13 @@ class TabData extends InheritedWidget {
 class _TabBody extends StatefulWidget {
   final int index;
   final List<Tab> tabs;
+  final bool automaticallyKeepAlive;
 
-  const _TabBody({required this.index, required this.tabs});
+  const _TabBody({
+    required this.index,
+    required this.tabs,
+    required this.automaticallyKeepAlive,
+  });
 
   @override
   State<_TabBody> createState() => __TabBodyState();
@@ -136,25 +141,100 @@ class _TabBody extends StatefulWidget {
 
 class __TabBodyState extends State<_TabBody> {
   final _pageKey = GlobalKey<State<PageView>>();
-  PageController? _pageController;
+  late PageController _pageController;
 
-  PageController get pageController => _pageController!;
+  /// The tabs as of the last build.
+  ///
+  /// This is a copy because callers may reorder their tab list in place, which
+  /// would leave [_TabBody.tabs] of the old widget already in the new order.
+  late List<Tab> _tabs;
+
+  /// The key of each tab's page, parallel to [_tabs].
+  ///
+  /// Pages are not keyed by the [Tab] widgets themselves because many callers
+  /// create new [Tab] instances on every build, which would tear down and
+  /// recreate every page, and its state, on every rebuild.
+  late List<Key> _pageKeys;
+
+  PageController get pageController => _pageController;
 
   @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-    _pageController ??= PageController(initialPage: widget.index);
+  void initState() {
+    super.initState();
+    _tabs = List.of(widget.tabs);
+    _pageKeys = [for (final _ in _tabs) UniqueKey()];
+    _pageController = PageController(initialPage: widget.index);
   }
 
   @override
   void didUpdateWidget(_TabBody oldWidget) {
     super.didUpdateWidget(oldWidget);
-    if (pageController.hasClients) {
-      if (oldWidget.index != widget.index ||
-          pageController.page != widget.index) {
-        pageController.jumpToPage(widget.index);
+    _updatePageKeys();
+    if (oldWidget.index == widget.index) return;
+
+    if (!pageController.hasClients) {
+      pageController.dispose();
+      _pageController = PageController(initialPage: widget.index);
+    } else if (pageController.page != widget.index) {
+      pageController.jumpToPage(widget.index);
+    }
+  }
+
+  /// Gives each new tab the page key of the previous tab it replaces, so that
+  /// page, and its state, survives the rebuild.
+  ///
+  /// A new tab replaces a previous tab with the same non-null [Widget.key], or
+  /// the same [Tab] instance, wherever that tab was. Explicit keys are matched
+  /// first, so they take precedence when a keyed tab instance is reused beside
+  /// another tab with the same key. A new tab that replaces none of them takes
+  /// the page at its own index, if no other tab took it, so tabs recreated on
+  /// every build keep their pages. Otherwise it gets a new page.
+  void _updatePageKeys() {
+    final newTabs = widget.tabs;
+    final untakenIndexes = {for (var i = 0; i < _tabs.length; i++) i};
+    final previousIndexes = List<int?>.filled(newTabs.length, null);
+
+    int? takeIndexWhere(bool Function(Tab tab) matches) {
+      final index = untakenIndexes
+          .where((index) => matches(_tabs[index]))
+          .firstOrNull;
+      if (index != null) untakenIndexes.remove(index);
+      return index;
+    }
+
+    // Explicit keys define tab identity and must be matched before reused
+    // instances. This also keeps generated page keys unique when callers use
+    // duplicate tab keys.
+    for (var i = 0; i < newTabs.length; i++) {
+      final key = newTabs[i].key;
+      if (key != null) {
+        previousIndexes[i] = takeIndexWhere((tab) => tab.key == key);
       }
     }
+    for (var i = 0; i < newTabs.length; i++) {
+      previousIndexes[i] ??= takeIndexWhere(
+        (tab) => identical(tab, newTabs[i]),
+      );
+    }
+
+    // Every tab is matched by identity before any tab is matched by position.
+    // Otherwise a tab inserted in front of the others would take the page of
+    // the tab that used to be at its index.
+    for (var i = 0; i < newTabs.length; i++) {
+      previousIndexes[i] ??= untakenIndexes.remove(i) ? i : null;
+    }
+
+    _pageKeys = [
+      for (final previousIndex in previousIndexes)
+        if (previousIndex == null) UniqueKey() else _pageKeys[previousIndex],
+    ];
+    _tabs = List.of(newTabs);
+  }
+
+  @override
+  void dispose() {
+    _pageController.dispose();
+    super.dispose();
   }
 
   @override
@@ -164,32 +244,57 @@ class __TabBodyState extends State<_TabBody> {
       physics: const NeverScrollableScrollPhysics(),
       controller: pageController,
       itemCount: widget.tabs.length,
-      // Reorders move a tab to a new index. Report the new index for each
-      // tab-keyed page so the lazy viewport relocates the existing element
-      // (and its state) instead of tearing it down — a plain ValueKey only
-      // guards in-place reuse, so without this a stateful body stayed parked
-      // at its old slot while the header moved, desyncing content from its
-      // tab.
+      // Report each page's new index so the lazy viewport moves an existing
+      // page, and its state, when its tab moves, instead of tearing it down.
       findChildIndexCallback: (key) {
-        // Pages are keyed by ValueKey<Tab>; guard the type rather than cast so
-        // an unexpected key can never throw from this framework callback.
-        if (key is! ValueKey<Tab>) return null;
-        final index = widget.tabs.indexOf(key.value);
+        final index = _pageKeys.indexOf(key);
         return index == -1 ? null : index;
       },
       itemBuilder: (context, index) {
         final isSelected = widget.index == index;
         final item = widget.tabs[index];
-
-        // Key the body by tab identity, matching the tab strip
-        // (KeyedSubtree(key: ValueKey<Tab>(tab)) in TabView).
-        return ExcludeFocus(
-          key: ValueKey<Tab>(item),
-          excluding: !isSelected,
-          child: FocusTraversalGroup(child: item.body),
+        return _KeepAlivePage(
+          key: _pageKeys[index],
+          keepAlive: widget.automaticallyKeepAlive,
+          child: ExcludeFocus(
+            excluding: !isSelected,
+            child: FocusTraversalGroup(child: item.body),
+          ),
         );
       },
     );
+  }
+}
+
+class _KeepAlivePage extends StatefulWidget {
+  const _KeepAlivePage({
+    required this.child,
+    required this.keepAlive,
+    super.key,
+  });
+
+  final Widget child;
+  final bool keepAlive;
+
+  @override
+  State<_KeepAlivePage> createState() => _KeepAlivePageState();
+}
+
+class _KeepAlivePageState extends State<_KeepAlivePage>
+    with AutomaticKeepAliveClientMixin {
+  @override
+  bool get wantKeepAlive => widget.keepAlive;
+
+  @override
+  void didUpdateWidget(_KeepAlivePage oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (widget.keepAlive != oldWidget.keepAlive) updateKeepAlive();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    super.build(context);
+    return widget.child;
   }
 }
 

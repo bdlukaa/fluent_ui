@@ -1,5 +1,6 @@
 ## [next]
 
+* feat: Add `TabView.automaticallyKeepAlive`, which defaults to true. Set it to false to let each tab body use `AutomaticKeepAliveClientMixin` to control its own lifetime.
 * **BREAKING** perf: Tree shake `FluentIcons` and `WindowsIcons` glyphs. Both classes are annotated with `@staticIconProvider`, so release builds keep only the glyphs an app uses instead of both fonts whole.
   - Off Windows, a `WindowsIcon` without `fallbackIcon` now renders the `WindowsIcons` glyph as given. It no longer looks up the `FluentIcons` glyph with the same name, because that lookup kept every glyph of both fonts. Controls in this package pass their fallback explicitly and render as before.
   - Name-based lookup moved to `package:fluent_ui/windows_icon_fallback.dart`, which keeps both fonts whole when imported.
@@ -19,6 +20,36 @@
   WindowsIcon.fallbackResolver = fluentIconFallback;
   ```
 
+* **BREAKING** `TabView` now requires a `TabViewController`, which owns its tabs and selected index. ([#1349](https://github.com/bdlukaa/fluent_ui/issues/1349))
+
+  Migration:
+
+  ```dart
+  // Before
+  TabView(
+    tabs: tabs,
+    currentIndex: currentIndex,
+    onChanged: (index) => setState(() => currentIndex = index),
+    onReorder: (oldIndex, newIndex) {
+      final tab = tabs.removeAt(oldIndex);
+      tabs.insert(newIndex, tab);
+    },
+  )
+
+  // After
+  TabView(
+    controller: controller,
+    onChanged: (index) {
+      // The controller has already selected index.
+    },
+  )
+  ```
+
+  - Create the controller in `State.initState` and dispose it in `State.dispose`.
+  - Replace selection state updates with `controller.select(index)`. `onChanged` remains an optional notification callback and is called after the controller updates its selection.
+  - `Tab.onClosed` still only requests a close; remove the tab in that callback with `controller.removeAt(controller.tabs.indexOf(tab))`.
+  - Replace `onReorder` list mutations with `controller.move(oldIndex, newIndex)`. Drag reordering updates the controller automatically.
+  - Add tabs from `onNewPressed` with `controller.add(tab)`. The callback does not add a tab automatically.
 * feat: Display Icons in DevTools ([1365](https://github.com/bdlukaa/fluent_ui/pull/1365))
 * feat: Add `CommandBarThemeData`, set through `FluentThemeData.commandBarTheme` or `CommandBarTheme`, to configure the padding and the closed and open decorations of the frame around `CommandBar` items ([#1374](https://github.com/bdlukaa/fluent_ui/pull/1374))
 * feat: Add `ButtonThemeData.smallIconButtonStyle`, used by small and tiny `IconButton`s (including those under a `SmallIconButton`, such as `TextBox` and `PasswordBox` buttons). It falls back to `iconButtonStyle` ([#1374](https://github.com/bdlukaa/fluent_ui/pull/1374))
