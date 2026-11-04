@@ -13,6 +13,7 @@ class TabViewPage extends StatefulWidget {
 
 class _TabViewPageState extends State<TabViewPage> with PageMixin {
   late final TabViewController _controller;
+  late final TabViewController _keepAliveController;
   late final TabViewController _secondaryController;
   var _nextControllerTab = 3;
 
@@ -37,6 +38,20 @@ class _TabViewPageState extends State<TabViewPage> with PageMixin {
     _controller = TabViewController(
       tabs: List.generate(3, _createControllerTab),
       initialIndex: 1,
+    );
+    _keepAliveController = TabViewController(
+      tabs: [
+        Tab(
+          text: const Text('Kept alive'),
+          body: const _CounterTabBody(keepAlive: true),
+        ),
+        Tab(
+          text: const Text('Discarded'),
+          body: const _CounterTabBody(keepAlive: false),
+        ),
+        Tab(text: const Text('Other 1'), body: const SizedBox()),
+        Tab(text: const Text('Other 2'), body: const SizedBox()),
+      ],
     );
     _secondaryController = TabViewController(
       tabs: [
@@ -78,6 +93,7 @@ class _TabViewPageState extends State<TabViewPage> with PageMixin {
   @override
   void dispose() {
     _controller.dispose();
+    _keepAliveController.dispose();
     _secondaryController.dispose();
     super.dispose();
   }
@@ -244,6 +260,44 @@ controller.move(0, controller.tabs.length - 1);''',
             ),
           ),
         ),
+        subtitle(content: const Text('Controlling body lifetime')),
+        const Text(
+          'Tab bodies are kept alive by default. Set automaticallyKeepAlive to false '
+          'when each body should decide whether it remains alive.',
+        ),
+        CodeSnippetCard(
+          codeSnippet: '''class KeptAliveTabBody extends StatefulWidget {
+  const KeptAliveTabBody({super.key});
+
+  @override
+  State<KeptAliveTabBody> createState() => _KeptAliveTabBodyState();
+}
+
+class _KeptAliveTabBodyState extends State<KeptAliveTabBody>
+    with AutomaticKeepAliveClientMixin {
+  @override
+  bool get wantKeepAlive => true;
+
+  @override
+  Widget build(BuildContext context) {
+    super.build(context);
+    return const Text('This tab body stays alive.');
+  }
+}
+
+TabView(
+  controller: controller,
+  automaticallyKeepAlive: false,
+)''',
+          child: SizedBox(
+            height: 180,
+            child: TabView(
+              controller: _keepAliveController,
+              automaticallyKeepAlive: false,
+              closeButtonVisibility: CloseButtonVisibilityMode.never,
+            ),
+          ),
+        ),
         subtitle(content: const Text('Custom tabs and secondary tap gestures')),
         CodeSnippetCard(
           codeSnippet: '''class MyCustomTab extends Tab {
@@ -287,6 +341,47 @@ TabView(
           ),
         ),
       ],
+    );
+  }
+}
+
+class _CounterTabBody extends StatefulWidget {
+  const _CounterTabBody({required this.keepAlive});
+
+  final bool keepAlive;
+
+  @override
+  State<_CounterTabBody> createState() => _CounterTabBodyState();
+}
+
+class _CounterTabBodyState extends State<_CounterTabBody>
+    with AutomaticKeepAliveClientMixin<_CounterTabBody> {
+  var _count = 0;
+
+  @override
+  bool get wantKeepAlive => widget.keepAlive;
+
+  @override
+  Widget build(final BuildContext context) {
+    super.build(context);
+    return Center(
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Text('Count: $_count'),
+          const SizedBox(height: 8),
+          Button(
+            onPressed: () => setState(() => _count++),
+            child: const Text('Increment'),
+          ),
+          const SizedBox(height: 8),
+          Text(
+            widget.keepAlive
+                ? 'This tab keeps its counter when inactive.'
+                : 'This tab does not request preservation when inactive.',
+          ),
+        ],
+      ),
     );
   }
 }

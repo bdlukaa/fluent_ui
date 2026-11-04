@@ -127,8 +127,13 @@ class TabData extends InheritedWidget {
 class _TabBody extends StatefulWidget {
   final int index;
   final List<Tab> tabs;
+  final bool automaticallyKeepAlive;
 
-  const _TabBody({required this.index, required this.tabs});
+  const _TabBody({
+    required this.index,
+    required this.tabs,
+    required this.automaticallyKeepAlive,
+  });
 
   @override
   State<_TabBody> createState() => __TabBodyState();
@@ -248,13 +253,48 @@ class __TabBodyState extends State<_TabBody> {
       itemBuilder: (context, index) {
         final isSelected = widget.index == index;
         final item = widget.tabs[index];
-        return ExcludeFocus(
+        return _KeepAlivePage(
           key: _pageKeys[index],
-          excluding: !isSelected,
-          child: FocusTraversalGroup(child: item.body),
+          keepAlive: widget.automaticallyKeepAlive,
+          child: ExcludeFocus(
+            excluding: !isSelected,
+            child: FocusTraversalGroup(child: item.body),
+          ),
         );
       },
     );
+  }
+}
+
+class _KeepAlivePage extends StatefulWidget {
+  const _KeepAlivePage({
+    required this.child,
+    required this.keepAlive,
+    super.key,
+  });
+
+  final Widget child;
+  final bool keepAlive;
+
+  @override
+  State<_KeepAlivePage> createState() => _KeepAlivePageState();
+}
+
+class _KeepAlivePageState extends State<_KeepAlivePage>
+    with AutomaticKeepAliveClientMixin {
+  @override
+  bool get wantKeepAlive => widget.keepAlive;
+
+  @override
+  void didUpdateWidget(_KeepAlivePage oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (widget.keepAlive != oldWidget.keepAlive) updateKeepAlive();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    super.build(context);
+    return widget.child;
   }
 }
 

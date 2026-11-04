@@ -118,6 +118,7 @@ class TabView extends StatefulWidget {
     this.reservedStripWidth,
     this.stripBuilder,
     this.closeDelayDuration = const Duration(seconds: 1),
+    this.automaticallyKeepAlive = true,
   });
 
   /// Controls the tabs and selected tab.
@@ -224,6 +225,12 @@ class TabView extends StatefulWidget {
   ///
   /// Defaults to one second.
   final Duration closeDelayDuration;
+
+  /// Whether visited tab bodies are automatically kept alive offscreen.
+  ///
+  /// Defaults to true. When false, bodies can control their own lifetime using
+  /// [AutomaticKeepAliveClientMixin]. Tab bodies are always built lazily.
+  final bool automaticallyKeepAlive;
 
   /// Whenever the new button should be displayed.
   bool get showNewButton => onNewPressed != null;
@@ -790,7 +797,11 @@ class _TabViewState extends State<TabView> {
           Expanded(
             child: Focus(
               autofocus: true,
-              child: _TabBody(index: widget._selectedIndex, tabs: widget._tabs),
+              child: _TabBody(
+                index: widget._selectedIndex,
+                tabs: widget._tabs,
+                automaticallyKeepAlive: widget.automaticallyKeepAlive,
+              ),
             ),
           ),
       ],

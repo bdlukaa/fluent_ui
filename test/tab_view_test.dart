@@ -506,6 +506,356 @@ void main() {
     );
     expect(find.text('Custom Strip'), findsOneWidget);
   });
+
+  testWidgets('TabViewController updates selection and notifies callbacks', (
+    tester,
+  ) async {
+    var changedIndex = -1;
+    final tabs = [
+      Tab(text: const Text('Tab 1'), body: const Text('Body 1')),
+      Tab(text: const Text('Tab 2'), body: const Text('Body 2')),
+    ];
+    final controller = TabViewController(tabs: tabs);
+    addTearDown(controller.dispose);
+
+    await tester.pumpWidget(
+      wrapApp(
+        child: TabView(
+          controller: controller,
+          onChanged: (index) => changedIndex = index,
+        ),
+      ),
+    );
+
+    await tester.tap(find.text('Tab 2'));
+    await tester.pumpAndSettle();
+    expect(controller.selectedIndex, 1);
+    expect(changedIndex, 1);
+    expect(find.text('Body 2'), findsOneWidget);
+
+    controller.select(0);
+    await tester.pumpAndSettle();
+    expect(find.text('Body 1'), findsOneWidget);
+  });
+
+  test('add and insert select new tabs by default', () {
+    final a = Tab(text: const Text('A'), body: const Text('Body A'));
+    final b = Tab(text: const Text('B'), body: const Text('Body B'));
+    final c = Tab(text: const Text('C'), body: const Text('Body C'));
+    final controller = TabViewController(tabs: [a]);
+    addTearDown(controller.dispose);
+
+    controller.add(b);
+    expect(controller.selectedTab, same(b));
+
+    controller.insert(0, c);
+    expect(controller.selectedIndex, 0);
+    expect(controller.selectedTab, same(c));
+
+    controller.select(2);
+    controller.insert(
+      0,
+      Tab(text: const Text('Preserved'), body: const Text('Body Preserved')),
+      select: false,
+    );
+    expect(controller.selectedTab, same(b));
+  });
+
+  testWidgets('updates and replaces an external scroll controller', (
+    tester,
+  ) async {
+    final controller = TabViewController(
+      tabs: [
+        Tab(text: const Text('A'), body: const Text('Body A')),
+        Tab(text: const Text('B'), body: const Text('Body B')),
+      ],
+    );
+    final firstScrollController = ScrollPosController();
+    final secondScrollController = ScrollPosController();
+    addTearDown(controller.dispose);
+    addTearDown(firstScrollController.dispose);
+    addTearDown(secondScrollController.dispose);
+
+    Widget build(ScrollPosController scrollController) => wrapApp(
+      child: SizedBox(
+        height: 100,
+        width: 300,
+        child: TabView(
+          controller: controller,
+          scrollController: scrollController,
+        ),
+      ),
+    );
+
+    await tester.pumpWidget(build(firstScrollController));
+    expect(firstScrollController.itemCount, 2);
+
+    controller.add(Tab(text: const Text('C'), body: const Text('Body C')));
+    await tester.pump();
+    expect(firstScrollController.itemCount, 3);
+
+    await tester.pumpWidget(build(secondScrollController));
+    expect(secondScrollController.itemCount, 3);
+    expect(secondScrollController.hasClients, isTrue);
+    expect(firstScrollController.hasClients, isFalse);
+  });
+
+  testWidgets('TabView honors programmatic selection before attachment', (
+    tester,
+  ) async {
+    final controller = TabViewController(
+      initialIndex: 1,
+      tabs: [
+        Tab(text: const Text('A'), body: const Text('Body A')),
+        Tab(text: const Text('B'), body: const Text('Body B')),
+      ],
+    );
+    addTearDown(controller.dispose);
+
+    await tester.pumpWidget(wrapApp(child: TabView(controller: controller)));
+
+    expect(find.text('Body A'), findsNothing);
+    expect(find.text('Body B'), findsOneWidget);
+  });
+
+  testWidgets('TabView renders an empty tab list without a body', (
+    tester,
+  ) async {
+    final controller = TabViewController();
+    addTearDown(controller.dispose);
+
+    await tester.pumpWidget(wrapApp(child: TabView(controller: controller)));
+
+    expect(find.byType(PageView), findsNothing);
+    expect(tester.takeException(), isNull);
+  });
+
+  testWidgets('TabView gives explicit tab keys distinct pages', (tester) async {
+    var rebuild = false;
+    List<Tab> tabs() => [
+      Tab(
+        key: const ValueKey('A'),
+        text: const Text('A'),
+        body: _IdentityCounterBody('A-$rebuild'),
+      ),
+      Tab(
+        key: const ValueKey('B'),
+        text: const Text('B'),
+        body: _IdentityCounterBody('B-$rebuild'),
+      ),
+    ];
+    final controller = TabViewController(tabs: tabs());
+    addTearDown(controller.dispose);
+
+    await tester.pumpWidget(
+      wrapApp(
+        child: StatefulBuilder(
+          builder: (context, setState) => Column(
+            children: [
+              Button(
+                onPressed: () => setState(() {
+                  rebuild = true;
+                  controller.replaceTabs(tabs());
+                }),
+                child: const Text('rebuild'),
+              ),
+              Expanded(child: TabView(controller: controller)),
+            ],
+          ),
+        ),
+      ),
+    );
+
+    await tester.tap(find.widgetWithText(Button, 'increment'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.widgetWithText(Button, 'rebuild'));
+    await tester.pumpAndSettle();
+
+    expect(find.text('A-true:1'), findsOneWidget);
+    expect(tester.takeException(), isNull);
+  });
+
+  testWidgets('TabView keeps lazy tab bodies alive by default', (tester) async {
+    final controller = TabViewController(
+      tabs: [
+        Tab(text: const Text('A'), body: const _KeepAliveTestCounterBody('A')),
+        Tab(text: const Text('B'), body: const _KeepAliveTestCounterBody('B')),
+        Tab(text: const Text('C'), body: const _KeepAliveTestCounterBody('C')),
+      ],
+    );
+    addTearDown(controller.dispose);
+
+    await tester.pumpWidget(wrapApp(child: TabView(controller: controller)));
+
+    await tester.tap(find.widgetWithText(Button, 'increment A'));
+    await tester.pump();
+    expect(find.text('A:1'), findsOneWidget);
+
+    controller.select(2);
+    await tester.pumpAndSettle();
+    expect(find.text('C:0'), findsOneWidget);
+
+    controller.select(0);
+    await tester.pumpAndSettle();
+
+    expect(find.text('A:1'), findsOneWidget);
+  });
+
+  testWidgets('TabView disposes plain lazy tab bodies when keep alive is off', (
+    tester,
+  ) async {
+    final controller = TabViewController(
+      tabs: [
+        Tab(text: const Text('A'), body: const _KeepAliveTestCounterBody('A')),
+        Tab(text: const Text('B'), body: const _KeepAliveTestCounterBody('B')),
+        Tab(text: const Text('C'), body: const _KeepAliveTestCounterBody('C')),
+      ],
+    );
+    addTearDown(controller.dispose);
+
+    await tester.pumpWidget(
+      wrapApp(
+        child: TabView(controller: controller, automaticallyKeepAlive: false),
+      ),
+    );
+
+    await tester.tap(find.widgetWithText(Button, 'increment A'));
+    await tester.pump();
+    expect(find.text('A:1'), findsOneWidget);
+
+    controller.select(2);
+    await tester.pumpAndSettle();
+    controller.select(0);
+    await tester.pumpAndSettle();
+
+    expect(find.text('A:0'), findsOneWidget);
+  });
+
+  testWidgets(
+    'TabView keeps opt-in lazy tab bodies alive when keep alive is off',
+    (tester) async {
+      final controller = TabViewController(
+        tabs: [
+          Tab(
+            text: const Text('A'),
+            body: const _OptInKeepAliveTestCounterBody('A'),
+          ),
+          Tab(
+            text: const Text('B'),
+            body: const _OptInKeepAliveTestCounterBody('B'),
+          ),
+          Tab(
+            text: const Text('C'),
+            body: const _OptInKeepAliveTestCounterBody('C'),
+          ),
+        ],
+      );
+      addTearDown(controller.dispose);
+
+      await tester.pumpWidget(
+        wrapApp(
+          child: TabView(controller: controller, automaticallyKeepAlive: false),
+        ),
+      );
+
+      await tester.tap(find.widgetWithText(Button, 'increment A'));
+      await tester.pump();
+      expect(find.text('A:1'), findsOneWidget);
+
+      controller.select(2);
+      await tester.pumpAndSettle();
+      controller.select(0);
+      await tester.pumpAndSettle();
+
+      expect(find.text('A:1'), findsOneWidget);
+    },
+  );
+
+  testWidgets('TabView applies keep-alive changes after rebuilding', (
+    tester,
+  ) async {
+    final controller = TabViewController(
+      tabs: [
+        Tab(text: const Text('A'), body: const _KeepAliveTestCounterBody('A')),
+        Tab(text: const Text('B'), body: const _KeepAliveTestCounterBody('B')),
+        Tab(text: const Text('C'), body: const _KeepAliveTestCounterBody('C')),
+      ],
+    );
+    addTearDown(controller.dispose);
+    final keepAlive = ValueNotifier(true);
+    addTearDown(keepAlive.dispose);
+
+    await tester.pumpWidget(
+      wrapApp(
+        child: ValueListenableBuilder<bool>(
+          valueListenable: keepAlive,
+          builder: (context, value, child) =>
+              TabView(controller: controller, automaticallyKeepAlive: value),
+        ),
+      ),
+    );
+
+    await tester.tap(find.widgetWithText(Button, 'increment A'));
+    await tester.pump();
+    controller.select(2);
+    await tester.pumpAndSettle();
+
+    keepAlive.value = false;
+    await tester.pumpAndSettle();
+    controller.select(0);
+    await tester.pumpAndSettle();
+
+    expect(find.text('A:0'), findsOneWidget);
+  });
+
+  testWidgets('TabView normal tab strip', (tester) async {
+    _configureTabViewGoldenEnvironment(tester);
+    await tester.pumpWidget(_goldenTabView(width: 600));
+    await tester.pumpAndSettle();
+
+    await expectLater(
+      find.byKey(_goldenTabViewKey),
+      matchesGoldenFile('goldens/tab_view/normal.png'),
+    );
+  }, tags: 'golden');
+
+  testWidgets('TabView actively dragged tab strip', (tester) async {
+    _configureTabViewGoldenEnvironment(tester);
+    await tester.pumpWidget(_goldenTabView(width: 600));
+    await tester.pumpAndSettle();
+
+    final initialTabPosition = tester.getCenter(find.text('A'));
+    final gesture = await tester.startGesture(
+      initialTabPosition,
+      kind: PointerDeviceKind.mouse,
+    );
+    await tester.pump();
+    await gesture.moveBy(const Offset(120, 0));
+    await tester.pump(const Duration(milliseconds: 200));
+
+    expect(
+      tester.getCenter(find.text('A')).dx,
+      greaterThan(initialTabPosition.dx),
+    );
+
+    await expectLater(
+      find.byKey(_goldenTabViewKey),
+      matchesGoldenFile('goldens/tab_view/dragging.png'),
+    );
+
+    await gesture.up();
+  }, tags: 'golden');
+
+  testWidgets('TabView scrollable tab strip', (tester) async {
+    _configureTabViewGoldenEnvironment(tester);
+    await tester.pumpWidget(_goldenTabView(width: 240, tabCount: 8));
+    await tester.pumpAndSettle();
+
+    await expectLater(
+      find.byKey(_goldenTabViewKey),
+      matchesGoldenFile('goldens/tab_view/scrollable.png'),
+    );
+  }, tags: 'golden');
 }
 
 Tab _controllerTab(String name) {
@@ -794,4 +1144,138 @@ class _CounterBodyState extends State<_CounterBody>
       ],
     );
   }
+}
+
+class _IdentityCounterBody extends StatefulWidget {
+  const _IdentityCounterBody(this.label);
+
+  final String label;
+
+  @override
+  State<_IdentityCounterBody> createState() => _IdentityCounterBodyState();
+}
+
+class _IdentityCounterBodyState extends State<_IdentityCounterBody>
+    with AutomaticKeepAliveClientMixin {
+  var _count = 0;
+
+  @override
+  bool get wantKeepAlive => true;
+
+  @override
+  Widget build(BuildContext context) {
+    super.build(context);
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        Text('${widget.label}:$_count'),
+        Button(
+          onPressed: () => setState(() => _count++),
+          child: const Text('increment'),
+        ),
+      ],
+    );
+  }
+}
+
+class _KeepAliveTestCounterBody extends StatefulWidget {
+  const _KeepAliveTestCounterBody(this.label);
+
+  final String label;
+
+  @override
+  State<_KeepAliveTestCounterBody> createState() =>
+      _KeepAliveTestCounterBodyState();
+}
+
+class _KeepAliveTestCounterBodyState extends State<_KeepAliveTestCounterBody> {
+  var _count = 0;
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        Text('${widget.label}:$_count'),
+        Button(
+          onPressed: () => setState(() => _count++),
+          child: Text('increment ${widget.label}'),
+        ),
+      ],
+    );
+  }
+}
+
+class _OptInKeepAliveTestCounterBody extends StatefulWidget {
+  const _OptInKeepAliveTestCounterBody(this.label);
+
+  final String label;
+
+  @override
+  State<_OptInKeepAliveTestCounterBody> createState() =>
+      _OptInKeepAliveTestCounterBodyState();
+}
+
+class _OptInKeepAliveTestCounterBodyState
+    extends State<_OptInKeepAliveTestCounterBody>
+    with AutomaticKeepAliveClientMixin {
+  var _count = 0;
+
+  @override
+  bool get wantKeepAlive => true;
+
+  @override
+  Widget build(BuildContext context) {
+    super.build(context);
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        Text('${widget.label}:$_count'),
+        Button(
+          onPressed: () => setState(() => _count++),
+          child: Text('increment ${widget.label}'),
+        ),
+      ],
+    );
+  }
+}
+
+const _goldenTabViewKey = ValueKey<String>('tab-view');
+
+void _configureTabViewGoldenEnvironment(WidgetTester tester) {
+  tester.view
+    ..physicalSize = const Size(800, 600)
+    ..devicePixelRatio = 1;
+  tester.platformDispatcher.textScaleFactorTestValue = 1;
+  addTearDown(tester.view.reset);
+  addTearDown(tester.platformDispatcher.clearTextScaleFactorTestValue);
+}
+
+Widget _goldenTabView({required double width, int tabCount = 3}) {
+  final controller = TabViewController(
+    tabs: List.generate(
+      tabCount,
+      (index) => Tab(
+        text: Text(String.fromCharCode(65 + index)),
+        body: const SizedBox(),
+      ),
+    ),
+  );
+  addTearDown(controller.dispose);
+  return MediaQuery(
+    data: const MediaQueryData(textScaler: TextScaler.noScaling),
+    child: FluentApp(
+      theme: FluentThemeData.light(),
+      home: Center(
+        child: RepaintBoundary(
+          key: _goldenTabViewKey,
+          child: SizedBox(
+            width: width,
+            height: 80,
+            child: TabView(controller: controller, onReorder: (_, _) {}),
+          ),
+        ),
+      ),
+    ),
+  );
 }

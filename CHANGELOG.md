@@ -1,5 +1,6 @@
 ## [next]
 
+* feat: Add `TabView.automaticallyKeepAlive`, which defaults to true. Set it to false to let each tab body use `AutomaticKeepAliveClientMixin` to control its own lifetime.
 * **BREAKING** perf: Tree shake `FluentIcons` and `WindowsIcons` glyphs. Both classes are annotated with `@staticIconProvider`, so release builds keep only the glyphs an app uses instead of both fonts whole.
   - Off Windows, a `WindowsIcon` without `fallbackIcon` now renders the `WindowsIcons` glyph as given. It no longer looks up the `FluentIcons` glyph with the same name, because that lookup kept every glyph of both fonts. Controls in this package pass their fallback explicitly and render as before.
   - Name-based lookup moved to `package:fluent_ui/windows_icon_fallback.dart`, which keeps both fonts whole when imported.
