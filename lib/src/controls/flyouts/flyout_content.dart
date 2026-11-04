@@ -29,7 +29,8 @@ class FlyoutContent extends StatelessWidget {
 
   /// The background color of the box.
   ///
-  /// If null, [FluentThemeData.menuColor] is used by default
+  /// An optional source-over overlay above the theme's Acrylic material.
+  /// If null, no extra fill is applied. Opaque colors hide the translucency.
   final Color? color;
 
   /// The shape to fill the [color] of the box.
@@ -111,13 +112,14 @@ class FlyoutContent extends StatelessWidget {
 
     final content = Acrylic(
       shape: resolvedShape,
+      // Flyout presenters use the explicit transient brush resource, not
+      // Acrylic's backwards-compatible automatic luminosity calculation.
+      luminosityAlpha: theme.acrylicLuminosityOpacity,
       child: Container(
         constraints: constraints,
-        decoration: ShapeDecoration(
-          color: color ?? theme.menuColor.withValues(alpha: kMenuColorOpacity),
-          shape: resolvedShape,
-        ),
-        padding: padding,
+        color: color,
+        // ShapeDecoration previously supplied this border inset implicitly.
+        padding: padding.add(resolvedShape.dimensions),
         child: DefaultTextStyle.merge(
           style: theme.typography.body,
           child: child,

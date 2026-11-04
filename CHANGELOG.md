@@ -32,6 +32,7 @@
 * fix: `Tooltip.useMousePosition` places the tooltip at the mouse pointer when the nearest `Overlay` is not at the window origin, such as inside a nested `Navigator` ([#1374](https://github.com/bdlukaa/fluent_ui/pull/1374))
 * fix: Opening a compact `NavigationPane` no longer moves the pane toggle and footer items by about 1px ([#1374](https://github.com/bdlukaa/fluent_ui/pull/1374))
 * fix: The open `NavigationPane` no longer adds a second 6px gap below the pane toggle, so the first item stays in place when a compact pane opens ([#1374](https://github.com/bdlukaa/fluent_ui/pull/1374))
+* fix: Correctly render `Acrylic` in flyouts and overlays ([#719](https://github.com/bdlukaa/fluent_ui/issues/719))
 
 ## 4.17.0
 
