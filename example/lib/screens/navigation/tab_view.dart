@@ -17,6 +17,8 @@ class TabViewPage extends StatefulWidget {
 class _TabViewPageState extends State<TabViewPage> with PageMixin {
   int currentIndex = 0;
   List<Tab>? tabs;
+  late final TabViewController _controller;
+  var _nextControllerTab = 3;
 
   TabWidthBehavior tabWidthBehavior = TabWidthBehavior.equal;
   CloseButtonVisibilityMode closeButtonVisibilityMode =
@@ -46,7 +48,37 @@ class _TabViewPageState extends State<TabViewPage> with PageMixin {
     return tab;
   }
 
+  Tab _createControllerTab(final int index) {
+    late final Tab tab;
+    tab = Tab(
+      key: ValueKey('controller-document-$index'),
+      text: Text('Controller document $index'),
+      body: Center(child: Text('Content for controller document $index')),
+      onClosed: () => _controller.removeAt(_controller.tabs.indexOf(tab)),
+    );
+    return tab;
+  }
+
+  void _addControllerTab() {
+    _controller.add(_createControllerTab(_nextControllerTab++));
+  }
+
   int _secondaryIndex = 0;
+
+  @override
+  void initState() {
+    super.initState();
+    _controller = TabViewController(
+      tabs: List.generate(3, _createControllerTab),
+      initialIndex: 1,
+    );
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(final BuildContext context) {
@@ -121,9 +153,100 @@ class _TabViewPageState extends State<TabViewPage> with PageMixin {
             );
           }(),
         ),
+        subtitle(content: const Text('Controller-managed tabs')),
+        const Text(
+          'TabViewController owns the tabs and selection state. Use it when '
+          'tabs are added, closed, selected, or reordered outside the build '
+          'method. Give each tab a stable key so its body stays associated with '
+          'that tab when the list changes.',
+        ),
+        CodeSnippetCard(
+          codeSnippet: r'''late final TabViewController controller;
+int nextTab = 3;
+
+@override
+void initState() {
+  super.initState();
+  controller = TabViewController(
+    tabs: List.generate(3, createTab),
+    initialIndex: 1,
+  );
+}
+
+Tab createTab(int index) {
+  late final Tab tab;
+  tab = Tab(
+    key: ValueKey('document-$index'),
+    text: Text('Document $index'),
+    body: Center(child: Text('Content $index')),
+    onClosed: () => controller.removeAt(controller.tabs.indexOf(tab)),
+  );
+  return tab;
+}
+
+void addTab() {
+  controller.add(createTab(nextTab++));
+}
+
+TabView(
+  controller: controller,
+  onNewPressed: addTab,
+)
+
+// Select a tab programmatically.
+controller.select(1);
+
+// Move a tab programmatically. Users can also drag tabs to reorder them.
+controller.move(0, controller.tabs.length - 1);''',
+          child: SizedBox(
+            height: 280,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Wrap(
+                  spacing: 8,
+                  runSpacing: 8,
+                  children: [
+                    Button(
+                      onPressed: _addControllerTab,
+                      child: const Text('Add tab'),
+                    ),
+                    Button(
+                      onPressed: () {
+                        if (_controller.tabs.length > 1) {
+                          _controller.select(1);
+                        }
+                      },
+                      child: const Text('Select second tab'),
+                    ),
+                    Button(
+                      onPressed: () {
+                        if (_controller.tabs.length > 1) {
+                          _controller.move(0, _controller.tabs.length - 1);
+                        }
+                      },
+                      child: const Text('Move first tab to end'),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 8),
+                const Text(
+                  'Close a tab with its close button or drag tabs to reorder them.',
+                ),
+                const SizedBox(height: 8),
+                Expanded(
+                  child: TabView(
+                    controller: _controller,
+                    onNewPressed: _addControllerTab,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
         subtitle(
           content: const Text(
-            'A TabView with support for adding, closing and rearraging tabs',
+            'Legacy callback API: adding, closing and rearranging tabs',
           ),
         ),
         Card(

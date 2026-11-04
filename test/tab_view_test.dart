@@ -12,9 +12,7 @@ void main() {
       Tab(text: const Text('Tab 1'), body: const Text('Body 1')),
       Tab(text: const Text('Tab 2'), body: const Text('Body 2')),
     ];
-    await tester.pumpWidget(
-      wrapApp(child: TabView(currentIndex: 0, tabs: tabs)),
-    );
+    await tester.pumpWidget(wrapApp(child: TabView(tabs: tabs)));
     expect(find.text('Tab 1'), findsOneWidget);
     expect(find.text('Tab 2'), findsOneWidget);
     expect(find.text('Body 1'), findsOneWidget);
@@ -46,6 +44,162 @@ void main() {
     expect(find.text('Body 2'), findsOneWidget);
   });
 
+  testWidgets(
+    'TabViewController synchronizes user and programmatic selection',
+    (tester) async {
+      var changedIndex = -1;
+      final controller = TabViewController(
+        tabs: [
+          Tab(text: const Text('Tab 1'), body: const Text('Body 1')),
+          Tab(text: const Text('Tab 2'), body: const Text('Body 2')),
+        ],
+      );
+      addTearDown(controller.dispose);
+
+      await tester.pumpWidget(
+        wrapApp(
+          child: TabView(
+            controller: controller,
+            onChanged: (index) => changedIndex = index,
+          ),
+        ),
+      );
+
+      await tester.tap(find.text('Tab 2'));
+      await tester.pumpAndSettle();
+      expect(controller.selectedIndex, 1);
+      expect(changedIndex, 1);
+      expect(find.text('Body 2'), findsOneWidget);
+
+      controller.select(0);
+      await tester.pumpAndSettle();
+      expect(find.text('Body 1'), findsOneWidget);
+    },
+  );
+
+  test('TabViewController manages tabs and preserves selected identity', () {
+    final a = _controllerTab('A');
+    final b = _controllerTab('B');
+    final c = _controllerTab('C');
+    final inserted = _controllerTab('Inserted');
+    final controller = TabViewController(tabs: [a, b], initialIndex: 1);
+    addTearDown(controller.dispose);
+
+    expect(controller.tabs, [a, b]);
+    expect(controller.selectedIndex, 1);
+    expect(controller.tabs[controller.selectedIndex], same(b));
+
+    controller.add(c, select: false);
+    controller.insert(0, inserted, select: false);
+    expect(controller.tabs, [inserted, a, b, c]);
+    expect(controller.selectedIndex, 2);
+    expect(controller.tabs[controller.selectedIndex], same(b));
+
+    controller.move(2, 0);
+    expect(controller.tabs, [b, inserted, a, c]);
+    expect(controller.selectedIndex, 0);
+    expect(controller.tabs[controller.selectedIndex], same(b));
+
+    controller.removeAt(1);
+    expect(controller.tabs, [b, a, c]);
+    expect(controller.tabs[controller.selectedIndex], same(b));
+
+    controller.replaceTabs([c, b]);
+    expect(controller.tabs, [c, b]);
+    expect(controller.selectedIndex, 1);
+    expect(controller.tabs[controller.selectedIndex], same(b));
+  });
+
+  test('TabViewController selects and notifies only for state changes', () {
+    final a = _controllerTab('A');
+    final b = _controllerTab('B');
+    final controller = TabViewController(tabs: [a, b]);
+    addTearDown(controller.dispose);
+    var notifications = 0;
+    controller.addListener(() => notifications++);
+
+    controller.select(0);
+    expect(notifications, 0);
+
+    controller.select(1);
+    expect(controller.selectedIndex, 1);
+    expect(controller.tabs[controller.selectedIndex], same(b));
+    expect(notifications, 1);
+
+    controller.add(_controllerTab('C'));
+    controller.insert(0, _controllerTab('Inserted'));
+    controller.removeAt(0);
+    controller.move(1, 0);
+    controller.replaceTabs([a, b]);
+    expect(notifications, 6);
+  });
+
+  test('TabViewController handles an empty collection', () {
+    final controller = TabViewController();
+    addTearDown(controller.dispose);
+
+    expect(controller.tabs, isEmpty);
+    expect(controller.selectedIndex, 0);
+
+    final tab = _controllerTab('First');
+    controller.add(tab);
+    expect(controller.tabs, [tab]);
+    expect(controller.selectedIndex, 0);
+    controller.removeAt(0);
+    expect(controller.tabs, isEmpty);
+    expect(controller.selectedIndex, 0);
+
+    controller.replaceTabs(const []);
+    expect(controller.tabs, isEmpty);
+    expect(controller.selectedIndex, 0);
+  });
+
+  testWidgets('TabView renders tabs owned by its controller', (tester) async {
+    final controller = TabViewController(
+      tabs: [_controllerTab('A'), _controllerTab('B')],
+      initialIndex: 1,
+    );
+    addTearDown(controller.dispose);
+
+    await tester.pumpWidget(wrapApp(child: TabView(controller: controller)));
+    expect(find.text('Body B'), findsOneWidget);
+
+    controller.insert(0, _controllerTab('Inserted'), select: false);
+    await tester.pumpAndSettle();
+    expect(find.text('Inserted'), findsOneWidget);
+    expect(find.text('Body B'), findsOneWidget);
+
+    controller.select(0);
+    await tester.pumpAndSettle();
+    expect(find.text('Body Inserted'), findsOneWidget);
+  });
+
+  testWidgets(
+    'TabView swaps externally owned controllers without disposing them',
+    (tester) async {
+      final first = TabViewController(tabs: [_controllerTab('First')]);
+      final second = TabViewController(
+        tabs: [_controllerTab('Second A'), _controllerTab('Second B')],
+        initialIndex: 1,
+      );
+      addTearDown(first.dispose);
+      addTearDown(second.dispose);
+
+      await tester.pumpWidget(wrapApp(child: TabView(controller: first)));
+      expect(find.text('Body First'), findsOneWidget);
+
+      await tester.pumpWidget(wrapApp(child: TabView(controller: second)));
+      expect(find.text('Body Second B'), findsOneWidget);
+
+      first.add(_controllerTab('First added'));
+      second.select(0);
+      await tester.pumpAndSettle();
+
+      expect(find.text('Body Second A'), findsOneWidget);
+      expect(find.text('First added'), findsNothing);
+    },
+  );
+
   testWidgets('TabView calls onNewPressed when add button is tapped', (
     tester,
   ) async {
@@ -55,7 +209,6 @@ void main() {
       wrapApp(
         child: TabView(
           newTabIcon: const Icon(FluentIcons.add),
-          currentIndex: 0,
           tabs: tabs,
           onNewPressed: () {
             pressed = true;
@@ -73,7 +226,6 @@ void main() {
     await tester.pumpWidget(
       wrapApp(
         child: TabView(
-          currentIndex: 0,
           tabs: tabs,
           header: const Text('Header'),
           footer: const Text('Footer'),
@@ -98,9 +250,7 @@ void main() {
         closeIcon: const Icon(FluentIcons.cancel),
       ),
     ];
-    await tester.pumpWidget(
-      wrapApp(child: TabView(currentIndex: 0, tabs: tabs)),
-    );
+    await tester.pumpWidget(wrapApp(child: TabView(tabs: tabs)));
     // Find the close button (IconButton with tooltip 'Close')
     final closeButton = find.byIcon(FluentIcons.cancel);
     expect(closeButton, findsOneWidget);
@@ -117,7 +267,6 @@ void main() {
     await tester.pumpWidget(
       wrapApp(
         child: TabView(
-          currentIndex: 0,
           tabs: tabs,
           onNewPressed: () => pressed = true,
           shortcutsEnabled: false,
@@ -153,6 +302,77 @@ void main() {
     expect(body('B:1'), findsOneWidget);
     expect(body('B:0'), findsNothing);
   });
+
+  testWidgets(
+    'TabView preserves a reused body when a tab is inserted ahead of it',
+    (tester) async {
+      Finder body(String text) => find.text(text, skipOffstage: false);
+
+      await tester.pumpWidget(wrapApp(child: const _ReorderHarness()));
+      await tester.tap(find.widgetWithText(Button, 'inc B'));
+      await tester.pumpAndSettle();
+      await tester.tap(find.widgetWithText(Button, 'insert'));
+      await tester.pumpAndSettle();
+
+      expect(body('B:1'), findsOneWidget);
+      expect(body('A:1'), findsNothing);
+    },
+  );
+
+  testWidgets(
+    'TabView preserves bodies when tabs are rebuilt as new instances',
+    (tester) async {
+      Finder body(String text) => find.text(text, skipOffstage: false);
+
+      await tester.pumpWidget(wrapApp(child: const _RebuiltTabsHarness()));
+      await tester.tap(find.widgetWithText(Button, 'inc A'));
+      await tester.pumpAndSettle();
+      await tester.tap(find.widgetWithText(Button, 'rebuild'));
+      await tester.pumpAndSettle();
+
+      expect(body('A:1'), findsOneWidget);
+    },
+  );
+
+  testWidgets(
+    'TabView does not recreate the body it switches away from when tabs are '
+    'rebuilt as new instances',
+    (tester) async {
+      final initializedBodies = <String>[];
+      await tester.pumpWidget(
+        wrapApp(
+          child: _RebuiltTabsHarness(
+            buildBody: (name) => _LifecycleBody(name, initializedBodies),
+          ),
+        ),
+      );
+
+      await tester.tap(find.text('B'));
+      await tester.pumpAndSettle();
+
+      expect(initializedBodies, ['A', 'B']);
+    },
+  );
+
+  testWidgets(
+    'TabView keeps keyed rebuilt bodies with their tabs after reordering',
+    (tester) async {
+      Finder body(String text) => find.text(text, skipOffstage: false);
+
+      await tester.pumpWidget(
+        wrapApp(child: const _RebuiltTabsHarness(keyed: true)),
+      );
+      await tester.tap(find.text('B'));
+      await tester.pumpAndSettle();
+      await tester.tap(find.widgetWithText(Button, 'inc B'));
+      await tester.pumpAndSettle();
+      await tester.tap(find.widgetWithText(Button, 'reorder'));
+      await tester.pumpAndSettle();
+
+      expect(body('B:1'), findsOneWidget);
+      expect(body('B:0'), findsNothing);
+    },
+  );
 
   testWidgets('TabView reorders tabs in both directions with a mouse drag', (
     tester,
@@ -258,7 +478,6 @@ void main() {
     await tester.pumpWidget(
       wrapApp(
         child: TabView(
-          currentIndex: 0,
           tabs: tabs,
           stripBuilder: (context, strip) => Column(
             mainAxisSize: MainAxisSize.min,
@@ -274,9 +493,14 @@ void main() {
   });
 }
 
+Tab _controllerTab(String name) {
+  return Tab(text: Text(name), body: Text('Body $name'));
+}
+
 /// Drives a two-tab [TabView] whose bodies hold state (a counter) that no
-/// widget config carries, plus buttons to bump B's counter and to move B in
-/// front of A. Used to prove the body element follows its tab across reorders.
+/// widget config carries, plus buttons to bump B's counter, to move B in
+/// front of A, and to insert a new tab X in front of both. Used to prove the
+/// body element follows its tab across reorders and insertions.
 class _ReorderHarness extends StatefulWidget {
   const _ReorderHarness();
 
@@ -305,6 +529,17 @@ class _ReorderHarnessState extends State<_ReorderHarness> {
               }),
               child: const Text('reorder'),
             ),
+            Button(
+              onPressed: () => setState(() {
+                final selectedTab = tabs[currentIndex];
+                tabs.insert(
+                  0,
+                  Tab(text: const Text('X'), body: const _CounterBody('X')),
+                );
+                currentIndex = tabs.indexOf(selectedTab);
+              }),
+              child: const Text('insert'),
+            ),
           ],
         ),
         Expanded(
@@ -317,6 +552,88 @@ class _ReorderHarnessState extends State<_ReorderHarness> {
       ],
     );
   }
+}
+
+/// Drives a two-tab [TabView] that creates new [Tab] instances on every build,
+/// as most apps do, plus buttons to rebuild and to move the last tab in front
+/// of the first.
+class _RebuiltTabsHarness extends StatefulWidget {
+  const _RebuiltTabsHarness({
+    this.keyed = false,
+    this.buildBody = _CounterBody.new,
+  });
+
+  /// Whether each [Tab] is given a key derived from its name.
+  final bool keyed;
+
+  final Widget Function(String name) buildBody;
+
+  @override
+  State<_RebuiltTabsHarness> createState() => _RebuiltTabsHarnessState();
+}
+
+class _RebuiltTabsHarnessState extends State<_RebuiltTabsHarness> {
+  final names = ['A', 'B'];
+  int currentIndex = 0;
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        Row(
+          children: [
+            Button(
+              onPressed: () => setState(() {}),
+              child: const Text('rebuild'),
+            ),
+            Button(
+              onPressed: () => setState(() {
+                names.insert(0, names.removeLast());
+                currentIndex = 0;
+              }),
+              child: const Text('reorder'),
+            ),
+          ],
+        ),
+        Expanded(
+          child: TabView(
+            currentIndex: currentIndex,
+            tabs: [
+              for (final name in names)
+                Tab(
+                  key: widget.keyed ? ValueKey(name) : null,
+                  text: Text(name),
+                  body: widget.buildBody(name),
+                ),
+            ],
+            onChanged: (i) => setState(() => currentIndex = i),
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+/// A body that records its name each time its [State] is created.
+class _LifecycleBody extends StatefulWidget {
+  const _LifecycleBody(this.name, this.initializedBodies);
+
+  final String name;
+  final List<String> initializedBodies;
+
+  @override
+  State<_LifecycleBody> createState() => _LifecycleBodyState();
+}
+
+class _LifecycleBodyState extends State<_LifecycleBody> {
+  @override
+  void initState() {
+    super.initState();
+    widget.initializedBodies.add(widget.name);
+  }
+
+  @override
+  Widget build(BuildContext context) => Text('Body ${widget.name}');
 }
 
 /// A body whose displayed count lives only in [State] — reused-by-position

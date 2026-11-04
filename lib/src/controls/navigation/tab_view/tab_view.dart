@@ -19,29 +19,66 @@ const double _kButtonWidth = 32;
 /// browser tabs. Users can switch between tabs, and optionally rearrange,
 /// open, or close tabs.
 ///
+/// ## Managing tabs
+///
+/// Use either [tabs] and [currentIndex], or a [controller], but not both. A
+/// [TabViewController] owns its tabs and selection, and notifies this widget
+/// when they change. Create it once in a [State.initState] method and dispose
+/// it in [State.dispose]. Without a controller, the parent owns the tab list
+/// and selection: [onChanged], [onNewPressed], [Tab.onClosed], and [onReorder]
+/// request changes, and the parent must rebuild this widget with the result.
+///
+/// A close action only invokes the selected [Tab.onClosed] callback; it never
+/// removes the tab automatically. The callback must remove the tab from the
+/// controller or parent-managed list. A tab without [Tab.onClosed] cannot be
+/// closed.
+///
+/// Give tabs stable, unique keys when their order or membership can change.
+/// Keys preserve a tab body's state when tabs are recreated or reordered.
+/// Unkeyed tabs can retain state when the same [Tab] instances are reused, but
+/// reordering newly created, otherwise indistinguishable unkeyed tabs is
+/// ambiguous and state can follow their previous positions instead.
+///
 /// ![TabView Preview](https://learn.microsoft.com/en-us/windows/apps/design/controls/images/tabview/tab-introduction.png)
 ///
 /// {@tool snippet}
-/// This example shows a basic tab view:
+/// This short controller lifecycle example adds and closes tabs:
 ///
 /// ```dart
-/// TabView(
-///   currentIndex: selectedIndex,
-///   onChanged: (index) => setState(() => selectedIndex = index),
-///   tabs: [
-///     Tab(
-///       text: Text('Document 1'),
-///       body: Center(child: Text('Content 1')),
-///     ),
-///     Tab(
-///       text: Text('Document 2'),
-///       body: Center(child: Text('Content 2')),
-///     ),
-///   ],
-///   onNewPressed: () {
-///     // Add a new tab
-///   },
-/// )
+/// class _TabViewExampleState extends State<TabViewExample> {
+///   late final TabViewController controller;
+///   var nextDocument = 2;
+///
+///   @override
+///   void initState() {
+///     super.initState();
+///     controller = TabViewController(tabs: [_tab('Document 1')]);
+///   }
+///
+///   Tab _tab(String title) {
+///     final key = ValueKey(title);
+///     return Tab(
+///       key: key,
+///       text: Text(title),
+///       body: Center(child: Text(title)),
+///       onClosed: () => controller.removeAt(
+///         controller.tabs.indexWhere((tab) => tab.key == key),
+///       ),
+///     );
+///   }
+///
+///   @override
+///   void dispose() {
+///     controller.dispose();
+///     super.dispose();
+///   }
+///
+///   @override
+///   Widget build(BuildContext context) => TabView(
+///     controller: controller,
+///     onNewPressed: () => controller.add(_tab('Document ${nextDocument++}')),
+///   );
+/// }
 /// ```
 /// {@end-tool}
 ///
@@ -64,9 +101,10 @@ class TabView extends StatefulWidget {
   ///
   /// [maxTabWidth] must be non-negative
   const TabView({
-    required this.currentIndex,
-    required this.tabs,
+    List<Tab>? tabs,
+    int? currentIndex,
     super.key,
+    this.controller,
     this.onChanged,
     this.onNewPressed,
     this.newTabIcon = const WindowsIcon(
@@ -86,21 +124,52 @@ class TabView extends StatefulWidget {
     this.reservedStripWidth,
     this.stripBuilder,
     this.closeDelayDuration = const Duration(seconds: 1),
-  });
+  }) : tabs = tabs ?? const [],
+       currentIndex = currentIndex ?? 0,
+       assert(
+         controller != null || tabs != null,
+         'tabs must be provided when controller is null.',
+       ),
+       assert(
+         controller == null || tabs == null,
+         'Tabs must be managed by either tabs or controller, not both.',
+       ),
+       assert(
+         controller == null || currentIndex == null,
+         'currentIndex must not be provided when controller is used.',
+       );
 
-  /// The index of the tab to be displayed
+  /// The index of the tab to display when [controller] is null.
+  ///
+  /// Defaults to `0`. When [controller] is provided, its
+  /// [TabViewController.selectedIndex] takes precedence.
   final int currentIndex;
 
-  /// Whether another tab was requested to be displayed
+  /// Controls the selected tab.
+  ///
+  /// When non-null, changing [TabViewController.selectedIndex] updates the
+  /// displayed tab. User selection updates the controller before [onChanged]
+  /// is called.
+  final TabViewController? controller;
+
+  /// Called when the user selects a tab.
+  ///
+  /// When [controller] is provided, it has already been updated with the
+  /// selected index when this callback is invoked. Without a controller, use
+  /// this callback to rebuild [TabView] with the new [currentIndex].
   final ValueChanged<int>? onChanged;
 
-  /// The tabs to be displayed.
+  /// The tabs to display when [controller] is null.
+  ///
+  /// This must be omitted when [controller] is provided.
   final List<Tab> tabs;
 
-  /// Called when the new button is pressed or when the
-  /// shortcut `Ctrl + T` is executed.
+  /// Called when the user requests a new tab by pressing the new-tab button or
+  /// using the `Ctrl + T` shortcut.
   ///
-  /// If null, the new button won't be displayed
+  /// This callback does not add a tab automatically. Add one to [controller],
+  /// or update the parent-managed [tabs] list and rebuild the [TabView]. If
+  /// null, the new-tab button is not displayed and `Ctrl + T` has no effect.
   final VoidCallback? onNewPressed;
 
   /// The icon of the "Add new tab" button.
@@ -118,9 +187,14 @@ class TabView extends StatefulWidget {
   /// Defaults to `true`.
   final bool shortcutsEnabled;
 
-  /// Called when the tabs are reordered.
+  /// Called when the user requests that a tab move from `oldIndex` to
+  /// `newIndex`.
   ///
-  /// If null, reordering is disabled. It's disabled by default.
+  /// With a [controller], it has already moved the tab before this callback is
+  /// invoked; use the callback for observation and do not move it again.
+  /// Without a controller, move the item in the parent-managed [tabs] list and
+  /// rebuild the [TabView]. If null, reordering is disabled unless a
+  /// [controller] is provided.
   final ReorderCallback? onReorder;
 
   /// The min width a tab can have. Must not be negative.
@@ -193,7 +267,11 @@ class TabView extends StatefulWidget {
   /// Whether reordering is enabled or not.
   ///
   /// To enable it, ensure [onReorder] is not null.
-  bool get isReorderEnabled => onReorder != null;
+  bool get isReorderEnabled => controller != null || onReorder != null;
+
+  List<Tab> get _effectiveTabs => controller?.tabs ?? tabs;
+
+  int get _effectiveCurrentIndex => controller?.selectedIndex ?? currentIndex;
 
   @override
   State<StatefulWidget> createState() => _TabViewState();
@@ -202,7 +280,8 @@ class TabView extends StatefulWidget {
   void debugFillProperties(DiagnosticPropertiesBuilder properties) {
     super.debugFillProperties(properties);
     properties
-      ..add(IntProperty('currentIndex', currentIndex))
+      ..add(IntProperty('currentIndex', _effectiveCurrentIndex))
+      ..add(DiagnosticsProperty('controller', controller))
       ..add(
         FlagProperty(
           'showNewButton',
@@ -228,7 +307,7 @@ class TabView extends StatefulWidget {
           ifNull: 'no new button',
         ),
       )
-      ..add(IntProperty('tabs', tabs.length))
+      ..add(IntProperty('tabs', _effectiveTabs.length))
       ..add(
         FlagProperty(
           'reorderEnabled',
@@ -280,25 +359,65 @@ class _TabViewState extends State<TabView> {
   @override
   void initState() {
     super.initState();
-    scrollController =
-        widget.scrollController ??
-        ScrollPosController(
-          itemCount: widget.tabs.length,
-          animationDuration: const Duration(milliseconds: 100),
-        );
-    scrollController.itemCount = widget.tabs.length;
+    widget.controller?.addListener(_handleControllerChanged);
+    scrollController = widget.scrollController ?? _createScrollController();
+    _syncScrollControllerItemCount();
   }
 
   @override
   void didUpdateWidget(TabView oldWidget) {
     super.didUpdateWidget(oldWidget);
-    if (widget.tabs.length != scrollController.itemCount) {
-      scrollController.itemCount = widget.tabs.length;
+    if (oldWidget.controller != widget.controller) {
+      oldWidget.controller?.removeListener(_handleControllerChanged);
+      widget.controller?.addListener(_handleControllerChanged);
     }
-    if (widget.currentIndex != oldWidget.currentIndex &&
-        scrollController.hasClients) {
-      scrollController.scrollToItem(widget.currentIndex);
+    if (oldWidget.scrollController != widget.scrollController) {
+      if (oldWidget.scrollController == null) scrollController.dispose();
+      scrollController = widget.scrollController ?? _createScrollController();
+      scrollController.animationDuration = FluentTheme.of(
+        context,
+      ).fastAnimationDuration;
     }
+    _syncScrollControllerItemCount();
+    if (widget._effectiveCurrentIndex != oldWidget._effectiveCurrentIndex) {
+      _scrollToCurrentIndex();
+    }
+  }
+
+  ScrollPosController _createScrollController() {
+    return ScrollPosController(
+      itemCount: widget._effectiveTabs.length,
+      animationDuration: const Duration(milliseconds: 100),
+    );
+  }
+
+  void _syncScrollControllerItemCount() {
+    if (scrollController.itemCount != widget._effectiveTabs.length) {
+      scrollController.itemCount = widget._effectiveTabs.length;
+    }
+  }
+
+  void _handleControllerChanged() {
+    if (!mounted) return;
+    _syncScrollControllerItemCount();
+    _scrollToCurrentIndex();
+    setState(() {});
+  }
+
+  void _scrollToCurrentIndex() {
+    if (scrollController.hasClients && widget._effectiveTabs.isNotEmpty) {
+      scrollController.scrollToItem(widget._effectiveCurrentIndex);
+    }
+  }
+
+  void _select(int index) {
+    widget.controller?.select(index);
+    widget.onChanged?.call(index);
+  }
+
+  void _reorder(int oldIndex, int newIndex) {
+    widget.controller?.move(oldIndex, newIndex);
+    widget.onReorder?.call(oldIndex, newIndex);
   }
 
   @override
@@ -326,6 +445,7 @@ class _TabViewState extends State<TabView> {
 
   @override
   void dispose() {
+    widget.controller?.removeListener(_handleControllerChanged);
     if (widget.scrollController == null) {
       // only dispose the local controller
       scrollController.dispose();
@@ -335,7 +455,7 @@ class _TabViewState extends State<TabView> {
   }
 
   void close(int index) {
-    final tab = widget.tabs[index];
+    final tab = widget._effectiveTabs[index];
     final closable = tab.onClosed != null;
 
     void createTimer() {
@@ -349,7 +469,7 @@ class _TabViewState extends State<TabView> {
     }
 
     if (closable) {
-      widget.tabs[index].onClosed!();
+      widget._effectiveTabs[index].onClosed!();
 
       closeTimer?.cancel();
 
@@ -362,7 +482,8 @@ class _TabViewState extends State<TabView> {
 
         // consider the divider thickness when calculating the tab width
         final thickness = DividerTheme.of(context).thickness ?? 0;
-        tabWidth += (thickness * (widget.tabs.length - 1)) - thickness * 2;
+        tabWidth +=
+            (thickness * (widget._effectiveTabs.length - 1)) - thickness * 2;
       }
 
       setState(() => lockedTabWidth = tabWidth);
@@ -375,15 +496,17 @@ class _TabViewState extends State<TabView> {
     int index,
     double preferredTabWidth,
   ) {
-    final tab = widget.tabs[index];
+    final tab = widget._effectiveTabs[index];
     final tabWidget = TabData(
       key: ValueKey<int>(index),
       reorderIndex: widget.isReorderEnabled ? index : null,
-      selected: index == widget.currentIndex,
-      onPressed: widget.onChanged == null
+      selected: index == widget._effectiveCurrentIndex,
+      onPressed: widget.controller == null && widget.onChanged == null
           ? null
-          : () => widget.onChanged!(index),
-      onClose: widget.tabs[index].onClosed == null ? null : () => close(index),
+          : () => _select(index),
+      onClose: widget._effectiveTabs[index].onClosed == null
+          ? null
+          : () => close(index),
       animationDuration: FluentTheme.of(context).fastAnimationDuration,
       animationCurve: FluentTheme.of(context).animationCurve,
       visibilityMode: widget.closeButtonVisibility,
@@ -471,7 +594,10 @@ class _TabViewState extends State<TabView> {
         style: DividerThemeData(
           verticalMargin: const EdgeInsetsDirectional.symmetric(vertical: 8),
           decoration:
-              ![widget.currentIndex - 1, widget.currentIndex].contains(index)
+              ![
+                widget._effectiveCurrentIndex - 1,
+                widget._effectiveCurrentIndex,
+              ].contains(index)
               ? null
               : const BoxDecoration(color: Colors.transparent),
         ),
@@ -520,14 +646,18 @@ class _TabViewState extends State<TabView> {
                         'You can only create a TabView in a box with defined width',
                       );
 
-                      preferredTabWidth = clampDouble(
-                        (width -
-                                (widget.showNewButton ? _kButtonWidth : 0) -
-                                (widget.reservedStripWidth ?? 0)) /
-                            widget.tabs.length,
-                        widget.minTabWidth,
-                        widget.maxTabWidth,
-                      );
+                      preferredTabWidth = widget._effectiveTabs.isEmpty
+                          ? 0
+                          : clampDouble(
+                              (width -
+                                      (widget.showNewButton
+                                          ? _kButtonWidth
+                                          : 0) -
+                                      (widget.reservedStripWidth ?? 0)) /
+                                  widget._effectiveTabs.length,
+                              widget.minTabWidth,
+                              widget.maxTabWidth,
+                            );
 
                       final Widget listView = Listener(
                         onPointerSignal: (e) {
@@ -553,10 +683,8 @@ class _TabViewState extends State<TabView> {
                           shrinkWrap: true,
                           scrollDirection: Axis.horizontal,
                           controller: scrollController,
-                          onReorderItem: (i, ii) {
-                            widget.onReorder?.call(i, ii);
-                          },
-                          itemCount: widget.tabs.length,
+                          onReorderItem: _reorder,
+                          itemCount: widget._effectiveTabs.length,
                           proxyDecorator: (child, index, animation) {
                             return child;
                           },
@@ -573,7 +701,7 @@ class _TabViewState extends State<TabView> {
 
                       /// Whether the tab bar is scrollable
                       final scrollable =
-                          preferredTabWidth * widget.tabs.length >
+                          preferredTabWidth * widget._effectiveTabs.length >
                           width - (widget.showNewButton ? _kButtonWidth : 0);
 
                       final showScrollButtons =
@@ -699,18 +827,23 @@ class _TabViewState extends State<TabView> {
             ),
           ),
         ),
-        if (widget.tabs.isNotEmpty)
+        if (widget._effectiveTabs.isNotEmpty)
           Expanded(
             child: Focus(
               autofocus: true,
-              child: _TabBody(index: widget.currentIndex, tabs: widget.tabs),
+              child: _TabBody(
+                index: widget._effectiveCurrentIndex,
+                tabs: widget._effectiveTabs,
+              ),
             ),
           ),
       ],
     );
     if (widget.shortcutsEnabled) {
       void onClosePressed() {
-        close(widget.currentIndex);
+        if (widget._effectiveTabs.isNotEmpty) {
+          close(widget._effectiveCurrentIndex);
+        }
       }
 
       // For more info, refer to [SingleActivator] docs
@@ -763,12 +896,11 @@ class _TabViewState extends State<TabView> {
                 final index = i as int;
                 return () {
                   // If it's the last, move to the last tab
+                  if (widget._effectiveTabs.isEmpty) return;
                   if (index == 8) {
-                    widget.onChanged?.call(widget.tabs.length - 1);
-                  } else {
-                    if (widget.tabs.length - 1 >= index) {
-                      widget.onChanged?.call(index);
-                    }
+                    _select(widget._effectiveTabs.length - 1);
+                  } else if (widget._effectiveTabs.length - 1 >= index) {
+                    _select(index);
                   }
                 };
               },

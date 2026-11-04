@@ -19,6 +19,7 @@
   WindowsIcon.fallbackResolver = fluentIconFallback;
   ```
 
+* feat: Add an optional `TabViewController` for managing tabs and selection independently of the widget. It supports selecting, adding, inserting, removing, moving, and replacing tabs while the existing callback-based API remains available. ([#1349](https://github.com/bdlukaa/fluent_ui/issues/1349))
 * feat: Display Icons in DevTools ([1365](https://github.com/bdlukaa/fluent_ui/pull/1365))
 * feat: Add `CommandBarThemeData`, set through `FluentThemeData.commandBarTheme` or `CommandBarTheme`, to configure the padding and the closed and open decorations of the frame around `CommandBar` items ([#1374](https://github.com/bdlukaa/fluent_ui/pull/1374))
 * feat: Add `ButtonThemeData.smallIconButtonStyle`, used by small and tiny `IconButton`s (including those under a `SmallIconButton`, such as `TextBox` and `PasswordBox` buttons). It falls back to `iconButtonStyle` ([#1374](https://github.com/bdlukaa/fluent_ui/pull/1374))

@@ -36,18 +36,18 @@ jobs:
       - name: Run tests
         run: flutter test --exclude-tags=golden
 
-  acrylic-goldens:
+  golden-tests:
     runs-on: macos-latest
 
     steps:
       - uses: actions/checkout@v2
       - name: Install Flutter
-        uses: subosito/flutter-action@main
+        uses: subosito/flutter-action@v2
         with:
-          channel: stable
+          flutter-version: 3.47.7
 
       - name: Install dependencies
         run: flutter pub get
 
-      - name: Run Acrylic golden tests
+      - name: Run golden tests
         run: flutter test --tags=golden
