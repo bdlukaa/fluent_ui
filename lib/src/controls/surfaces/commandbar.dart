@@ -513,7 +513,6 @@ class CommandBarState extends State<CommandBar> {
                     // presenter width bounds.
                     child: IntrinsicWidth(
                       child: FlyoutContent(
-                        color: theme.resources.layerOnAcrylicFillColorDefault,
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(8),
                           side: BorderSide(

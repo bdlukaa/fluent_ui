@@ -149,7 +149,16 @@ void main() {
       presenter.constraints,
       const BoxConstraints(minWidth: 160, maxWidth: 480),
     );
-    expect(presenter.color, theme.resources.layerOnAcrylicFillColorDefault);
+    expect(presenter.color, isNull);
+    final acrylic = tester.widget<Acrylic>(
+      find.descendant(
+        of: find.byType(FlyoutContent),
+        matching: find.byType(Acrylic),
+      ),
+    );
+    expect(acrylic.luminosityAlpha, theme.acrylicLuminosityOpacity);
+    expect(acrylic.tint, isNull);
+    expect(acrylic.tintAlpha, isNull);
     final shape = presenter.shape! as RoundedRectangleBorder;
     expect(shape.side.color, theme.resources.surfaceStrokeColorFlyout);
     expect(shape.side.width, 1);

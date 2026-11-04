@@ -1,4 +1,7 @@
+import 'dart:ui' as ui;
+
 import 'package:fluent_ui/fluent_ui.dart';
+import 'package:flutter/rendering.dart';
 
 import 'package:flutter_test/flutter_test.dart';
 
@@ -92,6 +95,64 @@ void main() {
   });
 
   group('Acrylic widget', () {
+    testWidgets('blend stages sample the backdrop across repaint boundaries', (
+      tester,
+    ) async {
+      const key = ValueKey('composition');
+      const acrylic = Acrylic(
+        tint: Color(0xFF808080),
+        tintAlpha: 0.2,
+        luminosityAlpha: 0.85,
+        blurAmount: 0,
+        child: SizedBox.expand(),
+      );
+      await tester.pumpWidget(
+        FluentApp(
+          home: Center(
+            child: RepaintBoundary(
+              key: key,
+              child: SizedBox(
+                width: 320,
+                height: 120,
+                child: Stack(
+                  fit: StackFit.expand,
+                  children: [
+                    const ColoredBox(color: Color(0xFFFF0000)),
+                    Row(
+                      children: [
+                        const Expanded(child: acrylic),
+                        Expanded(child: RepaintBoundary(child: acrylic)),
+                      ],
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ),
+        ),
+      );
+      await tester.pumpAndSettle();
+      final boundary = tester.renderObject<RenderRepaintBoundary>(
+        find.byKey(key),
+      );
+      final image = (await tester.runAsync(() => boundary.toImage()))!;
+      final bytes = (await tester.runAsync(
+        () => image.toByteData(format: ui.ImageByteFormat.rawRgba),
+      ))!;
+      final left = (60 * image.width + 80) * 4;
+      final right = (60 * image.width + 240) * 4;
+      expect(bytes.getUint8(left), closeTo(228, 3));
+      expect(bytes.getUint8(left + 1), closeTo(74, 3));
+      for (var channel = 0; channel < 3; channel++) {
+        expect(
+          bytes.getUint8(right + channel),
+          closeTo(bytes.getUint8(left + channel), 2),
+          reason:
+              'Material blend operations must not target a transparent intermediate canvas.',
+        );
+      }
+      image.dispose();
+    });
     testWidgets(
       'keeps automatic luminosity and resolves native theme resources',
       (tester) async {
@@ -124,7 +185,7 @@ void main() {
         FluentApp(
           home: DisableAcrylic(
             child: Acrylic(
-              fallbackColor: Colors.green,
+              fallbackColor: Colors.green.withValues(alpha: 0.2),
               child: const SizedBox(width: 80, height: 40),
             ),
           ),
@@ -134,6 +195,47 @@ void main() {
       expect(find.byType(BackdropFilter), findsNothing);
 
       expect(find.byType(ClipPath), findsOneWidget);
+      final fallback = tester.widget<DecoratedBox>(
+        find.descendant(
+          of: find.byType(ClipPath),
+          matching: find.byType(DecoratedBox),
+        ),
+      );
+      expect(
+        (fallback.decoration as BoxDecoration).color,
+        Colors.green.withValues(alpha: 1),
+      );
+      expect(find.byType(Opacity), findsNothing);
+    });
+
+    testWidgets('explicit brush parameters override custom theme resources', (
+      tester,
+    ) async {
+      AcrylicProperties? properties;
+      await tester.pumpWidget(
+        FluentApp(
+          theme: FluentThemeData(
+            acrylicTintOpacity: 0.7,
+            acrylicLuminosityOpacity: 0.9,
+          ),
+          home: Acrylic(
+            tint: const Color(0xFF123456),
+            tintAlpha: 0.4,
+            luminosityAlpha: 0.6,
+            fallbackColor: const Color(0xFF654321),
+            child: Builder(
+              builder: (context) {
+                properties = AcrylicProperties.of(context);
+                return const SizedBox.expand();
+              },
+            ),
+          ),
+        ),
+      );
+      expect(properties?.tint, const Color(0xFF123456));
+      expect(properties?.tintAlpha, 0.4);
+      expect(properties?.luminosityAlpha, 0.6);
+      expect(properties?.fallbackColor, const Color(0xFF654321));
     });
 
     testWidgets('theme changes update Acrylic resources', (tester) async {

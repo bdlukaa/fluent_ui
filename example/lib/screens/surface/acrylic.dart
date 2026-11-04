@@ -57,6 +57,32 @@ class _AcrylicPageState extends State<AcrylicPage> with PageMixin {
             ),
           ],
         ),
+        subtitle(content: const Text('Flyout materials')),
+        const Text(
+          'Open either menu over each backdrop. Use Settings to compare light and dark themes; the fallback checkbox below also applies to these samples.',
+        ),
+        _MaterialComparison(
+          children: [
+            _MaterialSample(
+              title: 'White backdrop',
+              child: _FlyoutPreview(
+                backdrop: Colors.white,
+                disabled: acrylicDisabled,
+              ),
+            ),
+            _MaterialSample(
+              title: 'Dark backdrop',
+              child: _FlyoutPreview(
+                backdrop: Colors.black,
+                disabled: acrylicDisabled,
+              ),
+            ),
+            _MaterialSample(
+              title: 'Multicolored backdrop',
+              child: _FlyoutPreview(disabled: acrylicDisabled),
+            ),
+          ],
+        ),
         subtitle(content: const Text('Acrylic rendering laboratory')),
         Card(
           child: Column(
@@ -243,6 +269,92 @@ class _AcrylicPageState extends State<AcrylicPage> with PageMixin {
         ),
       ],
     );
+  }
+}
+
+class _FlyoutPreview extends StatefulWidget {
+  const _FlyoutPreview({this.backdrop, required this.disabled});
+
+  final Color? backdrop;
+  final bool disabled;
+
+  @override
+  State<_FlyoutPreview> createState() => _FlyoutPreviewState();
+}
+
+class _FlyoutPreviewState extends State<_FlyoutPreview> {
+  final controller = FlyoutController();
+
+  @override
+  void dispose() {
+    controller.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final sample = Stack(
+      fit: StackFit.expand,
+      children: [
+        if (widget.backdrop case final color?)
+          ColoredBox(color: color)
+        else
+          const _AcrylicBackdropContent(),
+        Positioned(
+          top: 12,
+          left: 12,
+          right: 12,
+          child: Row(
+            children: [
+              FlyoutTarget(
+                controller: controller,
+                child: Button(
+                  child: const Text('MenuFlyout'),
+                  onPressed: () => controller.showFlyout(
+                    builder: (context) => MenuFlyout(
+                      items: [
+                        MenuFlyoutItem(
+                          text: const Text('Copy'),
+                          onPressed: () => Flyout.of(context).close(),
+                        ),
+                        MenuFlyoutItem(
+                          text: const Text('Paste (disabled)'),
+                          onPressed: null,
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+              const Spacer(),
+              SizedBox(
+                width: 140,
+                child: CommandBar(
+                  primaryItems: const [],
+                  secondaryItems: [
+                    CommandBarButton(
+                      label: const Text('Copy'),
+                      onPressed: () {},
+                    ),
+                    const CommandBarButton(
+                      label: Text('Paste'),
+                      onPressed: null,
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        ),
+        const Positioned(
+          bottom: 24,
+          left: 32,
+          right: 32,
+          child: FlyoutContent(child: Text('Shared transient Acrylic surface')),
+        ),
+      ],
+    );
+    return widget.disabled ? DisableAcrylic(child: sample) : sample;
   }
 }
 
