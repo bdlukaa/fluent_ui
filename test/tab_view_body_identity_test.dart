@@ -25,46 +25,47 @@ void main() {
   testWidgets('TabView renders an empty tab list without a body', (
     tester,
   ) async {
-    await tester.pumpWidget(wrapApp(child: const TabView(tabs: [])));
+    final controller = TabViewController();
+    addTearDown(controller.dispose);
+
+    await tester.pumpWidget(wrapApp(child: TabView(controller: controller)));
 
     expect(find.byType(PageView), findsNothing);
     expect(tester.takeException(), isNull);
   });
 
-  testWidgets('TabView gives duplicate explicit tab keys distinct pages', (
-    tester,
-  ) async {
+  testWidgets('TabView gives explicit tab keys distinct pages', (tester) async {
     var rebuild = false;
+    List<Tab> tabs() => [
+      Tab(
+        key: const ValueKey('A'),
+        text: const Text('A'),
+        body: _CounterBody('A-$rebuild'),
+      ),
+      Tab(
+        key: const ValueKey('B'),
+        text: const Text('B'),
+        body: _CounterBody('B-$rebuild'),
+      ),
+    ];
+    final controller = TabViewController(tabs: tabs());
+    addTearDown(controller.dispose);
 
     await tester.pumpWidget(
       wrapApp(
         child: StatefulBuilder(
-          builder: (context, setState) {
-            return Column(
-              children: [
-                Button(
-                  onPressed: () => setState(() => rebuild = true),
-                  child: const Text('rebuild'),
-                ),
-                Expanded(
-                  child: TabView(
-                    tabs: [
-                      Tab(
-                        key: const ValueKey('duplicate'),
-                        text: const Text('A'),
-                        body: _CounterBody('A-$rebuild'),
-                      ),
-                      Tab(
-                        key: const ValueKey('duplicate'),
-                        text: const Text('B'),
-                        body: _CounterBody('B-$rebuild'),
-                      ),
-                    ],
-                  ),
-                ),
-              ],
-            );
-          },
+          builder: (context, setState) => Column(
+            children: [
+              Button(
+                onPressed: () => setState(() {
+                  rebuild = true;
+                  controller.replaceTabs(tabs());
+                }),
+                child: const Text('rebuild'),
+              ),
+              Expanded(child: TabView(controller: controller)),
+            ],
+          ),
         ),
       ),
     );

@@ -68,13 +68,16 @@ void _configureGoldenEnvironment(WidgetTester tester) {
 }
 
 Widget _tabView({required double width, int tabCount = 3}) {
-  final tabs = List.generate(
-    tabCount,
-    (index) => Tab(
-      text: Text(String.fromCharCode(65 + index)),
-      body: const SizedBox(),
+  final controller = TabViewController(
+    tabs: List.generate(
+      tabCount,
+      (index) => Tab(
+        text: Text(String.fromCharCode(65 + index)),
+        body: const SizedBox(),
+      ),
     ),
   );
+  addTearDown(controller.dispose);
   return MediaQuery(
     data: const MediaQueryData(textScaler: TextScaler.noScaling),
     child: FluentApp(
@@ -85,11 +88,7 @@ Widget _tabView({required double width, int tabCount = 3}) {
           child: SizedBox(
             width: width,
             height: 80,
-            child: TabView(
-              currentIndex: 0,
-              tabs: tabs,
-              onReorder: (oldIndex, newIndex) {},
-            ),
+            child: TabView(controller: controller, onReorder: (_, _) {}),
           ),
         ),
       ),

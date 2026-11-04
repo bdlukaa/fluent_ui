@@ -8,11 +8,14 @@ import 'app_test.dart';
 
 void main() {
   testWidgets('TabView renders tabs and bodies', (tester) async {
-    final tabs = [
-      Tab(text: const Text('Tab 1'), body: const Text('Body 1')),
-      Tab(text: const Text('Tab 2'), body: const Text('Body 2')),
-    ];
-    await tester.pumpWidget(wrapApp(child: TabView(tabs: tabs)));
+    final controller = TabViewController(
+      tabs: [
+        Tab(text: const Text('Tab 1'), body: const Text('Body 1')),
+        Tab(text: const Text('Tab 2'), body: const Text('Body 2')),
+      ],
+    );
+    addTearDown(controller.dispose);
+    await tester.pumpWidget(wrapApp(child: TabView(controller: controller)));
     expect(find.text('Tab 1'), findsOneWidget);
     expect(find.text('Tab 2'), findsOneWidget);
     expect(find.text('Body 1'), findsOneWidget);
@@ -21,20 +24,18 @@ void main() {
 
   testWidgets('TabView switches tabs on tap', (tester) async {
     int? selectedIndex;
-    final tabs = [
-      Tab(text: const Text('Tab 1'), body: const Text('Body 1')),
-      Tab(text: const Text('Tab 2'), body: const Text('Body 2')),
-    ];
+    final controller = TabViewController(
+      tabs: [
+        Tab(text: const Text('Tab 1'), body: const Text('Body 1')),
+        Tab(text: const Text('Tab 2'), body: const Text('Body 2')),
+      ],
+    );
+    addTearDown(controller.dispose);
     await tester.pumpWidget(
       wrapApp(
-        child: StatefulBuilder(
-          builder: (context, setState) => TabView(
-            currentIndex: selectedIndex ?? 0,
-            tabs: tabs,
-            onChanged: (i) => setState(() {
-              selectedIndex = i;
-            }),
-          ),
+        child: TabView(
+          controller: controller,
+          onChanged: (index) => selectedIndex = index,
         ),
       ),
     );
@@ -204,12 +205,15 @@ void main() {
     tester,
   ) async {
     var pressed = false;
-    final tabs = [Tab(text: const Text('Tab 1'), body: const Text('Body 1'))];
+    final controller = TabViewController(
+      tabs: [Tab(text: const Text('Tab 1'), body: const Text('Body 1'))],
+    );
+    addTearDown(controller.dispose);
     await tester.pumpWidget(
       wrapApp(
         child: TabView(
+          controller: controller,
           newTabIcon: const Icon(FluentIcons.add),
-          tabs: tabs,
           onNewPressed: () {
             pressed = true;
           },
@@ -222,11 +226,14 @@ void main() {
   });
 
   testWidgets('TabView shows header and footer', (tester) async {
-    final tabs = [Tab(text: const Text('Tab 1'), body: const Text('Body 1'))];
+    final controller = TabViewController(
+      tabs: [Tab(text: const Text('Tab 1'), body: const Text('Body 1'))],
+    );
+    addTearDown(controller.dispose);
     await tester.pumpWidget(
       wrapApp(
         child: TabView(
-          tabs: tabs,
+          controller: controller,
           header: const Text('Header'),
           footer: const Text('Footer'),
         ),
@@ -250,7 +257,9 @@ void main() {
         closeIcon: const Icon(FluentIcons.cancel),
       ),
     ];
-    await tester.pumpWidget(wrapApp(child: TabView(tabs: tabs)));
+    final controller = TabViewController(tabs: tabs);
+    addTearDown(controller.dispose);
+    await tester.pumpWidget(wrapApp(child: TabView(controller: controller)));
     // Find the close button (IconButton with tooltip 'Close')
     final closeButton = find.byIcon(FluentIcons.cancel);
     expect(closeButton, findsOneWidget);
@@ -263,11 +272,14 @@ void main() {
     tester,
   ) async {
     var pressed = false;
-    final tabs = [Tab(text: const Text('Tab 1'), body: const Text('Body 1'))];
+    final controller = TabViewController(
+      tabs: [Tab(text: const Text('Tab 1'), body: const Text('Body 1'))],
+    );
+    addTearDown(controller.dispose);
     await tester.pumpWidget(
       wrapApp(
         child: TabView(
-          tabs: tabs,
+          controller: controller,
           onNewPressed: () => pressed = true,
           shortcutsEnabled: false,
         ),
@@ -474,11 +486,14 @@ void main() {
   });
 
   testWidgets('TabView supports custom stripBuilder', (tester) async {
-    final tabs = [Tab(text: const Text('Tab 1'), body: const Text('Body 1'))];
+    final controller = TabViewController(
+      tabs: [Tab(text: const Text('Tab 1'), body: const Text('Body 1'))],
+    );
+    addTearDown(controller.dispose);
     await tester.pumpWidget(
       wrapApp(
         child: TabView(
-          tabs: tabs,
+          controller: controller,
           stripBuilder: (context, strip) => Column(
             mainAxisSize: MainAxisSize.min,
             children: [
@@ -509,11 +524,21 @@ class _ReorderHarness extends StatefulWidget {
 }
 
 class _ReorderHarnessState extends State<_ReorderHarness> {
-  late final List<Tab> tabs = [
-    Tab(text: const Text('A'), body: const _CounterBody('A')),
-    Tab(text: const Text('B'), body: const _CounterBody('B')),
-  ];
-  int currentIndex = 1; // start on B so its body is mounted
+  late final controller = TabViewController(
+    initialIndex: 1,
+    tabs: [
+      Tab(text: const Text('A'), body: const _CounterBody('A')),
+      Tab(text: const Text('B'), body: const _CounterBody('B')),
+    ],
+  );
+
+  int get currentIndex => controller.selectedIndex;
+
+  @override
+  void dispose() {
+    controller.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -522,33 +547,20 @@ class _ReorderHarnessState extends State<_ReorderHarness> {
         Row(
           children: [
             Button(
-              onPressed: () => setState(() {
-                final b = tabs.removeAt(1);
-                tabs.insert(0, b);
-                currentIndex = 0;
-              }),
+              onPressed: () => controller.move(1, 0),
               child: const Text('reorder'),
             ),
             Button(
-              onPressed: () => setState(() {
-                final selectedTab = tabs[currentIndex];
-                tabs.insert(
-                  0,
-                  Tab(text: const Text('X'), body: const _CounterBody('X')),
-                );
-                currentIndex = tabs.indexOf(selectedTab);
-              }),
+              onPressed: () => controller.insert(
+                0,
+                Tab(text: const Text('X'), body: const _CounterBody('X')),
+                select: false,
+              ),
               child: const Text('insert'),
             ),
           ],
         ),
-        Expanded(
-          child: TabView(
-            currentIndex: currentIndex,
-            tabs: tabs,
-            onChanged: (i) => setState(() => currentIndex = i),
-          ),
-        ),
+        Expanded(child: TabView(controller: controller)),
       ],
     );
   }
@@ -574,7 +586,28 @@ class _RebuiltTabsHarness extends StatefulWidget {
 
 class _RebuiltTabsHarnessState extends State<_RebuiltTabsHarness> {
   final names = ['A', 'B'];
-  int currentIndex = 0;
+  late final TabViewController controller;
+
+  @override
+  void initState() {
+    super.initState();
+    controller = TabViewController(tabs: _tabs());
+  }
+
+  List<Tab> _tabs() => [
+    for (final name in names)
+      Tab(
+        key: widget.keyed ? ValueKey(name) : null,
+        text: Text(name),
+        body: widget.buildBody(name),
+      ),
+  ];
+
+  @override
+  void dispose() {
+    controller.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -583,32 +616,19 @@ class _RebuiltTabsHarnessState extends State<_RebuiltTabsHarness> {
         Row(
           children: [
             Button(
-              onPressed: () => setState(() {}),
+              onPressed: () => controller.replaceTabs(_tabs()),
               child: const Text('rebuild'),
             ),
             Button(
-              onPressed: () => setState(() {
+              onPressed: () {
                 names.insert(0, names.removeLast());
-                currentIndex = 0;
-              }),
+                controller.replaceTabs(_tabs());
+              },
               child: const Text('reorder'),
             ),
           ],
         ),
-        Expanded(
-          child: TabView(
-            currentIndex: currentIndex,
-            tabs: [
-              for (final name in names)
-                Tab(
-                  key: widget.keyed ? ValueKey(name) : null,
-                  text: Text(name),
-                  body: widget.buildBody(name),
-                ),
-            ],
-            onChanged: (i) => setState(() => currentIndex = i),
-          ),
-        ),
+        Expanded(child: TabView(controller: controller)),
       ],
     );
   }
@@ -691,13 +711,28 @@ class _DragReorderHarness extends StatefulWidget {
 }
 
 class _DragReorderHarnessState extends State<_DragReorderHarness> {
-  late final List<Tab> tabs = List.generate(widget.tabCount, _createTab);
+  late final TabViewController controller;
   final List<(int, int)> reorders = [];
   final List<String> closed = [];
-  int currentIndex = 0;
+
+  int get currentIndex => controller.selectedIndex;
 
   List<String> get tabNames =>
-      tabs.map((tab) => (tab.text as Text).data!).toList();
+      controller.tabs.map((tab) => (tab.text as Text).data!).toList();
+
+  @override
+  void initState() {
+    super.initState();
+    controller = TabViewController(
+      tabs: List.generate(widget.tabCount, _createTab),
+    );
+  }
+
+  @override
+  void dispose() {
+    controller.dispose();
+    super.dispose();
+  }
 
   Tab _createTab(int index) {
     final name = String.fromCharCode(65 + index);
@@ -705,10 +740,12 @@ class _DragReorderHarnessState extends State<_DragReorderHarness> {
       text: Text(name),
       body: Text('Body $name'),
       closeIcon: const Icon(FluentIcons.cancel),
-      onClosed: () => setState(() {
+      onClosed: () {
         closed.add(name);
-        tabs.removeWhere((tab) => (tab.text as Text).data == name);
-      }),
+        controller.removeAt(
+          controller.tabs.indexWhere((tab) => (tab.text as Text).data == name),
+        );
+      },
     );
   }
 
@@ -718,16 +755,11 @@ class _DragReorderHarnessState extends State<_DragReorderHarness> {
       width: widget.width,
       height: 160,
       child: TabView(
-        currentIndex: currentIndex,
-        tabs: tabs,
+        controller: controller,
         scrollController: widget.controller,
-        onChanged: (index) => setState(() => currentIndex = index),
-        onReorder: (oldIndex, newIndex) => setState(() {
+        onReorder: (oldIndex, newIndex) {
           reorders.add((oldIndex, newIndex));
-          final tab = tabs.removeAt(oldIndex);
-          tabs.insert(newIndex, tab);
-          currentIndex = tabs.indexOf(tab);
-        }),
+        },
       ),
     );
   }

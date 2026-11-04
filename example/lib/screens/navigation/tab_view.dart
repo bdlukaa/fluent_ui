@@ -1,11 +1,8 @@
-import 'dart:math';
-
 import 'package:example/widgets/code_snippet_card.dart';
 import 'package:example/widgets/page.dart';
 import 'package:fluent_ui/fluent_ui.dart';
-import 'package:flutter/foundation.dart';
+
 import 'package:flutter/gestures.dart';
-import 'package:window_manager/window_manager.dart';
 
 class TabViewPage extends StatefulWidget {
   const TabViewPage({super.key});
@@ -15,38 +12,9 @@ class TabViewPage extends StatefulWidget {
 }
 
 class _TabViewPageState extends State<TabViewPage> with PageMixin {
-  int currentIndex = 0;
-  List<Tab>? tabs;
   late final TabViewController _controller;
+  late final TabViewController _secondaryController;
   var _nextControllerTab = 3;
-
-  TabWidthBehavior tabWidthBehavior = TabWidthBehavior.equal;
-  CloseButtonVisibilityMode closeButtonVisibilityMode =
-      CloseButtonVisibilityMode.always;
-  bool showScrollButtons = true;
-  bool wheelScroll = false;
-
-  Tab generateTab(final int index) {
-    final allIcons = WindowsIcons.allIcons.values;
-    late Tab tab;
-    tab = Tab(
-      text: Text('Document $index'),
-      semanticLabel: 'Document #$index',
-      icon: Icon(allIcons.elementAt(Random().nextInt(allIcons.length))),
-      body: Container(
-        color:
-            Colors.accentColors[Random().nextInt(Colors.accentColors.length)],
-      ),
-      onClosed: () {
-        setState(() {
-          tabs!.remove(tab);
-
-          if (currentIndex > 0) currentIndex--;
-        });
-      },
-    );
-    return tab;
-  }
 
   Tab _createControllerTab(final int index) {
     late final Tab tab;
@@ -63,8 +31,6 @@ class _TabViewPageState extends State<TabViewPage> with PageMixin {
     _controller.add(_createControllerTab(_nextControllerTab++));
   }
 
-  int _secondaryIndex = 0;
-
   @override
   void initState() {
     super.initState();
@@ -72,17 +38,52 @@ class _TabViewPageState extends State<TabViewPage> with PageMixin {
       tabs: List.generate(3, _createControllerTab),
       initialIndex: 1,
     );
+    _secondaryController = TabViewController(
+      tabs: [
+        Tab(
+          key: const ValueKey('secondary-tap'),
+          text: const Text('Tab that recognizes secondary tap'),
+          body: Container(color: Colors.red),
+          gestures: {
+            TapGestureRecognizer:
+                GestureRecognizerFactoryWithHandlers<TapGestureRecognizer>(
+                  TapGestureRecognizer.new,
+                  (final instance) {
+                    instance.onSecondaryTap = () {
+                      if (!mounted) return;
+                      debugPrint('Secondary tap recognized');
+                      displayInfoBar(
+                        context,
+                        builder: (final context, final close) {
+                          return const InfoBar(
+                            title: Text('Secondary tap recognized'),
+                            severity: InfoBarSeverity.success,
+                          );
+                        },
+                      );
+                    };
+                  },
+                ),
+          },
+        ),
+        MyCustomTab(
+          key: const ValueKey('custom-secondary-tap'),
+          text: const Text('Custom tab that opens menu on secondary tap'),
+          body: Container(color: Colors.blue),
+        ),
+      ],
+    );
   }
 
   @override
   void dispose() {
     _controller.dispose();
+    _secondaryController.dispose();
     super.dispose();
   }
 
   @override
   Widget build(final BuildContext context) {
-    tabs ??= List.generate(3, generateTab);
     final theme = FluentTheme.of(context);
     return ScaffoldPage.scrollable(
       header: const PageHeader(title: Text('TabView')),
@@ -153,12 +154,11 @@ class _TabViewPageState extends State<TabViewPage> with PageMixin {
             );
           }(),
         ),
-        subtitle(content: const Text('Controller-managed tabs')),
+        subtitle(content: const Text('Managing tabs')),
         const Text(
-          'TabViewController owns the tabs and selection state. Use it when '
-          'tabs are added, closed, selected, or reordered outside the build '
-          'method. Give each tab a stable key so its body stays associated with '
-          'that tab when the list changes.',
+          'TabViewController owns the tabs and selection state. Give each tab '
+          'a stable key so its body stays associated with that tab when the '
+          'list changes.',
         ),
         CodeSnippetCard(
           codeSnippet: r'''late final TabViewController controller;
@@ -244,164 +244,9 @@ controller.move(0, controller.tabs.length - 1);''',
             ),
           ),
         ),
-        subtitle(
-          content: const Text(
-            'Legacy callback API: adding, closing and rearranging tabs',
-          ),
-        ),
-        Card(
-          child: Wrap(
-            spacing: 10,
-            runSpacing: 10,
-            crossAxisAlignment: WrapCrossAlignment.end,
-            children: [
-              SizedBox(
-                width: 150,
-                child: InfoLabel(
-                  label: 'Tab width behavior',
-                  child: ComboBox<TabWidthBehavior>(
-                    isExpanded: true,
-                    value: tabWidthBehavior,
-                    items: TabWidthBehavior.values.map((final behavior) {
-                      return ComboBoxItem(
-                        value: behavior,
-                        child: Text(behavior.name),
-                      );
-                    }).toList(),
-                    onChanged: (final behavior) {
-                      if (behavior != null) {
-                        setState(() => tabWidthBehavior = behavior);
-                      }
-                    },
-                  ),
-                ),
-              ),
-              SizedBox(
-                width: 150,
-                child: InfoLabel(
-                  label: 'Close button visbility',
-                  child: ComboBox<CloseButtonVisibilityMode>(
-                    isExpanded: true,
-                    value: closeButtonVisibilityMode,
-                    items: CloseButtonVisibilityMode.values.map((final mode) {
-                      return ComboBoxItem(value: mode, child: Text(mode.name));
-                    }).toList(),
-                    onChanged: (final mode) {
-                      if (mode != null) {
-                        setState(() => closeButtonVisibilityMode = mode);
-                      }
-                    },
-                  ),
-                ),
-              ),
-              Checkbox(
-                checked: showScrollButtons,
-                onChanged: (final v) => setState(() => showScrollButtons = v!),
-                content: const Text('Show scroll buttons'),
-              ),
-              Checkbox(
-                checked: wheelScroll,
-                onChanged: (final v) => setState(() => wheelScroll = v!),
-                content: const Text('Wheel scroll'),
-              ),
-            ],
-          ),
-        ),
-        CodeSnippetCard(
-          codeSnippet:
-              '''int currentIndex = 0;
-List<Tab> tabs = [];
-
-/// Creates a tab for the given index
-Tab generateTab(int index) {
-  late Tab tab;
-  tab = Tab(
-    text: Text('Document \$index'),
-    semanticLabel: 'Document #\$index',
-    icon: const FlutterLogo(),
-    body: Container(
-      color: Colors.accentColors[Random().nextInt(Colors.accentColors.length)],
-    ),
-    onClosed: () {
-      setState(() {
-        tabs!.remove(tab);
-
-        if (currentIndex > 0) currentIndex--;
-      });
-    },
-  );
-  return tab;
-}
-
-TabView(
-  tabs: tabs!,
-  currentIndex: currentIndex,
-  onChanged: (index) => setState(() => currentIndex = index),
-  tabWidthBehavior: $tabWidthBehavior,
-  closeButtonVisibility: $closeButtonVisibilityMode,
-  showScrollButtons: $showScrollButtons,
-  wheelScroll: $wheelScroll,
-  onNewPressed: () {
-    setState(() {
-      final index = tabs!.length + 1;
-      final tab = generateTab(index);
-      tabs!.add(tab);
-    });
-  },
-  onReorder: (oldIndex, newIndex) {
-    setState(() {
-      final item = tabs!.removeAt(oldIndex);
-      tabs!.insert(newIndex, item);
-
-      if (currentIndex == newIndex) {
-        currentIndex = oldIndex;
-      } else if (currentIndex == oldIndex) {
-        currentIndex = newIndex;
-      }
-    });
-  },
-)''',
-          child: SizedBox(
-            height: 400,
-            child: TabView(
-              tabs: tabs!,
-              reservedStripWidth: 100,
-              currentIndex: currentIndex,
-              onChanged: (final index) => setState(() => currentIndex = index),
-              tabWidthBehavior: tabWidthBehavior,
-              closeButtonVisibility: closeButtonVisibilityMode,
-              showScrollButtons: showScrollButtons,
-              onNewPressed: () {
-                setState(() {
-                  final index = tabs!.length + 1;
-                  final tab = generateTab(index);
-                  tabs!.add(tab);
-                });
-              },
-              onReorder: (oldIndex, newIndex) {
-                setState(() {
-                  final item = tabs!.removeAt(oldIndex);
-                  tabs!.insert(newIndex, item);
-
-                  if (currentIndex == newIndex) {
-                    currentIndex = oldIndex;
-                  } else if (currentIndex == oldIndex) {
-                    currentIndex = newIndex;
-                  }
-                });
-              },
-              stripBuilder: kIsWeb
-                  ? null
-                  : (final context, final strip) {
-                      return DragToMoveArea(child: strip);
-                    },
-            ),
-          ),
-        ),
         subtitle(content: const Text('Custom tabs and secondary tap gestures')),
         CodeSnippetCard(
-          codeSnippet: '''
-class MyCustomTab extends Tab {
+          codeSnippet: '''class MyCustomTab extends Tab {
   MyCustomTab({
     super.key,
     required super.body,
@@ -412,141 +257,32 @@ class MyCustomTab extends Tab {
   State<Tab> createState() => MyCustomTabState();
 }
 
-class MyCustomTabState extends TabState {
-  late FlyoutController _flyoutController;
-  final _targetKey = GlobalKey();
-
-  @override
-  void initState() {
-    super.initState();
-    _flyoutController = FlyoutController();
-  }
-
-  void _showMenu(Offset position) {
-    _flyoutController.showFlyout<void>(
-      position: position,
-      builder: (context) {
-        return MenuFlyout(
-          items: [
-            MenuFlyoutItem(
-              onPressed: () {
-                debugPrint('Item 1 pressed');
-                Navigator.of(context).maybePop();
-              },
-              leading: const WindowsIcon(WindowsIcons.add),
-              text: const Text('New tab'),
-            ),
-            MenuFlyoutItem(
-              onPressed: () {
-                debugPrint('Item 2 pressed');
-                Navigator.of(context).maybePop();
-              },
-              leading: const WindowsIcon(WindowsIcons.refresh),
-              text: const Text('Refresh'),
-            ),
-          ],
-        );
-      },
-    );
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return GestureDetector(
-      onSecondaryTapUp: (d) {
-        // This calculates the position of the flyout according to the parent navigator.
-        // See https://bdlukaa.github.io/fluent_ui/#/popups/flyout
-        final targetContext = _targetKey.currentContext;
-        if (targetContext == null) return;
-        final box = targetContext.findRenderObject() as RenderBox;
-        final position = box.localToGlobal(
-          d.localPosition,
-          ancestor: Navigator.of(context).context.findRenderObject(),
-        );
-
-        _showMenu(position);
-      },
-      child: FlyoutTarget(
-        key: _targetKey,
-        controller: _flyoutController,
-        child: super.build(context),
-      ),
-    );
-  }
-}
-
-TabView(
-  currentIndex: index,
-  onChanged: (index) => setState(() => this.index = index),
-  tabWidthBehavior: TabWidthBehavior.sizeToContent,
-  closeButtonVisibility: CloseButtonVisibilityMode.never,
+final controller = TabViewController(
   tabs: <Tab>[
     Tab(
+      key: const ValueKey('secondary-tap'),
       text: const Text('Tab that recognizes secondary tap'),
       body: Container(color: Colors.red),
-      gestures: {
-        TapGestureRecognizer: GestureRecognizerFactoryWithHandlers<>(
-          () => TapGestureRecognizer(),
-          (TapGestureRecognizer instance) {
-            instance.onSecondaryTap = () {
-              debugPrint('Secondary tap recognized');
-              displayInfoBar(context, builder: (context, close) {
-                return const InfoBar(
-                  title: Text('Secondary tap recognized'),
-                  severity: InfoBarSeverity.success,
-                );
-              });
-            };
-          },
-        ),
-      },
     ),
     MyCustomTab(
+      key: const ValueKey('custom-secondary-tap'),
       text: const Text('Custom tab that opens menu on secondary tap'),
       body: Container(color: Colors.blue),
     ),
   ],
-)
-''',
+);
+
+TabView(
+  controller: controller,
+  tabWidthBehavior: TabWidthBehavior.sizeToContent,
+  closeButtonVisibility: CloseButtonVisibilityMode.never,
+)''',
           child: SizedBox(
             height: 200,
             child: TabView(
-              currentIndex: _secondaryIndex,
-              onChanged: (final index) =>
-                  setState(() => _secondaryIndex = index),
+              controller: _secondaryController,
               tabWidthBehavior: TabWidthBehavior.sizeToContent,
               closeButtonVisibility: CloseButtonVisibilityMode.never,
-              tabs: <Tab>[
-                Tab(
-                  text: const Text('Tab that recognizes secondary tap'),
-                  body: Container(color: Colors.red),
-                  gestures: {
-                    TapGestureRecognizer:
-                        GestureRecognizerFactoryWithHandlers<
-                          TapGestureRecognizer
-                        >(TapGestureRecognizer.new, (final instance) {
-                          instance.onSecondaryTap = () {
-                            debugPrint('Secondary tap recognized');
-                            displayInfoBar(
-                              context,
-                              builder: (final context, final close) {
-                                return const InfoBar(
-                                  title: Text('Secondary tap recognized'),
-                                  severity: InfoBarSeverity.success,
-                                );
-                              },
-                            );
-                          };
-                        }),
-                  },
-                ),
-                MyCustomTab(
-                  text: const Text(
-                    'Custom tab that opens menu on secondary tap',
-                  ),
-                  body: Container(color: Colors.blue),
-                ),
-              ],
             ),
           ),
         ),
@@ -603,14 +339,12 @@ class MyCustomTabState extends TabState {
   @override
   Widget build(final BuildContext context) {
     return GestureDetector(
-      onSecondaryTapUp: (final d) {
-        // This calculates the position of the flyout according to the parent navigator.
-        // See https://bdlukaa.github.io/fluent_ui/#/popups/flyout
+      onSecondaryTapUp: (final details) {
         final targetContext = _targetKey.currentContext;
         if (targetContext == null) return;
         final box = targetContext.findRenderObject()! as RenderBox;
         final position = box.localToGlobal(
-          d.localPosition,
+          details.localPosition,
           ancestor: Navigator.of(context).context.findRenderObject(),
         );
 
