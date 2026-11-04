@@ -4,9 +4,13 @@ import 'package:flutter/foundation.dart';
 /// Represents a Windows icon.
 ///
 /// This widget is used to display icons that are part of the Windows icon set.
-/// These icons can only be used in a Windows environment and are not available
-/// on other platforms. This widget will automatically resolve the icon to the
-/// appropriate icon based on the current platform.
+/// On Windows it renders [icon]. On other platforms it renders [fallbackIcon]
+/// when one is given, otherwise the icon returned by [fallbackResolver], and
+/// otherwise [icon] as given.
+///
+/// ```dart
+/// const WindowsIcon(WindowsIcons.add, fallbackIcon: FluentIcons.add)
+/// ```
 ///
 /// See also:
 ///
@@ -14,9 +18,27 @@ import 'package:flutter/foundation.dart';
 ///  * [WindowsIcons], which provides a collection of Windows icons.
 ///  * [FluentIcons], which is a collection of Fluent Design icons.
 class WindowsIcon extends Icon {
-  /// An optional fallback icon to use if the specified icon is not available
-  /// in the current context.
+  /// The icon rendered instead of [icon] on platforms other than Windows.
   final IconData? fallbackIcon;
+
+  /// Resolves the icon rendered off Windows for a [WindowsIcon] built without
+  /// a [fallbackIcon].
+  ///
+  /// Null by default, so such an icon renders [icon] as given. To substitute
+  /// the [FluentIcons] glyph that has the same name as the [WindowsIcons]
+  /// glyph, as earlier versions did implicitly, set it once before `runApp`:
+  ///
+  /// ```dart
+  /// import 'package:fluent_ui/windows_icon_fallback.dart';
+  ///
+  /// WindowsIcon.fallbackResolver = fluentIconFallback;
+  /// ```
+  ///
+  /// Name-based lookup references every glyph of both icon fonts, so the icon
+  /// tree shaker keeps both fonts whole. Prefer passing [fallbackIcon].
+  static IconData? Function(IconData icon)? fallbackResolver;
+
+  static final Set<IconData> _debugUnresolvedIcons = {};
 
   /// Creates a windows icon.
   const WindowsIcon(
@@ -42,45 +64,34 @@ class WindowsIcon extends Icon {
     properties.add(DiagnosticsProperty<IconData>('fallbackIcon', fallbackIcon));
   }
 
+  IconData? _resolveIcon() {
+    final icon = this.icon;
+    if (!kIsWeb && defaultTargetPlatform == TargetPlatform.windows) {
+      return icon;
+    }
+    if (fallbackIcon != null || icon == null) return fallbackIcon ?? icon;
+    final resolved = fallbackResolver?.call(icon);
+    if (resolved != null) return resolved;
+    assert(() {
+      if (icon.fontFamily == 'SegoeIcons' &&
+          icon.fontPackage == 'fluent_ui' &&
+          _debugUnresolvedIcons.add(icon)) {
+        debugPrint(
+          'WindowsIcon(U+${icon.codePoint.toRadixString(16).toUpperCase()}) '
+          'has no fallbackIcon and renders the Windows glyph on this '
+          'platform. Pass fallbackIcon:, or set WindowsIcon.fallbackResolver '
+          'from package:fluent_ui/windows_icon_fallback.dart.',
+        );
+      }
+      return true;
+    }());
+    return icon;
+  }
+
   @override
   Widget build(BuildContext context) {
-    final resolvedIcon = () {
-      final isWindows =
-          !kIsWeb && defaultTargetPlatform == TargetPlatform.windows;
-
-      if (isWindows) {
-        return icon;
-      } else if (fallbackIcon != null) {
-        return fallbackIcon;
-      } else {
-        final iconId = WindowsIcons.allIcons.entries.firstWhereOrNull((entry) {
-          return entry.value == icon;
-        });
-
-        if (iconId == null) {
-          return icon;
-        }
-
-        final fallbackIcon = FluentIcons.allIcons.entries.firstWhereOrNull((
-          entry,
-        ) {
-          return entry.key == iconId.key || entry.value == iconId.value;
-        });
-
-        if (fallbackIcon != null) {
-          return fallbackIcon.value;
-        } else {
-          debugPrint(
-            'The icon ${iconId.key} is not available in the current context. '
-            'Please provide a fallback icon or use a different icon.',
-          );
-          return icon;
-        }
-      }
-    }();
-
     return Icon(
-      resolvedIcon,
+      _resolveIcon(),
       key: key,
       size: size,
       applyTextScaling: applyTextScaling,
@@ -94,17 +105,5 @@ class WindowsIcon extends Icon {
       opticalSize: opticalSize,
       weight: weight,
     );
-  }
-}
-
-extension _Iterable<T> on Iterable<T> {
-  /// Returns the first element of the iterable that satisfies the given [test].
-  ///
-  /// If no element satisfies the test, returns `null`.
-  T? firstWhereOrNull(bool Function(T element) test) {
-    for (final element in this) {
-      if (test(element)) return element;
-    }
-    return null;
   }
 }

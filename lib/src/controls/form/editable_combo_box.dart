@@ -262,7 +262,10 @@ class ComboboxFormField<T> extends FormField<T> {
     VoidCallback? onClose,
     int elevation = 8,
     TextStyle? style,
-    Widget icon = const WindowsIcon(WindowsIcons.chevron_down),
+    Widget icon = const WindowsIcon(
+      WindowsIcons.chevron_down,
+      fallbackIcon: FluentIcons.chevron_down,
+    ),
     Color? iconDisabledColor,
     Color? iconEnabledColor,
     double iconSize = 8.0,
@@ -388,7 +391,10 @@ class EditableComboboxFormField<T> extends FormField<T> {
     VoidCallback? onClose,
     int elevation = 8,
     TextStyle? style,
-    Widget icon = const WindowsIcon(WindowsIcons.chevron_down),
+    Widget icon = const WindowsIcon(
+      WindowsIcons.chevron_down,
+      fallbackIcon: FluentIcons.chevron_down,
+    ),
     Color? iconDisabledColor,
     Color? iconEnabledColor,
     double iconSize = 8.0,

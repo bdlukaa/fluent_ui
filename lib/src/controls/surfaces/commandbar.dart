@@ -384,7 +384,10 @@ class CommandBarState extends State<CommandBar> {
           tooltip: _secondaryMenuController.isOpen
               ? FluentLocalizations.of(context).seeLess
               : FluentLocalizations.of(context).seeMore,
-          icon: const WindowsIcon(WindowsIcons.more),
+          icon: const WindowsIcon(
+            WindowsIcons.more,
+            fallbackIcon: FluentIcons.more,
+          ),
         );
       }
 

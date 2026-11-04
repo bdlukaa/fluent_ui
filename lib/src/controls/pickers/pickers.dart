@@ -139,7 +139,10 @@ class YesNoPickerControl extends StatelessWidget {
               child: Button(
                 onPressed: onChanged,
                 style: buttonStyle,
-                child: const WindowsIcon(WindowsIcons.check_mark),
+                child: const WindowsIcon(
+                  WindowsIcons.check_mark,
+                  fallbackIcon: FluentIcons.check_mark,
+                ),
               ),
             ),
           ),
@@ -150,7 +153,10 @@ class YesNoPickerControl extends StatelessWidget {
               child: Button(
                 onPressed: onCancel,
                 style: buttonStyle,
-                child: const WindowsIcon(WindowsIcons.chrome_close),
+                child: const WindowsIcon(
+                  WindowsIcons.chrome_close,
+                  fallbackIcon: FluentIcons.chrome_close,
+                ),
               ),
             ),
           ),

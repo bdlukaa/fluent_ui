@@ -1,5 +1,24 @@
 ## [next]
 
+* **BREAKING** perf: Tree shake `FluentIcons` and `WindowsIcons` glyphs. Both classes are annotated with `@staticIconProvider`, so release builds keep only the glyphs an app uses instead of both fonts whole.
+  - Off Windows, a `WindowsIcon` without `fallbackIcon` now renders the `WindowsIcons` glyph as given. It no longer looks up the `FluentIcons` glyph with the same name, because that lookup kept every glyph of both fonts. Controls in this package pass their fallback explicitly and render as before.
+  - Name-based lookup moved to `package:fluent_ui/windows_icon_fallback.dart`, which keeps both fonts whole when imported.
+
+  Migration:
+
+  ```dart
+  // Before
+  const WindowsIcon(WindowsIcons.add)
+
+  // After
+  const WindowsIcon(WindowsIcons.add, fallbackIcon: FluentIcons.add)
+
+  // Or restore the name-based fallback for every WindowsIcon before runApp
+  import 'package:fluent_ui/windows_icon_fallback.dart';
+
+  WindowsIcon.fallbackResolver = fluentIconFallback;
+  ```
+
 * feat: Display Icons in DevTools ([1365](https://github.com/bdlukaa/fluent_ui/pull/1365))
 * feat: Add `CommandBarThemeData`, set through `FluentThemeData.commandBarTheme` or `CommandBarTheme`, to configure the padding and the closed and open decorations of the frame around `CommandBar` items ([#1374](https://github.com/bdlukaa/fluent_ui/pull/1374))
 * feat: Add `ButtonThemeData.smallIconButtonStyle`, used by small and tiny `IconButton`s (including those under a `SmallIconButton`, such as `TextBox` and `PasswordBox` buttons). It falls back to `iconButtonStyle` ([#1374](https://github.com/bdlukaa/fluent_ui/pull/1374))

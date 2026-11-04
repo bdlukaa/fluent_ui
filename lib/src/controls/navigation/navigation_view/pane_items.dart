@@ -862,6 +862,7 @@ class PaneItemExpander extends PaneItem {
   /// The default trailing icon for expanders.
   static const kDefaultTrailing = WindowsIcon(
     WindowsIcons.chevron_down,
+    fallbackIcon: FluentIcons.chevron_down,
     size: 8,
   );
 

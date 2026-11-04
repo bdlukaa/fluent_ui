@@ -722,7 +722,10 @@ class NumberBoxState<T extends num> extends State<NumberBox<T>> {
       if (widget.clearButton && _hasPrimaryFocus) ...[
         IconButton(
           key: _clearButtonKey,
-          icon: const WindowsIcon(WindowsIcons.clear),
+          icon: const WindowsIcon(
+            WindowsIcons.clear,
+            fallbackIcon: FluentIcons.clear,
+          ),
           onPressed: _clearValue,
           focusable: false,
         ),
@@ -735,13 +738,19 @@ class NumberBoxState<T extends num> extends State<NumberBox<T>> {
         textFieldSuffix.addAll([
           _SpinButton(
             buttonKey: _incrementButtonKey,
-            icon: const WindowsIcon(WindowsIcons.chevron_up),
+            icon: const WindowsIcon(
+              WindowsIcons.chevron_up,
+              fallbackIcon: FluentIcons.chevron_up,
+            ),
             onAction: widget.onChanged != null ? incrementSmall : null,
             interval: widget.interval,
           ),
           _SpinButton(
             buttonKey: _decrementButtonKey,
-            icon: const WindowsIcon(WindowsIcons.chevron_down),
+            icon: const WindowsIcon(
+              WindowsIcons.chevron_down,
+              fallbackIcon: FluentIcons.chevron_down,
+            ),
             onAction: widget.onChanged != null ? decrementSmall : null,
             interval: widget.interval,
           ),
@@ -1055,13 +1064,21 @@ class _NumberBoxCompactOverlay extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
                 _SpinButton(
-                  icon: const WindowsIcon(WindowsIcons.chevron_up, size: 16),
+                  icon: const WindowsIcon(
+                    WindowsIcons.chevron_up,
+                    fallbackIcon: FluentIcons.chevron_up,
+                    size: 16,
+                  ),
                   onAction: onIncrement,
                   interval: interval,
                   iconButtonMode: IconButtonMode.large,
                 ),
                 _SpinButton(
-                  icon: const WindowsIcon(WindowsIcons.chevron_down, size: 16),
+                  icon: const WindowsIcon(
+                    WindowsIcons.chevron_down,
+                    fallbackIcon: FluentIcons.chevron_down,
+                    size: 16,
+                  ),
                   onAction: onDecrement,
                   interval: interval,
                   iconButtonMode: IconButtonMode.large,

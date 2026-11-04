@@ -413,7 +413,11 @@ class InfoBar extends StatelessWidget {
           if (icon != null)
             Padding(
               padding: const EdgeInsetsDirectional.only(end: 14),
-              child: WindowsIcon(icon, color: style.iconColor?.call(severity)),
+              child: WindowsIcon(
+                icon,
+                fallbackIcon: _severityIconFallback(icon),
+                color: style.iconColor?.call(severity),
+              ),
             ),
           if (isLong)
             Flexible(
@@ -731,3 +735,12 @@ class InfoBarThemeData with Diagnosticable {
       );
   }
 }
+
+/// The [FluentIcons] glyph rendered off Windows for a default severity icon of
+/// [InfoBarThemeData.icon].
+IconData? _severityIconFallback(IconData icon) => switch (icon) {
+  WindowsIcons.info_solid => FluentIcons.info_solid,
+  WindowsIcons.completed_solid => FluentIcons.completed_solid,
+  WindowsIcons.status_error_full => FluentIcons.status_error_full,
+  _ => null,
+};
