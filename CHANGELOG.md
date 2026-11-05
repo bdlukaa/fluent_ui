@@ -23,6 +23,8 @@
 * feat: Add `CommandBarThemeData`, set through `FluentThemeData.commandBarTheme` or `CommandBarTheme`, to configure the padding and the closed and open decorations of the frame around `CommandBar` items ([#1374](https://github.com/bdlukaa/fluent_ui/pull/1374))
 * feat: Add `ButtonThemeData.smallIconButtonStyle`, used by small and tiny `IconButton`s (including those under a `SmallIconButton`, such as `TextBox` and `PasswordBox` buttons). It falls back to `iconButtonStyle` ([#1374](https://github.com/bdlukaa/fluent_ui/pull/1374))
 * feat: Add `RadioButton.toggleable`. When true, selecting the selected radio button again calls `RadioGroup.onChanged` with null. Defaults to false ([#1374](https://github.com/bdlukaa/fluent_ui/pull/1374))
+* fix: `TreeViewItem.from` gives each copy its own `FocusNode`. Sharing one let a press in one tree select the item in the other, and left a mounted row with a detached node when the other tree closed
+* fix: Pressing a `TreeViewItem` whose `FocusNode` is detached no longer throws before the item is selected or invoked
 * fix: Do not use Material icons on `InfoBar` ([#1366](https://github.com/bdlukaa/fluent_ui/pull/1366))
 * fix: `PaneItem` titles are no longer hidden in open panes narrower than ~226px ([#1370](https://github.com/bdlukaa/fluent_ui/pull/1370))
 * fix: Do not use Material Localizations on `TabView` ([#1367](https://github.com/bdlukaa/fluent_ui/pull/1367))

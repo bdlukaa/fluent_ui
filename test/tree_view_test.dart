@@ -71,6 +71,113 @@ void main() {
     );
   });
 
+  test('TreeViewItem deep copy gets its own focus node', () {
+    final child = TreeViewItem(content: const Text('Child'));
+    final source = TreeViewItem(
+      content: const Text('Parent'),
+      children: [child],
+    );
+
+    final copy = TreeViewItem.from(source);
+
+    expect(copy.focusNode, isNot(same(source.focusNode)));
+    expect(copy.children.single.focusNode, isNot(same(child.focusNode)));
+  });
+
+  testWidgets(
+    'A press in one tree does not select the same item in its deep copy',
+    (tester) async {
+      final source = TreeViewItem(content: const Text('Source'), value: 'item');
+      final copy = TreeViewItem.from(source);
+      final sourceSelections = <Object?>[];
+
+      await tester.pumpWidget(
+        wrapApp(
+          child: Column(
+            children: [
+              Expanded(
+                child: TreeView(
+                  selectionMode: TreeViewSelectionMode.single,
+                  items: [source],
+                  onSelectionChanged: (items) async {
+                    sourceSelections.addAll(items.map((item) => item.value));
+                  },
+                ),
+              ),
+              Expanded(
+                child: TreeView(
+                  selectionMode: TreeViewSelectionMode.single,
+                  items: [copy],
+                ),
+              ),
+            ],
+          ),
+        ),
+      );
+
+      await tester.tap(find.text('Source').last);
+      await tester.pumpAndSettle();
+
+      expect(sourceSelections, isEmpty);
+      expect(copy.selected, isTrue);
+    },
+  );
+
+  for (final mode in [
+    TreeViewSelectionMode.single,
+    TreeViewSelectionMode.multiple,
+  ]) {
+    testWidgets('A press survives a detached focus node ($mode)', (
+      tester,
+    ) async {
+      final focusNode = FocusNode();
+      addTearDown(focusNode.dispose);
+      TreeViewItem item() =>
+          TreeViewItem(content: const Text('Item'), focusNode: focusNode);
+      final kept = item();
+      final invoked = <TreeViewItemInvokeReason>[];
+      final showSecondTree = ValueNotifier<bool>(true);
+      addTearDown(showSecondTree.dispose);
+
+      await tester.pumpWidget(
+        wrapApp(
+          child: Column(
+            children: [
+              Expanded(
+                child: TreeView(
+                  selectionMode: mode,
+                  items: [kept],
+                  onItemInvoked: (_, reason) async => invoked.add(reason),
+                ),
+              ),
+              ValueListenableBuilder<bool>(
+                valueListenable: showSecondTree,
+                builder: (context, show, _) => show
+                    ? Expanded(
+                        child: TreeView(selectionMode: mode, items: [item()]),
+                      )
+                    : const SizedBox.shrink(),
+              ),
+            ],
+          ),
+        ),
+      );
+
+      // The second tree took the node over; removing it leaves the first
+      // tree's row with a node that is attached to nothing.
+      showSecondTree.value = false;
+      await tester.pumpAndSettle();
+      expect(focusNode.nearestScope, isNull);
+
+      await tester.tap(find.text('Item'));
+      await tester.pumpAndSettle();
+
+      expect(tester.takeException(), isNull);
+      expect(invoked, [TreeViewItemInvokeReason.pressed]);
+      if (mode == TreeViewSelectionMode.single) expect(kept.selected, isTrue);
+    });
+  }
+
   group('TreeViewController', () {
     test('controller initializes with items', () {
       final controller = TreeViewController(

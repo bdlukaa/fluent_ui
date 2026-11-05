@@ -262,6 +262,9 @@ class TreeViewItem with Diagnosticable {
   /// its child items. Useful if you want to have multiple trees with the
   /// same items, but with different UX states (e.g., selection, visibility,
   /// etc.).
+  ///
+  /// The copy does not reuse [focusNode]: a [FocusNode] can only be attached
+  /// to one row at a time, so each copy gets its own.
   factory TreeViewItem.from(TreeViewItem source) {
     final newItem = TreeViewItem(
       key: source.key,
@@ -276,7 +279,6 @@ class TreeViewItem with Diagnosticable {
       onExpandToggle: source.onExpandToggle,
       backgroundColor: source.backgroundColor,
       autofocus: source.autofocus,
-      focusNode: source.focusNode,
       semanticLabel: source.semanticLabel,
       loadingWidget: source.loadingWidget,
       lazy: source.lazy,
@@ -1340,6 +1342,15 @@ class _TreeViewItem extends StatelessWidget {
   final Widget loadingWidgetFallback;
   final bool narrowSpacing;
 
+  /// Drops the cached traversal order of the scope holding [item], if any. A
+  /// node that lost its attachment has no scope.
+  void _invalidateTraversalData(BuildContext context) {
+    final scope = item.focusNode.nearestScope;
+    if (scope != null) {
+      FocusTraversalGroup.of(context).invalidateScopeData(scope);
+    }
+  }
+
   void _onCheckboxInvoked() {
     onSelect();
     onInvoked(TreeViewItemInvokeReason.selectionToggle);
@@ -1401,18 +1412,14 @@ class _TreeViewItem extends StatelessWidget {
             ? () {
                 item._focusedByPress = true;
                 item.focusNode.requestFocus();
-                FocusTraversalGroup.of(
-                  context,
-                ).invalidateScopeData(item.focusNode.nearestScope!);
+                _invalidateTraversalData(context);
                 onSelect();
                 onInvoked(TreeViewItemInvokeReason.pressed);
               }
             : () {
                 item._focusedByPress = true;
                 item.focusNode.requestFocus();
-                FocusTraversalGroup.of(
-                  context,
-                ).invalidateScopeData(item.focusNode.nearestScope!);
+                _invalidateTraversalData(context);
                 onInvoked(TreeViewItemInvokeReason.pressed);
               },
         onFocusTap: _onCheckboxInvoked,
