@@ -1485,7 +1485,10 @@ class _TreeViewItem extends StatelessWidget {
                                 TreeViewSelectionMode.none,
                               ].contains(selectionMode)
                               ? states
-                              : selected && (states.isPressed || states.isNone)
+                              : selected &&
+                                    (states.isPressed ||
+                                        states.isNone ||
+                                        (states.isFocused && !states.isHovered))
                               ? {WidgetState.hovered}
                               : selected && states.isHovered
                               ? {WidgetState.pressed}

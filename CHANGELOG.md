@@ -25,6 +25,7 @@
 * feat: Add `RadioButton.toggleable`. When true, selecting the selected radio button again calls `RadioGroup.onChanged` with null. Defaults to false ([#1374](https://github.com/bdlukaa/fluent_ui/pull/1374))
 * fix: `TreeViewItem.from` gives each copy its own `FocusNode`. Sharing one let a press in one tree select the item in the other, and left a mounted row with a detached node when the other tree closed
 * fix: Pressing a `TreeViewItem` whose `FocusNode` is detached no longer throws before the item is selected or invoked
+* fix: A selected `TreeViewItem` keeps its background while focused
 * fix: Do not use Material icons on `InfoBar` ([#1366](https://github.com/bdlukaa/fluent_ui/pull/1366))
 * fix: `PaneItem` titles are no longer hidden in open panes narrower than ~226px ([#1370](https://github.com/bdlukaa/fluent_ui/pull/1370))
 * fix: Do not use Material Localizations on `TabView` ([#1367](https://github.com/bdlukaa/fluent_ui/pull/1367))

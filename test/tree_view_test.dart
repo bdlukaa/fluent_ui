@@ -723,4 +723,48 @@ void main() {
       controller.dispose();
     });
   });
+
+  group('TreeView selected item background', () {
+    Color? rowColor(WidgetTester tester) {
+      for (final box in tester.widgetList<Container>(find.byType(Container))) {
+        final decoration = box.decoration;
+        if (decoration is BoxDecoration &&
+            decoration.borderRadius == BorderRadius.circular(6)) {
+          return decoration.color;
+        }
+      }
+      return null;
+    }
+
+    testWidgets('A selected item keeps its background while focused', (
+      tester,
+    ) async {
+      FocusManager.instance.highlightStrategy =
+          FocusHighlightStrategy.alwaysTraditional;
+      addTearDown(
+        () => FocusManager.instance.highlightStrategy =
+            FocusHighlightStrategy.automatic,
+      );
+      final item = TreeViewItem(content: const Text('Item'), selected: true);
+
+      await tester.pumpWidget(
+        wrapApp(
+          child: TreeView(
+            selectionMode: TreeViewSelectionMode.single,
+            items: [item],
+          ),
+        ),
+      );
+      await tester.pumpAndSettle();
+      final unfocused = rowColor(tester);
+      expect(unfocused, isNotNull);
+      expect(unfocused!.a, greaterThan(0));
+
+      item.focusNode.requestFocus();
+      await tester.pumpAndSettle();
+
+      expect(item.focusNode.hasFocus, isTrue);
+      expect(rowColor(tester), unfocused);
+    });
+  });
 }
