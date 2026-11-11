@@ -124,6 +124,51 @@ void main() {
       expect(find.byType(NavigationView), findsOneWidget);
     });
 
+    testWidgets('StickyNavigationIndicator hides when nothing is selected', (
+      tester,
+    ) async {
+      await tester.pumpWidget(
+        FluentApp(
+          home: SizedBox(
+            width: 1200,
+            height: 800,
+            child: NavigationView(
+              paneBodyBuilder: (item, body) => const SizedBox(),
+              pane: NavigationPane(
+                displayMode: PaneDisplayMode.compact,
+                autoSuggestBox: const TextBox(),
+                autoSuggestBoxReplacement: const Icon(FluentIcons.search),
+                items: [
+                  PaneItem(
+                    icon: const Icon(FluentIcons.home),
+                    title: const Text('Home'),
+                  ),
+                ],
+                footerItems: [
+                  PaneItemAction(
+                    icon: const Icon(FluentIcons.add),
+                    title: const Text('Add'),
+                    onTap: () {},
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ),
+      );
+
+      await tester.pumpAndSettle();
+
+      expect(find.byType(StickyNavigationIndicator), findsWidgets);
+      expect(
+        find.descendant(
+          of: find.byType(StickyNavigationIndicator),
+          matching: find.byType(Container),
+        ),
+        findsNothing,
+      );
+    });
+
     testWidgets('EndNavigationIndicator renders correctly', (tester) async {
       await tester.pumpWidget(
         FluentApp(

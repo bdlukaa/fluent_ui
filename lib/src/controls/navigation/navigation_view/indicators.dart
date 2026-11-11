@@ -372,8 +372,9 @@ class _StickyNavigationIndicatorState
   }
 
   bool get _shouldRender {
+    if (selectedIndex.isNegative) return false;
     if (isSelected || _isForceShow || _isAnimatingForceShow) return true;
-    if (selectedIndex.isNegative || previousItemIndex.isNegative) return false;
+    if (previousItemIndex.isNegative) return false;
     if (itemIndex == previousItemIndex && _shrinkController.isAnimating) {
       return true;
     }
