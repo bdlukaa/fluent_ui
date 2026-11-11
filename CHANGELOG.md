@@ -67,7 +67,8 @@
 * fix: `Tooltip.useMousePosition` places the tooltip at the mouse pointer when the nearest `Overlay` is not at the window origin, such as inside a nested `Navigator` ([#1374](https://github.com/bdlukaa/fluent_ui/pull/1374))
 * fix: Opening a compact `NavigationPane` no longer moves the pane toggle and footer items by about 1px ([#1374](https://github.com/bdlukaa/fluent_ui/pull/1374))
 * fix: The open `NavigationPane` no longer adds a second 6px gap below the pane toggle, so the first item stays in place when a compact pane opens ([#1374](https://github.com/bdlukaa/fluent_ui/pull/1374))
-* fix: `TextBox` reports itself to assistive technologies as an enabled text field that accepts focus. Its enabled state and focus action were on a separate wrapper node, so the text field node read as disabled and the web engine rendered a disabled `<input>` that screen readers could not type into. This also fixes `AutoSuggestBox`, `NumberBox`, `PasswordBox` and `TextFormBox`, which build a `TextBox`
+* fix: `StickyNavigationIndicator` no longer incorrectly draws on the pane toggle button, the search button and `PaneItemAction`s when no `NavigationPane` item is selected. ([#1380](https://github.com/bdlukaa/fluent_ui/pull/1380))
+* fix: Correctly merge `TextBox` Semantics node ([#1379](https://github.com/bdlukaa/fluent_ui/pull/1379))
 
 ## 4.17.0
 
