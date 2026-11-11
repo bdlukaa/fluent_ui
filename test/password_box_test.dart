@@ -97,4 +97,31 @@ void main() {
 
     expect(find.byIcon(FluentIcons.password_field), findsOneWidget);
   });
+
+  group('text field semantics', () {
+    testWidgets('enabled PasswordBox', (tester) async {
+      await expectTextFieldSemantics(
+        tester,
+        const PasswordBox(),
+        enabled: true,
+      );
+    });
+    testWidgets('disabled PasswordBox', (tester) async {
+      await expectTextFieldSemantics(
+        tester,
+        const PasswordBox(enabled: false),
+        enabled: false,
+      );
+    });
+    testWidgets('enabled PasswordFormBox', (tester) async {
+      await expectTextFieldSemantics(tester, PasswordFormBox(), enabled: true);
+    });
+    testWidgets('disabled PasswordFormBox', (tester) async {
+      await expectTextFieldSemantics(
+        tester,
+        PasswordFormBox(enabled: false),
+        enabled: false,
+      );
+    });
+  });
 }

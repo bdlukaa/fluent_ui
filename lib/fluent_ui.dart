@@ -53,6 +53,7 @@ export 'src/controls/navigation/breadcrumb_bar.dart';
 export 'src/controls/navigation/navigation_view/title_bar.dart';
 export 'src/controls/navigation/navigation_view/view.dart';
 export 'src/controls/navigation/tab_view/tab_view.dart';
+export 'src/controls/navigation/tab_view/tab_view_controller.dart';
 export 'src/controls/navigation/tree_view.dart';
 export 'src/controls/pickers/calendar_view.dart';
 export 'src/controls/pickers/color_picker/color_picker.dart';

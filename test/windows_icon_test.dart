@@ -179,6 +179,13 @@ void main() {
   }
 
   testWidgets('controls render the legacy fallbacks', (tester) async {
+    final tabViewController = TabViewController(
+      initialTabs: [
+        Tab(text: const Text('Tab'), body: const SizedBox(), onClosed: () {}),
+      ],
+    );
+    addTearDown(tabViewController.dispose);
+
     await tester.pumpWidget(
       wrapApp(
         child: ScaffoldPage(
@@ -187,15 +194,8 @@ void main() {
               SizedBox(
                 height: 80,
                 child: TabView(
-                  currentIndex: 0,
+                  controller: tabViewController,
                   onNewPressed: () {},
-                  tabs: [
-                    Tab(
-                      text: const Text('Tab'),
-                      body: const SizedBox(),
-                      onClosed: () {},
-                    ),
-                  ],
                 ),
               ),
               NumberBox<int>(
