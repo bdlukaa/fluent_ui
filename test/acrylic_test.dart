@@ -1,5 +1,3 @@
-import 'dart:ui' as ui;
-
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter/rendering.dart';
 
@@ -107,7 +105,7 @@ void main() {
         child: SizedBox.expand(),
       );
       await tester.pumpWidget(
-        FluentApp(
+        const FluentApp(
           home: Center(
             child: RepaintBoundary(
               key: key,
@@ -117,10 +115,10 @@ void main() {
                 child: Stack(
                   fit: StackFit.expand,
                   children: [
-                    const ColoredBox(color: Color(0xFFFF0000)),
+                    ColoredBox(color: Color(0xFFFF0000)),
                     Row(
                       children: [
-                        const Expanded(child: acrylic),
+                        Expanded(child: acrylic),
                         Expanded(child: RepaintBoundary(child: acrylic)),
                       ],
                     ),
@@ -135,10 +133,8 @@ void main() {
       final boundary = tester.renderObject<RenderRepaintBoundary>(
         find.byKey(key),
       );
-      final image = (await tester.runAsync(() => boundary.toImage()))!;
-      final bytes = (await tester.runAsync(
-        () => image.toByteData(format: ui.ImageByteFormat.rawRgba),
-      ))!;
+      final image = (await tester.runAsync(boundary.toImage))!;
+      final bytes = (await tester.runAsync(image.toByteData))!;
       final left = (60 * image.width + 80) * 4;
       final right = (60 * image.width + 240) * 4;
       expect(bytes.getUint8(left), closeTo(228, 3));
@@ -175,6 +171,78 @@ void main() {
         expect(properties?.tintAlpha, 0.0);
         expect(properties?.fallbackColor, const Color(0xFFF9F9F9));
         expect(find.byType(BackdropFilter), findsOneWidget);
+      },
+    );
+
+    testWidgets(
+      'only fully opaque effective tint skips filtering and retains noise',
+      (tester) async {
+        Future<void> check({
+          required Color tint,
+          required double? luminosityAlpha,
+          required bool opaque,
+          double tintAlpha = 1,
+        }) async {
+          await tester.pumpWidget(
+            FluentApp(
+              home: Center(
+                child: Acrylic(
+                  tint: tint,
+                  tintAlpha: tintAlpha,
+                  luminosityAlpha: luminosityAlpha,
+                  shape: const RoundedRectangleBorder(
+                    borderRadius: BorderRadius.all(Radius.circular(8)),
+                  ),
+                  child: const SizedBox(
+                    width: 80,
+                    height: 40,
+                    child: Text('content'),
+                  ),
+                ),
+              ),
+            ),
+          );
+          final surface = find.byType(Acrylic);
+          expect(
+            find.descendant(of: surface, matching: find.byType(BackdropFilter)),
+            opaque ? findsNothing : findsOneWidget,
+          );
+          final noise = tester.widget<Opacity>(
+            find.descendant(of: surface, matching: find.byType(Opacity)),
+          );
+          expect(noise.opacity, 0.02);
+          expect(find.text('content'), findsOneWidget);
+          expect(
+            find.descendant(of: surface, matching: find.byType(ClipPath)),
+            findsOneWidget,
+          );
+          if (opaque) {
+            final fill = tester.widget<ColoredBox>(
+              find.descendant(of: surface, matching: find.byType(ColoredBox)),
+            );
+            expect(fill.color, tint);
+          }
+        }
+
+        await check(tint: Colors.white, luminosityAlpha: 0.85, opaque: true);
+        // tintAlpha == 1 is not enough: automatic white tint is suppressed to 0.45.
+        await check(tint: Colors.white, luminosityAlpha: null, opaque: false);
+        await check(
+          tint: Colors.white.withValues(alpha: 0.5),
+          luminosityAlpha: 0.85,
+          opaque: false,
+        );
+        await check(
+          tint: const Color(0xFF0078D4),
+          luminosityAlpha: 0.85,
+          opaque: true,
+        );
+        await check(
+          tint: const Color(0xFF0078D4),
+          tintAlpha: 0.9,
+          luminosityAlpha: 0.85,
+          opaque: false,
+        );
       },
     );
 

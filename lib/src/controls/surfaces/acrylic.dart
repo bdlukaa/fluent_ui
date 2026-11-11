@@ -148,6 +148,7 @@ class _AcrylicState extends State<Acrylic> {
   AcrylicProperties _properties = const AcrylicProperties.empty();
   ImageFilter? _cachedBlurFilter;
   late ImageFilter _materialFilter;
+  late Color _effectiveTintColor;
   double _cachedBlurAmount = kBlurAmount;
 
   @override
@@ -186,6 +187,14 @@ class _AcrylicState extends State<Acrylic> {
       fallbackColor: widget.fallbackColor ?? theme.acrylicFallbackColor,
     );
 
+    _effectiveTintColor = AcrylicHelper.getEffectiveTintColor(
+      _properties.tint,
+      _properties.tintAlpha,
+      luminosityOpacity: _properties.luminosityAlpha,
+    );
+    // WinUI's opaque brush uses only tint and noise, without sampling a backdrop.
+    if (_effectiveTintColor.a >= 1) return;
+
     if (_cachedBlurFilter == null || _cachedBlurAmount != blurAmount) {
       _cachedBlurAmount = blurAmount;
       _cachedBlurFilter = ImageFilter.blur(
@@ -193,11 +202,6 @@ class _AcrylicState extends State<Acrylic> {
         sigmaY: blurAmount,
       );
     }
-    final tintColor = AcrylicHelper.getEffectiveTintColor(
-      _properties.tint,
-      _properties.tintAlpha,
-      luminosityOpacity: _properties.luminosityAlpha,
-    );
     final luminosityColor = AcrylicHelper.getLuminosityColor(
       _properties.tint,
       _properties.luminosityAlpha,
@@ -208,10 +212,7 @@ class _AcrylicState extends State<Acrylic> {
     // Recipe: microsoft-ui-xaml/controls/dev/Materials/Acrylic/AcrylicBrush.cpp.
     // As in WinUI, first back transparent backdrop pixels with opaque fallback.
     _materialFilter = ImageFilter.compose(
-      outer: ColorFilter.mode(
-        tintColor,
-        tintColor.a >= 1 ? BlendMode.src : BlendMode.color,
-      ),
+      outer: ColorFilter.mode(_effectiveTintColor, BlendMode.color),
       inner: ImageFilter.compose(
         outer: ColorFilter.mode(luminosityColor, BlendMode.luminosity),
         inner: ImageFilter.compose(
@@ -547,17 +548,20 @@ class _AcrylicGuts extends StatelessWidget {
       );
     }
 
+    final tintColor = inherited.state._effectiveTintColor;
     return ClipPath(
       clipper: ShapeBorderClipper(shape: properties.shape),
       child: Stack(
         fit: StackFit.passthrough,
         children: [
           Positioned.fill(
-            child: BackdropFilter(
-              filter: inherited.state._materialFilter,
-              blendMode: BlendMode.src,
-              child: const SizedBox.expand(),
-            ),
+            child: tintColor.a >= 1
+                ? ColoredBox(color: tintColor)
+                : BackdropFilter(
+                    filter: inherited.state._materialFilter,
+                    blendMode: BlendMode.src,
+                    child: const SizedBox.expand(),
+                  ),
           ),
 
           const Positioned.fill(child: _AcrylicNoise()),
