@@ -32,6 +32,7 @@
 * fix: `Tooltip.useMousePosition` places the tooltip at the mouse pointer when the nearest `Overlay` is not at the window origin, such as inside a nested `Navigator` ([#1374](https://github.com/bdlukaa/fluent_ui/pull/1374))
 * fix: Opening a compact `NavigationPane` no longer moves the pane toggle and footer items by about 1px ([#1374](https://github.com/bdlukaa/fluent_ui/pull/1374))
 * fix: The open `NavigationPane` no longer adds a second 6px gap below the pane toggle, so the first item stays in place when a compact pane opens ([#1374](https://github.com/bdlukaa/fluent_ui/pull/1374))
+* fix: `StickyNavigationIndicator` no longer draws on the pane toggle, the search button and `PaneItemAction`s when no `NavigationPane` item is selected. These items have no index (-1), which matched the unselected index (-1). It now checks for no selection first, as `NavigationIndicator.shouldShow` does
 
 ## 4.17.0
 
