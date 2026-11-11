@@ -180,7 +180,7 @@ void main() {
 
   testWidgets('controls render the legacy fallbacks', (tester) async {
     final tabViewController = TabViewController(
-      tabs: [
+      initialTabs: [
         Tab(text: const Text('Tab'), body: const SizedBox(), onClosed: () {}),
       ],
     );

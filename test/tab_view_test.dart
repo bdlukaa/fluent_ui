@@ -9,7 +9,7 @@ import 'app_test.dart';
 void main() {
   testWidgets('TabView renders tabs and bodies', (tester) async {
     final controller = TabViewController(
-      tabs: [
+      initialTabs: [
         Tab(text: const Text('Tab 1'), body: const Text('Body 1')),
         Tab(text: const Text('Tab 2'), body: const Text('Body 2')),
       ],
@@ -25,7 +25,7 @@ void main() {
   testWidgets('TabView switches tabs on tap', (tester) async {
     int? selectedIndex;
     final controller = TabViewController(
-      tabs: [
+      initialTabs: [
         Tab(text: const Text('Tab 1'), body: const Text('Body 1')),
         Tab(text: const Text('Tab 2'), body: const Text('Body 2')),
       ],
@@ -50,7 +50,7 @@ void main() {
     (tester) async {
       var changedIndex = -1;
       final controller = TabViewController(
-        tabs: [
+        initialTabs: [
           Tab(text: const Text('Tab 1'), body: const Text('Body 1')),
           Tab(text: const Text('Tab 2'), body: const Text('Body 2')),
         ],
@@ -83,7 +83,7 @@ void main() {
     final b = _controllerTab('B');
     final c = _controllerTab('C');
     final inserted = _controllerTab('Inserted');
-    final controller = TabViewController(tabs: [a, b], initialIndex: 1);
+    final controller = TabViewController(initialTabs: [a, b], initialIndex: 1);
     addTearDown(controller.dispose);
 
     expect(controller.tabs, [a, b]);
@@ -114,7 +114,7 @@ void main() {
   test('TabViewController selects and notifies only for state changes', () {
     final a = _controllerTab('A');
     final b = _controllerTab('B');
-    final controller = TabViewController(tabs: [a, b]);
+    final controller = TabViewController(initialTabs: [a, b]);
     addTearDown(controller.dispose);
     var notifications = 0;
     controller.addListener(() => notifications++);
@@ -157,7 +157,7 @@ void main() {
 
   testWidgets('TabView renders tabs owned by its controller', (tester) async {
     final controller = TabViewController(
-      tabs: [_controllerTab('A'), _controllerTab('B')],
+      initialTabs: [_controllerTab('A'), _controllerTab('B')],
       initialIndex: 1,
     );
     addTearDown(controller.dispose);
@@ -178,9 +178,9 @@ void main() {
   testWidgets(
     'TabView swaps externally owned controllers without disposing them',
     (tester) async {
-      final first = TabViewController(tabs: [_controllerTab('First')]);
+      final first = TabViewController(initialTabs: [_controllerTab('First')]);
       final second = TabViewController(
-        tabs: [_controllerTab('Second A'), _controllerTab('Second B')],
+        initialTabs: [_controllerTab('Second A'), _controllerTab('Second B')],
         initialIndex: 1,
       );
       addTearDown(first.dispose);
@@ -206,7 +206,7 @@ void main() {
   ) async {
     var pressed = false;
     final controller = TabViewController(
-      tabs: [Tab(text: const Text('Tab 1'), body: const Text('Body 1'))],
+      initialTabs: [Tab(text: const Text('Tab 1'), body: const Text('Body 1'))],
     );
     addTearDown(controller.dispose);
     await tester.pumpWidget(
@@ -227,7 +227,7 @@ void main() {
 
   testWidgets('TabView shows header and footer', (tester) async {
     final controller = TabViewController(
-      tabs: [Tab(text: const Text('Tab 1'), body: const Text('Body 1'))],
+      initialTabs: [Tab(text: const Text('Tab 1'), body: const Text('Body 1'))],
     );
     addTearDown(controller.dispose);
     await tester.pumpWidget(
@@ -257,7 +257,7 @@ void main() {
         closeIcon: const Icon(FluentIcons.cancel),
       ),
     ];
-    final controller = TabViewController(tabs: tabs);
+    final controller = TabViewController(initialTabs: tabs);
     addTearDown(controller.dispose);
     await tester.pumpWidget(wrapApp(child: TabView(controller: controller)));
     // Find the close button (IconButton with tooltip 'Close')
@@ -273,7 +273,7 @@ void main() {
   ) async {
     var pressed = false;
     final controller = TabViewController(
-      tabs: [Tab(text: const Text('Tab 1'), body: const Text('Body 1'))],
+      initialTabs: [Tab(text: const Text('Tab 1'), body: const Text('Body 1'))],
     );
     addTearDown(controller.dispose);
     await tester.pumpWidget(
@@ -487,7 +487,7 @@ void main() {
 
   testWidgets('TabView supports custom stripBuilder', (tester) async {
     final controller = TabViewController(
-      tabs: [Tab(text: const Text('Tab 1'), body: const Text('Body 1'))],
+      initialTabs: [Tab(text: const Text('Tab 1'), body: const Text('Body 1'))],
     );
     addTearDown(controller.dispose);
     await tester.pumpWidget(
@@ -515,7 +515,7 @@ void main() {
       Tab(text: const Text('Tab 1'), body: const Text('Body 1')),
       Tab(text: const Text('Tab 2'), body: const Text('Body 2')),
     ];
-    final controller = TabViewController(tabs: tabs);
+    final controller = TabViewController(initialTabs: tabs);
     addTearDown(controller.dispose);
 
     await tester.pumpWidget(
@@ -542,7 +542,7 @@ void main() {
     final a = Tab(text: const Text('A'), body: const Text('Body A'));
     final b = Tab(text: const Text('B'), body: const Text('Body B'));
     final c = Tab(text: const Text('C'), body: const Text('Body C'));
-    final controller = TabViewController(tabs: [a]);
+    final controller = TabViewController(initialTabs: [a]);
     addTearDown(controller.dispose);
 
     controller.add(b);
@@ -565,7 +565,7 @@ void main() {
     tester,
   ) async {
     final controller = TabViewController(
-      tabs: [
+      initialTabs: [
         Tab(text: const Text('A'), body: const Text('Body A')),
         Tab(text: const Text('B'), body: const Text('Body B')),
       ],
@@ -605,7 +605,7 @@ void main() {
   ) async {
     final controller = TabViewController(
       initialIndex: 1,
-      tabs: [
+      initialTabs: [
         Tab(text: const Text('A'), body: const Text('Body A')),
         Tab(text: const Text('B'), body: const Text('Body B')),
       ],
@@ -644,7 +644,7 @@ void main() {
         body: _IdentityCounterBody('B-$rebuild'),
       ),
     ];
-    final controller = TabViewController(tabs: tabs());
+    final controller = TabViewController(initialTabs: tabs());
     addTearDown(controller.dispose);
 
     await tester.pumpWidget(
@@ -677,7 +677,7 @@ void main() {
 
   testWidgets('TabView keeps lazy tab bodies alive by default', (tester) async {
     final controller = TabViewController(
-      tabs: [
+      initialTabs: [
         Tab(text: const Text('A'), body: const _KeepAliveTestCounterBody('A')),
         Tab(text: const Text('B'), body: const _KeepAliveTestCounterBody('B')),
         Tab(text: const Text('C'), body: const _KeepAliveTestCounterBody('C')),
@@ -705,7 +705,7 @@ void main() {
     tester,
   ) async {
     final controller = TabViewController(
-      tabs: [
+      initialTabs: [
         Tab(text: const Text('A'), body: const _KeepAliveTestCounterBody('A')),
         Tab(text: const Text('B'), body: const _KeepAliveTestCounterBody('B')),
         Tab(text: const Text('C'), body: const _KeepAliveTestCounterBody('C')),
@@ -735,7 +735,7 @@ void main() {
     'TabView keeps opt-in lazy tab bodies alive when keep alive is off',
     (tester) async {
       final controller = TabViewController(
-        tabs: [
+        initialTabs: [
           Tab(
             text: const Text('A'),
             body: const _OptInKeepAliveTestCounterBody('A'),
@@ -775,7 +775,7 @@ void main() {
     tester,
   ) async {
     final controller = TabViewController(
-      tabs: [
+      initialTabs: [
         Tab(text: const Text('A'), body: const _KeepAliveTestCounterBody('A')),
         Tab(text: const Text('B'), body: const _KeepAliveTestCounterBody('B')),
         Tab(text: const Text('C'), body: const _KeepAliveTestCounterBody('C')),
@@ -876,7 +876,7 @@ class _ReorderHarness extends StatefulWidget {
 class _ReorderHarnessState extends State<_ReorderHarness> {
   late final controller = TabViewController(
     initialIndex: 1,
-    tabs: [
+    initialTabs: [
       Tab(text: const Text('A'), body: const _CounterBody('A')),
       Tab(text: const Text('B'), body: const _CounterBody('B')),
     ],
@@ -941,7 +941,7 @@ class _RebuiltTabsHarnessState extends State<_RebuiltTabsHarness> {
   @override
   void initState() {
     super.initState();
-    controller = TabViewController(tabs: _tabs());
+    controller = TabViewController(initialTabs: _tabs());
   }
 
   List<Tab> _tabs() => [
@@ -1074,7 +1074,7 @@ class _DragReorderHarnessState extends State<_DragReorderHarness> {
   void initState() {
     super.initState();
     controller = TabViewController(
-      tabs: List.generate(widget.tabCount, _createTab),
+      initialTabs: List.generate(widget.tabCount, _createTab),
     );
   }
 
@@ -1253,7 +1253,7 @@ void _configureTabViewGoldenEnvironment(WidgetTester tester) {
 
 Widget _goldenTabView({required double width, int tabCount = 3}) {
   final controller = TabViewController(
-    tabs: List.generate(
+    initialTabs: List.generate(
       tabCount,
       (index) => Tab(
         text: Text(String.fromCharCode(65 + index)),

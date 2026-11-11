@@ -12,10 +12,103 @@ class TabViewPage extends StatefulWidget {
 }
 
 class _TabViewPageState extends State<TabViewPage> with PageMixin {
-  late final TabViewController _controller;
-  late final TabViewController _compactController;
-  late final TabViewController _keepAliveController;
-  late final TabViewController _secondaryController;
+  late final TabViewController _controller = TabViewController(
+    initialTabs: [
+      _createDocumentTab(1, title: 'Project brief'),
+      _createDocumentTab(2, title: 'Meeting notes'),
+      _createDocumentTab(3, title: 'Release checklist'),
+    ],
+    initialIndex: 1,
+  );
+  late final TabViewController _compactController = TabViewController(
+    initialTabs: [
+      Tab(
+        icon: const WindowsIcon(
+          WindowsIcons.document,
+          fallbackIcon: FluentIcons.document,
+        ),
+        text: const Text('Notes'),
+        body: const _CompactTabBody(title: 'Notes'),
+      ),
+      Tab(
+        icon: const WindowsIcon(
+          WindowsIcons.folder_open,
+          fallbackIcon: FluentIcons.folder_open,
+        ),
+        text: const Text('Files'),
+        body: const _CompactTabBody(title: 'Files'),
+      ),
+      Tab(
+        icon: const WindowsIcon(
+          WindowsIcons.settings,
+          fallbackIcon: FluentIcons.settings,
+        ),
+        text: const Text('Settings'),
+        body: const _CompactTabBody(title: 'Settings'),
+      ),
+    ],
+  );
+  late final TabViewController _keepAliveController = TabViewController(
+    initialTabs: [
+      Tab(
+        text: const Text('Kept alive'),
+        body: const _CounterTabBody(keepAlive: true),
+      ),
+      Tab(
+        text: const Text('Discarded'),
+        body: const _CounterTabBody(keepAlive: false),
+      ),
+      Tab(text: const Text('Other 1'), body: const SizedBox()),
+      Tab(text: const Text('Other 2'), body: const SizedBox()),
+    ],
+  );
+  late final TabViewController _secondaryController = TabViewController(
+    initialTabs: [
+      Tab(
+        key: const ValueKey('secondary-tap'),
+        icon: const WindowsIcon(
+          WindowsIcons.document,
+          fallbackIcon: FluentIcons.document,
+        ),
+        text: const Text('Recognizes secondary tap'),
+        body: const _SecondaryTapBody(
+          title: 'Use the secondary mouse button on this tab.',
+        ),
+        gestures: {
+          TapGestureRecognizer:
+              GestureRecognizerFactoryWithHandlers<TapGestureRecognizer>(
+                TapGestureRecognizer.new,
+                (instance) {
+                  instance.onSecondaryTap = () {
+                    if (!mounted) return;
+                    debugPrint('Secondary tap recognized');
+                    displayInfoBar(
+                      context,
+                      builder: (context, close) {
+                        return const InfoBar(
+                          title: Text('Secondary tap recognized'),
+                          severity: InfoBarSeverity.success,
+                        );
+                      },
+                    );
+                  };
+                },
+              ),
+        },
+      ),
+      MyCustomTab(
+        key: const ValueKey('custom-secondary-tap'),
+        icon: const WindowsIcon(
+          WindowsIcons.settings,
+          fallbackIcon: FluentIcons.settings,
+        ),
+        text: const Text('Custom context menu'),
+        body: const _SecondaryTapBody(
+          title: 'Use the secondary mouse button to open a menu.',
+        ),
+      ),
+    ],
+  );
   var _nextDocument = 4;
 
   Tab _createDocumentTab(int index, {String? title}) {
@@ -36,108 +129,6 @@ class _TabViewPageState extends State<TabViewPage> with PageMixin {
 
   void _addDocument() {
     _controller.add(_createDocumentTab(_nextDocument++));
-  }
-
-  @override
-  void initState() {
-    super.initState();
-    _controller = TabViewController(
-      tabs: [
-        _createDocumentTab(1, title: 'Project brief'),
-        _createDocumentTab(2, title: 'Meeting notes'),
-        _createDocumentTab(3, title: 'Release checklist'),
-      ],
-      initialIndex: 1,
-    );
-    _compactController = TabViewController(
-      tabs: [
-        Tab(
-          icon: const WindowsIcon(
-            WindowsIcons.document,
-            fallbackIcon: FluentIcons.document,
-          ),
-          text: const Text('Notes'),
-          body: const _CompactTabBody(title: 'Notes'),
-        ),
-        Tab(
-          icon: const WindowsIcon(
-            WindowsIcons.folder_open,
-            fallbackIcon: FluentIcons.folder_open,
-          ),
-          text: const Text('Files'),
-          body: const _CompactTabBody(title: 'Files'),
-        ),
-        Tab(
-          icon: const WindowsIcon(
-            WindowsIcons.settings,
-            fallbackIcon: FluentIcons.settings,
-          ),
-          text: const Text('Settings'),
-          body: const _CompactTabBody(title: 'Settings'),
-        ),
-      ],
-    );
-    _keepAliveController = TabViewController(
-      tabs: [
-        Tab(
-          text: const Text('Kept alive'),
-          body: const _CounterTabBody(keepAlive: true),
-        ),
-        Tab(
-          text: const Text('Discarded'),
-          body: const _CounterTabBody(keepAlive: false),
-        ),
-        Tab(text: const Text('Other 1'), body: const SizedBox()),
-        Tab(text: const Text('Other 2'), body: const SizedBox()),
-      ],
-    );
-    _secondaryController = TabViewController(
-      tabs: [
-        Tab(
-          key: const ValueKey('secondary-tap'),
-          icon: const WindowsIcon(
-            WindowsIcons.document,
-            fallbackIcon: FluentIcons.document,
-          ),
-          text: const Text('Recognizes secondary tap'),
-          body: const _SecondaryTapBody(
-            title: 'Use the secondary mouse button on this tab.',
-          ),
-          gestures: {
-            TapGestureRecognizer:
-                GestureRecognizerFactoryWithHandlers<TapGestureRecognizer>(
-                  TapGestureRecognizer.new,
-                  (instance) {
-                    instance.onSecondaryTap = () {
-                      if (!mounted) return;
-                      debugPrint('Secondary tap recognized');
-                      displayInfoBar(
-                        context,
-                        builder: (context, close) {
-                          return const InfoBar(
-                            title: Text('Secondary tap recognized'),
-                            severity: InfoBarSeverity.success,
-                          );
-                        },
-                      );
-                    };
-                  },
-                ),
-          },
-        ),
-        MyCustomTab(
-          key: const ValueKey('custom-secondary-tap'),
-          icon: const WindowsIcon(
-            WindowsIcons.settings,
-            fallbackIcon: FluentIcons.settings,
-          ),
-          text: const Text('Custom context menu'),
-          body: const _SecondaryTapBody(
-            title: 'Use the secondary mouse button to open a menu.',
-          ),
-        ),
-      ],
-    );
   }
 
   @override

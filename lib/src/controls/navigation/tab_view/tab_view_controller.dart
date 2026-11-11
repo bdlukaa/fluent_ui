@@ -9,12 +9,12 @@ import 'tab_view.dart';
 /// A controller owns its tab list. Supply it to [TabView.controller] to update
 /// the view by calling methods such as [select], [add], and [removeAt].
 class TabViewController with ChangeNotifier {
-  /// Creates a controller with [tabs] and the initially selected tab.
+  /// Creates a controller with [initialTabs] and the initially selected tab.
   ///
-  /// When [tabs] is empty, [initialIndex] must be `0`. This value is retained
+  /// When [initialTabs] is empty, [initialIndex] must be `0`. This value is retained
   /// so that the first tab added becomes selected.
-  TabViewController({List<Tab> tabs = const [], int initialIndex = 0})
-    : _tabs = List.of(tabs),
+  TabViewController({List<Tab> initialTabs = const [], int initialIndex = 0})
+    : _tabs = List.of(initialTabs),
       _selectedIndex = initialIndex {
     _validateTabs(_tabs);
     _validateSelectedIndex();

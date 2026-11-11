@@ -27,7 +27,7 @@
   ```dart
   // Before
   TabView(
-    tabs: tabs,
+    tabs: [ ... ],
     currentIndex: currentIndex,
     onChanged: (index) => setState(() => currentIndex = index),
     onReorder: (oldIndex, newIndex) {
@@ -37,6 +37,10 @@
   )
 
   // After
+  final controller = TabViewController(
+    initialTabs: [ ... ],
+  );
+
   TabView(
     controller: controller,
     onChanged: (index) {
