@@ -268,4 +268,27 @@ void main() {
       expect(currentControls(), same(customControls));
     },
   );
+
+  group('text field semantics', () {
+    testWidgets('enabled TextBox', (tester) async {
+      await expectTextFieldSemantics(tester, const TextBox(), enabled: true);
+    });
+    testWidgets('disabled TextBox', (tester) async {
+      await expectTextFieldSemantics(
+        tester,
+        const TextBox(enabled: false),
+        enabled: false,
+      );
+    });
+    testWidgets('enabled TextFormBox', (tester) async {
+      await expectTextFieldSemantics(tester, TextFormBox(), enabled: true);
+    });
+    testWidgets('disabled TextFormBox', (tester) async {
+      await expectTextFieldSemantics(
+        tester,
+        TextFormBox(enabled: false),
+        enabled: false,
+      );
+    });
+  });
 }

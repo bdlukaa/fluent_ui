@@ -126,4 +126,36 @@ void main() {
 
     expect(find.byType(TextFormBox), findsOneWidget);
   });
+
+  group('text field semantics', () {
+    final items = [AutoSuggestBoxItem<String>(value: 'a', label: 'a')];
+    testWidgets('enabled AutoSuggestBox', (tester) async {
+      await expectTextFieldSemantics(
+        tester,
+        AutoSuggestBox<String>(items: items),
+        enabled: true,
+      );
+    });
+    testWidgets('disabled AutoSuggestBox', (tester) async {
+      await expectTextFieldSemantics(
+        tester,
+        AutoSuggestBox<String>(items: items, enabled: false),
+        enabled: false,
+      );
+    });
+    testWidgets('enabled AutoSuggestBox.form', (tester) async {
+      await expectTextFieldSemantics(
+        tester,
+        AutoSuggestBox<String>.form(items: items),
+        enabled: true,
+      );
+    });
+    testWidgets('disabled AutoSuggestBox.form', (tester) async {
+      await expectTextFieldSemantics(
+        tester,
+        AutoSuggestBox<String>.form(items: items, enabled: false),
+        enabled: false,
+      );
+    });
+  });
 }
