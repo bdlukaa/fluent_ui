@@ -73,7 +73,7 @@ void main() {
         ),
       );
       await tester.pumpAndSettle();
-      await _expectGolden(find.byKey(_acrylicKey), 'flyouts_$name.png');
+      await _expectGolden(tester, find.byKey(_acrylicKey), 'flyouts_$name.png');
     });
 
     for (final menu in [false, true]) {
@@ -137,18 +137,22 @@ void main() {
         }
         await tester.pumpAndSettle();
         // The overflow lives in the app Overlay, outside the home's boundary.
-        await _expectGolden(find.byType(FluentApp), '${kind}_$name.png');
+        await _expectGolden(
+          tester,
+          find.byType(FluentApp),
+          '${kind}_$name.png',
+        );
       });
     }
   }
   testWidgets('light default Acrylic', (tester) async {
     await _pumpAcrylic(tester, theme: FluentThemeData.light());
-    await _expectGolden(find.byKey(_acrylicKey), 'light_default.png');
+    await _expectGolden(tester, find.byKey(_acrylicKey), 'light_default.png');
   });
 
   testWidgets('dark default Acrylic', (tester) async {
     await _pumpAcrylic(tester, theme: FluentThemeData.dark());
-    await _expectGolden(find.byKey(_acrylicKey), 'dark_default.png');
+    await _expectGolden(tester, find.byKey(_acrylicKey), 'dark_default.png');
   });
 
   testWidgets('colored backdrop through Acrylic', (tester) async {
@@ -158,7 +162,11 @@ void main() {
       tint: Colors.blue,
       tintAlpha: 0.8,
     );
-    await _expectGolden(find.byKey(_acrylicKey), 'colored_backdrop.png');
+    await _expectGolden(
+      tester,
+      find.byKey(_acrylicKey),
+      'colored_backdrop.png',
+    );
   });
 
   testWidgets('high contrast content through Acrylic', (tester) async {
@@ -178,17 +186,34 @@ void main() {
         ],
       ),
     );
-    await _expectGolden(find.byKey(_acrylicKey), 'high_contrast.png');
+    await _expectGolden(tester, find.byKey(_acrylicKey), 'high_contrast.png');
   });
 
   testWidgets('disabled Acrylic fallback', (tester) async {
     await _pumpAcrylic(tester, theme: FluentThemeData.dark(), disabled: true);
-    await _expectGolden(find.byKey(_acrylicKey), 'disabled_fallback.png');
+    await _expectGolden(
+      tester,
+      find.byKey(_acrylicKey),
+      'disabled_fallback.png',
+    );
   });
 }
 
-Future<void> _expectGolden(Finder finder, String filename) async {
+Future<void> _expectGolden(
+  WidgetTester tester,
+  Finder finder,
+  String filename,
+) async {
   try {
+    // Asset decoding is real async work: pumpAndSettle alone can finish before
+    // the noise texture loads, making captures depend on test order and timing.
+    await tester.runAsync(
+      () => precacheImage(
+        const AssetImage('assets/AcrylicNoise.png', package: 'fluent_ui'),
+        tester.element(finder),
+      ),
+    );
+    await tester.pumpAndSettle();
     await expectLater(finder, matchesGoldenFile('goldens/acrylic/$filename'));
   } finally {
     debugDisableShadows = true;
