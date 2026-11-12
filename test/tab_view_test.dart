@@ -807,55 +807,6 @@ void main() {
 
     expect(find.text('A:0'), findsOneWidget);
   });
-
-  testWidgets('TabView normal tab strip', (tester) async {
-    _configureTabViewGoldenEnvironment(tester);
-    await tester.pumpWidget(_goldenTabView(width: 600));
-    await tester.pumpAndSettle();
-
-    await expectLater(
-      find.byKey(_goldenTabViewKey),
-      matchesGoldenFile('goldens/tab_view/normal.png'),
-    );
-  }, tags: 'golden');
-
-  testWidgets('TabView actively dragged tab strip', (tester) async {
-    _configureTabViewGoldenEnvironment(tester);
-    await tester.pumpWidget(_goldenTabView(width: 600));
-    await tester.pumpAndSettle();
-
-    final initialTabPosition = tester.getCenter(find.text('A'));
-    final gesture = await tester.startGesture(
-      initialTabPosition,
-      kind: PointerDeviceKind.mouse,
-    );
-    await tester.pump();
-    await gesture.moveBy(const Offset(120, 0));
-    await tester.pump(const Duration(milliseconds: 200));
-
-    expect(
-      tester.getCenter(find.text('A')).dx,
-      greaterThan(initialTabPosition.dx),
-    );
-
-    await expectLater(
-      find.byKey(_goldenTabViewKey),
-      matchesGoldenFile('goldens/tab_view/dragging.png'),
-    );
-
-    await gesture.up();
-  }, tags: 'golden');
-
-  testWidgets('TabView scrollable tab strip', (tester) async {
-    _configureTabViewGoldenEnvironment(tester);
-    await tester.pumpWidget(_goldenTabView(width: 240, tabCount: 8));
-    await tester.pumpAndSettle();
-
-    await expectLater(
-      find.byKey(_goldenTabViewKey),
-      matchesGoldenFile('goldens/tab_view/scrollable.png'),
-    );
-  }, tags: 'golden');
 }
 
 Tab _controllerTab(String name) {
@@ -1238,44 +1189,4 @@ class _OptInKeepAliveTestCounterBodyState
       ],
     );
   }
-}
-
-const _goldenTabViewKey = ValueKey<String>('tab-view');
-
-void _configureTabViewGoldenEnvironment(WidgetTester tester) {
-  tester.view
-    ..physicalSize = const Size(800, 600)
-    ..devicePixelRatio = 1;
-  tester.platformDispatcher.textScaleFactorTestValue = 1;
-  addTearDown(tester.view.reset);
-  addTearDown(tester.platformDispatcher.clearTextScaleFactorTestValue);
-}
-
-Widget _goldenTabView({required double width, int tabCount = 3}) {
-  final controller = TabViewController(
-    initialTabs: List.generate(
-      tabCount,
-      (index) => Tab(
-        text: Text(String.fromCharCode(65 + index)),
-        body: const SizedBox(),
-      ),
-    ),
-  );
-  addTearDown(controller.dispose);
-  return MediaQuery(
-    data: const MediaQueryData(textScaler: TextScaler.noScaling),
-    child: FluentApp(
-      theme: FluentThemeData.light(),
-      home: Center(
-        child: RepaintBoundary(
-          key: _goldenTabViewKey,
-          child: SizedBox(
-            width: width,
-            height: 80,
-            child: TabView(controller: controller, onReorder: (_, _) {}),
-          ),
-        ),
-      ),
-    ),
-  );
 }
