@@ -1342,13 +1342,16 @@ class _TreeViewItem extends StatelessWidget {
   final Widget loadingWidgetFallback;
   final bool narrowSpacing;
 
-  /// Drops the cached traversal order of the scope holding [item], if any. A
-  /// node that lost its attachment has no scope.
-  void _invalidateTraversalData(BuildContext context) {
+  /// Moves focus to [item] for a press and drops the cached traversal order of
+  /// its scope. A node that lost its attachment has no scope and cannot take
+  /// focus, so it reports no focus change that would clear
+  /// [TreeViewItem._focusedByPress]; the flag is set only when focus can move.
+  void _focusOnPress(BuildContext context) {
     final scope = item.focusNode.nearestScope;
-    if (scope != null) {
-      FocusTraversalGroup.of(context).invalidateScopeData(scope);
-    }
+    if (scope == null || !item.focusNode.canRequestFocus) return;
+    item._focusedByPress = true;
+    item.focusNode.requestFocus();
+    FocusTraversalGroup.of(context).invalidateScopeData(scope);
   }
 
   void _onCheckboxInvoked() {
@@ -1410,16 +1413,12 @@ class _TreeViewItem extends StatelessWidget {
               },
         onPressed: selectionMode == TreeViewSelectionMode.single
             ? () {
-                item._focusedByPress = true;
-                item.focusNode.requestFocus();
-                _invalidateTraversalData(context);
+                _focusOnPress(context);
                 onSelect();
                 onInvoked(TreeViewItemInvokeReason.pressed);
               }
             : () {
-                item._focusedByPress = true;
-                item.focusNode.requestFocus();
-                _invalidateTraversalData(context);
+                _focusOnPress(context);
                 onInvoked(TreeViewItemInvokeReason.pressed);
               },
         onFocusTap: _onCheckboxInvoked,

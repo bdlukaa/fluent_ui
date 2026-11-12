@@ -178,6 +178,70 @@ void main() {
     });
   }
 
+  testWidgets(
+    'A press on a detached focus node does not stop later keyboard selection',
+    (tester) async {
+      final focusNode = FocusNode();
+      addTearDown(focusNode.dispose);
+      TreeViewItem item() =>
+          TreeViewItem(content: const Text('Item'), focusNode: focusNode);
+      final kept = item();
+      final showSecondTree = ValueNotifier<bool>(true);
+      addTearDown(showSecondTree.dispose);
+
+      await tester.pumpWidget(
+        wrapApp(
+          child: Column(
+            children: [
+              Expanded(
+                child: TreeView(
+                  selectionMode: TreeViewSelectionMode.single,
+                  items: [kept],
+                ),
+              ),
+              ValueListenableBuilder<bool>(
+                valueListenable: showSecondTree,
+                builder: (context, show, _) => show
+                    ? Expanded(
+                        child: TreeView(
+                          selectionMode: TreeViewSelectionMode.single,
+                          items: [item()],
+                        ),
+                      )
+                    : const SizedBox.shrink(),
+              ),
+            ],
+          ),
+        ),
+      );
+      showSecondTree.value = false;
+      await tester.pumpAndSettle();
+      expect(focusNode.nearestScope, isNull);
+
+      // The press cannot move focus to the detached node.
+      await tester.tap(find.text('Item'));
+      await tester.pumpAndSettle();
+
+      // A fresh tree attaches the node again; focus that does not come from a
+      // press selects the item.
+      kept.selected = false;
+      await tester.pumpWidget(
+        wrapApp(
+          child: TreeView(
+            selectionMode: TreeViewSelectionMode.single,
+            items: [kept],
+          ),
+        ),
+      );
+      expect(focusNode.nearestScope, isNotNull);
+      focusNode.requestFocus();
+      await tester.pumpAndSettle();
+
+      expect(focusNode.hasFocus, isTrue);
+      expect(kept.selected, isTrue);
+    },
+  );
+
   group('TreeViewController', () {
     test('controller initializes with items', () {
       final controller = TreeViewController(
