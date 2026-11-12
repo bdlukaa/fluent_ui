@@ -1,9 +1,9 @@
-## [next]
+## 4.18.0
 
-* feat: Add `TabView.automaticallyKeepAlive`, which defaults to true. Set it to false to let each tab body use `AutomaticKeepAliveClientMixin` to control its own lifetime.
-* **BREAKING** perf: Tree shake `FluentIcons` and `WindowsIcons` glyphs. Both classes are annotated with `@staticIconProvider`, so release builds keep only the glyphs an app uses instead of both fonts whole.
-  - Off Windows, a `WindowsIcon` without `fallbackIcon` now renders the `WindowsIcons` glyph as given. It no longer looks up the `FluentIcons` glyph with the same name, because that lookup kept every glyph of both fonts. Controls in this package pass their fallback explicitly and render as before.
-  - Name-based lookup moved to `package:fluent_ui/windows_icon_fallback.dart`, which keeps both fonts whole when imported.
+* feat: Add `TabView.automaticallyKeepAlive` (defaults to `true`). Set it to `false` to let each tab body use `AutomaticKeepAliveClientMixin` to control its own lifetime.
+* **BREAKING** perf: Tree-shake `FluentIcons` and `WindowsIcons` glyphs ([#1375](https://github.com/bdlukaa/fluent_ui/pull/1375)). Both classes are annotated with `@staticIconProvider`, so release builds include only the glyphs an app uses instead of the entire fonts.
+  - On non-Windows platforms, a `WindowsIcon` without `fallbackIcon` now renders the specified `WindowsIcons` glyph. It no longer looks up a same-named `FluentIcons` glyph, since that lookup retained every glyph from both fonts. Controls in this package provide their fallbacks explicitly and are unchanged.
+  - Name-based fallback lookup is available from `package:fluent_ui/windows_icon_fallback.dart`. Importing it retains both fonts in full.
 
   Migration:
 
@@ -14,13 +14,26 @@
   // After
   const WindowsIcon(WindowsIcons.add, fallbackIcon: FluentIcons.add)
 
-  // Or restore the name-based fallback for every WindowsIcon before runApp
+  // Or restore name-based fallback for every WindowsIcon before runApp
   import 'package:fluent_ui/windows_icon_fallback.dart';
 
   WindowsIcon.fallbackResolver = fluentIconFallback;
   ```
 
-* **BREAKING** `TabView` now requires a `TabViewController`, which owns its tabs and selected index. ([#1349](https://github.com/bdlukaa/fluent_ui/issues/1349))
+* feat: Display icons in DevTools ([#1365](https://github.com/bdlukaa/fluent_ui/pull/1365)).
+* fix: Use Fluent icons in `InfoBar` instead of Material icons ([#1366](https://github.com/bdlukaa/fluent_ui/pull/1366)).
+* fix: Avoid Material localizations in `TabView` ([#1367](https://github.com/bdlukaa/fluent_ui/pull/1367)).
+* fix: Keep `PaneItem` titles visible in open navigation panes narrower than approximately 226 px ([#1370](https://github.com/bdlukaa/fluent_ui/pull/1370)).
+* feat/fix: Add `CommandBarThemeData`, `ButtonThemeData.smallIconButtonStyle`, and `RadioButton.toggleable`; fix `TextBox` selection-control recreation, `CommandBar` overflow-menu padding and sizing, `Tooltip.useMousePosition` in nested overlays, and compact `NavigationPane` spacing ([#1374](https://github.com/bdlukaa/fluent_ui/pull/1374)).
+  - `CommandBarThemeData`, configured through `FluentThemeData.commandBarTheme` or `CommandBarTheme`, controls the padding and open/closed decorations of the frame around `CommandBar` items.
+  - `smallIconButtonStyle` styles small and tiny `IconButton`s, including buttons in `TextBox` and `PasswordBox`, and falls back to `iconButtonStyle`.
+  - When `RadioButton.toggleable` is true, selecting the selected radio button again calls `RadioGroup.onChanged` with `null`. It defaults to `false`.
+  - `TextBox` and controls built on it no longer recreate default selection controls on each build, avoiding disposal of visible selection handles while their overlay is building. Affected controls include `AutoSuggestBox`, `EditableComboBox`, `NumberBox`, `PasswordBox`, and `TextFormBox`.
+  - The `CommandBar` overflow menu now matches `MenuFlyout` padding and item margins, and sizes to its content between 160 and 480 px. Long items can expand the menu beyond its previous 320 px limit.
+  - `Tooltip.useMousePosition` now positions the tooltip correctly when the nearest overlay is offset from the window origin, such as in a nested `Navigator`.
+  - Opening a compact `NavigationPane` no longer shifts its toggle and footer items or adds a second 6 px gap below the toggle.
+* fix: Correctly render `Acrylic` in flyouts and overlays ([#1376](https://github.com/bdlukaa/fluent_ui/pull/1376); [#719](https://github.com/bdlukaa/fluent_ui/issues/719)).
+* **BREAKING** `TabView` now requires a `TabViewController`, which owns its tabs and selected index ([#1377](https://github.com/bdlukaa/fluent_ui/pull/1377); [#1349](https://github.com/bdlukaa/fluent_ui/issues/1349)).
 
   Migration:
 
@@ -49,28 +62,14 @@
   )
   ```
 
-  - Create the controller in `State.initState` and dispose it in `State.dispose`.
-  - Replace selection state updates with `controller.select(index)`. `onChanged` remains an optional notification callback and is called after the controller updates its selection.
-  - `Tab.onClosed` still only requests a close; remove the tab in that callback with `controller.removeAt(controller.tabs.indexOf(tab))`.
+  - Create the controller in `State.initState` and dispose of it in `State.dispose`.
+  - Replace selection state updates with `controller.select(index)`. The optional `onChanged` callback runs after the controller updates its selection.
+  - `Tab.onClosed` still only requests a close. Remove the tab in that callback with `controller.removeAt(controller.tabs.indexOf(tab))`.
   - Replace `onReorder` list mutations with `controller.move(oldIndex, newIndex)`. Drag reordering updates the controller automatically.
-  - Add tabs from `onNewPressed` with `controller.add(tab)`. The callback does not add a tab automatically.
-* feat: Display Icons in DevTools ([1365](https://github.com/bdlukaa/fluent_ui/pull/1365))
-* feat: Add `CommandBarThemeData`, set through `FluentThemeData.commandBarTheme` or `CommandBarTheme`, to configure the padding and the closed and open decorations of the frame around `CommandBar` items ([#1374](https://github.com/bdlukaa/fluent_ui/pull/1374))
-* feat: Add `ButtonThemeData.smallIconButtonStyle`, used by small and tiny `IconButton`s (including those under a `SmallIconButton`, such as `TextBox` and `PasswordBox` buttons). It falls back to `iconButtonStyle` ([#1374](https://github.com/bdlukaa/fluent_ui/pull/1374))
-* feat: Add `RadioButton.toggleable`. When true, selecting the selected radio button again calls `RadioGroup.onChanged` with null. Defaults to false ([#1374](https://github.com/bdlukaa/fluent_ui/pull/1374))
-* fix: Pressing a `TreeViewItem` whose `FocusNode` is detached no longer throws before the item is selected or invoked, and no longer stops the item from being selected when it later gains focus from the keyboard ([#1378](https://github.com/bdlukaa/fluent_ui/pull/1378))
-* fix: Do not use Material icons on `InfoBar` ([#1366](https://github.com/bdlukaa/fluent_ui/pull/1366))
-* fix: `PaneItem` titles are no longer hidden in open panes narrower than ~226px ([#1370](https://github.com/bdlukaa/fluent_ui/pull/1370))
-* fix: Do not use Material Localizations on `TabView` ([#1367](https://github.com/bdlukaa/fluent_ui/pull/1367))
-* fix: `TextBox` no longer creates new default selection controls on every build. A new instance made `EditableText` dispose its visible selection handles, which threw when this happened while their `Overlay` was building. This also fixes `AutoSuggestBox`, `EditableComboBox`, `NumberBox`, `PasswordBox` and `TextFormBox`, which build a `TextBox` ([#1374](https://github.com/bdlukaa/fluent_ui/pull/1374))
-* fix: The `CommandBar` overflow menu uses the same padding and item margin as `MenuFlyout`, and sizes to its content between 160px and 480px wide. It stacked the default `FlyoutContent` padding, an extra scroll view padding and the menu item margin, so it had more padding than every other menu, and its items stretched it to the widest size the position allowed ([#1374](https://github.com/bdlukaa/fluent_ui/pull/1374))
-* fix: The `CommandBar` overflow menu is no longer limited to 320px wide, so long items can widen it up to the 480px maximum ([#1374](https://github.com/bdlukaa/fluent_ui/pull/1374))
-* fix: `Tooltip.useMousePosition` places the tooltip at the mouse pointer when the nearest `Overlay` is not at the window origin, such as inside a nested `Navigator` ([#1374](https://github.com/bdlukaa/fluent_ui/pull/1374))
-* fix: Opening a compact `NavigationPane` no longer moves the pane toggle and footer items by about 1px ([#1374](https://github.com/bdlukaa/fluent_ui/pull/1374))
-* fix: The open `NavigationPane` no longer adds a second 6px gap below the pane toggle, so the first item stays in place when a compact pane opens ([#1374](https://github.com/bdlukaa/fluent_ui/pull/1374))
-* fix: Correctly render `Acrylic` in flyouts and overlays ([#719](https://github.com/bdlukaa/fluent_ui/issues/719))
-* fix: `StickyNavigationIndicator` no longer incorrectly draws on the pane toggle button, the search button and `PaneItemAction`s when no `NavigationPane` item is selected. ([#1380](https://github.com/bdlukaa/fluent_ui/pull/1380))
-* fix: Correctly merge `TextBox` Semantics node ([#1379](https://github.com/bdlukaa/fluent_ui/pull/1379))
+  - Add tabs from `onNewPressed` with `controller.add(tab)`; the callback does not add a tab automatically.
+* fix: Pressing a `TreeViewItem` with a detached `FocusNode` no longer throws before selection or invocation, and the item can still be selected later through keyboard focus ([#1378](https://github.com/bdlukaa/fluent_ui/pull/1378)).
+* fix: Correctly merge the `TextBox` semantics node ([#1379](https://github.com/bdlukaa/fluent_ui/pull/1379)).
+* fix: Prevent `StickyNavigationIndicator` from drawing on the pane toggle, search button, or `PaneItemAction`s when no navigation item is selected ([#1380](https://github.com/bdlukaa/fluent_ui/pull/1380)).
 
 ## 4.17.0
 
