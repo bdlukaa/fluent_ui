@@ -34,20 +34,4 @@ jobs:
         run: flutter pub publish --dry-run
 
       - name: Run tests
-        run: flutter test --exclude-tags=golden
-
-  golden-tests:
-    runs-on: macos-latest
-
-    steps:
-      - uses: actions/checkout@v2
-      - name: Install Flutter
-        uses: subosito/flutter-action@v2
-        with:
-          flutter-version: 3.47.7
-
-      - name: Install dependencies
-        run: flutter pub get
-
-      - name: Run golden tests
-        run: flutter test --tags=golden
+        run: flutter test

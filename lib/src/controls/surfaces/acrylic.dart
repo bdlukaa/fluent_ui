@@ -47,7 +47,9 @@ const double kMenuColorOpacity = 0.65;
 /// {@end-tool}
 ///
 /// When [luminosityAlpha] is null, Acrylic uses WinUI's automatic luminosity
-/// calculation. Set it explicitly to use a fixed luminosity opacity.
+/// calculation. Set it explicitly to use a fixed luminosity opacity, such as
+/// [FluentThemeData.acrylicLuminosityOpacity] for a theme-provided transient
+/// surface. [FlyoutContent] selects this resource automatically.
 ///
 /// When [DisableAcrylic] is present, the widget keeps the same layout and
 /// semantics but paints only [fallbackColor], without a backdrop filter or
@@ -115,6 +117,7 @@ class Acrylic extends StatefulWidget {
   ///
   /// Equivalent to WinUI `AcrylicBrush.FallbackColor`. If null, the
   /// Acrylic fallback resource from the nearest [FluentTheme] is used.
+  /// Its alpha is forced to 1 so disabled Acrylic is always opaque.
   final Color? fallbackColor;
 
   /// The z-coordinate relative to the parent at which to place this physical
@@ -144,6 +147,8 @@ class Acrylic extends StatefulWidget {
 class _AcrylicState extends State<Acrylic> {
   AcrylicProperties _properties = const AcrylicProperties.empty();
   ImageFilter? _cachedBlurFilter;
+  late ImageFilter _materialFilter;
+  late Color _effectiveTintColor;
   double _cachedBlurAmount = kBlurAmount;
 
   @override
@@ -182,6 +187,14 @@ class _AcrylicState extends State<Acrylic> {
       fallbackColor: widget.fallbackColor ?? theme.acrylicFallbackColor,
     );
 
+    _effectiveTintColor = AcrylicHelper.getEffectiveTintColor(
+      _properties.tint,
+      _properties.tintAlpha,
+      luminosityOpacity: _properties.luminosityAlpha,
+    );
+    // WinUI's opaque brush uses only tint and noise, without sampling a backdrop.
+    if (_effectiveTintColor.a >= 1) return;
+
     if (_cachedBlurFilter == null || _cachedBlurAmount != blurAmount) {
       _cachedBlurAmount = blurAmount;
       _cachedBlurFilter = ImageFilter.blur(
@@ -189,6 +202,28 @@ class _AcrylicState extends State<Acrylic> {
         sigmaY: blurAmount,
       );
     }
+    final luminosityColor = AcrylicHelper.getLuminosityColor(
+      _properties.tint,
+      _properties.luminosityAlpha,
+      _properties.tintAlpha,
+    );
+    // Blend on the sampled backdrop, not on the canvas of a sibling picture.
+    // WinUI's Color/Luminosity enum names are reversed; Flutter's are not.
+    // Recipe: microsoft-ui-xaml/controls/dev/Materials/Acrylic/AcrylicBrush.cpp.
+    // As in WinUI, first back transparent backdrop pixels with opaque fallback.
+    _materialFilter = ImageFilter.compose(
+      outer: ColorFilter.mode(_effectiveTintColor, BlendMode.color),
+      inner: ImageFilter.compose(
+        outer: ColorFilter.mode(luminosityColor, BlendMode.luminosity),
+        inner: ImageFilter.compose(
+          outer: blurFilter,
+          inner: ColorFilter.mode(
+            _properties.fallbackColor.withValues(alpha: 1),
+            BlendMode.dstOver,
+          ),
+        ),
+      ),
+    );
   }
 
   ImageFilter get blurFilter => _cachedBlurFilter ??= ImageFilter.blur(
@@ -211,21 +246,28 @@ class _AcrylicState extends State<Acrylic> {
 
     return _AcrylicInheritedWidget(
       state: this,
-      child: DecoratedBox(
-        decoration: ShapeDecoration(
-          shape: _properties.shape,
-          shadows: [
-            BoxShadow(
-              color: shadowColor.withValues(alpha: 0.13),
-              blurRadius: 0.9 * widget.elevation,
-              offset: Offset(0, 0.4 * widget.elevation),
-            ),
-            BoxShadow(
-              color: shadowColor.withValues(alpha: 0.11),
-              blurRadius: 0.225 * widget.elevation,
-              offset: Offset(0, 0.085 * widget.elevation),
-            ),
-          ],
+      child: CustomPaint(
+        painter: widget.elevation > 0
+            ? _AcrylicShadowPainter(
+                shape: _properties.shape,
+                textDirection: Directionality.maybeOf(context),
+                shadows: [
+                  BoxShadow(
+                    color: shadowColor.withValues(alpha: 0.13),
+                    blurRadius: 0.9 * widget.elevation,
+                    offset: Offset(0, 0.4 * widget.elevation),
+                  ),
+                  BoxShadow(
+                    color: shadowColor.withValues(alpha: 0.11),
+                    blurRadius: 0.225 * widget.elevation,
+                    offset: Offset(0, 0.085 * widget.elevation),
+                  ),
+                ],
+              )
+            : null,
+        foregroundPainter: _AcrylicBorderPainter(
+          _properties.shape,
+          Directionality.maybeOf(context),
         ),
         child: _AcrylicGuts(child: widget.child ?? const SizedBox.shrink()),
       ),
@@ -498,43 +540,30 @@ class _AcrylicGuts extends StatelessWidget {
       return ClipPath(
         clipper: ShapeBorderClipper(shape: properties.shape),
         child: DecoratedBox(
-          decoration: BoxDecoration(color: properties.fallbackColor),
+          decoration: BoxDecoration(
+            color: properties.fallbackColor.withValues(alpha: 1),
+          ),
           child: child,
         ),
       );
     }
 
-    final tintColor = AcrylicHelper.getEffectiveTintColor(
-      properties.tint,
-      properties.tintAlpha,
-      luminosityOpacity: properties.luminosityAlpha,
-    );
-    final luminosityColor = AcrylicHelper.getLuminosityColor(
-      properties.tint,
-      properties.luminosityAlpha,
-      properties.tintAlpha,
-    );
-
+    final tintColor = inherited.state._effectiveTintColor;
     return ClipPath(
       clipper: ShapeBorderClipper(shape: properties.shape),
       child: Stack(
         fit: StackFit.passthrough,
         children: [
           Positioned.fill(
-            child: BackdropFilter(
-              filter: inherited.state.blurFilter,
-              child: const SizedBox.expand(),
-            ),
+            child: tintColor.a >= 1
+                ? ColoredBox(color: tintColor)
+                : BackdropFilter(
+                    filter: inherited.state._materialFilter,
+                    blendMode: BlendMode.src,
+                    child: const SizedBox.expand(),
+                  ),
           ),
-          Positioned.fill(
-            child: CustomPaint(
-              isComplex: true,
-              painter: _AcrylicPainter(
-                tintColor: tintColor,
-                luminosityColor: luminosityColor,
-              ),
-            ),
-          ),
+
           const Positioned.fill(child: _AcrylicNoise()),
           child,
         ],
@@ -563,28 +592,62 @@ class _AcrylicNoise extends StatelessWidget {
   }
 }
 
-class _AcrylicPainter extends CustomPainter {
-  final Color luminosityColor;
-  final Color tintColor;
+class _AcrylicShadowPainter extends CustomPainter {
+  final ShapeBorder shape;
+  final List<BoxShadow> shadows;
 
-  const _AcrylicPainter({
-    required this.luminosityColor,
-    required this.tintColor,
+  final TextDirection? textDirection;
+
+  const _AcrylicShadowPainter({
+    required this.shape,
+    required this.shadows,
+    required this.textDirection,
   });
 
   @override
   void paint(Canvas canvas, Size size) {
-    canvas.drawColor(luminosityColor, BlendMode.luminosity);
-    canvas.drawColor(
-      tintColor,
-      tintColor.a >= 1 ? BlendMode.src : BlendMode.color,
+    final rect = Offset.zero & size;
+    final path = shape.getOuterPath(rect, textDirection: textDirection);
+    final extent = shadows.fold<double>(
+      0,
+      (extent, shadow) =>
+          math.max(extent, shadow.blurRadius * 3 + shadow.offset.distance),
     );
+    // Keep the original exterior shadows, but exclude their filled interiors
+    // from the brush's backdrop. No offscreen layer is needed.
+    canvas.save();
+    canvas.clipPath(
+      Path()
+        ..fillType = PathFillType.evenOdd
+        ..addRect(rect.inflate(extent))
+        ..addPath(path, Offset.zero),
+    );
+    for (final shadow in shadows) {
+      canvas.drawPath(path.shift(shadow.offset), shadow.toPaint());
+    }
+    canvas.restore();
   }
 
   @override
-  bool shouldRepaint(covariant _AcrylicPainter old) {
-    return luminosityColor != old.luminosityColor || tintColor != old.tintColor;
-  }
+  bool shouldRepaint(_AcrylicShadowPainter old) =>
+      shape != old.shape ||
+      textDirection != old.textDirection ||
+      !listEquals(shadows, old.shadows);
+}
+
+class _AcrylicBorderPainter extends CustomPainter {
+  final ShapeBorder shape;
+  final TextDirection? textDirection;
+
+  const _AcrylicBorderPainter(this.shape, this.textDirection);
+
+  @override
+  void paint(Canvas canvas, Size size) =>
+      shape.paint(canvas, Offset.zero & size, textDirection: textDirection);
+
+  @override
+  bool shouldRepaint(_AcrylicBorderPainter old) =>
+      shape != old.shape || textDirection != old.textDirection;
 }
 
 /// Microsoft Acrylic helper calculations converted from WinUI's
