@@ -1216,8 +1216,10 @@ class ComboBoxState<T> extends State<ComboBox<T>>
               child: Focus(
                 focusNode: _popupFocusNode,
                 onKeyEvent: _handlePopupKey,
+                // The popup does not scope a semantics route. On Windows,
+                // scoping one makes opening the popup allocate about 1 GB
+                // (#1364). Revisit once popups move to the windowing API.
                 child: Semantics(
-                  scopesRoute: true,
                   namesRoute: true,
                   explicitChildNodes: true,
                   label: FluentLocalizations.of(context).dialogLabel,

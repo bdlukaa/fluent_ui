@@ -1,3 +1,7 @@
+## [next]
+
+* fix: `ComboBox` popups no longer scope a semantics route, which made opening one allocate about 1 GB on Windows ([#1364](https://github.com/bdlukaa/fluent_ui/issues/1364)). The popup keeps its `Dialog` label, and screen readers on Android and iOS no longer announce it as a new route when it opens.
+
 ## 4.18.0
 
 * feat: Add `TabView.automaticallyKeepAlive` (defaults to `true`). Set it to `false` to let each tab body use `AutomaticKeepAliveClientMixin` to control its own lifetime.
