@@ -800,7 +800,7 @@ class FlyoutController
     FlyoutTransitionBuilder? transitionBuilder,
     Duration? transitionDuration,
     Duration? reverseTransitionDuration = Duration.zero,
-    Curve transitionCurve = Curves.linear,
+    Curve transitionCurve = const Cubic(0, 0, 0, 1),
     Offset? position,
     RouteSettings? settings,
     GestureRecognizer? barrierRecognizer,
@@ -814,7 +814,7 @@ class FlyoutController
     final textDirection = Directionality.of(context);
 
     final theme = FluentTheme.of(context);
-    transitionDuration ??= theme.fastAnimationDuration;
+    transitionDuration ??= theme.mediumAnimationDuration;
     reverseTransitionDuration ??= transitionDuration;
 
     _currentNavigator = navigatorKey ?? Navigator.of(context);
@@ -845,12 +845,32 @@ class FlyoutController
       pageBuilder: (context, animation, secondary) {
         transitionBuilder ??= (context, animation, placementMode, flyout) {
           switch (placementMode) {
+            case FlyoutPlacementMode.rightTop:
+            case FlyoutPlacementMode.rightCenter:
+            case FlyoutPlacementMode.rightBottom:
+              return SlideTransition(
+                position: Tween<Offset>(
+                  begin: const Offset(-0.04, 0),
+                  end: Offset.zero,
+                ).animate(animation),
+                child: flyout,
+              );
+            case FlyoutPlacementMode.leftTop:
+            case FlyoutPlacementMode.leftCenter:
+            case FlyoutPlacementMode.leftBottom:
+              return SlideTransition(
+                position: Tween<Offset>(
+                  begin: const Offset(0.04, 0),
+                  end: Offset.zero,
+                ).animate(animation),
+                child: flyout,
+              );
             case FlyoutPlacementMode.topCenter:
             case FlyoutPlacementMode.topLeft:
             case FlyoutPlacementMode.topRight:
               return SlideTransition(
                 position: Tween<Offset>(
-                  begin: const Offset(0, 0.25),
+                  begin: const Offset(0, 0.15),
                   end: Offset.zero,
                 ).animate(animation),
                 child: flyout,
@@ -889,6 +909,7 @@ class FlyoutController
           additionalOffset: additionalOffset,
           margin: margin,
           transitionBuilder: transitionBuilder!,
+          transitionCurve: transitionCurve,
           animation: CurvedAnimation(curve: transitionCurve, parent: animation),
           transitionDuration: transitionDuration,
           reverseTransitionDuration: reverseTransitionDuration,
@@ -994,6 +1015,7 @@ class _FlyoutPage extends StatelessWidget {
     required this.additionalOffset,
     required this.margin,
     required this.transitionBuilder,
+    required this.transitionCurve,
     required this.animation,
     required this.transitionDuration,
     required this.reverseTransitionDuration,
@@ -1022,6 +1044,7 @@ class _FlyoutPage extends StatelessWidget {
   final double additionalOffset;
   final double margin;
   final FlyoutTransitionBuilder transitionBuilder;
+  final Curve transitionCurve;
   final Animation<double> animation;
   final Duration? transitionDuration;
   final Duration? reverseTransitionDuration;
@@ -1207,7 +1230,7 @@ class _FlyoutPage extends StatelessWidget {
         return Directionality(
           textDirection: textDirection,
           child: FadeTransition(
-            opacity: CurvedAnimation(curve: Curves.ease, parent: animation),
+            opacity: CurvedAnimation(curve: transitionCurve, parent: animation),
             child: box,
           ),
         );
