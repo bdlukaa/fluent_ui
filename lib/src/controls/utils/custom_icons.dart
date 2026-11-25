@@ -27,6 +27,15 @@ class ChevronDown extends StatelessWidget {
   });
 
   @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties
+      ..add(DoubleProperty('iconSize', iconSize, defaultValue: 8.0))
+      ..add(DiagnosticsProperty<IconData>('icon', icon))
+      ..add(ColorProperty('iconColor', iconColor));
+  }
+
+  @override
   Widget build(BuildContext context) {
     assert(debugCheckHasFluentTheme(context));
     final theme = FluentTheme.of(context);
@@ -42,7 +51,7 @@ class ChevronDown extends StatelessWidget {
       child: Icon(icon, size: iconSize, color: iconColor),
       builder: (context, value, child) {
         return Opacity(
-          opacity: clampDouble(value, 0.0, 1.0),
+          opacity: clampDouble(value, 0, 1),
           child: Transform.translate(
             filterQuality: FilterQuality.high,
             offset: Offset(0, value == 1 ? 0 : value * 1),

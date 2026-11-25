@@ -1,4 +1,5 @@
 import 'package:fluent_ui/fluent_ui.dart';
+import 'package:flutter/foundation.dart';
 
 /// The size mode for an [IconButton].
 ///
@@ -99,15 +100,27 @@ class IconButton extends BaseButton {
   final IconButtonMode? iconButtonMode;
 
   @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties.add(EnumProperty('iconButtonMode', iconButtonMode));
+  }
+
+  /// Whether this button is small or tiny, either from [iconButtonMode] or,
+  /// when it is null, from a [SmallIconButton] ancestor.
+  bool _isSmall(BuildContext context) {
+    return iconButtonMode != null
+        ? iconButtonMode != IconButtonMode.large
+        : SmallIconButton.of(context) != null;
+  }
+
+  @override
   ButtonStyle defaultStyleOf(BuildContext context) {
     assert(debugCheckHasFluentTheme(context));
     final theme = FluentTheme.of(context);
     final isIconSmall =
         SmallIconButton.of(context) != null ||
         iconButtonMode == IconButtonMode.tiny;
-    final isSmall = iconButtonMode != null
-        ? iconButtonMode != IconButtonMode.large
-        : SmallIconButton.of(context) != null;
+    final isSmall = _isSmall(context);
     return ButtonStyle(
       iconSize: WidgetStatePropertyAll(isIconSmall ? 11.0 : null),
       padding: WidgetStatePropertyAll(
@@ -137,7 +150,11 @@ class IconButton extends BaseButton {
   @override
   ButtonStyle? themeStyleOf(BuildContext context) {
     assert(debugCheckHasFluentTheme(context));
-    return ButtonTheme.of(context).iconButtonStyle;
+    final buttonTheme = ButtonTheme.of(context);
+    if (_isSmall(context)) {
+      return buttonTheme.smallIconButtonStyle ?? buttonTheme.iconButtonStyle;
+    }
+    return buttonTheme.iconButtonStyle;
   }
 }
 

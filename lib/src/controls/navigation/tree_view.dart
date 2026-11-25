@@ -262,6 +262,9 @@ class TreeViewItem with Diagnosticable {
   /// its child items. Useful if you want to have multiple trees with the
   /// same items, but with different UX states (e.g., selection, visibility,
   /// etc.).
+  ///
+  /// The copy does not reuse [focusNode]: a [FocusNode] can only be attached
+  /// to one row at a time, so each copy gets its own.
   factory TreeViewItem.from(TreeViewItem source) {
     final newItem = TreeViewItem(
       key: source.key,
@@ -276,7 +279,6 @@ class TreeViewItem with Diagnosticable {
       onExpandToggle: source.onExpandToggle,
       backgroundColor: source.backgroundColor,
       autofocus: source.autofocus,
-      focusNode: source.focusNode,
       semanticLabel: source.semanticLabel,
       loadingWidget: source.loadingWidget,
       lazy: source.lazy,
@@ -808,6 +810,14 @@ class TreeViewController with ChangeNotifier, Diagnosticable {
           ifTrue: 'attached',
           ifFalse: 'detached',
         ),
+      )
+      ..add(
+        FlagProperty(
+          'isAttachedStateMounted',
+          value: _state?.mounted ?? false,
+          ifTrue: 'attached state mounted',
+          ifFalse: 'no mounted attached state',
+        ),
       );
   }
 
@@ -1151,6 +1161,12 @@ class TreeViewState extends State<TreeView> with AutomaticKeepAliveClientMixin {
   }
 
   @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties.add(IntProperty('visibleItemCount', _items.length));
+  }
+
+  @override
   Widget build(BuildContext context) {
     super.build(context);
     assert(debugCheckHasDirectionality(context));
@@ -1326,6 +1342,18 @@ class _TreeViewItem extends StatelessWidget {
   final Widget loadingWidgetFallback;
   final bool narrowSpacing;
 
+  /// Moves focus to [item] for a press and drops the cached traversal order of
+  /// its scope. A node that lost its attachment has no scope and cannot take
+  /// focus, so it reports no focus change that would clear
+  /// [TreeViewItem._focusedByPress]; the flag is set only when focus can move.
+  void _focusOnPress(BuildContext context) {
+    final scope = item.focusNode.nearestScope;
+    if (scope == null || !item.focusNode.canRequestFocus) return;
+    item._focusedByPress = true;
+    item.focusNode.requestFocus();
+    FocusTraversalGroup.of(context).invalidateScopeData(scope);
+  }
+
   void _onCheckboxInvoked() {
     onSelect();
     onInvoked(TreeViewItemInvokeReason.selectionToggle);
@@ -1385,20 +1413,12 @@ class _TreeViewItem extends StatelessWidget {
               },
         onPressed: selectionMode == TreeViewSelectionMode.single
             ? () {
-                item._focusedByPress = true;
-                item.focusNode.requestFocus();
-                FocusTraversalGroup.of(
-                  context,
-                ).invalidateScopeData(item.focusNode.nearestScope!);
+                _focusOnPress(context);
                 onSelect();
                 onInvoked(TreeViewItemInvokeReason.pressed);
               }
             : () {
-                item._focusedByPress = true;
-                item.focusNode.requestFocus();
-                FocusTraversalGroup.of(
-                  context,
-                ).invalidateScopeData(item.focusNode.nearestScope!);
+                _focusOnPress(context);
                 onInvoked(TreeViewItemInvokeReason.pressed);
               },
         onFocusTap: _onCheckboxInvoked,
@@ -1464,7 +1484,10 @@ class _TreeViewItem extends StatelessWidget {
                                 TreeViewSelectionMode.none,
                               ].contains(selectionMode)
                               ? states
-                              : selected && (states.isPressed || states.isNone)
+                              : selected &&
+                                    (states.isPressed ||
+                                        states.isNone ||
+                                        (states.isFocused && !states.isHovered))
                               ? {WidgetState.hovered}
                               : selected && states.isHovered
                               ? {WidgetState.pressed}

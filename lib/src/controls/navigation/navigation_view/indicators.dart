@@ -119,6 +119,18 @@ class EndNavigationIndicator extends NavigationIndicator {
   });
 
   @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties.add(
+      ColorProperty(
+        'unselectedColor',
+        unselectedColor,
+        defaultValue: Colors.transparent,
+      ),
+    );
+  }
+
+  @override
   NavigationIndicatorState<EndNavigationIndicator> createState() =>
       _EndNavigationIndicatorState();
 }
@@ -209,6 +221,15 @@ class StickyNavigationIndicator extends NavigationIndicator {
   ///
   /// Defaults to 3.0px to match WinUI3 NavigationView standard.
   final double indicatorSize;
+
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties
+      ..add(DoubleProperty('topPadding', topPadding, defaultValue: 12.0))
+      ..add(DoubleProperty('leftPadding', leftPadding, defaultValue: 10.0))
+      ..add(DoubleProperty('indicatorSize', indicatorSize, defaultValue: 3.0));
+  }
 
   @override
   NavigationIndicatorState<StickyNavigationIndicator> createState() =>
@@ -351,8 +372,9 @@ class _StickyNavigationIndicatorState
   }
 
   bool get _shouldRender {
+    if (selectedIndex.isNegative) return false;
     if (isSelected || _isForceShow || _isAnimatingForceShow) return true;
-    if (selectedIndex.isNegative || previousItemIndex.isNegative) return false;
+    if (previousItemIndex.isNegative) return false;
     if (itemIndex == previousItemIndex && _shrinkController.isAnimating) {
       return true;
     }

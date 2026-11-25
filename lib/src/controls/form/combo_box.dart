@@ -441,6 +441,7 @@ class _ComboBoxPopupState<T> extends State<_ComboBoxPopup<T>> {
                     child: Center(
                       child: WindowsIcon(
                         WindowsIcons.check_mark,
+                        fallbackIcon: FluentIcons.check_mark,
                         size: 10,
                         color: theme.resources.textFillColorPrimary,
                       ),
@@ -577,7 +578,10 @@ class ComboBox<T> extends StatefulWidget {
     this.onClose,
     this.elevation = 8,
     this.style,
-    this.icon = const WindowsIcon(WindowsIcons.chevron_down),
+    this.icon = const WindowsIcon(
+      WindowsIcons.chevron_down,
+      fallbackIcon: FluentIcons.chevron_down,
+    ),
     this.iconDisabledColor,
     this.iconEnabledColor,
     this.iconSize = 8.0,
@@ -654,6 +658,59 @@ class ComboBox<T> extends StatefulWidget {
 
   /// A builder for the selected control content.
   final ComboBoxBuilder? selectedItemBuilder;
+
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties
+      ..add(IntProperty('itemCount', items?.length ?? 0))
+      ..add(
+        ObjectFlagProperty<ComboBoxBuilder?>.has(
+          'selectedItemBuilder',
+          selectedItemBuilder,
+        ),
+      )
+      ..add(ObjectFlagProperty<Widget?>.has('placeholder', placeholder))
+      ..add(
+        ObjectFlagProperty<Widget?>.has(
+          'disabledPlaceholder',
+          disabledPlaceholder,
+        ),
+      )
+      ..add(
+        FlagProperty(
+          'enabled',
+          value: onChanged != null,
+          defaultValue: true,
+          ifFalse: 'disabled',
+        ),
+      )
+      ..add(IntProperty('elevation', elevation, defaultValue: 8))
+      ..add(DoubleProperty('iconSize', iconSize, defaultValue: 8))
+      ..add(
+        FlagProperty(
+          'isExpanded',
+          value: isExpanded,
+          defaultValue: false,
+          ifTrue: 'expanded',
+        ),
+      )
+      ..add(ObjectFlagProperty<FocusNode?>.has('focusNode', focusNode))
+      ..add(
+        FlagProperty(
+          'autofocus',
+          value: autofocus,
+          defaultValue: false,
+          ifTrue: 'autofocus',
+        ),
+      )
+      ..add(
+        ObjectFlagProperty<BoxConstraints?>.has(
+          'popupConstraints',
+          popupConstraints,
+        ),
+      );
+  }
 
   @override
   State<ComboBox<T>> createState() => ComboBoxState<T>();
@@ -1159,8 +1216,10 @@ class ComboBoxState<T> extends State<ComboBox<T>>
               child: Focus(
                 focusNode: _popupFocusNode,
                 onKeyEvent: _handlePopupKey,
+                // The popup does not scope a semantics route. On Windows,
+                // scoping one makes opening the popup allocate about 1 GB
+                // (#1364). Revisit once popups move to the windowing API.
                 child: Semantics(
-                  scopesRoute: true,
                   namesRoute: true,
                   explicitChildNodes: true,
                   label: FluentLocalizations.of(context).dialogLabel,

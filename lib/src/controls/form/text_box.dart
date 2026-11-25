@@ -719,19 +719,12 @@ class TextBox extends StatefulWidget {
     super.debugFillProperties(properties);
     properties
       ..add(
-        DiagnosticsProperty<TextEditingController>(
+        ObjectFlagProperty<TextEditingController?>.has(
           'controller',
           controller,
-          defaultValue: null,
         ),
       )
-      ..add(
-        DiagnosticsProperty<FocusNode>(
-          'focusNode',
-          focusNode,
-          defaultValue: null,
-        ),
-      )
+      ..add(ObjectFlagProperty<FocusNode?>.has('focusNode', focusNode))
       ..add(
         DiagnosticsProperty<WidgetStateProperty<BoxDecoration>>(
           'decoration',
@@ -751,7 +744,7 @@ class TextBox extends StatefulWidget {
           defaultValue: kTextBoxPadding,
         ),
       )
-      ..add(StringProperty('placeholder', placeholder))
+      ..add(ObjectFlagProperty<String?>.has('placeholder', placeholder))
       ..add(
         DiagnosticsProperty<TextStyle>('placeholderStyle', placeholderStyle),
       )
@@ -835,7 +828,7 @@ class TextBox extends StatefulWidget {
           defaultValue: null,
         ),
       )
-      ..add(DoubleProperty('cursorWidth', cursorWidth, defaultValue: 1.0))
+      ..add(DoubleProperty('cursorWidth', cursorWidth, defaultValue: 2.0))
       ..add(DoubleProperty('cursorHeight', cursorHeight, defaultValue: null))
       ..add(
         DiagnosticsProperty<Radius>(
@@ -947,6 +940,18 @@ class _TextBoxState extends State<TextBox>
   UndoHistoryController get _effectiveUndoController =>
       widget.undoController ?? (_undoController ??= UndoHistoryController());
 
+  // The selection controls used when [TextBox.selectionControls] is null.
+  //
+  // Kept for as long as the undo controller does not change: [EditableText]
+  // recreates its selection overlay whenever it receives a different controls
+  // instance, which disposes any visible selection handles, possibly while
+  // their [Overlay] is building.
+  WindowsTextSelectionHandleControls? _defaultSelectionControls;
+  WindowsTextSelectionHandleControls get _effectiveDefaultSelectionControls =>
+      _defaultSelectionControls ??= WindowsTextSelectionHandleControls(
+        undoHistoryController: _effectiveUndoController,
+      );
+
   MaxLengthEnforcement get _effectiveMaxLengthEnforcement =>
       widget.maxLengthEnforcement ??
       LengthLimitingTextInputFormatter.getDefaultMaxLengthEnforcement();
@@ -1001,6 +1006,7 @@ class _TextBoxState extends State<TextBox>
     if (widget.undoController != oldWidget.undoController) {
       _undoController?.dispose();
       _undoController = null;
+      _defaultSelectionControls = null;
     }
   }
 
@@ -1266,22 +1272,18 @@ class _TextBoxState extends State<TextBox>
     assert(debugCheckHasFluentTheme(context));
     final controller = _effectiveController;
 
-    var textSelectionControls = widget.selectionControls;
+    final textSelectionControls =
+        widget.selectionControls ?? _effectiveDefaultSelectionControls;
     VoidCallback? handleDidGainAccessibilityFocus;
     switch (defaultTargetPlatform) {
       case TargetPlatform.iOS:
       case TargetPlatform.android:
       case TargetPlatform.fuchsia:
       case TargetPlatform.linux:
-        textSelectionControls ??= WindowsTextSelectionHandleControls(
-          undoHistoryController: _effectiveUndoController,
-        );
+        break;
 
       case TargetPlatform.macOS:
       case TargetPlatform.windows:
-        textSelectionControls ??= WindowsTextSelectionHandleControls(
-          undoHistoryController: _effectiveUndoController,
-        );
         handleDidGainAccessibilityFocus = () {
           // Automatically activate the TextField when it receives accessibility focus.
           if (!_effectiveFocusNode.hasFocus &&
@@ -1457,148 +1459,147 @@ class _TextBoxState extends State<TextBox>
           .merge(widget.placeholderStyle);
     }
 
-    return Semantics(
-      enabled: enabled,
-      onTap: !enabled || widget.readOnly
-          ? null
-          : () {
-              if (!controller.selection.isValid) {
-                controller.selection = TextSelection.collapsed(
-                  offset: controller.text.length,
-                );
-              }
-              _requestKeyboard();
-            },
-      onDidGainAccessibilityFocus: handleDidGainAccessibilityFocus,
-      onFocus: enabled
-          ? () {
-              assert(
-                _effectiveFocusNode.canRequestFocus,
-                'Received SemanticsAction.focus from the engine. However, the FocusNode '
-                'of this text field cannot gain focus. This likely indicates a bug. '
-                'If this text field cannot be focused (e.g. because it is not '
-                'enabled), then its corresponding semantics node must be configured '
-                'such that the assistive technology cannot request focus on it.',
-              );
-
-              if (_effectiveFocusNode.canRequestFocus &&
-                  !_effectiveFocusNode.hasFocus) {
-                _effectiveFocusNode.requestFocus();
-              } else if (!widget.readOnly) {
-                // If the platform requested focus, that means that previously the
-                // platform believed that the text field did not have focus (even
-                // though Flutter's widget system believed otherwise). This likely
-                // means that the on-screen keyboard is hidden, or more generally,
-                // there is no current editing session in this field. To correct
-                // that, keyboard must be requested.
-                //
-                // A concrete scenario where this can happen is when the user
-                // dismisses the keyboard on the web. The editing session is
-                // closed by the engine, but the text field widget stays focused
-                // in the framework.
-                _requestKeyboard();
-              }
+    return TextFieldTapRegion(
+      child: IgnorePointer(
+        ignoring: !enabled,
+        child: HoverButton(
+          focusEnabled: false,
+          hitTestBehavior: HitTestBehavior.translucent,
+          builder: (context, states) {
+            // Since we manage focus outside of the HoverButton (see focusEnabled: false)
+            // we need to add the focused state when the field is focused
+            //
+            // widgets below this can call `HoverButton.of(context).states.isFocused`
+            // and have the correct value
+            if (_effectiveFocusNode.hasFocus) {
+              states = {...states, WidgetState.focused};
             }
-          : null,
-      child: TextFieldTapRegion(
-        child: IgnorePointer(
-          ignoring: !enabled,
-          child: HoverButton(
-            focusEnabled: false,
-            hitTestBehavior: HitTestBehavior.translucent,
-            builder: (context, states) {
-              // Since we manage focus outside of the HoverButton (see focusEnabled: false)
-              // we need to add the focused state when the field is focused
-              //
-              // widgets below this can call `HoverButton.of(context).states.isFocused`
-              // and have the correct value
-              if (_effectiveFocusNode.hasFocus) {
-                states = {...states, WidgetState.focused};
-              }
 
-              final resolvedWidgetDecoration = widget.decoration?.resolve(
-                states,
-              );
-              final radius =
-                  resolvedWidgetDecoration?.borderRadius?.resolve(
-                    Directionality.of(context),
-                  ) ??
-                  BorderRadius.circular(4);
-              final decoration =
-                  WidgetStateProperty.resolveWith((states) {
+            final resolvedWidgetDecoration = widget.decoration?.resolve(states);
+            final radius =
+                resolvedWidgetDecoration?.borderRadius?.resolve(
+                  Directionality.of(context),
+                ) ??
+                BorderRadius.circular(4);
+            final decoration =
+                WidgetStateProperty.resolveWith((states) {
+                      return BoxDecoration(
+                        borderRadius: radius,
+                        border: Border.all(
+                          color: themeData.resources.controlStrokeColorDefault,
+                        ),
+                        color: backgroundColor(states),
+                      );
+                    })
+                    .resolve(states)
+                    .copyWith(
+                      backgroundBlendMode:
+                          resolvedWidgetDecoration?.backgroundBlendMode,
+                      border: resolvedWidgetDecoration?.border,
+                      borderRadius: resolvedWidgetDecoration?.borderRadius,
+                      boxShadow: resolvedWidgetDecoration?.boxShadow,
+                      color: resolvedWidgetDecoration?.color,
+                      gradient: resolvedWidgetDecoration?.gradient,
+                      image: resolvedWidgetDecoration?.image,
+                      shape: resolvedWidgetDecoration?.shape,
+                    );
+
+            final resolvedWidgetForegroundDecoration = widget
+                .foregroundDecoration
+                ?.resolve(states);
+            final foregroundDecoration =
+                WidgetStateProperty.resolveWith((states) {
+                      if (states.isFocused) {
                         return BoxDecoration(
-                          borderRadius: radius,
-                          border: Border.all(
-                            color:
-                                themeData.resources.controlStrokeColorDefault,
+                          border: Border(
+                            bottom: BorderSide(
+                              color:
+                                  widget.highlightColor ??
+                                  themeData.accentColor.defaultBrushFor(
+                                    themeData.brightness,
+                                  ),
+                              width: 2,
+                            ),
                           ),
-                          color: backgroundColor(states),
                         );
-                      })
-                      .resolve(states)
-                      .copyWith(
-                        backgroundBlendMode:
-                            resolvedWidgetDecoration?.backgroundBlendMode,
-                        border: resolvedWidgetDecoration?.border,
-                        borderRadius: resolvedWidgetDecoration?.borderRadius,
-                        boxShadow: resolvedWidgetDecoration?.boxShadow,
-                        color: resolvedWidgetDecoration?.color,
-                        gradient: resolvedWidgetDecoration?.gradient,
-                        image: resolvedWidgetDecoration?.image,
-                        shape: resolvedWidgetDecoration?.shape,
+                      } else if (enabled) {
+                        return BoxDecoration(
+                          border: Border(
+                            bottom: BorderSide(
+                              color:
+                                  widget.unfocusedColor ??
+                                  themeData
+                                      .resources
+                                      .controlStrongStrokeColorDefault,
+                              width: 1.25,
+                            ),
+                          ),
+                        );
+                      } else {
+                        return const BoxDecoration();
+                      }
+                    })
+                    .resolve(states)
+                    .copyWith(
+                      backgroundBlendMode: resolvedWidgetForegroundDecoration
+                          ?.backgroundBlendMode,
+                      border: resolvedWidgetForegroundDecoration?.border,
+                      borderRadius:
+                          resolvedWidgetForegroundDecoration?.borderRadius,
+                      boxShadow: resolvedWidgetForegroundDecoration?.boxShadow,
+                      color: resolvedWidgetForegroundDecoration?.color,
+                      gradient: resolvedWidgetForegroundDecoration?.gradient,
+                      image: resolvedWidgetForegroundDecoration?.image,
+                      shape: resolvedWidgetForegroundDecoration?.shape,
+                    );
+
+            // The HoverButton merges its semantics into one node with the
+            // editable. These properties must sit inside that node so the
+            // text field reports its enabled state and focus action.
+            return Semantics(
+              enabled: enabled,
+              onTap: !enabled || widget.readOnly
+                  ? null
+                  : () {
+                      if (!controller.selection.isValid) {
+                        controller.selection = TextSelection.collapsed(
+                          offset: controller.text.length,
+                        );
+                      }
+                      _requestKeyboard();
+                    },
+              onDidGainAccessibilityFocus: handleDidGainAccessibilityFocus,
+              onFocus: enabled
+                  ? () {
+                      assert(
+                        _effectiveFocusNode.canRequestFocus,
+                        'Received SemanticsAction.focus from the engine. However, the FocusNode '
+                        'of this text field cannot gain focus. This likely indicates a bug. '
+                        'If this text field cannot be focused (e.g. because it is not '
+                        'enabled), then its corresponding semantics node must be configured '
+                        'such that the assistive technology cannot request focus on it.',
                       );
 
-              final resolvedWidgetForegroundDecoration = widget
-                  .foregroundDecoration
-                  ?.resolve(states);
-              final foregroundDecoration =
-                  WidgetStateProperty.resolveWith((states) {
-                        if (states.isFocused) {
-                          return BoxDecoration(
-                            border: Border(
-                              bottom: BorderSide(
-                                color:
-                                    widget.highlightColor ??
-                                    themeData.accentColor.defaultBrushFor(
-                                      themeData.brightness,
-                                    ),
-                                width: 2,
-                              ),
-                            ),
-                          );
-                        } else if (enabled) {
-                          return BoxDecoration(
-                            border: Border(
-                              bottom: BorderSide(
-                                color:
-                                    widget.unfocusedColor ??
-                                    themeData
-                                        .resources
-                                        .controlStrongStrokeColorDefault,
-                                width: 1.25,
-                              ),
-                            ),
-                          );
-                        } else {
-                          return const BoxDecoration();
-                        }
-                      })
-                      .resolve(states)
-                      .copyWith(
-                        backgroundBlendMode: resolvedWidgetForegroundDecoration
-                            ?.backgroundBlendMode,
-                        border: resolvedWidgetForegroundDecoration?.border,
-                        borderRadius:
-                            resolvedWidgetForegroundDecoration?.borderRadius,
-                        boxShadow:
-                            resolvedWidgetForegroundDecoration?.boxShadow,
-                        color: resolvedWidgetForegroundDecoration?.color,
-                        gradient: resolvedWidgetForegroundDecoration?.gradient,
-                        image: resolvedWidgetForegroundDecoration?.image,
-                        shape: resolvedWidgetForegroundDecoration?.shape,
-                      );
-
-              return ClipRRect(
+                      if (_effectiveFocusNode.canRequestFocus &&
+                          !_effectiveFocusNode.hasFocus) {
+                        _effectiveFocusNode.requestFocus();
+                      } else if (!widget.readOnly) {
+                        // If the platform requested focus, that means that previously the
+                        // platform believed that the text field did not have focus (even
+                        // though Flutter's widget system believed otherwise). This likely
+                        // means that the on-screen keyboard is hidden, or more generally,
+                        // there is no current editing session in this field. To correct
+                        // that, keyboard must be requested.
+                        //
+                        // A concrete scenario where this can happen is when the user
+                        // dismisses the keyboard on the web. The editing session is
+                        // closed by the engine, but the text field widget stays focused
+                        // in the framework.
+                        _requestKeyboard();
+                      }
+                    }
+                  : null,
+              child: ClipRRect(
                 borderRadius: radius,
                 clipBehavior: widget.clipBehavior,
                 child: DecoratedBox(
@@ -1628,9 +1629,9 @@ class _TextBoxState extends State<TextBox>
                         ),
                   ),
                 ),
-              );
-            },
-          ),
+              ),
+            );
+          },
         ),
       ),
     );

@@ -157,12 +157,13 @@ class ToggleSwitch extends StatefulWidget {
           ifFalse: 'trailingContent',
         ),
       )
-      ..add(ObjectFlagProperty('onChanged', onChanged, ifNull: 'disabled'))
+      ..add(
+        FlagProperty('enabled', value: onChanged != null, ifFalse: 'disabled'),
+      )
       ..add(
         FlagProperty('autofocus', value: autofocus, ifFalse: 'manual focus'),
       )
       ..add(DiagnosticsProperty<ToggleSwitchThemeData>('style', style))
-      ..add(StringProperty('semanticLabel', semanticLabel))
       ..add(ObjectFlagProperty<FocusNode>.has('focusNode', focusNode));
   }
 
@@ -297,6 +298,15 @@ class DefaultToggleSwitchKnob extends StatelessWidget {
   final Set<WidgetState> states;
 
   @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties
+      ..add(FlagProperty('checked', value: checked, ifFalse: 'unchecked'))
+      ..add(DiagnosticsProperty<ToggleSwitchThemeData>('style', style))
+      ..add(IterableProperty<WidgetState>('states', states));
+  }
+
+  @override
   Widget build(BuildContext context) {
     const checkedFactor = 1;
     return AnimatedContainer(
@@ -378,6 +388,12 @@ class ToggleSwitchTheme extends InheritedTheme {
   @override
   Widget wrap(BuildContext context, Widget child) {
     return ToggleSwitchTheme(data: data, child: child);
+  }
+
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties.add(DiagnosticsProperty<ToggleSwitchThemeData>('data', data));
   }
 
   @override
@@ -589,6 +605,6 @@ class ToggleSwitchThemeData with Diagnosticable {
           uncheckedKnobDecoration,
         ),
       )
-      ..add(DiagnosticsProperty('foregroundColor', foregroundColor));
+      ..add(ObjectFlagProperty.has('foregroundColor', foregroundColor));
   }
 }

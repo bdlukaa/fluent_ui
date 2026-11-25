@@ -252,7 +252,7 @@ class NavigationView extends StatefulWidget {
         DiagnosticsProperty(
           'clipBehavior',
           clipBehavior,
-          defaultValue: Clip.hardEdge,
+          defaultValue: Clip.antiAlias,
         ),
       )
       ..add(DiagnosticsProperty('contentShape', contentShape));
@@ -649,6 +649,30 @@ class NavigationViewState extends State<NavigationView> {
   /// space.
   PaneDisplayMode get displayMode => _displayMode;
 
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    final paneOpen = switch (_displayMode) {
+      PaneDisplayMode.expanded => true,
+      PaneDisplayMode.compact => _compactOverlayOpen,
+      PaneDisplayMode.minimal => _minimalPaneOpen,
+      PaneDisplayMode.top || PaneDisplayMode.auto => false,
+    };
+    properties
+      ..add(EnumProperty('requestedDisplayMode', widget.pane?.displayMode))
+      ..add(EnumProperty('displayMode', displayMode))
+      ..add(FlagProperty('isPaneOpen', value: paneOpen, ifTrue: 'pane open'))
+      ..add(
+        FlagProperty(
+          'isTransitioning',
+          value: _isTransitioning,
+          ifTrue: 'transitioning',
+        ),
+      )
+      ..add(IntProperty('selectedIndex', widget.pane?.selected))
+      ..add(IntProperty('historyDepth', _history.length));
+  }
+
   /// The layout adapts based on available width:
   /// - Width >= 1008px: Open mode (expanded pane)
   /// - Width 641-1007px: Compact mode (icons only)
@@ -930,16 +954,11 @@ class NavigationViewState extends State<NavigationView> {
                       return Mica(
                         key: _overlayKey,
                         backgroundColor: theme.backgroundColor,
-                        child: Container(
-                          margin: const EdgeInsetsDirectional.symmetric(
-                            vertical: 1,
-                          ),
-                          child: _OpenNavigationPane(
-                            theme: theme,
-                            pane: pane,
-                            initiallyOpen: true,
-                            onAnimationEnd: _animationEndCallback,
-                          ),
+                        child: _OpenNavigationPane(
+                          theme: theme,
+                          pane: pane,
+                          initiallyOpen: true,
+                          onAnimationEnd: _animationEndCallback,
                         ),
                       );
                     } else {
@@ -992,16 +1011,15 @@ class NavigationViewState extends State<NavigationView> {
                     key: _overlayKey,
                     backgroundColor: theme.overlayBackgroundColor,
                     elevation: 10,
+                    // A foreground border takes no layout space, so the pane
+                    // items stay where the compact pane had them.
                     child: Container(
-                      decoration: BoxDecoration(
+                      foregroundDecoration: BoxDecoration(
                         border: Border.all(
                           color: const Color(0xFF6c6c6c),
                           width: 0.15,
                         ),
                         borderRadius: BorderRadius.circular(8),
-                      ),
-                      margin: const EdgeInsetsDirectional.symmetric(
-                        vertical: 1,
                       ),
                       padding: EdgeInsetsDirectional.only(top: paneTopPadding),
                       child: _OpenNavigationPane(

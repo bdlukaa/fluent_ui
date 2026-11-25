@@ -227,6 +227,20 @@ class Expander extends StatefulWidget {
           defaultValue: false,
         ),
       )
+      ..add(
+        FlagProperty(
+          'enabled',
+          value: enabled,
+          defaultValue: true,
+          ifFalse: 'disabled',
+        ),
+      )
+      ..add(
+        DiagnosticsProperty<WidgetStateColor>(
+          'headerBackgroundColor',
+          headerBackgroundColor,
+        ),
+      )
       ..add(ColorProperty('contentBackgroundColor', contentBackgroundColor))
       ..add(
         DiagnosticsProperty<EdgeInsetsGeometry>(

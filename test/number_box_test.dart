@@ -815,4 +815,35 @@ void main() {
       await tester.pumpAndSettle();
     });
   });
+
+  group('text field semantics', () {
+    testWidgets('enabled NumberBox', (tester) async {
+      await expectTextFieldSemantics(
+        tester,
+        NumberBox<int>(value: 1, onChanged: (_) {}),
+        enabled: true,
+      );
+    });
+    testWidgets('disabled NumberBox', (tester) async {
+      await expectTextFieldSemantics(
+        tester,
+        const NumberBox<int>(value: 1, onChanged: null),
+        enabled: false,
+      );
+    });
+    testWidgets('enabled NumberFormBox', (tester) async {
+      await expectTextFieldSemantics(
+        tester,
+        NumberFormBox<int>(value: 1, onChanged: (_) {}),
+        enabled: true,
+      );
+    });
+    testWidgets('disabled NumberFormBox', (tester) async {
+      await expectTextFieldSemantics(
+        tester,
+        NumberFormBox<int>(value: 1),
+        enabled: false,
+      );
+    });
+  });
 }

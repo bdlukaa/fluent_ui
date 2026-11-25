@@ -166,7 +166,6 @@ class TimePicker extends StatefulWidget {
   void debugFillProperties(DiagnosticPropertiesBuilder properties) {
     super.debugFillProperties(properties);
     properties
-      ..add(DiagnosticsProperty<DateTime>('selected', selected, ifNull: 'now'))
       ..add(
         EnumProperty<HourFormat>(
           'hourFormat',
@@ -175,7 +174,7 @@ class TimePicker extends StatefulWidget {
         ),
       )
       ..add(
-        DiagnosticsProperty(
+        DiagnosticsProperty<EdgeInsetsGeometry>(
           'contentPadding',
           contentPadding,
           defaultValue: kPickerContentPadding,
@@ -197,7 +196,9 @@ class TimePicker extends StatefulWidget {
           defaultValue: kPickerPopupHeight,
         ),
       )
-      ..add(IntProperty('minuteIncrement', minuteIncrement, defaultValue: 1));
+      ..add(IntProperty('minuteIncrement', minuteIncrement, defaultValue: 1))
+      ..add(DiagnosticsProperty<TextStyle>('headerStyle', headerStyle))
+      ..add(DiagnosticsProperty<Locale>('locale', locale));
   }
 }
 

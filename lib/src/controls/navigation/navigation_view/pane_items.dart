@@ -457,14 +457,8 @@ class PaneItem extends NavigationPaneItem {
           return LayoutBuilder(
             builder: (context, constraints) {
               final minimumExpandedWidth = depth * 28 + 130;
-              const threshold = kOpenNavigationPaneWidth / 1.5;
-              final showsExpandedContent =
-                  constraints.maxWidth >=
-                  (minimumExpandedWidth > threshold
-                      ? minimumExpandedWidth
-                      : threshold);
               return buildContent(
-                showsExpandedContent
+                constraints.maxWidth >= minimumExpandedWidth
                     ? PaneDisplayMode.expanded
                     : PaneDisplayMode.compact,
               );
@@ -868,6 +862,7 @@ class PaneItemExpander extends PaneItem {
   /// The default trailing icon for expanders.
   static const kDefaultTrailing = WindowsIcon(
     WindowsIcons.chevron_down,
+    fallbackIcon: FluentIcons.chevron_down,
     size: 8,
   );
 

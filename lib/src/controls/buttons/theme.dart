@@ -44,6 +44,20 @@ class ButtonStyle with Diagnosticable {
   /// The size of icons within the button.
   final WidgetStateProperty<double?>? iconSize;
 
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties
+      ..add(ObjectFlagProperty.has('textStyle', textStyle))
+      ..add(ObjectFlagProperty.has('backgroundColor', backgroundColor))
+      ..add(ObjectFlagProperty.has('foregroundColor', foregroundColor))
+      ..add(ObjectFlagProperty.has('shadowColor', shadowColor))
+      ..add(ObjectFlagProperty.has('elevation', elevation))
+      ..add(ObjectFlagProperty.has('padding', padding))
+      ..add(ObjectFlagProperty.has('shape', shape))
+      ..add(ObjectFlagProperty.has('iconSize', iconSize));
+  }
+
   /// Merges this [ButtonStyle] with another, with the other taking precedence.
   ButtonStyle? merge(ButtonStyle? other) {
     if (other == null) return this;
@@ -191,6 +205,12 @@ class ButtonTheme extends InheritedTheme {
   }
 
   @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties.add(DiagnosticsProperty<ButtonThemeData>('data', data));
+  }
+
+  @override
   bool updateShouldNotify(ButtonTheme oldWidget) => data != oldWidget.data;
 }
 
@@ -213,7 +233,20 @@ class ButtonThemeData with Diagnosticable {
   final ButtonStyle? outlinedButtonStyle;
 
   /// The style for [IconButton] widgets.
+  ///
+  /// Also used by small and tiny icon buttons when [smallIconButtonStyle] is
+  /// null.
   final ButtonStyle? iconButtonStyle;
+
+  /// The style for small and tiny [IconButton] widgets.
+  ///
+  /// An icon button is small when its [IconButton.iconButtonMode] is
+  /// [IconButtonMode.small] or [IconButtonMode.tiny], or when it has no mode
+  /// and a [SmallIconButton] is above it, such as the buttons inside a
+  /// [TextBox] or a [PasswordBox].
+  ///
+  /// If null, [iconButtonStyle] is used.
+  final ButtonStyle? smallIconButtonStyle;
 
   /// Creates button theme data with optional styles for each button type.
   const ButtonThemeData({
@@ -222,6 +255,7 @@ class ButtonThemeData with Diagnosticable {
     this.hyperlinkButtonStyle,
     this.outlinedButtonStyle,
     this.iconButtonStyle,
+    this.smallIconButtonStyle,
   });
 
   /// Creates button theme data with the same style for all button types.
@@ -230,7 +264,8 @@ class ButtonThemeData with Diagnosticable {
       filledButtonStyle = style,
       hyperlinkButtonStyle = style,
       outlinedButtonStyle = style,
-      iconButtonStyle = style;
+      iconButtonStyle = style,
+      smallIconButtonStyle = style;
 
   /// Linearly interpolates between two [ButtonThemeData] objects.
   static ButtonThemeData lerp(
@@ -251,6 +286,7 @@ class ButtonThemeData with Diagnosticable {
       hyperlinkButtonStyle: style.hyperlinkButtonStyle ?? hyperlinkButtonStyle,
       defaultButtonStyle: style.defaultButtonStyle ?? defaultButtonStyle,
       iconButtonStyle: style.iconButtonStyle ?? iconButtonStyle,
+      smallIconButtonStyle: style.smallIconButtonStyle ?? smallIconButtonStyle,
     );
   }
 
@@ -284,6 +320,12 @@ class ButtonThemeData with Diagnosticable {
       )
       ..add(
         DiagnosticsProperty<ButtonStyle>('iconButtonStyle', iconButtonStyle),
+      )
+      ..add(
+        DiagnosticsProperty<ButtonStyle>(
+          'smallIconButtonStyle',
+          smallIconButtonStyle,
+        ),
       );
   }
 

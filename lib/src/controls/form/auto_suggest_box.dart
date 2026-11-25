@@ -436,7 +436,7 @@ class AutoSuggestBox<T> extends StatefulWidget {
   void debugFillProperties(DiagnosticPropertiesBuilder properties) {
     super.debugFillProperties(properties);
     properties
-      ..add(IterableProperty<AutoSuggestBoxItem<T>>('items', items))
+      ..add(IntProperty('itemCount', items.length))
       ..add(
         ObjectFlagProperty<ValueChanged<AutoSuggestBoxItem<T>>?>(
           'onSelected',
@@ -785,7 +785,11 @@ class AutoSuggestBoxState<T> extends State<AutoSuggestBox<T>> {
           Padding(
             padding: const EdgeInsetsDirectional.only(start: 2),
             child: IconButton(
-              icon: const WindowsIcon(WindowsIcons.chrome_close, size: 9),
+              icon: const WindowsIcon(
+                WindowsIcons.chrome_close,
+                fallbackIcon: FluentIcons.chrome_close,
+                size: 9,
+              ),
               onPressed: () {
                 _controller.clear();
                 widget.onChanged?.call(

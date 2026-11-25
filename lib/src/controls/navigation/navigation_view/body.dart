@@ -347,6 +347,55 @@ class NavigationViewContext extends InheritedWidget {
   }
 
   @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties
+      ..add(EnumProperty<PaneDisplayMode>('displayMode', displayMode))
+      ..add(FlagProperty('hasPane', value: pane != null, ifTrue: 'has pane'))
+      ..add(
+        FlagProperty(
+          'isMinimalPaneOpen',
+          value: isMinimalPaneOpen,
+          defaultValue: false,
+          ifTrue: 'minimal pane open',
+        ),
+      )
+      ..add(
+        FlagProperty(
+          'isCompactOverlayOpen',
+          value: isCompactOverlayOpen,
+          defaultValue: false,
+          ifTrue: 'compact overlay open',
+        ),
+      )
+      ..add(
+        IntProperty('previousItemIndex', previousItemIndex, defaultValue: -1),
+      )
+      ..add(
+        FlagProperty(
+          'isTransitioning',
+          value: isTransitioning,
+          defaultValue: false,
+          ifTrue: 'transitioning',
+        ),
+      )
+      ..add(
+        EnumProperty<PaneToggleButtonPosition>(
+          'toggleButtonPosition',
+          toggleButtonPosition,
+        ),
+      )
+      ..add(
+        FlagProperty(
+          'canPop',
+          value: canPop,
+          defaultValue: false,
+          ifTrue: 'can pop',
+        ),
+      );
+  }
+
+  @override
   bool updateShouldNotify(covariant NavigationViewContext oldWidget) {
     return oldWidget.displayMode != displayMode ||
         oldWidget.isMinimalPaneOpen != isMinimalPaneOpen ||

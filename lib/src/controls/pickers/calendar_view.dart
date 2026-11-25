@@ -1,7 +1,6 @@
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter/foundation.dart';
 import 'package:intl/intl.dart';
-import 'package:material_ui/material_ui.dart' as m;
 
 part 'calendar_date_picker.dart';
 
@@ -270,6 +269,65 @@ class CalendarView extends StatefulWidget {
 
   @override
   State<CalendarView> createState() => CalendarViewState();
+
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties
+      ..add(DiagnosticsProperty<DateTime>('minDate', minDate))
+      ..add(DiagnosticsProperty<DateTime>('maxDate', maxDate))
+      ..add(DiagnosticsProperty<DateTime>('displayDateEnd', displayDateEnd))
+      ..add(DiagnosticsProperty<DateTime>('displayDateStart', displayDateStart))
+      ..add(ColorProperty('selectionColor', selectionColor))
+      ..add(DiagnosticsProperty<Decoration>('decoration', decoration))
+      ..add(DiagnosticsProperty<ShapeBorder>('dayItemShape', dayItemShape))
+      ..add(
+        EnumProperty<CalendarViewDisplayMode>(
+          'initialDisplayMode',
+          initialDisplayMode,
+          defaultValue: CalendarViewDisplayMode.month,
+        ),
+      )
+      ..add(
+        EnumProperty<CalendarViewSelectionMode>(
+          'selectionMode',
+          selectionMode,
+          defaultValue: CalendarViewSelectionMode.single,
+        ),
+      )
+      ..add(
+        FlagProperty(
+          'isTodayHighlighted',
+          value: isTodayHighlighted,
+          ifFalse: 'today not highlighted',
+          defaultValue: true,
+        ),
+      )
+      ..add(IntProperty('weeksPerView', weeksPerView, defaultValue: 6))
+      ..add(IntProperty('yearsPerView', yearsPerView, defaultValue: 16))
+      ..add(IntProperty('firstDayOfWeek', firstDayOfWeek))
+      ..add(
+        FlagProperty(
+          'isOutOfScopeEnabled',
+          value: isOutOfScopeEnabled,
+          ifTrue: 'out-of-scope dates enabled',
+          defaultValue: false,
+        ),
+      )
+      ..add(
+        FlagProperty(
+          'isGroupLabelVisible',
+          value: isGroupLabelVisible,
+          ifFalse: 'group labels hidden',
+          defaultValue: true,
+        ),
+      )
+      ..add(DiagnosticsProperty<TextStyle>('headerStyle', headerStyle))
+      ..add(DiagnosticsProperty<Locale>('locale', locale))
+      ..add(
+        DiagnosticsProperty<ScrollBehavior>('scrollBehavior', scrollBehavior),
+      );
+  }
 }
 
 class CalendarViewState extends State<CalendarView> {
@@ -496,7 +554,7 @@ class CalendarViewState extends State<CalendarView> {
   bool _shouldUpdateDate(DateTime? newDate) {
     if (newDate == null) return false;
     if (_displayMode == CalendarViewDisplayMode.month) {
-      return !m.DateUtils.isSameMonth(newDate, visibleDate);
+      return !newDate.isSameMonth(visibleDate);
     } else if (_displayMode == CalendarViewDisplayMode.year) {
       return newDate.year != visibleDate.year;
     } else if (_displayMode == CalendarViewDisplayMode.decade) {
@@ -543,10 +601,7 @@ class CalendarViewState extends State<CalendarView> {
   }
 
   DateTime _daysFromAnchor(int days) {
-    return DateTime(
-      _anchorMonth.year,
-      _anchorMonth.month,
-    ).add(Duration(days: days));
+    return _anchorMonth.addDays(days);
   }
 
   DateTime _yearForPage(int page) {
@@ -613,7 +668,7 @@ class CalendarViewState extends State<CalendarView> {
     setState(() {
       switch (widget.selectionMode) {
         case CalendarViewSelectionMode.single:
-          _selectedStart = m.DateUtils.isSameDay(_selectedStart, day)
+          _selectedStart = (_selectedStart?.isSameDay(day) ?? false)
               ? null
               : day;
           _selectedEnd = null;
@@ -631,10 +686,10 @@ class CalendarViewState extends State<CalendarView> {
           }
         case CalendarViewSelectionMode.multiple:
           final alreadySelected = _selectedMultiple.any(
-            (d) => m.DateUtils.isSameDay(d, day),
+            (d) => d.isSameDay(day),
           );
           if (alreadySelected) {
-            _selectedMultiple.removeWhere((d) => m.DateUtils.isSameDay(d, day));
+            _selectedMultiple.removeWhere((d) => d.isSameDay(day));
           } else {
             _selectedMultiple.add(day);
           }
@@ -693,26 +748,21 @@ class CalendarViewState extends State<CalendarView> {
         final isBlackout =
             !_isDateWithinBounds(day) ||
             (widget.blackoutRule?.call(day) ?? false);
-        final isCurrentMonth = m.DateUtils.isSameMonth(day, visibleDate);
-        final isFirstMonthDay = m.DateUtils.isSameDay(
-          day,
-          DateTime(day.year, day.month),
-        );
+        final isCurrentMonth = day.isSameMonth(visibleDate);
+        final isFirstMonthDay = day.isSameDay(DateTime(day.year, day.month));
         final isSelected =
             widget.selectionMode == CalendarViewSelectionMode.single
-            ? m.DateUtils.isSameDay(day, _selectedStart)
+            ? day.isSameDay(_selectedStart)
             : widget.selectionMode == CalendarViewSelectionMode.range
-            ? (m.DateUtils.isSameDay(day, _selectedStart) ||
-                  m.DateUtils.isSameDay(day, _selectedEnd))
-            : _selectedMultiple.any((d) => m.DateUtils.isSameDay(day, d));
+            ? (day.isSameDay(_selectedStart) || day.isSameDay(_selectedEnd))
+            : _selectedMultiple.any((d) => day.isSameDay(d));
         final isInRange =
             widget.selectionMode == CalendarViewSelectionMode.range &&
             _selectedStart != null &&
             _selectedEnd != null &&
             _isInRange(day);
         final isToday =
-            widget.isTodayHighlighted &&
-            m.DateUtils.isSameDay(day, DateTime.now());
+            widget.isTodayHighlighted && day.isSameDay(DateTime.now());
 
         return _CalendarDayItem(
           day: day,
@@ -746,10 +796,10 @@ class CalendarViewState extends State<CalendarView> {
             _displayMode = CalendarViewDisplayMode.year;
           });
         };
-        onNext = m.DateUtils.isSameMonth(maxDate, visibleDate)
+        onNext = maxDate.isSameMonth(visibleDate)
             ? null
             : () => stepMonth(offset: 1);
-        onPrevious = m.DateUtils.isSameMonth(minDate, visibleDate)
+        onPrevious = minDate.isSameMonth(visibleDate)
             ? null
             : () => stepMonth(offset: -1);
       case CalendarViewDisplayMode.year:
@@ -860,7 +910,7 @@ class CalendarViewState extends State<CalendarView> {
                 gridDelegate: gridDelegate,
                 delegate: SliverChildBuilderDelegate((context, index) {
                   final negativeIndex = _getNegativeIndex(index, 7) - offset;
-                  final day = _anchorMonth.add(Duration(days: negativeIndex));
+                  final day = _anchorMonth.addDays(negativeIndex);
 
                   if (day.isAfter(
                         widget.displayDateEnd ?? DateTime(_maxDisplayedYear),
@@ -886,7 +936,7 @@ class CalendarViewState extends State<CalendarView> {
                 key: forwardListKey,
                 gridDelegate: gridDelegate,
                 delegate: SliverChildBuilderDelegate((context, index) {
-                  final day = _anchorMonth.add(Duration(days: index - offset));
+                  final day = _anchorMonth.addDays(index - offset);
                   if (day.isAfter(
                         widget.displayDateEnd ?? DateTime(_maxDisplayedYear),
                       ) ||
@@ -1001,8 +1051,7 @@ class CalendarViewState extends State<CalendarView> {
             ? DateTime(year, monthNumber)
             : DateTime(year + (monthNumber ~/ 12), monthNumber % 12);
         final isDisabled = !_isDateWithinBounds(month);
-        final isFilled =
-            isCurrentYear && m.DateUtils.isSameMonth(month, DateTime.now());
+        final isFilled = isCurrentYear && month.isSameMonth(DateTime.now());
         final showGroupLabel = widget.isGroupLabelVisible && month.month == 1;
         return _CalendarItem(
           content: DateFormat.MMM(locale.toString()).format(month),
@@ -1272,7 +1321,11 @@ class _CalendarHeader extends StatelessWidget {
               aspectRatio: 1,
               child: IconButton(
                 icon: const Center(
-                  child: WindowsIcon(WindowsIcons.caret_up_solid8, size: 10),
+                  child: WindowsIcon(
+                    WindowsIcons.caret_up_solid8,
+                    fallbackIcon: FluentIcons.caret_up_solid8,
+                    size: 10,
+                  ),
                 ),
                 onPressed: onPrevious,
               ),
@@ -1281,7 +1334,11 @@ class _CalendarHeader extends StatelessWidget {
               aspectRatio: 1,
               child: IconButton(
                 icon: const Center(
-                  child: WindowsIcon(WindowsIcons.caret_down_solid8, size: 10),
+                  child: WindowsIcon(
+                    WindowsIcons.caret_down_solid8,
+                    fallbackIcon: FluentIcons.caret_down_solid8,
+                    size: 10,
+                  ),
                 ),
                 onPressed: onNext,
               ),

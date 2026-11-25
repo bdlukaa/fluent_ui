@@ -272,6 +272,15 @@ class PageHeader extends StatelessWidget {
   final Widget? commandBar;
 
   @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties
+      ..add(ObjectFlagProperty.has('leading', leading))
+      ..add(ObjectFlagProperty.has('title', title))
+      ..add(ObjectFlagProperty.has('commandBar', commandBar));
+  }
+
+  @override
   Widget build(BuildContext context) {
     assert(debugCheckHasFluentTheme(context));
     assert(debugCheckHasMediaQuery(context));

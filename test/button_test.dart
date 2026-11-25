@@ -166,4 +166,95 @@ void main() {
       Colors.black,
     );
   });
+
+  group('IconButton theme styles', () {
+    const largeKey = Key('large');
+    const smallKey = Key('small');
+    const tinyKey = Key('tiny');
+    const inheritedKey = Key('inherited');
+    const iconButtonStyle = ButtonStyle(
+      padding: WidgetStatePropertyAll(EdgeInsetsDirectional.all(20)),
+    );
+    const smallIconButtonStyle = ButtonStyle(
+      padding: WidgetStatePropertyAll(EdgeInsetsDirectional.all(1)),
+    );
+
+    Future<void> pumpIconButtons(
+      WidgetTester tester,
+      ButtonThemeData buttonTheme,
+    ) async {
+      await tester.pumpWidget(
+        FluentApp(
+          theme: FluentThemeData(buttonTheme: buttonTheme),
+          home: Column(
+            children: [
+              IconButton(
+                key: largeKey,
+                icon: const Icon(FluentIcons.add),
+                onPressed: () {},
+              ),
+              IconButton(
+                key: smallKey,
+                iconButtonMode: IconButtonMode.small,
+                icon: const Icon(FluentIcons.add),
+                onPressed: () {},
+              ),
+              IconButton(
+                key: tinyKey,
+                iconButtonMode: IconButtonMode.tiny,
+                icon: const Icon(FluentIcons.add),
+                onPressed: () {},
+              ),
+              SmallIconButton(
+                child: IconButton(
+                  key: inheritedKey,
+                  icon: const Icon(FluentIcons.add),
+                  onPressed: () {},
+                ),
+              ),
+            ],
+          ),
+        ),
+      );
+    }
+
+    // The horizontal padding around the icon of the button with [key].
+    double paddingOf(WidgetTester tester, Key key) {
+      final button = tester.getRect(find.byKey(key));
+      final icon = tester.getRect(
+        find.descendant(of: find.byKey(key), matching: find.byType(Icon)),
+      );
+      return icon.left - button.left;
+    }
+
+    testWidgets('iconButtonStyle applies to every mode by default', (
+      tester,
+    ) async {
+      await pumpIconButtons(
+        tester,
+        const ButtonThemeData(iconButtonStyle: iconButtonStyle),
+      );
+
+      for (final key in [largeKey, smallKey, tinyKey, inheritedKey]) {
+        expect(paddingOf(tester, key), 20, reason: '$key');
+      }
+    });
+
+    testWidgets('smallIconButtonStyle applies to small and tiny buttons', (
+      tester,
+    ) async {
+      await pumpIconButtons(
+        tester,
+        const ButtonThemeData(
+          iconButtonStyle: iconButtonStyle,
+          smallIconButtonStyle: smallIconButtonStyle,
+        ),
+      );
+
+      expect(paddingOf(tester, largeKey), 20);
+      for (final key in [smallKey, tinyKey, inheritedKey]) {
+        expect(paddingOf(tester, key), 1, reason: '$key');
+      }
+    });
+  });
 }

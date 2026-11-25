@@ -146,6 +146,13 @@ class RatingControl extends StatefulWidget {
       ..add(IntProperty('amount', amount, defaultValue: 5))
       ..add(DoubleProperty('rating', rating))
       ..add(
+        FlagProperty(
+          'interactive',
+          value: onChanged != null,
+          ifFalse: 'read-only',
+        ),
+      )
+      ..add(
         DiagnosticsProperty<Duration>('animationDuration', animationDuration),
       )
       ..add(DiagnosticsProperty<Curve>('animationCurve', animationCurve))
@@ -485,6 +492,18 @@ class RatingIcon extends StatelessWidget {
 
   /// The size of the icon.
   final double? size;
+
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties
+      ..add(PercentProperty('rating', rating))
+      ..add(IconDataProperty('icon', icon))
+      ..add(IconDataProperty('unratedIcon', unratedIcon))
+      ..add(ColorProperty('ratedColor', ratedColor))
+      ..add(ColorProperty('unratedColor', unratedColor))
+      ..add(DoubleProperty('size', size));
+  }
 
   @override
   Widget build(BuildContext context) {

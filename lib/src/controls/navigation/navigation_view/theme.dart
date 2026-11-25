@@ -75,6 +75,12 @@ class NavigationPaneTheme extends InheritedTheme {
   }
 
   @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties.add(DiagnosticsProperty<NavigationPaneThemeData>('data', data));
+  }
+
+  @override
   Widget wrap(BuildContext context, Widget child) {
     return NavigationPaneTheme(data: data, child: child);
   }
@@ -360,8 +366,11 @@ class NavigationPaneThemeData with Diagnosticable {
       ..add(DiagnosticsProperty<Curve>('animationCurve', animationCurve))
       ..add(DiagnosticsProperty('selectedTextStyle', selectedTextStyle))
       ..add(DiagnosticsProperty('unselectedTextStyle', unselectedTextStyle))
-      ..add(DiagnosticsProperty('selectedTopTextStyle', selectedTextStyle))
-      ..add(DiagnosticsProperty('unselectedTopTextStyle', unselectedTextStyle))
+      ..add(DiagnosticsProperty('selectedTopTextStyle', selectedTopTextStyle))
+      ..add(
+        DiagnosticsProperty('unselectedTopTextStyle', unselectedTopTextStyle),
+      )
+      ..add(DiagnosticsProperty('itemHeaderTextStyle', itemHeaderTextStyle))
       ..add(DiagnosticsProperty('selectedIconColor', selectedIconColor))
       ..add(DiagnosticsProperty('unselectedIconColor', unselectedIconColor))
       ..add(

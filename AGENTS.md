@@ -88,6 +88,7 @@ Provide concise, technical responses. Omit filler. Output complete, working code
   otherwise use `flutter test`.
 * **Unit Tests:** Use `package:test` for unit tests.
 * **Widget Tests:** Use `package:flutter_test` for widget tests.
+* **Test Organization:** Keep all tests for a control in a single test file. Tag golden tests individually or by group so CI can run them separately.
 - **Testing:** Write widget tests for any new control. Ensure interactions like hover and focus are simulated and verified. Mock dependencies as needed.
 - **Example App:** For any control update, update the example app to demonstrate the new behavior.
 

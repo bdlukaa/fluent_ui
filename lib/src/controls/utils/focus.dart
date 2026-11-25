@@ -168,6 +168,12 @@ class FocusTheme extends InheritedTheme {
   }
 
   @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties.add(DiagnosticsProperty<FocusThemeData>('data', data));
+  }
+
+  @override
   Widget wrap(BuildContext context, Widget child) {
     return FocusTheme(data: data, child: child);
   }

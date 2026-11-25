@@ -1,4 +1,5 @@
 import 'package:fluent_ui/fluent_ui.dart';
+import 'package:flutter/foundation.dart';
 
 /// The mode of the password reveal button.
 ///
@@ -220,6 +221,77 @@ class PasswordBox extends StatefulWidget {
   });
 
   @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties
+      ..add(
+        ObjectFlagProperty<TextEditingController?>.has(
+          'controller',
+          controller,
+        ),
+      )
+      ..add(
+        FlagProperty(
+          'enabled',
+          value: enabled,
+          defaultValue: true,
+          ifFalse: 'disabled',
+        ),
+      )
+      ..add(
+        EnumProperty<PasswordRevealMode>(
+          'revealMode',
+          revealMode,
+          defaultValue: PasswordRevealMode.peek,
+        ),
+      )
+      ..add(
+        FlagProperty(
+          'autofocus',
+          value: autofocus,
+          defaultValue: false,
+          ifTrue: 'autofocus',
+        ),
+      )
+      ..add(ObjectFlagProperty<FocusNode?>.has('focusNode', focusNode))
+      ..add(ObjectFlagProperty<Widget?>.has('leadingIcon', leadingIcon))
+      ..add(DoubleProperty('cursorWidth', cursorWidth, defaultValue: 1.5))
+      ..add(
+        FlagProperty(
+          'readOnly',
+          value: readOnly,
+          defaultValue: false,
+          ifTrue: 'read only',
+        ),
+      )
+      ..add(
+        ObjectFlagProperty<WidgetStateProperty<BoxDecoration>?>.has(
+          'decoration',
+          decoration,
+        ),
+      )
+      ..add(
+        ObjectFlagProperty<WidgetStateProperty<BoxDecoration>?>.has(
+          'foregroundDecoration',
+          foregroundDecoration,
+        ),
+      )
+      ..add(
+        EnumProperty<TextAlign>(
+          'textAlign',
+          textAlign,
+          defaultValue: TextAlign.start,
+        ),
+      )
+      ..add(
+        ObjectFlagProperty<ScrollController?>.has(
+          'scrollController',
+          scrollController,
+        ),
+      );
+  }
+
+  @override
   State<PasswordBox> createState() => _PasswordBoxState();
 }
 
@@ -348,7 +420,10 @@ class _PasswordBoxState extends State<PasswordBox> {
       suffix: _canPeek
           ? SmallIconButton(
               child: IconButton(
-                icon: const WindowsIcon(WindowsIcons.red_eye),
+                icon: const WindowsIcon(
+                  WindowsIcons.red_eye,
+                  fallbackIcon: FluentIcons.red_eye,
+                ),
                 // todo: half eye icon, like WinUI3 ?
                 onPressed: null,
                 onTapDown: widget.enabled

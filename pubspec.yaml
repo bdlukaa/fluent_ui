@@ -1,6 +1,6 @@
 name: fluent_ui
 description: Implements Microsoft's Windows User Interface in Flutter.
-version: 4.17.0
+version: 4.18.0
 homepage: https://bdlukaa.github.io/fluent_ui/#/
 repository: https://github.com/bdlukaa/fluent_ui
 issue_tracker: https://github.com/bdlukaa/fluent_ui/issues
@@ -32,13 +32,12 @@ dependencies:
   math_expressions: ^3.2.0
 
   # Add support to use material components with `FluentApp`
-  material_ui: ^1.2.0
+  material_ui: ^1.7.0
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
   flutter_lints: ^6.0.0
-  intl_utils: ^2.8.16
 
 flutter:
   uses-material-design: true

@@ -82,9 +82,15 @@ void main() {
 
       await tester.enterText(find.byType(TextBox), 'o');
       await tester.pumpAndSettle();
-      expect(find.byType(CompositedTransformFollower), findsOneWidget);
+      // The text box's selection handles are followers too, so only look
+      // inside the AutoSuggestBox.
+      final followerFinder = find.descendant(
+        of: find.byType(AutoSuggestBox<String>),
+        matching: find.byType(CompositedTransformFollower),
+      );
+      expect(followerFinder, findsOneWidget);
       final follower = tester.widget<CompositedTransformFollower>(
-        find.byType(CompositedTransformFollower),
+        followerFinder,
       );
       expect(follower.offset.dy, lessThan(0));
       expect(
@@ -119,5 +125,37 @@ void main() {
     );
 
     expect(find.byType(TextFormBox), findsOneWidget);
+  });
+
+  group('text field semantics', () {
+    final items = [AutoSuggestBoxItem<String>(value: 'a', label: 'a')];
+    testWidgets('enabled AutoSuggestBox', (tester) async {
+      await expectTextFieldSemantics(
+        tester,
+        AutoSuggestBox<String>(items: items),
+        enabled: true,
+      );
+    });
+    testWidgets('disabled AutoSuggestBox', (tester) async {
+      await expectTextFieldSemantics(
+        tester,
+        AutoSuggestBox<String>(items: items, enabled: false),
+        enabled: false,
+      );
+    });
+    testWidgets('enabled AutoSuggestBox.form', (tester) async {
+      await expectTextFieldSemantics(
+        tester,
+        AutoSuggestBox<String>.form(items: items),
+        enabled: true,
+      );
+    });
+    testWidgets('disabled AutoSuggestBox.form', (tester) async {
+      await expectTextFieldSemantics(
+        tester,
+        AutoSuggestBox<String>.form(items: items, enabled: false),
+        enabled: false,
+      );
+    });
   });
 }

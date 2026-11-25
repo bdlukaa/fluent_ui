@@ -76,6 +76,23 @@ class CalendarDatePicker extends CalendarView {
 
   @override
   State<CalendarView> createState() => CalendarDatePickerState();
+
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties
+      ..add(DiagnosticsProperty<DateFormat>('dateFormatter', dateFormatter))
+      ..add(EnumProperty<FlyoutPlacementMode>('placement', placement))
+      ..add(DoubleProperty('verticalOffset', verticalOffset))
+      ..add(
+        FlagProperty(
+          'closeOnSelection',
+          value: closeOnSelection,
+          ifFalse: 'flyout remains open after selection',
+          defaultValue: true,
+        ),
+      );
+  }
 }
 
 class CalendarDatePickerState extends CalendarViewState {
@@ -192,7 +209,10 @@ class CalendarDatePickerState extends CalendarViewState {
 
               return widget.placeholderText ?? localizations.pickADate;
             }()),
-            const WindowsIcon(WindowsIcons.calendar),
+            const WindowsIcon(
+              WindowsIcons.calendar,
+              fallbackIcon: FluentIcons.calendar,
+            ),
           ],
         ),
       ),

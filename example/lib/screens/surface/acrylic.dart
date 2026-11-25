@@ -11,12 +11,12 @@ class AcrylicPage extends StatefulWidget {
 }
 
 class _AcrylicPageState extends State<AcrylicPage> with PageMixin {
-  double tintOpacity = 0.8;
-  double luminosityOpacity = 0.8;
+  double? tintOpacity;
+  double? luminosityOpacity;
   double blurAmount = kBlurAmount;
   double elevation = 0;
   Color? color;
-  bool automaticLuminosity = true;
+  bool automaticLuminosity = false;
   bool acrylicDisabled = false;
   bool animateMaterial = false;
 
@@ -24,7 +24,15 @@ class _AcrylicPageState extends State<AcrylicPage> with PageMixin {
   Widget build(BuildContext context) {
     final theme = FluentTheme.of(context);
     final customTint = color ?? theme.acrylicBackgroundColor;
-    final luminosity = automaticLuminosity ? null : luminosityOpacity;
+    final resolvedTintOpacity = tintOpacity ?? theme.acrylicTintOpacity;
+    final luminosity = automaticLuminosity
+        ? null
+        : luminosityOpacity ?? theme.acrylicLuminosityOpacity;
+    final effectiveLuminosityOpacity = AcrylicHelper.getLuminosityColor(
+      customTint,
+      luminosity,
+      resolvedTintOpacity,
+    ).a;
 
     return ScaffoldPage.scrollable(
       header: const PageHeader(title: Text('Acrylic')),
@@ -57,6 +65,32 @@ class _AcrylicPageState extends State<AcrylicPage> with PageMixin {
             ),
           ],
         ),
+        subtitle(content: const Text('Flyout materials')),
+        const Text(
+          'Open either menu over each backdrop. Use Settings to compare light and dark themes; the fallback checkbox below also applies to these samples.',
+        ),
+        _MaterialComparison(
+          children: [
+            _MaterialSample(
+              title: 'White backdrop',
+              child: _FlyoutPreview(
+                backdrop: Colors.white,
+                disabled: acrylicDisabled,
+              ),
+            ),
+            _MaterialSample(
+              title: 'Dark backdrop',
+              child: _FlyoutPreview(
+                backdrop: Colors.black,
+                disabled: acrylicDisabled,
+              ),
+            ),
+            _MaterialSample(
+              title: 'Multicolored backdrop',
+              child: _FlyoutPreview(disabled: acrylicDisabled),
+            ),
+          ],
+        ),
         subtitle(content: const Text('Acrylic rendering laboratory')),
         Card(
           child: Column(
@@ -84,7 +118,7 @@ class _AcrylicPageState extends State<AcrylicPage> with PageMixin {
                               )
                             : Acrylic(
                                 tint: customTint,
-                                tintAlpha: tintOpacity,
+                                tintAlpha: resolvedTintOpacity,
                                 luminosityAlpha: luminosity,
                                 blurAmount: blurAmount,
                                 elevation: elevation,
@@ -127,6 +161,7 @@ class _AcrylicPageState extends State<AcrylicPage> with PageMixin {
                       placeholder: const Text('Theme tint'),
                       onChanged: (value) => setState(() => color = value),
                       items: [
+                        const ComboBoxItem<Color>(child: Text('Theme tint')),
                         ...Colors.accentColors.map(
                           (accent) => ComboBoxItem(
                             value: accent,
@@ -142,11 +177,12 @@ class _AcrylicPageState extends State<AcrylicPage> with PageMixin {
                     ),
                   ),
                   InfoLabel(
-                    label: 'Tint opacity: ${tintOpacity.toStringAsFixed(2)}',
+                    label:
+                        'Tint opacity: ${resolvedTintOpacity.toStringAsFixed(2)}',
                     child: SizedBox(
                       width: 180,
                       child: Slider(
-                        value: tintOpacity,
+                        value: resolvedTintOpacity,
                         max: 1,
                         onChanged: (value) =>
                             setState(() => tintOpacity = value),
@@ -155,11 +191,11 @@ class _AcrylicPageState extends State<AcrylicPage> with PageMixin {
                   ),
                   InfoLabel(
                     label:
-                        'Luminosity opacity: ${luminosityOpacity.toStringAsFixed(2)}',
+                        'Luminosity opacity: ${effectiveLuminosityOpacity.toStringAsFixed(2)}',
                     child: SizedBox(
                       width: 180,
                       child: Slider(
-                        value: luminosityOpacity,
+                        value: effectiveLuminosityOpacity,
                         max: 1,
                         onChanged: automaticLuminosity
                             ? null
@@ -243,6 +279,98 @@ class _AcrylicPageState extends State<AcrylicPage> with PageMixin {
         ),
       ],
     );
+  }
+}
+
+class _FlyoutPreview extends StatefulWidget {
+  const _FlyoutPreview({this.backdrop, required this.disabled});
+
+  final Color? backdrop;
+  final bool disabled;
+
+  @override
+  State<_FlyoutPreview> createState() => _FlyoutPreviewState();
+}
+
+class _FlyoutPreviewState extends State<_FlyoutPreview> {
+  final controller = FlyoutController();
+
+  @override
+  void dispose() {
+    controller.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final sample = Stack(
+      fit: StackFit.expand,
+      children: [
+        if (widget.backdrop case final color?)
+          ColoredBox(color: color)
+        else
+          const _AcrylicBackdropContent(),
+        Positioned(
+          top: 12,
+          left: 12,
+          right: 12,
+          child: Row(
+            children: [
+              FlyoutTarget(
+                controller: controller,
+                child: Button(
+                  child: const Text('MenuFlyout'),
+                  onPressed: () => controller.showFlyout(
+                    builder: (context) {
+                      final menu = MenuFlyout(
+                        items: [
+                          MenuFlyoutItem(
+                            text: const Text('Copy'),
+                            onPressed: () => Flyout.of(context).close(),
+                          ),
+                          MenuFlyoutItem(
+                            text: const Text('Paste (disabled)'),
+                            onPressed: null,
+                          ),
+                        ],
+                      );
+                      // The flyout route is outside the preview's inherited scope.
+                      return widget.disabled
+                          ? DisableAcrylic(child: menu)
+                          : menu;
+                    },
+                  ),
+                ),
+              ),
+              const Spacer(),
+              SizedBox(
+                width: 140,
+                child: CommandBar(
+                  primaryItems: const [],
+                  secondaryItems: [
+                    CommandBarButton(
+                      label: const Text('Copy'),
+                      onPressed: () {},
+                    ),
+                    const CommandBarButton(
+                      label: Text('Paste'),
+                      onPressed: null,
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        ),
+        const Positioned(
+          bottom: 24,
+          left: 32,
+          right: 32,
+          child: FlyoutContent(child: Text('Shared transient Acrylic surface')),
+        ),
+      ],
+    );
+    return widget.disabled ? DisableAcrylic(child: sample) : sample;
   }
 }
 
@@ -351,9 +479,14 @@ class _ContrastStripePainter extends CustomPainter {
   @override
   void paint(Canvas canvas, Size size) {
     final paint = Paint()..color = Colors.white.withValues(alpha: 0.24);
+    // CustomPaint does not clip its canvas. Keep the stripes inside this
+    // backdrop so sibling samples cannot paint over one another when scrolled.
+    canvas.save();
+    canvas.clipRect(Offset.zero & size);
     for (var x = -size.height; x < size.width; x += 24) {
       canvas.drawRect(Rect.fromLTWH(x, 0, 10, size.height), paint);
     }
+    canvas.restore();
   }
 
   @override
