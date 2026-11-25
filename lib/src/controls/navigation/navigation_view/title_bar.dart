@@ -135,6 +135,75 @@ class TitleBar extends StatelessWidget {
   }
 
   @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties
+      ..add(
+        FlagProperty(
+          'isBackButtonVisible',
+          value: isBackButtonVisible,
+          defaultValue: true,
+          ifFalse: 'back button hidden',
+        ),
+      )
+      ..add(
+        DiagnosticsProperty<bool>(
+          'isBackButtonEnabled',
+          isBackButtonEnabled,
+          ifNull: 'automatic',
+        ),
+      )
+      ..add(
+        FlagProperty(
+          'hasCustomBackButton',
+          value: backButton != null,
+          ifTrue: 'custom back button',
+        ),
+      )
+      ..add(
+        ObjectFlagProperty(
+          'onBackRequested',
+          onBackRequested,
+          ifNull: 'not provided',
+        ),
+      )
+      ..add(
+        FlagProperty(
+          'hasLeftHeader',
+          value: leftHeader != null,
+          ifTrue: 'left header',
+        ),
+      )
+      ..add(FlagProperty('hasIcon', value: icon != null, ifTrue: 'icon'))
+      ..add(FlagProperty('hasTitle', value: title != null, ifTrue: 'title'))
+      ..add(
+        FlagProperty(
+          'hasSubtitle',
+          value: subtitle != null,
+          ifTrue: 'subtitle',
+        ),
+      )
+      ..add(
+        FlagProperty('hasContent', value: content != null, ifTrue: 'content'),
+      )
+      ..add(
+        FlagProperty(
+          'hasEndHeader',
+          value: endHeader != null,
+          ifTrue: 'end header',
+        ),
+      )
+      ..add(
+        FlagProperty(
+          'hasCaptionControls',
+          value: captionControls != null,
+          ifTrue: 'caption controls',
+        ),
+      )
+      ..add(DoubleProperty('height', height));
+  }
+
+  @override
   Widget build(BuildContext context) {
     assert(debugCheckHasFluentTheme(context));
     final theme = FluentTheme.of(context);
@@ -621,6 +690,18 @@ class PaneToggleButton extends StatelessWidget {
   final VoidCallback? onPressed;
 
   @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties.add(
+      FlagProperty(
+        'hasCustomOnPressed',
+        value: onPressed != null,
+        ifTrue: 'custom on pressed callback',
+      ),
+    );
+  }
+
+  @override
   Widget build(BuildContext context) {
     final view = NavigationView.dataOf(context);
     final navigationView = NavigationView.of(context);
@@ -680,6 +761,27 @@ class PaneBackButton extends StatelessWidget {
   final bool enabled;
 
   final Widget backIcon;
+
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties
+      ..add(
+        FlagProperty(
+          'enabled',
+          value: enabled,
+          defaultValue: true,
+          ifFalse: 'disabled',
+        ),
+      )
+      ..add(
+        FlagProperty(
+          'hasCustomOnPressed',
+          value: onPressed != null,
+          ifTrue: 'custom on pressed callback',
+        ),
+      );
+  }
 
   @override
   Widget build(BuildContext context) {

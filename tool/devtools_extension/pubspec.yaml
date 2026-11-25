@@ -1,0 +1,23 @@
+name: fluent_ui_devtools_extension
+description: Fluent UI icon browser for Dart DevTools.
+publish_to: none
+version: 1.0.0
+
+environment:
+  sdk: '>=3.8.0 <4.0.0'
+  flutter: '>=3.32.0'
+
+dependencies:
+  devtools_extensions: ^0.5.1
+  fluent_ui:
+    path: ../..
+  flutter:
+    sdk: flutter
+
+dev_dependencies:
+  flutter_lints: ^6.0.0
+  flutter_test:
+    sdk: flutter
+
+flutter:
+  uses-material-design: true

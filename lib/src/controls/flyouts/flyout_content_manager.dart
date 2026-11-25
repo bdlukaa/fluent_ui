@@ -1,4 +1,5 @@
 import 'package:fluent_ui/fluent_ui.dart';
+import 'package:flutter/foundation.dart';
 
 /// Stores info about the current flyout, such as positioning, sub menus and transitions
 ///
@@ -77,6 +78,27 @@ class Flyout extends StatefulWidget {
 
   @override
   State<Flyout> createState() => FlyoutState();
+
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties
+      ..add(ObjectFlagProperty.has('root', root))
+      ..add(ObjectFlagProperty.has('rootFlyout', rootFlyout))
+      ..add(ObjectFlagProperty.has('menuKey', menuKey))
+      ..add(DoubleProperty('additionalOffset', additionalOffset))
+      ..add(DoubleProperty('margin', margin))
+      ..add(
+        DiagnosticsProperty<Duration>('transitionDuration', transitionDuration),
+      )
+      ..add(
+        DiagnosticsProperty<Duration>(
+          'reverseTransitionDuration',
+          reverseTransitionDuration,
+        ),
+      )
+      ..add(EnumProperty<FlyoutPlacementMode>('placementMode', placementMode));
+  }
 }
 
 /// The state for a [Flyout] widget.

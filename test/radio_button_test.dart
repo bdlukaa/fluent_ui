@@ -1,4 +1,5 @@
 import 'package:fluent_ui/fluent_ui.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 import 'app_test.dart';
@@ -177,5 +178,78 @@ void main() {
     await tester.pumpAndSettle();
     expect(focusNode2.hasFocus, isTrue);
     expect(focusNode1.hasFocus, isFalse);
+  });
+
+  group('RadioButton.toggleable', () {
+    // Pumps two radio buttons with the first one selected and returns every
+    // value the group reports.
+    Future<List<int?>> pumpGroup(
+      WidgetTester tester, {
+      required FocusNode focusNode,
+      bool? toggleable,
+    }) async {
+      final changes = <int?>[];
+      await tester.pumpWidget(
+        wrapApp(
+          child: RadioGroup<int>(
+            groupValue: 0,
+            onChanged: changes.add,
+            child: Column(
+              children: [
+                if (toggleable == null)
+                  RadioButton<int>(value: 0, focusNode: focusNode)
+                else
+                  RadioButton<int>(
+                    value: 0,
+                    focusNode: focusNode,
+                    toggleable: toggleable,
+                  ),
+                const RadioButton<int>(value: 1),
+              ],
+            ),
+          ),
+        ),
+      );
+      return changes;
+    }
+
+    testWidgets('defaults to false', (tester) async {
+      final focusNode = FocusNode();
+      addTearDown(focusNode.dispose);
+      final changes = await pumpGroup(tester, focusNode: focusNode);
+
+      await tester.tap(find.byType(RadioButton<int>).first);
+      await tester.pump();
+      focusNode.requestFocus();
+      await tester.pump();
+      await tester.sendKeyEvent(LogicalKeyboardKey.space);
+      await tester.pump();
+
+      expect(changes, isEmpty);
+    });
+
+    testWidgets('clears the selected radio button when true', (tester) async {
+      final focusNode = FocusNode();
+      addTearDown(focusNode.dispose);
+      final changes = await pumpGroup(
+        tester,
+        focusNode: focusNode,
+        toggleable: true,
+      );
+
+      await tester.tap(find.byType(RadioButton<int>).first);
+      await tester.pump();
+      expect(changes, [null]);
+
+      focusNode.requestFocus();
+      await tester.pump();
+      await tester.sendKeyEvent(LogicalKeyboardKey.space);
+      await tester.pump();
+      expect(changes, [null, null]);
+
+      await tester.tap(find.byType(RadioButton<int>).last);
+      await tester.pump();
+      expect(changes, [null, null, 1]);
+    });
   });
 }

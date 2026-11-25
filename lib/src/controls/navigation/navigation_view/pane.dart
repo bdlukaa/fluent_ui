@@ -343,7 +343,12 @@ class NavigationPane with Diagnosticable {
   static Widget defaultBuildTopOverflowButton(VoidCallback openFlyout) {
     return Builder(
       builder: (context) {
-        return PaneItem(icon: const WindowsIcon(WindowsIcons.more)).build(
+        return PaneItem(
+          icon: const WindowsIcon(
+            WindowsIcons.more,
+            fallbackIcon: FluentIcons.more,
+          ),
+        ).build(
           context: context,
           selected: false,
           onPressed: openFlyout,
@@ -1085,6 +1090,7 @@ class _MenuFlyoutPaneItemExpanderState
                       ),
                       child: const WindowsIcon(
                         WindowsIcons.chevron_down,
+                        fallbackIcon: FluentIcons.chevron_down,
                         size: 10,
                       ),
                     ),
@@ -1285,9 +1291,13 @@ class _OpenNavigationPaneState extends State<_OpenNavigationPane> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Container(
+                // The menu button already has the gap below it, as in the
+                // compact pane, so only a header without it gets one.
                 margin: widget.pane.autoSuggestBox != null
                     ? (menuButton == null ? theme.iconPadding : null)
-                    : topPadding,
+                    : (menuButton == null && widget.pane.header != null
+                          ? topPadding
+                          : null),
                 height: paneHeaderHeight,
                 child: widget.pane.header != null
                     ? Row(

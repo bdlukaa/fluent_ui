@@ -6,6 +6,36 @@ Widget wrapApp({required Widget child}) {
   return FluentApp(home: child);
 }
 
+/// Pumps [field] with semantics enabled and checks the text field node that
+/// assistive technologies see: an enabled field reports its enabled state and
+/// accepts tap and focus, a disabled one reports that it is disabled.
+Future<void> expectTextFieldSemantics(
+  WidgetTester tester,
+  Widget field, {
+  required bool enabled,
+}) async {
+  final handle = tester.ensureSemantics();
+  await tester.pumpWidget(wrapApp(child: ScaffoldPage(content: field)));
+
+  expect(
+    tester.getSemantics(find.byType(EditableText)),
+    enabled
+        ? isSemantics(
+            isTextField: true,
+            hasEnabledState: true,
+            isEnabled: true,
+            hasTapAction: true,
+            hasFocusAction: true,
+          )
+        : isSemantics(
+            isTextField: true,
+            hasEnabledState: true,
+            isEnabled: false,
+          ),
+  );
+  handle.dispose();
+}
+
 void main() {
   testWidgets('Can nest apps', (tester) async {
     await tester.pumpWidget(

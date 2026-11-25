@@ -1,4 +1,5 @@
 import 'package:fluent_ui/fluent_ui.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
 
@@ -28,6 +29,12 @@ class HoverButtonInherited extends InheritedWidget {
   /// Returns the closest [HoverButtonInherited] ancestor, if any.
   static HoverButtonInherited? maybeOf(BuildContext context) {
     return context.dependOnInheritedWidgetOfExactType<HoverButtonInherited>();
+  }
+
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties.add(IterableProperty<WidgetState>('states', states));
   }
 
   @override
@@ -202,6 +209,43 @@ class HoverButton extends StatefulWidget {
 
   @override
   State<HoverButton> createState() => _HoverButtonState();
+
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties
+      ..add(ObjectFlagProperty.has('onPressed', onPressed))
+      ..add(ObjectFlagProperty.has('onLongPress', onLongPress))
+      ..add(IntProperty('gestures', gestures.length, defaultValue: 0))
+      ..add(
+        IntProperty('customActions', customActions?.length, defaultValue: 0),
+      )
+      ..add(IntProperty('shortcuts', shortcuts?.length, defaultValue: 0))
+      ..add(
+        FlagProperty(
+          'autofocus',
+          value: autofocus,
+          defaultValue: false,
+          ifTrue: 'autofocus',
+        ),
+      )
+      ..add(
+        FlagProperty(
+          'focusEnabled',
+          value: focusEnabled,
+          defaultValue: true,
+          ifFalse: 'focus disabled',
+        ),
+      )
+      ..add(
+        FlagProperty(
+          'forceEnabled',
+          value: forceEnabled,
+          defaultValue: false,
+          ifTrue: 'force enabled',
+        ),
+      );
+  }
 
   /// Returns the closest [HoverButtonInherited] ancestor.
   static HoverButtonInherited of(BuildContext context) {

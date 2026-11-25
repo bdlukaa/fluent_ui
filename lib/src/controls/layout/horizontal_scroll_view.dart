@@ -1,4 +1,5 @@
 import 'package:fluent_ui/fluent_ui.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/gestures.dart';
 
 /// A specialized kind of [SingleChildScrollView] that only scrolls
@@ -36,6 +37,28 @@ class HorizontalScrollView extends StatefulWidget {
     this.mouseWheelScrolls = true,
     this.scrollDirection = Axis.horizontal,
   });
+
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties
+      ..add(DiagnosticsProperty<ScrollPhysics>('scrollPhysics', scrollPhysics))
+      ..add(
+        FlagProperty(
+          'mouseWheelScrolls',
+          value: mouseWheelScrolls,
+          defaultValue: true,
+          ifFalse: 'does not scroll with mouse wheel',
+        ),
+      )
+      ..add(
+        EnumProperty<Axis>(
+          'scrollDirection',
+          scrollDirection,
+          defaultValue: Axis.horizontal,
+        ),
+      );
+  }
 
   @override
   State<HorizontalScrollView> createState() => _HorizontalScrollViewState();

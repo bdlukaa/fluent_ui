@@ -69,6 +69,21 @@ class MenuFlyout extends StatefulWidget {
 
   @override
   State<MenuFlyout> createState() => _MenuFlyoutState();
+
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties
+      ..add(IntProperty('items', items.length, defaultValue: 0))
+      ..add(ColorProperty('color', color))
+      ..add(DiagnosticsProperty<ShapeBorder>('shape', shape))
+      ..add(
+        ColorProperty('shadowColor', shadowColor, defaultValue: Colors.black),
+      )
+      ..add(DoubleProperty('elevation', elevation, defaultValue: 8.0))
+      ..add(DiagnosticsProperty<BoxConstraints>('constraints', constraints))
+      ..add(DiagnosticsProperty<EdgeInsetsGeometry>('itemMargin', itemMargin));
+  }
 }
 
 class _MenuFlyoutState extends State<MenuFlyout> {
@@ -515,9 +530,15 @@ class _MenuFlyoutSubItemChevron extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final isRtl = Directionality.of(context) == TextDirection.rtl;
-    return WindowsIcon(
-      isRtl ? WindowsIcons.chevron_left : WindowsIcons.chevron_right,
-    );
+    return isRtl
+        ? const WindowsIcon(
+            WindowsIcons.chevron_left,
+            fallbackIcon: FluentIcons.chevron_left,
+          )
+        : const WindowsIcon(
+            WindowsIcons.chevron_right,
+            fallbackIcon: FluentIcons.chevron_right,
+          );
   }
 }
 

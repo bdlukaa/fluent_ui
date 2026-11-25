@@ -87,6 +87,17 @@ class ContentDialog extends StatelessWidget {
   final BoxConstraints constraints;
 
   @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties
+      ..add(ObjectFlagProperty.has('title', title))
+      ..add(ObjectFlagProperty.has('content', content))
+      ..add(IntProperty('actions', actions?.length))
+      ..add(DiagnosticsProperty<ContentDialogThemeData>('style', style))
+      ..add(DiagnosticsProperty<BoxConstraints>('constraints', constraints));
+  }
+
+  @override
   Widget build(BuildContext context) {
     assert(debugCheckHasFluentTheme(context));
     final style = ContentDialogTheme.of(context).merge(this.style);
@@ -421,6 +432,12 @@ class ContentDialogTheme extends InheritedTheme {
     return ContentDialogThemeData.standard(
       theme,
     ).merge(theme.dialogTheme).merge(inheritedTheme?.data);
+  }
+
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties.add(DiagnosticsProperty<ContentDialogThemeData>('data', data));
   }
 
   @override

@@ -2,7 +2,6 @@ import 'dart:ui';
 
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter/foundation.dart';
-import 'package:material_ui/material_ui.dart' show Icons;
 
 /// A builder function for creating an [InfoBar] within a popup.
 ///
@@ -414,7 +413,11 @@ class InfoBar extends StatelessWidget {
           if (icon != null)
             Padding(
               padding: const EdgeInsetsDirectional.only(end: 14),
-              child: Icon(icon, color: style.iconColor?.call(severity)),
+              child: WindowsIcon(
+                icon,
+                fallbackIcon: _severityIconFallback(icon),
+                color: style.iconColor?.call(severity),
+              ),
             ),
           if (isLong)
             Flexible(
@@ -527,6 +530,12 @@ class InfoBarTheme extends InheritedTheme {
   }
 
   @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties.add(DiagnosticsProperty<InfoBarThemeData>('data', data));
+  }
+
+  @override
   bool updateShouldNotify(InfoBarTheme oldWidget) => data != oldWidget.data;
 }
 
@@ -605,14 +614,13 @@ class InfoBarThemeData with Diagnosticable {
       icon: (severity) {
         switch (severity) {
           case InfoBarSeverity.info:
-            return FluentIcons.info_solid;
+            return WindowsIcons.info_solid;
           case InfoBarSeverity.warning:
             return FluentIcons.critical_error_solid;
-          // TODO(fluent): Do not use Material Icons
           case InfoBarSeverity.success:
-            return Icons.check_circle;
+            return WindowsIcons.completed_solid;
           case InfoBarSeverity.error:
-            return Icons.cancel;
+            return WindowsIcons.status_error_full;
         }
       },
       iconColor: (severity) {
@@ -717,6 +725,7 @@ class InfoBarThemeData with Diagnosticable {
       )
       ..add(ObjectFlagProperty.has('decoration', decoration))
       ..add(ObjectFlagProperty.has('iconColor', iconColor))
+      ..add(DiagnosticsProperty<EdgeInsetsGeometry?>('padding', padding))
       ..add(
         DiagnosticsProperty<ButtonStyle>(
           'actionStyle',
@@ -726,3 +735,12 @@ class InfoBarThemeData with Diagnosticable {
       );
   }
 }
+
+/// The [FluentIcons] glyph rendered off Windows for a default severity icon of
+/// [InfoBarThemeData.icon].
+IconData? _severityIconFallback(IconData icon) => switch (icon) {
+  WindowsIcons.info_solid => FluentIcons.info_solid,
+  WindowsIcons.completed_solid => FluentIcons.completed_solid,
+  WindowsIcons.status_error_full => FluentIcons.status_error_full,
+  _ => null,
+};

@@ -97,6 +97,19 @@ class EditableComboBox<T> extends ComboBox<T> {
   final List<TextInputFormatter>? inputFormatters;
 
   @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties
+      ..add(
+        ObjectFlagProperty<TextEditingController?>.has(
+          'textController',
+          textController,
+        ),
+      )
+      ..add(IntProperty('inputFormatterCount', inputFormatters?.length ?? 0));
+  }
+
+  @override
   State<ComboBox<T>> createState() => _EditableComboboxState<T>();
 }
 
@@ -249,7 +262,10 @@ class ComboboxFormField<T> extends FormField<T> {
     VoidCallback? onClose,
     int elevation = 8,
     TextStyle? style,
-    Widget icon = const WindowsIcon(WindowsIcons.chevron_down),
+    Widget icon = const WindowsIcon(
+      WindowsIcons.chevron_down,
+      fallbackIcon: FluentIcons.chevron_down,
+    ),
     Color? iconDisabledColor,
     Color? iconEnabledColor,
     double iconSize = 8.0,
@@ -375,7 +391,10 @@ class EditableComboboxFormField<T> extends FormField<T> {
     VoidCallback? onClose,
     int elevation = 8,
     TextStyle? style,
-    Widget icon = const WindowsIcon(WindowsIcons.chevron_down),
+    Widget icon = const WindowsIcon(
+      WindowsIcons.chevron_down,
+      fallbackIcon: FluentIcons.chevron_down,
+    ),
     Color? iconDisabledColor,
     Color? iconEnabledColor,
     double iconSize = 8.0,

@@ -2,8 +2,9 @@
 
 // ignore_for_file: constant_identifier_names, public_member_api_docs
 
-import 'package:flutter/widgets.dart' show IconData;
+import 'package:flutter/widgets.dart' show IconData, staticIconProvider;
 
+@staticIconProvider
 class WindowsIcons {
   const WindowsIcons._();
 

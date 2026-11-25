@@ -124,6 +124,51 @@ void main() {
       expect(find.byType(NavigationView), findsOneWidget);
     });
 
+    testWidgets('StickyNavigationIndicator hides when nothing is selected', (
+      tester,
+    ) async {
+      await tester.pumpWidget(
+        FluentApp(
+          home: SizedBox(
+            width: 1200,
+            height: 800,
+            child: NavigationView(
+              paneBodyBuilder: (item, body) => const SizedBox(),
+              pane: NavigationPane(
+                displayMode: PaneDisplayMode.compact,
+                autoSuggestBox: const TextBox(),
+                autoSuggestBoxReplacement: const Icon(FluentIcons.search),
+                items: [
+                  PaneItem(
+                    icon: const Icon(FluentIcons.home),
+                    title: const Text('Home'),
+                  ),
+                ],
+                footerItems: [
+                  PaneItemAction(
+                    icon: const Icon(FluentIcons.add),
+                    title: const Text('Add'),
+                    onTap: () {},
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ),
+      );
+
+      await tester.pumpAndSettle();
+
+      expect(find.byType(StickyNavigationIndicator), findsWidgets);
+      expect(
+        find.descendant(
+          of: find.byType(StickyNavigationIndicator),
+          matching: find.byType(Container),
+        ),
+        findsNothing,
+      );
+    });
+
     testWidgets('EndNavigationIndicator renders correctly', (tester) async {
       await tester.pumpWidget(
         FluentApp(
@@ -1711,6 +1756,125 @@ void main() {
       }
     }
   });
+
+  testWidgets('a narrow open pane still shows item titles', (tester) async {
+    await tester.pumpWidget(
+      FluentApp(
+        home: NavigationView(
+          pane: NavigationPane(
+            selected: 0,
+            displayMode: PaneDisplayMode.expanded,
+            size: const NavigationPaneSize(openMaxWidth: 200),
+            items: [
+              PaneItem(
+                icon: const Icon(FluentIcons.home),
+                title: const Text('Home'),
+                body: const SizedBox(),
+              ),
+              PaneItemExpander(
+                icon: const Icon(FluentIcons.folder),
+                title: const Text('Folder'),
+                initiallyExpanded: true,
+                items: [
+                  PaneItem(
+                    icon: const Icon(FluentIcons.document),
+                    title: const Text('Nested'),
+                    body: const SizedBox(),
+                  ),
+                ],
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+    await tester.pumpAndSettle();
+
+    expect(find.text('Home'), findsOneWidget);
+    expect(find.text('Folder'), findsOneWidget);
+    expect(find.text('Nested'), findsOneWidget);
+  });
+
+  testWidgets('an open pane too narrow for item content shows only icons', (
+    tester,
+  ) async {
+    await tester.pumpWidget(
+      FluentApp(
+        home: NavigationView(
+          pane: NavigationPane(
+            selected: 0,
+            displayMode: PaneDisplayMode.expanded,
+            size: const NavigationPaneSize(openMaxWidth: 120),
+            items: [
+              PaneItem(
+                icon: const Icon(FluentIcons.home),
+                title: const Text('Home'),
+                body: const SizedBox(),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+    await tester.pumpAndSettle();
+
+    expect(find.byIcon(FluentIcons.home), findsOneWidget);
+    expect(find.text('Home'), findsNothing);
+  });
+
+  for (final (width, layout) in [(1400.0, 'beside'), (700.0, 'over')]) {
+    for (final header in [null, const Text('Header')]) {
+      testWidgets(
+        'opening a compact pane $layout the content keeps its icons in place'
+        '${header == null ? '' : ' with a header'}',
+        (tester) async {
+          tester.view.devicePixelRatio = 1;
+          addTearDown(tester.view.reset);
+          tester.view.physicalSize = Size(width, 700);
+
+          await tester.pumpWidget(
+            FluentApp(
+              home: NavigationView(
+                pane: NavigationPane(
+                  selected: 0,
+                  displayMode: PaneDisplayMode.compact,
+                  header: header,
+                  items: [
+                    PaneItem(
+                      icon: const Icon(FluentIcons.home),
+                      title: const Text('Home'),
+                      body: const SizedBox(),
+                    ),
+                  ],
+                  footerItems: [
+                    PaneItem(
+                      icon: const Icon(FluentIcons.settings),
+                      title: const Text('Settings'),
+                      body: const SizedBox(),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          );
+
+          double iconTop(IconData icon) =>
+              tester.getTopLeft(find.byIcon(icon)).dy;
+          final compactToggle = iconTop(WindowsIcons.global_nav_button);
+          final compactItem = iconTop(FluentIcons.home);
+          final compactFooterItem = iconTop(FluentIcons.settings);
+
+          await tester.tap(find.byType(PaneToggleButton));
+          await tester.pumpAndSettle();
+          expect(find.text('Home'), findsOneWidget);
+
+          expect(iconTop(WindowsIcons.global_nav_button), compactToggle);
+          expect(iconTop(FluentIcons.home), compactItem);
+          expect(iconTop(FluentIcons.settings), compactFooterItem);
+        },
+      );
+    }
+  }
 }
 
 class _PageLifecycle {

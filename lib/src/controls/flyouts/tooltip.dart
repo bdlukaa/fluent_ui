@@ -274,7 +274,12 @@ class TooltipState extends State<Tooltip> with SingleTickerProviderStateMixin {
   }
 
   void _handleMouseHover(PointerHoverEvent event) {
-    _mousePosition = event.position;
+    // The tooltip is laid out in the coordinates of the nearest overlay, which
+    // is not necessarily at the window origin.
+    final overlay = Overlay.maybeOf(context)?.context.findRenderObject();
+    _mousePosition = overlay is RenderBox
+        ? overlay.globalToLocal(event.position)
+        : event.position;
   }
 
   void _handleMouseExit(PointerExitEvent event) {
@@ -324,7 +329,7 @@ class TooltipState extends State<Tooltip> with SingleTickerProviderStateMixin {
     assert(debugCheckHasDirectionality(context));
 
     final theme = FluentTheme.of(context);
-    final defaultTextStyle = theme.typography.body!;
+    final defaultTextStyle = theme.typography.body;
     final defaultDecoration = BoxDecoration(
       color: theme.menuColor,
       borderRadius: const BorderRadius.all(Radius.circular(8)),
@@ -429,6 +434,12 @@ class TooltipTheme extends InheritedTheme {
     return TooltipThemeData.standard(
       theme,
     ).merge(theme.tooltipTheme).merge(inheritedTheme?.data);
+  }
+
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties.add(DiagnosticsProperty<TooltipThemeData>('data', data));
   }
 
   @override

@@ -623,4 +623,24 @@ void main() {
     expect(row.height, lessThanOrEqualTo(kComboBoxItemHeight));
     expect((row.center.dy - text.center.dy).abs(), lessThanOrEqualTo(1));
   });
+
+  testWidgets('popup is labelled without scoping a semantics route', (
+    tester,
+  ) async {
+    final handle = tester.ensureSemantics();
+    await tester.pumpWidget(
+      wrapApp(
+        child: ComboBox<String>(items: _items(count: 2), onChanged: (_) {}),
+      ),
+    );
+
+    await tester.tap(find.byType(ComboBox<String>));
+    await tester.pumpAndSettle();
+
+    expect(
+      tester.getSemantics(find.bySemanticsLabel('Dialog')),
+      isSemantics(label: 'Dialog', namesRoute: true, scopesRoute: false),
+    );
+    handle.dispose();
+  });
 }
