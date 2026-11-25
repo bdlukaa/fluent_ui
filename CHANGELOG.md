@@ -1,7 +1,7 @@
 ## 4.18.1
 
-- feat: Improved Flyout, with smoother animations, animations for when the flyout comes out from the right or left side and adjusted padding to better align with the WinUI3 gallery example.
-* fix: `ComboBox` popups no longer scope a semantics route, which made opening one allocate about 1 GB on Windows ([#1364](https://github.com/bdlukaa/fluent_ui/issues/1364)). The popup keeps its `Dialog` label, and screen readers on Android and iOS no longer announce it as a new route when it opens.
+- feat: Improved `Flyout` with smoother animations ([#1363](https://github.com/bdlukaa/fluent_ui/pull/1363))
+* fix: `ComboBox` popups no longer scope a semantics route, which made opening one allocate about 1 GB on Windows ([#1364](https://github.com/bdlukaa/fluent_ui/issues/1364)).
 
 ## 4.18.0
 
