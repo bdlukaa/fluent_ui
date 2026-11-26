@@ -117,4 +117,27 @@ void main() {
 
     expect(find.text('14'), findsNothing); // 14 is not a multiple of 13
   });
+
+  testWidgets('TimePicker pads minutes to two digits', (tester) async {
+    await tester.pumpWidget(
+      wrapApp(
+        child: TimePicker(
+          selected: DateTime(2023, 1, 1, 14, 5),
+          onChanged: (_) {},
+          minuteIncrement: 5,
+        ),
+      ),
+    );
+
+    expect(find.text('05'), findsOneWidget); // field
+    expect(find.text('5'), findsNothing);
+
+    await tester.tap(find.byType(TimePicker));
+    await tester.pumpAndSettle();
+
+    // The popup lists the selected minute and the rest of the increments.
+    expect(find.text('05'), findsWidgets);
+    expect(find.text('10'), findsWidgets);
+    expect(find.text('5'), findsNothing);
+  });
 }

@@ -1,6 +1,7 @@
 ## [next]
 
-* fix: Flyouts, including the `DropDownButton` and `SplitButton` menus, use the themes around their target, such as a nested `FluentTheme`, instead of the themes above the navigator.
+* fix: Flyouts use the themes around their target, such as a nested `FluentTheme`, instead of the themes above the navigator. ([#1385](https://github.com/bdlukaa/fluent_ui/pull/1385))
+* fix: `TimePicker` pads minutes to two digits, for example "05" instead of "5". ([#1384](https://github.com/bdlukaa/fluent_ui/pull/1384))
 
 ## 4.18.1
 

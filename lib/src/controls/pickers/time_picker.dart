@@ -31,8 +31,11 @@ String _formatHour(int hour, String locale) {
   );
 }
 
+/// Formats [minute] as two digits, such as "05", in [locale]'s digits.
+///
+/// `DateFormat.m` doesn't pad: it formats 5 minutes as "5".
 String _formatMinute(int minute, String locale) {
-  return DateFormat.m(locale).format(
+  return DateFormat('mm', locale).format(
     DateTime(
       0, // year
       0, // month
