@@ -111,4 +111,30 @@ void main() {
     await tester.pumpAndSettle();
     expect(find.byKey(const Key('disabled-flyout')), findsNothing);
   });
+
+  testWidgets('SplitButton flyout uses the theme around the button', (
+    tester,
+  ) async {
+    await tester.pumpWidget(
+      wrapApp(
+        child: FluentTheme(
+          data: FluentThemeData(brightness: Brightness.dark),
+          child: SplitButton(
+            flyout: const SizedBox(
+              key: Key('flyout-content'),
+              width: 100,
+              height: 100,
+            ),
+            child: const Text('Primary'),
+          ),
+        ),
+      ),
+    );
+
+    await tester.tap(find.byType(ChevronDown));
+    await tester.pumpAndSettle();
+
+    final content = tester.element(find.byKey(const Key('flyout-content')));
+    expect(FluentTheme.of(content).brightness, Brightness.dark);
+  });
 }

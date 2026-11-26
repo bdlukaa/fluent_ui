@@ -58,4 +58,26 @@ void main() {
       );
     },
   );
+
+  testWidgets('DropDownButton menu uses the theme around the button', (
+    tester,
+  ) async {
+    await tester.pumpWidget(
+      wrapApp(
+        child: FluentTheme(
+          data: FluentThemeData(brightness: Brightness.dark),
+          child: DropDownButton(
+            items: [MenuFlyoutItem(text: const Text('one'), onPressed: () {})],
+            title: const Text('Numbers'),
+          ),
+        ),
+      ),
+    );
+
+    await tester.tap(find.text('Numbers'));
+    await tester.pumpAndSettle();
+
+    final item = tester.element(find.text('one'));
+    expect(FluentTheme.of(item).brightness, Brightness.dark);
+  });
 }

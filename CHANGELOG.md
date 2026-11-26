@@ -1,3 +1,7 @@
+## [next]
+
+* fix: Flyouts, including the `DropDownButton` and `SplitButton` menus, use the themes around their target, such as a nested `FluentTheme`, instead of the themes above the navigator.
+
 ## 4.18.1
 
 - feat: Improved `Flyout` with smoother animations ([#1363](https://github.com/bdlukaa/fluent_ui/pull/1363))
