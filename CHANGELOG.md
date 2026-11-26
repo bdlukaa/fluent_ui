@@ -1,3 +1,7 @@
+## [next]
+
+* fix: `TimePicker` pads minutes to two digits, for example "05" instead of "5".
+
 ## 4.18.1
 
 - feat: Improved `Flyout` with smoother animations ([#1363](https://github.com/bdlukaa/fluent_ui/pull/1363))
