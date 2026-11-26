@@ -819,6 +819,16 @@ class FlyoutController
 
     _currentNavigator = navigatorKey ?? Navigator.of(context);
 
+    // The flyout is pushed on the navigator, so it would inherit the themes
+    // above the navigator rather than the ones around the target, such as a
+    // nested FluentTheme. Re-apply the target's themes in the route. A
+    // navigator passed with navigatorKey isn't necessarily an ancestor of the
+    // target, so then capture every theme up to the root.
+    final capturedThemes = InheritedTheme.capture(
+      from: context,
+      to: navigatorKey == null ? _currentNavigator!.context : null,
+    );
+
     final Offset targetOffset;
     final Size targetSize;
     final Rect targetRect;
@@ -889,34 +899,39 @@ class FlyoutController
           }
         };
 
-        return _FlyoutPage(
-          navigator: _currentNavigator ?? Navigator.of(context),
-          targetRect: targetRect,
-          attachState: _attachState,
-          targetOffset: targetOffset,
-          targetSize: targetSize,
-          flyoutKey: flyoutKey,
-          navigatorBox: navigatorBox,
-          barrierColor: barrierColor,
-          barrierRecognizer: barrierRecognizer,
-          barrierDismissible: barrierDismissible,
-          dismissWithEsc: dismissWithEsc,
-          dismissOnPointerMoveAway: dismissOnPointerMoveAway,
-          placementMode: placementMode,
-          autoModeConfiguration: autoModeConfiguration,
-          forceAvailableSpace: forceAvailableSpace,
-          shouldConstrainToRootBounds: shouldConstrainToRootBounds,
-          additionalOffset: additionalOffset,
-          margin: margin,
-          transitionBuilder: transitionBuilder!,
-          transitionCurve: transitionCurve,
-          animation: CurvedAnimation(curve: transitionCurve, parent: animation),
-          transitionDuration: transitionDuration,
-          reverseTransitionDuration: reverseTransitionDuration,
-          position: position,
-          builder: builder,
-          buildTarget: buildTarget,
-          textDirection: textDirection,
+        return capturedThemes.wrap(
+          _FlyoutPage(
+            navigator: _currentNavigator ?? Navigator.of(context),
+            targetRect: targetRect,
+            attachState: _attachState,
+            targetOffset: targetOffset,
+            targetSize: targetSize,
+            flyoutKey: flyoutKey,
+            navigatorBox: navigatorBox,
+            barrierColor: barrierColor,
+            barrierRecognizer: barrierRecognizer,
+            barrierDismissible: barrierDismissible,
+            dismissWithEsc: dismissWithEsc,
+            dismissOnPointerMoveAway: dismissOnPointerMoveAway,
+            placementMode: placementMode,
+            autoModeConfiguration: autoModeConfiguration,
+            forceAvailableSpace: forceAvailableSpace,
+            shouldConstrainToRootBounds: shouldConstrainToRootBounds,
+            additionalOffset: additionalOffset,
+            margin: margin,
+            transitionBuilder: transitionBuilder!,
+            transitionCurve: transitionCurve,
+            animation: CurvedAnimation(
+              curve: transitionCurve,
+              parent: animation,
+            ),
+            transitionDuration: transitionDuration,
+            reverseTransitionDuration: reverseTransitionDuration,
+            position: position,
+            builder: builder,
+            buildTarget: buildTarget,
+            textDirection: textDirection,
+          ),
         );
       },
     );
